@@ -9,11 +9,13 @@ layout: compress
 {% include lang.html %}
 
 {% if site.theme_mode %}
-  data-mode="{{ site.theme_mode }}"
+  {% capture prefer_mode %}data-mode="{{ site.theme_mode }}"{% endcapture %}
+{% else %}
+  {% capture prefer_mode %}data-mode="dark"{% endcapture %}
 {% endif %}
 
 <!-- `site.alt_lang` can specify a language different from the UI -->
-<html lang="{{ page.lang | default: site.alt_lang | default: site.lang }}">
+<html lang="{{ page.lang | default: site.alt_lang | default: site.lang }}" {{ prefer_mode }}>
   {% include head.html %}
 
   <body>
