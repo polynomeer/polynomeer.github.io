@@ -72,3 +72,7 @@ net.ipv4.tcp_keepalive_probes = 5
 이 예에서 keepalive 패킷은 15분간의 비활성 후에 전송된다. 원격 호스트에서 응답이 없으면 추가 keepalive 패킷이 매분 전송되어 총 5개의 패킷이 응답 없이 전송될 때까지 전송된다. 여전히 응답이 없으면 연결이 끊어진 것으로 간주되어 닫힌다.
 
 - [TCP keepalive Recommended Settings and Best Practices](https://webhostinggeeks.com/howto/tcp-keepalive-recommended-settings-and-best-practices/)
+
+## References
+
+- [Keepalive 설정으로 NGINX HTTP 성능 향상](https://nginxstore.com/blog/nginx/keepalive-%EC%84%A4%EC%A0%95%EC%9C%BC%EB%A1%9C-nginx-http-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81/)

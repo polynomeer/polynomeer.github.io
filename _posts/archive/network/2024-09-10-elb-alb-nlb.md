@@ -74,6 +74,7 @@ NLB는 ALB가 다루지 않는 모든 것에 사용된다. 일반적인 사용 �
 ## Comparison Table
 
 Basic load balancing features
+
 | Feature                             | ALB  | NLB       | ELB  |
 | ----------------------------------- | ---- | --------- | ---- |
 | Balance load between targets        | Yes  | Yes       | Yes  |
@@ -113,6 +114,8 @@ AWS는 로드 밸런싱과 관련하여 다양한 옵션을 제공한다. 또한
 
 - [ELB vs. ALB vs. NLB: Choosing the Best AWS Load Balancer for Your Needs](https://iamondemand.com/blog/elb-vs-alb-vs-nlb-choosing-the-best-aws-load-balancer-for-your-needs/)
 - [Differences: ALB vs. NLB vs. CLB](https://nidhiashtikar.medium.com/differences-alb-vs-nlb-vs-clb-29f25fc1033b)
+- [What’s the difference between application, network, and gateway load balancing?](https://aws.amazon.com/compare/the-difference-between-the-difference-between-application-network-and-gateway-load-balancing/)
+- [CLB vs. ALB vs. NLB—Which AWS load balancer is right for you?](https://www.site24x7.com/learn/clb-vs-alb-vs-nlb.html)
 
 ---
 
