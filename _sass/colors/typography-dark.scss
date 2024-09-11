@@ -17,9 +17,9 @@
   --blockquote-border-color: #ff79c6;
   --blockquote-text-color: #6272a4;
   --link-color: #bd93f9;
-  --link-underline-color: #ffb86c;
+  --link-underline-color: #bd93f9;
   --button-bg: #ff79c6;
-  --btn-border-color: #ff79c6;
+  --btn-border-color: #bd93f9;
   --btn-outline-primary: #ff79c6;
   --btn-backtotop-color: var(--text-color);
   --btn-backtotop-border-color: #44475a;
@@ -153,6 +153,7 @@
 
     &:hover {
       background-color: var(--btn-outline-primary);
+      border-color: var(--btn-outline-primary);
       color: #fff; /* 혹은 원하는 텍스트 색상 */
     }
   }
