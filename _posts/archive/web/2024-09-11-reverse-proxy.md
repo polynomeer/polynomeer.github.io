@@ -69,6 +69,6 @@ tags: [Reverse Proxy]
 트래픽 흐름에 따라 리버스 프록시는 조직의 인증 서비스(예: 단일 로그인)와 통합된다. IT가 리버스 프록시와 거래하도록 서비스와 앱을 구성하면 프록시는 에이전트 없이 인라인으로 작동할 수 있다. 이는 관리형 클라우드 앱 등에 들어오는 트래픽이 자동으로 리버스 프록시로 리다이렉션되는 간단한 사용자 경험을 제공한다.
 
 - [What Is a Reverse Proxy?](https://www.zscaler.com/resources/security-terms-glossary/what-is-reverse-proxy)
-- [What is a reverse proxy? | Proxy servers explained](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/)
+- [What is a reverse proxy? Proxy servers explained](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/)
 - [Proxy server](https://en.wikipedia.org/wiki/Proxy_server)
 - [리버스 프록시(reverse proxy) 서버 개념](https://losskatsu.github.io/it-infra/reverse-proxy/#3-%EB%A6%AC%EB%B2%84%EC%8A%A4-%ED%94%84%EB%A1%9D%EC%8B%9Creverse-proxy-%EC%84%9C%EB%B2%84%EB%9E%80)
