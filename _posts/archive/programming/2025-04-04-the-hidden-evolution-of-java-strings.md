@@ -1,11 +1,11 @@
 ---
 title: The Hidden Evolution of Java Strings
 date: 2025-04-04
-categories: [Programming, Java]
+categories: [Archive, Programming]
 tags: [Java, String]
 ---
 
-## Java `String` 클래스의 변천사 (Java 1 ~ Java 21)
+# Java `String` 클래스의 변천사 (Java 1 ~ Java 21)
 
 Java에서 `String` 클래스는 자바 언어의 핵심 중 하나로, 수많은 개선이 이루어졌다. 특히 Java 9 이후부터는 성능과 메모리 최적화를 위해 **내부 구조가 크게 바뀌었고**,  Java 21까지 계속해서 진화해왔다. 이 글에서는 Java 1부터 21까지의 `String` 클래스의 **내부 구조와 기능 변화 중심**으로 정리해보았다.
 

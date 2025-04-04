@@ -1,7 +1,7 @@
 ---
-title: Integer.toString(3) vs String.valueOf(3) vs "" + 3
+title: Integer.toString(int) vs String.valueOf(int) vs "" + int
 date: 2025-04-04
-categories: [Programming, Java]
+categories: [Archive, Programming]
 tags: [Java, String]
 ---
 
