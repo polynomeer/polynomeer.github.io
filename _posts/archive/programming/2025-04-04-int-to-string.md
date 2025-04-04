@@ -1,5 +1,5 @@
 ---
-title: 2025-04-04-TIL
+title: Integer.toString(3) vs String.valueOf(3) vs "" + 3
 date: 2025-04-04
 categories: [Programming, Java]
 tags: [Java, String]
