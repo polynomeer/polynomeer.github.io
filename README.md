@@ -1,38 +1,60 @@
-## Hi there 👋, I'm Polynomeer
+기술 블로그 저장소의 `README.md`는 **방문자에게 이 블로그의 목적, 구성, 사용기술, 주요 링크** 등을 전달하는 역할을 해요. 비록 실제 블로그에서는 보여지지 않더라도, GitHub에서 저장소를 방문하는 사람이나 본인의 포트폴리오 링크에 포함될 수 있기 때문에 **전문적이고 간결하게 작성**해두는 게 좋아요.
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-informational.svg?&style=flat&logo=notion&logoColor=white)](https://amplified-apple-303.notion.site/130c9d7b5e554a4b86991428800cd611) [![TIL Blog](https://img.shields.io/badge/TIL%20Blog-333664?&style=flat&logo=github&logoColor=white)](https://polynomeer.github.io/) [![Tech Blog](https://img.shields.io/badge/Tech%20Blog-11B48A?style=square&logo=Vimeo&logoColor=white)](https://velog.io/@polynomeer) ![polynomeer@gmail.com](https://img.shields.io/badge/polynomeer@gmail.com-red.svg?&style=flat&logo=gmail&logoColor=white) ![polynomeer@naver.com](https://img.shields.io/badge/polynomeer@naver.com-03C75A?style=square&logo=naver&logoColor=white)
+---
 
-### Make Non Polynomial Polynomial. 어려운 문제를 어렵지 않게.
+### ✅ 기술 블로그용 `README.md` 구성 예시
 
-저는 모든 문제를 쉽게 모델링하고 이해하려고 노력합니다. 모든 문제를 반드시 복잡한 코드로 해결해야할 필요는 없습니다. 때로는 좋은 구조나 좋은 정책이 얼마든지 더 좋은 해결방법이 되기도 합니다.
+```markdown
+# polynomeer.github.io
 
-### Skills
-![Spring](https://img.shields.io/badge/Spring%20-6DB33F.svg?&style=flat&logo=spring&logoColor=white) ![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F?style=square&logo=springboot&logoColor=white)  ![Amazon AWS](https://img.shields.io/badge/Amazon%20AWS-232F3E.svg?&style=flat&logo=amazon-aws&logoColor=white) ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?&style=flat&logo=hibernate&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1.svg?&style=flat&logo=mysql&logoColor=white) ![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?&style=flat&logo=java&logoColor=white) ![Kotlin](https://img.shields.io/badge/Kotlin-blueviolet?style=square&logo=kotlin&logoColor=white) ![C++](https://img.shields.io/badge/C++-00599C?style=square&logo=C%2B%2B&logoColor=white) ![C](https://img.shields.io/badge/C-A8B9CC?style=square&logo=C&logoColor=white) ![Atlassian](https://img.shields.io/badge/Atlassian-0052CC?style=square&logo=atlassian&logoColor=white) ![Jira Software](https://img.shields.io/badge/Jira%20Software-0052CC?style=square&logo=jira%20software&logoColor=white) ![Confluence](https://img.shields.io/badge/Confluence-172B4D?style=square&logo=confluence&logoColor=white) ![Trello](https://img.shields.io/badge/Trello-0052CC?style=square&logo=trello&logoColor=white) ![Datadog](https://img.shields.io/badge/Datadog-632CA6?style=square&logo=datadog&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=square&logo=docker&logoColor=white) ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=square&logo=kubernetes&logoColor=white) ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=square&logo=apache%20maven&logoColor=white) ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=square&logo=gradle&logoColor=white) ![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?style=square&logo=apache%20kafka&logoColor=white) ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-231F20?style=square&logo=rabbitmq&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=square&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=square&logo=github&logoColor=white) ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=square&logo=jenkins&logoColor=white) ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=square&logo=intellij%20idea&logoColor=white) ![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=square&logo=junit5&logoColor=white) ![Slack](https://img.shields.io/badge/Slack-4A154B?style=square&logo=slack&logoColor=white)
+🧠 **Make Non-Polynomial Polynomial**  
+복잡한 문제를 명확한 구조와 정책으로 해결하려는 개발자의 기술 블로그입니다.
 
-### Statistics
+## ✨ 블로그 소개
 
-<a href="https://github.com/anuraghazra/github-readme-stats">
-  <img src="https://github-readme-stats.vercel.app/api?username=polynomeer&show_icons=true&theme=material-palenight&hide_border=true&bg_color=20232a&icon_color=E3E3E3A8&text_color=fff&title_color=918FE0" width=49.2% />
-</a></br>
-<a href="https://github.com/polynomeer/github-stats">
- <img src="https://raw.githubusercontent.com/Polynomeer/github-stats-transparent/output/generated/languages.svg" width=49.2% />
-</a>
+이 블로그는 주로 다음과 같은 주제를 다룹니다:
 
-## License
+- 백엔드 개발 (Java, Spring Boot, JPA, MySQL, Redis 등)
+- 시스템 아키텍처 및 성능 최적화
+- 배치 처리 및 대용량 데이터 처리
+- 이벤트 기반 시스템 및 메시지 큐
+- DevOps, CI/CD, 로그 수집 및 모니터링
 
-This project is published under [MIT License][license].
+## 📌 기술 스택
 
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[ci]: https://github.com/cotes2020/jekyll-theme-chirpy/actions/workflows/ci.yml?query=event%3Apush+branch%3Amaster
-[codacy]: https://app.codacy.com/gh/cotes2020/jekyll-theme-chirpy/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
-[license]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/LICENSE
-[open-container]: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/cotes2020/jekyll-theme-chirpy
-[jekyllrb]: https://jekyllrb.com/
-[clipartmax]: https://www.clipartmax.com/middle/m2i8b1m2K9Z5m2K9_ant-clipart-childrens-ant-cute/
-[demo]: https://cotes2020.github.io/chirpy-demo/
-[wiki]: https://github.com/cotes2020/jekyll-theme-chirpy/wiki
-[contribute-guide]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/docs/CONTRIBUTING.md
-[contributors]: https://github.com/cotes2020/jekyll-theme-chirpy/graphs/contributors
-[lib]: https://github.com/cotes2020/chirpy-static-assets
-[vscode]: https://code.visualstudio.com/
-[jetbrains]: https://www.jetbrains.com/?from=jekyll-theme-chirpy
+이 블로그는 [Jekyll](https://jekyllrb.com/) 기반의 GitHub Pages 정적 사이트로 구축되었으며, 다음 기술을 활용합니다:
+
+- **Jekyll** + **GitHub Pages**
+- **SCSS** 커스터마이징을 통한 테마 수정
+- **Markdown** 기반 포스팅
+- **VSCode** + **Live Preview** 환경에서 작성
+
+## 🔗 주요 링크
+
+- 👉 [블로그 바로가기](https://polynomeer.github.io)
+- 📝 [글 목록 전체 보기](https://polynomeer.github.io/archive/)
+- 📬 Contact: [polynomeer@gmail.com](mailto:polynomeer@gmail.com)
+
+## 🗂️ 디렉토리 구조
+
+```
+├── _posts/            # 블로그 포스트
+├── _layouts/          # HTML 레이아웃 템플릿
+├── _includes/         # 재사용 가능한 HTML 조각
+├── assets/            # 이미지, SCSS 등 정적 리소스
+├── _config.yml        # Jekyll 설정 파일
+└── theme.scss         # 사용자 정의 스타일
+```
+
+## 🛠️ 로컬 개발 (선택 사항)
+
+```bash
+# 로컬에서 실행하려면 Jekyll 설치 필요
+bundle install
+bundle exec jekyll serve
+```
+
+---
+
+이 저장소는 기술적 고민과 해결 과정, 그리고 아키텍처 설계 및 코드의 맥락을 기록하고 공유하기 위한 공간입니다.
+```
