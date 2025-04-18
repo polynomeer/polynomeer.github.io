@@ -1,5 +1,5 @@
 ---
-title: Java 진화의 두 축: JEP vs JSR
+title: Java 진화의 두 축 JEP vs JSR
 date: 2025-04-17
 categories: [Archive, Programming]
 tags: [Java, JEP, JSR]

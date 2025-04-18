@@ -1,5 +1,5 @@
 ---
-title: Jakarta EE: 기업용 Java의 진화
+title: Jakarta EE 기업용 Java의 진화
 date: 2025-04-17
 categories: [Archive, Programming]
 tags: [Java, Jakarta EE]
