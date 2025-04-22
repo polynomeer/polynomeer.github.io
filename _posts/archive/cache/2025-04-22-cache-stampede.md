@@ -1,7 +1,7 @@
 ---
 title: 캐시 스탬피드(Cache Stampede)
 date: 2025-04-22
-categories: [Archive, Infrastructure]
+categories: [Archive, Cache & Session]
 tags: [Cache, Redis]
 ---
 
