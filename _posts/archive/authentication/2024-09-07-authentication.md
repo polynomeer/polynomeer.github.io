@@ -1,7 +1,7 @@
 ---
 title: Authentication
 date: 2024-09-05
-categories: [Archive, Common]
+categories: [Archive, Authentication]
 tags: [Authentication]
 ---
 

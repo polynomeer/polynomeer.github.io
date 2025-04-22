@@ -1,7 +1,7 @@
 ---
 title: Token Authentication
 date: 2024-09-05 11:18:30 -0800
-categories: [Archive, Common]
+categories: [Archive, Authentication]
 tags: [Authentication]
 ---
 
