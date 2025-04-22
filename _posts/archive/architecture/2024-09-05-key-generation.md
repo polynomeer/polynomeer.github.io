@@ -1,7 +1,7 @@
 ---
 title: Unique ID Generation Strategy in Distributed Systems
 date: 2024-09-05
-categories: [Archive, Architecture]
+categories: [Archive, Architecture & Design]
 tags: [architecture]
 ---
 
