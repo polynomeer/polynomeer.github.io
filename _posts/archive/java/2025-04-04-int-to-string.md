@@ -1,7 +1,7 @@
 ---
 title: Integer.toString(int) vs String.valueOf(int) vs "" + int
 date: 2025-04-04
-categories: [Archive, Programming]
+categories: [Archive, Java]
 tags: [Java, String]
 ---
 

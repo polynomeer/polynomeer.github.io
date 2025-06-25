@@ -1,7 +1,7 @@
 ---
 title: Java 21 Features
 date: 2025-04-14
-categories: [Archive, Programming]
+categories: [Archive, Java]
 tags: [Java]
 ---
 
