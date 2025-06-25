@@ -5,11 +5,32 @@ categories: [Archive, Programming]
 tags: [Floating Point]
 ---
 
-## Floating point
+## **부동소수점**(浮動小數點, floating point)
 
-Floating point(부동 소수점)은 컴퓨터에서 실수를 표현하는 방식 중 하나이다. 정수만으로는 표현할 수 없는 소수점이 있는 숫자 (e.g. 3.14, -0.0001, 2.71828... 등)를 저장하고 계산할 수 있도록 만든 방식이다. 여기서 "부동(floating)"이라는 말은 소수점의 위치가 고정되어 있지않고 자유롭게 이동할 수 있다는 의미이다.
+**부동소수점(浮動小數點, floating point)**은 컴퓨터에서 실수를 표현하는 방식 중 하나이다. 정수만으로는 표현할 수 없는 소수점이 있는 숫자 (e.g. 3.14, -0.0001, 2.71828... 등)를 저장하고 계산할 수 있도록 만든 방식이다. 여기서 "부동(floating)"이라는 말은 소수점의 위치가 고정되어 있지않고 자유롭게 이동할 수 있다는 의미이다.
 
-## Floating point 구조 (IEEE 754 표준 기준)
+> 여기서의 **부동(浮動)**은 떠다니며 움직인다는 뜻으로 움직이지 않는다는 의미의 **부동(不動)**과 헷갈리지 않도록 주의하자. 실제로 **고정소수점(固定小數點, Fixed-point arithmetic)**이라는 개념이 존재한다.
+{: .prompt-warning }
+
+## Fixed point 구조
+
+![fixed point](../../../assets/img/posts/fixed-point.png)
+
+위 이미지는 **Fixed-Point (고정 소수점)**의 8비트 표현 구조를 보여준다.
+
+| 구간       | 비트 수 | 설명                            |
+| ---------- | ------- | ------------------------------- |
+| **정수부** | 4비트   | 소수점 왼쪽, 정수 부분을 표현   |
+| **소수부** | 4비트   | 소수점 오른쪽, 소수 부분을 표현 |
+
+예를 들어, 이진수가 `01101000`이라면
+
+- `0110` → 정수부 = 6
+- `1000` → 소수부 = 0.5 (이진수 `1×2⁻¹`)
+
+전체 숫자는 `6.5`가 된다.
+
+## Floating point 구조
 
 대부분의 시스템은 IEEE 754 표준을 사용하며, `float`(32비트) 또는 `double`(64비트) 형식으로 표현한다. IEEE 754의 최신 버전은 IEEE 754-2019이다. [공식문서](https://ieeexplore.ieee.org/document/8766229)는 학회 소속이나 관련 연구기관 소속이라는 인증을 해야 받아볼 수 있는듯하다.
 
@@ -31,7 +52,7 @@ Floating point(부동 소수점)은 컴퓨터에서 실수를 표현하는 방�
 
 ## 부동소수점 표현식 해석
 
-### 1.  `sign` (부호 비트)
+### 1.  sign(부호 비트)
 
 숫자가 **양수인지 음수인지를 나타내는 비트**이다.
 
@@ -43,7 +64,7 @@ Floating point(부동 소수점)은 컴퓨터에서 실수를 표현하는 방�
 - `(-1)^0 = +1` → 양수
 - `(-1)^1 = -1` → 음수
 
-### 2. `mantissa` (가수부 또는 유효숫자부)
+### 2. mantissa(가수부 또는 유효숫자부)
 
 실제 **숫자의 주요한 값**(유효 숫자)을 담고 있는 부분이다.
 
@@ -54,13 +75,13 @@ Floating point(부동 소수점)은 컴퓨터에서 실수를 표현하는 방�
 
 ※ 이 부분이 수의 **정밀도**를 좌우하므로 이 범위를 최대한으로 확보하는 것이 중요하다.
 
-### 3. `exponent` (지수부)
+### 3. exponent(지수부)
 
 이 숫자가 **얼마나 크거나 작은지를 결정하는 지수**이다. 2진수의 지수니까 **2의 몇 제곱**인지에 대한 자릿수를 나타낸다.
 
 하지만 **지수에는 음수도 나와야 하므로**, 실제 저장할 땐 `bias`를 더한 값을 저장한다. 예를 들어, 실제 지수 `-2` → 저장 값은 `bias + (-2)`
 
-### 4. `bias` (편향값)
+### 4. bias(편향값)
 
 **음수 지수를 표현**하기 위해 지수에 더해지는 고정된 값이다.
 
@@ -104,11 +125,15 @@ mantissa = 1.570796...
 
 이때 계산식은 다음과 같다.
 
-```math
-(-1)^0 \times 1.25 \times 2^3 = 1.25 \times 8 = \boxed{10.0}
+```
+(-1)^0  × 1.25  ×  2^3 = 1.25  ×  8 = 10.0
 ```
 
 실제로 컴퓨터는 실수 `10.0`을 32비트 메모리로 분해해서 저장하고, 계산 시 위 수식을 사용한다.
+
+이 과정을 이해하기 쉽게 [시뮬레이션 해볼 수 있는 사이트](https://www.h-schmidt.net/FloatConverter/IEEE754.html)도 있다. 10진수로 10을 입력하면 10.0의 실제 저장되는 값이 표현된다.
+
+![floating point converter](../../../assets/img/posts/floating-point-converter.png)
 
 ---
 
@@ -123,3 +148,12 @@ mantissa = 1.570796...
 
 - **정확하지 않은 근사값**을 저장 (ex. `0.1`은 정확히 표현 불가)
 - **오차 누적** 가능성 존재 → 금융, 과학 계산에서 주의 필요
+
+---
+
+## 참고자료
+
+- [IEEE 754 - Wikipedia](https://en.wikipedia.org/wiki/IEEE_754)
+- [Floating-point arithmetic - Wikipedia](https://en.wikipedia.org/wiki/Floating-point_arithmetic)
+- [Fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic)
+- [IEEE Standard 754 Floating Point Numbers](https://www.geeksforgeeks.org/ieee-standard-754-floating-point-numbers/)
