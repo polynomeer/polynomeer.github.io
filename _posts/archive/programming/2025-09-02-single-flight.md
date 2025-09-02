@@ -72,11 +72,15 @@ func main() {
 
 이 예에서 여러 고루틴은 동일한 "expensiveOperation"을 요청한다. `singleflight`를 사용하면 해당 작업은 한 번만 실행되고 결과는 모든 호출자 간에 공유된다.
 
+---
+
 ## 고려 사항 및 모범 사례
 
 - 오류 처리: 공유 함수 호출로 인해 오류가 발생하는 시나리오를 애플리케이션이 올바르게 처리하는지 확인한다.
 - 키 관리: 효율성은 `singleflight`고유한 작업을 나타내는 키를 적절히 식별하고 차별화하는 데 달려 있다.
 - 모니터링: 호출에 대한 적절한 로깅 및 모니터링을 구현하여 `singleflight`애플리케이션에서의 호출 영향과 동작을 파악한다.
+
+---
 
 ## 고급 예제
 
@@ -163,7 +167,92 @@ func main() {
 - `GetWeather`메서드는 먼저 캐시에서 기존 데이터를 확인한다. 데이터가 없으면 `singleflight`동일한 도시에 대해 외부 서비스에 대한 요청이 하나만 이루어지도록 한다.
 - 여러 개의 고루틴이 같은 도시의 날씨 데이터에 대한 동시 요청을 시뮬레이션한다.
 
-`singleflight`이 고급 예제는 웹 서비스 및 마이크로서비스 아키텍처에서 흔하고 실용적인 시나리오인 중복된 외부 API 호출을 방지하는 방법을 보여줍니다 . 또한 캐싱을 추가하여 성능을 더욱 최적화하고 불필요한 작업을 줄인다.
+`singleflight`이 고급 예제는 웹 서비스 및 마이크로서비스 아키텍처에서 흔하고 실용적인 시나리오인 중복된 외부 API 호출을 방지하는 방법을 보여준다 . 또한 캐싱을 추가하여 성능을 더욱 최적화하고 불필요한 작업을 줄인다.
+
+---
+
+## 자바에서는?
+
+자바에서는 Go처럼 공식적으로 지원하는 내장된 singleflight 기능은 없다. 따라서 직접 ConcurrentHashMap과 CompletableFuture로 구현해볼 수 있다. 
+
+```java
+import java.util.concurrent.*;
+import java.util.function.Supplier;
+
+public class SingleFlight<T> {
+    private final ConcurrentHashMap<String, CompletableFuture<T>> inFlight = new ConcurrentHashMap<>();
+
+    public T doCall(String key, Supplier<T> task) throws ExecutionException, InterruptedException {
+        CompletableFuture<T> future = inFlight.computeIfAbsent(key, k -> {
+            CompletableFuture<T> f = new CompletableFuture<>();
+            CompletableFuture.runAsync(() -> {
+                try {
+                    T result = task.get();
+                    f.complete(result);
+                } catch (Exception e) {
+                    f.completeExceptionally(e);
+                } finally {
+                    inFlight.remove(k); // Remove after completion
+                }
+            });
+            return f;
+        });
+
+        return future.get();  // Wait for result
+    }
+}
+```
+
+위와 같이 ConcurrentHashMap을 여러 개의 작업을 담아둔다. (Go singleflight의 Group 역할) 그리고 CompletableFuture로 key가 없을때만 실행하므로 최초로 실행 완료한 스레드가 finally문에서 key를 제거한다. 그리고 다른 스레드들은 동일한 key가 이미 존재하므로 CompletableFuture의 결과를 바로 리턴받아서 공유하게 된다.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        SingleFlight<String> singleFlight = new SingleFlight<>();
+
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+
+        // 여러 스레드가 동시에 같은 키로 호출
+        for (int i = 0; i < 5; i++) {
+            int id = i;
+            executor.submit(() -> {
+                try {
+                    String result = singleFlight.doCall("myKey", () -> {
+                        System.out.println("실제 작업 실행 by thread-" + id);
+                        try {
+                            Thread.sleep(1000);  // 비용이 큰 작업 시뮬레이션
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return "결과 from thread-" + id;
+                    });
+
+                    System.out.println("Thread-" + id + " result: " + result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        executor.shutdown();
+    }
+}
+```
+
+실제로 Main 클래스를 실행해보면 다음과 같이 출력된다.
+
+```
+실제 작업 실행 by thread-0
+Thread-2 result: 결과 from thread-0
+Thread-3 result: 결과 from thread-0
+Thread-4 result: 결과 from thread-0
+Thread-1 result: 결과 from thread-0
+Thread-0 result: 결과 from thread-0
+```
+
+즉, 실제 작업은 한 번만(thread-0) 수행되고, 나머지 스레드는 해당 결과를 공유한다.
+
+---
 
 ## 참고자료
 
