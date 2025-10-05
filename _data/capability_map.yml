@@ -70,7 +70,7 @@ nodes:
         en: Made the system enforce consistency through explicit states instead of relying on operators calling APIs in order.
     representative_posts:
       - _posts/notes/common/2026-01-03-bulk-insert-with-lock-part4.md
-      - _posts/notes/common/2026-09-13-settlement-write-guard.md
+      - _posts/notes/common/2025-10-05-settlement-write-guard.md
       - _posts/notes/common/2026-09-14-batch-heap-dump-to-chunk.md
     supporting_links:
       - title:

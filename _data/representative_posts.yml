@@ -20,7 +20,7 @@ items:
       ko-KR: 동시성과 락
       en: Concurrency and locking
     surfaces: [recruit, panel]
-  - path: _posts/notes/common/2026-09-13-settlement-write-guard.md
+  - path: _posts/notes/common/2025-10-05-settlement-write-guard.md
     summary:
       ko-KR: 정산이 도는 동안 기준 데이터 수정을 막기 위해 물리 락 대신 상태 플래그와 AOP를 택한 이유와, 남긴 경합 창을 어디까지 받아들였는지 설명합니다.
       en: Explains why a state flag with AOP replaced a physical lock to block edits during settlement, and how much of the remaining race window was accepted and why.
