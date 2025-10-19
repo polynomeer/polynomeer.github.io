@@ -167,7 +167,7 @@ nodes:
     representative_posts:
       - _posts/notes/common/2026-09-13-sequence-part3.md
       - _posts/notes/common/2026-09-14-archunit-guardrails-on-legacy.md
-      - _posts/notes/common/2026-09-14-polling-to-sqs-pipeline.md
+      - _posts/notes/common/2025-10-19-polling-to-sqs-pipeline.md
     supporting_links:
       - title:
           ko-KR: 시리즈에서 구조적으로 읽기
