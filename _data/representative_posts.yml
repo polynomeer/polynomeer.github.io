@@ -36,7 +36,7 @@ items:
       ko-KR: 계측 기반 레거시 재설계
       en: Measurement-driven legacy redesign
     surfaces: [recruit, panel]
-  - path: _posts/notes/common/2026-09-14-batch-heap-dump-to-chunk.md
+  - path: _posts/notes/common/2025-12-06-batch-heap-dump-to-chunk.md
     summary:
       ko-KR: Heap Dump가 가리킨 영속성 컨텍스트 누적을 Tasklet에서 Chunk로, XSSF에서 SXSSF로 바꿔 해결한 기록입니다.
       en: Follows a heap dump to persistence context accumulation and resolves it by moving from Tasklet to Chunk and from XSSF to SXSSF.
