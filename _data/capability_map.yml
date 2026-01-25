@@ -165,7 +165,7 @@ nodes:
       - ko-KR: 네트워크, 저장소, 애플리케이션 계층을 하나의 판단 흐름으로 묶습니다.
         en: Connects network, storage, and application layers into one decision narrative.
     representative_posts:
-      - _posts/notes/common/2026-09-13-sequence-part3.md
+      - _posts/notes/common/2026-01-25-sequence-part3.md
       - _posts/notes/common/2025-12-20-archunit-guardrails-on-legacy.md
       - _posts/notes/common/2025-10-19-polling-to-sqs-pipeline.md
     supporting_links:

@@ -28,7 +28,7 @@ items:
       ko-KR: 정합성과 상태 전이 설계
       en: Consistency and state transition design
     surfaces: [recruit, panel]
-  - path: _posts/notes/common/2026-09-13-sequence-part3.md
+  - path: _posts/notes/common/2026-01-25-sequence-part3.md
     summary:
       ko-KR: 시퀀스 채번을 INSERT 시점으로 옮기고 범위 단위로 받아 계약 생성 시간을 2분에서 10초로 줄인 구조 변경과, 결번을 허용한 판단을 다룹니다.
       en: Covers moving sequence allocation to INSERT time with range allocation, cutting contract creation from 2 minutes to 10 seconds, and the decision to accept gaps.
