@@ -4,7 +4,7 @@ description:
   en: Posts that best show how production bottlenecks and consistency problems were traced and solved structurally.
 
 items:
-  - path: _posts/notes/parity-pay/2026-09-14-parity-pay-lock-hold-time.md
+  - path: _posts/notes/parity-pay/2026-02-19-parity-pay-lock-hold-time.md
     summary:
       ko-KR: 동일 지갑 경합의 원인을 추론에서 측정으로 바꾸고, 잠금을 필요 이상으로 오래 쥐던 결함과 측정 방법의 실수까지 기록한 글입니다.
       en: Turns a same-wallet contention diagnosis from inference into measurement, and records the excess lock hold defect along with the measurement mistakes made on the way.
