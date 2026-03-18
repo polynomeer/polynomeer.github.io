@@ -16,23 +16,23 @@ series_groups:
     summary: 대출 오픈런을 견딘 시스템, 무한스크롤이 안 되는 은행의 이유, Service Mesh, 인프라 자동화, ML 서비스, 스크래핑과 웹 자동화, 네이티브 메모리 누수 추적.
     tone: cyan
     starts_at: 10
-    ends_at: 21
+    ends_at: 20
   - label: SLASH 23
     title: 코어뱅킹 MSA, Zero Trust, Gateway, Observability
     summary: 은행 최초 코어뱅킹 MSA 전환, Istio와 Zero Trust, 대외 연계, 분산 추적, Gateway, 프로파일러, 배포 파이프라인, 데이터플랫폼 오픈소스 전환.
     tone: green
-    starts_at: 22
-    ends_at: 32
+    starts_at: 21
+    ends_at: 31
   - label: SLASH 24
     title: 커널까지 내려간 관측과 지속 가능한 마이그레이션
     summary: eBPF와 Hyperthread, Kubernetes CPU, Canary 배포, 차세대 없는 마이그레이션, 환전의 보상 트랜잭션, 마이데이터 운영, ML 플랫폼과 Feature Store, Hadoop 구축.
     tone: amber
-    starts_at: 33
-    ends_at: 46
+    starts_at: 32
+    ends_at: 45
   - label: TMC 25
     title: 결제·정산·FEP·FDS, 그리고 플랫폼 운영
     summary: 20년 레거시 결제 시스템, 결제창 재작성, 정산 개편, 분산 트랜잭션, FEP 통합, 이상거래탐지, Spring 구동 시간과 가드레일, 하이브리드 클라우드, Data Mesh, ScyllaDB Feature Store.
     tone: slate
-    starts_at: 47
-    ends_at: 66
+    starts_at: 46
+    ends_at: 65
 ---
