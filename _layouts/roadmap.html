@@ -1,0 +1,86 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign roadmap = site.data.roadmaps[page.roadmap_id] %}
+
+{% if roadmap %}
+  <section class="roadmap-detail">
+    <div class="roadmap-hero">
+      <p class="roadmap-eyebrow">{{ site.data.locales[lang].roadmaps.eyebrow }}</p>
+      <h2>{{ roadmap.title }}</h2>
+      <p class="roadmap-summary">{{ roadmap.description }}</p>
+    </div>
+
+    {% for stage in roadmap.stages %}
+      {% assign stage_series = '' | split: '' %}
+      {% assign stage_posts_count = 0 %}
+
+      {% for post in site.posts %}
+        {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id %}
+          {% assign stage_posts_count = stage_posts_count | plus: 1 %}
+          {% if post.series %}
+            {% unless stage_series contains post.series %}
+            {% assign stage_series = stage_series | push: post.series %}
+            {% endunless %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if stage_posts_count > 0 %}
+        <section class="roadmap-stage">
+          <div class="roadmap-stage-header">
+            <h3>{{ stage.title }}</h3>
+            {% if stage.description %}
+              <p>{{ stage.description }}</p>
+            {% endif %}
+          </div>
+
+          {% for series_id in stage_series %}
+            {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
+            {% assign series_first_post = series_posts | first %}
+            <article class="roadmap-series">
+              <h4>{{ series_first_post.series_title | default: series_id }}</h4>
+              {% if series_first_post.series_description %}
+                <p class="roadmap-series-description">{{ series_first_post.series_description }}</p>
+              {% endif %}
+              <ol class="roadmap-post-list">
+                {% for post in series_posts %}
+                  {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id %}
+                    <li>
+                      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ol>
+            </article>
+          {% endfor %}
+
+          {% assign standalone_exists = false %}
+          {% for post in site.posts %}
+            {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id and post.series == nil %}
+              {% assign standalone_exists = true %}
+            {% endif %}
+          {% endfor %}
+
+          {% if standalone_exists %}
+            <article class="roadmap-series standalone">
+              <h4>{{ site.data.locales[lang].roadmaps.standalone_title }}</h4>
+              <ol class="roadmap-post-list">
+                {% for post in site.posts %}
+                  {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id and post.series == nil %}
+                    <li>
+                      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ol>
+            </article>
+          {% endif %}
+        </section>
+      {% endif %}
+    {% endfor %}
+  </section>
+{% endif %}

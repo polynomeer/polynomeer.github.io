@@ -1,0 +1,46 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+<section class="roadmap-directory">
+  <div class="roadmap-hero">
+    <p class="roadmap-eyebrow">{{ site.data.locales[lang].roadmaps.eyebrow }}</p>
+    <h2>{{ site.data.locales[lang].roadmaps.directory_title }}</h2>
+    <p class="roadmap-summary">{{ site.data.locales[lang].roadmaps.directory_description }}</p>
+  </div>
+
+  <div class="roadmap-grid">
+    {% assign roadmaps = site.roadmaps | sort: 'order' %}
+    {% for roadmap_page in roadmaps %}
+      {% assign roadmap = site.data.roadmaps[roadmap_page.roadmap_id] %}
+      {% if roadmap %}
+        {% assign roadmap_post_count = 0 %}
+        {% for post in site.posts %}
+          {% if post.roadmaps contains roadmap_page.roadmap_id %}
+            {% assign roadmap_post_count = roadmap_post_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+
+        <article class="roadmap-card">
+          <a href="{{ roadmap_page.url | relative_url }}" class="roadmap-card-link">
+            <div class="roadmap-card-header">
+              {% if roadmap.icon %}
+                <i class="{{ roadmap.icon }}"></i>
+              {% endif %}
+              <span class="roadmap-count">
+                {{
+                  site.data.locales[lang].roadmaps.post_count
+                  | replace: ':COUNT', roadmap_post_count
+                }}
+              </span>
+            </div>
+            <h3>{{ roadmap.title }}</h3>
+            <p>{{ roadmap.description }}</p>
+          </a>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
