@@ -170,6 +170,9 @@ collections:
   content_types:
     output: true
     sort_by: order
+  post_statuses:
+    output: true
+    sort_by: order
 
 defaults:
   - scope:
@@ -207,6 +210,11 @@ defaults:
       type: content_types
     values:
       layout: content-type
+  - scope:
+      path: ""
+      type: post_statuses
+    values:
+      layout: post-status
 
 sass:
   style: compressed

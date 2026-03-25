@@ -14,6 +14,7 @@ tabs:
   # format: <filename_without_extension>: <value>
   home: 홈
   types: 타입
+  statuses: 상태
   topics: 토픽
   categories: 카테고리
   tags: 태그
@@ -131,4 +132,10 @@ content_types:
   eyebrow: 콘텐츠 타입
   directory_title: 글 성격별로 탐색하기
   directory_description: 짧은 학습 기록, 장기 보관용 아카이브 글, 긴 형식의 아티클을 구분해서 탐색할 수 있습니다.
+  post_count: ":COUNT개 글"
+
+post_statuses:
+  eyebrow: 글 상태
+  directory_title: 관리 상태별로 글 탐색하기
+  directory_description: 지금도 신뢰 가능한 글인지, 계속 보강 중인 글인지, 참고용으로만 보관된 글인지 빠르게 구분할 수 있습니다.
   post_count: ":COUNT개 글"

@@ -14,6 +14,7 @@ tabs:
   # format: <filename_without_extension>: <value>
   home: Home
   types: Types
+  statuses: Statuses
   topics: Topics
   categories: Categories
   tags: Tags
@@ -138,4 +139,10 @@ content_types:
   eyebrow: Content type
   directory_title: Browse by writing style
   directory_description: Separate quick learning notes, evergreen archive pieces, and broader long-form articles.
+  post_count: ":COUNT posts"
+
+post_statuses:
+  eyebrow: Editorial status
+  directory_title: Browse by maintenance state
+  directory_description: Quickly tell which posts are long-lived references, actively evolving, or kept only for historical context.
   post_count: ":COUNT posts"

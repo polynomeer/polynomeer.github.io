@@ -1,0 +1,30 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign post_status = site.data.post_statuses[page.post_status_id] %}
+
+{% if post_status %}
+  <section class="post-status-detail">
+    <div class="post-status-hero">
+      <p class="post-status-eyebrow">{{ site.data.locales[lang].post_statuses.eyebrow }}</p>
+      <h2>{{ post_status.title }}</h2>
+      <p class="post-status-summary">{{ post_status.description }}</p>
+    </div>
+
+    <ul class="post-status-post-list">
+      {% for post in site.posts %}
+        {% if post.status == page.post_status_id %}
+          <li class="d-flex justify-content-between gap-3">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="text-muted small text-nowrap">
+              {% include datetime.html date=post.date lang=lang %}
+            </span>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}

@@ -1,0 +1,17 @@
+evergreen:
+  title: "Evergreen"
+  description: "Reliable long-term reference content."
+  icon: "fas fa-seedling"
+  order: 1
+
+updating:
+  title: "Updating"
+  description: "Actively revised or expanded content."
+  icon: "fas fa-pen-ruler"
+  order: 2
+
+archived:
+  title: "Archived"
+  description: "Kept for reference, not actively maintained."
+  icon: "fas fa-box-archive"
+  order: 3

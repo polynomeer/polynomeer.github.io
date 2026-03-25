@@ -83,8 +83,9 @@ refactor: true
 
             <div class="post-meta flex-grow-1 d-flex align-items-end">
               <div class="me-auto">
-                <div class="mb-2">
+                <div class="post-type-row mb-2">
                   {% include content-type-badge.html post=post lang=lang %}
+                  {% include post-status-badge.html post=post lang=lang %}
                 </div>
 
                 <!-- posted date -->

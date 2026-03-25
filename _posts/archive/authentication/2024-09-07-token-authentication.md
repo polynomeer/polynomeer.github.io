@@ -9,6 +9,7 @@ series_order: 2
 series_description: Core authentication and authorization concepts for backend engineers.
 roadmaps: [backend-core, security-foundations]
 roadmap_stage: beginner
+status: evergreen
 ---
 
 # Token Authentication
