@@ -25,6 +25,7 @@ search:
   hint: 검색
   cancel: 취소
   no_results: 검색 결과가 없습니다.
+  results: ":QUERY 검색 결과 :COUNT개"
 
 panel:
   lastmod: 최근 업데이트

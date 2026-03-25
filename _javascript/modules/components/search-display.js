@@ -12,6 +12,7 @@ const resultWrapper = document.getElementById('search-result-wrapper');
 const results = document.getElementById('search-results');
 const input = document.getElementById('search-input');
 const hints = document.getElementById('search-hints');
+const resultInfo = document.getElementById('search-result-info');
 
 // CSS class names
 const LOADED = 'd-block';
@@ -54,6 +55,8 @@ class ResultSwitch {
   static off() {
     if (this.resultVisible) {
       results.innerHTML = '';
+      resultInfo.textContent = '';
+      resultInfo.classList.add(UNLOADED);
 
       if (hints.classList.contains(UNLOADED)) {
         hints.classList.remove(UNLOADED);
@@ -63,7 +66,7 @@ class ResultSwitch {
       content.forEach((el) => {
         el.classList.remove(UNLOADED);
       });
-      input.textContent = '';
+      input.value = '';
       this.resultVisible = false;
     }
   }

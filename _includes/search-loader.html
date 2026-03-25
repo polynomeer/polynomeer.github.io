@@ -4,12 +4,20 @@
 -->
 
 {% capture result_elem %}
-  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">
+  <article class="search-result-item px-1 px-sm-2 px-lg-4 px-xl-0">
     <header>
       <h2><a href="{url}">{title}</a></h2>
-      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">
-        {categories}
-        {tags}
+      <div class="post-meta d-flex flex-column text-muted mt-1 mb-1">
+        <div class="search-result-meta">
+          {date_label}
+          {categories}
+          {tags}
+        </div>
+        <div class="search-result-badges">
+          {series_title}
+          {roadmaps}
+          {topics}
+        </div>
       </div>
     </header>
     <p>{snippet}</p>
@@ -20,18 +28,51 @@
 
 <script>
   {%- comment -%} Note: dependent library will be loaded in `js-selector.html` {%- endcomment -%}
+  const searchInput = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('search-results');
+  const resultInfo = document.getElementById('search-result-info');
+  const hints = document.getElementById('search-hints');
+
+  function renderSearchSummary() {
+    const query = searchInput.value.trim();
+
+    if (query === '') {
+      resultInfo.textContent = '';
+      resultInfo.classList.add('d-none');
+      return;
+    }
+
+    const count = resultsContainer.querySelectorAll('.search-result-item').length;
+    resultInfo.textContent =
+      count > 0
+        ? `{{ site.data.locales[include.lang].search.results }}`
+            .replace(':COUNT', count)
+            .replace(':QUERY', query)
+        : '';
+
+    if (count > 0) {
+      resultInfo.classList.remove('d-none');
+    } else {
+      resultInfo.classList.add('d-none');
+    }
+  }
+
   SimpleJekyllSearch({
-    searchInput: document.getElementById('search-input'),
-    resultsContainer: document.getElementById('search-results'),
+    searchInput: searchInput,
+    resultsContainer: resultsContainer,
     json: '{{ '/assets/js/data/search.json' | relative_url }}',
     searchResultTemplate: '{{ result_elem | strip_newlines }}',
     noResultsText: '{{ not_found }}',
     templateMiddleware: function(prop, value, template) {
+      if (prop === 'date_label') {
+        return value === '' ? '' : `<div class="search-result-date"><i class="far fa-calendar fa-fw"></i>${value}</div>`;
+      }
+
       if (prop === 'categories') {
         if (value === '') {
           return `${value}`;
         } else {
-          return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+          return `<div class="search-result-categories"><i class="far fa-folder fa-fw"></i>${value}</div>`;
         }
       }
 
@@ -39,9 +80,31 @@
         if (value === '') {
           return `${value}`;
         } else {
-          return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+          return `<div class="search-result-tags"><i class="fa fa-tag fa-fw"></i>${value}</div>`;
         }
       }
+
+      if (prop === 'series_title') {
+        return value === '' ? '' : `<span class="search-chip search-chip-series">{{ value }}</span>`;
+      }
+
+      if (prop === 'roadmaps') {
+        return value === '' ? '' : `<span class="search-chip search-chip-roadmap">${value}</span>`;
+      }
+
+      if (prop === 'topics') {
+        return value === '' ? '' : `<span class="search-chip search-chip-topic">${value}</span>`;
+      }
     }
+  });
+
+  searchInput.addEventListener('input', () => {
+    queueMicrotask(() => {
+      renderSearchSummary();
+
+      if (searchInput.value.trim() === '') {
+        hints.classList.remove('d-none');
+      }
+    });
   });
 </script>
