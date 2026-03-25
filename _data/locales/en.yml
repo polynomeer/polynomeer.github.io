@@ -13,6 +13,7 @@ layout:
 tabs:
   # format: <filename_without_extension>: <value>
   home: Home
+  types: Types
   topics: Topics
   categories: Categories
   tags: Tags
@@ -132,3 +133,9 @@ home:
   curation_series_title: Read through connected series
   curation_series_count: ":COUNT posts"
   curation_series_fallback: A connected sequence of posts designed to be read in order.
+
+content_types:
+  eyebrow: Content type
+  directory_title: Browse by writing style
+  directory_description: Separate quick learning notes, evergreen archive pieces, and broader long-form articles.
+  post_count: ":COUNT posts"

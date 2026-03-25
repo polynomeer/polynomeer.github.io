@@ -167,6 +167,9 @@ collections:
   topics:
     output: true
     sort_by: order
+  content_types:
+    output: true
+    sort_by: order
 
 defaults:
   - scope:
@@ -199,6 +202,11 @@ defaults:
       type: topics
     values:
       layout: topic-hub
+  - scope:
+      path: ""
+      type: content_types
+    values:
+      layout: content-type
 
 sass:
   style: compressed

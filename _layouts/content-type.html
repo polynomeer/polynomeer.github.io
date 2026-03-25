@@ -1,0 +1,41 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign content_type = site.data.content_types[page.content_type_id] %}
+
+{% if content_type %}
+  <section class="content-type-detail">
+    <div class="content-type-hero">
+      <p class="content-type-eyebrow">{{ site.data.locales[lang].content_types.eyebrow }}</p>
+      <h2>{{ content_type.title }}</h2>
+      <p class="content-type-summary">{{ content_type.description }}</p>
+    </div>
+
+    <ul class="content-type-post-list">
+      {% for post in site.posts %}
+      {% assign matches_type = false %}
+      {% if page.content_type_id == 'til' and post.path contains '_posts/TIL/' %}
+        {% assign matches_type = true %}
+      {% elsif page.content_type_id == 'archive' and post.path contains '_posts/archive/' %}
+        {% assign matches_type = true %}
+      {% elsif page.content_type_id == 'article' %}
+        {% unless post.path contains '_posts/TIL/' or post.path contains '_posts/archive/' %}
+          {% assign matches_type = true %}
+        {% endunless %}
+      {% endif %}
+
+        {% if matches_type %}
+          <li class="d-flex justify-content-between gap-3">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="text-muted small text-nowrap">
+              {% include datetime.html date=post.date lang=lang %}
+            </span>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}

@@ -1,0 +1,17 @@
+til:
+  title: TIL
+  description: Short iterative notes and daily learning records collected over time.
+  icon: fas fa-pencil-alt
+  order: 1
+
+archive:
+  title: Archive
+  description: Curated technical articles intended to stay useful as long-term references.
+  icon: fas fa-box-archive
+  order: 2
+
+article:
+  title: Article
+  description: Long-form content such as lectures, books, conference notes, references, and interview materials.
+  icon: fas fa-newspaper
+  order: 3

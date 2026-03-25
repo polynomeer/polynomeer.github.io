@@ -1,0 +1,57 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+<section class="content-type-directory">
+  <div class="content-type-hero">
+    <p class="content-type-eyebrow">{{ site.data.locales[lang].content_types.eyebrow }}</p>
+    <h2>{{ site.data.locales[lang].content_types.directory_title }}</h2>
+    <p class="content-type-summary">{{ site.data.locales[lang].content_types.directory_description }}</p>
+  </div>
+
+  <div class="content-type-grid">
+    {% assign type_pages = site.content_types | sort: 'order' %}
+    {% for type_page in type_pages %}
+      {% assign content_type = site.data.content_types[type_page.content_type_id] %}
+      {% if content_type %}
+        {% assign post_count = 0 %}
+        {% for post in site.posts %}
+          {% assign matches_type = false %}
+          {% if type_page.content_type_id == 'til' and post.path contains '_posts/TIL/' %}
+            {% assign matches_type = true %}
+          {% elsif type_page.content_type_id == 'archive' and post.path contains '_posts/archive/' %}
+            {% assign matches_type = true %}
+          {% elsif type_page.content_type_id == 'article' %}
+            {% unless post.path contains '_posts/TIL/' or post.path contains '_posts/archive/' %}
+              {% assign matches_type = true %}
+            {% endunless %}
+          {% endif %}
+
+          {% if matches_type %}
+            {% assign post_count = post_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+
+        <article class="content-type-card">
+          <a href="{{ type_page.url | relative_url }}" class="content-type-card-link">
+            <div class="content-type-card-header">
+              {% if content_type.icon %}
+                <i class="{{ content_type.icon }}"></i>
+              {% endif %}
+              <span class="content-type-count">
+                {{
+                  site.data.locales[lang].content_types.post_count
+                  | replace: ':COUNT', post_count
+                }}
+              </span>
+            </div>
+            <h3>{{ content_type.title }}</h3>
+            <p>{{ content_type.description }}</p>
+          </a>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
