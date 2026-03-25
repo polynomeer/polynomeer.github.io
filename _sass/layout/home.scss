@@ -104,6 +104,25 @@
   font-weight: 700;
 }
 
+.home-curation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(98, 114, 164, 0.14);
+    background: rgba(68, 71, 90, 0.22);
+    color: var(--text-muted-color);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+}
+
 #post-list {
   margin-top: 2rem;
 

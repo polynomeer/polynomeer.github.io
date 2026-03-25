@@ -15,6 +15,7 @@ tabs:
   home: Home
   types: Types
   statuses: Statuses
+  paths: Paths
   topics: Topics
   categories: Categories
   tags: Tags
@@ -126,6 +127,8 @@ topics:
 
 home:
   curation_explore: Explore
+  curation_paths_eyebrow: Guided learning
+  curation_paths_title: Follow curated reading and study paths
   curation_topics_eyebrow: Curated topics
   curation_topics_title: Start with strong subject entry points
   curation_roadmaps_eyebrow: Structured learning
@@ -146,3 +149,15 @@ post_statuses:
   directory_title: Browse by maintenance state
   directory_description: Quickly tell which posts are long-lived references, actively evolving, or kept only for historical context.
   post_count: ":COUNT posts"
+
+learning_paths:
+  eyebrow: Learning path
+  directory_title: Browse guided reading and study paths
+  directory_description: Start from curated paths that combine topic hubs, roadmaps, and selected posts in a deliberate order.
+  phase_count: ":COUNT phases"
+  audience: Audience
+  level: Level
+  duration: Duration
+  related_roadmaps: Related roadmaps
+  related_topics: Related topics
+  recommended_posts: Recommended posts

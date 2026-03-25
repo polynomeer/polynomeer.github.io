@@ -173,6 +173,9 @@ collections:
   post_statuses:
     output: true
     sort_by: order
+  learning_paths:
+    output: true
+    sort_by: order
 
 defaults:
   - scope:
@@ -215,6 +218,11 @@ defaults:
       type: post_statuses
     values:
       layout: post-status
+  - scope:
+      path: ""
+      type: learning_paths
+    values:
+      layout: learning-path
 
 sass:
   style: compressed

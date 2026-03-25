@@ -1,0 +1,56 @@
+backend-foundations-path:
+  title: "Backend Foundations Path"
+  description: "Build a practical mental model of identity, trust, transport security, and runtime boundaries."
+  icon: "fas fa-route"
+  audience: "Readers building their first backend fundamentals map."
+  level: "Beginner"
+  duration: "1-2 weeks"
+  order: 1
+  phases:
+    - title: "Identity and access basics"
+      description: "Start with the concepts that define who a user is and what they can do."
+      roadmaps: [backend-core, security-foundations]
+      topics: [backend-foundations]
+      posts:
+        - _posts/archive/authentication/2024-09-07-authentication.md
+        - _posts/archive/authentication/2024-09-07-authorization.md
+        - _posts/archive/authentication/2024-09-07-token-authentication.md
+    - title: "Transport trust and request boundaries"
+      description: "Continue into the network layer where encryption and timeout behavior shape reliability."
+      roadmaps: [backend-core, security-foundations]
+      topics: [backend-foundations]
+      posts:
+        - _posts/archive/network/2024-09-07-ssl-tls.md
+        - _posts/archive/network/2024-09-07-timeout.md
+        - _posts/archive/network/2024-09-09-idle-timeout.md
+
+secure-authentication-path:
+  title: "Secure Authentication Path"
+  description: "Focus on the concepts needed to reason about login flows, authorization, tokens, and secure transport."
+  icon: "fas fa-user-shield"
+  audience: "Readers preparing for backend interviews or authentication-focused application work."
+  level: "Beginner to Intermediate"
+  duration: "4-6 sessions"
+  order: 2
+  phases:
+    - title: "Authentication model"
+      description: "Understand the vocabulary and mental model before choosing an implementation strategy."
+      roadmaps: [security-foundations]
+      topics: [backend-foundations]
+      posts:
+        - _posts/archive/authentication/2024-09-07-authentication.md
+        - _posts/archive/authentication/2024-09-07-token-authentication.md
+    - title: "Authorization and delegated access"
+      description: "Move from identity to permission boundaries and external authorization flows."
+      roadmaps: [security-foundations, backend-core]
+      topics: [backend-foundations]
+      posts:
+        - _posts/archive/authentication/2024-09-07-authorization.md
+        - _posts/archive/authentication/2024-09-07-oauth2.md
+    - title: "Transport and session boundary decisions"
+      description: "Finish with the runtime decisions that shape secure request handling."
+      roadmaps: [security-foundations]
+      topics: [backend-foundations]
+      posts:
+        - _posts/archive/network/2024-09-07-ssl-tls.md
+        - _posts/archive/web/2024-09-07-session-and-jwt.md

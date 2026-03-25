@@ -2,5 +2,5 @@
 layout: topic-hubs
 title: Topics
 icon: fas fa-compass
-order: 6
+order: 7
 ---
