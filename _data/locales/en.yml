@@ -121,3 +121,14 @@ topics:
   featured_roadmaps: Related roadmaps
   featured_series: Key series
   additional_posts: Additional reading
+
+home:
+  curation_explore: Explore
+  curation_topics_eyebrow: Curated topics
+  curation_topics_title: Start with strong subject entry points
+  curation_roadmaps_eyebrow: Structured learning
+  curation_roadmaps_title: Follow roadmap-based reading paths
+  curation_series_eyebrow: Ordered series
+  curation_series_title: Read through connected series
+  curation_series_count: ":COUNT posts"
+  curation_series_fallback: A connected sequence of posts designed to be read in order.

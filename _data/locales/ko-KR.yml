@@ -114,3 +114,14 @@ topics:
   featured_roadmaps: 함께 보면 좋은 로드맵
   featured_series: 핵심 시리즈
   additional_posts: 추가 읽을 글
+
+home:
+  curation_explore: 더 보기
+  curation_topics_eyebrow: 큐레이션 토픽
+  curation_topics_title: 주제별 진입점부터 시작하기
+  curation_roadmaps_eyebrow: 구조화된 학습
+  curation_roadmaps_title: 로드맵 기반 읽기 경로 따라가기
+  curation_series_eyebrow: 순서형 시리즈
+  curation_series_title: 연결된 시리즈로 이어 읽기
+  curation_series_count: ":COUNT개 글"
+  curation_series_fallback: 순서대로 읽을 수 있도록 묶인 연속 시리즈입니다.

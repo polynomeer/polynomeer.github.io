@@ -40,6 +40,12 @@ refactor: true
   {% endfor %}
 {% endif %}
 
+{% assign current_page = paginator.page | default: 1 %}
+
+{% if current_page == 1 %}
+  {% include home-curation.html lang=lang %}
+{% endif %}
+
 <div id="post-list" class="flex-grow-1 px-xl-1">
   {% for post in posts %}
     <article class="card-wrapper card">

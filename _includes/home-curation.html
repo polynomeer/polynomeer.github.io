@@ -1,0 +1,118 @@
+{% assign topic_pages = site.topics | sort: 'order' %}
+{% assign roadmap_pages = site.roadmaps | sort: 'order' %}
+{% assign featured_series = '' | split: '' %}
+
+{% for hub_pair in site.data.topic_hubs %}
+  {% assign hub = hub_pair[1] %}
+  {% assign hub_series = hub.featured_series | default: '' | split: ',' %}
+  {% for series_id in hub_series %}
+    {% unless series_id == empty or featured_series contains series_id %}
+      {% assign featured_series = featured_series | push: series_id %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+
+<section id="home-curation" class="px-xl-1">
+  {% if topic_pages.size > 0 %}
+    <section class="home-curation-section">
+      <div class="home-curation-header">
+        <div>
+          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_topics_eyebrow }}</p>
+          <h2>{{ site.data.locales[include.lang].home.curation_topics_title }}</h2>
+        </div>
+        <a href="{{ '/topics/' | relative_url }}" class="home-curation-link">
+          {{ site.data.locales[include.lang].home.curation_explore }}
+        </a>
+      </div>
+
+      <div class="home-curation-grid">
+        {% for topic_page in topic_pages limit: 3 %}
+          {% assign hub = site.data.topic_hubs[topic_page.topic_hub_id] %}
+          {% if hub %}
+            <article class="home-curation-card">
+              <a href="{{ topic_page.url | relative_url }}" class="home-curation-card-link">
+                <div class="home-curation-card-header">
+                  {% if hub.icon %}
+                    <i class="{{ hub.icon }}"></i>
+                  {% endif %}
+                  <span class="home-curation-chip">{{ site.data.locales[include.lang].tabs.topics }}</span>
+                </div>
+                <h3>{{ hub.title }}</h3>
+                <p>{{ hub.description }}</p>
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if roadmap_pages.size > 0 %}
+    <section class="home-curation-section">
+      <div class="home-curation-header">
+        <div>
+          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_roadmaps_eyebrow }}</p>
+          <h2>{{ site.data.locales[include.lang].home.curation_roadmaps_title }}</h2>
+        </div>
+        <a href="{{ '/roadmaps/' | relative_url }}" class="home-curation-link">
+          {{ site.data.locales[include.lang].home.curation_explore }}
+        </a>
+      </div>
+
+      <div class="home-curation-grid compact">
+        {% for roadmap_page in roadmap_pages limit: 2 %}
+          {% assign roadmap = site.data.roadmaps[roadmap_page.roadmap_id] %}
+          {% if roadmap %}
+            <article class="home-curation-card">
+              <a href="{{ roadmap_page.url | relative_url }}" class="home-curation-card-link">
+                <div class="home-curation-card-header">
+                  {% if roadmap.icon %}
+                    <i class="{{ roadmap.icon }}"></i>
+                  {% endif %}
+                  <span class="home-curation-chip">{{ site.data.locales[include.lang].tabs.roadmaps }}</span>
+                </div>
+                <h3>{{ roadmap.title }}</h3>
+                <p>{{ roadmap.description }}</p>
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if featured_series.size > 0 %}
+    <section class="home-curation-section">
+      <div class="home-curation-header">
+        <div>
+          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_series_eyebrow }}</p>
+          <h2>{{ site.data.locales[include.lang].home.curation_series_title }}</h2>
+        </div>
+      </div>
+
+      <div class="home-curation-grid">
+        {% for series_id in featured_series limit: 3 %}
+          {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
+          {% assign first_post = series_posts | first %}
+          {% if first_post %}
+            <article class="home-curation-card">
+              <a href="{{ first_post.url | relative_url }}" class="home-curation-card-link">
+                <div class="home-curation-card-header">
+                  <i class="fas fa-list-ol"></i>
+                  <span class="home-curation-chip">
+                    {{
+                      site.data.locales[include.lang].home.curation_series_count
+                      | replace: ':COUNT', series_posts.size
+                    }}
+                  </span>
+                </div>
+                <h3>{{ first_post.series_title | default: series_id }}</h3>
+                <p>{{ first_post.series_description | default: site.data.locales[include.lang].home.curation_series_fallback }}</p>
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</section>
