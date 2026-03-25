@@ -7,11 +7,13 @@ layout:
   category: 카테고리
   tag: 태그
   roadmap: 로드맵
+  topic-hub: 토픽 허브
 
 # The tabs of sidebar
 tabs:
   # format: <filename_without_extension>: <value>
   home: 홈
+  topics: 토픽
   categories: 카테고리
   tags: 태그
   archives: 아카이브
@@ -98,3 +100,13 @@ roadmaps:
   directory_description: 시간순 목록이나 태그 검색 대신, 주제별 읽기 경로를 따라 핵심 글을 탐색할 수 있습니다.
   post_count: ":COUNT개 글"
   standalone_title: 함께 읽을 글
+
+topics:
+  eyebrow: 큐레이션 토픽 허브
+  directory_title: 주제 중심 진입 페이지로 탐색하기
+  directory_description: 대표 글, 시리즈, 로드맵, 추가 읽을거리를 묶은 주제별 허브 페이지를 탐색할 수 있습니다.
+  post_count: ":COUNT개 글"
+  featured_posts: 먼저 읽을 글
+  featured_roadmaps: 함께 보면 좋은 로드맵
+  featured_series: 핵심 시리즈
+  additional_posts: 추가 읽을 글

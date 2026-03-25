@@ -164,6 +164,9 @@ collections:
   roadmaps:
     output: true
     sort_by: order
+  topics:
+    output: true
+    sort_by: order
 
 defaults:
   - scope:
@@ -191,6 +194,11 @@ defaults:
       type: roadmaps
     values:
       layout: roadmap
+  - scope:
+      path: ""
+      type: topics
+    values:
+      layout: topic-hub
 
 sass:
   style: compressed

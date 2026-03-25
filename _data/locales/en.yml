@@ -7,11 +7,13 @@ layout:
   category: Category
   tag: Tag
   roadmap: Roadmap
+  topic-hub: Topic Hub
 
 # The tabs of sidebar
 tabs:
   # format: <filename_without_extension>: <value>
   home: Home
+  topics: Topics
   categories: Categories
   tags: Tags
   archives: Archives
@@ -105,3 +107,13 @@ roadmaps:
   directory_description: Follow curated sequences of posts instead of browsing only by time, category, or tag.
   post_count: ":COUNT posts"
   standalone_title: Supporting articles
+
+topics:
+  eyebrow: Curated topic hub
+  directory_title: Start from topic-first entry pages
+  directory_description: Explore curated topic landing pages that combine featured reads, related series, roadmaps, and supporting posts.
+  post_count: ":COUNT posts"
+  featured_posts: Start here
+  featured_roadmaps: Related roadmaps
+  featured_series: Key series
+  additional_posts: Additional reading

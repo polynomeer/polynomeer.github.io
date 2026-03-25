@@ -1,0 +1,44 @@
+backend-foundations:
+  title: Backend Foundations
+  description: Start here for the core backend concepts that shape request flow, trust boundaries, and production behavior.
+  icon: fas fa-server
+  order: 1
+  categories:
+    - Authentication
+    - Network
+  tags:
+    - Timeout
+    - TLS
+  featured_series:
+    - authentication-basics
+  featured_roadmaps:
+    - backend-core
+    - security-foundations
+  featured_posts:
+    - /posts/authentication/
+    - /posts/token-authentication/
+
+spring-backend:
+  title: Spring Backend
+  description: Explore practical Spring and Spring Boot concepts from the perspective of backend architecture and runtime behavior.
+  icon: fas fa-leaf
+  order: 2
+  categories:
+    - Spring
+  tags:
+    - Spring
+    - Spring Boot
+  featured_posts:
+    - /posts/java-21-features-with-spring/
+
+database-internals:
+  title: Database Internals
+  description: Follow the articles that explain transactions, indexing, locking, and storage behavior from the inside out.
+  icon: fas fa-database
+  order: 3
+  categories:
+    - Database
+  tags:
+    - Transaction
+    - SQL
+    - MVCC

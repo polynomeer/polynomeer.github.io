@@ -1,0 +1,118 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign hub = site.data.topic_hubs[page.topic_hub_id] %}
+
+{% if hub %}
+  {% assign featured_urls = hub.featured_posts | default: '' | split: ',' %}
+  <section class="topic-detail">
+    <div class="topic-hero">
+      <p class="topic-eyebrow">{{ site.data.locales[lang].topics.eyebrow }}</p>
+      <h2>{{ hub.title }}</h2>
+      <p class="topic-summary">{{ hub.description }}</p>
+    </div>
+
+    {% if hub.featured_posts and hub.featured_posts.size > 0 %}
+      <section class="topic-section">
+        <h3>{{ site.data.locales[lang].topics.featured_posts }}</h3>
+        <ul class="topic-post-list">
+          {% for post_url in hub.featured_posts %}
+            {% for post in site.posts %}
+              {% if post.url == post_url %}
+                <li>
+                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    {% if hub.featured_roadmaps and hub.featured_roadmaps.size > 0 %}
+      <section class="topic-section">
+        <h3>{{ site.data.locales[lang].topics.featured_roadmaps }}</h3>
+        <div class="feature-chip-list">
+          {% for roadmap_id in hub.featured_roadmaps %}
+            {% assign roadmap = site.data.roadmaps[roadmap_id] %}
+            {% if roadmap %}
+              <a class="feature-chip" href="{{ '/roadmaps/' | append: roadmap_id | append: '/' | relative_url }}">
+                {% if roadmap.icon %}
+                  <i class="{{ roadmap.icon }}"></i>
+                {% endif %}
+                <span>{{ roadmap.title }}</span>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if hub.featured_series and hub.featured_series.size > 0 %}
+      <section class="topic-section">
+        <h3>{{ site.data.locales[lang].topics.featured_series }}</h3>
+        <div class="topic-series-grid">
+          {% for series_id in hub.featured_series %}
+            {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
+            {% assign series_first_post = series_posts | first %}
+            {% if series_first_post %}
+              <article class="topic-series-card">
+                <h4>{{ series_first_post.series_title | default: series_id }}</h4>
+                {% if series_first_post.series_description %}
+                  <p>{{ series_first_post.series_description }}</p>
+                {% endif %}
+                <ol class="topic-post-list compact">
+                  {% for post in series_posts %}
+                    <li>
+                      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ol>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="topic-section">
+      <h3>{{ site.data.locales[lang].topics.additional_posts }}</h3>
+      <ul class="topic-post-list">
+        {% for post in site.posts %}
+          {% assign is_match = false %}
+          {% for category in post.categories %}
+            {% if hub.categories contains category %}
+              {% assign is_match = true %}
+            {% endif %}
+          {% endfor %}
+          {% for tag in post.tags %}
+            {% if hub.tags contains tag %}
+              {% assign is_match = true %}
+            {% endif %}
+          {% endfor %}
+          {% if post.series and hub.featured_series contains post.series %}
+            {% assign is_match = true %}
+          {% endif %}
+          {% if post.roadmaps %}
+            {% for roadmap_id in post.roadmaps %}
+              {% if hub.featured_roadmaps contains roadmap_id %}
+                {% assign is_match = true %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          {% if is_match %}
+            {% unless hub.featured_posts contains post.url %}
+            <li>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            </li>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </section>
+  </section>
+{% endif %}
