@@ -1,0 +1,25 @@
+backend-core:
+  title: Backend Core Roadmap
+  description: Build a backend foundation from authentication and networking basics to practical runtime concerns.
+  icon: fas fa-server
+  order: 1
+  stages:
+    - id: beginner
+      title: Beginner
+      description: Core concepts required to understand request flow, trust, and access.
+    - id: intermediate
+      title: Intermediate
+      description: Topics that influence robustness, runtime behavior, and system boundaries.
+
+security-foundations:
+  title: Security Foundations
+  description: Learn the security concepts that shape authentication, authorization, and transport security.
+  icon: fas fa-shield-halved
+  order: 2
+  stages:
+    - id: beginner
+      title: Beginner
+      description: Security basics that define identity and trust boundaries.
+    - id: intermediate
+      title: Intermediate
+      description: Protocol and integration topics for real systems.

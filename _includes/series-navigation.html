@@ -1,0 +1,80 @@
+{% if page.series and page.series_order %}
+  {% assign series_posts = site.posts | where: 'series', page.series | sort: 'series_order' %}
+  {% assign series_total = series_posts | size %}
+  {% assign series_title = page.series_title %}
+
+  {% if series_title == nil or series_title == empty %}
+    {% assign series_title = page.series | replace: '-', ' ' | split: ' ' %}
+    {% capture series_title %}{% for word in series_title %}{{ word | capitalize }}{% unless forloop.last %} {% endunless %}{% endfor %}{% endcapture %}
+  {% endif %}
+
+  {% assign current_index = -1 %}
+  {% assign previous_post = nil %}
+  {% assign next_post = nil %}
+
+  {% for post in series_posts %}
+    {% if post.url == page.url %}
+      {% assign current_index = forloop.index0 %}
+      {% unless forloop.first %}
+        {% assign previous_index = forloop.index0 | minus: 1 %}
+        {% assign previous_post = series_posts[previous_index] %}
+      {% endunless %}
+      {% unless forloop.last %}
+        {% assign next_index = forloop.index0 | plus: 1 %}
+        {% assign next_post = series_posts[next_index] %}
+      {% endunless %}
+    {% endif %}
+  {% endfor %}
+
+  {% if series_total > 0 and current_index >= 0 %}
+    {% assign current_part = current_index | plus: 1 %}
+    <section class="feature-panel series-navigation" aria-labelledby="series-navigation-title">
+      <div class="feature-panel-header d-flex flex-column flex-lg-row justify-content-between gap-3">
+        <div>
+          <span class="feature-panel-label">{{ site.data.locales[include.lang].post.series }}</span>
+          <h3 id="series-navigation-title" class="feature-panel-title mb-1">{{ series_title }}</h3>
+          <p class="feature-panel-copy mb-0">
+            {{
+              site.data.locales[include.lang].post.series_progress
+              | replace: ':CURRENT', current_part
+              | replace: ':TOTAL', series_total
+            }}
+          </p>
+        </div>
+
+        <div class="series-navigation-links d-flex flex-column align-items-start align-items-lg-end gap-2">
+          {% if previous_post %}
+            <a class="series-link" href="{{ previous_post.url | relative_url }}">
+              <span class="series-link-label">{{ site.data.locales[include.lang].post.series_previous }}</span>
+              <strong>{{ previous_post.title }}</strong>
+            </a>
+          {% endif %}
+          {% if next_post %}
+            <a class="series-link" href="{{ next_post.url | relative_url }}">
+              <span class="series-link-label">{{ site.data.locales[include.lang].post.series_next }}</span>
+              <strong>{{ next_post.title }}</strong>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <ol class="series-navigation-list list-unstyled mb-0">
+        {% for post in series_posts %}
+          <li class="{% if post.url == page.url %}active{% endif %}">
+            {% if post.url == page.url %}
+              <span>
+                <span class="series-step">{{ forloop.index }}</span>
+                <strong>{{ post.title }}</strong>
+              </span>
+            {% else %}
+              <a href="{{ post.url | relative_url }}">
+                <span class="series-step">{{ forloop.index }}</span>
+                <span>{{ post.title }}</span>
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+  {% endif %}
+{% endif %}

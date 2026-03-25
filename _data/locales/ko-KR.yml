@@ -6,6 +6,7 @@ layout:
   post: 포스트
   category: 카테고리
   tag: 태그
+  roadmap: 로드맵
 
 # The tabs of sidebar
 tabs:
@@ -14,6 +15,7 @@ tabs:
   categories: 카테고리
   tags: 태그
   archives: 아카이브
+  roadmaps: 로드맵
   about: 정보
 
 # the text displayed in the search bar & search results
@@ -57,6 +59,13 @@ post:
   updated: 업데이트
   words: 단어
   pageview_measure: 조회
+  series: 시리즈
+  series_progress: ":TOTAL편 중 :CURRENT편"
+  series_previous: 이전 시리즈 글
+  series_next: 다음 시리즈 글
+  roadmaps: 로드맵
+  roadmaps_title: 이어서 읽을 로드맵
+  roadmap_stage: "단계: :STAGE"
   read_time:
     unit: 분
     prompt: 읽는 시간
@@ -82,3 +91,10 @@ df:
 categories:
   category_measure: 카테고리
   post_measure: 포스트
+
+roadmaps:
+  eyebrow: 학습 경로
+  directory_title: 로드맵으로 글을 순서대로 탐색하기
+  directory_description: 시간순 목록이나 태그 검색 대신, 주제별 읽기 경로를 따라 핵심 글을 탐색할 수 있습니다.
+  post_count: ":COUNT개 글"
+  standalone_title: 함께 읽을 글

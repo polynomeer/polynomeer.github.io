@@ -6,6 +6,7 @@ layout:
   post: Post
   category: Category
   tag: Tag
+  roadmap: Roadmap
 
 # The tabs of sidebar
 tabs:
@@ -14,6 +15,7 @@ tabs:
   categories: Categories
   tags: Tags
   archives: Archives
+  roadmaps: Roadmaps
   about: About
 
 # the text displayed in the search bar & search results
@@ -57,6 +59,13 @@ post:
   updated: Updated
   words: words
   pageview_measure: views
+  series: Series
+  series_progress: "Part :CURRENT of :TOTAL"
+  series_previous: Previous in series
+  series_next: Next in series
+  roadmaps: Roadmaps
+  roadmaps_title: Continue in a roadmap
+  roadmap_stage: "Stage: :STAGE"
   read_time:
     unit: min
     prompt: read
@@ -89,3 +98,10 @@ categories:
   post_measure:
     singular: post
     plural: posts
+
+roadmaps:
+  eyebrow: Learning path
+  directory_title: Explore roadmap-based reading paths
+  directory_description: Follow curated sequences of posts instead of browsing only by time, category, or tag.
+  post_count: ":COUNT posts"
+  standalone_title: Supporting articles

@@ -99,6 +99,9 @@ tail_includes:
     {{ content }}
   </div>
 
+  {% include series-navigation.html lang=lang %}
+  {% include roadmap-membership.html lang=lang %}
+
   <div class="post-tail-wrapper text-muted">
     <!-- categories -->
     {% if page.categories.size > 0 %}

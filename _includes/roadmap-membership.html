@@ -1,0 +1,34 @@
+{% if page.roadmaps and page.roadmaps.size > 0 %}
+  <section class="feature-panel roadmap-membership" aria-labelledby="roadmap-membership-title">
+    <div class="feature-panel-header">
+      <span class="feature-panel-label">{{ site.data.locales[include.lang].post.roadmaps }}</span>
+      <h3 id="roadmap-membership-title" class="feature-panel-title mb-1">
+        {{ site.data.locales[include.lang].post.roadmaps_title }}
+      </h3>
+      {% if page.roadmap_stage %}
+        <p class="feature-panel-copy mb-0">
+          {{
+            site.data.locales[include.lang].post.roadmap_stage
+            | replace: ':STAGE', page.roadmap_stage
+          }}
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="feature-chip-list">
+      {% for roadmap_id in page.roadmaps %}
+        {% assign roadmap = site.data.roadmaps[roadmap_id] %}
+        {% if roadmap %}
+          <a class="feature-chip" href="{{ '/roadmaps/' | append: roadmap_id | append: '/' | relative_url }}">
+            {% if roadmap.icon %}
+              <i class="{{ roadmap.icon }}"></i>
+            {% endif %}
+            <span>{{ roadmap.title }}</span>
+          </a>
+        {% else %}
+          <span class="feature-chip disabled">{{ roadmap_id }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
