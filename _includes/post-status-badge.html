@@ -1,10 +1,19 @@
 {% assign post_status = site.data.post_statuses[include.post.status] %}
 
 {% if post_status %}
-  <a class="post-status-badge" href="{{ '/statuses/' | append: include.post.status | append: '/' | relative_url }}">
-    {% if post_status.icon %}
-      <i class="{{ post_status.icon }}"></i>
-    {% endif %}
-    <span>{{ post_status.title }}</span>
-  </a>
+  {% if include.link == false %}
+    <span class="post-status-badge">
+      {% if post_status.icon %}
+        <i class="{{ post_status.icon }}"></i>
+      {% endif %}
+      <span>{{ post_status.title }}</span>
+    </span>
+  {% else %}
+    <a class="post-status-badge" href="{{ '/statuses/' | append: include.post.status | append: '/' | relative_url }}">
+      {% if post_status.icon %}
+        <i class="{{ post_status.icon }}"></i>
+      {% endif %}
+      <span>{{ post_status.title }}</span>
+    </a>
+  {% endif %}
 {% endif %}

@@ -9,10 +9,19 @@
 {% assign content_type = site.data.content_types[content_type_id] %}
 
 {% if content_type %}
-  <a class="content-type-badge" href="{{ '/types/' | append: content_type_id | append: '/' | relative_url }}">
-    {% if content_type.icon %}
-      <i class="{{ content_type.icon }}"></i>
-    {% endif %}
-    <span>{{ content_type.title }}</span>
-  </a>
+  {% if include.link == false %}
+    <span class="content-type-badge">
+      {% if content_type.icon %}
+        <i class="{{ content_type.icon }}"></i>
+      {% endif %}
+      <span>{{ content_type.title }}</span>
+    </span>
+  {% else %}
+    <a class="content-type-badge" href="{{ '/types/' | append: content_type_id | append: '/' | relative_url }}">
+      {% if content_type.icon %}
+        <i class="{{ content_type.icon }}"></i>
+      {% endif %}
+      <span>{{ content_type.title }}</span>
+    </a>
+  {% endif %}
 {% endif %}
