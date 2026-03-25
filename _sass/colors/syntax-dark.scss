@@ -1,17 +1,16 @@
 /*
- * The syntax dark mode styles (Dracula theme)
+ * The syntax dark mode styles (IntelliJ-like Dracula theme)
  */
 
- @mixin dark-syntax {
-  /* 기본 배경 및 텍스트 색상 */
-  --language-border-color: #6272a4;
+@mixin dark-syntax {
+  --language-border-color: #59617c;
   --highlight-bg-color: #282a36;
   --highlighter-rouge-color: #f8f8f2;
   --highlight-lineno-color: #6272a4;
-  --inline-code-bg: rgba(255, 255, 255, 0.08);
+  --inline-code-bg: rgba(189, 147, 249, 0.16);
   --code-color: #f8f8f2;
   --code-header-text-color: #bd93f9;
-  --code-header-muted-color: #44475a;
+  --code-header-muted-color: #343746;
   --code-header-icon-color: #ff79c6;
   --clipboard-checked-color: #50fa7b;
   --filepath-text-color: #ffb86c;
@@ -19,8 +18,6 @@
   .highlight .gp {
     color: #6272a4;
   }
-
-  /* --- Syntax highlight theme for Dracula --- */
 
   .highlight table td {
     padding: 5px;
@@ -51,25 +48,28 @@
     color: #6272a4;
   }
 
-  .highlight .cp {
-    color: #ffb86c;
-  }
-
+  .highlight .cp,
+  .highlight .kc,
+  .highlight .kt,
+  .highlight .kd,
   .highlight .nt {
     color: #ffb86c;
   }
 
   .highlight .o,
-  .highlight .ow {
-    color: #f8f8f2;
-  }
-
+  .highlight .ow,
   .highlight .p,
   .highlight .pi {
     color: #f8f8f2;
   }
 
-  .highlight .gi {
+  .highlight .gi,
+  .highlight .nc,
+  .highlight .nn,
+  .highlight .no,
+  .highlight .ss,
+  .highlight .nf,
+  .highlight .fm {
     color: #50fa7b;
   }
 
@@ -88,20 +88,9 @@
   .highlight .kn,
   .highlight .kp,
   .highlight .kr,
-  .highlight .kv {
+  .highlight .kv,
+  .highlight .sa {
     color: #ff79c6;
-  }
-
-  .highlight .kc {
-    color: #ffb86c;
-  }
-
-  .highlight .kt {
-    color: #ffb86c;
-  }
-
-  .highlight .kd {
-    color: #ffb86c;
   }
 
   .highlight .s,
@@ -116,38 +105,13 @@
     color: #f1fa8c;
   }
 
-  .highlight .sa {
-    color: #ff79c6;
-  }
-
-  .highlight .sr {
-    color: #8be9fd;
-  }
-
-  .highlight .si {
-    color: #bd93f9;
-  }
-
-  .highlight .se {
-    color: #bd93f9;
-  }
-
-  .highlight .nn {
-    color: #50fa7b;
-  }
-
-  .highlight .nc {
-    color: #50fa7b;
-  }
-
-  .highlight .no {
-    color: #50fa7b;
-  }
-
+  .highlight .sr,
   .highlight .na {
     color: #8be9fd;
   }
 
+  .highlight .si,
+  .highlight .se,
   .highlight .m,
   .highlight .mb,
   .highlight .mf,
@@ -159,20 +123,8 @@
     color: #bd93f9;
   }
 
-  .highlight .ss {
-    color: #50fa7b;
-  }
-
-  .highlight .nf {
-    color: #50fa7b;
-  }
-
-  .highlight .fm {
-    color: #50fa7b;
-  }
-
   strong,
   b {
-    color: #50fa7b;
+    color: #8be9fd;
   }
 }

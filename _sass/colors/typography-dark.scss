@@ -1,110 +1,200 @@
 /*
- * The main dark mode styles (Dracula theme)
+ * The main dark mode styles (IntelliJ-like Dracula theme)
  */
 
- @mixin dark-scheme {
+@mixin dark-scheme {
   /* Framework color */
   --main-bg: #282a36;
-  --mask-bg: #44475a;
-  --main-border-color: #6272a4;
+  --mask-bg: #3b3f51;
+  --main-border-color: #4b5268;
 
   /* Common color */
   --text-color: #f8f8f2;
-  --text-muted-color: #6272a4;
-  --text-muted-highlight-color: #bd93f9;
-  --heading-color: #ff79c6;
+  --text-muted-color: #7f86a3;
+  --text-muted-highlight-color: #c8cbdd;
+  --heading-color: #f8f8f2;
   --label-color: #8be9fd;
-  --blockquote-border-color: #ff79c6;
-  --blockquote-text-color: #6272a4;
+  --blockquote-border-color: #bd93f9;
+  --blockquote-text-color: #c0c5dd;
   --link-color: #bd93f9;
-  --link-underline-color: #bd93f9;
-  --button-bg: #ff79c6;
-  --btn-border-color: #bd93f9;
-  --btn-outline-primary: #ff79c6;
+  --link-underline-color: rgba(189, 147, 249, 0.52);
+  --button-bg: #343746;
+  --btn-border-color: #59617c;
+  --btn-outline-primary: #bd93f9;
   --btn-backtotop-color: var(--text-color);
   --btn-backtotop-border-color: #44475a;
-  --btn-box-shadow: var(--main-bg);
-  --card-header-bg: #44475a;
-  --checkbox-color: #ff79c6;
-  --checkbox-checked-color: var(--link-color);
-  --img-bg: radial-gradient(circle, #282a36 0%, #44475a 100%);
+  --btn-box-shadow: rgba(18, 19, 27, 0.45);
+  --card-header-bg: #343746;
+  --checkbox-color: #bd93f9;
+  --checkbox-checked-color: #8be9fd;
+  --img-bg: radial-gradient(circle, #343746 0%, #282a36 100%);
   --shimmer-bg: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 121, 198, 0.4) 50%,
+    rgba(189, 147, 249, 0.2) 50%,
     rgba(255, 255, 255, 0) 100%
   );
 
   /* Sidebar */
   --site-title-color: #ff79c6;
-  --site-subtitle-color: #6272a4;
-  --sidebar-bg: #282a36;
-  --sidebar-border-color: #44475a;
-  --sidebar-muted-color: #6272a4;
+  --site-subtitle-color: #7f86a3;
+  --sidebar-bg: #242631;
+  --sidebar-border-color: #3b3f51;
+  --sidebar-muted-color: #7f86a3;
   --sidebar-active-color: #f8f8f2;
-  --sidebar-hover-bg: #6272a4;
-  --sidebar-btn-bg: #44475a;
+  --sidebar-hover-bg: #343746;
+  --sidebar-btn-bg: #343746;
   --sidebar-btn-color: #bd93f9;
-  --avatar-border-color: rgba(206, 206, 206, 0.9);
+  --avatar-border-color: rgba(189, 147, 249, 0.55);
 
   /* Topbar */
-  --topbar-bg: rgba(40, 42, 54, 0.64);
+  --topbar-bg: rgba(52, 55, 70, 0.76);
   --topbar-text-color: var(--text-color);
-  --search-border-color: #6272a4;
-  --search-icon-color: #bd93f9;
-  --input-focus-border-color: #ff79c6;
+  --search-border-color: #59617c;
+  --search-icon-color: #8be9fd;
+  --input-focus-border-color: #8be9fd;
 
   /* Home page */
   --post-list-text-color: var(--text-color);
   --btn-patinator-text-color: var(--text-color);
-  --btn-paginator-hover-color: #ff79c6;
+  --btn-paginator-hover-color: #44475a;
 
   /* Posts */
-  --toc-highlight: #ff79c6;
-  --tag-hover: #6272a4;
-  --tb-odd-bg: #44475a; /* odd rows of the posts' table */
-  --tb-even-bg: #282a36; /* even rows of the posts' table */
-  --tb-border-color: var(--tb-odd-bg);
-  --footnote-target-bg: #ff79c6;
-  --btn-share-color: #ff79c6;
+  --toc-highlight: #8be9fd;
+  --tag-hover: #44475a;
+  --tb-odd-bg: #343746; /* odd rows of the posts' table */
+  --tb-even-bg: #2b2d39; /* even rows of the posts' table */
+  --tb-border-color: #454b60;
+  --footnote-target-bg: rgba(189, 147, 249, 0.28);
+  --btn-share-color: #bd93f9;
   --btn-share-hover-color: #ff79c6;
-  --card-bg: #282a36;
-  --card-hovor-bg: #6272a4;
-  --card-shadow: rgba(21, 21, 21, 0.72) 0 6px 18px 0,
-    rgba(137, 135, 135, 0.24) 0 0 0 1px;
+  --card-bg: #2b2d39;
+  --card-hovor-bg: #44475a;
+  --card-shadow: rgba(16, 18, 24, 0.42) 0 16px 36px -20px,
+    rgba(93, 101, 129, 0.2) 0 0 0 1px;
   --kbd-wrap-color: #ffb86c;
   --kbd-text-color: #f8f8f2;
   --kbd-bg-color: #44475a;
-  --prompt-text-color: rgba(216, 212, 212, 0.75);
-  --prompt-tip-bg: rgba(22, 60, 36, 0.64);
-  --prompt-tip-icon-color: rgba(15, 164, 15, 0.81);
-  --prompt-info-bg: rgba(7, 59, 104, 0.8);
-  --prompt-info-icon-color: #0075d1;
-  --prompt-warning-bg: rgba(90, 69, 3, 0.88);
-  --prompt-warning-icon-color: rgba(255, 165, 0, 0.8);
-  --prompt-danger-bg: rgba(86, 28, 8, 0.8);
+  --prompt-text-color: rgba(248, 248, 242, 0.84);
+  --prompt-tip-bg: rgba(80, 250, 123, 0.14);
+  --prompt-tip-icon-color: #50fa7b;
+  --prompt-info-bg: rgba(139, 233, 253, 0.14);
+  --prompt-info-icon-color: #8be9fd;
+  --prompt-warning-bg: rgba(255, 184, 108, 0.16);
+  --prompt-warning-icon-color: #ffb86c;
+  --prompt-danger-bg: rgba(255, 85, 85, 0.16);
   --prompt-danger-icon-color: #ff5555;
 
   /* Tags */
-  --tag-border: #6272a4;
+  --tag-border: #59617c;
   --tag-shadow: #282a36;
-  --dash-color: #ff79c6;
-  --search-tag-bg: #44475a;
+  --dash-color: #bd93f9;
+  --search-tag-bg: #3b3f51;
 
   /* Categories */
-  --categories-border: rgba(64, 66, 69, 0.5);
-  --categories-hover-bg: #6272a4;
+  --categories-border: rgba(93, 101, 129, 0.45);
+  --categories-hover-bg: #44475a;
   --categories-icon-hover-color: white;
 
   /* Archive */
   --timeline-node-bg: #f8f8f2;
-  --timeline-color: #ff79c6;
+  --timeline-color: #bd93f9;
   --timeline-year-dot-color: var(--timeline-color);
 
   color-scheme: dark;
 
   .light {
     display: none;
+  }
+
+  body {
+    background-color: var(--main-bg);
+    background-image:
+      radial-gradient(circle at top right, rgba(189, 147, 249, 0.08), transparent 28%),
+      radial-gradient(circle at top left, rgba(139, 233, 253, 0.05), transparent 24%),
+      linear-gradient(180deg, #2b2d39 0%, #282a36 100%);
+  }
+
+  #sidebar {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 16%);
+    box-shadow: 20px 0 48px rgba(10, 10, 14, 0.2);
+
+    .profile-wrapper {
+      border-bottom: 1px solid rgba(93, 101, 129, 0.28);
+      padding-bottom: 1.5rem;
+    }
+
+    .nav-link,
+    .sidebar-bottom a,
+    #mode-toggle {
+      transition:
+        background-color 0.22s ease,
+        color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s ease;
+    }
+
+    .nav-link:hover,
+    .nav-item.active .nav-link {
+      box-shadow: inset 0 0 0 1px rgba(139, 233, 253, 0.12);
+    }
+
+    .sidebar-bottom a:hover,
+    .sidebar-bottom #mode-toggle:hover {
+      box-shadow:
+        inset 0 0 0 1px rgba(189, 147, 249, 0.2),
+        0 8px 22px rgba(0, 0, 0, 0.16);
+      transform: translateY(-1px);
+    }
+  }
+
+  #topbar-wrapper {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(93, 101, 129, 0.3);
+    box-shadow: 0 8px 22px rgba(10, 10, 14, 0.14);
+  }
+
+  #topbar {
+    button i {
+      color: #9aa3c7;
+    }
+  }
+
+  search {
+    background: rgba(40, 42, 54, 0.82);
+    box-shadow: inset 0 0 0 1px rgba(139, 233, 253, 0.06);
+  }
+
+  .post-preview,
+  .categories.card,
+  .card,
+  .list-group-item {
+    border: 1px solid rgba(93, 101, 129, 0.22);
+  }
+
+  .post-preview::before {
+    background: linear-gradient(135deg, rgba(139, 233, 253, 0.1), rgba(189, 147, 249, 0.16));
+  }
+
+  .post-tag,
+  #search-hints .post-tag {
+    background-color: rgba(68, 71, 90, 0.4);
+  }
+
+  blockquote:not([class^='prompt-']) {
+    background: rgba(68, 71, 90, 0.28);
+    border-radius: 0.9rem;
+    padding: 1rem 1.2rem;
+  }
+
+  .table-wrapper > table thead {
+    border-bottom-color: rgba(93, 101, 129, 0.42);
+  }
+
+  #toc-wrapper,
+  .access > section {
+    border-left-color: rgba(93, 101, 129, 0.28);
   }
 
   /* Categories */
@@ -134,9 +224,9 @@
     background-image: linear-gradient(
       to left,
       #282a36,
-      #44475a,
-      #44475a,
-      #44475a,
+      #3b3f51,
+      #3b3f51,
+      #3b3f51,
       #282a36
     );
   }
@@ -146,15 +236,15 @@
     color-scheme: none;
   }
 
-  /* Bootstrap 버튼 재정의 */
   .btn-outline-primary {
     color: var(--btn-outline-primary);
     border-color: var(--btn-outline-primary);
+    background-color: rgba(189, 147, 249, 0.08);
 
     &:hover {
       background-color: var(--btn-outline-primary);
       border-color: var(--btn-outline-primary);
-      color: #fff; /* 혹은 원하는 텍스트 색상 */
+      color: #282a36;
     }
   }
 } /* dark-scheme */
