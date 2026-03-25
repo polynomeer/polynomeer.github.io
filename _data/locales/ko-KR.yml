@@ -68,6 +68,9 @@ post:
   roadmaps: 로드맵
   roadmaps_title: 이어서 읽을 로드맵
   roadmap_stage: "단계: :STAGE"
+  recommendation_series: 같은 시리즈
+  recommendation_roadmap: 같은 로드맵
+  recommendation_topic: 같은 토픽
   read_time:
     unit: 분
     prompt: 읽는 시간

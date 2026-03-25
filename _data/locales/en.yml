@@ -68,6 +68,9 @@ post:
   roadmaps: Roadmaps
   roadmaps_title: Continue in a roadmap
   roadmap_stage: "Stage: :STAGE"
+  recommendation_series: Same series
+  recommendation_roadmap: Same roadmap
+  recommendation_topic: Same topic
   read_time:
     unit: min
     prompt: read

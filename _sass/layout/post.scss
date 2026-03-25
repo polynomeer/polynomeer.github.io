@@ -497,6 +497,25 @@ header {
   }
 }
 
+.recommendation-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.recommendation-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.18);
+  background: rgba(68, 71, 90, 0.2);
+  color: var(--text-muted-color);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 @media (hover: hover) {
   .post-navigation {
     .btn,
