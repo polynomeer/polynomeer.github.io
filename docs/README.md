@@ -23,6 +23,7 @@ Feature-level design and operational modeling:
 - [`features/home-curation-design.md`](./features/home-curation-design.md)
 - [`features/capability-map-design.md`](./features/capability-map-design.md)
 - [`features/content-type-separation-design.md`](./features/content-type-separation-design.md)
+- [`features/archives-enhancement-design.md`](./features/archives-enhancement-design.md)
 - [`features/fixed-profile-links-design.md`](./features/fixed-profile-links-design.md)
 - [`features/learning-evidence-design.md`](./features/learning-evidence-design.md)
 - [`features/post-status-design.md`](./features/post-status-design.md)

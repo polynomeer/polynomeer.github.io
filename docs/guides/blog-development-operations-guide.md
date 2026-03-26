@@ -18,6 +18,7 @@ It now includes layered discovery and curation features:
 6. content type separation
 7. post status metadata
 8. representative posts
+9. archive enhancement
 10. capability map
 11. practical validation badges
 12. fixed profile links
@@ -258,6 +259,26 @@ Main files:
 
 - `docs/features/representative-posts-design.md`
 - `_data/representative_posts.yml`
+
+### 9. Archive Enhancement
+
+Purpose:
+
+- Make the archive page easier to scan and more useful as a discovery page.
+
+Main files:
+
+- `docs/features/archives-enhancement-design.md`
+- `_layouts/archives.html`
+- `_sass/layout/archives.scss`
+- `_includes/content-type-badge.html`
+- `_includes/post-status-badge.html`
+
+How to operate:
+
+- Keep yearly grouping derived from `site.posts`.
+- Reuse existing content type and status metadata instead of introducing archive-only post fields.
+- If the archive page becomes too dense, prefer improving summaries and badges before adding new navigation layers.
 - `_includes/representative-posts.html`
 - `_layouts/default.html`
 - `_includes/recruit-mode.html`
