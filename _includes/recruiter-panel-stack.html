@@ -1,10 +1,7 @@
 {% assign panel = site.data.recruiter_panel %}
 
 {% if panel and panel.enabled %}
-  {% include recruiter-panel.html lang=include.lang %}
   {% include representative-posts.html lang=include.lang surface='panel' variant='panel' limit=4 %}
-  {% include core-strengths-panel.html lang=include.lang %}
-  {% include reading-path-panel.html lang=include.lang %}
   {% include proof-signals-panel.html lang=include.lang %}
   {% include featured-focus-panel.html lang=include.lang %}
 {% endif %}
