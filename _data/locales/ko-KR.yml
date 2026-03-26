@@ -160,6 +160,8 @@ archives:
   total_posts: 전체 글
   active_years: 연도 수
   latest_year: 최신 연도
+  highlights_eyebrow: 추천 아카이브
+  highlights_title: 먼저 보면 좋은 대표 아카이브 글
   filter_type: 타입 필터
   filter_status: 상태 필터
   filter_all: 전체

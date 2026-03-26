@@ -160,6 +160,8 @@ archives:
   total_posts: Total posts
   active_years: Active years
   latest_year: Latest year
+  highlights_eyebrow: Archive picks
+  highlights_title: Start with representative archive posts
   filter_type: Filter by type
   filter_status: Filter by status
   filter_all: All

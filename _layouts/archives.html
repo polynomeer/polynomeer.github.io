@@ -11,6 +11,15 @@ layout: page
 {% assign yearly_posts = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
 {% assign active_years = yearly_posts | size %}
 {% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
+{% assign archive_highlights = '' | split: '' %}
+
+{% if site.data.representative_posts and site.data.representative_posts.items %}
+  {% for item in site.data.representative_posts.items %}
+    {% if item.path contains '_posts/archive/' %}
+      {% assign archive_highlights = archive_highlights | push: item %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 <div id="archives" class="pl-xl-3">
   <section class="archives-hero">
@@ -69,6 +78,40 @@ layout: page
       </div>
     </div>
   </section>
+
+  {% if archive_highlights.size > 0 %}
+    <section class="archives-highlights">
+      <div class="archives-highlights-header">
+        <p class="archives-eyebrow" data-i18n="archives.highlights_eyebrow">{{ site.data.locales[lang].archives.highlights_eyebrow }}</p>
+        <h3 data-i18n="archives.highlights_title">{{ site.data.locales[lang].archives.highlights_title }}</h3>
+      </div>
+
+      <div class="archives-highlight-grid">
+        {% for item in archive_highlights limit: 3 %}
+          {% assign matched_post = site.posts | where: 'path', item.path | first %}
+          {% if matched_post %}
+            <article class="archives-highlight-card">
+              <a href="{{ matched_post.url | relative_url }}" class="archives-highlight-link">
+                <div class="archives-highlight-meta">
+                  {% include content-type-badge.html post=matched_post link=false %}
+                  {% include post-status-badge.html post=matched_post link=false %}
+                </div>
+                <h4>{{ matched_post.title }}</h4>
+                {% if item.summary %}
+                  <p
+                    data-l10n-ko="{{ item.summary['ko-KR'] | default: item.summary | escape }}"
+                    data-l10n-en="{{ item.summary.en | default: item.summary | escape }}"
+                  >
+                    {% include localized-value.html value=item.summary lang=lang %}
+                  </p>
+                {% endif %}
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 
   {% for year_group in yearly_posts %}
     {% assign cur_year = year_group.name %}
