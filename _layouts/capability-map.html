@@ -1,0 +1,89 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign capability_map = site.data.capability_map %}
+
+{% if capability_map and capability_map.enabled and capability_map.items and capability_map.items.size > 0 %}
+  <section class="capability-map-directory">
+    <div class="capability-map-hero">
+      <p class="capability-map-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
+      <h2 data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</h2>
+      <p class="capability-map-summary" data-i18n="capability_map.directory_description">{{ site.data.locales[lang].capability_map.directory_description }}</p>
+    </div>
+
+    <div class="capability-map-grid">
+      {% for capability in capability_map.items %}
+        <article class="capability-map-card">
+          <div class="capability-map-card-body">
+            <div class="capability-map-card-header">
+              <div class="capability-map-card-title">
+                {% if capability.icon %}
+                  <i class="{{ capability.icon }}"></i>
+                {% endif %}
+                <h3
+                  data-l10n-ko="{{ capability.title['ko-KR'] | default: capability.title | escape }}"
+                  data-l10n-en="{{ capability.title.en | default: capability.title | escape }}"
+                >
+                  {% include localized-value.html value=capability.title lang=lang %}
+                </h3>
+              </div>
+            </div>
+
+            {% if capability.summary %}
+              <p
+                class="capability-map-card-summary"
+                data-l10n-ko="{{ capability.summary['ko-KR'] | default: capability.summary | escape }}"
+                data-l10n-en="{{ capability.summary.en | default: capability.summary | escape }}"
+              >
+                {% include localized-value.html value=capability.summary lang=lang %}
+              </p>
+            {% endif %}
+
+            <div class="capability-map-links">
+              {% if capability.topic_url %}
+                <a class="feature-chip" href="{{ capability.topic_url | relative_url }}">
+                  <i class="fas fa-compass"></i>
+                  <span data-i18n="capability_map.related_topic">{{ site.data.locales[lang].capability_map.related_topic }}</span>
+                </a>
+              {% endif %}
+
+              {% if capability.roadmap_url %}
+                <a class="feature-chip" href="{{ capability.roadmap_url | relative_url }}">
+                  <i class="fas fa-map"></i>
+                  <span data-i18n="capability_map.related_path">{{ site.data.locales[lang].capability_map.related_path }}</span>
+                </a>
+              {% endif %}
+            </div>
+
+            {% assign capability_posts = capability.representative_posts | default: empty %}
+            {% if capability_posts and capability_posts.size > 0 %}
+              <div class="capability-map-evidence">
+                <h4 data-i18n="capability_map.evidence">{{ site.data.locales[lang].capability_map.evidence }}</h4>
+                <ul class="capability-map-post-list">
+                  {% for post_path in capability_posts %}
+                    {% assign matched_post = nil %}
+                    {% for post in site.posts %}
+                      {% if post.path == post_path %}
+                        {% assign matched_post = post %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if matched_post %}
+                      <li>
+                        <a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

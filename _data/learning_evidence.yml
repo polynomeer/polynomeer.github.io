@@ -1,0 +1,116 @@
+enabled: true
+
+groups:
+  - id: backend-and-web
+    title:
+      ko-KR: 백엔드와 웹 기초
+      en: Backend and Web Foundations
+    description:
+      ko-KR: 프로토콜 이해, 백엔드 기본기, 실용적인 웹 사고를 강화한 강의와 책입니다.
+      en: Courses and books that strengthened protocol understanding, backend fundamentals, and practical web reasoning.
+    items:
+      - id: inflearn-http-basics
+        type: course
+        title: 모든 개발자를 위한 HTTP 웹 기본 지식
+        provider: Inflearn
+        status: completed
+        period: "2024"
+        summary:
+          ko-KR: HTTP 의미 체계, 요청-응답 흐름, 백엔드 웹 통신의 기본 사고 모델을 강화했습니다.
+          en: Strengthened HTTP semantics, request-response flow understanding, and the mental model behind backend web communication.
+        source_posts:
+          - _posts/lecture/http/모든_개발자를_위한_HTTP_웹_기본_지식.md
+        related_posts:
+          - _posts/archive/web/2026-02-13-presigned-url.md
+          - _posts/archive/web/2026-02-25-netty.md
+
+      - id: spring-in-action
+        type: book
+        title: Spring in Action
+        provider: Manning
+        status: completed
+        period: "2024-2025"
+        summary:
+          ko-KR: Spring 애플리케이션 구조와 실용적인 백엔드 개발 패턴에 대한 이해를 깊게 했습니다.
+          en: Helped deepen understanding of Spring application structure and practical backend development patterns.
+        source_posts:
+          - _posts/book/spring-in-action/chap1.md
+          - _posts/book/spring-in-action/chap2.md
+          - _posts/book/spring-in-action/chap3.md
+        related_posts:
+          - _posts/archive/spring/2025-06-30-spring-lifecycle.md
+          - _posts/archive/spring/2025-08-07-spring-boot-application-annotation.md
+
+  - id: architecture-and-operations
+    title:
+      ko-KR: 아키텍처와 운영적 사고
+      en: Architecture and Operational Thinking
+    description:
+      ko-KR: 아키텍처 트레이드오프 판단과 트러블슈팅 중심 사고를 형성한 학습 입력입니다.
+      en: Learning inputs that shaped architectural tradeoff reasoning and troubleshooting-oriented thinking.
+    items:
+      - id: fundamentals-software-architecture
+        type: book
+        title: Fundamentals of Software Architecture
+        provider: O'Reilly
+        status: in_progress
+        period: "2025"
+        summary:
+          ko-KR: 아키텍처 사고, 트레이드오프 분석, 비즈니스 맥락과 기술 의사결정의 연결을 강화했습니다.
+          en: Reinforced architectural thinking, tradeoff analysis, and the connection between business context and technical decisions.
+        source_posts:
+          - _posts/book/fundamentals-of-software-architecture/2025-05-13-fundamentals-of-software-architecture-chap2.md
+        related_posts:
+          - _posts/archive/common/2026-03-20-architectural-decisions.md
+
+      - id: troubleshooting-java
+        type: book
+        title: Troubleshooting Java
+        provider: Unknown
+        status: in_progress
+        period: "2025"
+        summary:
+          ko-KR: 프로파일링, 장애 분석, 런타임 동작 이해를 중심으로 더 체계적인 디버깅 사고를 만들었습니다.
+          en: Built a more systematic debugging mindset around profiling, failure analysis, and understanding runtime behavior.
+        source_posts:
+          - _posts/book/troubleshooting-java/chap1.md
+        related_posts:
+          - _posts/archive/web/2026-02-25-netty.md
+          - _posts/archive/programming/2025-09-03-unit-test-integration-test.md
+
+  - id: platform-and-career
+    title:
+      ko-KR: 플랫폼과 커리어 확장
+      en: Platform and Career Development
+    description:
+      ko-KR: 플랫폼 확장, 포트폴리오 작업, 채용 준비와 연결된 강의와 작성 결과입니다.
+      en: Courses and written outputs related to platform growth, portfolio work, and hiring readiness.
+    items:
+      - id: kubernetes-backend-course
+        type: course
+        title: Kubernetes for Backend Developer
+        provider: FastCampus
+        status: in_progress
+        period: "2025"
+        summary:
+          ko-KR: 애플리케이션 중심 백엔드를 넘어 인프라와 플랫폼 영역으로 시야를 넓혔습니다.
+          en: Expanded infrastructure and platform exposure beyond application-only backend work.
+        source_posts:
+          - _posts/lecture/kubernetes-for-backend-developer/ch1.md
+        related_posts:
+          - _posts/recruit/Interview/2025-08-05-system-design-interview-preparation.md
+
+      - id: backend-pass-portfolio
+        type: course
+        title: Backend Pass Portfolio
+        provider: Lecture
+        status: completed
+        period: "2025"
+        summary:
+          ko-KR: 백엔드 포지셔닝, 채용 준비도, 증거 제시에 대한 포트폴리오 사고를 구조화했습니다.
+          en: Structured portfolio thinking around backend positioning, hiring readiness, and evidence presentation.
+        source_posts:
+          - _posts/lecture/backend-pass-portfolio/2025-05-21-backend-pass-portfolio-index.md
+        related_posts:
+          - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
+          - _posts/recruit/Interview/2025-08-05-real-interview-questions.md

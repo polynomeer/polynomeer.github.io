@@ -1,0 +1,123 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign learning_evidence = site.data.learning_evidence %}
+
+{% if learning_evidence and learning_evidence.enabled and learning_evidence.groups and learning_evidence.groups.size > 0 %}
+  <section class="learning-evidence-directory">
+    <div class="learning-evidence-hero">
+      <p class="learning-evidence-eyebrow" data-i18n="learning_evidence.eyebrow">{{ site.data.locales[lang].learning_evidence.eyebrow }}</p>
+      <h2 data-i18n="learning_evidence.directory_title">{{ site.data.locales[lang].learning_evidence.directory_title }}</h2>
+      <p class="learning-evidence-summary" data-i18n="learning_evidence.directory_description">{{ site.data.locales[lang].learning_evidence.directory_description }}</p>
+    </div>
+
+    {% for group in learning_evidence.groups %}
+      <section class="learning-evidence-group">
+        <div class="learning-evidence-group-header">
+          <h3
+            data-l10n-ko="{{ group.title['ko-KR'] | default: group.title | escape }}"
+            data-l10n-en="{{ group.title.en | default: group.title | escape }}"
+          >
+            {% include localized-value.html value=group.title lang=lang %}
+          </h3>
+          {% if group.description %}
+            <p
+              data-l10n-ko="{{ group.description['ko-KR'] | default: group.description | escape }}"
+              data-l10n-en="{{ group.description.en | default: group.description | escape }}"
+            >
+              {% include localized-value.html value=group.description lang=lang %}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="learning-evidence-grid">
+          {% for item in group.items %}
+            <article class="learning-evidence-card">
+              <div class="learning-evidence-card-header">
+                <div class="learning-evidence-badges">
+                  <span class="learning-evidence-type-badge" data-i18n="learning_evidence_meta.{{ item.type }}">
+                    {{ site.data.locales[lang].learning_evidence_meta[item.type] | default: item.type }}
+                  </span>
+                  {% if item.status %}
+                    <span class="learning-evidence-status-badge" data-i18n="learning_evidence_meta.{{ item.status }}">
+                      {{ site.data.locales[lang].learning_evidence_meta[item.status] | default: item.status }}
+                    </span>
+                  {% endif %}
+                </div>
+                {% if item.period %}
+                  <span class="learning-evidence-period">{{ item.period }}</span>
+                {% endif %}
+              </div>
+
+              <h4
+                data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
+                data-l10n-en="{{ item.title.en | default: item.title | escape }}"
+              >
+                {% include localized-value.html value=item.title lang=lang %}
+              </h4>
+
+              {% if item.provider %}
+                <p class="learning-evidence-provider">{{ item.provider }}</p>
+              {% endif %}
+
+              {% if item.summary %}
+                <p
+                  class="learning-evidence-card-summary"
+                  data-l10n-ko="{{ item.summary['ko-KR'] | default: item.summary | escape }}"
+                  data-l10n-en="{{ item.summary.en | default: item.summary | escape }}"
+                >
+                  {% include localized-value.html value=item.summary lang=lang %}
+                </p>
+              {% endif %}
+
+              {% assign source_posts = item.source_posts | default: empty %}
+              {% if source_posts and source_posts.size > 0 %}
+                <div class="learning-evidence-links">
+                  <h5 data-i18n="learning_evidence.source_posts">{{ site.data.locales[lang].learning_evidence.source_posts }}</h5>
+                  <ul>
+                    {% for post_path in source_posts %}
+                      {% assign matched_post = nil %}
+                      {% for post in site.posts %}
+                        {% if post.path == post_path %}
+                          {% assign matched_post = post %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if matched_post %}
+                        <li><a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+
+              {% assign related_posts = item.related_posts | default: empty %}
+              {% if related_posts and related_posts.size > 0 %}
+                <div class="learning-evidence-links">
+                  <h5 data-i18n="learning_evidence.related_posts">{{ site.data.locales[lang].learning_evidence.related_posts }}</h5>
+                  <ul>
+                    {% for post_path in related_posts %}
+                      {% assign matched_post = nil %}
+                      {% for post in site.posts %}
+                        {% if post.path == post_path %}
+                          {% assign matched_post = post %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if matched_post %}
+                        <li><a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  </section>
+{% endif %}

@@ -1,0 +1,62 @@
+enabled: true
+
+items:
+  - id: database-internals
+    title:
+      ko-KR: 데이터베이스 내부 동작
+      en: Database Internals
+    summary:
+      ko-KR: 트랜잭션, MVCC, 락, 리플리케이션을 표면적 사용법이 아니라 시스템 수준의 사고로 설명합니다.
+      en: Explains transactions, MVCC, locking, and replication in a way that shows systems-level reasoning rather than surface usage.
+    icon: fas fa-database
+    topic_url: /topics/database-internals/
+    roadmap_url: /roadmaps/backend-core/
+    representative_posts:
+      - _posts/archive/database/2025-07-29-mvcc.md
+      - _posts/archive/database/2025-07-29-gap-lock.md
+      - _posts/archive/database/2025-08-17-db-replication.md
+
+  - id: spring-backend
+    title:
+      ko-KR: Spring 백엔드
+      en: Spring Backend
+    summary:
+      ko-KR: Spring과 Spring Boot에서 런타임 라이프사이클, 프레임워크 경계, 실제 백엔드 애플리케이션 동작을 다룹니다.
+      en: Covers runtime lifecycle, framework boundaries, and practical backend application behavior in Spring and Spring Boot.
+    icon: fas fa-leaf
+    topic_url: /topics/spring-backend/
+    roadmap_url: /roadmaps/backend-core/
+    representative_posts:
+      - _posts/archive/spring/2025-06-30-spring-lifecycle.md
+      - _posts/archive/spring/2025-08-07-spring-boot-application-annotation.md
+      - _posts/archive/spring/2025-05-13-transactional-event-listener.md
+
+  - id: architecture-judgment
+    title:
+      ko-KR: 아키텍처와 의사결정
+      en: Architecture and Decision Making
+    summary:
+      ko-KR: 트레이드오프를 명시적으로 드러내고, 설계 선택이 운영 결과와 어떻게 연결되는지 보여줍니다.
+      en: Makes tradeoffs explicit, shows system-level reasoning, and connects design choices to operational consequences.
+    icon: fas fa-sitemap
+    topic_url: /recruit/
+    roadmap_url: /paths/backend-foundations-path/
+    representative_posts:
+      - _posts/archive/common/2026-03-20-architectural-decisions.md
+      - _posts/archive/web/2026-02-25-netty.md
+      - _posts/archive/web/2026-02-13-presigned-url.md
+
+  - id: hiring-readiness
+    title:
+      ko-KR: 채용 및 면접 준비도
+      en: Hiring and Interview Readiness
+    summary:
+      ko-KR: 면접 준비, 질문 분석, 채용 담당자용 자료를 짧은 증거 흐름으로 정리합니다.
+      en: Organizes interview preparation, question analysis, and recruiter-facing material into a compact evidence trail.
+    icon: fas fa-user-tie
+    topic_url: /recruit/
+    roadmap_url: /types/recruit/
+    representative_posts:
+      - _posts/recruit/Interview/2025-08-05-real-interview-questions.md
+      - _posts/recruit/Interview/2025-08-05-system-design-interview-preparation.md
+      - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
