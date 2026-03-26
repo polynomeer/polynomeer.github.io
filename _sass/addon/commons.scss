@@ -1139,6 +1139,12 @@ $btn-mb: 0.5rem;
 
     .sidebar-controls-row {
       margin-bottom: 0.9rem;
+      align-items: stretch;
+      width: 100%;
+
+      .lang-switcher {
+        width: 100%;
+      }
     }
 
     .sidebar-contact-row {

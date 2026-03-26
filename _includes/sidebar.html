@@ -54,10 +54,20 @@
         <div class="lang-switcher theme-toggle" aria-label="{{ site.data.locales[include.lang].theme.label }}">
           <span class="lang-switcher-thumb" aria-hidden="true"></span>
           <button type="button" class="lang-switcher-btn" data-theme-option="dark">
-            <span data-i18n="theme.dark">{{ site.data.locales[include.lang].theme.dark }}</span>
+            <span
+              data-l10n-ko="{{ site.data.locales['ko-KR'].theme.dark | escape }}"
+              data-l10n-en="{{ site.data.locales.en.theme.dark | escape }}"
+            >
+              {{ site.data.locales[include.lang].theme.dark }}
+            </span>
           </button>
           <button type="button" class="lang-switcher-btn" data-theme-option="light">
-            <span data-i18n="theme.light">{{ site.data.locales[include.lang].theme.light }}</span>
+            <span
+              data-l10n-ko="{{ site.data.locales['ko-KR'].theme.light | escape }}"
+              data-l10n-en="{{ site.data.locales.en.theme.light | escape }}"
+            >
+              {{ site.data.locales[include.lang].theme.light }}
+            </span>
           </button>
         </div>
       {% endunless %}
