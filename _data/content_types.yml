@@ -10,8 +10,38 @@ archive:
   icon: fas fa-box-archive
   order: 2
 
-article:
-  title: Article
-  description: Long-form content such as lectures, books, conference notes, references, and interview materials.
-  icon: fas fa-newspaper
+book:
+  title: Book
+  description: Notes, summaries, and takeaways collected while reading technical books.
+  icon: fas fa-book
   order: 3
+
+conference:
+  title: Conference
+  description: Session notes, event takeaways, and conference-related technical reflections.
+  icon: fas fa-microphone-lines
+  order: 4
+
+lecture:
+  title: Lecture
+  description: Course, bootcamp, and structured lecture notes organized for later review.
+  icon: fas fa-chalkboard-teacher
+  order: 5
+
+problemsolving:
+  title: Problem Solving
+  description: Coding test, algorithm, and problem-solving practice writeups.
+  icon: fas fa-puzzle-piece
+  order: 6
+
+recruit:
+  title: Recruit
+  description: Interview preparation, hiring notes, and recruiting-related materials.
+  icon: fas fa-user-tie
+  order: 7
+
+reference:
+  title: Reference
+  description: Quick lookup notes, keywords, cheat sheets, and development references.
+  icon: fas fa-bookmark
+  order: 8

@@ -1,10 +1,5 @@
-{% assign content_type_id = 'article' %}
-
-{% if include.post.path contains '_posts/TIL/' %}
-  {% assign content_type_id = 'til' %}
-{% elsif include.post.path contains '_posts/archive/' %}
-  {% assign content_type_id = 'archive' %}
-{% endif %}
+{% capture content_type_id %}{% include content-type-id.html post=include.post %}{% endcapture %}
+{% assign content_type_id = content_type_id | strip %}
 
 {% assign content_type = site.data.content_types[content_type_id] %}
 

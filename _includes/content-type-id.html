@@ -1,0 +1,4 @@
+{% assign path_parts = include.post.path | split: '/' %}
+{% if path_parts.size > 2 %}
+  {{ path_parts[1] | downcase }}
+{% endif %}

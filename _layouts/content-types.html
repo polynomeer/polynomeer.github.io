@@ -18,18 +18,10 @@ layout: page
       {% if content_type %}
         {% assign post_count = 0 %}
         {% for post in site.posts %}
-          {% assign matches_type = false %}
-          {% if type_page.content_type_id == 'til' and post.path contains '_posts/TIL/' %}
-            {% assign matches_type = true %}
-          {% elsif type_page.content_type_id == 'archive' and post.path contains '_posts/archive/' %}
-            {% assign matches_type = true %}
-          {% elsif type_page.content_type_id == 'article' %}
-            {% unless post.path contains '_posts/TIL/' or post.path contains '_posts/archive/' %}
-              {% assign matches_type = true %}
-            {% endunless %}
-          {% endif %}
+          {% capture post_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+          {% assign post_type_id = post_type_id | strip %}
 
-          {% if matches_type %}
+          {% if post_type_id == type_page.content_type_id %}
             {% assign post_count = post_count | plus: 1 %}
           {% endif %}
         {% endfor %}
