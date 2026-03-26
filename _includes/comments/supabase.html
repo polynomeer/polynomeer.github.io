@@ -52,7 +52,10 @@
     ></textarea>
     <div class="comment-form-footer">
       <span class="comment-form-hint text-muted"></span>
-      <button type="submit" class="comment-submit-button btn btn-primary btn-sm" disabled>
+      <button type="button" class="comment-inline-login-button btn btn-outline-primary btn-sm">
+        <i class="fab fa-github me-1"></i>{{ site.data.locales[lang].comments.signin }}
+      </button>
+      <button type="submit" class="comment-submit-button btn btn-primary btn-sm d-none" disabled>
         {{ site.data.locales[lang].comments.submit }}
       </button>
     </div>
@@ -85,6 +88,7 @@
     const form = root.querySelector('.comment-form');
     const textarea = root.querySelector('.comment-body-field');
     const submitButton = root.querySelector('.comment-submit-button');
+    const inlineLoginButton = root.querySelector('.comment-inline-login-button');
     const formHint = root.querySelector('.comment-form-hint');
     const listNode = root.querySelector('.comment-list');
 
@@ -167,6 +171,8 @@
         : '';
       loginButton.classList.toggle('d-none', signedIn);
       logoutButton.classList.toggle('d-none', !signedIn);
+      inlineLoginButton.classList.toggle('d-none', signedIn);
+      submitButton.classList.toggle('d-none', !signedIn);
     };
 
     const renderComments = () => {
@@ -237,6 +243,19 @@
     };
 
     loginButton.addEventListener('click', async () => {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: config.authProvider,
+        options: {
+          redirectTo: window.location.href
+        }
+      });
+
+      if (error) {
+        console.error('comment auth error', error);
+      }
+    });
+
+    inlineLoginButton.addEventListener('click', async () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: config.authProvider,
         options: {
