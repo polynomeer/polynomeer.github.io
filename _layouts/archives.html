@@ -117,7 +117,10 @@ layout: page
     {% assign cur_year = year_group.name %}
     {% assign year_posts = year_group.items %}
     {% assign year_post_count = year_posts | size %}
-    {% assign is_open = cur_year == latest_year %}
+    {% assign is_open = false %}
+    {% if cur_year == latest_year %}
+      {% assign is_open = true %}
+    {% endif %}
 
     <section class="archive-year-group{% if is_open %} is-open{% endif %}" data-year="{{ cur_year }}">
       <button
