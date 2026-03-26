@@ -61,7 +61,6 @@
     </div>
   </form>
 
-  <div class="comment-status text-muted" aria-live="polite"></div>
   <ol class="comment-list list-unstyled mb-0"></ol>
 </section>
 
@@ -90,7 +89,6 @@
     const textarea = root.querySelector('.comment-body-field');
     const submitButton = root.querySelector('.comment-submit-button');
     const formHint = root.querySelector('.comment-form-hint');
-    const statusNode = root.querySelector('.comment-status');
     const listNode = root.querySelector('.comment-list');
 
     const texts = {
@@ -160,10 +158,6 @@
     let currentUser = null;
     let comments = [];
     let pendingDeleteId = null;
-
-    const setStatus = (message = '') => {
-      statusNode.textContent = message;
-    };
 
     const setComposerState = () => {
       const signedIn = Boolean(currentUser);
@@ -246,8 +240,6 @@
     };
 
     loginButton.addEventListener('click', async () => {
-      setStatus('');
-
       const { error } = await supabase.auth.signInWithOAuth({
         provider: config.authProvider,
         options: {
@@ -257,17 +249,14 @@
 
       if (error) {
         console.error('comment auth error', error);
-        setStatus(texts.authError);
       }
     });
 
     logoutButton.addEventListener('click', async () => {
-      setStatus('');
       const { error } = await supabase.auth.signOut();
 
       if (error) {
         console.error('comment signout error', error);
-        setStatus(texts.authError);
         return;
       }
 
@@ -280,7 +269,6 @@
       event.preventDefault();
 
       if (!currentUser) {
-        setStatus(texts.signinPrompt);
         return;
       }
 
@@ -293,7 +281,6 @@
 
       submitButton.disabled = true;
       submitButton.textContent = texts.submitting;
-      setStatus('');
 
       const userName =
         currentUser.user_metadata?.user_name ||
@@ -312,7 +299,6 @@
 
       if (error) {
         console.error('comment submit error', error);
-        setStatus(texts.submitError);
       } else {
         textarea.value = '';
         await loadComments();
@@ -337,7 +323,6 @@
 
       pendingDeleteId = Number(commentId);
       renderComments();
-      setStatus('');
 
       const { error } = await supabase.from(config.table).delete().eq('id', commentId);
 
@@ -345,7 +330,6 @@
 
       if (error) {
         console.error('comment delete error', error);
-        setStatus(texts.deleteError);
       } else {
         await loadComments();
       }
@@ -360,8 +344,8 @@
     Promise.all([syncUser(), loadComments()]).catch((error) => {
       console.error('comment init error', error);
       titleNode.textContent = texts.title;
-      setStatus(texts.loadError);
-      listNode.innerHTML = `<li class="comment-empty text-muted">${escapeHtml(texts.loadError)}</li>`;
+      countNode.textContent = '';
+      listNode.innerHTML = '';
     });
   }
 </script>
