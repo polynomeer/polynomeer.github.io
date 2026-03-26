@@ -160,6 +160,10 @@ archives:
   total_posts: 전체 글
   active_years: 연도 수
   latest_year: 최신 연도
+  filter_type: 타입 필터
+  filter_status: 상태 필터
+  filter_all: 전체
+  empty: 선택한 조건과 일치하는 아카이브 글이 없습니다.
   year_post_count: ":COUNT개 글"
 
 # categories page

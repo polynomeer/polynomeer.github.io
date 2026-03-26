@@ -10,6 +10,7 @@ layout: page
 {% assign latest_year = site.posts.first.date | date: '%Y' %}
 {% assign yearly_posts = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
 {% assign active_years = yearly_posts | size %}
+{% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
 
 <div id="archives" class="pl-xl-3">
   <section class="archives-hero">
@@ -31,9 +32,43 @@ layout: page
         <strong>{{ latest_year }}</strong>
       </article>
     </div>
-  </section>
 
-  {% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
+    <div class="archives-filters">
+      <div class="archives-filter-group">
+        <span class="archives-filter-label" data-i18n="archives.filter_type">{{ site.data.locales[lang].archives.filter_type }}</span>
+        <div class="archives-filter-options" data-filter-group="type">
+          <button type="button" class="archives-filter-chip active" data-filter-group="type" data-filter-value="all" data-i18n="archives.filter_all">
+            {{ site.data.locales[lang].archives.filter_all }}
+          </button>
+          {% for type_entry in sorted_content_types %}
+            {% assign content_type_id = type_entry[0] %}
+            {% assign content_type = type_entry[1] %}
+            {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+            <button type="button" class="archives-filter-chip" data-filter-group="type" data-filter-value="{{ content_type_id }}">
+              {{ content_type_label }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="archives-filter-group">
+        <span class="archives-filter-label" data-i18n="archives.filter_status">{{ site.data.locales[lang].archives.filter_status }}</span>
+        <div class="archives-filter-options" data-filter-group="status">
+          <button type="button" class="archives-filter-chip active" data-filter-group="status" data-filter-value="all" data-i18n="archives.filter_all">
+            {{ site.data.locales[lang].archives.filter_all }}
+          </button>
+          {% assign sorted_post_statuses = site.data.post_statuses | sort: 'last.order' %}
+          {% for status_entry in sorted_post_statuses %}
+            {% assign status_id = status_entry[0] %}
+            {% assign post_status = status_entry[1] %}
+            <button type="button" class="archives-filter-chip" data-filter-group="status" data-filter-value="{{ status_id }}">
+              {{ post_status.title }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
 
   {% for year_group in yearly_posts %}
     {% assign cur_year = year_group.name %}
@@ -96,7 +131,13 @@ layout: page
 
       <ul id="archive-year-{{ cur_year }}" class="list-unstyled"{% unless is_open %} hidden{% endunless %}>
         {% for post in year_posts %}
-          <li class="archive-post-item">
+          {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+          {% assign post_content_type_id = post_content_type_id | strip %}
+          <li
+            class="archive-post-item"
+            data-content-type="{{ post_content_type_id }}"
+            data-post-status="{{ post.status | default: 'none' }}"
+          >
             {% assign ts = post.date | date: '%s' %}
             <div class="archive-post-date">
               <span class="date day" data-ts="{{ ts }}" data-df="DD">{{ post.date | date: '%d' }}</span>
@@ -117,10 +158,53 @@ layout: page
       </ul>
     </section>
   {% endfor %}
+
+  <p
+    class="archives-empty-state"
+    data-i18n="archives.empty"
+    hidden
+  >
+    {{ site.data.locales[lang].archives.empty }}
+  </p>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const archiveRoot = document.getElementById('archives');
+    const emptyState = archiveRoot?.querySelector('.archives-empty-state');
+    const activeFilters = {
+      type: 'all',
+      status: 'all'
+    };
+
+    const applyFilters = () => {
+      if (!archiveRoot) return;
+
+      let visibleCount = 0;
+
+      archiveRoot.querySelectorAll('.archive-year-group').forEach((group) => {
+        let visibleInGroup = 0;
+
+        group.querySelectorAll('.archive-post-item').forEach((item) => {
+          const matchesType = activeFilters.type === 'all' || item.dataset.contentType === activeFilters.type;
+          const matchesStatus = activeFilters.status === 'all' || item.dataset.postStatus === activeFilters.status;
+          const isVisible = matchesType && matchesStatus;
+          item.hidden = !isVisible;
+
+          if (isVisible) {
+            visibleCount += 1;
+            visibleInGroup += 1;
+          }
+        });
+
+        group.hidden = visibleInGroup === 0;
+      });
+
+      if (emptyState) {
+        emptyState.hidden = visibleCount > 0;
+      }
+    };
+
     document.querySelectorAll('#archives .archive-year-toggle').forEach((toggle) => {
       toggle.addEventListener('click', () => {
         const group = toggle.closest('.archive-year-group');
@@ -133,5 +217,28 @@ layout: page
         group.classList.toggle('is-open', !expanded);
       });
     });
+
+    document.querySelectorAll('#archives .archives-filter-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const groupName = chip.dataset.filterGroup;
+        const value = chip.dataset.filterValue;
+
+        if (!groupName || !value) return;
+
+        activeFilters[groupName] = value;
+
+        archiveRoot
+          .querySelectorAll(`.archives-filter-chip[data-filter-group="${groupName}"]`)
+          .forEach((candidate) => {
+            const isActive = candidate.dataset.filterValue === value;
+            candidate.classList.toggle('active', isActive);
+            candidate.setAttribute('aria-pressed', String(isActive));
+          });
+
+        applyFilters();
+      });
+    });
+
+    applyFilters();
   });
 </script>
