@@ -12,7 +12,7 @@ The feature should help a recruiter answer:
 
 ## Why This Feature Fits This Repository
 
-This repository already has strong long-form technical content, structured topic hubs, roadmaps, learning paths, and content type separation.
+This repository already has strong long-form technical content, structured topic hubs, roadmaps, and content type separation.
 
 Those features are useful for readers who want to explore deeply.
 

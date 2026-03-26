@@ -26,7 +26,6 @@ Feature-level design and operational modeling:
 - [`features/fixed-profile-links-design.md`](./features/fixed-profile-links-design.md)
 - [`features/learning-evidence-design.md`](./features/learning-evidence-design.md)
 - [`features/post-status-design.md`](./features/post-status-design.md)
-- [`features/learning-path-design.md`](./features/learning-path-design.md)
 - [`features/practical-validation-badge-design.md`](./features/practical-validation-badge-design.md)
 - [`features/problem-decision-result-design.md`](./features/problem-decision-result-design.md)
 - [`features/recruiter-panel-design.md`](./features/recruiter-panel-design.md)
@@ -45,7 +44,6 @@ AI-agent-oriented feature maintenance references:
 - [`features/ai/ai-home-curation-guide.md`](./features/ai/ai-home-curation-guide.md)
 - [`features/ai/ai-content-type-guide.md`](./features/ai/ai-content-type-guide.md)
 - [`features/ai/ai-post-status-guide.md`](./features/ai/ai-post-status-guide.md)
-- [`features/ai/ai-learning-path-guide.md`](./features/ai/ai-learning-path-guide.md)
 - [`features/ai/ai-post-likes-supabase-guide.md`](./features/ai/ai-post-likes-supabase-guide.md)
 
 ### Project Policy Docs

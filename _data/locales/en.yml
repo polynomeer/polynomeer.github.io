@@ -26,7 +26,6 @@ tabs:
   capabilities: Capabilities
   types: Types
   statuses: Statuses
-  paths: Paths
   topics: Topics
   categories: Categories
   tags: Tags
@@ -203,18 +202,6 @@ post_statuses:
   directory_title: Browse by maintenance state
   directory_description: Quickly tell which posts are long-lived references, actively evolving, or kept only for historical context.
   post_count: ":COUNT posts"
-
-learning_paths:
-  eyebrow: Learning path
-  directory_title: Browse guided reading and study paths
-  directory_description: Start from curated paths that combine topic hubs, roadmaps, and selected posts in a deliberate order.
-  phase_count: ":COUNT phases"
-  audience: Audience
-  level: Level
-  duration: Duration
-  related_roadmaps: Related roadmaps
-  related_topics: Related topics
-  recommended_posts: Recommended posts
 
 representative_posts:
   eyebrow: Representative posts

@@ -126,23 +126,6 @@ Rendering:
 - `_layouts/post-statuses.html`
 - `_layouts/post-status.html`
 
-### Learning Paths
-
-Status:
-
-- treat as legacy or niche guided journeys
-- prefer `roadmaps` for primary discovery and new public navigation work
-
-Source of truth:
-
-- `_data/learning_paths.yml`
-- `_learning_paths/`
-
-Rendering:
-
-- `_layouts/learning-paths.html`
-- `_layouts/learning-path.html`
-
 ### Post Likes
 
 Source of truth:

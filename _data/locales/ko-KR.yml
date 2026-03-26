@@ -26,7 +26,6 @@ tabs:
   capabilities: 역량 맵
   types: 타입
   statuses: 상태
-  paths: 경로
   topics: 토픽
   categories: 카테고리
   tags: 태그
@@ -196,18 +195,6 @@ post_statuses:
   directory_title: 관리 상태별로 글 탐색하기
   directory_description: 지금도 신뢰 가능한 글인지, 계속 보강 중인 글인지, 참고용으로만 보관된 글인지 빠르게 구분할 수 있습니다.
   post_count: ":COUNT개 글"
-
-learning_paths:
-  eyebrow: 학습 경로
-  directory_title: 순서 있는 독서·학습 경로 탐색하기
-  directory_description: 토픽 허브, 로드맵, 대표 글을 조합한 큐레이션 경로로 어디서부터 읽을지 바로 정할 수 있습니다.
-  phase_count: ":COUNT단계"
-  audience: 대상 독자
-  level: 난이도
-  duration: 예상 기간
-  related_roadmaps: 함께 볼 로드맵
-  related_topics: 관련 토픽 허브
-  recommended_posts: 추천 글
 
 representative_posts:
   eyebrow: 대표 글

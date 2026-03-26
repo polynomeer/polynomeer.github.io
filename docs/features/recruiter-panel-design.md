@@ -20,7 +20,6 @@ The repository already has:
 - capability map
 - topic hubs
 - roadmaps
-- learning paths
 
 The right-side panel is the most persistent desktop-side discovery surface.
 

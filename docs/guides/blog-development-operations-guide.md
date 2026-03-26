@@ -17,8 +17,7 @@ It now includes layered discovery and curation features:
 5. homepage curation
 6. content type separation
 7. post status metadata
-8. learning paths
-9. representative posts
+8. representative posts
 10. capability map
 11. practical validation badges
 12. fixed profile links
@@ -249,33 +248,7 @@ How to operate:
 - Add `status` in post front matter when editorial intent is clear.
 - Do not force a status onto every post.
 
-### 8. Learning Paths
-
-Purpose:
-
-- Keep legacy reader-goal-oriented study routes available without using them as a primary navigation surface.
-
-Main files:
-
-- `docs/features/learning-path-design.md`
-- `docs/features/ai/ai-learning-path-guide.md`
-- `_data/learning_paths.yml`
-- `_layouts/learning-paths.html`
-- `_layouts/learning-path.html`
-- `_learning_paths/`
-- `_tabs/paths.md`
-
-How to operate:
-
-- Prefer `roadmaps` for public navigation, recruiter surfaces, and homepage curation.
-- Keep `learning paths` only when a legacy deep link or a tightly guided reader journey still provides unique value.
-- If a path overlaps strongly with a roadmap, update the roadmap first and avoid adding new public entry points for the path.
-
-Recommended use:
-
-- Use learning paths sparingly for legacy onboarding or highly specific guided sequences that are not worth elevating to a standalone roadmap.
-
-### 9. Representative Posts
+### 8. Representative Posts
 
 Purpose:
 
@@ -545,13 +518,6 @@ Classification depends on file path:
 3. Link featured posts, relevant series, and roadmap ids.
 4. Check the topic directory and topic detail page.
 
-### Add a New Learning Path
-
-1. Confirm a roadmap cannot express the same reader journey clearly enough.
-2. Add a path entry in `_data/learning_paths.yml` only when the legacy path still adds unique value.
-3. Add a page in `_learning_paths/`.
-4. Verify the detail page and any remaining deep links that reference the path.
-
 ### Add a New Post Status
 
 1. Update `_data/post_statuses.yml`.
@@ -652,7 +618,6 @@ Check:
 - Add metadata gradually and deliberately.
 - Prefer a small number of clear curation assets over many partially maintained ones.
 - Keep roadmaps topic-oriented.
-- Keep learning paths reader-goal-oriented.
 - Keep statuses editorially meaningful.
 
 ## Related Docs
@@ -664,4 +629,3 @@ Check:
 - `docs/features/home-curation-design.md`
 - `docs/features/content-type-separation-design.md`
 - `docs/features/post-status-design.md`
-- `docs/features/learning-path-design.md`

@@ -16,7 +16,6 @@ This repository already has:
 
 - topic hubs
 - roadmaps
-- learning paths
 - representative posts
 - recruit mode
 

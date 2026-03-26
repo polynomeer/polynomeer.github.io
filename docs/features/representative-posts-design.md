@@ -16,7 +16,6 @@ This repository already includes:
 
 - topic hubs
 - roadmaps
-- learning paths
 - content type badges
 - recruiter-oriented entry points
 
@@ -142,7 +141,7 @@ Show:
 ## Non-Goals
 
 - Do not auto-rank all posts for representativeness.
-- Do not replace topic hubs, roadmaps, or learning paths.
+- Do not replace topic hubs or roadmaps.
 - Do not require front matter additions across the archive.
 - Do not create a separate content collection just for flagship posts.
 
