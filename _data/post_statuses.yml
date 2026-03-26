@@ -1,17 +1,23 @@
-evergreen:
-  title: "Evergreen"
-  description: "Reliable long-term reference content."
-  icon: "fas fa-seedling"
+writing:
+  title: "Writing"
+  description: "Still being written and not yet fully settled."
+  icon: "fas fa-pen"
   order: 1
 
-updating:
-  title: "Updating"
-  description: "Actively revised or expanded content."
-  icon: "fas fa-pen-ruler"
+published:
+  title: "Published"
+  description: "Readable normal-state content."
+  icon: "fas fa-check-circle"
   order: 2
+
+modifying:
+  title: "Modifying"
+  description: "Public content that is currently being revised."
+  icon: "fas fa-pen-ruler"
+  order: 3
 
 archived:
   title: "Archived"
   description: "Kept for reference, not actively maintained."
   icon: "fas fa-box-archive"
-  order: 3
+  order: 4
