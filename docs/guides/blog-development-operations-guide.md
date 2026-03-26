@@ -18,6 +18,7 @@ It now includes layered discovery and curation features:
 6. content type separation
 7. post status metadata
 8. learning paths
+9. Supabase post likes
 
 The goal of this guide is to explain:
 
@@ -265,6 +266,34 @@ How to operate:
 Recommended use:
 
 - Use learning paths for beginner onboarding, interview preparation, or domain study sequences.
+
+### 9. Supabase Post Likes
+
+Purpose:
+
+- Add lightweight engagement feedback on individual posts.
+
+Main files:
+
+- `docs/features/post-likes-supabase-design.md`
+- `docs/features/ai/ai-post-likes-supabase-guide.md`
+- `_layouts/post.html`
+- `_includes/likes/supabase.html`
+- `_includes/js-selector.html`
+- `_sass/layout/post.scss`
+- `_config.yml`
+
+How to operate:
+
+- Set `likes.provider: supabase`.
+- Fill `likes.supabase.url` and `likes.supabase.anon_key`.
+- Create the `post_likes` table and RLS policies in Supabase.
+- Verify on a real post page that count and toggle state update.
+
+Important:
+
+- This is browser-scoped, not account-scoped.
+- It is good enough for a personal blog, not for abuse-sensitive voting.
 
 ## Content Metadata Cheat Sheet
 

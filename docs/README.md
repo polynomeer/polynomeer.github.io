@@ -24,6 +24,7 @@ Feature-level design and operational modeling:
 - [`features/content-type-separation-design.md`](./features/content-type-separation-design.md)
 - [`features/post-status-design.md`](./features/post-status-design.md)
 - [`features/learning-path-design.md`](./features/learning-path-design.md)
+- [`features/post-likes-supabase-design.md`](./features/post-likes-supabase-design.md)
 
 ### Feature AI Guides
 
@@ -37,6 +38,7 @@ AI-agent-oriented feature maintenance references:
 - [`features/ai/ai-content-type-guide.md`](./features/ai/ai-content-type-guide.md)
 - [`features/ai/ai-post-status-guide.md`](./features/ai/ai-post-status-guide.md)
 - [`features/ai/ai-learning-path-guide.md`](./features/ai/ai-learning-path-guide.md)
+- [`features/ai/ai-post-likes-supabase-guide.md`](./features/ai/ai-post-likes-supabase-guide.md)
 
 ### Project Policy Docs
 

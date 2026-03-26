@@ -16,6 +16,7 @@ Maintain feature consistency across:
 - layouts and includes
 - search index generation
 - homepage and feed UI
+- engagement widgets
 
 ## Change Planning Model
 
@@ -137,6 +138,19 @@ Rendering:
 - `_layouts/learning-paths.html`
 - `_layouts/learning-path.html`
 
+### Post Likes
+
+Source of truth:
+
+- `_config.yml`
+- Supabase table and RLS configuration
+
+Rendering:
+
+- `_layouts/post.html`
+- `_includes/likes/supabase.html`
+- `_sass/layout/post.scss`
+
 ## Safe Editing Rules
 
 - Do not bulk-edit user draft posts.
@@ -144,6 +158,7 @@ Rendering:
 - Do not infer editorial metadata automatically when a small curated sample is safer.
 - Check for nested anchor problems when rendering badges inside cards.
 - Watch for global CSS leakage from generic selectors like `.categories`.
+- Never commit private Supabase credentials. Only the public anon key belongs in config.
 
 ## Common Tasks
 
