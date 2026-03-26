@@ -787,6 +787,11 @@ header {
   border: 1px solid var(--btn-border-color);
   background: rgba(68, 71, 90, 0.14);
   overflow: hidden;
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
 }
 
 .post-status-card {
@@ -801,6 +806,12 @@ header {
   height: 100%;
   padding: 1.25rem;
   color: var(--text-color);
+  transition: color 0.22s ease;
+
+  &:hover {
+    color: var(--text-color) !important;
+    border-bottom: none !important;
+  }
 }
 
 .post-status-card-link {
@@ -837,6 +848,22 @@ header {
 .content-type-count {
   color: var(--text-muted-color);
   font-size: 0.82rem;
+}
+
+@media (hover: hover) {
+  .content-type-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(139, 233, 253, 0.28);
+    background: rgba(68, 71, 90, 0.24);
+    box-shadow:
+      0 16px 36px -24px rgba(8, 10, 16, 0.45),
+      0 0 0 1px rgba(139, 233, 253, 0.08);
+  }
+
+  .content-type-card:hover .content-type-card-header i,
+  .content-type-card:hover .content-type-card-link h3 {
+    color: var(--text-color);
+  }
 }
 
 .post-status-count {
