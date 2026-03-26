@@ -1,0 +1,73 @@
+<!-- Display Supabase pageviews -->
+<script>
+  (() => {
+    const pv = document.getElementById('pageviews');
+
+    if (pv === null) {
+      return;
+    }
+
+    const projectUrl = '{{ site.pageviews.supabase.url | strip }}'.replace(/\/$/, '');
+    const anonKey = '{{ site.pageviews.supabase.anon_key | strip }}';
+    const table = '{{ site.pageviews.supabase.table | default: "post_pageviews" | strip }}';
+    const keyColumn = '{{ site.pageviews.supabase.key_column | default: "post_path" | strip }}';
+    const postKey = '{{ page.post_id | default: page.url }}';
+    const endpoint = `${projectUrl}/rest/v1/${table}`;
+
+    if (!projectUrl || !anonKey || !table || !keyColumn || !postKey) {
+      pv.innerText = '0';
+      return;
+    }
+
+    const headers = {
+      apikey: anonKey,
+      Authorization: `Bearer ${anonKey}`,
+      'Content-Type': 'application/json'
+    };
+
+    const renderCount = (count) => {
+      pv.innerText = new Intl.NumberFormat().format(count);
+    };
+
+    const fetchCount = async () => {
+      const query = new URLSearchParams({
+        select: 'id',
+        [keyColumn]: `eq.${postKey}`
+      });
+
+      const response = await fetch(`${endpoint}?${query.toString()}`, { headers });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch pageviews: ${response.status}`);
+      }
+
+      const rows = await response.json();
+      return Array.isArray(rows) ? rows.length : 0;
+    };
+
+    const insertView = async () => {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify({
+          [keyColumn]: postKey
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to insert pageview: ${response.status}`);
+      }
+    };
+
+    insertView()
+      .then(fetchCount)
+      .then(renderCount)
+      .catch((error) => {
+        console.error('pageviews error', error);
+        pv.innerText = '0';
+      });
+  })();
+</script>

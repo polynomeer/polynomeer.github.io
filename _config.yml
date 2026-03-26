@@ -61,7 +61,7 @@ analytics:
   google:
     id: # fill in your Google Analytics ID
   goatcounter:
-    id: polynomeer
+    id:
   umami:
     id: # fill in your Umami ID
     domain: # fill in your Umami domain
@@ -75,7 +75,12 @@ analytics:
 
 # Page views settings
 pageviews:
-  provider: goatcounter # now only supports 'goatcounter'
+  provider: supabase
+  supabase:
+    url: https://eyrabiilsmkbehqhiezm.supabase.co
+    anon_key: sb_publishable__QCEqxJ5nC04iD8-igyV4g_DNTyXW5k
+    table: post_pageviews
+    key_column: post_path
 
 likes:
   provider: supabase

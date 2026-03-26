@@ -81,6 +81,10 @@
         {% if site.analytics[provider].id != empty and site.analytics[provider].id %}
           {% include pageviews/{{ provider }}.html %}
         {% endif %}
+      {% when 'supabase' %}
+        {% if site.pageviews.supabase.url != empty and site.pageviews.supabase.anon_key != empty %}
+          {% include pageviews/supabase.html %}
+        {% endif %}
     {% endcase %}
   {% endif %}
 {% endif %}

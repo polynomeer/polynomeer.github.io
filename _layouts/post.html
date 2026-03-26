@@ -109,7 +109,22 @@ tail_includes:
           {% endif %}
 
           <!-- pageviews -->
-          {% if site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
+          {% assign show_pageviews = false %}
+          {% if site.pageviews.provider == 'goatcounter' %}
+            {% if site.analytics.goatcounter.id and site.analytics.goatcounter.id != empty %}
+              {% assign show_pageviews = true %}
+            {% endif %}
+          {% elsif site.pageviews.provider == 'supabase' %}
+            {% if site.pageviews.supabase.url
+              and site.pageviews.supabase.url != empty
+              and site.pageviews.supabase.anon_key
+              and site.pageviews.supabase.anon_key != empty
+            %}
+              {% assign show_pageviews = true %}
+            {% endif %}
+          {% endif %}
+
+          {% if show_pageviews %}
             <span>
               <em id="pageviews">
                 <i class="fas fa-spinner fa-spin small"></i>
