@@ -224,6 +224,7 @@ footer {
 
 .control-switcher {
   padding: 0.2rem;
+  min-height: 2.34rem;
   min-width: 4.6rem;
 }
 
@@ -231,8 +232,10 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
   width: 100%;
   min-width: 0;
+  padding-block: 0;
   padding-inline: 0.85rem;
 
   i {
