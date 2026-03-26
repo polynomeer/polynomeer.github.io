@@ -11,8 +11,7 @@
 }
 
 .post-status-filter-bar {
-  display: grid;
-  gap: 0.9rem;
+  display: block;
   padding: 0.95rem 1rem;
   border-radius: 1rem;
   border: 1px solid rgba(98, 114, 164, 0.16);
@@ -21,46 +20,31 @@
 
 .post-filter-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: end;
   gap: 0.8rem;
 }
 
-.post-filter-row-groups {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.post-filter-row-search {
-  align-items: stretch;
+.post-filter-row-inline {
+  align-items: end;
 }
 
 .post-filter-field {
   display: grid;
   gap: 0.45rem;
-  min-width: 10rem;
-  flex: 1 1 10rem;
+  min-width: 0;
 }
 
-.post-filter-field-wide {
-  min-width: 100%;
-  flex-basis: 100%;
+.post-filter-field-search {
+  flex: 1.8 1 22rem;
 }
 
 .post-filter-field-compact {
-  min-width: 12rem;
-  flex: 0 1 12rem;
+  flex: 0 1 11rem;
 }
 
-.post-filter-group {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.post-filter-chip-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+.post-filter-field-tag {
+  flex: 1 1 14rem;
 }
 
 .post-status-filter-label {
@@ -116,7 +100,8 @@
 }
 
 #home-filter-reset {
-  flex: 0 0 auto;
+  flex: 0 0 9.5rem;
+  justify-content: center;
 }
 
 .post-status-filter-empty {
@@ -367,13 +352,8 @@
 
 /* Hide SideBar and TOC */
 @media all and (max-width: 830px) {
-  .post-filter-field-compact {
-    min-width: calc(50% - 0.4rem);
-    flex-basis: calc(50% - 0.4rem);
-  }
-
-  .post-filter-field {
-    min-width: calc(50% - 0.4rem);
+  .post-filter-row {
+    flex-wrap: wrap;
   }
 
   #post-list {
@@ -403,10 +383,8 @@
 }
 
 @media all and (max-width: 576px) {
-  .post-filter-field-compact,
   .post-filter-field {
     min-width: 100%;
-    flex-basis: 100%;
   }
 
   #home-filter-reset {

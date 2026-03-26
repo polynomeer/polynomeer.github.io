@@ -59,12 +59,12 @@ refactor: true
 {% endfor %}
 
 {% assign home_tags = home_tags | sort %}
-{% assign home_years = home_years | sort | reverse %}
+{% assign home_years = home_years | sort %}
 
 <section id="home-discovery-filter" class="px-xl-1">
   <div class="post-status-filter-bar">
-    <div class="post-filter-row post-filter-row-search">
-      <label class="post-filter-field post-filter-field-wide">
+    <div class="post-filter-row post-filter-row-inline">
+      <label class="post-filter-field post-filter-field-search">
         <span class="post-status-filter-label" data-i18n="home.search_filter_label">{{ site.data.locales[lang].home.search_filter_label }}</span>
         <input
           id="home-post-search"
@@ -74,15 +74,11 @@ refactor: true
           placeholder="{{ site.data.locales[lang].home.search_filter_placeholder }}..."
         >
       </label>
-    </div>
 
-    <div class="post-filter-row post-filter-row-groups">
-      <div class="post-filter-group">
+      <label class="post-filter-field post-filter-field-compact">
         <span class="post-status-filter-label" data-i18n="home.type_filter_label">{{ site.data.locales[lang].home.type_filter_label }}</span>
-        <div class="post-filter-chip-group" data-filter-group="type">
-          <button type="button" class="post-status-filter-btn active" data-type-filter="all" data-i18n="home.filter_all">
-            {{ site.data.locales[lang].home.filter_all }}
-          </button>
+        <select id="home-type-filter" class="post-filter-select">
+          <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
           {% for type_page in sorted_content_types %}
             {% assign content_type_id = type_page.content_type_id %}
             {% assign content_type = site.data.content_types[content_type_id] %}
@@ -96,45 +92,44 @@ refactor: true
             {% endfor %}
             {% if has_posts_of_type %}
               {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-              <button type="button" class="post-status-filter-btn" data-type-filter="{{ content_type_id }}">{{ content_type_label }}</button>
+              <option value="{{ content_type_id }}">{{ content_type_label }}</option>
             {% endif %}
           {% endfor %}
-        </div>
-      </div>
+        </select>
+      </label>
 
-      <div class="post-filter-group">
+      <label class="post-filter-field post-filter-field-tag">
         <span class="post-status-filter-label" data-i18n="home.tag_filter_label">{{ site.data.locales[lang].home.tag_filter_label }}</span>
-        <div class="post-filter-chip-group" data-filter-group="tag">
-          <button type="button" class="post-status-filter-btn active" data-tag-filter="all" data-i18n="home.filter_all">
-            {{ site.data.locales[lang].home.filter_all }}
-          </button>
+        <input
+          id="home-tag-filter"
+          type="search"
+          class="post-filter-input"
+          list="home-tag-options"
+          data-i18n-placeholder="home.tag_filter_placeholder"
+          placeholder="{{ site.data.locales[lang].home.tag_filter_placeholder }}..."
+        >
+        <datalist id="home-tag-options">
           {% for tag in home_tags %}
-            <button type="button" class="post-status-filter-btn" data-tag-filter="{{ tag | downcase }}">{{ tag }}</button>
+            <option value="{{ tag }}"></option>
           {% endfor %}
-        </div>
-      </div>
+        </datalist>
+      </label>
 
       {% if status_pages.size > 0 %}
-        <div class="post-filter-group">
+        <label class="post-filter-field post-filter-field-compact">
           <span class="post-status-filter-label" data-i18n="home.status_filter_label">{{ site.data.locales[lang].home.status_filter_label }}</span>
-          <div class="post-filter-chip-group" data-filter-group="status">
-            <button type="button" class="post-status-filter-btn active" data-status-filter="all" data-i18n="home.filter_all">
-              {{ site.data.locales[lang].home.filter_all }}
-            </button>
+          <select id="home-status-filter" class="post-filter-select">
+            <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
             {% for status_page in status_pages %}
               {% assign post_status = site.data.post_statuses[status_page.post_status_id] %}
               {% if post_status %}
-                <button type="button" class="post-status-filter-btn" data-status-filter="{{ status_page.post_status_id }}">
-                  {{ post_status.title }}
-                </button>
+                <option value="{{ status_page.post_status_id }}">{{ post_status.title }}</option>
               {% endif %}
             {% endfor %}
-          </div>
-        </div>
+          </select>
+        </label>
       {% endif %}
-    </div>
 
-    <div class="post-filter-row">
       <label class="post-filter-field post-filter-field-compact">
         <span class="post-status-filter-label" data-i18n="home.year_filter_label">{{ site.data.locales[lang].home.year_filter_label }}</span>
         <select id="home-year-filter" class="post-filter-select">
@@ -267,21 +262,19 @@ refactor: true
     if (!filterRoot || !postList) return;
 
     const searchInput = document.getElementById('home-post-search');
+    const typeSelect = document.getElementById('home-type-filter');
+    const tagInput = document.getElementById('home-tag-filter');
+    const statusSelect = document.getElementById('home-status-filter');
     const yearSelect = document.getElementById('home-year-filter');
     const resetButton = document.getElementById('home-filter-reset');
-    const typeButtons = Array.from(filterRoot.querySelectorAll('[data-type-filter]'));
-    const tagButtons = Array.from(filterRoot.querySelectorAll('[data-tag-filter]'));
-    const statusButtons = Array.from(filterRoot.querySelectorAll('[data-status-filter]'));
     const cards = Array.from(postList.querySelectorAll('[data-post-status]'));
     const emptyState = document.getElementById('post-status-filter-empty');
-    const activeFilters = {
-      type: 'all',
-      tag: 'all',
-      status: 'all'
-    };
 
     const applyFilter = () => {
       const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const selectedType = typeSelect ? typeSelect.value : 'all';
+      const selectedTag = tagInput ? tagInput.value.trim().toLowerCase() : '';
+      const selectedStatus = statusSelect ? statusSelect.value : 'all';
       const selectedYear = yearSelect ? yearSelect.value : 'all';
       let visibleCount = 0;
 
@@ -289,10 +282,10 @@ refactor: true
         const searchable = card.dataset.postSearch || '';
         const tags = (card.dataset.postTags || '').split('|').filter(Boolean);
         const matchesSearch = searchTerm === '' || searchable.includes(searchTerm);
-        const matchesType = activeFilters.type === 'all' || card.dataset.postType === activeFilters.type;
-        const matchesTag = activeFilters.tag === 'all' || tags.includes(activeFilters.tag);
+        const matchesType = selectedType === 'all' || card.dataset.postType === selectedType;
+        const matchesTag = selectedTag === '' || tags.includes(selectedTag);
         const matchesYear = selectedYear === 'all' || card.dataset.postYear === selectedYear;
-        const matchesStatus = activeFilters.status === 'all' || card.dataset.postStatus === activeFilters.status;
+        const matchesStatus = selectedStatus === 'all' || card.dataset.postStatus === selectedStatus;
         const matches = matchesSearch && matchesType && matchesTag && matchesYear && matchesStatus;
 
         card.hidden = !matches;
@@ -304,48 +297,19 @@ refactor: true
       }
     };
 
-    [searchInput, yearSelect]
+    [searchInput, typeSelect, tagInput, statusSelect, yearSelect]
       .filter(Boolean)
       .forEach((control) => {
         control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', applyFilter);
       });
 
-    const bindGroup = (buttons, filterName, datasetKey) => {
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const nextValue = button.dataset[datasetKey];
-          activeFilters[filterName] = nextValue;
-
-          buttons.forEach((candidate) => {
-            const isActive = candidate.dataset[datasetKey] === nextValue;
-            candidate.classList.toggle('active', isActive);
-            candidate.setAttribute('aria-pressed', String(isActive));
-          });
-
-          applyFilter();
-        });
-      });
-    };
-
-    bindGroup(typeButtons, 'type', 'typeFilter');
-    bindGroup(tagButtons, 'tag', 'tagFilter');
-    bindGroup(statusButtons, 'status', 'statusFilter');
-
     if (resetButton) {
       resetButton.addEventListener('click', () => {
         if (searchInput) searchInput.value = '';
+        if (typeSelect) typeSelect.value = 'all';
+        if (tagInput) tagInput.value = '';
+        if (statusSelect) statusSelect.value = 'all';
         if (yearSelect) yearSelect.value = 'all';
-        activeFilters.type = 'all';
-        activeFilters.tag = 'all';
-        activeFilters.status = 'all';
-        [...typeButtons, ...tagButtons, ...statusButtons].forEach((button) => {
-          const isActive =
-            (button.dataset.typeFilter && button.dataset.typeFilter === 'all') ||
-            (button.dataset.tagFilter && button.dataset.tagFilter === 'all') ||
-            (button.dataset.statusFilter && button.dataset.statusFilter === 'all');
-          button.classList.toggle('active', isActive);
-          button.setAttribute('aria-pressed', String(isActive));
-        });
         applyFilter();
       });
     }
