@@ -18,7 +18,15 @@ It now includes layered discovery and curation features:
 6. content type separation
 7. post status metadata
 8. learning paths
-9. Supabase post likes
+9. representative posts
+10. capability map
+11. practical validation badges
+12. fixed profile links
+13. recruiter panel
+14. learning evidence
+15. problem decision result
+16. recruiter mode
+17. Supabase post likes
 
 The goal of this guide is to explain:
 
@@ -267,7 +275,203 @@ Recommended use:
 
 - Use learning paths for beginner onboarding, interview preparation, or domain study sequences.
 
-### 9. Supabase Post Likes
+### 9. Representative Posts
+
+Purpose:
+
+- Surface a small explicit set of flagship posts that represent the blog's strongest technical writing.
+
+Main files:
+
+- `docs/features/representative-posts-design.md`
+- `_data/representative_posts.yml`
+- `_includes/representative-posts.html`
+- `_layouts/default.html`
+- `_includes/recruit-mode.html`
+
+How to operate:
+
+- Keep the list explicit and short.
+- Use stable post paths rather than automatic ranking.
+- Reuse the same data across recruiter and panel surfaces.
+- Review the list when publishing a new flagship article.
+
+Recommended use:
+
+- Use this feature to improve first-visit discovery and recruiter-facing proof signals.
+
+### 10. Capability Map
+
+Purpose:
+
+- Present the blog as a map of demonstrated engineering strengths rather than only as topics or timelines.
+
+Main files:
+
+- `docs/features/capability-map-design.md`
+- `_data/capability_map.yml`
+- `_layouts/capability-map.html`
+- `_tabs/capabilities.md`
+- locale files
+
+How to operate:
+
+- Keep capability definitions explicit and evidence-oriented.
+- Reuse representative posts, topic hubs, and roadmap links.
+- Keep the list short enough to scan quickly.
+
+Recommended use:
+
+- Use this feature when the blog should help recruiters or first-time visitors understand technical fit fast.
+
+### 11. Practical Validation Badges
+
+Purpose:
+
+- Signal what kind of real-world or editorial grounding a post has, such as production experience, troubleshooting, or interview focus.
+
+Main files:
+
+- `docs/features/practical-validation-badge-design.md`
+- `_data/practical_validation_badges.yml`
+- `_includes/practical-validation-badges.html`
+- `_layouts/post.html`
+- `_includes/representative-posts.html`
+
+How to operate:
+
+- Add `validation_badges` in post front matter.
+- Keep badge count small and meanings concrete.
+- Reuse badges on curated surfaces when stronger scanning signal is useful.
+
+Recommended use:
+
+- Use this feature on representative posts, recruiter-relevant posts, and tradeoff-heavy writeups.
+
+### 12. Fixed Profile Links
+
+Purpose:
+
+- Keep resume, project, and recruiter-oriented links visible in a stable site-wide location.
+
+Main files:
+
+- `docs/features/fixed-profile-links-design.md`
+- `_data/fixed_profile_links.yml`
+- `_includes/fixed-profile-links.html`
+- `_includes/sidebar.html`
+- `_sass/addon/commons.scss`
+
+How to operate:
+
+- Keep the list short and high-value.
+- Configure the resume PDF only when the asset exists.
+- Prefer one recruiter link and one project link alongside the resume.
+
+Recommended use:
+
+- Use this feature to reduce friction after a visitor decides they want to learn more or contact you.
+
+### 13. Recruiter Panel
+
+Purpose:
+
+- Turn the right-side panel into a recruiter-oriented quick-evaluation surface with CTA, strengths, proof, and structured follow-up paths.
+
+Main files:
+
+- `docs/features/recruiter-panel-design.md`
+- `_data/recruiter_panel.yml`
+- `_includes/recruiter-panel-stack.html`
+- `_includes/recruiter-panel.html`
+- `_includes/core-strengths-panel.html`
+- `_includes/reading-path-panel.html`
+- `_includes/proof-signals-panel.html`
+- `_includes/featured-focus-panel.html`
+- `_layouts/default.html`
+
+How to operate:
+
+- Keep panel-specific copy in `_data/recruiter_panel.yml`.
+- Reuse representative posts and recruit-mode strength data where possible.
+- Keep each section short enough to scan in the sidebar.
+
+Recommended use:
+
+- Use this feature to improve recruiter-first navigation on desktop layouts.
+
+### 14. Learning Evidence
+
+Purpose:
+
+- Show books, courses, and related posts together as evidence that learning inputs were turned into written outputs.
+
+Main files:
+
+- `docs/features/learning-evidence-design.md`
+- `_data/learning_evidence.yml`
+- `_layouts/learning-evidence.html`
+- `About` page link or a dedicated page entry
+
+How to operate:
+
+- Keep learning items explicit and curated.
+- Link each input to direct study posts and later output posts.
+- Group items by broad meaning such as backend, Spring, or architecture.
+
+Recommended use:
+
+- Use this feature when the blog should show long-term learning discipline and synthesis, not only standalone article quality.
+
+### 15. Problem Decision Result
+
+Purpose:
+
+- Add a compact top-of-post summary that makes engineering context and tradeoffs easier to scan.
+
+Main files:
+
+- `docs/features/problem-decision-result-design.md`
+- `_includes/problem-decision-result.html`
+- `_layouts/post.html`
+- `_sass/layout/post.scss`
+- locale files
+
+How to operate:
+
+- Use `problem_decision_result` in post front matter.
+- Keep each field concise and factual.
+- Use the feature selectively on tradeoff-heavy or recruiter-relevant posts.
+
+Recommended use:
+
+- Use this feature on architecture, troubleshooting, performance, and decision-oriented posts.
+
+### 16. Recruit Mode
+
+Purpose:
+
+- Provide a recruiter-specific landing flow that highlights role fit, strongest proof posts, and direct hiring links.
+
+Main files:
+
+- `docs/features/recruit-mode-design.md`
+- `_data/recruit_mode.yml`
+- `_includes/recruit-mode.html`
+- `_tabs/recruit.md` or equivalent standalone page
+
+How to operate:
+
+- Keep recruiter curation explicit in one data file.
+- Prefer representative evergreen posts over latest posts.
+- Reuse topic hubs, roadmaps, and content type badges instead of creating a parallel content model.
+- Keep resume and contact links current.
+
+Recommended use:
+
+- Use this feature when the blog is intended to support job search, portfolio review, or inbound recruiter traffic.
+
+### 17. Supabase Post Likes
 
 Purpose:
 

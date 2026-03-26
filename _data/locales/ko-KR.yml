@@ -1,5 +1,15 @@
 # The layout text of site
 
+title: Polynomeer
+
+site:
+  tagline: Make Non Polynomial Polynomial.
+
+language:
+  label: 언어
+  ko: 한국어
+  en: English
+
 # ----- Commons label -----
 
 layout:
@@ -13,6 +23,7 @@ layout:
 tabs:
   # format: <filename_without_extension>: <value>
   home: 홈
+  capabilities: 역량 맵
   types: 타입
   statuses: 상태
   paths: 경로
@@ -21,6 +32,7 @@ tabs:
   tags: 태그
   archives: 아카이브
   roadmaps: 로드맵
+  recruit: 채용
   about: 정보
 
 # the text displayed in the search bar & search results
@@ -32,6 +44,19 @@ search:
 
 panel:
   lastmod: 최근 업데이트
+  for_recruiters: 채용 담당자용
+  representative_posts: 대표 글
+  core_strengths: 핵심 역량
+  reading_path: 채용 담당자용 읽기 순서
+  proof_signals: 증거 신호
+  featured_focus: 추천 시리즈 또는 로드맵
+  focus_roadmap: 추천 로드맵
+  focus_series: 추천 시리즈
+  signal_posts: 전체 글
+  signal_representative: 대표 글
+  signal_topics: 토픽 허브
+  signal_roadmaps: 로드맵
+  signal_recruit: 채용 글
   trending_tags: 인기 태그
   toc: 바로가기
 
@@ -183,3 +208,65 @@ learning_paths:
   related_roadmaps: 함께 볼 로드맵
   related_topics: 관련 토픽 허브
   recommended_posts: 추천 글
+
+representative_posts:
+  eyebrow: 대표 글
+  title: 역량을 보여주는 대표 글
+
+pdr:
+  eyebrow: 엔지니어링 요약
+  title: Problem Decision Result
+  problem: Problem
+  decision: Decision
+  result: Result
+
+capability_map:
+  eyebrow: 역량 맵
+  directory_title: 보여지는 역량 기준으로 블로그 탐색하기
+  directory_description: 백엔드, 데이터베이스, 아키텍처, 채용 관련 글을 역량 증거 중심으로 빠르게 살펴볼 수 있습니다.
+  related_topic: 관련 주제
+  related_path: 관련 경로
+  evidence: 대표 증거 글
+
+sidebar:
+  quick_links: 빠른 이동
+
+pages:
+  recruit:
+    title: 채용
+  capabilities:
+    title: 역량 맵
+  learning_evidence:
+    title: 학습 성과
+
+about:
+  motto: Make Non Polynomial Polynomial
+  intro_title: 복잡한 문제를 명확한 구조로 풀어냅니다
+  intro_summary_1: 복잡한 서비스 흐름을 안정적으로 운영 가능한 구조로 설계하고 구현해 온 백엔드 엔지니어입니다. 특히 상태 전이와 동시성, 트랜잭션 정합성이 중요한 시스템을 다루며, 다양한 예외 상황과 변화 속에서도 신뢰할 수 있게 동작하는 플랫폼을 만드는 데 집중해 왔습니다.
+  intro_summary_2: 대규모 데이터 처리 환경에서는 병목을 계측 기반으로 분석하고, 코드와 데이터 구조를 함께 개선하며 성능과 안정성을 지속적으로 높여 왔습니다. 결제나 정산처럼 실패하면 안 되는 흐름을 더 정확하고 견고하게 만들고, 사용자와 서비스가 모두 신뢰할 수 있는 시스템을 만드는 것이 제가 가장 오래 붙들고 있는 주제입니다.
+  intro_summary_3: 이 블로그에는 그 과정에서 얻은 실무적 판단과 실험 결과를 남깁니다. 데이터베이스 내부 동작, Spring 백엔드, 아키텍처 의사결정, 성능 개선, 동시성 제어, 배치 및 정산 시스템 운영처럼 실제 시스템을 더 정확하고 견고하게 만드는 데 필요한 주제를 주로 다룹니다.
+  technical_focus: 기술 집중 분야
+  profile_hub_eyebrow: 프로필 허브
+  profile_hub_title: 여기서 시작하기
+  profile_hub_summary: 채용 담당자용 자료, 핵심 역량, 프로젝트 링크를 가장 짧은 동선으로 보려면 아래 바로가기를 사용하세요.
+  learning_evidence: 학습 성과
+  core_strengths: 핵심 역량
+
+recruit_mode:
+  strength_snapshot_eyebrow: 역량 스냅샷
+  strength_snapshot_title: 관련 읽기 경로와 함께 보는 핵심 역량
+  structured_reading_eyebrow: 구조화된 읽기
+  structured_reading_title: 지식 구조로 빠르게 진입하는 시작점
+
+learning_evidence_meta:
+  course: 강의
+  book: 책
+  completed: 수료
+  in_progress: 진행 중
+
+learning_evidence:
+  eyebrow: 학습 성과
+  directory_title: 학습 입력과 작성 결과를 함께 보기
+  directory_description: 수강한 강의, 읽은 책, 그리고 그 학습이 어떤 글과 산출물로 이어졌는지 한 곳에서 볼 수 있습니다.
+  source_posts: 학습 기록 글
+  related_posts: 연결된 결과 글

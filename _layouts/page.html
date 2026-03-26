@@ -7,8 +7,12 @@ layout: default
 <article class="px-1">
   {% if page.layout == 'page' or page.collection == 'tabs' %}
     {% assign tab_key = page.title | downcase %}
-    {% assign title = site.data.locales[lang].tabs[tab_key] | default: page.title %}
-    <h1 class="dynamic-title">
+    {% assign title = site.data.locales[lang].pages[page.title_key].title | default: site.data.locales[lang].tabs[tab_key] | default: page.title %}
+    <h1
+      class="dynamic-title"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].pages[page.title_key].title | default: site.data.locales['ko-KR'].tabs[tab_key] | default: page.title | escape }}"
+      data-l10n-en="{{ site.data.locales.en.pages[page.title_key].title | default: site.data.locales.en.tabs[tab_key] | default: page.title | escape }}"
+    >
       {{ title }}
     </h1>
     <div class="content">

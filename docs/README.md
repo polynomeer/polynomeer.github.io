@@ -21,9 +21,17 @@ Feature-level design and operational modeling:
 - [`features/recommendation-quality-design.md`](./features/recommendation-quality-design.md)
 - [`features/search-enhancement-design.md`](./features/search-enhancement-design.md)
 - [`features/home-curation-design.md`](./features/home-curation-design.md)
+- [`features/capability-map-design.md`](./features/capability-map-design.md)
 - [`features/content-type-separation-design.md`](./features/content-type-separation-design.md)
+- [`features/fixed-profile-links-design.md`](./features/fixed-profile-links-design.md)
+- [`features/learning-evidence-design.md`](./features/learning-evidence-design.md)
 - [`features/post-status-design.md`](./features/post-status-design.md)
 - [`features/learning-path-design.md`](./features/learning-path-design.md)
+- [`features/practical-validation-badge-design.md`](./features/practical-validation-badge-design.md)
+- [`features/problem-decision-result-design.md`](./features/problem-decision-result-design.md)
+- [`features/recruiter-panel-design.md`](./features/recruiter-panel-design.md)
+- [`features/representative-posts-design.md`](./features/representative-posts-design.md)
+- [`features/recruit-mode-design.md`](./features/recruit-mode-design.md)
 - [`features/post-likes-supabase-design.md`](./features/post-likes-supabase-design.md)
 
 ### Feature AI Guides

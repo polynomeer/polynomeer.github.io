@@ -1,5 +1,15 @@
 # The layout text of site
 
+title: Polynomeer
+
+site:
+  tagline: Make Non Polynomial Polynomial.
+
+language:
+  label: Language
+  ko: 한국어
+  en: English
+
 # ----- Commons label -----
 
 layout:
@@ -13,6 +23,7 @@ layout:
 tabs:
   # format: <filename_without_extension>: <value>
   home: Home
+  capabilities: Capabilities
   types: Types
   statuses: Statuses
   paths: Paths
@@ -21,6 +32,7 @@ tabs:
   tags: Tags
   archives: Archives
   roadmaps: Roadmaps
+  recruit: Recruit
   about: About
 
 # the text displayed in the search bar & search results
@@ -32,6 +44,19 @@ search:
 
 panel:
   lastmod: Recently Updated
+  for_recruiters: For Recruiters
+  representative_posts: Representative Posts
+  core_strengths: Core Strengths
+  reading_path: Reading Path for Recruiters
+  proof_signals: Proof Signals
+  featured_focus: Featured Series or Roadmap
+  focus_roadmap: Featured roadmap
+  focus_series: Featured series
+  signal_posts: Posts
+  signal_representative: Representative
+  signal_topics: Topics
+  signal_roadmaps: Roadmaps
+  signal_recruit: Recruit posts
   trending_tags: Trending Tags
   toc: Contents
 
@@ -190,3 +215,65 @@ learning_paths:
   related_roadmaps: Related roadmaps
   related_topics: Related topics
   recommended_posts: Recommended posts
+
+representative_posts:
+  eyebrow: Representative posts
+  title: Proof-oriented writing samples
+
+pdr:
+  eyebrow: Engineering summary
+  title: Problem Decision Result
+  problem: Problem
+  decision: Decision
+  result: Result
+
+capability_map:
+  eyebrow: Capability map
+  directory_title: Browse the blog by demonstrated engineering strength
+  directory_description: Follow the strongest evidence trails for backend, database, architecture, and hiring-oriented writing.
+  related_topic: Related topic
+  related_path: Related path
+  evidence: Representative evidence
+
+sidebar:
+  quick_links: Quick Access
+
+pages:
+  recruit:
+    title: Recruit
+  capabilities:
+    title: Capability Map
+  learning_evidence:
+    title: Learning Evidence
+
+about:
+  motto: Make Non Polynomial Polynomial
+  intro_title: Turning complex problems into explicit structures
+  intro_summary_1: I am a backend engineer who has designed and implemented service flows that remain operable under real-world complexity. I have spent most of my time on systems where state transitions, concurrency, and transactional consistency matter, and I focus on building platforms that remain reliable across change and failure conditions.
+  intro_summary_2: In large-scale data processing environments, I analyze bottlenecks with measurement-first methods and improve both code and data structures to raise performance and stability continuously. Payment and settlement flows, where failure is unacceptable, are the kind of systems I care about most.
+  intro_summary_3: This blog records the engineering judgment and experiments that came out of that work. I write mostly about database internals, Spring backend behavior, architectural decisions, performance improvement, concurrency control, and operating batch or settlement systems with higher reliability.
+  technical_focus: Technical Focus
+  profile_hub_eyebrow: Profile Hub
+  profile_hub_title: Start Here
+  profile_hub_summary: Use these shortcuts for the shortest path through recruiter-facing material, strengths, and project links.
+  learning_evidence: Learning Evidence
+  core_strengths: Core Strengths
+
+recruit_mode:
+  strength_snapshot_eyebrow: Strength Snapshot
+  strength_snapshot_title: Core strengths with supporting reading paths
+  structured_reading_eyebrow: Structured Reading
+  structured_reading_title: Fast entry points into the knowledge structure
+
+learning_evidence_meta:
+  course: Course
+  book: Book
+  completed: Completed
+  in_progress: In Progress
+
+learning_evidence:
+  eyebrow: Learning evidence
+  directory_title: Trace learning inputs and written outputs together
+  directory_description: Follow the courses, books, and study records that were turned into reusable technical writing and portfolio evidence.
+  source_posts: Source study posts
+  related_posts: Related output posts
