@@ -29,6 +29,41 @@
     applyText(lang);
   };
 
+  const resolveTheme = () => {
+    if (window.modeToggle && typeof window.modeToggle.modeStatus === 'string') {
+      return window.modeToggle.modeStatus;
+    }
+
+    const explicit = document.documentElement.getAttribute('data-mode');
+    return explicit === 'light' ? 'light' : 'dark';
+  };
+
+  const applyThemeToggle = (theme) => {
+    document.querySelectorAll('[data-theme-option]').forEach((button) => {
+      const isActive = button.dataset.themeOption === theme;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+
+      const switcher = button.closest('.theme-toggle');
+      if (switcher) {
+        switcher.dataset.activeTheme = theme;
+      }
+    });
+  };
+
+  const setTheme = (theme) => {
+    if (!window.modeToggle) return;
+
+    if (theme === 'light') {
+      window.modeToggle.setLight();
+    } else {
+      window.modeToggle.setDark();
+    }
+
+    window.modeToggle.notify();
+    applyThemeToggle(theme);
+  };
+
   const pickLanguage = () => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get('lang');
@@ -100,13 +135,30 @@
 
   const initialLang = pickLanguage();
   applyText(initialLang);
+  window.addEventListener('load', () => {
+    applyThemeToggle(resolveTheme());
+  });
+
+  window.addEventListener('message', (event) => {
+    if (event.source === window && event.data && event.data.direction === 'mode-toggle') {
+      applyThemeToggle(event.data.message === 'light' ? 'light' : 'dark');
+    }
+  });
 
   document.addEventListener('click', (event) => {
-    const switcher = event.target.closest('.lang-switcher:not(.control-switcher)');
-    if (!switcher) return;
+    const themeSwitcher = event.target.closest('.theme-toggle');
+    if (themeSwitcher) {
+      const currentTheme = resolveTheme();
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(nextTheme);
+      return;
+    }
 
-    const currentLang = document.documentElement.lang === 'en' ? 'en' : 'ko-KR';
-    const nextLang = currentLang === 'ko-KR' ? 'en' : 'ko-KR';
-    setLanguage(nextLang);
+    const langSwitcher = event.target.closest('.lang-toggle');
+    if (langSwitcher) {
+      const currentLang = document.documentElement.lang === 'en' ? 'en' : 'ko-KR';
+      const nextLang = currentLang === 'ko-KR' ? 'en' : 'ko-KR';
+      setLanguage(nextLang);
+    }
   });
 })();

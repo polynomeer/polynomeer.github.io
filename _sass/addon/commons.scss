@@ -179,7 +179,8 @@ footer {
   background: rgba(148, 163, 184, 0.08);
 }
 
-.lang-toggle {
+.lang-toggle,
+.theme-toggle {
   gap: 0;
 
   .lang-switcher-thumb {
@@ -193,14 +194,14 @@ footer {
     transition: transform 0.22s ease;
   }
 
-  &[data-active-lang='en'] {
+  &[data-active-lang='en'],
+  &[data-active-theme='light'] {
     .lang-switcher-thumb {
       transform: translateX(100%);
     }
   }
 }
 
-.control-switcher-btn,
 .lang-switcher-btn {
   position: relative;
   z-index: 1;
@@ -221,28 +222,6 @@ footer {
     color 0.2s ease;
 
   &.active {
-    color: var(--text-color);
-  }
-}
-
-.control-switcher {
-  padding: 0.2rem;
-  min-height: 2.34rem;
-  min-width: 4.6rem;
-}
-
-.control-switcher-btn {
-  height: 100%;
-  width: 100%;
-  min-width: 0;
-  padding-block: 0;
-  padding-inline: 0.85rem;
-
-  i {
-    line-height: 1;
-  }
-
-  &:hover {
     color: var(--text-color);
   }
 }

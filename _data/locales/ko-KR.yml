@@ -10,6 +10,11 @@ language:
   ko: 한국어
   en: English
 
+theme:
+  label: 테마
+  dark: 어두운
+  light: 밝은
+
 # ----- Commons label -----
 
 layout:

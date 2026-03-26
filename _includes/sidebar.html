@@ -49,11 +49,15 @@
   </nav>
 
   <div class="sidebar-bottom w-100">
-    <div class="sidebar-controls-row d-flex align-items-center">
+    <div class="sidebar-controls-row d-flex flex-column align-items-start">
       {% unless site.theme_mode %}
-        <div class="lang-switcher control-switcher" aria-label="Switch Mode">
-          <button type="button" class="lang-switcher-btn control-switcher-btn" aria-label="Switch Mode" id="mode-toggle">
-            <i class="fas fa-adjust"></i>
+        <div class="lang-switcher theme-toggle" aria-label="{{ site.data.locales[include.lang].theme.label }}">
+          <span class="lang-switcher-thumb" aria-hidden="true"></span>
+          <button type="button" class="lang-switcher-btn" data-theme-option="dark">
+            <span data-i18n="theme.dark">{{ site.data.locales[include.lang].theme.dark }}</span>
+          </button>
+          <button type="button" class="lang-switcher-btn" data-theme-option="light">
+            <span data-i18n="theme.light">{{ site.data.locales[include.lang].theme.light }}</span>
           </button>
         </div>
       {% endunless %}
