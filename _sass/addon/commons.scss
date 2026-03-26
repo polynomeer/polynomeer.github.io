@@ -1058,8 +1058,10 @@ $btn-mb: 0.5rem;
 
         display: flex;
         align-items: center;
+        width: 100%;
         border-radius: 0.75rem;
         font-weight: 600;
+        box-sizing: border-box;
 
         &:hover {
           background-color: var(--sidebar-hover-bg);
