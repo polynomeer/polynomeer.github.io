@@ -15,6 +15,46 @@
     background-color: var(--timeline-color);
   }
 
+  .archive-year-group {
+    &:not(.is-open) {
+      .archive-year-toggle .year::before {
+        height: 32px;
+      }
+    }
+
+    &.is-open {
+      .archive-year-toggle .year::before {
+        height: 72px;
+      }
+    }
+  }
+
+  .archive-year-toggle {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    color: inherit;
+
+    &::after {
+      content: '\f107';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 6.2rem;
+      margin-top: 1rem;
+      color: var(--text-muted-color);
+      transition: transform 0.2s ease;
+    }
+
+    &[aria-expanded='false']::after {
+      transform: rotate(-90deg);
+    }
+  }
+
   .year {
     height: 3.5rem;
     font-size: 1.5rem;
@@ -55,6 +95,8 @@
   }
 
   ul {
+    margin-bottom: 0;
+
     li {
       font-size: 1.1rem;
       line-height: 3rem;

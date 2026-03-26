@@ -7,16 +7,26 @@ layout: page
 
 {% assign df_strftime_m = site.data.locales[lang].df.archives.strftime | default: '/ %m' %}
 {% assign df_dayjs_m = site.data.locales[lang].df.archives.dayjs | default: '/ MM' %}
+{% assign latest_year = site.posts.first.date | date: '%Y' %}
 
 <div id="archives" class="pl-xl-3">
   {% for post in site.posts %}
     {% assign cur_year = post.date | date: '%Y' %}
 
     {% if cur_year != last_year %}
-      {% unless forloop.first %}</ul>{% endunless %}
+      {% unless forloop.first %}</ul></section>{% endunless %}
 
-      <time class="year lead d-block">{{ cur_year }}</time>
-      {{ '<ul class="list-unstyled">' }}
+      {% assign is_open = cur_year == latest_year %}
+      <section class="archive-year-group{% if is_open %} is-open{% endif %}" data-year="{{ cur_year }}">
+        <button
+          type="button"
+          class="archive-year-toggle"
+          aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
+          aria-controls="archive-year-{{ cur_year }}"
+        >
+          <time class="year lead d-block">{{ cur_year }}</time>
+        </button>
+        <ul id="archive-year-{{ cur_year }}" class="list-unstyled"{% unless is_open %} hidden{% endunless %}>
 
       {% assign last_year = cur_year %}
     {% endif %}
@@ -30,6 +40,23 @@ layout: page
       <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
     </li>
 
-    {% if forloop.last %}</ul>{% endif %}
+    {% if forloop.last %}</ul></section>{% endif %}
   {% endfor %}
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#archives .archive-year-toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const group = toggle.closest('.archive-year-group');
+        const list = group?.querySelector('ul');
+        if (!list) return;
+
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        list.hidden = expanded;
+        group.classList.toggle('is-open', !expanded);
+      });
+    });
+  });
+</script>
