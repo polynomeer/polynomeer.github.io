@@ -1,7 +1,7 @@
 ---
 # the default layout is 'page'
 icon: fas fa-info-circle
-order: 9
+order: 1
 ---
 
 {% include lang.html %}
