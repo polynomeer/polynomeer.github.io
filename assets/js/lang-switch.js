@@ -16,6 +16,19 @@
   const lookup = (source, path) =>
     path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), source);
 
+  const updateUrl = (lang) => {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set('lang', lang);
+    window.history.replaceState({}, '', nextUrl);
+  };
+
+  const setLanguage = (lang) => {
+    if (!supported.includes(lang)) return;
+    window.localStorage.setItem(storageKey, lang);
+    updateUrl(lang);
+    applyText(lang);
+  };
+
   const pickLanguage = () => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get('lang');
@@ -84,18 +97,11 @@
   applyText(initialLang);
 
   document.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-lang-option]');
-    if (!button) return;
+    const switcher = event.target.closest('.lang-switcher:not(.control-switcher)');
+    if (!switcher) return;
 
-    const { langOption } = button.dataset;
-    if (!supported.includes(langOption)) return;
-
-    window.localStorage.setItem(storageKey, langOption);
-
-    const nextUrl = new URL(window.location.href);
-    nextUrl.searchParams.set('lang', langOption);
-    window.history.replaceState({}, '', nextUrl);
-
-    applyText(langOption);
+    const currentLang = document.documentElement.lang === 'en' ? 'en' : 'ko-KR';
+    const nextLang = currentLang === 'ko-KR' ? 'en' : 'ko-KR';
+    setLanguage(nextLang);
   });
 })();
