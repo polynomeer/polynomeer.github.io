@@ -1,0 +1,21 @@
+{% assign badge_ids = include.post.validation_badges | default: empty %}
+
+{% if badge_ids and badge_ids.size > 0 %}
+  <div class="practical-validation-badge-list">
+    {% for badge_id in badge_ids %}
+      {% assign badge = site.data.practical_validation_badges[badge_id] %}
+      {% if badge %}
+        <span
+          class="practical-validation-badge"
+          title="{{ badge.description }}"
+          data-badge-id="{{ badge_id }}"
+        >
+          {% if badge.icon %}
+            <i class="{{ badge.icon }}"></i>
+          {% endif %}
+          <span>{{ badge.title }}</span>
+        </span>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

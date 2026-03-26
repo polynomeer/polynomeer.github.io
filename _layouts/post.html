@@ -22,6 +22,7 @@ tail_includes:
       <div class="post-type-row mb-3">
         {% include content-type-badge.html post=page lang=lang %}
         {% include post-status-badge.html post=page lang=lang %}
+        {% include practical-validation-badges.html post=page lang=lang %}
       </div>
 
       <!-- published date -->
@@ -139,6 +140,8 @@ tail_includes:
       </div>
     </div>
   </header>
+
+  {% include problem-decision-result.html lang=lang %}
 
   <div class="content">
     {{ content }}

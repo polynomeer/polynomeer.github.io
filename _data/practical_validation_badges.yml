@@ -1,0 +1,29 @@
+production-experience:
+  title: Production Experience
+  description: Based on implementation or operational experience in real systems.
+  icon: fas fa-server
+
+troubleshooting:
+  title: Troubleshooting
+  description: Focused on diagnosing and resolving failures or unexpected behavior.
+  icon: fas fa-stethoscope
+
+performance:
+  title: Performance
+  description: Focused on throughput, latency, scaling, or efficiency tradeoffs.
+  icon: fas fa-gauge-high
+
+architecture:
+  title: Architecture
+  description: Focused on system design tradeoffs and structural decisions.
+  icon: fas fa-sitemap
+
+interview-focused:
+  title: Interview Focused
+  description: Written to support interview preparation or hiring evaluation.
+  icon: fas fa-user-tie
+
+conceptual:
+  title: Conceptual
+  description: Primarily explanatory or conceptual rather than field-report oriented.
+  icon: fas fa-lightbulb

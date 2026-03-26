@@ -1,0 +1,41 @@
+{% assign pdr = page.problem_decision_result %}
+
+{% if pdr %}
+  {% assign has_problem = pdr.problem and pdr.problem != empty %}
+  {% assign has_decision = pdr.decision and pdr.decision != empty %}
+  {% assign has_result = pdr.result and pdr.result != empty %}
+
+  {% if has_problem or has_decision or has_result %}
+    <section class="problem-decision-result" aria-labelledby="problem-decision-result-title">
+      <div class="problem-decision-result-header">
+        <p class="problem-decision-result-eyebrow">{{ site.data.locales[include.lang].pdr.eyebrow }}</p>
+        <h2 id="problem-decision-result-title" class="problem-decision-result-title">
+          {{ site.data.locales[include.lang].pdr.title }}
+        </h2>
+      </div>
+
+      <div class="problem-decision-result-grid">
+        {% if has_problem %}
+          <article class="problem-decision-result-card">
+            <h3>{{ site.data.locales[include.lang].pdr.problem }}</h3>
+            <p>{{ pdr.problem }}</p>
+          </article>
+        {% endif %}
+
+        {% if has_decision %}
+          <article class="problem-decision-result-card">
+            <h3>{{ site.data.locales[include.lang].pdr.decision }}</h3>
+            <p>{{ pdr.decision }}</p>
+          </article>
+        {% endif %}
+
+        {% if has_result %}
+          <article class="problem-decision-result-card">
+            <h3>{{ site.data.locales[include.lang].pdr.result }}</h3>
+            <p>{{ pdr.result }}</p>
+          </article>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+{% endif %}
