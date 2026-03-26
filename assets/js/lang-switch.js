@@ -78,6 +78,11 @@
       const isActive = button.dataset.langOption === lang;
       button.classList.toggle('active', isActive);
       button.setAttribute('aria-pressed', String(isActive));
+
+      const switcher = button.closest('.lang-toggle');
+      if (switcher) {
+        switcher.dataset.activeLang = lang;
+      }
     });
 
     if (searchInput) {

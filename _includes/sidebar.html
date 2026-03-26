@@ -58,7 +58,8 @@
         </div>
       {% endunless %}
 
-      <div class="lang-switcher" aria-label="{{ site.data.locales[include.lang].language.label }}">
+      <div class="lang-switcher lang-toggle" aria-label="{{ site.data.locales[include.lang].language.label }}">
+        <span class="lang-switcher-thumb" aria-hidden="true"></span>
         <button type="button" class="lang-switcher-btn" data-lang-option="ko-KR">
           {{ site.data.locales[include.lang].language.ko }}
         </button>

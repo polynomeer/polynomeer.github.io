@@ -173,11 +173,31 @@ footer {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
   padding: 0.2rem;
   border: 1px solid var(--main-border-color);
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.08);
+}
+
+.lang-toggle {
+  gap: 0;
+
+  .lang-switcher-thumb {
+    position: absolute;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    left: 0.2rem;
+    width: calc(50% - 0.1rem);
+    border-radius: 999px;
+    background: rgba(139, 233, 253, 0.18);
+    transition: transform 0.22s ease;
+  }
+
+  &[data-active-lang='en'] {
+    .lang-switcher-thumb {
+      transform: translateX(100%);
+    }
+  }
 }
 
 .control-switcher-btn,
@@ -198,7 +218,6 @@ footer {
     color 0.2s ease;
 
   &.active {
-    background: rgba(139, 233, 253, 0.18);
     color: var(--text-color);
   }
 }
