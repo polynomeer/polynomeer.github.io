@@ -85,6 +85,12 @@
   {% endif %}
 {% endif %}
 
+{% if page.layout == 'post' and site.likes.provider == 'supabase' %}
+  {% if site.likes.supabase.url != empty and site.likes.supabase.anon_key != empty %}
+    {% include likes/supabase.html %}
+  {% endif %}
+{% endif %}
+
 {% if page.mermaid %}
   {% include mermaid.html %}
 {% endif %}

@@ -65,6 +65,9 @@ post:
   updated: Updated
   words: words
   pageview_measure: views
+  like_idle: likes
+  like_active: liked
+  like_unavailable: unavailable
   series: Series
   series_progress: "Part :CURRENT of :TOTAL"
   series_previous: Previous in series

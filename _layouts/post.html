@@ -83,6 +83,30 @@ tail_includes:
         </span>
 
         <div>
+          {% if site.likes.provider == 'supabase'
+            and site.likes.supabase.url
+            and site.likes.supabase.url != empty
+            and site.likes.supabase.anon_key
+            and site.likes.supabase.anon_key != empty
+          %}
+            <span
+              id="post-likes"
+              class="post-like-widget"
+              data-post-path="{{ page.url }}"
+              data-label-idle="{{ site.data.locales[lang].post.like_idle }}"
+              data-label-active="{{ site.data.locales[lang].post.like_active }}"
+              data-label-unavailable="{{ site.data.locales[lang].post.like_unavailable }}"
+            >
+              <button type="button" class="post-like-button" aria-pressed="false">
+                <i class="far fa-heart"></i>
+                <i class="fas fa-heart"></i>
+                <span class="post-like-count">0</span>
+              </button>
+              <span class="post-like-label">{{ site.data.locales[lang].post.like_idle }}</span>
+              <span class="post-like-status" aria-live="polite"></span>
+            </span>
+          {% endif %}
+
           <!-- pageviews -->
           {% if site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
             <span>

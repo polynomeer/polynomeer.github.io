@@ -1,0 +1,189 @@
+<!-- Supabase post likes -->
+<script>
+  (() => {
+    const root = document.getElementById('post-likes');
+
+    if (!root) {
+      return;
+    }
+
+    const likeButton = root.querySelector('.post-like-button');
+    const countNode = root.querySelector('.post-like-count');
+    const labelNode = root.querySelector('.post-like-label');
+    const statusNode = root.querySelector('.post-like-status');
+    const projectUrl = '{{ site.likes.supabase.url | strip }}'.replace(/\/$/, '');
+    const anonKey = '{{ site.likes.supabase.anon_key | strip }}';
+    const table = '{{ site.likes.supabase.table | default: "post_likes" | strip }}';
+    const postPath = root.dataset.postPath;
+    const visitorStorageKey = 'post-likes-visitor-id';
+    const texts = {
+      idle: root.dataset.labelIdle,
+      active: root.dataset.labelActive,
+      unavailable: root.dataset.labelUnavailable
+    };
+
+    if (!projectUrl || !anonKey || !table || !postPath) {
+      root.dataset.ready = 'false';
+      likeButton.disabled = true;
+      labelNode.textContent = texts.unavailable;
+      statusNode.textContent = texts.unavailable;
+      return;
+    }
+
+    const endpoint = `${projectUrl}/rest/v1/${table}`;
+
+    const headers = {
+      apikey: anonKey,
+      Authorization: `Bearer ${anonKey}`,
+      'Content-Type': 'application/json'
+    };
+
+    const getVisitorId = () => {
+      const existing = localStorage.getItem(visitorStorageKey);
+
+      if (existing) {
+        return existing;
+      }
+
+      const created =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `visitor-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+      localStorage.setItem(visitorStorageKey, created);
+      return created;
+    };
+
+    const visitorId = getVisitorId();
+
+    const buildQuery = (params) => {
+      const query = new URLSearchParams(params);
+      return `${endpoint}?${query.toString()}`;
+    };
+
+    const setPending = (pending) => {
+      root.dataset.pending = pending ? 'true' : 'false';
+      likeButton.disabled = pending;
+    };
+
+    const setView = ({ liked, count, unavailable = false }) => {
+      root.dataset.ready = unavailable ? 'false' : 'true';
+      root.dataset.liked = liked ? 'true' : 'false';
+      likeButton.setAttribute('aria-pressed', liked ? 'true' : 'false');
+      likeButton.classList.toggle('is-liked', liked);
+      countNode.textContent = new Intl.NumberFormat().format(count);
+      labelNode.textContent = liked ? texts.active : texts.idle;
+      statusNode.textContent = unavailable ? texts.unavailable : '';
+      likeButton.disabled = unavailable || root.dataset.pending === 'true';
+    };
+
+    const fetchCount = async () => {
+      const response = await fetch(
+        buildQuery({
+          select: 'id',
+          post_path: `eq.${postPath}`
+        }),
+        { headers }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch likes: ${response.status}`);
+      }
+
+      const rows = await response.json();
+      return Array.isArray(rows) ? rows.length : 0;
+    };
+
+    const fetchLiked = async () => {
+      const response = await fetch(
+        buildQuery({
+          select: 'id',
+          post_path: `eq.${postPath}`,
+          visitor_id: `eq.${visitorId}`,
+          limit: '1'
+        }),
+        { headers }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch like state: ${response.status}`);
+      }
+
+      const rows = await response.json();
+      return Array.isArray(rows) && rows.length > 0;
+    };
+
+    const refresh = async () => {
+      const [count, liked] = await Promise.all([fetchCount(), fetchLiked()]);
+      setView({ liked, count });
+    };
+
+    const insertLike = async () => {
+      const response = await fetch(`${endpoint}?on_conflict=post_path,visitor_id`, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          Prefer: 'resolution=merge-duplicates,return=representation'
+        },
+        body: JSON.stringify({
+          post_path: postPath,
+          visitor_id: visitorId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to insert like: ${response.status}`);
+      }
+    };
+
+    const deleteLike = async () => {
+      const response = await fetch(
+        buildQuery({
+          post_path: `eq.${postPath}`,
+          visitor_id: `eq.${visitorId}`
+        }),
+        {
+          method: 'DELETE',
+          headers: {
+            ...headers,
+            Prefer: 'return=representation'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete like: ${response.status}`);
+      }
+    };
+
+    likeButton.addEventListener('click', async () => {
+      if (root.dataset.pending === 'true') {
+        return;
+      }
+
+      setPending(true);
+
+      try {
+        if (root.dataset.liked === 'true') {
+          await deleteLike();
+        } else {
+          await insertLike();
+        }
+
+        await refresh();
+      } catch (error) {
+        console.error('post likes error', error);
+        statusNode.textContent = texts.unavailable;
+      } finally {
+        setPending(false);
+      }
+    });
+
+    setView({ liked: false, count: 0 });
+
+    refresh().catch((error) => {
+      console.error('post likes init error', error);
+      setView({ liked: false, count: 0, unavailable: true });
+    });
+  })();
+</script>

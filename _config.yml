@@ -77,6 +77,13 @@ analytics:
 pageviews:
   provider: goatcounter # now only supports 'goatcounter'
 
+likes:
+  provider: supabase
+  supabase:
+    url:
+    anon_key:
+    table: post_likes
+
 # Prefer color scheme setting.
 #
 # Note: Keep empty will follow the system prefer color by default,

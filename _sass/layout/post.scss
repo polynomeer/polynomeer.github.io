@@ -37,6 +37,81 @@ header {
         color: inherit;
       }
     }
+
+    .post-like-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+
+      &::before {
+        display: none;
+      }
+
+      .post-like-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.25rem 0.7rem;
+        border: 1px solid rgba(189, 147, 249, 0.28);
+        border-radius: 999px;
+        background: rgba(68, 71, 90, 0.3);
+        color: var(--text-muted-color);
+        transition:
+          color 0.2s ease,
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          transform 0.2s ease;
+
+        &:hover:not(:disabled) {
+          color: #ff79c6;
+          border-color: rgba(255, 121, 198, 0.45);
+          background: rgba(255, 121, 198, 0.08);
+          transform: translateY(-1px);
+        }
+
+        &:disabled {
+          opacity: 0.75;
+          cursor: wait;
+        }
+
+        .fas.fa-heart {
+          display: none;
+        }
+
+        .post-like-count {
+          font-weight: 600;
+        }
+      }
+
+      &[data-liked='true'] {
+        .post-like-button {
+          color: #ff79c6;
+          border-color: rgba(255, 121, 198, 0.5);
+          background: rgba(255, 121, 198, 0.12);
+        }
+
+        .far.fa-heart {
+          display: none;
+        }
+
+        .fas.fa-heart {
+          display: inline-block;
+        }
+      }
+
+      .post-like-label,
+      .post-like-status {
+        color: var(--text-muted-color);
+
+        &::before {
+          display: none;
+        }
+      }
+
+      .post-like-status:empty {
+        display: none;
+      }
+    }
   }
 
   h1 + .post-meta {
