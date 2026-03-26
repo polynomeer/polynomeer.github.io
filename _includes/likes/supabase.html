@@ -14,7 +14,9 @@
     const projectUrl = '{{ site.likes.supabase.url | strip }}'.replace(/\/$/, '');
     const anonKey = '{{ site.likes.supabase.anon_key | strip }}';
     const table = '{{ site.likes.supabase.table | default: "post_likes" | strip }}';
-    const postPath = root.dataset.postPath;
+    const keyColumn = '{{ site.likes.supabase.key_column | default: "post_path" | strip }}';
+    const postKey = root.dataset.postKey;
+    const legacyPostKey = root.dataset.legacyPostKey || '';
     const visitorStorageKey = 'post-likes-visitor-id';
     const texts = {
       idle: root.dataset.labelIdle,
@@ -22,7 +24,7 @@
       unavailable: root.dataset.labelUnavailable
     };
 
-    if (!projectUrl || !anonKey || !table || !postPath) {
+    if (!projectUrl || !anonKey || !table || !keyColumn || !postKey) {
       root.dataset.ready = 'false';
       likeButton.disabled = true;
       labelNode.textContent = texts.unavailable;
@@ -61,6 +63,11 @@
       return `${endpoint}?${query.toString()}`;
     };
 
+    const buildKeyFilters = () => {
+      const keys = legacyPostKey && legacyPostKey !== postKey ? [postKey, legacyPostKey] : [postKey];
+      return keys;
+    };
+
     const setPending = (pending) => {
       root.dataset.pending = pending ? 'true' : 'false';
       likeButton.disabled = pending;
@@ -78,10 +85,15 @@
     };
 
     const fetchCount = async () => {
+      const keys = buildKeyFilters();
+      const filterValue =
+        keys.length === 1
+          ? `eq.${keys[0]}`
+          : `in.(${keys.map((key) => `"${key}"`).join(',')})`;
       const response = await fetch(
         buildQuery({
           select: 'id',
-          post_path: `eq.${postPath}`
+          [keyColumn]: filterValue
         }),
         { headers }
       );
@@ -95,10 +107,15 @@
     };
 
     const fetchLiked = async () => {
+      const keys = buildKeyFilters();
+      const filterValue =
+        keys.length === 1
+          ? `eq.${keys[0]}`
+          : `in.(${keys.map((key) => `"${key}"`).join(',')})`;
       const response = await fetch(
         buildQuery({
           select: 'id',
-          post_path: `eq.${postPath}`,
+          [keyColumn]: filterValue,
           visitor_id: `eq.${visitorId}`,
           limit: '1'
         }),
@@ -119,14 +136,14 @@
     };
 
     const insertLike = async () => {
-      const response = await fetch(`${endpoint}?on_conflict=post_path,visitor_id`, {
+      const response = await fetch(`${endpoint}?on_conflict=${keyColumn},visitor_id`, {
         method: 'POST',
         headers: {
           ...headers,
           Prefer: 'resolution=merge-duplicates,return=representation'
         },
         body: JSON.stringify({
-          post_path: postPath,
+          [keyColumn]: postKey,
           visitor_id: visitorId
         })
       });
@@ -137,9 +154,14 @@
     };
 
     const deleteLike = async () => {
+      const keys = buildKeyFilters();
+      const filterValue =
+        keys.length === 1
+          ? `eq.${keys[0]}`
+          : `in.(${keys.map((key) => `"${key}"`).join(',')})`;
       const response = await fetch(
         buildQuery({
-          post_path: `eq.${postPath}`,
+          [keyColumn]: filterValue,
           visitor_id: `eq.${visitorId}`
         }),
         {

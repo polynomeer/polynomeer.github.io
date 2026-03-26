@@ -83,6 +83,7 @@ likes:
     url: https://eyrabiilsmkbehqhiezm.supabase.co
     anon_key: sb_publishable__QCEqxJ5nC04iD8-igyV4g_DNTyXW5k
     table: post_likes
+    key_column: post_path
 
 # Prefer color scheme setting.
 #

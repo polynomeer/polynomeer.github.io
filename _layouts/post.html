@@ -92,7 +92,8 @@ tail_includes:
             <span
               id="post-likes"
               class="post-like-widget"
-              data-post-path="{{ page.url }}"
+              data-post-key="{{ page.post_id | default: page.url }}"
+              data-legacy-post-key="{% if page.post_id %}{{ page.url }}{% endif %}"
               data-label-idle="{{ site.data.locales[lang].post.like_idle }}"
               data-label-active="{{ site.data.locales[lang].post.like_active }}"
               data-label-unavailable="{{ site.data.locales[lang].post.like_unavailable }}"
