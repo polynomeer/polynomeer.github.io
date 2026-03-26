@@ -2,7 +2,7 @@
 
 Use this guide when implementing or extending post status metadata in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Objective
 
@@ -73,4 +73,3 @@ The safest first implementation is:
 2. add reusable status badge include
 3. add status directory/detail pages
 4. annotate a few curated posts
-

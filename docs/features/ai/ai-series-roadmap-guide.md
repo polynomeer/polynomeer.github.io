@@ -11,7 +11,7 @@ Use this document when working on:
 - roadmap metadata
 - recommendation improvements based on ordered reading paths
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Feature Summary
 
@@ -172,4 +172,3 @@ If implementation starts, the safest first task is:
 - render it in post pages only when `series` metadata exists
 
 This gives visible value with low repository risk and minimal content migration effort.
-

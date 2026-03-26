@@ -2,7 +2,7 @@
 
 Use this guide when improving search behavior in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Search Architecture
 
@@ -90,4 +90,3 @@ Safest first implementation:
 3. add a result count area in `_includes/search-results.html`
 
 This gives visible improvement without rewriting the search engine.
-

@@ -45,8 +45,8 @@ Purpose:
 
 Main files:
 
-- `docs/series-roadmap-design.md`
-- `docs/ai-series-roadmap-guide.md`
+- `docs/features/series-roadmap-design.md`
+- `docs/features/ai/ai-series-roadmap-guide.md`
 - `_includes/series-navigation.html`
 - `_includes/roadmap-membership.html`
 - `_layouts/post.html`
@@ -77,8 +77,8 @@ Purpose:
 
 Main files:
 
-- `docs/topic-hub-design.md`
-- `docs/ai-topic-hub-guide.md`
+- `docs/features/topic-hub-design.md`
+- `docs/features/ai/ai-topic-hub-guide.md`
 - `_data/topic_hubs.yml`
 - `_layouts/topic-hubs.html`
 - `_layouts/topic-hub.html`
@@ -103,8 +103,8 @@ Purpose:
 
 Main files:
 
-- `docs/recommendation-quality-design.md`
-- `docs/ai-recommendation-guide.md`
+- `docs/features/recommendation-quality-design.md`
+- `docs/features/ai/ai-recommendation-guide.md`
 - `_includes/related-posts.html`
 - `_data/topic_hubs.yml`
 - `_data/locales/en.yml`
@@ -132,8 +132,8 @@ Purpose:
 
 Main files:
 
-- `docs/search-enhancement-design.md`
-- `docs/ai-search-guide.md`
+- `docs/features/search-enhancement-design.md`
+- `docs/features/ai/ai-search-guide.md`
 - `assets/js/data/search.json`
 - `_includes/search-loader.html`
 - `_includes/search-results.html`
@@ -166,8 +166,8 @@ Purpose:
 
 Main files:
 
-- `docs/home-curation-design.md`
-- `docs/ai-home-curation-guide.md`
+- `docs/features/home-curation-design.md`
+- `docs/features/ai/ai-home-curation-guide.md`
 - `_includes/home-curation.html`
 - `_layouts/home.html`
 - `_sass/layout/home.scss`
@@ -186,8 +186,8 @@ Purpose:
 
 Main files:
 
-- `docs/content-type-separation-design.md`
-- `docs/ai-content-type-guide.md`
+- `docs/features/content-type-separation-design.md`
+- `docs/features/ai/ai-content-type-guide.md`
 - `_data/content_types.yml`
 - `_includes/content-type-badge.html`
 - `_layouts/content-types.html`
@@ -214,8 +214,8 @@ Purpose:
 
 Main files:
 
-- `docs/post-status-design.md`
-- `docs/ai-post-status-guide.md`
+- `docs/features/post-status-design.md`
+- `docs/features/ai/ai-post-status-guide.md`
 - `_data/post_statuses.yml`
 - `_includes/post-status-badge.html`
 - `_layouts/post-statuses.html`
@@ -242,8 +242,8 @@ Purpose:
 
 Main files:
 
-- `docs/learning-path-design.md`
-- `docs/ai-learning-path-guide.md`
+- `docs/features/learning-path-design.md`
+- `docs/features/ai/ai-learning-path-guide.md`
 - `_data/learning_paths.yml`
 - `_layouts/learning-paths.html`
 - `_layouts/learning-path.html`
@@ -418,12 +418,11 @@ Check:
 
 ## Related Docs
 
-- `docs/series-roadmap-design.md`
-- `docs/topic-hub-design.md`
-- `docs/recommendation-quality-design.md`
-- `docs/search-enhancement-design.md`
-- `docs/home-curation-design.md`
-- `docs/content-type-separation-design.md`
-- `docs/post-status-design.md`
-- `docs/learning-path-design.md`
-
+- `docs/features/series-roadmap-design.md`
+- `docs/features/topic-hub-design.md`
+- `docs/features/recommendation-quality-design.md`
+- `docs/features/search-enhancement-design.md`
+- `docs/features/home-curation-design.md`
+- `docs/features/content-type-separation-design.md`
+- `docs/features/post-status-design.md`
+- `docs/features/learning-path-design.md`

@@ -2,7 +2,7 @@
 
 Use this document when implementing or extending topic hub functionality in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Purpose
 
@@ -110,4 +110,3 @@ The safest first implementation is:
 3. match posts using existing category and tag metadata
 
 This gives useful discovery pages without requiring content migration.
-

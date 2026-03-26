@@ -2,7 +2,7 @@
 
 Use this guide when implementing or extending content type separation in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Purpose
 
@@ -72,4 +72,3 @@ The safest first implementation is:
 3. add type badges to post and home cards
 
 This provides immediate user value with minimal risk.
-

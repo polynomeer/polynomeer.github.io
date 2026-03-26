@@ -2,7 +2,7 @@
 
 Use this guide when implementing or extending learning paths in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Objective
 
@@ -57,4 +57,3 @@ The safest first implementation is:
 1. add the learning path data file
 2. add collection layouts and sample entries
 3. add a homepage curation section
-

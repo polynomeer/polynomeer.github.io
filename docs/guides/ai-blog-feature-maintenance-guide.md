@@ -5,7 +5,7 @@ This document is a task-oriented reference for AI agents and contributors mainta
 Use this together with:
 
 - `AGENTS.md`
-- `docs/blog-development-operations-guide.md`
+- `docs/guides/blog-development-operations-guide.md`
 
 ## Goal
 
@@ -210,7 +210,6 @@ Keep docs and implementation in separate commits when both are part of the task.
 
 ## When to Update Which Doc
 
-- Update `docs/blog-development-operations-guide.md` when feature behavior or operating workflow changes.
+- Update `docs/guides/blog-development-operations-guide.md` when feature behavior or operating workflow changes.
 - Update this guide when AI-safe editing rules or maintenance strategy changes.
 - Update feature-specific design docs when the feature’s structure or intended model changes.
-

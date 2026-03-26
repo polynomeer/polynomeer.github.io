@@ -2,7 +2,7 @@
 
 Use this guide when improving homepage curation in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Objective
 
@@ -78,4 +78,3 @@ Add curated homepage sections above the post list using:
 3. featured series
 
 Then leave the existing post feed intact below them.
-

@@ -2,7 +2,7 @@
 
 Use this guide when updating related post recommendation behavior in this repository.
 
-For general repository rules, read [`AGENTS.md`](../AGENTS.md) first.
+For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 ## Current Baseline
 
@@ -93,4 +93,3 @@ Update [`_includes/related-posts.html`](../_includes/related-posts.html) so that
 5. shared categories
 
 This is the highest-value improvement with the smallest surface area.
-
