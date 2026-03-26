@@ -150,6 +150,17 @@ df:
   post:
     strftime: "%Y/%m/%d"
     dayjs: "YYYY/MM/DD"
+  archives:
+    strftime: "%m"
+    dayjs: "MM"
+
+archives:
+  eyebrow: 시간순 아카이브
+  description: 연도별 요약과 포스트 메타데이터를 함께 보면서 전체 글 흐름을 탐색합니다.
+  total_posts: 전체 글
+  active_years: 연도 수
+  latest_year: 최신 연도
+  year_post_count: ":COUNT개 글"
 
 # categories page
 categories:

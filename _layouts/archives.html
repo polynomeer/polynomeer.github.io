@@ -8,39 +8,114 @@ layout: page
 {% assign df_strftime_m = site.data.locales[lang].df.archives.strftime | default: '/ %m' %}
 {% assign df_dayjs_m = site.data.locales[lang].df.archives.dayjs | default: '/ MM' %}
 {% assign latest_year = site.posts.first.date | date: '%Y' %}
+{% assign yearly_posts = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
+{% assign active_years = yearly_posts | size %}
 
 <div id="archives" class="pl-xl-3">
-  {% for post in site.posts %}
-    {% assign cur_year = post.date | date: '%Y' %}
+  <section class="archives-hero">
+    <p class="archives-eyebrow" data-i18n="archives.eyebrow">{{ site.data.locales[lang].archives.eyebrow }}</p>
+    <h2 data-i18n="tabs.archives">{{ site.data.locales[lang].tabs.archives }}</h2>
+    <p class="archives-summary" data-i18n="archives.description">{{ site.data.locales[lang].archives.description }}</p>
 
-    {% if cur_year != last_year %}
-      {% unless forloop.first %}</ul></section>{% endunless %}
+    <div class="archives-stats">
+      <article class="archives-stat-card">
+        <span class="archives-stat-label" data-i18n="archives.total_posts">{{ site.data.locales[lang].archives.total_posts }}</span>
+        <strong>{{ site.posts | size }}</strong>
+      </article>
+      <article class="archives-stat-card">
+        <span class="archives-stat-label" data-i18n="archives.active_years">{{ site.data.locales[lang].archives.active_years }}</span>
+        <strong>{{ active_years }}</strong>
+      </article>
+      <article class="archives-stat-card">
+        <span class="archives-stat-label" data-i18n="archives.latest_year">{{ site.data.locales[lang].archives.latest_year }}</span>
+        <strong>{{ latest_year }}</strong>
+      </article>
+    </div>
+  </section>
 
-      {% assign is_open = cur_year == latest_year %}
-      <section class="archive-year-group{% if is_open %} is-open{% endif %}" data-year="{{ cur_year }}">
-        <button
-          type="button"
-          class="archive-year-toggle"
-          aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
-          aria-controls="archive-year-{{ cur_year }}"
-        >
+  {% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
+
+  {% for year_group in yearly_posts %}
+    {% assign cur_year = year_group.name %}
+    {% assign year_posts = year_group.items %}
+    {% assign year_post_count = year_posts | size %}
+    {% assign is_open = cur_year == latest_year %}
+
+    <section class="archive-year-group{% if is_open %} is-open{% endif %}" data-year="{{ cur_year }}">
+      <button
+        type="button"
+        class="archive-year-toggle"
+        aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
+        aria-controls="archive-year-{{ cur_year }}"
+      >
+        <div class="archive-year-main">
           <time class="year lead d-block">{{ cur_year }}</time>
-        </button>
-        <ul id="archive-year-{{ cur_year }}" class="list-unstyled"{% unless is_open %} hidden{% endunless %}>
+          <div class="archive-year-summary">
+            <span
+              class="archive-year-count"
+              data-l10n-ko="{{ site.data.locales['ko-KR'].archives.year_post_count | replace: ':COUNT', year_post_count | escape }}"
+              data-l10n-en="{% if year_post_count == 1 %}{{ site.data.locales.en.archives.year_post_count_singular | replace: ':COUNT', year_post_count | escape }}{% else %}{{ site.data.locales.en.archives.year_post_count | replace: ':COUNT', year_post_count | escape }}{% endif %}"
+            >
+              {% if lang == 'en' %}
+                {% if year_post_count == 1 %}
+                  {{ site.data.locales.en.archives.year_post_count_singular | replace: ':COUNT', year_post_count }}
+                {% else %}
+                  {{ site.data.locales.en.archives.year_post_count | replace: ':COUNT', year_post_count }}
+                {% endif %}
+              {% else %}
+                {{ site.data.locales[lang].archives.year_post_count | replace: ':COUNT', year_post_count }}
+              {% endif %}
+            </span>
 
-      {% assign last_year = cur_year %}
-    {% endif %}
+            <div class="archive-type-summary">
+              {% assign shown_type_count = 0 %}
+              {% for type_entry in sorted_content_types %}
+                {% if shown_type_count >= 3 %}
+                  {% break %}
+                {% endif %}
 
-    <li>
-      {% assign ts = post.date | date: '%s' %}
-      <span class="date day" data-ts="{{ ts }}" data-df="DD">{{ post.date | date: '%d' }}</span>
-      <span class="date month small text-muted ms-1" data-ts="{{ ts }}" data-df="{{ df_dayjs_m }}">
-        {{ post.date | date: df_strftime_m }}
-      </span>
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    </li>
+                {% assign content_type_id = type_entry[0] %}
+                {% assign content_type = type_entry[1] %}
+                {% assign type_segment = '/' | append: content_type_id | append: '/' %}
+                {% assign matching_type_posts = year_posts | where_exp: 'post', "post.path contains type_segment" %}
+                {% assign matching_type_count = matching_type_posts | size %}
 
-    {% if forloop.last %}</ul></section>{% endif %}
+                {% if matching_type_count > 0 %}
+                  {% assign shown_type_count = shown_type_count | plus: 1 %}
+                  {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+                  <span class="archive-type-pill">
+                    <span>{{ content_type_label }}</span>
+                    <strong>{{ matching_type_count }}</strong>
+                  </span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <ul id="archive-year-{{ cur_year }}" class="list-unstyled"{% unless is_open %} hidden{% endunless %}>
+        {% for post in year_posts %}
+          <li class="archive-post-item">
+            {% assign ts = post.date | date: '%s' %}
+            <div class="archive-post-date">
+              <span class="date day" data-ts="{{ ts }}" data-df="DD">{{ post.date | date: '%d' }}</span>
+              <span class="date month small text-muted ms-1" data-ts="{{ ts }}" data-df="{{ df_dayjs_m }}">
+                {{ post.date | date: df_strftime_m }}
+              </span>
+            </div>
+
+            <div class="archive-post-main">
+              <a href="{{ post.url | relative_url }}" class="archive-post-link">{{ post.title }}</a>
+              <div class="archive-post-meta">
+                {% include content-type-badge.html post=post link=true %}
+                {% include post-status-badge.html post=post link=true %}
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
   {% endfor %}
 </div>
 

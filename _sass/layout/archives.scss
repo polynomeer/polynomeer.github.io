@@ -4,6 +4,8 @@
 
 #archives {
   letter-spacing: 0.03rem;
+  display: grid;
+  gap: 1.5rem;
 
   $timeline-width: 4px;
 
@@ -15,7 +17,65 @@
     background-color: var(--timeline-color);
   }
 
+  .archives-hero {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.35rem 1.5rem;
+    border: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.25));
+    border-radius: 1.25rem;
+    background:
+      radial-gradient(circle at top right, rgba(139, 233, 253, 0.12), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+    box-shadow: 0 18px 38px rgba(15, 18, 30, 0.12);
+  }
+
+  .archives-eyebrow {
+    margin: 0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted-color);
+  }
+
+  .archives-summary {
+    margin: 0;
+    color: var(--text-muted-color);
+    line-height: 1.7;
+  }
+
+  .archives-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .archives-stat-card {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+
+    strong {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+  }
+
+  .archives-stat-label {
+    color: var(--text-muted-color);
+    font-size: 0.83rem;
+  }
+
   .archive-year-group {
+    padding: 1rem 1.1rem 0.85rem;
+    border: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.22));
+    border-radius: 1.25rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
+      var(--main-bg, #ffffff);
+
     &:not(.is-open) {
       .archive-year-toggle .year::before {
         height: 32px;
@@ -31,10 +91,11 @@
 
   .archive-year-toggle {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.85rem;
-    width: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
     padding: 0;
     border: 0;
     background: transparent;
@@ -54,6 +115,48 @@
 
     &[aria-expanded='false']::after {
       transform: rotate(-90deg);
+    }
+  }
+
+  .archive-year-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .archive-year-summary {
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 0.2rem;
+  }
+
+  .archive-year-count {
+    color: var(--heading-color);
+    font-size: 0.98rem;
+    font-weight: 700;
+  }
+
+  .archive-type-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .archive-type-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.28rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    color: var(--text-muted-color);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(120, 130, 160, 0.18);
+
+    strong {
+      color: var(--heading-color);
+      font-size: 0.75rem;
     }
   }
 
@@ -98,13 +201,11 @@
 
   ul {
     margin-bottom: 0;
+    padding-top: 0.85rem;
 
     li {
       font-size: 1.1rem;
-      line-height: 3rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.5;
 
       &:nth-child(odd) {
         background-color: var(--main-bg, #ffffff);
@@ -123,14 +224,79 @@
 
         top: 0;
         left: 77px;
-        height: 3.1rem;
+        height: calc(100% + 0.75rem);
       }
     }
 
     &:last-child li:last-child::before {
-      height: 1.5rem;
+      height: calc(50% + 0.35rem);
     }
   } /* #archives ul */
+
+  .archive-post-item {
+    display: grid;
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+    align-items: start;
+    padding: 0.75rem 0;
+  }
+
+  .archive-post-date {
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+
+  .archive-post-main {
+    min-width: 0;
+    display: grid;
+    gap: 0.45rem;
+    padding-right: 0.25rem;
+  }
+
+  .archive-post-link {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    margin-left: 2.5rem;
+    position: relative;
+    top: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      border-bottom: none;
+    }
+
+    &::before {
+      content: '';
+      display: inline-block;
+      position: relative;
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      float: left;
+      top: 0.1rem;
+      left: 71px;
+      background-color: var(--timeline-node-bg);
+      box-shadow: 0 0 3px 0 #c2c6cc;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+  }
+
+  .archive-post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-left: 2.5rem;
+
+    .content-type-badge,
+    .post-status-badge {
+      margin: 0;
+    }
+  }
 
   .date {
     white-space: nowrap;
@@ -149,37 +315,38 @@
     }
   }
 
-  a {
-    /* post title in Archvies */
-    margin-left: 2.5rem;
-    position: relative;
-    top: 0.1rem;
-
-    &:hover {
-      border-bottom: none;
-    }
-
-    &::before {
-      /* the dot before post title */
-      content: '';
-      display: inline-block;
-      position: relative;
-      border-radius: 50%;
-      width: 8px;
-      height: 8px;
-      float: left;
-      top: 1.35rem;
-      left: 71px;
-      background-color: var(--timeline-node-bg);
-      box-shadow: 0 0 3px 0 #c2c6cc;
-      z-index: 1;
-    }
-  }
 } /* #archives */
 
 @media all and (max-width: 576px) {
   #archives {
     margin-top: -1rem;
+
+    .archives-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .archive-year-toggle,
+    .archive-year-main,
+    .archive-post-item {
+      gap: 0.75rem;
+    }
+
+    .archive-post-item {
+      grid-template-columns: 1fr;
+    }
+
+    .archive-post-date,
+    .archive-post-link,
+    .archive-post-meta {
+      margin-left: 0;
+    }
+
+    .archive-post-link::before,
+    ul li::before,
+    .year::before,
+    .year::after {
+      display: none;
+    }
 
     ul {
       letter-spacing: 0;

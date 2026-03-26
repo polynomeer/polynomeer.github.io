@@ -154,6 +154,15 @@ df:
     strftime: "%b"
     dayjs: "MMM"
 
+archives:
+  eyebrow: Time archive
+  description: Explore the full writing history with yearly summaries and post metadata.
+  total_posts: Total posts
+  active_years: Active years
+  latest_year: Latest year
+  year_post_count: ":COUNT posts"
+  year_post_count_singular: ":COUNT post"
+
 # categories page
 categories:
   category_measure:
