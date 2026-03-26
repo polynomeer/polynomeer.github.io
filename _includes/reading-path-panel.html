@@ -1,0 +1,24 @@
+{% assign panel = site.data.recruiter_panel %}
+
+{% if panel and panel.enabled and panel.reading_path and panel.reading_path.size > 0 %}
+  <section class="panel-section recruiter-reading-path-panel">
+    <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.reading_path -}}</h2>
+    <ol class="panel-step-list">
+      {% for item in panel.reading_path %}
+        {% assign href = item.url %}
+        {% unless href contains '://' %}
+          {% assign href = href | relative_url %}
+        {% endunless %}
+        <li>
+          <a
+            href="{{ href }}"
+            data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
+            data-l10n-en="{{ item.title.en | default: item.title | escape }}"
+          >
+            {% include localized-value.html value=item.title lang=include.lang %}
+          </a>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+{% endif %}

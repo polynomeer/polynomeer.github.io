@@ -1,0 +1,15 @@
+{% assign value = include.value %}
+{% assign locale = include.lang | default: site.lang %}
+
+{% if value == nil %}
+{% elsif value[locale] %}
+  {{- value[locale] -}}
+{% elsif value[site.lang] %}
+  {{- value[site.lang] -}}
+{% elsif value.en %}
+  {{- value.en -}}
+{% elsif value['ko-KR'] %}
+  {{- value['ko-KR'] -}}
+{% else %}
+  {{- value -}}
+{% endif %}

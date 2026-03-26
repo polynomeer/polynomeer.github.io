@@ -1,0 +1,42 @@
+{% assign profile_links = site.data.fixed_profile_links %}
+
+{% if profile_links and profile_links.enabled and profile_links.items and profile_links.items.size > 0 %}
+  <section class="fixed-profile-links" aria-label="{{ site.data.locales[include.lang].sidebar.quick_links }}">
+    <p class="fixed-profile-links-eyebrow">
+      <span
+        data-l10n-ko="{{ profile_links.eyebrow['ko-KR'] | default: site.data.locales['ko-KR'].sidebar.quick_links | escape }}"
+        data-l10n-en="{{ profile_links.eyebrow.en | default: site.data.locales.en.sidebar.quick_links | escape }}"
+      >
+        {% include localized-value.html value=profile_links.eyebrow lang=include.lang %}
+      </span>
+    </p>
+
+    <div class="fixed-profile-links-list">
+      {% for item in profile_links.items %}
+        {% if item.url and item.url != empty %}
+          {% assign href = item.url %}
+          {% unless href contains '://' or href contains 'mailto:' %}
+            {% assign href = href | relative_url %}
+          {% endunless %}
+          <a
+            class="fixed-profile-link"
+            href="{{ href }}"
+            {% if item.external %}
+              target="_blank" rel="noopener noreferrer"
+            {% endif %}
+          >
+            {% if item.icon %}
+              <i class="{{ item.icon }}"></i>
+            {% endif %}
+            <span
+              data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
+              data-l10n-en="{{ item.title.en | default: item.title | escape }}"
+            >
+              {% include localized-value.html value=item.title lang=include.lang %}
+            </span>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

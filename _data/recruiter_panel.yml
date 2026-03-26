@@ -1,0 +1,48 @@
+enabled: true
+
+for_recruiters:
+  summary:
+    ko-KR: 채용 담당자가 블로그를 가장 짧은 동선으로 파악할 수 있는 시작점입니다.
+    en: Start here for the shortest recruiter-friendly path through the blog.
+  links:
+    - title:
+        ko-KR: 채용 개요
+        en: Recruit Overview
+      url: /recruit/
+      icon: fas fa-user-tie
+    - title:
+        ko-KR: 역량 맵
+        en: Capability Map
+      url: /capabilities/
+      icon: fas fa-diagram-project
+    - title:
+        ko-KR: 이메일
+        en: Email
+      url: mailto:polynomeer@gmail.com
+      icon: fas fa-envelope
+
+reading_path:
+  - title:
+      ko-KR: 채용 개요 먼저 보기
+      en: Review the recruiter overview
+    url: /recruit/
+  - title:
+      ko-KR: 역량 맵 훑어보기
+      en: Scan the capability map
+    url: /capabilities/
+  - title:
+      ko-KR: 추천 로드맵 읽기
+      en: Read the featured roadmap
+    url: /roadmaps/backend-core/
+
+featured:
+  roadmap:
+    title:
+      ko-KR: 백엔드 핵심 로드맵
+      en: Backend Core Roadmap
+    url: /roadmaps/backend-core/
+    summary:
+      ko-KR: 백엔드 핵심 개념과 연결된 글을 짧은 동선으로 따라가는 구조화된 경로입니다.
+      en: A compact structured path through backend fundamentals and supporting articles.
+  series:
+    id: authentication-basics

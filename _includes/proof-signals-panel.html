@@ -1,0 +1,42 @@
+{% assign representative = site.data.representative_posts %}
+{% assign representative_count = 0 %}
+{% if representative and representative.items %}
+  {% assign representative_count = representative.items | size %}
+{% endif %}
+
+{% assign topic_count = site.topics | size %}
+{% assign roadmap_count = site.roadmaps | size %}
+{% assign total_post_count = site.posts | size %}
+{% assign recruit_post_count = 0 %}
+
+{% for post in site.posts %}
+  {% if post.path contains '/_posts/recruit/' %}
+    {% assign recruit_post_count = recruit_post_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+<section class="panel-section proof-signals-panel">
+  <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.proof_signals -}}</h2>
+  <div class="proof-signal-grid">
+    <div class="proof-signal-card">
+      <strong>{{ total_post_count }}</strong>
+      <span>{{ site.data.locales[include.lang].panel.signal_posts }}</span>
+    </div>
+    <div class="proof-signal-card">
+      <strong>{{ representative_count }}</strong>
+      <span>{{ site.data.locales[include.lang].panel.signal_representative }}</span>
+    </div>
+    <div class="proof-signal-card">
+      <strong>{{ topic_count }}</strong>
+      <span>{{ site.data.locales[include.lang].panel.signal_topics }}</span>
+    </div>
+    <div class="proof-signal-card">
+      <strong>{{ roadmap_count }}</strong>
+      <span>{{ site.data.locales[include.lang].panel.signal_roadmaps }}</span>
+    </div>
+    <div class="proof-signal-card">
+      <strong>{{ recruit_post_count }}</strong>
+      <span>{{ site.data.locales[include.lang].panel.signal_recruit }}</span>
+    </div>
+  </div>
+</section>

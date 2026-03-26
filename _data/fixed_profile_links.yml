@@ -1,0 +1,29 @@
+enabled: true
+eyebrow:
+  ko-KR: 빠른 이동
+  en: Quick Access
+
+items:
+  - title:
+      ko-KR: 채용 개요
+      en: Recruit Overview
+    url: /recruit/
+    icon: fas fa-user-tie
+    external: false
+  - title:
+      ko-KR: 역량 맵
+      en: Capability Map
+    url: /capabilities/
+    icon: fas fa-diagram-project
+    external: false
+  - title:
+      ko-KR: GitHub 프로젝트
+      en: GitHub Projects
+    url: https://github.com/polynomeer
+    icon: fab fa-github
+    external: true
+  # Configure when the PDF is added to the repository, for example:
+  # - title: Resume PDF
+  #   url: /assets/files/resume.pdf
+  #   icon: fas fa-file-pdf
+  #   external: false

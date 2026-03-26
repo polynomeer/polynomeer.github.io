@@ -1,0 +1,42 @@
+{% assign panel = site.data.recruiter_panel %}
+
+{% if panel and panel.enabled and panel.for_recruiters %}
+  <section class="panel-section recruiter-panel">
+    <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.for_recruiters -}}</h2>
+    <p
+      class="panel-copy"
+      data-l10n-ko="{{ panel.for_recruiters.summary['ko-KR'] | default: panel.for_recruiters.summary | escape }}"
+      data-l10n-en="{{ panel.for_recruiters.summary.en | default: panel.for_recruiters.summary | escape }}"
+    >
+      {% include localized-value.html value=panel.for_recruiters.summary lang=include.lang %}
+    </p>
+
+    {% if panel.for_recruiters.links and panel.for_recruiters.links.size > 0 %}
+      <div class="panel-action-list">
+        {% for item in panel.for_recruiters.links %}
+          {% assign href = item.url %}
+          {% unless href contains '://' or href contains 'mailto:' %}
+            {% assign href = href | relative_url %}
+          {% endunless %}
+          <a
+            class="panel-action-link"
+            href="{{ href }}"
+            {% if item.url contains '://' or item.url contains 'mailto:' %}
+              target="_blank" rel="noopener noreferrer"
+            {% endif %}
+          >
+            {% if item.icon %}
+              <i class="{{ item.icon }}"></i>
+            {% endif %}
+            <span
+              data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
+              data-l10n-en="{{ item.title.en | default: item.title | escape }}"
+            >
+              {% include localized-value.html value=item.title lang=include.lang %}
+            </span>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+{% endif %}

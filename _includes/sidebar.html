@@ -12,11 +12,13 @@
     </a>
 
     <h1 class="site-title">
-      <a href="{{ '/about/' | relative_url }}">{{ site.title }}</a>
+      <a href="{{ '/about/' | relative_url }}" data-i18n="title">{{ site.data.locales[include.lang].title | default: site.title }}</a>
     </h1>
-    <p class="site-subtitle fst-italic mb-0">{{ site.tagline }}</p>
+    <p class="site-subtitle fst-italic mb-0" data-i18n="site.tagline">{{ site.data.locales[include.lang].site.tagline | default: site.tagline }}</p>
   </header>
   <!-- .profile-wrapper -->
+
+  {% include fixed-profile-links.html lang=include.lang %}
 
   <nav class="flex-column flex-grow-1 w-100 ps-0">
     <ul class="nav">
@@ -24,20 +26,24 @@
       <li class="nav-item{% if page.layout == 'home' %}{{ " active" }}{% endif %}">
         <a href="{{ '/' | relative_url }}" class="nav-link">
           <i class="fa-fw fas fa-home"></i>
-          <span>{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
+          <span data-i18n="tabs.home">{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
         </a>
       </li>
       <!-- the real tabs -->
       {% for tab in site.tabs %}
-        <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
-          <a href="{{ tab.url | relative_url }}" class="nav-link">
-            <i class="fa-fw {{ tab.icon }}"></i>
-            {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
-
-            <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
-          </a>
-        </li>
-        <!-- .nav-item -->
+        {% unless tab.url == '/recruit/' or tab.url == '/capabilities/' %}
+          <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
+            <a href="{{ tab.url | relative_url }}" class="nav-link">
+              <i class="fa-fw {{ tab.icon }}"></i>
+              {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+              {% assign tab_label = site.data.locales[include.lang].tabs.[tab_name] | default: site.data.locales[include.lang].pages[tab.title_key].title | default: tab.title %}
+              {% assign tab_label_ko = site.data.locales['ko-KR'].tabs.[tab_name] | default: site.data.locales['ko-KR'].pages[tab.title_key].title | default: tab.title %}
+              {% assign tab_label_en = site.data.locales.en.tabs.[tab_name] | default: site.data.locales.en.pages[tab.title_key].title | default: tab.title %}
+              <span data-l10n-ko="{{ tab_label_ko | escape }}" data-l10n-en="{{ tab_label_en | escape }}">{{ tab_label | upcase }}</span>
+            </a>
+          </li>
+          <!-- .nav-item -->
+        {% endunless %}
       {% endfor %}
     </ul>
   </nav>
@@ -53,6 +59,16 @@
       {% endif %}
     {% endunless %}
 
+    <span class="icon-border"></span>
+    <div class="lang-switcher" aria-label="{{ site.data.locales[include.lang].language.label }}">
+      <button type="button" class="lang-switcher-btn" data-lang-option="ko-KR">
+        {{ site.data.locales[include.lang].language.ko }}
+      </button>
+      <button type="button" class="lang-switcher-btn" data-lang-option="en">
+        {{ site.data.locales[include.lang].language.en }}
+      </button>
+    </div>
+
     {% for entry in site.data.contact %}
       {% case entry.type %}
         {% when 'github', 'twitter' %}
@@ -60,10 +76,7 @@
             https://{{ entry.type }}.com/{{ site[entry.type].username }}
           {%- endcapture -%}
         {% when 'email' %}
-          {% assign email = site.social.email | split: '@' %}
-          {%- capture url -%}
-            javascript:location.href = 'mailto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@')
-          {%- endcapture -%}
+          {%- capture url -%}mailto:{{ site.social.email }}{%- endcapture -%}
         {% when 'rss' %}
           {% assign url = '/feed.xml' | relative_url %}
         {% else %}

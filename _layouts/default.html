@@ -37,8 +37,13 @@ layout: compress
           <!-- panel -->
           <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 mb-5 text-muted">
             <div class="access">
-              {% include_cached update-list.html lang=lang %}
-              {% include_cached trending-tags.html lang=lang %}
+              {% if page.layout == 'post' %}
+                {% include_cached update-list.html lang=lang %}
+                {% include_cached trending-tags.html lang=lang %}
+              {% else %}
+                {% include_cached update-list.html lang=lang %}
+                {% include recruiter-panel-stack.html lang=lang %}
+              {% endif %}
             </div>
 
             {% for _include in layout.panel_includes %}
@@ -75,6 +80,17 @@ layout: compress
     {% if site.pwa.enabled %}
       {% include_cached notification.html lang=lang %}
     {% endif %}
+
+    {% capture ui_locales_json %}
+      {
+        "ko-KR": {{ site.data.locales['ko-KR'] | jsonify }},
+        "en": {{ site.data.locales.en | jsonify }}
+      }
+    {% endcapture %}
+    <script id="ui-locales" type="application/json">
+      {{ ui_locales_json | strip }}
+    </script>
+    <script defer src="{{ '/assets/js/lang-switch.js' | relative_url }}"></script>
 
     <!-- JavaScripts -->
     {% include js-selector.html lang=lang %}
