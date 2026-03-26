@@ -201,6 +201,129 @@ header {
   font-size: 1rem;
 }
 
+.comment-thread {
+  margin-top: 3rem;
+  padding: 1.35rem 1.35rem 1.1rem;
+  border: 1px solid rgba(189, 147, 249, 0.14);
+  border-radius: 1rem;
+  background: rgba(40, 42, 54, 0.7);
+
+  .comment-thread-header,
+  .comment-auth-bar,
+  .comment-form-footer,
+  .comment-item-head,
+  .comment-author-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .comment-thread-header {
+    margin-bottom: 1rem;
+  }
+
+  .comment-thread-label {
+    margin-bottom: 0.3rem;
+    color: var(--label-color);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .comment-thread-title {
+    margin-bottom: 0;
+    font-size: 1.35rem;
+  }
+
+  .comment-count {
+    white-space: nowrap;
+  }
+
+  .comment-auth-bar {
+    margin-bottom: 1rem;
+  }
+
+  .comment-form {
+    margin-bottom: 1rem;
+  }
+
+  .comment-body-field {
+    min-height: 7rem;
+    margin-bottom: 0.75rem;
+    border-color: rgba(98, 114, 164, 0.35);
+    background: rgba(68, 71, 90, 0.28);
+    color: var(--text-color);
+
+    &:focus {
+      border-color: rgba(139, 233, 253, 0.55);
+      box-shadow: 0 0 0 0.18rem rgba(139, 233, 253, 0.12);
+      background: rgba(68, 71, 90, 0.34);
+    }
+  }
+
+  .comment-status {
+    min-height: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .comment-empty {
+    padding: 1rem 0;
+  }
+
+  .comment-item {
+    padding: 1rem 0;
+    border-top: 1px solid rgba(98, 114, 164, 0.16);
+  }
+
+  .comment-avatar {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    object-fit: cover;
+    background: rgba(68, 71, 90, 0.36);
+  }
+
+  .comment-avatar-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--heading-color);
+    font-weight: 700;
+  }
+
+  .comment-author-block {
+    justify-content: flex-start;
+  }
+
+  .comment-author {
+    display: block;
+    color: var(--heading-color);
+  }
+
+  .comment-date {
+    font-size: 0.86rem;
+  }
+
+  .comment-body {
+    margin-top: 0.85rem;
+    color: var(--text-color);
+    line-height: 1.75;
+    word-break: break-word;
+  }
+
+  .comment-delete-button {
+    padding-right: 0;
+    color: var(--text-muted-color);
+    text-decoration: none;
+
+    &:hover {
+      color: #ff79c6;
+    }
+  }
+}
+
 .post-tags {
   line-height: 2rem;
 

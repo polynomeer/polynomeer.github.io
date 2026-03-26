@@ -121,7 +121,7 @@ social_preview_image: # string, local or CORS resources
 toc: true
 
 comments:
-  provider: "giscus"
+  provider: "supabase"
   giscus:
     repo: "polynomeer/polynomeer.github.io"
     repo_id: "R_kgDOOBxR8A"
@@ -132,6 +132,12 @@ comments:
     reactions_enabled: true
     emit_metadata: false
     theme: "catppuccin_frappe"
+  supabase:
+    url: https://eyrabiilsmkbehqhiezm.supabase.co
+    anon_key: sb_publishable__QCEqxJ5nC04iD8-igyV4g_DNTyXW5k
+    table: post_comments
+    key_column: post_path
+    auth_provider: github
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:

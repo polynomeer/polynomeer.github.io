@@ -1,0 +1,367 @@
+<section
+  id="post-comments"
+  class="comment-thread"
+  data-post-key="{{ page.post_id | default: page.url }}"
+  data-locale="{{ lang }}"
+  data-title="{{ site.data.locales[lang].comments.title }}"
+  data-count-zero="{{ site.data.locales[lang].comments.count_zero }}"
+  data-count-one="{{ site.data.locales[lang].comments.count_one }}"
+  data-count-many="{{ site.data.locales[lang].comments.count_many }}"
+  data-signin="{{ site.data.locales[lang].comments.signin }}"
+  data-signout="{{ site.data.locales[lang].comments.signout }}"
+  data-signin-prompt="{{ site.data.locales[lang].comments.signin_prompt }}"
+  data-signed-in-as="{{ site.data.locales[lang].comments.signed_in_as }}"
+  data-write-prompt="{{ site.data.locales[lang].comments.write_prompt }}"
+  data-empty="{{ site.data.locales[lang].comments.empty }}"
+  data-placeholder="{{ site.data.locales[lang].comments.placeholder }}"
+  data-submit="{{ site.data.locales[lang].comments.submit }}"
+  data-submitting="{{ site.data.locales[lang].comments.submitting }}"
+  data-delete="{{ site.data.locales[lang].comments.delete }}"
+  data-deleting="{{ site.data.locales[lang].comments.deleting }}"
+  data-delete-confirm="{{ site.data.locales[lang].comments.delete_confirm }}"
+  data-load-error="{{ site.data.locales[lang].comments.load_error }}"
+  data-submit-error="{{ site.data.locales[lang].comments.submit_error }}"
+  data-delete-error="{{ site.data.locales[lang].comments.delete_error }}"
+  data-auth-error="{{ site.data.locales[lang].comments.auth_error }}"
+>
+  <div class="comment-thread-header">
+    <div>
+      <p class="comment-thread-label">{{ site.data.locales[lang].comments.eyebrow }}</p>
+      <h2 class="comment-thread-title">{{ site.data.locales[lang].comments.title }}</h2>
+    </div>
+    <span class="comment-count text-muted">{{ site.data.locales[lang].comments.count_zero }}</span>
+  </div>
+
+  <div class="comment-auth-bar">
+    <div class="comment-auth-state text-muted">{{ site.data.locales[lang].comments.signin_prompt }}</div>
+    <div class="comment-auth-actions">
+      <button type="button" class="comment-login-button btn btn-outline-primary btn-sm">
+        <i class="fab fa-github me-1"></i>{{ site.data.locales[lang].comments.signin }}
+      </button>
+      <button type="button" class="comment-logout-button btn btn-outline-secondary btn-sm d-none">
+        {{ site.data.locales[lang].comments.signout }}
+      </button>
+    </div>
+  </div>
+
+  <form class="comment-form">
+    <label class="visually-hidden" for="comment-body">{{ site.data.locales[lang].comments.placeholder }}</label>
+    <textarea
+      id="comment-body"
+      class="comment-body-field form-control"
+      rows="4"
+      placeholder="{{ site.data.locales[lang].comments.placeholder }}"
+      disabled
+    ></textarea>
+    <div class="comment-form-footer">
+      <span class="comment-form-hint text-muted">{{ site.data.locales[lang].comments.signin_prompt }}</span>
+      <button type="submit" class="comment-submit-button btn btn-primary btn-sm" disabled>
+        {{ site.data.locales[lang].comments.submit }}
+      </button>
+    </div>
+  </form>
+
+  <div class="comment-status text-muted" aria-live="polite"></div>
+  <ol class="comment-list list-unstyled mb-0"></ol>
+</section>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+  const root = document.getElementById('post-comments');
+
+  if (root) {
+    const config = {
+      url: '{{ site.comments.supabase.url | strip }}',
+      anonKey: '{{ site.comments.supabase.anon_key | strip }}',
+      table: '{{ site.comments.supabase.table | default: "post_comments" | strip }}',
+      keyColumn: '{{ site.comments.supabase.key_column | default: "post_path" | strip }}',
+      authProvider: '{{ site.comments.supabase.auth_provider | default: "github" | strip }}'
+    };
+
+    const postKey = root.dataset.postKey;
+    const locale = root.dataset.locale || 'en';
+    const titleNode = root.querySelector('.comment-thread-title');
+    const countNode = root.querySelector('.comment-count');
+    const authStateNode = root.querySelector('.comment-auth-state');
+    const loginButton = root.querySelector('.comment-login-button');
+    const logoutButton = root.querySelector('.comment-logout-button');
+    const form = root.querySelector('.comment-form');
+    const textarea = root.querySelector('.comment-body-field');
+    const submitButton = root.querySelector('.comment-submit-button');
+    const formHint = root.querySelector('.comment-form-hint');
+    const statusNode = root.querySelector('.comment-status');
+    const listNode = root.querySelector('.comment-list');
+
+    const texts = {
+      title: root.dataset.title,
+      countZero: root.dataset.countZero,
+      countOne: root.dataset.countOne,
+      countMany: root.dataset.countMany,
+      signin: root.dataset.signin,
+      signout: root.dataset.signout,
+      signinPrompt: root.dataset.signinPrompt,
+      signedInAs: root.dataset.signedInAs,
+      writePrompt: root.dataset.writePrompt,
+      empty: root.dataset.empty,
+      placeholder: root.dataset.placeholder,
+      submit: root.dataset.submit,
+      submitting: root.dataset.submitting,
+      delete: root.dataset.delete,
+      deleting: root.dataset.deleting,
+      deleteConfirm: root.dataset.deleteConfirm,
+      loadError: root.dataset.loadError,
+      submitError: root.dataset.submitError,
+      deleteError: root.dataset.deleteError,
+      authError: root.dataset.authError
+    };
+
+    const escapeHtml = (value) =>
+      value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+
+    const formatCount = (count) => {
+      if (count === 0) {
+        return texts.countZero;
+      }
+
+      if (count === 1) {
+        return texts.countOne;
+      }
+
+      return texts.countMany.replace(':COUNT', new Intl.NumberFormat(locale).format(count));
+    };
+
+    const formatSignedInAs = (name) => texts.signedInAs.replace(':USER', name);
+
+    const formatDate = (value) =>
+      new Intl.DateTimeFormat(locale, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(new Date(value));
+
+    const nl2br = (value) => value.replaceAll('\n', '<br>');
+
+    const supabase = createClient(config.url, config.anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+
+    let currentUser = null;
+    let comments = [];
+    let pendingDeleteId = null;
+
+    const setStatus = (message = '') => {
+      statusNode.textContent = message;
+    };
+
+    const setComposerState = () => {
+      const signedIn = Boolean(currentUser);
+      textarea.disabled = !signedIn;
+      submitButton.disabled = !signedIn;
+      textarea.placeholder = signedIn ? texts.placeholder : texts.signinPrompt;
+      formHint.textContent = signedIn ? texts.writePrompt : texts.signinPrompt;
+      authStateNode.textContent = signedIn
+        ? formatSignedInAs(currentUser.user_metadata?.user_name || currentUser.user_metadata?.preferred_username || currentUser.user_metadata?.full_name || currentUser.email || 'GitHub')
+        : texts.signinPrompt;
+      loginButton.classList.toggle('d-none', signedIn);
+      logoutButton.classList.toggle('d-none', !signedIn);
+    };
+
+    const renderComments = () => {
+      countNode.textContent = formatCount(comments.length);
+
+      if (comments.length === 0) {
+        listNode.innerHTML = `<li class="comment-empty text-muted">${escapeHtml(texts.empty)}</li>`;
+        return;
+      }
+
+      listNode.innerHTML = comments
+        .map((comment) => {
+          const canDelete = currentUser && currentUser.id === comment.user_id;
+          const avatar = comment.user_avatar_url
+            ? `<img class="comment-avatar" src="${escapeHtml(comment.user_avatar_url)}" alt="${escapeHtml(comment.user_name)}">`
+            : `<div class="comment-avatar comment-avatar-fallback">${escapeHtml(comment.user_name.slice(0, 1).toUpperCase())}</div>`;
+
+          return `
+            <li class="comment-item" data-comment-id="${comment.id}">
+              <div class="comment-item-head">
+                <div class="comment-author-block">
+                  ${avatar}
+                  <div>
+                    <strong class="comment-author">${escapeHtml(comment.user_name)}</strong>
+                    <div class="comment-date text-muted">${escapeHtml(formatDate(comment.created_at))}</div>
+                  </div>
+                </div>
+                ${
+                  canDelete
+                    ? `<button type="button" class="comment-delete-button btn btn-sm btn-link" data-comment-id="${comment.id}">
+                        ${escapeHtml(pendingDeleteId === comment.id ? texts.deleting : texts.delete)}
+                      </button>`
+                    : ''
+                }
+              </div>
+              <div class="comment-body">${nl2br(escapeHtml(comment.body))}</div>
+            </li>
+          `;
+        })
+        .join('');
+    };
+
+    const loadComments = async () => {
+      const { data, error } = await supabase
+        .from(config.table)
+        .select('id, user_id, user_name, user_avatar_url, body, created_at')
+        .eq(config.keyColumn, postKey)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      comments = data || [];
+      renderComments();
+    };
+
+    const syncUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+        throw error;
+      }
+
+      currentUser = data.user;
+      setComposerState();
+      renderComments();
+    };
+
+    loginButton.addEventListener('click', async () => {
+      setStatus('');
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: config.authProvider,
+        options: {
+          redirectTo: window.location.href
+        }
+      });
+
+      if (error) {
+        console.error('comment auth error', error);
+        setStatus(texts.authError);
+      }
+    });
+
+    logoutButton.addEventListener('click', async () => {
+      setStatus('');
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error('comment signout error', error);
+        setStatus(texts.authError);
+        return;
+      }
+
+      currentUser = null;
+      setComposerState();
+      renderComments();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!currentUser) {
+        setStatus(texts.signinPrompt);
+        return;
+      }
+
+      const body = textarea.value.trim();
+
+      if (!body) {
+        textarea.focus();
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = texts.submitting;
+      setStatus('');
+
+      const userName =
+        currentUser.user_metadata?.user_name ||
+        currentUser.user_metadata?.preferred_username ||
+        currentUser.user_metadata?.full_name ||
+        currentUser.email ||
+        'GitHub';
+
+      const { error } = await supabase.from(config.table).insert({
+        [config.keyColumn]: postKey,
+        user_id: currentUser.id,
+        user_name: userName,
+        user_avatar_url: currentUser.user_metadata?.avatar_url || null,
+        body
+      });
+
+      if (error) {
+        console.error('comment submit error', error);
+        setStatus(texts.submitError);
+      } else {
+        textarea.value = '';
+        await loadComments();
+      }
+
+      submitButton.textContent = texts.submit;
+      setComposerState();
+    });
+
+    listNode.addEventListener('click', async (event) => {
+      const button = event.target.closest('.comment-delete-button');
+
+      if (!button || !currentUser) {
+        return;
+      }
+
+      const commentId = button.dataset.commentId;
+
+      if (!commentId || !window.confirm(texts.deleteConfirm)) {
+        return;
+      }
+
+      pendingDeleteId = Number(commentId);
+      renderComments();
+      setStatus('');
+
+      const { error } = await supabase.from(config.table).delete().eq('id', commentId);
+
+      pendingDeleteId = null;
+
+      if (error) {
+        console.error('comment delete error', error);
+        setStatus(texts.deleteError);
+      } else {
+        await loadComments();
+      }
+    });
+
+    supabase.auth.onAuthStateChange(async (_event, session) => {
+      currentUser = session?.user || null;
+      setComposerState();
+      renderComments();
+    });
+
+    Promise.all([syncUser(), loadComments()]).catch((error) => {
+      console.error('comment init error', error);
+      titleNode.textContent = texts.title;
+      setStatus(texts.loadError);
+      listNode.innerHTML = `<li class="comment-empty text-muted">${escapeHtml(texts.loadError)}</li>`;
+    });
+  }
+</script>

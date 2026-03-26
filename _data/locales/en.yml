@@ -57,6 +57,29 @@ notification:
   update_found: A new version of content is available.
   update: Update
 
+comments:
+  eyebrow: Discussion
+  title: Comments
+  count_zero: No comments yet
+  count_one: 1 comment
+  count_many: ":COUNT comments"
+  signin: Sign in with GitHub
+  signout: Sign out
+  signin_prompt: Sign in with GitHub to join the discussion.
+  signed_in_as: "Signed in as :USER"
+  write_prompt: Your comment is public. Keep it concise and useful.
+  empty: No comments yet. Be the first to add one.
+  placeholder: Write a comment
+  submit: Post comment
+  submitting: Posting...
+  delete: Delete
+  deleting: Deleting...
+  delete_confirm: Delete this comment?
+  load_error: Failed to load comments.
+  submit_error: Failed to post the comment.
+  delete_error: Failed to delete the comment.
+  auth_error: GitHub sign-in failed.
+
 # ----- Posts related labels -----
 
 post:
