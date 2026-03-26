@@ -179,6 +179,7 @@ footer {
   background: rgba(148, 163, 184, 0.08);
 }
 
+.control-chip-btn,
 .lang-switcher-btn {
   border: 0;
   background: transparent;
@@ -198,10 +199,30 @@ footer {
   }
 }
 
+.control-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  border: 1px solid var(--main-border-color);
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text-muted-color);
+
+  i {
+    line-height: 1;
+  }
+
+  &:hover {
+    background: rgba(139, 233, 253, 0.12);
+    color: var(--text-color);
+  }
+}
+
 .topbar-lang-switcher {
   margin: 0 0.75rem 0 auto;
 
-  @media (max-width: 849px) {
+  @media (max-width: 1120px) {
     display: none;
   }
 }
@@ -1092,12 +1113,6 @@ $btn-mb: 0.5rem;
 
     i {
       line-height: $btn-size;
-    }
-
-    #mode-toggle {
-      @extend %button;
-      @extend %sidebar-links;
-      @extend %sidebar-link-hover;
     }
 
     .sidebar-controls-row,
