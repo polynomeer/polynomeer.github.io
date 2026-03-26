@@ -41,7 +41,7 @@ refactor: true
 {% endif %}
 
 {% assign status_pages = site.post_statuses | sort: 'order' %}
-{% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
+{% assign sorted_content_types = site.content_types | sort: 'order' %}
 {% assign home_tags = '' | split: '' %}
 {% assign home_years = '' | split: '' %}
 
@@ -83,9 +83,9 @@ refactor: true
           <button type="button" class="post-status-filter-btn active" data-type-filter="all" data-i18n="home.filter_all">
             {{ site.data.locales[lang].home.filter_all }}
           </button>
-          {% for type_entry in sorted_content_types %}
-            {% assign content_type_id = type_entry[0] %}
-            {% assign content_type = type_entry[1] %}
+          {% for type_page in sorted_content_types %}
+            {% assign content_type_id = type_page.content_type_id %}
+            {% assign content_type = site.data.content_types[content_type_id] %}
             {% assign has_posts_of_type = false %}
             {% assign type_segment = '/' | append: content_type_id | append: '/' %}
             {% for post in posts %}

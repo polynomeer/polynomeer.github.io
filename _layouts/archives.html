@@ -10,7 +10,7 @@ layout: page
 {% assign latest_year = site.posts.first.date | date: '%Y' %}
 {% assign yearly_posts = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
 {% assign active_years = yearly_posts | size %}
-{% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
+{% assign sorted_content_types = site.content_types | sort: 'order' %}
 {% assign archive_highlights = '' | split: '' %}
 
 {% if site.data.representative_posts and site.data.representative_posts.items %}
@@ -49,9 +49,9 @@ layout: page
           <button type="button" class="archives-filter-chip active" data-filter-group="type" data-filter-value="all" data-i18n="archives.filter_all">
             {{ site.data.locales[lang].archives.filter_all }}
           </button>
-          {% for type_entry in sorted_content_types %}
-            {% assign content_type_id = type_entry[0] %}
-            {% assign content_type = type_entry[1] %}
+          {% for type_page in sorted_content_types %}
+            {% assign content_type_id = type_page.content_type_id %}
+            {% assign content_type = site.data.content_types[content_type_id] %}
             {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
             <button type="button" class="archives-filter-chip" data-filter-group="type" data-filter-value="{{ content_type_id }}">
               {{ content_type_label }}
@@ -66,10 +66,10 @@ layout: page
           <button type="button" class="archives-filter-chip active" data-filter-group="status" data-filter-value="all" data-i18n="archives.filter_all">
             {{ site.data.locales[lang].archives.filter_all }}
           </button>
-          {% assign sorted_post_statuses = site.data.post_statuses | sort: 'last.order' %}
-          {% for status_entry in sorted_post_statuses %}
-            {% assign status_id = status_entry[0] %}
-            {% assign post_status = status_entry[1] %}
+          {% assign sorted_post_statuses = site.post_statuses | sort: 'order' %}
+          {% for status_page in sorted_post_statuses %}
+            {% assign status_id = status_page.post_status_id %}
+            {% assign post_status = site.data.post_statuses[status_id] %}
             <button type="button" class="archives-filter-chip" data-filter-group="status" data-filter-value="{{ status_id }}">
               {{ post_status.title }}
             </button>
@@ -147,13 +147,13 @@ layout: page
 
             <div class="archive-type-summary">
               {% assign shown_type_count = 0 %}
-              {% for type_entry in sorted_content_types %}
+              {% for type_page in sorted_content_types %}
                 {% if shown_type_count >= 3 %}
                   {% break %}
                 {% endif %}
 
-                {% assign content_type_id = type_entry[0] %}
-                {% assign content_type = type_entry[1] %}
+                {% assign content_type_id = type_page.content_type_id %}
+                {% assign content_type = site.data.content_types[content_type_id] %}
                 {% assign type_segment = '/' | append: content_type_id | append: '/' %}
                 {% assign matching_type_posts = year_posts | where_exp: 'post', "post.path contains type_segment" %}
                 {% assign matching_type_count = matching_type_posts | size %}
