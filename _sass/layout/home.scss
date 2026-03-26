@@ -72,23 +72,44 @@
       .post-meta {
         @extend %muted;
 
-        i {
-          &:not(:first-child) {
-            margin-left: 1.5rem;
-          }
-        }
-
         em {
           @extend %normal-font-style;
 
           color: inherit;
         }
 
-        > div:first-child {
-          display: block;
+        .post-meta-main {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.45rem;
+          min-width: 0;
+        }
+
+        .post-meta-line {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 0.9rem;
+          min-width: 0;
+        }
+
+        .post-meta-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          min-width: 0;
+        }
+
+        .categories {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+
+        i {
+          margin-left: 0 !important;
         }
       }
     }
@@ -164,10 +185,8 @@
         }
 
         .post-meta {
-          i {
-            &:not(:first-child) {
-              margin-left: 1.75rem;
-            }
+          .post-meta-line {
+            gap: 1rem;
           }
         }
       }
@@ -183,6 +202,12 @@
         .card-title-row {
           flex-direction: column;
           gap: 0.6rem;
+        }
+
+        .post-meta {
+          .post-meta-line {
+            gap: 0.65rem;
+          }
         }
       }
     }

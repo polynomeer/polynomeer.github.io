@@ -79,25 +79,29 @@ refactor: true
             </div>
 
             <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
+              <div class="post-meta-main me-auto">
                 <div class="post-type-row mb-2">
                   {% include post-status-badge.html post=post lang=lang link=false %}
                 </div>
 
-                <!-- posted date -->
-                <i class="far fa-calendar fa-fw me-1"></i>
-                {% include datetime.html date=post.date lang=lang %}
-
-                <!-- categories -->
-                {% if post.categories.size > 0 %}
-                  <i class="far fa-folder-open fa-fw me-1"></i>
-                  <span class="categories">
-                    {% for category in post.categories %}
-                      {{ category }}
-                      {%- unless forloop.last -%},{%- endunless -%}
-                    {% endfor %}
+                <div class="post-meta-line">
+                  <span class="post-meta-item">
+                    <i class="far fa-calendar fa-fw"></i>
+                    {% include datetime.html date=post.date lang=lang %}
                   </span>
-                {% endif %}
+
+                  {% if post.categories.size > 0 %}
+                    <span class="post-meta-item">
+                      <i class="far fa-folder-open fa-fw"></i>
+                      <span class="categories">
+                        {% for category in post.categories %}
+                          {{ category }}
+                          {%- unless forloop.last -%},{%- endunless -%}
+                        {% endfor %}
+                      </span>
+                    </span>
+                  {% endif %}
+                </div>
               </div>
 
               {% if post.pin %}
