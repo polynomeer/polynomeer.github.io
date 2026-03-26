@@ -179,7 +179,7 @@ footer {
   background: rgba(148, 163, 184, 0.08);
 }
 
-.control-chip-btn,
+.control-switcher-btn,
 .lang-switcher-btn {
   border: 0;
   background: transparent;
@@ -199,15 +199,16 @@ footer {
   }
 }
 
-.control-chip-btn {
+.control-switcher {
+  padding: 0.2rem;
+}
+
+.control-switcher-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.4rem;
-  border: 1px solid var(--main-border-color);
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.08);
-  color: var(--text-muted-color);
+  min-width: 2.5rem;
+  padding-inline: 0.72rem;
 
   i {
     line-height: 1;

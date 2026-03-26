@@ -51,9 +51,11 @@
   <div class="sidebar-bottom w-100">
     <div class="sidebar-controls-row d-flex align-items-center">
       {% unless site.theme_mode %}
-        <button type="button" class="btn btn-link control-chip-btn" aria-label="Switch Mode" id="mode-toggle">
-          <i class="fas fa-adjust"></i>
-        </button>
+        <div class="lang-switcher control-switcher" aria-label="Switch Mode">
+          <button type="button" class="lang-switcher-btn control-switcher-btn" aria-label="Switch Mode" id="mode-toggle">
+            <i class="fas fa-adjust"></i>
+          </button>
+        </div>
       {% endunless %}
 
       <div class="lang-switcher" aria-label="{{ site.data.locales[include.lang].language.label }}">
