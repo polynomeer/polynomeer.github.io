@@ -69,7 +69,10 @@ refactor: true
 
         <div class="col-md-{{ card_body_col }}">
           <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
+            <div class="card-title-row my-2 mt-md-0">
+              <h1 class="card-title">{{ post.title }}</h1>
+              {% include content-type-badge.html post=post lang=lang link=false %}
+            </div>
 
             <div class="card-text content mt-0 mb-3">
               <p>{% include post-description.html %}</p>
@@ -78,7 +81,6 @@ refactor: true
             <div class="post-meta flex-grow-1 d-flex align-items-end">
               <div class="me-auto">
                 <div class="post-type-row mb-2">
-                  {% include content-type-badge.html post=post lang=lang link=false %}
                   {% include post-status-badge.html post=post lang=lang link=false %}
                 </div>
 

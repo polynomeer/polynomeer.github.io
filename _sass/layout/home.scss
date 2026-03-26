@@ -33,11 +33,25 @@
       height: 100%;
       padding: 1rem;
 
+      .card-title-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.85rem;
+      }
+
       .card-title {
         @extend %text-clip;
 
+        margin: 0;
+        flex: 1 1 auto;
         color: var(--heading-color) !important;
         font-size: 1.25rem;
+      }
+
+      .content-type-badge {
+        flex-shrink: 0;
+        margin-top: 0.1rem;
       }
 
       %muted {
@@ -145,6 +159,10 @@
           display: inherit !important;
         }
 
+        .card-title-row {
+          gap: 1rem;
+        }
+
         .post-meta {
           i {
             &:not(:first-child) {
@@ -159,6 +177,17 @@
 
 /* Hide SideBar and TOC */
 @media all and (max-width: 830px) {
+  #post-list {
+    .card {
+      .card-body {
+        .card-title-row {
+          flex-direction: column;
+          gap: 0.6rem;
+        }
+      }
+    }
+  }
+
   .pagination {
     .page-item {
       &:not(:first-child):not(:last-child) {
