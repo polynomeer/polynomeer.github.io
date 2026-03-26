@@ -10,8 +10,19 @@ layout: page
   <section class="roadmap-detail">
     <div class="roadmap-hero">
       <p class="roadmap-eyebrow">{{ site.data.locales[lang].roadmaps.eyebrow }}</p>
-      <h2>{{ roadmap.title }}</h2>
-      <p class="roadmap-summary">{{ roadmap.description }}</p>
+      <h2
+        data-l10n-ko="{{ roadmap.title['ko-KR'] | default: roadmap.title | escape }}"
+        data-l10n-en="{{ roadmap.title.en | default: roadmap.title | escape }}"
+      >
+        {% include localized-value.html value=roadmap.title lang=lang %}
+      </h2>
+      <p
+        class="roadmap-summary"
+        data-l10n-ko="{{ roadmap.description['ko-KR'] | default: roadmap.description | escape }}"
+        data-l10n-en="{{ roadmap.description.en | default: roadmap.description | escape }}"
+      >
+        {% include localized-value.html value=roadmap.description lang=lang %}
+      </p>
     </div>
 
     {% for stage in roadmap.stages %}
@@ -31,9 +42,19 @@ layout: page
       {% if stage_posts_count > 0 %}
         <section class="roadmap-stage">
           <div class="roadmap-stage-header">
-            <h3>{{ stage.title }}</h3>
+            <h3
+              data-l10n-ko="{{ stage.title['ko-KR'] | default: stage.title | escape }}"
+              data-l10n-en="{{ stage.title.en | default: stage.title | escape }}"
+            >
+              {% include localized-value.html value=stage.title lang=lang %}
+            </h3>
             {% if stage.description %}
-              <p>{{ stage.description }}</p>
+              <p
+                data-l10n-ko="{{ stage.description['ko-KR'] | default: stage.description | escape }}"
+                data-l10n-en="{{ stage.description.en | default: stage.description | escape }}"
+              >
+                {% include localized-value.html value=stage.description lang=lang %}
+              </p>
             {% endif %}
           </div>
 

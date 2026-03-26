@@ -1,6 +1,10 @@
 backend-foundations:
-  title: Backend Foundations
-  description: Start here for the core backend concepts that shape request flow, trust boundaries, and production behavior.
+  title:
+    ko-KR: 백엔드 기초 체력
+    en: Backend Foundations
+  description:
+    ko-KR: 요청 흐름, 신뢰 경계, 운영 환경의 동작을 이해하는 데 필요한 핵심 백엔드 개념부터 시작합니다.
+    en: Start here for the core backend concepts that shape request flow, trust boundaries, and production behavior.
   icon: fas fa-server
   order: 1
   categories:
@@ -19,8 +23,12 @@ backend-foundations:
     - /posts/token-authentication/
 
 spring-backend:
-  title: Spring Backend
-  description: Explore practical Spring and Spring Boot concepts from the perspective of backend architecture and runtime behavior.
+  title:
+    ko-KR: Spring 백엔드
+    en: Spring Backend
+  description:
+    ko-KR: 백엔드 아키텍처와 런타임 동작 관점에서 Spring과 Spring Boot의 실전 개념을 살펴봅니다.
+    en: Explore practical Spring and Spring Boot concepts from the perspective of backend architecture and runtime behavior.
   icon: fas fa-leaf
   order: 2
   categories:
@@ -32,8 +40,12 @@ spring-backend:
     - /posts/java-21-features-with-spring/
 
 database-internals:
-  title: Database Internals
-  description: Follow the articles that explain transactions, indexing, locking, and storage behavior from the inside out.
+  title:
+    ko-KR: 데이터베이스 내부 동작
+    en: Database Internals
+  description:
+    ko-KR: 트랜잭션, 인덱스, 락, 저장소 동작을 내부 구조부터 설명하는 글을 따라갑니다.
+    en: Follow the articles that explain transactions, indexing, locking, and storage behavior from the inside out.
   icon: fas fa-database
   order: 3
   categories:

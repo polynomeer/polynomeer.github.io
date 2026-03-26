@@ -71,7 +71,7 @@
       </section>
     {% else %}
       <section class="panel-section representative-posts-panel">
-        <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.representative_posts -}}</h2>
+        <h2 class="panel-heading" data-i18n="panel.representative_posts">{{- site.data.locales[include.lang].panel.representative_posts -}}</h2>
         <ul class="representative-posts-list list-unstyled ps-0 pb-1 ms-1 mt-2">
           {% for item in curated_items limit: limit %}
             {% assign matched_post = site.posts | where: 'path', item.path | first %}

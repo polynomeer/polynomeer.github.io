@@ -2,7 +2,7 @@
 
 {% if panel and panel.enabled and panel.reading_path and panel.reading_path.size > 0 %}
   <section class="panel-section recruiter-reading-path-panel">
-    <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.reading_path -}}</h2>
+    <h2 class="panel-heading" data-i18n="panel.reading_path">{{- site.data.locales[include.lang].panel.reading_path -}}</h2>
     <ol class="panel-step-list">
       {% for item in panel.reading_path %}
         {% assign href = item.url %}

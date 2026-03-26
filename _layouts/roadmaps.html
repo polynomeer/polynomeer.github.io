@@ -32,8 +32,18 @@ layout: page
                 }}
               </span>
             </div>
-            <h3>{{ roadmap.title }}</h3>
-            <p>{{ roadmap.description }}</p>
+            <h3
+              data-l10n-ko="{{ roadmap.title['ko-KR'] | default: roadmap.title | escape }}"
+              data-l10n-en="{{ roadmap.title.en | default: roadmap.title | escape }}"
+            >
+              {% include localized-value.html value=roadmap.title lang=lang %}
+            </h3>
+            <p
+              data-l10n-ko="{{ roadmap.description['ko-KR'] | default: roadmap.description | escape }}"
+              data-l10n-en="{{ roadmap.description.en | default: roadmap.description | escape }}"
+            >
+              {% include localized-value.html value=roadmap.description lang=lang %}
+            </p>
           </a>
         </article>
       {% endif %}

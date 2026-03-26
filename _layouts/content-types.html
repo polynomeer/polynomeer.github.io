@@ -33,8 +33,18 @@ layout: page
                 }}
               </span>
             </div>
-            <h3>{{ content_type.title }}</h3>
-            <p>{{ content_type.description }}</p>
+            <h3
+              data-l10n-ko="{{ content_type.title['ko-KR'] | default: content_type.title | escape }}"
+              data-l10n-en="{{ content_type.title.en | default: content_type.title | escape }}"
+            >
+              {% include localized-value.html value=content_type.title lang=lang %}
+            </h3>
+            <p
+              data-l10n-ko="{{ content_type.description['ko-KR'] | default: content_type.description | escape }}"
+              data-l10n-en="{{ content_type.description.en | default: content_type.description | escape }}"
+            >
+              {% include localized-value.html value=content_type.description lang=lang %}
+            </p>
           </a>
         </article>
       {% endif %}

@@ -2,7 +2,7 @@
 
 {% if recruit and recruit.strengths and recruit.strengths.size > 0 %}
   <section class="panel-section recruiter-strengths-panel">
-    <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.core_strengths -}}</h2>
+    <h2 class="panel-heading" data-i18n="panel.core_strengths">{{- site.data.locales[include.lang].panel.core_strengths -}}</h2>
     <ul class="panel-link-list list-unstyled ps-0 pb-1 ms-1 mt-2">
       {% for strength in recruit.strengths limit: 4 %}
         {% assign href = strength.url %}

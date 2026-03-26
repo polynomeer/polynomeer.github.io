@@ -1,25 +1,49 @@
 backend-core:
-  title: Backend Core Roadmap
-  description: Build a backend foundation from authentication and networking basics to practical runtime concerns.
+  title:
+    ko-KR: 백엔드 핵심 로드맵
+    en: Backend Core Roadmap
+  description:
+    ko-KR: 인증과 네트워크 기초부터 실제 런타임 이슈까지 백엔드 기초 체력을 쌓는 로드맵입니다.
+    en: Build a backend foundation from authentication and networking basics to practical runtime concerns.
   icon: fas fa-server
   order: 1
   stages:
     - id: beginner
-      title: Beginner
-      description: Core concepts required to understand request flow, trust, and access.
+      title:
+        ko-KR: 입문
+        en: Beginner
+      description:
+        ko-KR: 요청 흐름, 신뢰, 접근 제어를 이해하기 위한 핵심 개념입니다.
+        en: Core concepts required to understand request flow, trust, and access.
     - id: intermediate
-      title: Intermediate
-      description: Topics that influence robustness, runtime behavior, and system boundaries.
+      title:
+        ko-KR: 중급
+        en: Intermediate
+      description:
+        ko-KR: 견고성, 런타임 동작, 시스템 경계에 영향을 주는 주제들입니다.
+        en: Topics that influence robustness, runtime behavior, and system boundaries.
 
 security-foundations:
-  title: Security Foundations
-  description: Learn the security concepts that shape authentication, authorization, and transport security.
+  title:
+    ko-KR: 보안 기초 로드맵
+    en: Security Foundations
+  description:
+    ko-KR: 인증, 인가, 전송 보안을 구성하는 핵심 보안 개념을 학습하는 로드맵입니다.
+    en: Learn the security concepts that shape authentication, authorization, and transport security.
   icon: fas fa-shield-halved
   order: 2
   stages:
     - id: beginner
-      title: Beginner
-      description: Security basics that define identity and trust boundaries.
+      title:
+        ko-KR: 입문
+        en: Beginner
+      description:
+        ko-KR: 신원과 신뢰 경계를 정의하는 기본 보안 개념입니다.
+        en: Security basics that define identity and trust boundaries.
     - id: intermediate
-      title: Intermediate
-      description: Protocol and integration topics for real systems.
+      title:
+        ko-KR: 중급
+        en: Intermediate
+      description:
+        ko-KR: 실제 시스템에서 중요한 프로토콜과 통합 주제입니다.
+        en: Protocol and integration topics for real systems.

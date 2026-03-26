@@ -1,47 +1,79 @@
 til:
-  title: TIL
-  description: Short iterative notes and daily learning records collected over time.
+  title:
+    ko-KR: TIL
+    en: TIL
+  description:
+    ko-KR: 짧은 반복 학습 기록과 일상적인 배움 메모를 시간에 따라 쌓아 둔 글입니다.
+    en: Short iterative notes and daily learning records collected over time.
   icon: fas fa-pencil-alt
   order: 1
 
 archive:
-  title: Archive
-  description: Curated technical articles intended to stay useful as long-term references.
+  title:
+    ko-KR: 아카이브
+    en: Archive
+  description:
+    ko-KR: 오래 참고할 수 있도록 정리한 기술 아티클 모음입니다.
+    en: Curated technical articles intended to stay useful as long-term references.
   icon: fas fa-box-archive
   order: 2
 
 book:
-  title: Book
-  description: Notes, summaries, and takeaways collected while reading technical books.
+  title:
+    ko-KR: 책
+    en: Book
+  description:
+    ko-KR: 기술 서적을 읽으며 정리한 메모, 요약, 핵심 인사이트입니다.
+    en: Notes, summaries, and takeaways collected while reading technical books.
   icon: fas fa-book
   order: 3
 
 conference:
-  title: Conference
-  description: Session notes, event takeaways, and conference-related technical reflections.
+  title:
+    ko-KR: 컨퍼런스
+    en: Conference
+  description:
+    ko-KR: 세션 노트, 행사에서 얻은 인사이트, 컨퍼런스 관련 기술 회고를 모았습니다.
+    en: Session notes, event takeaways, and conference-related technical reflections.
   icon: fas fa-microphone-lines
   order: 4
 
 lecture:
-  title: Lecture
-  description: Course, bootcamp, and structured lecture notes organized for later review.
+  title:
+    ko-KR: 강의
+    en: Lecture
+  description:
+    ko-KR: 강의, 부트캠프, 구조화된 수업 내용을 다시 보기 쉽게 정리한 노트입니다.
+    en: Course, bootcamp, and structured lecture notes organized for later review.
   icon: fas fa-chalkboard-teacher
   order: 5
 
 problemsolving:
-  title: Problem Solving
-  description: Coding test, algorithm, and problem-solving practice writeups.
+  title:
+    ko-KR: 문제 풀이
+    en: Problem Solving
+  description:
+    ko-KR: 코딩 테스트, 알고리즘, 문제 해결 연습 과정을 기록한 글입니다.
+    en: Coding test, algorithm, and problem-solving practice writeups.
   icon: fas fa-puzzle-piece
   order: 6
 
 recruit:
-  title: Recruit
-  description: Interview preparation, hiring notes, and recruiting-related materials.
+  title:
+    ko-KR: 채용
+    en: Recruit
+  description:
+    ko-KR: 면접 준비, 채용 메모, 채용 관련 자료를 정리한 글입니다.
+    en: Interview preparation, hiring notes, and recruiting-related materials.
   icon: fas fa-user-tie
   order: 7
 
 reference:
-  title: Reference
-  description: Quick lookup notes, keywords, cheat sheets, and development references.
+  title:
+    ko-KR: 레퍼런스
+    en: Reference
+  description:
+    ko-KR: 빠르게 찾아보는 메모, 키워드, 치트시트, 개발 참고 자료입니다.
+    en: Quick lookup notes, keywords, cheat sheets, and development references.
   icon: fas fa-bookmark
   order: 8

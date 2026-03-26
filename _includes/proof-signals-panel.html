@@ -16,27 +16,27 @@
 {% endfor %}
 
 <section class="panel-section proof-signals-panel">
-  <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.proof_signals -}}</h2>
+  <h2 class="panel-heading" data-i18n="panel.proof_signals">{{- site.data.locales[include.lang].panel.proof_signals -}}</h2>
   <div class="proof-signal-grid">
     <div class="proof-signal-card">
       <strong>{{ total_post_count }}</strong>
-      <span>{{ site.data.locales[include.lang].panel.signal_posts }}</span>
+      <span data-i18n="panel.signal_posts">{{ site.data.locales[include.lang].panel.signal_posts }}</span>
     </div>
     <div class="proof-signal-card">
       <strong>{{ representative_count }}</strong>
-      <span>{{ site.data.locales[include.lang].panel.signal_representative }}</span>
+      <span data-i18n="panel.signal_representative">{{ site.data.locales[include.lang].panel.signal_representative }}</span>
     </div>
     <div class="proof-signal-card">
       <strong>{{ topic_count }}</strong>
-      <span>{{ site.data.locales[include.lang].panel.signal_topics }}</span>
+      <span data-i18n="panel.signal_topics">{{ site.data.locales[include.lang].panel.signal_topics }}</span>
     </div>
     <div class="proof-signal-card">
       <strong>{{ roadmap_count }}</strong>
-      <span>{{ site.data.locales[include.lang].panel.signal_roadmaps }}</span>
+      <span data-i18n="panel.signal_roadmaps">{{ site.data.locales[include.lang].panel.signal_roadmaps }}</span>
     </div>
     <div class="proof-signal-card">
       <strong>{{ recruit_post_count }}</strong>
-      <span>{{ site.data.locales[include.lang].panel.signal_recruit }}</span>
+      <span data-i18n="panel.signal_recruit">{{ site.data.locales[include.lang].panel.signal_recruit }}</span>
     </div>
   </div>
 </section>

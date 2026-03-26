@@ -57,8 +57,18 @@ layout: page
                 }}
               </span>
             </div>
-            <h3>{{ hub.title }}</h3>
-            <p>{{ hub.description }}</p>
+            <h3
+              data-l10n-ko="{{ hub.title['ko-KR'] | default: hub.title | escape }}"
+              data-l10n-en="{{ hub.title.en | default: hub.title | escape }}"
+            >
+              {% include localized-value.html value=hub.title lang=lang %}
+            </h3>
+            <p
+              data-l10n-ko="{{ hub.description['ko-KR'] | default: hub.description | escape }}"
+              data-l10n-en="{{ hub.description.en | default: hub.description | escape }}"
+            >
+              {% include localized-value.html value=hub.description lang=lang %}
+            </p>
           </a>
         </article>
       {% endif %}

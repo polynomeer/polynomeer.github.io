@@ -2,7 +2,7 @@
 
 {% if panel and panel.enabled and panel.for_recruiters %}
   <section class="panel-section recruiter-panel">
-    <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.for_recruiters -}}</h2>
+    <h2 class="panel-heading" data-i18n="panel.for_recruiters">{{- site.data.locales[include.lang].panel.for_recruiters -}}</h2>
     <p
       class="panel-copy"
       data-l10n-ko="{{ panel.for_recruiters.summary['ko-KR'] | default: panel.for_recruiters.summary | escape }}"

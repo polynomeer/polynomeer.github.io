@@ -2,12 +2,12 @@
 
 {% if panel and panel.enabled and panel.featured %}
   <section class="panel-section featured-focus-panel">
-    <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.featured_focus -}}</h2>
+    <h2 class="panel-heading" data-i18n="panel.featured_focus">{{- site.data.locales[include.lang].panel.featured_focus -}}</h2>
 
     <div class="featured-focus-list">
       {% if panel.featured.roadmap and panel.featured.roadmap.url %}
         <a class="featured-focus-card" href="{{ panel.featured.roadmap.url | relative_url }}">
-          <span class="featured-focus-label">{{ site.data.locales[include.lang].panel.focus_roadmap }}</span>
+          <span class="featured-focus-label" data-i18n="panel.focus_roadmap">{{ site.data.locales[include.lang].panel.focus_roadmap }}</span>
           <strong
             data-l10n-ko="{{ panel.featured.roadmap.title['ko-KR'] | default: panel.featured.roadmap.title | escape }}"
             data-l10n-en="{{ panel.featured.roadmap.title.en | default: panel.featured.roadmap.title | escape }}"
@@ -30,13 +30,13 @@
         {% assign first_post = series_posts | first %}
         {% if first_post %}
           <a class="featured-focus-card" href="{{ first_post.url | relative_url }}">
-            <span class="featured-focus-label">{{ site.data.locales[include.lang].panel.focus_series }}</span>
+            <span class="featured-focus-label" data-i18n="panel.focus_series">{{ site.data.locales[include.lang].panel.focus_series }}</span>
             <strong>{{ first_post.series_title | default: panel.featured.series.id }}</strong>
-            <span>
-              {{
-                site.data.locales[include.lang].home.curation_series_count
-                | replace: ':COUNT', series_posts.size
-              }}
+            <span
+              data-l10n-ko="{{ site.data.locales['ko-KR'].home.curation_series_count | replace: ':COUNT', series_posts.size | escape }}"
+              data-l10n-en="{{ site.data.locales.en.home.curation_series_count | replace: ':COUNT', series_posts.size | escape }}"
+            >
+              {{ site.data.locales[include.lang].home.curation_series_count | replace: ':COUNT', series_posts.size }}
             </span>
           </a>
         {% endif %}
