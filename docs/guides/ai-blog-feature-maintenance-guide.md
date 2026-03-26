@@ -128,6 +128,11 @@ Rendering:
 
 ### Learning Paths
 
+Status:
+
+- treat as legacy or niche guided journeys
+- prefer `roadmaps` for primary discovery and new public navigation work
+
 Source of truth:
 
 - `_data/learning_paths.yml`

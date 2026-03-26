@@ -253,7 +253,7 @@ How to operate:
 
 Purpose:
 
-- Provide reader-goal-oriented study routes that combine posts, roadmaps, and topic hubs.
+- Keep legacy reader-goal-oriented study routes available without using them as a primary navigation surface.
 
 Main files:
 
@@ -267,13 +267,13 @@ Main files:
 
 How to operate:
 
-- Define a path in `_data/learning_paths.yml`.
-- Add a matching page in `_learning_paths/`.
-- Use explicit post paths, roadmap ids, and topic ids for each phase.
+- Prefer `roadmaps` for public navigation, recruiter surfaces, and homepage curation.
+- Keep `learning paths` only when a legacy deep link or a tightly guided reader journey still provides unique value.
+- If a path overlaps strongly with a roadmap, update the roadmap first and avoid adding new public entry points for the path.
 
 Recommended use:
 
-- Use learning paths for beginner onboarding, interview preparation, or domain study sequences.
+- Use learning paths sparingly for legacy onboarding or highly specific guided sequences that are not worth elevating to a standalone roadmap.
 
 ### 9. Representative Posts
 
@@ -547,10 +547,10 @@ Classification depends on file path:
 
 ### Add a New Learning Path
 
-1. Add a path entry in `_data/learning_paths.yml`.
-2. Add a page in `_learning_paths/`.
-3. Add phases with curated post paths, topic ids, and roadmap ids.
-4. Verify `/paths/` and the detail page.
+1. Confirm a roadmap cannot express the same reader journey clearly enough.
+2. Add a path entry in `_data/learning_paths.yml` only when the legacy path still adds unique value.
+3. Add a page in `_learning_paths/`.
+4. Verify the detail page and any remaining deep links that reference the path.
 
 ### Add a New Post Status
 

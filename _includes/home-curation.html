@@ -1,6 +1,5 @@
 {% assign topic_pages = site.topics | sort: 'order' %}
 {% assign roadmap_pages = site.roadmaps | sort: 'order' %}
-{% assign learning_path_pages = site.learning_paths | sort: 'order' %}
 {% assign featured_series = '' | split: '' %}
 
 {% for hub_pair in site.data.topic_hubs %}
@@ -14,44 +13,6 @@
 {% endfor %}
 
 <section id="home-curation" class="px-xl-1">
-  {% if learning_path_pages.size > 0 %}
-    <section class="home-curation-section">
-      <div class="home-curation-header">
-        <div>
-          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_paths_eyebrow }}</p>
-          <h2>{{ site.data.locales[include.lang].home.curation_paths_title }}</h2>
-        </div>
-        <a href="{{ '/paths/' | relative_url }}" class="home-curation-link">
-          {{ site.data.locales[include.lang].home.curation_explore }}
-        </a>
-      </div>
-
-      <div class="home-curation-grid compact">
-        {% for path_page in learning_path_pages limit: 2 %}
-          {% assign learning_path = site.data.learning_paths[path_page.learning_path_id] %}
-          {% if learning_path %}
-            <article class="home-curation-card">
-              <a href="{{ path_page.url | relative_url }}" class="home-curation-card-link">
-                <div class="home-curation-card-header">
-                  {% if learning_path.icon %}
-                    <i class="{{ learning_path.icon }}"></i>
-                  {% endif %}
-                  <span class="home-curation-chip">{{ site.data.locales[include.lang].tabs.paths }}</span>
-                </div>
-                <h3>{{ learning_path.title }}</h3>
-                <p>{{ learning_path.description }}</p>
-                <div class="home-curation-meta">
-                  <span>{{ learning_path.level }}</span>
-                  <span>{{ learning_path.duration }}</span>
-                </div>
-              </a>
-            </article>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
   {% if topic_pages.size > 0 %}
     <section class="home-curation-section">
       <div class="home-curation-header">

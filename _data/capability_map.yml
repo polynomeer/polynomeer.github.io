@@ -40,7 +40,7 @@ items:
       en: Makes tradeoffs explicit, shows system-level reasoning, and connects design choices to operational consequences.
     icon: fas fa-sitemap
     topic_url: /recruit/
-    roadmap_url: /paths/backend-foundations-path/
+    roadmap_url: /roadmaps/backend-core/
     representative_posts:
       - _posts/archive/common/2026-03-20-architectural-decisions.md
       - _posts/archive/web/2026-02-25-netty.md

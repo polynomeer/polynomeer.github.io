@@ -124,7 +124,8 @@
 
     {% include representative-posts.html lang=include.lang surface='recruit' variant='full' limit=6 %}
 
-    {% if recruit.featured_paths and recruit.featured_paths.size > 0 %}
+    {% assign featured_roadmaps = recruit.featured_roadmaps | default: recruit.featured_paths %}
+    {% if featured_roadmaps and featured_roadmaps.size > 0 %}
       <section class="recruit-section">
         <div class="recruit-section-header">
           <p class="recruit-section-eyebrow" data-i18n="recruit_mode.structured_reading_eyebrow">{{ site.data.locales[include.lang].recruit_mode.structured_reading_eyebrow }}</p>
@@ -132,24 +133,24 @@
         </div>
 
         <div class="recruit-path-list">
-          {% for path_item in recruit.featured_paths %}
-            {% assign path_href = path_item.url %}
-            {% unless path_href contains '://' %}
-              {% assign path_href = path_href | relative_url %}
+          {% for roadmap_item in featured_roadmaps %}
+            {% assign roadmap_href = roadmap_item.url %}
+            {% unless roadmap_href contains '://' %}
+              {% assign roadmap_href = roadmap_href | relative_url %}
             {% endunless %}
-            <a class="recruit-path-card" href="{{ path_href }}">
+            <a class="recruit-path-card" href="{{ roadmap_href }}">
               <strong
-                data-l10n-ko="{{ path_item.title['ko-KR'] | default: path_item.title | escape }}"
-                data-l10n-en="{{ path_item.title.en | default: path_item.title | escape }}"
+                data-l10n-ko="{{ roadmap_item.title['ko-KR'] | default: roadmap_item.title | escape }}"
+                data-l10n-en="{{ roadmap_item.title.en | default: roadmap_item.title | escape }}"
               >
-                {% include localized-value.html value=path_item.title lang=include.lang %}
+                {% include localized-value.html value=roadmap_item.title lang=include.lang %}
               </strong>
-              {% if path_item.description %}
+              {% if roadmap_item.description %}
                 <span
-                  data-l10n-ko="{{ path_item.description['ko-KR'] | default: path_item.description | escape }}"
-                  data-l10n-en="{{ path_item.description.en | default: path_item.description | escape }}"
+                  data-l10n-ko="{{ roadmap_item.description['ko-KR'] | default: roadmap_item.description | escape }}"
+                  data-l10n-en="{{ roadmap_item.description.en | default: roadmap_item.description | escape }}"
                 >
-                  {% include localized-value.html value=path_item.description lang=include.lang %}
+                  {% include localized-value.html value=roadmap_item.description lang=include.lang %}
                 </span>
               {% endif %}
             </a>

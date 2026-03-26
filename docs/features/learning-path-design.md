@@ -1,5 +1,14 @@
 # Learning Path Design
 
+## Status
+
+This feature remains implemented, but it is no longer the primary public navigation model.
+
+Current repository direction:
+
+- `roadmaps` are the main structured discovery surface
+- `learning paths` are legacy or niche guided sequences kept only when they add value beyond a roadmap
+
 ## Goal
 
 Introduce curated learning paths that guide readers through a recommended study order.
@@ -157,4 +166,3 @@ Implement:
 2. `learning_paths` collection with directory and detail layouts
 3. home curation section
 4. a few high-signal starter paths
-
