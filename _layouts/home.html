@@ -40,9 +40,38 @@ refactor: true
   {% endfor %}
 {% endif %}
 
+{% assign status_pages = site.post_statuses | sort: 'order' %}
+
+{% if status_pages.size > 0 %}
+  <section id="post-status-filter" class="px-xl-1">
+    <div class="post-status-filter-bar">
+      <span class="post-status-filter-label">{{ site.data.locales[lang].home.status_filter_label }}</span>
+      <div class="post-status-filter-actions">
+        <button type="button" class="post-status-filter-btn active" data-status-filter="all">
+          {{ site.data.locales[lang].home.status_filter_all }}
+        </button>
+        {% for status_page in status_pages %}
+          {% assign post_status = site.data.post_statuses[status_page.post_status_id] %}
+          {% if post_status %}
+            <button type="button" class="post-status-filter-btn" data-status-filter="{{ status_page.post_status_id }}">
+              {{ post_status.title }}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <p id="post-status-filter-empty" class="post-status-filter-empty" hidden>
+      {{ site.data.locales[lang].home.status_filter_empty }}
+    </p>
+  </section>
+{% endif %}
+
 <div id="post-list" class="flex-grow-1 px-xl-1">
   {% for post in posts %}
-    <article class="card-wrapper card">
+    <article
+      class="card-wrapper card"
+      data-post-status="{{ post.status | default: 'none' }}"
+    >
       <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
         {% assign card_body_col = '12' %}
 
@@ -124,3 +153,38 @@ refactor: true
 {% if paginator.total_pages > 1 %}
   {% include post-paginator.html %}
 {% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterRoot = document.getElementById('post-status-filter');
+    const postList = document.getElementById('post-list');
+
+    if (!filterRoot || !postList) return;
+
+    const buttons = Array.from(filterRoot.querySelectorAll('[data-status-filter]'));
+    const cards = Array.from(postList.querySelectorAll('[data-post-status]'));
+    const emptyState = document.getElementById('post-status-filter-empty');
+
+    const applyFilter = (status) => {
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const matches = status === 'all' || card.dataset.postStatus === status;
+        card.hidden = !matches;
+        if (matches) visibleCount += 1;
+      });
+
+      buttons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.statusFilter === status);
+      });
+
+      if (emptyState) {
+        emptyState.hidden = visibleCount > 0;
+      }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => applyFilter(button.dataset.statusFilter));
+    });
+  });
+</script>

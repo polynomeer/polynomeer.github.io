@@ -126,6 +126,9 @@ topics:
   additional_posts: Additional reading
 
 home:
+  status_filter_label: Filter by status
+  status_filter_all: All
+  status_filter_empty: No posts on this page match the selected status.
   curation_explore: Explore
   curation_paths_eyebrow: Guided learning
   curation_paths_title: Follow curated reading and study paths
