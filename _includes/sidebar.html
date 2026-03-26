@@ -48,64 +48,63 @@
     </ul>
   </nav>
 
-  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
-    {% unless site.theme_mode %}
-      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle">
-        <i class="fas fa-adjust"></i>
-      </button>
+  <div class="sidebar-bottom w-100">
+    <div class="sidebar-controls-row d-flex align-items-center">
+      {% unless site.theme_mode %}
+        <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle">
+          <i class="fas fa-adjust"></i>
+        </button>
+      {% endunless %}
 
-      {% if site.data.contact.size > 0 %}
-        <span class="icon-border"></span>
-      {% endif %}
-    {% endunless %}
-
-    <span class="icon-border"></span>
-    <div class="lang-switcher" aria-label="{{ site.data.locales[include.lang].language.label }}">
-      <button type="button" class="lang-switcher-btn" data-lang-option="ko-KR">
-        {{ site.data.locales[include.lang].language.ko }}
-      </button>
-      <button type="button" class="lang-switcher-btn" data-lang-option="en">
-        {{ site.data.locales[include.lang].language.en }}
-      </button>
+      <div class="lang-switcher" aria-label="{{ site.data.locales[include.lang].language.label }}">
+        <button type="button" class="lang-switcher-btn" data-lang-option="ko-KR">
+          {{ site.data.locales[include.lang].language.ko }}
+        </button>
+        <button type="button" class="lang-switcher-btn" data-lang-option="en">
+          {{ site.data.locales[include.lang].language.en }}
+        </button>
+      </div>
     </div>
 
-    {% for entry in site.data.contact %}
-      {% case entry.type %}
-        {% when 'github', 'twitter' %}
-          {%- capture url -%}
-            https://{{ entry.type }}.com/{{ site[entry.type].username }}
-          {%- endcapture -%}
-        {% when 'email' %}
-          {%- capture url -%}mailto:{{ site.social.email }}{%- endcapture -%}
-        {% when 'rss' %}
-          {% assign url = '/feed.xml' | relative_url %}
-        {% else %}
-          {% assign url = entry.url %}
-      {% endcase %}
+    <div class="sidebar-contact-row d-flex flex-wrap align-items-center">
+      {% for entry in site.data.contact %}
+        {% case entry.type %}
+          {% when 'github', 'twitter' %}
+            {%- capture url -%}
+              https://{{ entry.type }}.com/{{ site[entry.type].username }}
+            {%- endcapture -%}
+          {% when 'email' %}
+            {%- capture url -%}mailto:{{ site.social.email }}{%- endcapture -%}
+          {% when 'rss' %}
+            {% assign url = '/feed.xml' | relative_url %}
+          {% else %}
+            {% assign url = entry.url %}
+        {% endcase %}
 
-      {% if url %}
-        <a
-          href="{{ url }}"
-          aria-label="{{ entry.type }}"
-          {% assign link_types = '' %}
+        {% if url %}
+          <a
+            href="{{ url }}"
+            aria-label="{{ entry.type }}"
+            {% assign link_types = '' %}
 
-          {% unless entry.noblank %}
-            target="_blank"
-            {% assign link_types = 'noopener noreferrer' %}
-          {% endunless %}
+            {% unless entry.noblank %}
+              target="_blank"
+              {% assign link_types = 'noopener noreferrer' %}
+            {% endunless %}
 
-          {% if entry.type == 'mastodon' %}
-            {% assign link_types = link_types | append: ' me' | strip %}
-          {% endif %}
+            {% if entry.type == 'mastodon' %}
+              {% assign link_types = link_types | append: ' me' | strip %}
+            {% endif %}
 
-          {% unless link_types == empty %}
-            rel="{{ link_types }}"
-          {% endunless %}
-        >
-          <i class="{{ entry.icon }}"></i>
-        </a>
-      {% endif %}
-    {% endfor %}
+            {% unless link_types == empty %}
+              rel="{{ link_types }}"
+            {% endunless %}
+          >
+            <i class="{{ entry.icon }}"></i>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
   <!-- .sidebar-bottom -->
 </aside>
