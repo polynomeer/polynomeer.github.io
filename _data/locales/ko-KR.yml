@@ -191,8 +191,14 @@ topics:
   additional_posts: 추가 읽을 글
 
 home:
+  search_filter_label: 검색
+  search_filter_placeholder: 글 검색
+  type_filter_label: 타입
+  tag_filter_label: 태그
+  year_filter_label: 연도
   status_filter_label: 상태 필터
-  status_filter_all: 전체
+  filter_all: 전체
+  filter_reset: 필터 초기화
   status_filter_empty: 현재 페이지에는 선택한 상태와 일치하는 글이 없습니다.
   curation_explore: 더 보기
   curation_paths_eyebrow: 학습 경로

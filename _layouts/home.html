@@ -41,37 +41,123 @@ refactor: true
 {% endif %}
 
 {% assign status_pages = site.post_statuses | sort: 'order' %}
+{% assign sorted_content_types = site.data.content_types | sort: 'last.order' %}
+{% assign home_tags = '' | split: '' %}
+{% assign home_years = '' | split: '' %}
 
-{% if status_pages.size > 0 %}
-  <section id="post-status-filter" class="px-xl-1">
-    <div class="post-status-filter-bar">
-      <span class="post-status-filter-label">{{ site.data.locales[lang].home.status_filter_label }}</span>
-      <div class="post-status-filter-actions">
-        <button type="button" class="post-status-filter-btn active" data-status-filter="all">
-          {{ site.data.locales[lang].home.status_filter_all }}
-        </button>
-        {% for status_page in status_pages %}
-          {% assign post_status = site.data.post_statuses[status_page.post_status_id] %}
-          {% if post_status %}
-            <button type="button" class="post-status-filter-btn" data-status-filter="{{ status_page.post_status_id }}">
-              {{ post_status.title }}
-            </button>
-          {% endif %}
-        {% endfor %}
-      </div>
+{% for post in posts %}
+  {% assign post_year = post.date | date: '%Y' %}
+  {% unless home_years contains post_year %}
+    {% assign home_years = home_years | push: post_year %}
+  {% endunless %}
+
+  {% for tag in post.tags %}
+    {% unless home_tags contains tag %}
+      {% assign home_tags = home_tags | push: tag %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+
+{% assign home_tags = home_tags | sort %}
+{% assign home_years = home_years | sort | reverse %}
+
+<section id="home-discovery-filter" class="px-xl-1">
+  <div class="post-status-filter-bar">
+    <div class="post-filter-row post-filter-row-search">
+      <label class="post-filter-field post-filter-field-wide">
+        <span class="post-status-filter-label" data-i18n="home.search_filter_label">{{ site.data.locales[lang].home.search_filter_label }}</span>
+        <input
+          id="home-post-search"
+          type="search"
+          class="post-filter-input"
+          data-i18n-placeholder="home.search_filter_placeholder"
+          placeholder="{{ site.data.locales[lang].home.search_filter_placeholder }}..."
+        >
+      </label>
     </div>
-    <p id="post-status-filter-empty" class="post-status-filter-empty" hidden>
-      {{ site.data.locales[lang].home.status_filter_empty }}
-    </p>
-  </section>
-{% endif %}
+
+    <div class="post-filter-row">
+      <label class="post-filter-field">
+        <span class="post-status-filter-label" data-i18n="home.type_filter_label">{{ site.data.locales[lang].home.type_filter_label }}</span>
+        <select id="home-type-filter" class="post-filter-select">
+          <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
+          {% for type_entry in sorted_content_types %}
+            {% assign content_type_id = type_entry[0] %}
+            {% assign content_type = type_entry[1] %}
+            {% assign has_posts_of_type = false %}
+            {% assign type_segment = '/' | append: content_type_id | append: '/' %}
+            {% for post in posts %}
+              {% if post.path contains type_segment %}
+                {% assign has_posts_of_type = true %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            {% if has_posts_of_type %}
+              {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+              <option value="{{ content_type_id }}">{{ content_type_label }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </label>
+
+      <label class="post-filter-field">
+        <span class="post-status-filter-label" data-i18n="home.tag_filter_label">{{ site.data.locales[lang].home.tag_filter_label }}</span>
+        <select id="home-tag-filter" class="post-filter-select">
+          <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
+          {% for tag in home_tags %}
+            <option value="{{ tag | downcase }}">{{ tag }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label class="post-filter-field">
+        <span class="post-status-filter-label" data-i18n="home.year_filter_label">{{ site.data.locales[lang].home.year_filter_label }}</span>
+        <select id="home-year-filter" class="post-filter-select">
+          <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
+          {% for year in home_years %}
+            <option value="{{ year }}">{{ year }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      {% if status_pages.size > 0 %}
+        <label class="post-filter-field">
+          <span class="post-status-filter-label" data-i18n="home.status_filter_label">{{ site.data.locales[lang].home.status_filter_label }}</span>
+          <select id="home-status-filter" class="post-filter-select">
+            <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
+            {% for status_page in status_pages %}
+              {% assign post_status = site.data.post_statuses[status_page.post_status_id] %}
+              {% if post_status %}
+                <option value="{{ status_page.post_status_id }}">{{ post_status.title }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </label>
+      {% endif %}
+
+      <button type="button" id="home-filter-reset" class="post-status-filter-btn" data-i18n="home.filter_reset">
+        {{ site.data.locales[lang].home.filter_reset }}
+      </button>
+    </div>
+  </div>
+  <p id="post-status-filter-empty" class="post-status-filter-empty" hidden data-i18n="home.status_filter_empty">
+    {{ site.data.locales[lang].home.status_filter_empty }}
+  </p>
+</section>
 
 <div id="post-list" class="flex-grow-1 px-xl-1">
   {% for post in posts %}
+    {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+    {% assign post_content_type_id = post_content_type_id | strip %}
+    {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
     <article
       class="card-wrapper card"
       data-post-status="{{ post.status | default: 'none' }}"
       data-post-url="{{ post.url | relative_url }}"
+      data-post-type="{{ post_content_type_id }}"
+      data-post-tags="{% for tag in post.tags %}{{ tag | downcase }}{% unless forloop.last %}|{% endunless %}{% endfor %}"
+      data-post-year="{{ post.date | date: '%Y' }}"
+      data-post-search="{{ post_search_blob | escape }}"
     >
       <div class="post-preview row g-0 flex-md-row-reverse">
         {% assign card_body_col = '12' %}
@@ -165,26 +251,40 @@ refactor: true
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const filterRoot = document.getElementById('post-status-filter');
+    const filterRoot = document.getElementById('home-discovery-filter');
     const postList = document.getElementById('post-list');
 
     if (!filterRoot || !postList) return;
 
-    const buttons = Array.from(filterRoot.querySelectorAll('[data-status-filter]'));
+    const searchInput = document.getElementById('home-post-search');
+    const typeSelect = document.getElementById('home-type-filter');
+    const tagSelect = document.getElementById('home-tag-filter');
+    const yearSelect = document.getElementById('home-year-filter');
+    const statusSelect = document.getElementById('home-status-filter');
+    const resetButton = document.getElementById('home-filter-reset');
     const cards = Array.from(postList.querySelectorAll('[data-post-status]'));
     const emptyState = document.getElementById('post-status-filter-empty');
 
-    const applyFilter = (status) => {
+    const applyFilter = () => {
+      const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const selectedType = typeSelect ? typeSelect.value : 'all';
+      const selectedTag = tagSelect ? tagSelect.value : 'all';
+      const selectedYear = yearSelect ? yearSelect.value : 'all';
+      const selectedStatus = statusSelect ? statusSelect.value : 'all';
       let visibleCount = 0;
 
       cards.forEach((card) => {
-        const matches = status === 'all' || card.dataset.postStatus === status;
+        const searchable = card.dataset.postSearch || '';
+        const tags = (card.dataset.postTags || '').split('|').filter(Boolean);
+        const matchesSearch = searchTerm === '' || searchable.includes(searchTerm);
+        const matchesType = selectedType === 'all' || card.dataset.postType === selectedType;
+        const matchesTag = selectedTag === 'all' || tags.includes(selectedTag);
+        const matchesYear = selectedYear === 'all' || card.dataset.postYear === selectedYear;
+        const matchesStatus = selectedStatus === 'all' || card.dataset.postStatus === selectedStatus;
+        const matches = matchesSearch && matchesType && matchesTag && matchesYear && matchesStatus;
+
         card.hidden = !matches;
         if (matches) visibleCount += 1;
-      });
-
-      buttons.forEach((button) => {
-        button.classList.toggle('active', button.dataset.statusFilter === status);
       });
 
       if (emptyState) {
@@ -192,9 +292,22 @@ refactor: true
       }
     };
 
-    buttons.forEach((button) => {
-      button.addEventListener('click', () => applyFilter(button.dataset.statusFilter));
-    });
+    [searchInput, typeSelect, tagSelect, yearSelect, statusSelect]
+      .filter(Boolean)
+      .forEach((control) => {
+        control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', applyFilter);
+      });
+
+    if (resetButton) {
+      resetButton.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        if (typeSelect) typeSelect.value = 'all';
+        if (tagSelect) tagSelect.value = 'all';
+        if (yearSelect) yearSelect.value = 'all';
+        if (statusSelect) statusSelect.value = 'all';
+        applyFilter();
+      });
+    }
 
     cards.forEach((card) => {
       card.addEventListener('click', (event) => {
@@ -203,5 +316,7 @@ refactor: true
         if (postUrl) window.location.href = postUrl;
       });
     });
+
+    applyFilter();
   });
 </script>
