@@ -105,6 +105,8 @@
         .categories {
           display: inline-flex;
           align-items: center;
+          margin-bottom: 0;
+          border: 0;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
