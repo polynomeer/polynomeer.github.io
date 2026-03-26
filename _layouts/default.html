@@ -42,7 +42,7 @@ layout: compress
                 {% include_cached trending-tags.html lang=lang %}
               {% else %}
                 {% include_cached update-list.html lang=lang %}
-                {% include recruiter-panel-stack.html lang=lang %}
+                {% include_cached recruiter-panel-stack.html lang=lang %}
               {% endif %}
             </div>
 
@@ -83,8 +83,66 @@ layout: compress
 
     {% capture ui_locales_json %}
       {
-        "ko-KR": {{ site.data.locales['ko-KR'] | jsonify }},
-        "en": {{ site.data.locales.en | jsonify }}
+        "ko-KR": {
+          "title": {{ site.data.locales['ko-KR'].title | jsonify }},
+          "site": {
+            "tagline": {{ site.data.locales['ko-KR'].site.tagline | jsonify }}
+          },
+          "tabs": {
+            "home": {{ site.data.locales['ko-KR'].tabs.home | jsonify }}
+          },
+          "search": {
+            "hint": {{ site.data.locales['ko-KR'].search.hint | jsonify }},
+            "cancel": {{ site.data.locales['ko-KR'].search.cancel | jsonify }}
+          },
+          "layout": {{ site.data.locales['ko-KR'].layout | jsonify }},
+          "panel": {
+            "lastmod": {{ site.data.locales['ko-KR'].panel.lastmod | jsonify }},
+            "trending_tags": {{ site.data.locales['ko-KR'].panel.trending_tags | jsonify }},
+            "toc": {{ site.data.locales['ko-KR'].panel.toc | jsonify }}
+          },
+          "representative_posts": {{ site.data.locales['ko-KR'].representative_posts | jsonify }},
+          "capability_map": {{ site.data.locales['ko-KR'].capability_map | jsonify }},
+          "learning_evidence": {{ site.data.locales['ko-KR'].learning_evidence | jsonify }},
+          "learning_evidence_meta": {{ site.data.locales['ko-KR'].learning_evidence_meta | jsonify }},
+          "about": {{ site.data.locales['ko-KR'].about | jsonify }},
+          "recruit_mode": {{ site.data.locales['ko-KR'].recruit_mode | jsonify }},
+          "content_types": {{ site.data.locales['ko-KR'].content_types | jsonify }},
+          "post_statuses": {{ site.data.locales['ko-KR'].post_statuses | jsonify }},
+          "roadmaps": {{ site.data.locales['ko-KR'].roadmaps | jsonify }},
+          "topics": {{ site.data.locales['ko-KR'].topics | jsonify }},
+          "learning_paths": {{ site.data.locales['ko-KR'].learning_paths | jsonify }}
+        },
+        "en": {
+          "title": {{ site.data.locales.en.title | jsonify }},
+          "site": {
+            "tagline": {{ site.data.locales.en.site.tagline | jsonify }}
+          },
+          "tabs": {
+            "home": {{ site.data.locales.en.tabs.home | jsonify }}
+          },
+          "search": {
+            "hint": {{ site.data.locales.en.search.hint | jsonify }},
+            "cancel": {{ site.data.locales.en.search.cancel | jsonify }}
+          },
+          "layout": {{ site.data.locales.en.layout | jsonify }},
+          "panel": {
+            "lastmod": {{ site.data.locales.en.panel.lastmod | jsonify }},
+            "trending_tags": {{ site.data.locales.en.panel.trending_tags | jsonify }},
+            "toc": {{ site.data.locales.en.panel.toc | jsonify }}
+          },
+          "representative_posts": {{ site.data.locales.en.representative_posts | jsonify }},
+          "capability_map": {{ site.data.locales.en.capability_map | jsonify }},
+          "learning_evidence": {{ site.data.locales.en.learning_evidence | jsonify }},
+          "learning_evidence_meta": {{ site.data.locales.en.learning_evidence_meta | jsonify }},
+          "about": {{ site.data.locales.en.about | jsonify }},
+          "recruit_mode": {{ site.data.locales.en.recruit_mode | jsonify }},
+          "content_types": {{ site.data.locales.en.content_types | jsonify }},
+          "post_statuses": {{ site.data.locales.en.post_statuses | jsonify }},
+          "roadmaps": {{ site.data.locales.en.roadmaps | jsonify }},
+          "topics": {{ site.data.locales.en.topics | jsonify }},
+          "learning_paths": {{ site.data.locales.en.learning_paths | jsonify }}
+        }
       }
     {% endcapture %}
     <script id="ui-locales" type="application/json">

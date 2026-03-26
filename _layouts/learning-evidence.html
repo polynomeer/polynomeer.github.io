@@ -79,13 +79,7 @@ layout: page
                   <h5 data-i18n="learning_evidence.source_posts">{{ site.data.locales[lang].learning_evidence.source_posts }}</h5>
                   <ul>
                     {% for post_path in source_posts %}
-                      {% assign matched_post = nil %}
-                      {% for post in site.posts %}
-                        {% if post.path == post_path %}
-                          {% assign matched_post = post %}
-                          {% break %}
-                        {% endif %}
-                      {% endfor %}
+                      {% assign matched_post = site.posts | where: 'path', post_path | first %}
                       {% if matched_post %}
                         <li><a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a></li>
                       {% endif %}
@@ -100,13 +94,7 @@ layout: page
                   <h5 data-i18n="learning_evidence.related_posts">{{ site.data.locales[lang].learning_evidence.related_posts }}</h5>
                   <ul>
                     {% for post_path in related_posts %}
-                      {% assign matched_post = nil %}
-                      {% for post in site.posts %}
-                        {% if post.path == post_path %}
-                          {% assign matched_post = post %}
-                          {% break %}
-                        {% endif %}
-                      {% endfor %}
+                      {% assign matched_post = site.posts | where: 'path', post_path | first %}
                       {% if matched_post %}
                         <li><a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a></li>
                       {% endif %}

@@ -64,13 +64,7 @@ layout: page
                 <h4 data-i18n="capability_map.evidence">{{ site.data.locales[lang].capability_map.evidence }}</h4>
                 <ul class="capability-map-post-list">
                   {% for post_path in capability_posts %}
-                    {% assign matched_post = nil %}
-                    {% for post in site.posts %}
-                      {% if post.path == post_path %}
-                        {% assign matched_post = post %}
-                        {% break %}
-                      {% endif %}
-                    {% endfor %}
+                    {% assign matched_post = site.posts | where: 'path', post_path | first %}
 
                     {% if matched_post %}
                       <li>

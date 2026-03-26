@@ -34,13 +34,7 @@
 
         <div class="recruit-proof-grid">
           {% for item in curated_items limit: limit %}
-            {% assign matched_post = nil %}
-            {% for post in site.posts %}
-              {% if post.path == item.path %}
-                {% assign matched_post = post %}
-                {% break %}
-              {% endif %}
-            {% endfor %}
+            {% assign matched_post = site.posts | where: 'path', item.path | first %}
 
             {% if matched_post %}
               <article class="recruit-proof-card">
@@ -80,13 +74,7 @@
         <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.representative_posts -}}</h2>
         <ul class="representative-posts-list list-unstyled ps-0 pb-1 ms-1 mt-2">
           {% for item in curated_items limit: limit %}
-            {% assign matched_post = nil %}
-            {% for post in site.posts %}
-              {% if post.path == item.path %}
-                {% assign matched_post = post %}
-                {% break %}
-              {% endif %}
-            {% endfor %}
+            {% assign matched_post = site.posts | where: 'path', item.path | first %}
 
             {% if matched_post %}
               <li class="representative-post-item">
