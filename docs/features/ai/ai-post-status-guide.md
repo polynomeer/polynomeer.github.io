@@ -8,8 +8,9 @@ For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 Expose editorial maintenance state through a small set of post statuses:
 
-- evergreen
-- updating
+- writing
+- published
+- modifying
 - archived
 
 ## Preferred Metadata
@@ -17,7 +18,7 @@ Expose editorial maintenance state through a small set of post statuses:
 Use post front matter:
 
 ```yaml
-status: evergreen
+status: published
 ```
 
 Do not try to infer status automatically from post dates.

@@ -199,7 +199,12 @@ Current classification rule:
 
 - `_posts/TIL/` -> `til`
 - `_posts/archive/` -> `archive`
-- all other `_posts/...` -> `article`
+- `_posts/book/` -> `book`
+- `_posts/conference/` -> `conference`
+- `_posts/lecture/` -> `lecture`
+- `_posts/problemsolving/` -> `problemsolving`
+- `_posts/recruit/` -> `recruit`
+- `_posts/reference/` -> `reference`
 
 Important:
 
@@ -210,7 +215,7 @@ Important:
 
 Purpose:
 
-- Show editorial maintenance state such as whether a post is evergreen, actively updating, or archived.
+- Show editorial maintenance state such as whether a post is still being written, normally published, actively being revised, or archived.
 
 Main files:
 
@@ -225,8 +230,9 @@ Main files:
 
 Current status model:
 
-- `evergreen`
-- `updating`
+- `writing`
+- `published`
+- `modifying`
 - `archived`
 
 How to operate:
@@ -276,7 +282,7 @@ roadmap_stage: beginner
 ### Post Status
 
 ```yaml
-status: evergreen
+status: published
 ```
 
 ### Content Type

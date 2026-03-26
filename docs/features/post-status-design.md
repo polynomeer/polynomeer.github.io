@@ -6,15 +6,16 @@ Introduce explicit post status metadata so readers can quickly understand the ma
 
 The feature should answer:
 
-- is this article evergreen and still reliable?
-- is this article actively being updated?
+- is this article still being written?
+- is this article published and readable as a normal post?
+- is this article currently being revised?
 - is this article kept for reference but no longer actively maintained?
 
 ## Why This Feature Fits This Repository
 
 This repository contains:
 
-- evergreen archive-style technical posts
+- stable archive-style technical posts
 - iterative notes and study material
 - content that may age at different speeds
 
@@ -28,21 +29,27 @@ Date alone is not enough to communicate whether a post is:
 
 Recommended first rollout statuses:
 
-- `evergreen`
-- `updating`
+- `writing`
+- `published`
+- `modifying`
 - `archived`
 
 ### Definitions
 
-#### evergreen
+#### writing
 
-- content is intended to remain broadly useful
-- updates may happen, but the article is considered reliable as-is
+- content is still being written
+- readers should expect incomplete structure or changing scope
 
-#### updating
+#### published
 
-- content is under active revision or extension
-- readers should expect changes
+- content is publicly readable in its normal state
+- this is the default “good to read now” status
+
+#### modifying
+
+- content is already public but currently under revision
+- readers should expect updates, corrections, or expansion
 
 #### archived
 
@@ -54,7 +61,7 @@ Recommended first rollout statuses:
 Use post front matter:
 
 ```yaml
-status: evergreen
+status: published
 ```
 
 Optional future fields:
@@ -93,8 +100,9 @@ Add `/status/` or `/statuses/` style entry points for browsing posts by status.
 Recommended first implementation:
 
 - `/statuses/`
-- `/statuses/evergreen/`
-- `/statuses/updating/`
+- `/statuses/writing/`
+- `/statuses/published/`
+- `/statuses/modifying/`
 - `/statuses/archived/`
 
 ### 4. Future search integration
@@ -108,23 +116,29 @@ Store display metadata in `_data/post_statuses.yml`.
 Recommended shape:
 
 ```yaml
-evergreen:
-  title: "Evergreen"
-  description: "Reliable long-term reference content."
-  icon: "fas fa-check-circle"
+writing:
+  title: "Writing"
+  description: "Still being written and not yet fully settled."
+  icon: "fas fa-pen"
   order: 1
 
-updating:
-  title: "Updating"
-  description: "Actively revised or expanded content."
-  icon: "fas fa-rotate"
+published:
+  title: "Published"
+  description: "Readable normal-state content."
+  icon: "fas fa-check-circle"
   order: 2
+
+modifying:
+  title: "Modifying"
+  description: "Public content that is currently being revised."
+  icon: "fas fa-pen-ruler"
+  order: 3
 
 archived:
   title: "Archived"
   description: "Kept for reference, not actively maintained."
   icon: "fas fa-box-archive"
-  order: 3
+  order: 4
 ```
 
 ## Rollout Plan
@@ -181,4 +195,3 @@ Implement:
 4. a few curated sample posts with explicit `status`
 
 This keeps the feature concrete without requiring repository-wide migration.
-
