@@ -127,4 +127,47 @@
   b {
     color: #8be9fd;
   }
+
+  .language-java.highlighter-rouge {
+    .highlight {
+      .k,
+      .kd,
+      .kn,
+      .kr,
+      .kv {
+        color: #ff79c6;
+      }
+
+      .kt,
+      .nc,
+      .nn {
+        color: #8be9fd;
+      }
+
+      .nf,
+      .na,
+      .nd {
+        color: #50fa7b;
+      }
+
+      .nb,
+      .no {
+        color: #bd93f9;
+      }
+
+      .mi,
+      .mf,
+      .il {
+        color: #bd93f9;
+      }
+
+      .s,
+      .sb,
+      .sc,
+      .s1,
+      .s2 {
+        color: #f1fa8c;
+      }
+    }
+  }
 }
