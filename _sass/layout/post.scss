@@ -249,6 +249,27 @@ header {
     margin-bottom: 1rem;
   }
 
+  .comment-submit-button.btn-primary {
+    border-color: rgba(80, 250, 123, 0.55);
+    background: rgba(80, 250, 123, 0.14);
+    color: #50fa7b;
+    box-shadow: none;
+
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      border-color: rgba(80, 250, 123, 0.7);
+      background: rgba(80, 250, 123, 0.2);
+      color: #8aff9f;
+      box-shadow: 0 0 0 0.18rem rgba(80, 250, 123, 0.12);
+    }
+
+    &:disabled {
+      border-color: rgba(80, 250, 123, 0.24);
+      background: rgba(80, 250, 123, 0.08);
+      color: rgba(139, 233, 253, 0.58);
+    }
+  }
+
   .comment-body-field {
     min-height: 7rem;
     margin-bottom: 0.75rem;
