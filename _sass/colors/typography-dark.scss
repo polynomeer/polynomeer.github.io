@@ -48,7 +48,7 @@
   --avatar-border-color: rgba(189, 147, 249, 0.55);
 
   /* Topbar */
-  --topbar-bg: #282a36;
+  --topbar-bg: transparent;
   --topbar-text-color: var(--text-color);
   --search-border-color: #59617c;
   --search-icon-color: #8be9fd;
@@ -156,10 +156,6 @@
     button i {
       color: #9aa3c7;
     }
-  }
-
-  #main-wrapper > .container {
-    background-color: var(--main-bg);
   }
 
   search {
