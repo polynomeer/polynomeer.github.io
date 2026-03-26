@@ -1,0 +1,110 @@
+{% assign representative = site.data.representative_posts %}
+{% assign surface = include.surface | default: 'default' %}
+{% assign variant = include.variant | default: 'panel' %}
+{% assign limit = include.limit | default: 4 | plus: 0 %}
+
+{% if representative and representative.enabled and representative.items and representative.items.size > 0 %}
+  {% assign curated_items = '' | split: '' %}
+
+  {% for item in representative.items %}
+    {% assign item_surfaces = item.surfaces | default: empty %}
+    {% if item_surfaces == empty or item_surfaces contains surface %}
+      {% assign curated_items = curated_items | push: item %}
+    {% endif %}
+  {% endfor %}
+
+  {% if curated_items.size > 0 %}
+    {% if variant == 'full' %}
+      <section class="recruit-section representative-posts-section">
+        <div class="recruit-section-header">
+          <p class="recruit-section-eyebrow">
+            <span data-i18n="representative_posts.eyebrow">{{ site.data.locales[include.lang].representative_posts.eyebrow }}</span>
+          </p>
+          <h3 data-i18n="representative_posts.title">{{ site.data.locales[include.lang].representative_posts.title }}</h3>
+          {% if representative.description %}
+            <p
+              class="recruit-proof-intro"
+              data-l10n-ko="{{ representative.description['ko-KR'] | default: representative.description | escape }}"
+              data-l10n-en="{{ representative.description.en | default: representative.description | escape }}"
+            >
+              {% include localized-value.html value=representative.description lang=include.lang %}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="recruit-proof-grid">
+          {% for item in curated_items limit: limit %}
+            {% assign matched_post = nil %}
+            {% for post in site.posts %}
+              {% if post.path == item.path %}
+                {% assign matched_post = post %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+
+            {% if matched_post %}
+              <article class="recruit-proof-card">
+                <a href="{{ matched_post.url | relative_url }}" class="recruit-proof-link">
+                  <div class="recruit-proof-meta">
+                    {% include content-type-badge.html post=matched_post lang=include.lang link=false %}
+                    {% include post-status-badge.html post=matched_post lang=include.lang link=false %}
+                  </div>
+                  {% include practical-validation-badges.html post=matched_post lang=include.lang %}
+                  <h4>{{ matched_post.title }}</h4>
+                  {% if item.capability %}
+                    <p
+                      class="recruit-capability"
+                      data-l10n-ko="{{ item.capability['ko-KR'] | default: item.capability | escape }}"
+                      data-l10n-en="{{ item.capability.en | default: item.capability | escape }}"
+                    >
+                      {% include localized-value.html value=item.capability lang=include.lang %}
+                    </p>
+                  {% endif %}
+                  {% if item.summary %}
+                    <p
+                      class="recruit-proof-summary"
+                      data-l10n-ko="{{ item.summary['ko-KR'] | default: item.summary | escape }}"
+                      data-l10n-en="{{ item.summary.en | default: item.summary | escape }}"
+                    >
+                      {% include localized-value.html value=item.summary lang=include.lang %}
+                    </p>
+                  {% endif %}
+                </a>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% else %}
+      <section class="panel-section representative-posts-panel">
+        <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.representative_posts -}}</h2>
+        <ul class="representative-posts-list list-unstyled ps-0 pb-1 ms-1 mt-2">
+          {% for item in curated_items limit: limit %}
+            {% assign matched_post = nil %}
+            {% for post in site.posts %}
+              {% if post.path == item.path %}
+                {% assign matched_post = post %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+
+            {% if matched_post %}
+              <li class="representative-post-item">
+                <a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a>
+                {% if item.capability %}
+                  <span
+                    class="representative-post-capability"
+                    data-l10n-ko="{{ item.capability['ko-KR'] | default: item.capability | escape }}"
+                    data-l10n-en="{{ item.capability.en | default: item.capability | escape }}"
+                  >
+                    {% include localized-value.html value=item.capability lang=include.lang %}
+                  </span>
+                {% endif %}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+  {% endif %}
+{% endif %}

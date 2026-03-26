@@ -1,0 +1,87 @@
+enabled: true
+
+hero:
+  eyebrow:
+    ko-KR: 채용 담당자용
+    en: For Recruiters
+  title:
+    ko-KR: 신뢰할 수 있는 시스템, 실용적 아키텍처, 기술 글쓰기에 집중해 온 백엔드 엔지니어
+    en: Backend engineer focused on reliable systems, practical architecture, and technical writing
+  summary:
+    ko-KR: 백엔드 핵심 개념을 분명하게 설명하고, 지식을 재사용 가능한 학습 구조로 정리하며, 실무 시스템에서 중요한 트레이드오프를 글로 남깁니다.
+    en: Explains backend fundamentals clearly, organizes knowledge into reusable learning structures, and writes about tradeoffs that matter in production systems.
+  roles:
+    - ko-KR: 백엔드 엔지니어
+      en: Backend Engineer
+    - ko-KR: 플랫폼 엔지니어
+      en: Platform Engineer
+    - ko-KR: Java/Spring 엔지니어
+      en: Java/Spring Engineer
+  contact_email: polynomeer@gmail.com
+
+strengths:
+  - title:
+      ko-KR: 데이터베이스 내부 동작
+      en: Database Internals
+    description:
+      ko-KR: 트랜잭션, MVCC, 락, 리플리케이션을 동작 관점부터 구현 디테일까지 설명합니다.
+      en: Transactions, MVCC, locks, and replication explained from behavior to implementation detail.
+    url: /topics/database-internals/
+    icon: fas fa-database
+  - title:
+      ko-KR: Spring 백엔드
+      en: Spring Backend
+    description:
+      ko-KR: 라이프사이클, 애너테이션, 트랜잭션 경계, 백엔드 애플리케이션 구조를 다룹니다.
+      en: Lifecycle, annotations, transactional boundaries, and backend application structure.
+    url: /topics/spring-backend/
+    icon: fas fa-leaf
+  - title:
+      ko-KR: 백엔드 기초 체력
+      en: Backend Foundations
+    description:
+      ko-KR: 인증, 전송 계층 신뢰, 타임아웃 동작, 운영 기본기를 다룹니다.
+      en: Authentication, transport trust, timeout behavior, and production fundamentals.
+    url: /topics/backend-foundations/
+    icon: fas fa-server
+  - title:
+      ko-KR: 구조화된 학습
+      en: Structured Learning
+    description:
+      ko-KR: 개념이 고립된 메모로 끝나지 않도록, 연결 관계가 보이는 로드맵과 경로를 제공합니다.
+      en: Curated roadmaps and paths that show how concepts connect instead of staying as isolated notes.
+    url: /paths/
+    icon: fas fa-route
+
+featured_links:
+  - title:
+      ko-KR: GitHub
+      en: GitHub
+    url: https://github.com/polynomeer
+    icon: fab fa-github
+  - title:
+      ko-KR: 이메일
+      en: Email
+    url: mailto:polynomeer@gmail.com
+    icon: fas fa-envelope
+  - title:
+      ko-KR: About
+      en: About
+    url: /about/
+    icon: fas fa-user
+
+featured_paths:
+  - title:
+      ko-KR: 백엔드 핵심 로드맵
+      en: Backend Core Roadmap
+    url: /roadmaps/backend-core/
+    description:
+      ko-KR: 백엔드 핵심 개념과 연결된 글을 순서 있게 따라가는 구조화된 경로입니다.
+      en: A structured route through core backend concepts and supporting articles.
+  - title:
+      ko-KR: 백엔드 기초 경로
+      en: Backend Foundations Path
+    url: /paths/backend-foundations-path/
+    description:
+      ko-KR: 시간순 탐색 대신 의도된 순서로 읽고 싶은 독자를 위한 가이드 경로입니다.
+      en: A guided path for readers who want an intentional sequence instead of chronological browsing.
