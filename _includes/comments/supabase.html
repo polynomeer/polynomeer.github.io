@@ -25,10 +25,7 @@
   data-auth-error="{{ site.data.locales[lang].comments.auth_error }}"
 >
   <div class="comment-thread-header">
-    <div>
-      <p class="comment-thread-label">{{ site.data.locales[lang].comments.eyebrow }}</p>
-      <h2 class="comment-thread-title">{{ site.data.locales[lang].comments.title }}</h2>
-    </div>
+    <h2 class="comment-thread-title">{{ site.data.locales[lang].comments.title }}</h2>
     <span class="comment-count text-muted">{{ site.data.locales[lang].comments.count_zero }}</span>
   </div>
 
@@ -164,7 +161,7 @@
       textarea.disabled = !signedIn;
       submitButton.disabled = !signedIn;
       textarea.placeholder = signedIn ? texts.placeholder : texts.signinPrompt;
-      formHint.textContent = signedIn ? texts.writePrompt : '';
+      formHint.textContent = '';
       authStateNode.textContent = signedIn
         ? formatSignedInAs(currentUser.user_metadata?.user_name || currentUser.user_metadata?.preferred_username || currentUser.user_metadata?.full_name || currentUser.email || 'GitHub')
         : '';
