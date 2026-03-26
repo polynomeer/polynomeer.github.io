@@ -26,6 +26,11 @@
   gap: 0.8rem;
 }
 
+.post-filter-row-groups {
+  display: grid;
+  gap: 0.9rem;
+}
+
 .post-filter-row-search {
   align-items: stretch;
 }
@@ -40,6 +45,22 @@
 .post-filter-field-wide {
   min-width: 100%;
   flex-basis: 100%;
+}
+
+.post-filter-field-compact {
+  min-width: 12rem;
+  flex: 0 1 12rem;
+}
+
+.post-filter-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.post-filter-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
 .post-status-filter-label {
@@ -346,6 +367,11 @@
 
 /* Hide SideBar and TOC */
 @media all and (max-width: 830px) {
+  .post-filter-field-compact {
+    min-width: calc(50% - 0.4rem);
+    flex-basis: calc(50% - 0.4rem);
+  }
+
   .post-filter-field {
     min-width: calc(50% - 0.4rem);
   }
@@ -377,8 +403,10 @@
 }
 
 @media all and (max-width: 576px) {
+  .post-filter-field-compact,
   .post-filter-field {
     min-width: 100%;
+    flex-basis: 100%;
   }
 
   #home-filter-reset {
