@@ -29,18 +29,6 @@
     <span class="comment-count text-muted">{{ site.data.locales[lang].comments.count_zero }}</span>
   </div>
 
-  <div class="comment-auth-bar">
-    <div class="comment-auth-state text-muted"></div>
-    <div class="comment-auth-actions">
-      <button type="button" class="comment-login-button btn btn-outline-primary btn-sm">
-        <i class="fab fa-github me-1"></i>{{ site.data.locales[lang].comments.signin }}
-      </button>
-      <button type="button" class="comment-logout-button btn btn-outline-secondary btn-sm d-none">
-        {{ site.data.locales[lang].comments.signout }}
-      </button>
-    </div>
-  </div>
-
   <form class="comment-form">
     <label class="visually-hidden" for="comment-body">{{ site.data.locales[lang].comments.placeholder }}</label>
     <textarea
@@ -54,6 +42,9 @@
       <span class="comment-form-hint text-muted"></span>
       <button type="button" class="comment-inline-login-button btn btn-outline-primary btn-sm">
         <i class="fab fa-github me-1"></i>{{ site.data.locales[lang].comments.signin }}
+      </button>
+      <button type="button" class="comment-logout-button btn btn-outline-secondary btn-sm d-none">
+        {{ site.data.locales[lang].comments.signout }}
       </button>
       <button type="submit" class="comment-submit-button btn btn-primary btn-sm d-none" disabled>
         {{ site.data.locales[lang].comments.submit }}
@@ -82,8 +73,6 @@
     const locale = root.dataset.locale || 'en';
     const titleNode = root.querySelector('.comment-thread-title');
     const countNode = root.querySelector('.comment-count');
-    const authStateNode = root.querySelector('.comment-auth-state');
-    const loginButton = root.querySelector('.comment-login-button');
     const logoutButton = root.querySelector('.comment-logout-button');
     const form = root.querySelector('.comment-form');
     const textarea = root.querySelector('.comment-body-field');
@@ -165,11 +154,9 @@
       textarea.disabled = !signedIn;
       submitButton.disabled = !signedIn;
       textarea.placeholder = signedIn ? texts.placeholder : texts.signinPrompt;
-      formHint.textContent = '';
-      authStateNode.textContent = signedIn
+      formHint.textContent = signedIn
         ? formatSignedInAs(currentUser.user_metadata?.user_name || currentUser.user_metadata?.preferred_username || currentUser.user_metadata?.full_name || currentUser.email || 'GitHub')
         : '';
-      loginButton.classList.toggle('d-none', signedIn);
       logoutButton.classList.toggle('d-none', !signedIn);
       inlineLoginButton.classList.toggle('d-none', signedIn);
       submitButton.classList.toggle('d-none', !signedIn);
