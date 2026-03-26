@@ -80,8 +80,8 @@ pageviews:
 likes:
   provider: supabase
   supabase:
-    url:
-    anon_key:
+    url: https://eyrabiilsmkbehqhiezm.supabase.co
+    anon_key: sb_publishable__QCEqxJ5nC04iD8-igyV4g_DNTyXW5k
     table: post_likes
 
 # Prefer color scheme setting.
