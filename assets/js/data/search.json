@@ -36,7 +36,9 @@ swcache: true
     {% endif %}
 
     {% if in_hub %}
-      {% assign topic_ids = topic_ids | push: hub.title %}
+      {% capture topic_title %}{% include localized-value.html value=hub.title lang=site.lang %}{% endcapture %}
+      {% assign topic_title = topic_title | strip %}
+      {% assign topic_ids = topic_ids | push: topic_title %}
     {% endif %}
   {% endfor %}
 
