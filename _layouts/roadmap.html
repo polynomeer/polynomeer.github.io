@@ -15,17 +15,16 @@ layout: page
     </div>
 
     {% for stage in roadmap.stages %}
+      {% assign stage_posts = site.posts | where_exp: 'post', "post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id" %}
+      {% assign stage_posts_count = stage_posts | size %}
       {% assign stage_series = '' | split: '' %}
-      {% assign stage_posts_count = 0 %}
+      {% assign standalone_posts = stage_posts | where_exp: 'post', "post.series == nil" %}
 
-      {% for post in site.posts %}
-        {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id %}
-          {% assign stage_posts_count = stage_posts_count | plus: 1 %}
-          {% if post.series %}
-            {% unless stage_series contains post.series %}
-            {% assign stage_series = stage_series | push: post.series %}
-            {% endunless %}
-          {% endif %}
+      {% for post in stage_posts %}
+        {% if post.series %}
+          {% unless stage_series contains post.series %}
+          {% assign stage_series = stage_series | push: post.series %}
+          {% endunless %}
         {% endif %}
       {% endfor %}
 
@@ -39,7 +38,7 @@ layout: page
           </div>
 
           {% for series_id in stage_series %}
-            {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
+            {% assign series_posts = stage_posts | where: 'series', series_id | sort: 'series_order' %}
             {% assign series_first_post = series_posts | first %}
             <article class="roadmap-series">
               <h4>{{ series_first_post.series_title | default: series_id }}</h4>
@@ -48,33 +47,22 @@ layout: page
               {% endif %}
               <ol class="roadmap-post-list">
                 {% for post in series_posts %}
-                  {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id %}
-                    <li>
-                      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                    </li>
-                  {% endif %}
+                  <li>
+                    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                  </li>
                 {% endfor %}
               </ol>
             </article>
           {% endfor %}
 
-          {% assign standalone_exists = false %}
-          {% for post in site.posts %}
-            {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id and post.series == nil %}
-              {% assign standalone_exists = true %}
-            {% endif %}
-          {% endfor %}
-
-          {% if standalone_exists %}
+          {% if standalone_posts.size > 0 %}
             <article class="roadmap-series standalone">
               <h4>{{ site.data.locales[lang].roadmaps.standalone_title }}</h4>
               <ol class="roadmap-post-list">
-                {% for post in site.posts %}
-                  {% if post.roadmaps contains page.roadmap_id and post.roadmap_stage == stage.id and post.series == nil %}
-                    <li>
-                      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                    </li>
-                  {% endif %}
+                {% for post in standalone_posts %}
+                  <li>
+                    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                  </li>
                 {% endfor %}
               </ol>
             </article>

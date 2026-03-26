@@ -84,14 +84,7 @@ layout: page
               <h4>{{ site.data.locales[lang].learning_paths.recommended_posts }}</h4>
               <ol class="learning-path-resource-list ordered">
                 {% for post_path in phase_posts %}
-                  {% assign matched_post = nil %}
-                  {% for post in site.posts %}
-                    {% if post.path == post_path %}
-                      {% assign matched_post = post %}
-                      {% break %}
-                    {% endif %}
-                  {% endfor %}
-
+                  {% assign matched_post = site.posts | where: 'path', post_path | first %}
                   {% if matched_post %}
                     <li>
                       <a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a>

@@ -7,6 +7,8 @@ layout: page
 {% assign content_type = site.data.content_types[page.content_type_id] %}
 
 {% if content_type %}
+  {% assign type_segment = '/' | append: page.content_type_id | append: '/' %}
+  {% assign matching_posts = site.posts | where_exp: 'post', "post.path contains type_segment" %}
   <section class="content-type-detail">
     <div class="content-type-hero">
       <p class="content-type-eyebrow">{{ site.data.locales[lang].content_types.eyebrow }}</p>
@@ -15,18 +17,13 @@ layout: page
     </div>
 
     <ul class="content-type-post-list">
-      {% for post in site.posts %}
-      {% capture post_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-      {% assign post_type_id = post_type_id | strip %}
-
-        {% if post_type_id == page.content_type_id %}
-          <li class="d-flex justify-content-between gap-3">
-            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-            <span class="text-muted small text-nowrap">
-              {% include datetime.html date=post.date lang=lang %}
-            </span>
-          </li>
-        {% endif %}
+      {% for post in matching_posts %}
+        <li class="d-flex justify-content-between gap-3">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          <span class="text-muted small text-nowrap">
+            {% include datetime.html date=post.date lang=lang %}
+          </span>
+        </li>
       {% endfor %}
     </ul>
   </section>

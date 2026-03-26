@@ -16,15 +16,9 @@ layout: page
     {% for type_page in type_pages %}
       {% assign content_type = site.data.content_types[type_page.content_type_id] %}
       {% if content_type %}
-        {% assign post_count = 0 %}
-        {% for post in site.posts %}
-          {% capture post_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-          {% assign post_type_id = post_type_id | strip %}
-
-          {% if post_type_id == type_page.content_type_id %}
-            {% assign post_count = post_count | plus: 1 %}
-          {% endif %}
-        {% endfor %}
+        {% assign type_segment = '/' | append: type_page.content_type_id | append: '/' %}
+        {% assign matching_posts = site.posts | where_exp: 'post', "post.path contains type_segment" %}
+        {% assign post_count = matching_posts | size %}
 
         <article class="content-type-card">
           <a href="{{ type_page.url | relative_url }}" class="content-type-card-link">

@@ -7,6 +7,7 @@ layout: page
 {% assign post_status = site.data.post_statuses[page.post_status_id] %}
 
 {% if post_status %}
+  {% assign matching_posts = site.posts | where: 'status', page.post_status_id %}
   <section class="post-status-detail">
     <div class="post-status-hero">
       <p class="post-status-eyebrow">{{ site.data.locales[lang].post_statuses.eyebrow }}</p>
@@ -15,15 +16,13 @@ layout: page
     </div>
 
     <ul class="post-status-post-list">
-      {% for post in site.posts %}
-        {% if post.status == page.post_status_id %}
-          <li class="d-flex justify-content-between gap-3">
-            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-            <span class="text-muted small text-nowrap">
-              {% include datetime.html date=post.date lang=lang %}
-            </span>
-          </li>
-        {% endif %}
+      {% for post in matching_posts %}
+        <li class="d-flex justify-content-between gap-3">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          <span class="text-muted small text-nowrap">
+            {% include datetime.html date=post.date lang=lang %}
+          </span>
+        </li>
       {% endfor %}
     </ul>
   </section>

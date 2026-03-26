@@ -16,12 +16,8 @@ layout: page
     {% for roadmap_page in roadmaps %}
       {% assign roadmap = site.data.roadmaps[roadmap_page.roadmap_id] %}
       {% if roadmap %}
-        {% assign roadmap_post_count = 0 %}
-        {% for post in site.posts %}
-          {% if post.roadmaps contains roadmap_page.roadmap_id %}
-            {% assign roadmap_post_count = roadmap_post_count | plus: 1 %}
-          {% endif %}
-        {% endfor %}
+        {% assign roadmap_posts = site.posts | where_exp: 'post', "post.roadmaps contains roadmap_page.roadmap_id" %}
+        {% assign roadmap_post_count = roadmap_posts | size %}
 
         <article class="roadmap-card">
           <a href="{{ roadmap_page.url | relative_url }}" class="roadmap-card-link">
