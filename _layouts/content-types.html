@@ -16,6 +16,7 @@ layout: page
     {% for type_page in type_pages %}
       {% assign content_type = site.data.content_types[type_page.content_type_id] %}
       {% if content_type %}
+        {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: type_page.content_type_id %}
         {% assign type_segment = '/' | append: type_page.content_type_id | append: '/' %}
         {% assign matching_posts = site.posts | where_exp: 'post', "post.path contains type_segment" %}
         {% assign post_count = matching_posts | size %}
@@ -33,12 +34,7 @@ layout: page
                 }}
               </span>
             </div>
-            <h3
-              data-l10n-ko="{{ content_type.title['ko-KR'] | default: content_type.title | escape }}"
-              data-l10n-en="{{ content_type.title.en | default: content_type.title | escape }}"
-            >
-              {% include localized-value.html value=content_type.title lang=lang %}
-            </h3>
+            <h3>{{ content_type_label }}</h3>
             <p
               data-l10n-ko="{{ content_type.description['ko-KR'] | default: content_type.description | escape }}"
               data-l10n-en="{{ content_type.description.en | default: content_type.description | escape }}"
