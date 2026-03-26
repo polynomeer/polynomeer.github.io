@@ -21,6 +21,7 @@ It is not a secure voting system.
   - `likes.supabase.url`
   - `likes.supabase.anon_key`
   - `likes.supabase.table`
+  - `likes.supabase.key_column`
 - `_layouts/post.html`
   - button placement
 - `_includes/likes/supabase.html`
@@ -35,7 +36,8 @@ It is not a secure voting system.
 - Keep the feature optional and config-gated.
 - Do not hardcode private keys or service-role credentials.
 - Do not claim the feature is fraud-resistant.
-- Prefer using `page.url` as the stable post identifier.
+- Prefer `page.post_id` as the stable post identifier.
+- Use `page.url` only as a fallback or legacy migration key.
 - Keep failures non-fatal.
 
 ## Safe Implementation Pattern
@@ -43,9 +45,10 @@ It is not a secure voting system.
 For this repository, prefer:
 
 1. render a button only on post pages
-2. use `localStorage` for a browser visitor id
-3. use direct Supabase REST calls with the public anon key
-4. refresh both count and liked state after a mutation
+2. use `page.post_id` when present and `page.url` as a fallback
+3. use `localStorage` for a browser visitor id
+4. use direct Supabase REST calls with the public anon key
+5. refresh both count and liked state after a mutation
 
 Avoid:
 
@@ -84,8 +87,10 @@ Check:
 1. `likes.provider` is set
 2. `likes.supabase.url` and `anon_key` are not empty
 3. the table exists
-4. RLS policies allow anon select/insert/delete
-5. the browser console shows the expected REST calls
+4. `likes.supabase.key_column` matches the actual column name in Supabase
+5. RLS policies allow anon select/insert/delete
+6. the post has a stable `post_id` if permalink churn is expected
+7. the browser console shows the expected REST calls
 
 ## Verification Checklist
 
