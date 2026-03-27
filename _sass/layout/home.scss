@@ -12,7 +12,7 @@
 
 .post-status-filter-bar {
   display: block;
-  padding: 0.95rem 1rem;
+  padding: 0.8rem 1rem;
   border-radius: 1rem;
   border: 1px solid rgba(98, 114, 164, 0.16);
   background: rgba(68, 71, 90, 0.14);
@@ -21,41 +21,33 @@
 .post-filter-row {
   display: flex;
   flex-wrap: nowrap;
-  align-items: end;
-  gap: 0.8rem;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 .post-filter-row-inline {
-  align-items: end;
+  align-items: center;
 }
 
 .post-filter-field {
-  display: grid;
-  gap: 0.45rem;
+  display: block;
   min-width: 0;
+  margin: 0;
 }
 
 .post-filter-field-search {
-  flex: 1.8 1 22rem;
+  flex: 1 1 auto;
 }
 
 .post-filter-field-compact {
-  flex: 0 1 11rem;
-}
-
-.post-status-filter-label {
-  color: var(--text-muted-highlight-color);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  flex: 0 0 12rem;
 }
 
 .post-filter-input,
 .post-filter-select {
   width: 100%;
-  min-height: 2.75rem;
-  padding: 0.65rem 0.85rem;
+  min-height: 2.6rem;
+  padding: 0.58rem 0.8rem;
   border-radius: 0.9rem;
   border: 1px solid rgba(98, 114, 164, 0.2);
   background: rgba(40, 42, 54, 0.5);
@@ -350,7 +342,7 @@
 /* Hide SideBar and TOC */
 @media all and (max-width: 830px) {
   .post-filter-row {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   #static-post-list,
@@ -381,10 +373,13 @@
 }
 
 @media all and (max-width: 576px) {
-  .post-filter-field {
-    min-width: 100%;
+  .post-filter-field-search {
+    flex: 1 1 0;
   }
 
+  .post-filter-field-compact {
+    flex: 0 0 9rem;
+  }
 }
 
 /* Sidebar is visible */

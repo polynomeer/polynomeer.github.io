@@ -55,35 +55,30 @@ refactor: true
   <div class="post-status-filter-bar">
     <div class="post-filter-row post-filter-row-inline">
       <label class="post-filter-field post-filter-field-search">
-        <span class="post-status-filter-label" data-i18n="home.search_filter_label">{{ site.data.locales[lang].home.search_filter_label }}</span>
         <input
           id="home-post-search"
           type="search"
           class="post-filter-input"
+          data-i18n-aria-label="home.search_filter_label"
           data-i18n-placeholder="home.search_filter_placeholder"
           placeholder="{{ site.data.locales[lang].home.search_filter_placeholder }}..."
+          aria-label="{{ site.data.locales[lang].home.search_filter_label }}"
         >
       </label>
 
       <label class="post-filter-field post-filter-field-compact">
-        <span class="post-status-filter-label" data-i18n="home.type_filter_label">{{ site.data.locales[lang].home.type_filter_label }}</span>
-        <select id="home-type-filter" class="post-filter-select">
+        <select
+          id="home-type-filter"
+          class="post-filter-select"
+          data-i18n-aria-label="home.type_filter_label"
+          aria-label="{{ site.data.locales[lang].home.type_filter_label }}"
+        >
           <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
           {% for type_page in sorted_content_types %}
             {% assign content_type_id = type_page.content_type_id %}
             {% assign content_type = site.data.content_types[content_type_id] %}
-            {% assign has_posts_of_type = false %}
-            {% assign type_segment = '/' | append: content_type_id | append: '/' %}
-            {% for post in feed_posts %}
-              {% if post.path contains type_segment %}
-                {% assign has_posts_of_type = true %}
-                {% break %}
-              {% endif %}
-            {% endfor %}
-            {% if has_posts_of_type %}
-              {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-              <option value="{{ content_type_id }}">{{ content_type_label }}</option>
-            {% endif %}
+            {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+            <option value="{{ content_type_id }}">{{ content_type_label }}</option>
           {% endfor %}
         </select>
       </label>
