@@ -24,9 +24,12 @@ layout: page
         <article class="content-type-card">
           <a href="{{ type_page.url | relative_url }}" class="content-type-card-link">
             <div class="content-type-card-header">
-              {% if content_type.icon %}
-                <i class="{{ content_type.icon }}"></i>
-              {% endif %}
+              <div class="content-type-card-title-wrap">
+                {% if content_type.icon %}
+                  <i class="{{ content_type.icon }}"></i>
+                {% endif %}
+                <h3>{{ content_type_label }}</h3>
+              </div>
               <span class="content-type-count">
                 {{
                   site.data.locales[lang].content_types.post_count
@@ -34,7 +37,6 @@ layout: page
                 }}
               </span>
             </div>
-            <h3>{{ content_type_label }}</h3>
             <p
               data-l10n-ko="{{ content_type.description['ko-KR'] | default: content_type.description | escape }}"
               data-l10n-en="{{ content_type.description.en | default: content_type.description | escape }}"
