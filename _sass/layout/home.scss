@@ -43,10 +43,6 @@
   flex: 0 1 11rem;
 }
 
-.post-filter-field-tag {
-  flex: 1 1 14rem;
-}
-
 .post-status-filter-label {
   color: var(--text-muted-highlight-color);
   font-size: 0.82rem;
@@ -97,17 +93,6 @@
     border-color: rgba(139, 233, 253, 0.24);
     color: var(--text-color);
   }
-}
-
-#home-filter-reset {
-  flex: 0 0 9.5rem;
-  justify-content: center;
-}
-
-.post-status-filter-empty {
-  margin: 0.8rem 0 0;
-  color: var(--text-muted-color);
-  font-size: 0.92rem;
 }
 
 #post-list {
