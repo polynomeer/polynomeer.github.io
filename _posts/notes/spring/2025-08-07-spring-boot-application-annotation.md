@@ -1,5 +1,5 @@
 ---
-title: @SpringBootApplication은 실제로 무엇을 하는가
+title: "@SpringBootApplication은 실제로 무엇을 하는가"
 date: 2025-08-07
 categories: [Notes, Spring]
 tags: [Spring, Spring Boot, "@SpringBootApplication"]

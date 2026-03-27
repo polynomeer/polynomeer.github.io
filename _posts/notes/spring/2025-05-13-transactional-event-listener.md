@@ -1,5 +1,5 @@
 ---
-title: @TransactionalEventListener 빠른 체크 노트
+title: "@TransactionalEventListener 빠른 체크 노트"
 date: 2025-05-13
 categories: [Notes, Spring]
 tags: [Spring, Transaction, "@TransactionalEventListener"]

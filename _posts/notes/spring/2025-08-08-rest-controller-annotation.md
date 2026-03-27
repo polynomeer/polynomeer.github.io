@@ -1,5 +1,5 @@
 ---
-title: @RestController는 무엇을 의미하는가
+title: "@RestController는 무엇을 의미하는가"
 date: 2025-08-08
 categories: [Notes, Spring]
 tags: [Spring, Spring MVC, REST, "@RestController"]

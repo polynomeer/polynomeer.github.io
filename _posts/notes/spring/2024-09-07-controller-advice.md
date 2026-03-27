@@ -1,5 +1,5 @@
 ---
-title: @ControllerAdvice와 @RestControllerAdvice 정리
+title: "@ControllerAdvice와 @RestControllerAdvice 정리"
 date: 2024-09-07
 categories: [Notes, Spring]
 tags: [Spring, ControllerAdvice, Exception Handling]
