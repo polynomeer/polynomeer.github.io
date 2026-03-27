@@ -1102,6 +1102,7 @@ $btn-mb: 0.5rem;
     margin-bottom: 1.5rem;
 
     $btn-size: 1.75rem;
+    $control-width: ($btn-size * 4) + ($sb-btn-gap * 3);
 
     %button {
       width: $btn-size;
@@ -1144,15 +1145,18 @@ $btn-mb: 0.5rem;
     .sidebar-controls-row {
       margin-bottom: 0.9rem;
       align-items: stretch;
-      width: 100%;
+      width: $control-width;
 
       .lang-switcher {
         width: 100%;
+        min-width: 0;
       }
     }
 
     .sidebar-contact-row {
       flex-wrap: wrap;
+      width: $control-width;
+      justify-content: space-between;
     }
   } /* .sidebar-bottom */
 } /* #sidebar */
@@ -1846,9 +1850,17 @@ search {
       padding-left: 2.75rem;
       margin-bottom: 1.75rem;
 
+      $btn-size-lg: 1.75rem;
+      $control-width-lg: ($btn-size-lg * 4) + ($sb-btn-gap-lg * 3);
+
       .sidebar-controls-row,
       .sidebar-contact-row {
         gap: $sb-btn-gap-lg;
+      }
+
+      .sidebar-controls-row,
+      .sidebar-contact-row {
+        width: $control-width-lg;
       }
     }
   }
