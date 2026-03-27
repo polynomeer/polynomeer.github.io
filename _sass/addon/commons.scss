@@ -230,6 +230,12 @@ footer {
 
 .topbar-lang-switcher {
   margin: 0 0.75rem 0 auto;
+  min-width: 10.4rem;
+
+  .lang-switcher-btn {
+    font-size: 0.7rem;
+    padding: 0.34rem 0.48rem;
+  }
 
   @media (max-width: 1120px) {
     display: none;
