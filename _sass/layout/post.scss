@@ -944,6 +944,18 @@ header {
   }
 }
 
+.about-profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+
+  strong {
+    margin: 0;
+    min-width: 0;
+  }
+}
+
 .about-profile-strengths {
   margin-top: 1.4rem;
 
@@ -1473,6 +1485,7 @@ header {
   h3 {
     margin: 0;
     min-width: 0;
+    flex: 1 1 auto;
   }
 }
 

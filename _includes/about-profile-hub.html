@@ -13,8 +13,10 @@
   {% if fixed_links and fixed_links.enabled and fixed_links.items and fixed_links.items.size > 0 %}
     <div class="about-profile-hub-grid">
       <a class="about-profile-hub-card" href="{{ '/learning-evidence/' | relative_url }}">
-        <i class="fas fa-book-open-reader"></i>
-        <strong data-i18n="about.learning_evidence">{{ site.data.locales[include.lang].about.learning_evidence }}</strong>
+        <div class="about-profile-card-header">
+          <i class="fas fa-book-open-reader"></i>
+          <strong data-i18n="about.learning_evidence">{{ site.data.locales[include.lang].about.learning_evidence }}</strong>
+        </div>
       </a>
 
       {% for item in fixed_links.items %}
@@ -30,15 +32,17 @@
               target="_blank" rel="noopener noreferrer"
             {% endif %}
           >
-            {% if item.icon %}
-              <i class="{{ item.icon }}"></i>
-            {% endif %}
-            <strong
-              data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
-              data-l10n-en="{{ item.title.en | default: item.title | escape }}"
-            >
-              {% include localized-value.html value=item.title lang=include.lang %}
-            </strong>
+            <div class="about-profile-card-header">
+              {% if item.icon %}
+                <i class="{{ item.icon }}"></i>
+              {% endif %}
+              <strong
+                data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
+                data-l10n-en="{{ item.title.en | default: item.title | escape }}"
+              >
+                {% include localized-value.html value=item.title lang=include.lang %}
+              </strong>
+            </div>
           </a>
         {% endif %}
       {% endfor %}
@@ -55,15 +59,17 @@
             {% assign href = href | relative_url %}
           {% endunless %}
           <a class="about-profile-strength-card" href="{{ href }}">
-            {% if strength.icon %}
-              <i class="{{ strength.icon }}"></i>
-            {% endif %}
-            <strong
-              data-l10n-ko="{{ strength.title['ko-KR'] | default: strength.title | escape }}"
-              data-l10n-en="{{ strength.title.en | default: strength.title | escape }}"
-            >
-              {% include localized-value.html value=strength.title lang=include.lang %}
-            </strong>
+            <div class="about-profile-card-header">
+              {% if strength.icon %}
+                <i class="{{ strength.icon }}"></i>
+              {% endif %}
+              <strong
+                data-l10n-ko="{{ strength.title['ko-KR'] | default: strength.title | escape }}"
+                data-l10n-en="{{ strength.title.en | default: strength.title | escape }}"
+              >
+                {% include localized-value.html value=strength.title lang=include.lang %}
+              </strong>
+            </div>
             {% if strength.description %}
               <span
                 data-l10n-ko="{{ strength.description['ko-KR'] | default: strength.description | escape }}"
