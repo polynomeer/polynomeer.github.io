@@ -32,6 +32,7 @@
   const resultsContainer = document.getElementById('search-results');
   const resultInfo = document.getElementById('search-result-info');
   const hints = document.getElementById('search-hints');
+  const hasDisplayValue = (value) => value !== null && value !== undefined && String(value).trim() !== '' && String(value).trim() !== 'null';
 
   function renderSearchSummary() {
     const query = searchInput.value.trim();
@@ -85,15 +86,15 @@
       }
 
       if (prop === 'series_title') {
-        return value === '' ? '' : `<span class="search-chip search-chip-series">${value}</span>`;
+        return hasDisplayValue(value) ? `<span class="search-chip search-chip-series">${value}</span>` : '';
       }
 
       if (prop === 'roadmaps') {
-        return value === '' ? '' : `<span class="search-chip search-chip-roadmap">${value}</span>`;
+        return hasDisplayValue(value) ? `<span class="search-chip search-chip-roadmap">${value}</span>` : '';
       }
 
       if (prop === 'topics') {
-        return value === '' ? '' : `<span class="search-chip search-chip-topic">${value}</span>`;
+        return hasDisplayValue(value) ? `<span class="search-chip search-chip-topic">${value}</span>` : '';
       }
     }
   });
