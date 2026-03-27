@@ -41,6 +41,15 @@ refactor: true
 {% endif %}
 
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
+{% assign feed_posts = '' | split: '' %}
+
+{% for post in pinned %}
+  {% assign feed_posts = feed_posts | push: post %}
+{% endfor %}
+
+{% for post in default %}
+  {% assign feed_posts = feed_posts | push: post %}
+{% endfor %}
 
 <section id="home-discovery-filter" class="px-xl-1">
   <div class="post-status-filter-bar">
@@ -65,7 +74,7 @@ refactor: true
             {% assign content_type = site.data.content_types[content_type_id] %}
             {% assign has_posts_of_type = false %}
             {% assign type_segment = '/' | append: content_type_id | append: '/' %}
-            {% for post in posts %}
+            {% for post in feed_posts %}
               {% if post.path contains type_segment %}
                 {% assign has_posts_of_type = true %}
                 {% break %}
@@ -83,6 +92,7 @@ refactor: true
 </section>
 
 <div id="post-list" class="flex-grow-1 px-xl-1">
+  <div id="static-post-list">
   {% for post in posts %}
     {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
     {% assign post_content_type_id = post_content_type_id | strip %}
@@ -176,50 +186,359 @@ refactor: true
       </div>
     </article>
   {% endfor %}
+  </div>
+
+  <div id="filtered-post-list" hidden></div>
 </div>
 <!-- #post-list -->
 
 {% if paginator.total_pages > 1 %}
-  {% include post-paginator.html %}
+  <div id="static-post-pagination">
+    {% include post-paginator.html %}
+  </div>
 {% endif %}
+
+<div id="filtered-post-pagination" class="px-xl-1" hidden></div>
+
+<script id="home-feed-metadata" type="application/json">
+  [
+    {% for post in feed_posts %}
+      {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+      {% assign post_content_type_id = post_content_type_id | strip %}
+      {% assign content_type = site.data.content_types[post_content_type_id] %}
+      {% assign post_status = site.data.post_statuses[post.status] %}
+      {% capture summary %}{% include post-description.html %}{% endcapture %}
+      {% assign summary = summary | strip | strip_newlines %}
+      {% assign src = nil %}
+      {% assign alt = nil %}
+      {% if post.image %}
+        {% assign src = post.image.path | default: post.image %}
+        {% unless src contains '//' %}
+          {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
+        {% endunless %}
+        {% assign alt = post.image.alt | default: 'Preview Image' %}
+      {% endif %}
+      {
+        "title": {{ post.title | jsonify }},
+        "url": {{ post.url | relative_url | jsonify }},
+        "typeId": {{ post_content_type_id | jsonify }},
+        "typeLabel": {{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},
+        "typeIcon": {{ content_type.icon | jsonify }},
+        "typeUrl": {{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},
+        "statusTitle": {{ post_status.title | jsonify }},
+        "statusIcon": {{ post_status.icon | jsonify }},
+        "summary": {{ summary | jsonify }},
+        "dateLabel": {{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},
+        "categories": {{ post.categories | jsonify }},
+        "imageSrc": {{ src | jsonify }},
+        "imageAlt": {{ alt | jsonify }},
+        "pin": {{ post.pin | default: false | jsonify }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const filterRoot = document.getElementById('home-discovery-filter');
     const postList = document.getElementById('post-list');
+    const staticPostList = document.getElementById('static-post-list');
+    const filteredPostList = document.getElementById('filtered-post-list');
+    const staticPagination = document.getElementById('static-post-pagination');
+    const filteredPagination = document.getElementById('filtered-post-pagination');
+    const metadataScript = document.getElementById('home-feed-metadata');
 
-    if (!filterRoot || !postList) return;
+    if (!filterRoot || !postList || !staticPostList || !filteredPostList || !metadataScript) return;
 
     const searchInput = document.getElementById('home-post-search');
     const typeSelect = document.getElementById('home-type-filter');
-    const cards = Array.from(postList.querySelectorAll('[data-post-type]'));
+    const perPage = {{ paginator.per_page | default: site.paginate | default: 10 }};
+    const searchDataUrl = {{ '/assets/js/data/search.json' | relative_url | jsonify }};
+    const noResultsMessage = {{ site.data.locales[lang].search.no_results | jsonify }};
+    const pinPrompt = {{ site.data.locales[lang].post.pin_prompt | jsonify }};
+    let allPosts = [];
+    let currentPage = 1;
+    let searchableByUrl = null;
 
-    const applyFilter = () => {
+    try {
+      allPosts = JSON.parse(metadataScript.textContent);
+    } catch (_error) {
+      return;
+    }
+
+    const escapeHtml = (value = '') =>
+      String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    const renderCategories = (categories = []) => {
+      if (!Array.isArray(categories) || categories.length === 0) return '';
+
+      return `
+        <span class="post-meta-item">
+          <i class="far fa-folder-open fa-fw"></i>
+          <span class="categories">${escapeHtml(categories.join(', '))}</span>
+        </span>
+      `;
+    };
+
+    const renderStatusBadge = (post) => {
+      if (!post.statusTitle) return '';
+
+      const icon = post.statusIcon ? `<i class="${escapeHtml(post.statusIcon)}"></i>` : '';
+      return `
+        <span class="post-status-badge">
+          ${icon}
+          <span>${escapeHtml(post.statusTitle)}</span>
+        </span>
+      `;
+    };
+
+    const renderTypeBadge = (post) => {
+      const icon = post.typeIcon ? `<i class="${escapeHtml(post.typeIcon)}"></i>` : '';
+      return `
+        <a class="content-type-badge" href="${escapeHtml(post.typeUrl)}">
+          ${icon}
+          <span>${escapeHtml(post.typeLabel)}</span>
+        </a>
+      `;
+    };
+
+    const renderImage = (post) => {
+      if (!post.imageSrc) return '';
+
+      return `
+        <div class="col-md-5">
+          <a href="${escapeHtml(post.url)}" class="post-preview-image-link">
+            <img src="${escapeHtml(post.imageSrc)}" alt="${escapeHtml(post.imageAlt || 'Preview Image')}">
+          </a>
+        </div>
+      `;
+    };
+
+    const renderCard = (post) => {
+      const cardBodyCol = post.imageSrc ? '7' : '12';
+      const pin = post.pin ? `
+        <div class="pin ms-1">
+          <i class="fas fa-thumbtack fa-fw"></i>
+          <span>${escapeHtml(pinPrompt)}</span>
+        </div>
+      ` : '';
+
+      return `
+        <article class="card-wrapper card" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}">
+          <div class="post-preview row g-0 flex-md-row-reverse">
+            ${renderImage(post)}
+            <div class="col-md-${cardBodyCol}">
+              <div class="card-body d-flex flex-column">
+                <div class="card-title-row my-2 mt-md-0">
+                  <h1 class="card-title">
+                    <a href="${escapeHtml(post.url)}" class="post-card-title-link">${escapeHtml(post.title)}</a>
+                  </h1>
+                  ${renderTypeBadge(post)}
+                </div>
+
+                <div class="card-text content mt-0 mb-3">
+                  <p>
+                    <a href="${escapeHtml(post.url)}" class="post-card-summary-link">
+                      ${escapeHtml(post.summary || '')}
+                    </a>
+                  </p>
+                </div>
+
+                <div class="post-meta flex-grow-1 d-flex align-items-end">
+                  <div class="post-meta-main me-auto">
+                    <div class="post-type-row mb-2">
+                      ${renderStatusBadge(post)}
+                    </div>
+
+                    <div class="post-meta-line">
+                      <span class="post-meta-item">
+                        <i class="far fa-calendar fa-fw"></i>
+                        ${escapeHtml(post.dateLabel)}
+                      </span>
+                      ${renderCategories(post.categories)}
+                    </div>
+                  </div>
+                  ${pin}
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    };
+
+    const renderEmptyState = () => {
+      filteredPostList.innerHTML = `<div class="post-filter-empty">${escapeHtml(noResultsMessage)}</div>`;
+    };
+
+    const renderPagination = (totalPages) => {
+      if (totalPages <= 1) {
+        filteredPagination.hidden = true;
+        filteredPagination.innerHTML = '';
+        return;
+      }
+
+      const pageButtons = Array.from({ length: totalPages }, (_, index) => {
+        const page = index + 1;
+        return `
+          <li class="page-item${page === currentPage ? ' active' : ''}">
+            <button type="button" class="page-link" data-page="${page}">${page}</button>
+          </li>
+        `;
+      }).join('');
+
+      filteredPagination.innerHTML = `
+        <nav aria-label="Filtered Page Navigation">
+          <ul class="pagination align-items-center mt-4 mb-0">
+            <li class="page-item${currentPage === 1 ? ' disabled' : ''}">
+              <button type="button" class="page-link" data-page="${currentPage - 1}" aria-label="previous-page">
+                <i class="fas fa-angle-left"></i>
+              </button>
+            </li>
+            ${pageButtons}
+            <li class="page-index align-middle">
+              <span>${currentPage}</span>
+              <span class="text-muted">/ ${totalPages}</span>
+            </li>
+            <li class="page-item${currentPage === totalPages ? ' disabled' : ''}">
+              <button type="button" class="page-link" data-page="${currentPage + 1}" aria-label="next-page">
+                <i class="fas fa-angle-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      `;
+      filteredPagination.hidden = false;
+    };
+
+    const loadSearchIndex = async () => {
+      if (searchableByUrl) return searchableByUrl;
+
+      try {
+        const response = await fetch(searchDataUrl, { credentials: 'same-origin' });
+        const items = await response.json();
+        searchableByUrl = items.reduce((acc, item) => {
+          acc[item.url] = [
+            item.title,
+            item.categories,
+            item.tags,
+            item.series,
+            item.series_title,
+            item.roadmaps,
+            item.topics,
+            item.snippet,
+            item.content
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+          return acc;
+        }, {});
+      } catch (_error) {
+        searchableByUrl = allPosts.reduce((acc, post) => {
+          acc[post.url] = [post.title, post.summary, Array.isArray(post.categories) ? post.categories.join(' ') : '']
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+          return acc;
+        }, {});
+      }
+
+      return searchableByUrl;
+    };
+
+    const toggleFilteredMode = (enabled) => {
+      staticPostList.hidden = enabled;
+      filteredPostList.hidden = !enabled;
+
+      if (staticPagination) {
+        staticPagination.hidden = enabled;
+      }
+
+      if (!enabled) {
+        filteredPagination.hidden = true;
+      }
+    };
+
+    const applyFilter = async ({ resetPage = false } = {}) => {
       const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
       const selectedType = typeSelect ? typeSelect.value : 'all';
+      const hasFilter = searchTerm !== '' || selectedType !== 'all';
 
-      cards.forEach((card) => {
-        const searchable = card.dataset.postSearch || '';
+      if (!hasFilter) {
+        currentPage = 1;
+        toggleFilteredMode(false);
+        return;
+      }
+
+      if (resetPage) {
+        currentPage = 1;
+      }
+
+      let searchMap = null;
+      if (searchTerm) {
+        searchMap = await loadSearchIndex();
+      }
+
+      const filteredPosts = allPosts.filter((post) => {
+        const matchesType = selectedType === 'all' || post.typeId === selectedType;
+        const searchable = searchMap ? searchMap[post.url] || '' : '';
         const matchesSearch = searchTerm === '' || searchable.includes(searchTerm);
-        const matchesType = selectedType === 'all' || card.dataset.postType === selectedType;
-        card.hidden = !(matchesSearch && matchesType);
+        return matchesType && matchesSearch;
+      });
+
+      toggleFilteredMode(true);
+
+      if (filteredPosts.length === 0) {
+        renderEmptyState();
+        renderPagination(0);
+        return;
+      }
+
+      const totalPages = Math.ceil(filteredPosts.length / perPage);
+      currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+
+      const start = (currentPage - 1) * perPage;
+      const pagePosts = filteredPosts.slice(start, start + perPage);
+      filteredPostList.innerHTML = pagePosts.map(renderCard).join('');
+      renderPagination(totalPages);
+    };
+
+    const bindCardNavigation = (container) => {
+      if (!container) return;
+
+      container.addEventListener('click', (event) => {
+        if (event.target.closest('a, button')) return;
+        const card = event.target.closest('[data-post-url]');
+        if (!card) return;
+        const { postUrl } = card.dataset;
+        if (postUrl) window.location.href = postUrl;
       });
     };
 
     [searchInput, typeSelect]
       .filter(Boolean)
       .forEach((control) => {
-        control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', applyFilter);
+        control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', () => {
+          applyFilter({ resetPage: true });
+        });
       });
 
-    cards.forEach((card) => {
-      card.addEventListener('click', (event) => {
-        if (event.target.closest('a, button')) return;
-        const { postUrl } = card.dataset;
-        if (postUrl) window.location.href = postUrl;
-      });
+    filteredPagination.addEventListener('click', (event) => {
+      const pageButton = event.target.closest('[data-page]');
+      if (!pageButton || pageButton.closest('.disabled')) return;
+      currentPage = Number(pageButton.dataset.page);
+      applyFilter();
+      filterRoot.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
 
+    bindCardNavigation(staticPostList);
+    bindCardNavigation(filteredPostList);
     applyFilter();
   });
 </script>
