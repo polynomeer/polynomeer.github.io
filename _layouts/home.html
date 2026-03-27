@@ -143,10 +143,6 @@ refactor: true
 
             <div class="post-meta flex-grow-1 d-flex align-items-end">
               <div class="post-meta-main me-auto">
-                <div class="post-type-row mb-2">
-                  {% include post-status-badge.html post=post lang=lang link=false %}
-                </div>
-
                 <div class="post-meta-line">
                   <span class="post-meta-item">
                     <i class="far fa-calendar fa-fw"></i>
@@ -201,7 +197,6 @@ refactor: true
       {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
       {% assign post_content_type_id = post_content_type_id | strip %}
       {% assign content_type = site.data.content_types[post_content_type_id] %}
-      {% assign post_status = site.data.post_statuses[post.status] %}
       {% capture summary %}{% include post-description.html %}{% endcapture %}
       {% assign summary = summary | strip | strip_newlines %}
       {% assign src = nil %}
@@ -220,8 +215,6 @@ refactor: true
         "typeLabel": {{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},
         "typeIcon": {{ content_type.icon | jsonify }},
         "typeUrl": {{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},
-        "statusTitle": {{ post_status.title | jsonify }},
-        "statusIcon": {{ post_status.icon | jsonify }},
         "summary": {{ summary | jsonify }},
         "dateLabel": {{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},
         "categories": {{ post.categories | jsonify }},
@@ -280,18 +273,6 @@ refactor: true
       `;
     };
 
-    const renderStatusBadge = (post) => {
-      if (!post.statusTitle) return '';
-
-      const icon = post.statusIcon ? `<i class="${escapeHtml(post.statusIcon)}"></i>` : '';
-      return `
-        <span class="post-status-badge">
-          ${icon}
-          <span>${escapeHtml(post.statusTitle)}</span>
-        </span>
-      `;
-    };
-
     const renderTypeBadge = (post) => {
       const icon = post.typeIcon ? `<i class="${escapeHtml(post.typeIcon)}"></i>` : '';
       return `
@@ -346,10 +327,6 @@ refactor: true
 
                 <div class="post-meta flex-grow-1 d-flex align-items-end">
                   <div class="post-meta-main me-auto">
-                    <div class="post-type-row mb-2">
-                      ${renderStatusBadge(post)}
-                    </div>
-
                     <div class="post-meta-line">
                       <span class="post-meta-item">
                         <i class="far fa-calendar fa-fw"></i>
