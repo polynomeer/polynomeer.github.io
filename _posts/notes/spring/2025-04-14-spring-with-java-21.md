@@ -1,105 +1,53 @@
 ---
-title: Java 21 Features with Spring
+title: Spring에서 Java 21을 도입할 때 체크할 것
 date: 2025-04-14
-categories: [Archive, Programming]
-tags: [Java, Spring]
+categories: [Notes, Spring]
+tags: [Java, Spring, Java 21]
 ---
 
-## 💡 Spring Boot 3.2 + Java 21 연계 활용 예시
+## 왜 Java 21을 고려해야 하는가
 
-### 1. ✅ **Virtual Threads + Spring Boot 3.2**
-> Java 21의 **가상 스레드(Virtual Thread)** 와 Spring Boot 3.2는 기본적으로 호환됩니다.
+Java 21은 LTS 버전이고, Spring Boot 3.x 계열과 함께 사용할 때 얻는 이점이 분명하다. 중요한 것은 "최신 문법을 얼마나 많이 쓰느냐"보다, 운영과 개발 생산성에 어떤 실질적 이점이 생기느냐다.
 
-#### 📌 주요 효과
-- 기존 `@RestController` 기반 **서블릿 API (Tomcat)** 도 가상 스레드로 실행 가능
-- **비동기 프로그래밍 없이도 고성능 처리 가능** → 동기식 코드로도 높은 동시성
+## 가장 먼저 볼 것
 
-#### ⚙️ 설정 방법
-```yaml
-# application.yml
-server:
-  tomcat:
-    protocol: org.apache.coyote.http11.Http11Nio2Protocol
-```
+- 현재 런타임과 라이브러리가 Java 21을 공식 지원하는가
+- Spring Boot 버전이 충분히 최신인가
+- 운영 환경의 GC, 메모리, 모니터링 도구가 맞춰져 있는가
+- 팀이 Java 21 기능을 어디까지 사용할지 기준이 있는가
 
-```java
-@Bean
-public TomcatProtocolHandlerCustomizer<?> protocolHandlerVirtualThreadExecutor() {
-    return protocolHandler -> protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
-}
-```
+즉, 버전만 올린다고 끝나는 작업이 아니라 애플리케이션과 운영 환경의 호환성을 함께 보는 작업이다.
 
-#### 👍 기대 효과
-- 기존의 `WebClient`, `CompletableFuture`, `@Async` 없이도 동시성 향상
-- 요청 수가 많은 API 서버에 적합 (예: 대용량 배치 처리, IO-bound 서비스)
+## 실무적으로 체감되는 포인트
 
----
+### 1. Virtual Threads
 
-### 2. ✅ **Scoped Values**  
-> `ThreadLocal` 대체: **가상 스레드에서도 안전하게 사용 가능**
+요청 수가 많고 I/O 대기가 긴 애플리케이션에서는 가상 스레드가 매력적이다. 다만 다음을 같이 봐야 한다.
 
-```java
-ScopedValue<String> USER_ID = ScopedValue.newInstance();
+- DB 커넥션 풀이 병목이면 효과가 제한적이다.
+- synchronized, ThreadLocal 사용 패턴을 다시 봐야 한다.
+- 외부 연동이 느리면 스레드 비용만 줄어들 뿐 전체 처리량은 그대로일 수 있다.
 
-public void controller() {
-    ScopedValue.where(USER_ID, "user-123").run(() -> {
-        service(); // 내부적으로 USER_ID.get() 사용 가능
-    });
-}
-```
+즉, 가상 스레드는 만능 성능 개선책이 아니라 "동시 요청 처리의 비용 구조를 바꾸는 도구"다.
 
-- ✅ 트랜잭션 ID, 요청자 ID, 타임존 등 **컨텍스트 전파**에 적합
-- 🚫 기존 `ThreadLocal`은 가상 스레드와 궁합이 안 좋음 → 이걸로 대체 가능
+### 2. Record
 
----
+DTO, 응답 모델, 설정 객체에서 record는 꽤 유용하다. 불변성과 간결함 덕분에 코드 양이 줄고 의도가 명확해진다.
 
-### 3. ✅ **Pattern Matching for `switch` / Record Patterns**
-> 요청 DTO, 커맨드 핸들러 등에서 **패턴 기반 분기 처리**
+다만 JPA 엔티티처럼 프레임워크 제약이 많은 곳에는 그대로 가져가기 어렵다. record는 주로 "읽기 모델" 쪽에서 생각하는 편이 낫다.
 
-```java
-sealed interface Command permits CreateUser, DeleteUser {}
-record CreateUser(String name) implements Command {}
-record DeleteUser(Long id) implements Command {}
+### 3. Pattern Matching과 switch 개선
 
-public void handle(Command command) {
-    switch (command) {
-        case CreateUser(var name) -> userService.create(name);
-        case DeleteUser(var id) -> userService.delete(id);
-    }
-}
-```
+분기 로직이 많은 서비스에서는 가독성이 좋아진다. 단, 문법이 좋아졌다고 분기 자체가 좋은 설계가 되는 것은 아니다. 복잡한 도메인 분기는 여전히 객체 책임 분리가 우선이다.
 
-- 💡 복잡한 `if-else` / `instanceof` 분기문 제거
-- 서비스 계층의 분기 로직을 명확하고 타입 안전하게 구현 가능
+## 도입 체크리스트
 
----
+- 빌드 서버와 운영 서버 JDK 버전 통일
+- Docker base image 교체
+- APM/모니터링 에이전트 호환성 점검
+- 테스트 코드와 reflection 기반 라이브러리 점검
+- Spring Boot 버전 업그레이드 동반 여부 확인
 
-### 4. ✅ **Foreign Function & Memory API**
-> 아직 Spring에서는 직접 활용 사례가 적지만, **고성능 네이티브 호출** 시 사용 가능  
-예: C 기반 음원 분석 라이브러리, 영상 인코딩 등과의 연동에 활용
+## 정리
 
----
-
-### 5. ✅ **Sequenced Collections**
-> 컨트롤러나 서비스에서 순서가 중요한 데이터 다룰 때 명시적 인터페이스 사용 가능
-
-```java
-SequencedSet<String> history = new LinkedHashSet<>();
-history.addFirst("eventA");
-history.addLast("eventB");
-```
-
-- `LinkedHashSet`, `LinkedHashMap` 등을 더 명확하게 활용 가능
-- 템플릿 엔진, 히스토리 로그, 순차 UI 렌더링에서 유용
-
----
-
-## ✅ 정리: 실무 적용 가이드
-
-| 기능 | Spring 실무 활용 |
-|------|------------------|
-| Virtual Threads | Tomcat 가상 스레드 설정 → IO 성능 향상 |
-| Scoped Values | 요청 컨텍스트 전파 (ex. userId, traceId) |
-| Record Patterns | Command/DTO 처리 로직 간결화 |
-| Sequenced Collections | 순서 있는 데이터 처리 명확하게 |
-| Foreign Function API | JNI 대체 (네이티브 라이브러리 호출) |
+Java 21은 Spring 프로젝트에 충분히 도입할 가치가 있다. 다만 핵심은 "새 기능을 얼마나 빨리 쓰느냐"가 아니라 "운영과 팀 생산성에 무리 없이 흡수되느냐"다. 특히 가상 스레드는 매력적이지만, 실제 병목이 어디인지 먼저 확인한 뒤 도입해야 효과를 제대로 볼 수 있다.

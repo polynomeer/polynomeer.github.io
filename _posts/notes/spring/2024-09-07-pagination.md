@@ -1,11 +1,59 @@
-# Pagination
+---
+title: Spring 애플리케이션에서 페이지네이션을 설계하는 방법
+date: 2024-09-07
+categories: [Notes, Spring]
+tags: [Spring, Pagination, Query]
+---
 
-- https://docs.gitlab.com/ee/development/database/pagination_performance_guidelines.html
-- https://itnext.io/the-best-database-pagination-technique-is-530abf2aab51
-- https://stackoverflow.com/questions/34336462/is-there-really-any-performance-benefit-in-using-pagination-in-web-pages
-- https://mariadb.com/kb/en/pagination-optimization/\
-- https://dzone.com/articles/improving-performance-at-nosql-query-with-paginati
-- https://jojoldu.tistory.com/528
-- https://jojoldu.tistory.com/530?category=637935
-- https://jojoldu.tistory.com/529?category=637935
-- https://jgrammer.tistory.com/entry/%EB%AC%B4%EC%8B%A0%EC%82%AC-%EC%8A%A4%ED%86%A0%EC%96%B4-watcher-%ED%8E%98%EC%9D%B4%EC%A7%95-%EC%BF%BC%EB%A6%AC-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0%EA%B8%B0
+## 페이지네이션은 단순히 잘라서 보여주는 문제가 아니다
+
+목록 조회를 만들 때 페이지네이션은 거의 필수다. 하지만 단순히 `Pageable`을 받는 것만으로 끝나지 않는다. 성능, 정렬 안정성, 카운트 쿼리 비용까지 함께 봐야 한다.
+
+## 가장 흔한 방식 두 가지
+
+### Offset Pagination
+
+`limit`, `offset` 기반 방식이다.
+
+- 장점: 구현이 단순하다.
+- 장점: 특정 페이지로 이동하기 쉽다.
+- 단점: 뒤 페이지로 갈수록 느려질 수 있다.
+- 단점: 중간 데이터가 삽입/삭제되면 결과가 흔들릴 수 있다.
+
+### Cursor Pagination
+
+마지막으로 본 값을 기준으로 다음 페이지를 가져오는 방식이다.
+
+- 장점: 대량 데이터에서 안정적이고 빠르다.
+- 장점: 무한 스크롤과 잘 맞는다.
+- 단점: 임의 페이지 이동은 어렵다.
+- 단점: 정렬 기준이 명확해야 한다.
+
+## Spring Data JPA에서 자주 쓰는 타입
+
+- `Page`: 전체 카운트 포함
+- `Slice`: 다음 페이지 존재 여부만 확인
+- `List`: 직접 제어
+
+카운트 쿼리가 비싸다면 `Page`보다 `Slice`가 더 적절할 수 있다.
+
+## 실무에서 중요한 판단 포인트
+
+- 관리자 화면인가, 사용자 피드인가
+- 전체 개수가 정말 필요한가
+- 데이터가 자주 추가/삭제되는가
+- 정렬 컬럼이 유일한가
+
+예를 들어 최신순 피드는 cursor pagination이 잘 맞고, 관리자 검색 화면은 offset pagination이 더 현실적일 수 있다.
+
+## 주의할 점
+
+- 정렬 기준이 모호하면 페이지가 겹치거나 누락될 수 있다.
+- `fetch join + pagination`은 예상 외 동작이나 성능 이슈가 생길 수 있다.
+- count 쿼리가 본 조회보다 더 비싸질 수 있다.
+
+정렬 기준에는 보통 `createdAt desc, id desc`처럼 tie-breaker를 두는 편이 안전하다.
+
+## 정리
+
+페이지네이션은 API의 모양보다 데이터 특성과 트래픽 패턴에 따라 정해야 한다. Spring에서 `Pageable`을 쉽게 붙일 수 있어도, 어떤 방식이 실제 서비스에 맞는지는 별도의 설계 판단이 필요하다.

@@ -1,21 +1,83 @@
-# Exception Handling
+---
+title: Spring 예외 처리 전략 정리
+date: 2024-09-07
+categories: [Notes, Spring]
+tags: [Spring, Exception Handling, ControllerAdvice]
+---
 
-## Exception Classes
+## 예외 처리는 왜 전략이 필요한가
 
-Exception은 수많은 자식 클래스가 있다. 그 중 RuntimeExeption은 Unchecked Exception이며, 그 외 Exception은 Checked Exception으로 볼 수 있다.
+예외는 단순히 잡아서 메시지를 내려주는 문제가 아니다. 어떤 예외를 기록할지, 어떤 예외를 외부에 노출할지, 어떤 상태 코드로 매핑할지가 모두 운영 정책과 연결된다.
 
-| |Checked Exception|Unchecked Exception|
-|-----|-----|-----|
-|처리여부|반드시 예외처리 필요|명시적 처리 강제하지 않음|
-|확인시점|컴파일 단계|런타임 단계|
-|종류|IOException</br>SQLException|NullPointerException</br>IllegalArgumentException</br>IndexOutOfBoundException</br>SystemException|
+실무에서는 다음이 중요하다.
 
-## Exception Handling in Spring
+- 클라이언트가 이해할 수 있는 응답 포맷
+- 서버가 추적할 수 있는 로그
+- 도메인 규칙과 시스템 장애의 구분
 
-### @ControllerAdvice, @RestControllerAdvice
+## Checked Exception vs Unchecked Exception
 
-@ControllerAdvice는 Spring에서 제공하는 애너테이션으로 @Controller나 @RestController에서 발생하는 예외를 한 곳에서 관리하고 처리할 수 있게 하는 애너테이션이다. 설정을 통해 범위 지정이 가능하며, default 값으로 모든 컨트롤러에 대해 예외 처리를 관리한다. 예외 발생 시 json의 형태롤 결과를 반환하기 위해서는 @RestControllerAdvice를 사용하면 된다.
+자바 기준으로는 다음처럼 나눌 수 있다.
 
-### @ExceptionHandler
+| 구분 | Checked Exception | Unchecked Exception |
+| --- | --- | --- |
+| 확인 시점 | 컴파일 시점 | 런타임 시점 |
+| 처리 강제 여부 | 강제 | 강제 아님 |
+| 예시 | `IOException`, `SQLException` | `IllegalArgumentException`, `NullPointerException` |
 
-예외 처리 상황이 발생하면 해당 핸들러로 처리하겠다고 명시하는 애너테이션이다. 애너테이션 뒤에 괄호를 붙여서 어떤 Exception Class를 처리할지 설정할 수 있다. @ExceptionHandler(MyException.class) Exception.class는 최상위 크래스로 하위 세부 예외 처리 클래스로 설정한 핸들러가 존재하면, 그 핸들러가 우선 처리하게 되며, 처리되지 못하는 예외처리에 대해 Exception class에서 핸들링한다. @ControllerAdvice로 설정된
+스프링 애플리케이션에서는 대부분 런타임 예외 기반으로 설계하는 편이 일반적이다. 트랜잭션 롤백, 계층 간 전달, 예외 분류가 더 단순해지기 때문이다.
+
+## Spring에서 주로 사용하는 처리 지점
+
+- 컨트롤러 내부 `@ExceptionHandler`
+- 전역 `@RestControllerAdvice`
+- 필터/인터셉터에서의 직접 처리
+- 서블릿 컨테이너 기본 에러 처리
+
+API 서버라면 전역 `@RestControllerAdvice` 중심으로 정리하는 것이 가장 유지보수에 유리하다.
+
+## 설계 기준
+
+### 1. 예상 가능한 실패는 명시적으로 분류한다
+
+- 잘못된 요청
+- 리소스 없음
+- 권한 없음
+- 비즈니스 규칙 위반
+
+이런 실패는 커스텀 예외와 에러 코드로 분류해두는 편이 좋다.
+
+### 2. 시스템 장애는 한 단계 위에서 묶는다
+
+DB 연결 실패, 외부 API 타임아웃, 메시지 브로커 장애 같은 것은 너무 세세하게 외부로 노출하기보다 내부 로그와 알림으로 처리하는 편이 낫다.
+
+### 3. 응답 구조를 통일한다
+
+예외마다 응답 JSON 구조가 다르면 프런트엔드와 운영이 모두 힘들어진다.
+
+예시:
+
+```json
+{
+  "code": "ORDER_NOT_FOUND",
+  "message": "주문을 찾을 수 없습니다."
+}
+```
+
+## 자주 놓치는 포인트
+
+- `MethodArgumentNotValidException` 처리 누락
+- 로그에 stack trace만 찍고 맥락 정보는 남기지 않음
+- 모든 예외를 500으로 내려버림
+- 내부 구현 예외 메시지를 그대로 외부에 노출
+
+## 추천 원칙
+
+- 예외는 비즈니스 의미 중심으로 설계한다.
+- 핸들러는 HTTP 응답으로 변환하는 역할만 맡긴다.
+- 로그는 운영자가 문제를 재현할 수 있을 정도의 맥락을 남긴다.
+- 외부로는 필요한 정보만 공개한다.
+
+## 정리
+
+좋은 예외 처리는 "에러를 덜 나게 만드는 것"이 아니라, "실패했을 때도 시스템이 읽기 쉬운 형태로 반응하게 만드는 것"이다. 스프링에서는 전역 예외 처리기와 명확한 예외 분류만 잘 잡아도 운영 난이도가 크게 내려간다.

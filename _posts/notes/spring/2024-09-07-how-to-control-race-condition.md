@@ -1,6 +1,86 @@
-# Race Condition in JPA
+---
+title: Spring과 JPA에서 Race Condition을 다루는 방법
+date: 2024-09-07
+categories: [Notes, Spring]
+tags: [Spring, JPA, Concurrency, Lock]
+---
 
-## References
-- https://stackoverflow.com/questions/29574630/how-to-avoid-race-conditions-on-product-sales-with-jpa-and-hibernate
-- https://softwareengineering.stackexchange.com/questions/133925/best-practice-to-manage-concurrency-into-a-basket-in-a-e-commerce-website
-- https://stackoverflow.com/questions/35465008/managing-the-product-count-in-the-database
+## Race Condition이란
+
+여러 요청이 동시에 같은 자원을 읽고 수정할 때, 의도하지 않은 순서로 처리되어 데이터 정합성이 깨지는 상황을 말한다.
+
+대표 예시는 다음과 같다.
+
+- 재고 차감
+- 중복 결제 방지
+- 쿠폰 선착순 발급
+- 좌석 예약
+
+조회와 갱신이 분리된 흐름에서는 특히 쉽게 발생한다.
+
+## 왜 JPA에서 자주 문제가 되는가
+
+JPA를 쓰면 엔티티 변경이 자연스럽게 보이기 때문에 동시성 문제도 자동으로 해결될 것처럼 착각하기 쉽다. 하지만 JPA는 ORM일 뿐이고, 동시성 제어는 결국 DB 락 전략과 애플리케이션 설계가 결정한다.
+
+## 해결 전략
+
+### 1. 낙관적 락
+
+버전 컬럼을 두고, 업데이트 시점에 버전이 바뀌었는지 검사한다.
+
+- 장점: 읽기 경쟁이 많은 환경에 유리
+- 단점: 충돌이 나면 재시도 정책이 필요
+
+`@Version` 기반으로 쉽게 적용할 수 있다.
+
+### 2. 비관적 락
+
+조회 시점부터 DB 락을 잡는다.
+
+- 장점: 충돌을 강하게 제어 가능
+- 단점: 대기 시간과 데드락 가능성 증가
+
+재고처럼 "절대 동시에 성공하면 안 되는" 케이스에서 자주 쓴다.
+
+### 3. 원자적 업데이트
+
+애플리케이션에서 읽고 계산하고 저장하는 대신, DB에 조건부 업데이트를 맡긴다.
+
+예:
+
+```sql
+update product
+set stock = stock - 1
+where id = ? and stock > 0
+```
+
+이 방식은 단순하고 강력하다. 가능한 경우 가장 먼저 검토할 만하다.
+
+### 4. 큐잉 또는 직렬화
+
+경쟁이 아주 심한 경우에는 아예 처리 순서를 직렬화하는 편이 더 안정적이다.
+
+- 메시지 큐
+- 단일 파티션 소비
+- Redis 분산 락
+
+## 실무 판단 기준
+
+- 충돌이 자주 발생하는가
+- 재시도가 가능한가
+- 처리량보다 정합성이 더 중요한가
+- 같은 자원에 경쟁이 집중되는가
+
+예를 들어 선착순 이벤트는 정합성이 우선이고, 일반 조회성 화면은 처리량이 우선일 수 있다.
+
+## 흔한 실수
+
+- `@Transactional`만 붙이면 안전하다고 생각함
+- synchronized로 멀티 인스턴스 환경을 해결하려고 함
+- 락은 걸었지만 조회 범위가 넓어 병목이 심해짐
+
+`@Transactional`은 원자성 보장과 동시성 제어를 동일하게 해결해주지 않는다.
+
+## 정리
+
+Race Condition 대응은 "락을 쓸까 말까"보다 "어디서 경쟁이 발생하고, 어떤 수준의 정합성을 보장해야 하는가"를 먼저 정하는 문제다. Spring/JPA에서는 낙관적 락, 비관적 락, 조건부 업데이트, 큐 기반 직렬화 중 문제 성격에 맞는 방식을 선택해야 한다.

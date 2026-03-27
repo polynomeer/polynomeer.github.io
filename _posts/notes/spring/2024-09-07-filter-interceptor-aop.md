@@ -1,19 +1,84 @@
-# Filter, Interceptor, and AOP
+---
+title: Filter, Interceptor, AOP의 차이와 선택 기준
+date: 2024-09-07
+categories: [Notes, Spring]
+tags: [Spring, Filter, Interceptor, AOP]
+---
 
-## References
+## 세 가지가 모두 필요한 이유
 
-### Filter, Interceptor, and AOP
-- https://baek-kim-dev.site/61
-- https://mangkyu.tistory.com/173
-- https://imnotabear.tistory.com/576
-- https://yzlosmik.tistory.com/27
-- https://goddaehee.tistory.com/154
-- https://goodteacher.tistory.com/412?category=745764
-- https://www.baeldung.com/cdi-interceptor-vs-spring-aspectj
-- https://blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=fortunerain&logNo=220964510870
-- https://stackoverflow.com/questions/3599976/interceptors-vs-aspects-in-spring
+웹 애플리케이션에서 공통 처리를 넣는 지점은 하나가 아니다. 요청이 서블릿 컨테이너에 들어온 직후 처리할 일도 있고, 컨트롤러 직전에 처리할 일도 있고, 서비스 메서드 호출 주변에서 처리할 일도 있다.
 
-### AOP
-- https://www.baeldung.com/cdi-interceptor-vs-spring-aspectj
-- https://docs.spring.io/spring-framework/docs/3.0.x/spring-framework-reference/html/aop.html
-- https://docs.spring.io/spring-framework/docs/1.2.x/reference/aop.html
+그래서 Filter, Interceptor, AOP는 서로 대체재라기보다 적용 지점이 다른 도구에 가깝다.
+
+## Filter
+
+Filter는 서블릿 스펙 레벨에서 동작한다. 스프링 MVC보다 앞단이다.
+
+주 용도:
+
+- 인코딩 처리
+- CORS
+- 공통 헤더 처리
+- 요청/응답 로깅
+- 아주 초기 단계의 인증 처리
+
+즉, "스프링 컨트롤러에 도달하기 전"에 다뤄야 하는 작업에 적합하다.
+
+## Interceptor
+
+Interceptor는 스프링 MVC의 핸들러 실행 전후에 동작한다. 컨트롤러 매핑 정보, 핸들러 정보에 접근할 수 있다는 점이 Filter와 다르다.
+
+주 용도:
+
+- 로그인 체크
+- 권한 확인
+- 특정 컨트롤러 그룹에 대한 로깅
+- 요청 처리 시간 측정
+
+컨트롤러 수준 문맥이 필요하면 Interceptor가 적합하다.
+
+## AOP
+
+AOP는 HTTP 요청 흐름이 아니라 메서드 호출 단위의 횡단 관심사에 더 가깝다. 즉, 컨트롤러뿐 아니라 서비스, 리포지토리 등 빈 전반에 걸쳐 적용할 수 있다.
+
+주 용도:
+
+- 서비스 메서드 로깅
+- 성능 측정
+- 공통 정책 검사
+- 트랜잭션
+
+요청 경로보다는 메서드 실행 자체를 기준으로 적용한다.
+
+## 선택 기준
+
+### 요청 자체를 다뤄야 하면 Filter
+
+예: 모든 요청에 추적 ID를 심거나 응답 헤더를 붙이는 경우
+
+### 컨트롤러 호출 전후를 다뤄야 하면 Interceptor
+
+예: 특정 API 그룹에만 인증 검사를 적용하는 경우
+
+### 비즈니스 메서드 전반의 공통 처리는 AOP
+
+예: 서비스 계층의 실행 시간 측정, 공통 감사 로그
+
+## 자주 하는 실수
+
+- 인증 로직을 무조건 AOP에 넣음
+- 예외 응답 가공을 Filter에서 해결하려고 함
+- 컨트롤러/서비스 공통 로깅을 모두 Interceptor 하나로 해결하려고 함
+
+도구가 겹쳐 보이더라도 관찰 가능한 정보와 실행 시점이 다르기 때문에, 성격에 맞게 선택해야 한다.
+
+## 한 줄로 정리
+
+- Filter: 서블릿 레벨
+- Interceptor: 스프링 MVC 레벨
+- AOP: 빈 메서드 레벨
+
+## 정리
+
+세 가지를 비교할 때 "무엇이 더 강한가"보다 "어느 계층에서 어떤 문맥을 가지고 동작하는가"를 먼저 보면 선택이 쉬워진다. 보안, 로깅, 트랜잭션처럼 흔한 요구사항도 적용 지점이 다르면 적절한 도구가 달라진다.
