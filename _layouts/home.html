@@ -378,14 +378,46 @@ refactor: true
         return;
       }
 
-      const pageButtons = Array.from({ length: totalPages }, (_, index) => {
-        const page = index + 1;
-        return `
-          <li class="page-item${page === currentPage ? ' active' : ''}">
-            <button type="button" class="page-link" data-page="${page}">${page}</button>
-          </li>
-        `;
-      }).join('');
+      const items = [];
+      let leftEllipsis = false;
+      let rightEllipsis = false;
+
+      for (let page = 1; page <= totalPages; page += 1) {
+        const prev = currentPage - 1;
+        const next = currentPage + 1;
+        const prevLess = prev - 1;
+        let show = false;
+
+        if (currentPage === 1) {
+          if (page <= 3 || page === totalPages) show = true;
+        } else if (currentPage === totalPages) {
+          if (page === 1 || page >= prevLess) show = true;
+        } else if (page === 1 || page === totalPages || (page >= prev && page <= next)) {
+          show = true;
+        }
+
+        if (show) {
+          items.push(`
+            <li class="page-item${page === currentPage ? ' active' : ''}">
+              <button type="button" class="page-link" data-page="${page}">${page}</button>
+            </li>
+          `);
+        } else if (page < prev && !leftEllipsis) {
+          items.push(`
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          `);
+          leftEllipsis = true;
+        } else if (page > next && !rightEllipsis) {
+          items.push(`
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          `);
+          rightEllipsis = true;
+        }
+      }
 
       filteredPagination.innerHTML = `
         <nav aria-label="Filtered Page Navigation">
@@ -395,7 +427,7 @@ refactor: true
                 <i class="fas fa-angle-left"></i>
               </button>
             </li>
-            ${pageButtons}
+            ${items.join('')}
             <li class="page-index align-middle">
               <span>${currentPage}</span>
               <span class="text-muted">/ ${totalPages}</span>
