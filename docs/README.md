@@ -51,6 +51,7 @@ AI-agent-oriented feature maintenance references:
 
 Project-level upstream and repository policy references:
 
+- [`project/release-notes-2026-03-27.md`](./project/release-notes-2026-03-27.md)
 - [`project/CHANGELOG.md`](./project/CHANGELOG.md)
 - [`project/CODE_OF_CONDUCT.md`](./project/CODE_OF_CONDUCT.md)
 - [`project/CONTRIBUTING.md`](./project/CONTRIBUTING.md)
