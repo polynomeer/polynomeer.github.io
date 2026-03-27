@@ -1,11 +1,57 @@
 ---
-title: 페이징 성능 개선
-date: 2024-09-05
-categories: [Archive, Database]
-tags: [Database, SQL]
+title: 데이터베이스 페이징 성능을 어떻게 봐야 하는가
+date: 2025-04-22
+categories: [Notes, Database]
+tags: [Database, SQL, Pagination]
 ---
 
-- [3-1. 페이징 성능 개선하기 - 검색 버튼 사용시 페이지 건수 고정하기](https://jojoldu.tistory.com/530?category=637935)
-- [커서 기반 페이지네이션 (Cursor-based Pagination) 구현하기](https://velog.io/@minsangk/%EC%BB%A4%EC%84%9C-%EA%B8%B0%EB%B0%98-%ED%8E%98%EC%9D%B4%EC%A7%80%EB%84%A4%EC%9D%B4%EC%85%98-Cursor-based-Pagination-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)
-- [Pagination performance guidelines](https://docs.gitlab.com/development/database/pagination_performance_guidelines/)
-- [SQL Pagination Techniques: Enhancing Query Performance and Managing Memory Efficiently](https://medium.com/@PradipBhusnar/sql-for-pagination-queries-memory-and-performance-567af4913b50)
+## 페이징은 왜 느려지는가
+
+목록 조회에서 페이지네이션은 당연한 기능처럼 보이지만, 데이터가 커질수록 단순 `limit offset` 방식이 병목이 되기 쉽다.
+
+문제는 DB가 `offset = 100000`이라고 해서 100000개를 건너뛰는 비용이 공짜가 아니라는 점이다. 보통은 앞 데이터를 훑은 뒤 버리는 식으로 처리되기 때문에 뒤 페이지로 갈수록 느려질 수 있다.
+
+## Offset 기반 페이징
+
+장점:
+
+- 구현이 단순하다.
+- 특정 페이지로 바로 이동하기 쉽다.
+
+단점:
+
+- 뒤 페이지일수록 비용이 커진다.
+- 중간에 데이터가 삽입/삭제되면 결과가 흔들릴 수 있다.
+
+## Cursor 기반 페이징
+
+이전 페이지의 마지막 키를 기준으로 다음 페이지를 가져오는 방식이다.
+
+장점:
+
+- 대량 데이터에서 안정적이다.
+- 무한 스크롤과 잘 맞는다.
+
+단점:
+
+- 임의 페이지 이동은 어렵다.
+- 정렬 기준이 명확해야 한다.
+
+## 성능을 볼 때 체크할 것
+
+- 정렬 기준 컬럼에 인덱스가 있는가
+- count 쿼리가 비싸지 않은가
+- 조회 쿼리와 count 쿼리를 분리해야 하는가
+- tie-breaker가 있는가
+
+예를 들어 `created_at desc`만 쓰면 같은 시간대 레코드에서 순서가 흔들릴 수 있어서 `created_at desc, id desc`처럼 보조 정렬 키를 두는 편이 안전하다.
+
+## 흔한 실수
+
+- 무조건 `Page`를 반환해서 무거운 count 쿼리를 매번 수행함
+- fetch join과 페이징을 함께 써서 예상과 다른 결과가 나옴
+- offset 방식이 느린데도 쿼리 대신 애플리케이션 레이어만 만짐
+
+## 정리
+
+페이징 성능은 "API 모양"보다 "DB가 어떤 순서로 몇 건을 읽는가"의 문제다. 데이터가 커지면 결국 offset과 cursor 중 어떤 방식을 택할지, 그리고 정렬/인덱스를 어떻게 맞출지가 핵심이 된다.

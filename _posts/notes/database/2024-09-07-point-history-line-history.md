@@ -1,40 +1,78 @@
 ---
-title: 점 이력, 선분 이력
-date: 2024-09-05
-categories: [Archive, Database]
-tags: [Database, History]
+title: 점 이력과 선분 이력 모델링
+date: 2024-09-07
+categories: [Notes, Database]
+tags: [Database, History, Data Modeling]
 ---
 
-# 점 이력, 선분 이력
+## 왜 이력 모델링이 필요한가
+
+실무 데이터는 "지금 상태"만 중요한 경우도 있지만, "언제 어떤 값이었는가"가 중요한 경우가 많다.
+
+- 가격 변경 이력
+- 회원 등급 변경 이력
+- 계약 상태 변경 이력
+- 권한 변경 추적
+
+이때 흔히 생각하는 방식이 점 이력과 선분 이력이다.
 
 ## 점 이력
 
-점 이력은 특정 시점에서의 데이터 상태를 기록하는 방식이다. 데터의 변경 사항을 추적하고 해당 시점에서의 데이터 값을 유지한다.
+점 이력은 특정 시점의 상태를 개별 레코드로 기록하는 방식이다.
+
+예를 들어 가격이 바뀔 때마다 "그 시점의 값"을 하나씩 남긴다.
+
+장점:
+
+- 기록이 단순하다.
+- 이벤트 발생 시점 중심으로 관리하기 쉽다.
+- append-only 구조와 잘 맞는다.
+
+단점:
+
+- 특정 기간에 유효한 값을 조회하려면 추가 계산이 필요하다.
+- 이전/다음 이력을 비교하는 쿼리가 다소 번거롭다.
 
 ## 선분 이력
 
-선분 이력은 데이터의 변경 사항을 추적하면서 데이터의 유효 기간을 관리하는 방식이다. 각 데이터에는 시작 시간과 종료 시간이 포함된다.
+선분 이력은 시작 시점과 종료 시점을 함께 관리해서 "이 값이 어느 구간 동안 유효했는가"를 표현한다.
 
-## 참고 자료
+예:
 
-- https://origina1.tistory.com/107
-- https://12bme.tistory.com/200
-- https://medium.com/@vipulkr1698/a-point-in-time-database-design-a-comprehensive-guide-18c2cb4160d1
-- https://www.codeproject.com/Questions/5257226/Db-design-with-historical-data-at-specific-point
-- https://community.fabric.microsoft.com/t5/Desktop/Modeling-Historical-Data/td-p/1963547
-- https://www.forecastr.co/blog/historical-financial-data-model-tips
-- https://blog.panoply.io/the-role-of-historical-data-in-a-data-warehouse-insights-and-strategies
-- https://www.linkedin.com/pulse/power-historical-data-financial-modeling-shashank-hegde-zrczc
-- https://12bme.tistory.com/333
-- https://im-wali.github.io/datamodeling/modeling-note-06-altered-data/
-- https://rasony.tistory.com/m/170
-- https://developer-syubrofo.tistory.com/198
-- https://medium.com/towards-data-engineering/design-a-database-to-store-large-amounts-of-historical-data-that-needs-to-be-regularly-analyzed-dd6558e1bd02
-- https://dev.to/zhiyueyi/design-a-table-to-keep-historical-changes-in-database-10fn
-- https://vertabelo.com/blog/price-history-database-model/
-- https://medium.com/@vipulkr1698/a-point-in-time-database-design-a-comprehensive-guide-18c2cb4160d1
-- https://uta.pressbooks.pub/historicalresearch/back-matter/database-design-and-parts-of-a-database/
-- https://gauravkantgoel.medium.com/data-modeling-patterns-for-historical-data-641f9087e887
-- https://www.dataversity.net/brief-history-data-modeling/
-- https://jaggedarray.hashnode.dev/building-a-historical-data-model
-- https://historicalmodeling.com/
+- `valid_from`
+- `valid_to`
+
+장점:
+
+- 특정 시점에 유효한 상태를 조회하기 쉽다.
+- 기간 기반 질의에 유리하다.
+
+단점:
+
+- 상태 변경 시 이전 구간 종료 처리를 잘해야 한다.
+- 겹치는 구간이나 비는 구간을 막는 제약 설계가 필요하다.
+
+## 언제 무엇을 쓰는가
+
+### 점 이력이 잘 맞는 경우
+
+- 이벤트 로그 성격이 강함
+- 변경 시점 그 자체가 중요함
+- 후처리나 분석 파이프라인에서 재구성 가능함
+
+### 선분 이력이 잘 맞는 경우
+
+- "특정 날짜 당시 상태" 조회가 자주 필요함
+- 유효 기간 기반 계산이 중요함
+- 운영 쿼리에서 바로 기간 조건을 써야 함
+
+## 실무에서 흔한 실수
+
+- 현재 상태와 이력 테이블의 책임을 섞음
+- 선분 이력인데 종료 시점 갱신을 누락함
+- 기간 겹침 방지 제약이 없음
+- 점 이력인데 최신 상태 조회 전략이 없음
+
+## 정리
+
+점 이력은 "변경 이벤트 기록", 선분 이력은 "유효 기간 관리"에 가깝다. 둘 중 무엇이 맞는지는 결국 조회 패턴이 결정한다. 과거를 남기고 싶다는 이유만으로 무조건 한쪽을 고르기보다, 어떤 질문에 답해야 하는 데이터를 만들 것인지부터 정하는 것이 중요하다.
