@@ -194,6 +194,7 @@
 
       .card-text.content {
         @extend %muted;
+        margin-bottom: 0 !important;
 
         p {
           @extend %text-clip;
