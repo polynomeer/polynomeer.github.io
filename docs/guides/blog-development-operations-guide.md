@@ -191,7 +191,7 @@ Operational note:
 
 Purpose:
 
-- Separate short-form learning records from longer archive or article content.
+- Separate short-form learning records from longer notes or article content.
 
 Main files:
 
@@ -207,7 +207,7 @@ Main files:
 Current classification rule:
 
 - `_posts/TIL/` -> `til`
-- `_posts/archive/` -> `archive`
+- `_posts/notes/` -> `notes`
 - `_posts/book/` -> `book`
 - `_posts/conference/` -> `conference`
 - `_posts/lecture/` -> `lecture`
@@ -519,7 +519,7 @@ No dedicated front matter field is used right now.
 Classification depends on file path:
 
 - `_posts/TIL/...`
-- `_posts/archive/...`
+- `_posts/notes/...`
 - `_posts/...` for article fallback
 
 ## Typical Editorial Workflows
@@ -617,7 +617,7 @@ Check:
 Check:
 
 - whether the build used `--limit_posts`
-- whether posts were placed under `_posts/TIL/` or `_posts/archive/`
+- whether posts were placed under `_posts/TIL/` or `_posts/notes/`
 
 ### Recommendations feel weak
 

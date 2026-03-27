@@ -15,7 +15,7 @@ layout: page
 
 {% if site.data.representative_posts and site.data.representative_posts.items %}
   {% for item in site.data.representative_posts.items %}
-    {% if item.path contains '_posts/archive/' %}
+    {% if item.path contains '_posts/notes/' %}
       {% assign archive_highlights = archive_highlights | push: item %}
     {% endif %}
   {% endfor %}

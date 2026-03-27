@@ -5,7 +5,7 @@
 Separate the blog into clearer content types so readers can distinguish between:
 
 - `TIL`
-- `Archive`
+- `Notes`
 - `Article`
 
 This improves discovery and helps users understand what kind of content they are reading before they commit time.
@@ -15,7 +15,7 @@ This improves discovery and helps users understand what kind of content they are
 The repository contains multiple kinds of writing:
 
 - short iterative notes under `_posts/TIL`
-- curated evergreen technical content under `_posts/archive`
+- curated evergreen technical content under `_posts/notes`
 - broader long-form content such as books, lectures, references, conference notes, and interview material
 
 Right now, these all flow through the same global post system.
@@ -34,8 +34,8 @@ That makes the site rich, but it also makes the content model harder to understa
 Recommended first rollout:
 
 - `til`: posts under `_posts/TIL`
-- `archive`: posts under `_posts/archive`
-- `article`: all remaining posts under `_posts` that are not TIL or archive
+- `notes`: posts under `_posts/notes`
+- `article`: all remaining posts under `_posts` that are not TIL or notes
 
 This aligns with the current directory structure and avoids migration effort.
 
@@ -52,9 +52,9 @@ til:
   icon: "fas fa-pencil"
   order: 1
 
-archive:
-  title: "Archive"
-  description: "More evergreen technical articles organized for long-term reference."
+notes:
+  title: "Notes"
+  description: "More evergreen technical notes organized for long-term reference."
   icon: "fas fa-box-archive"
   order: 2
 
@@ -82,7 +82,7 @@ Each card should show:
 Add one page per content type:
 
 - `/types/til/`
-- `/types/archive/`
+- `/types/notes/`
 - `/types/article/`
 
 Each page should show:
@@ -97,7 +97,7 @@ Each post page should display its content type near post metadata.
 This helps users understand whether the current page is:
 
 - a quick note
-- a curated archive article
+- a curated technical note
 - a broader article or study note
 
 ### 4. Homepage integration
@@ -114,18 +114,18 @@ A post is `til` when:
 
 - `post.path` contains `/_posts/TIL/`
 
-### Archive
+### Notes
 
-A post is `archive` when:
+A post is `notes` when:
 
-- `post.path` contains `/_posts/archive/`
+- `post.path` contains `/_posts/notes/`
 
 ### Article
 
 A post is `article` when:
 
 - it is under `_posts`
-- and it does not match TIL or archive
+- and it does not match TIL or notes
 
 ## Non-Goals
 
@@ -167,4 +167,3 @@ Implement:
 4. content type badge in post pages and homepage feed
 
 This gives immediate clarity without requiring content migration.
-

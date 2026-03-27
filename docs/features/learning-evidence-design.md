@@ -108,8 +108,8 @@ groups:
         source_posts:
           - "_posts/lecture/http/모든_개발자를_위한_HTTP_웹_기본_지식.md"
         related_posts:
-          - "_posts/archive/web/2025-08-22-error-handling.md"
-          - "_posts/archive/web/2026-02-13-presigned-url.md"
+          - "_posts/notes/web/2025-08-22-error-handling.md"
+          - "_posts/notes/web/2026-02-13-presigned-url.md"
 
       - id: fundamentals-software-architecture
         type: book
@@ -121,7 +121,7 @@ groups:
         source_posts:
           - "_posts/book/fundamentals-of-software-architecture/2025-05-13-fundamentals-of-software-architecture-chap2.md"
         related_posts:
-          - "_posts/archive/common/2026-03-20-architectural-decisions.md"
+          - "_posts/notes/common/2026-03-20-architectural-decisions.md"
 ```
 
 Why this model:

@@ -12,9 +12,9 @@ items:
     topic_url: /topics/database-internals/
     roadmap_url: /roadmaps/backend-core/
     representative_posts:
-      - _posts/archive/database/2025-07-29-mvcc.md
-      - _posts/archive/database/2025-07-29-gap-lock.md
-      - _posts/archive/database/2025-08-17-db-replication.md
+      - _posts/notes/database/2025-07-29-mvcc.md
+      - _posts/notes/database/2025-07-29-gap-lock.md
+      - _posts/notes/database/2025-08-17-db-replication.md
 
   - id: spring-backend
     title:
@@ -27,9 +27,9 @@ items:
     topic_url: /topics/spring-backend/
     roadmap_url: /roadmaps/backend-core/
     representative_posts:
-      - _posts/archive/spring/2025-06-30-spring-lifecycle.md
-      - _posts/archive/spring/2025-08-07-spring-boot-application-annotation.md
-      - _posts/archive/spring/2025-05-13-transactional-event-listener.md
+      - _posts/notes/spring/2025-06-30-spring-lifecycle.md
+      - _posts/notes/spring/2025-08-07-spring-boot-application-annotation.md
+      - _posts/notes/spring/2025-05-13-transactional-event-listener.md
 
   - id: architecture-judgment
     title:
@@ -42,9 +42,9 @@ items:
     topic_url: /recruit/
     roadmap_url: /roadmaps/backend-core/
     representative_posts:
-      - _posts/archive/common/2026-03-20-architectural-decisions.md
-      - _posts/archive/web/2026-02-25-netty.md
-      - _posts/archive/web/2026-02-13-presigned-url.md
+      - _posts/notes/common/2026-03-20-architectural-decisions.md
+      - _posts/notes/web/2026-02-25-netty.md
+      - _posts/notes/web/2026-02-13-presigned-url.md
 
   - id: hiring-readiness
     title:

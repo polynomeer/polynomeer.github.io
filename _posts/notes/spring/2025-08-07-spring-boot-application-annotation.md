@@ -1,6 +1,6 @@
 ---
 title: "Spring Boot Startup Explained: The Role of @SpringBootApplication"
-date: 2025-06-30
+date: 2025-08-07
 categories: [Archive, Spring]
 tags: [Spring, Spring Boot, "@SpringBootApplication"]
 ---
@@ -47,7 +47,7 @@ public @interface SpringBootApplication {
 
 - `@SpringBootConfiguration`: 해당 클래스가 **스프링 설정 클래스**임을 의미. 빈(Bean)을 정의할 수 있음
 - `@EnableAutoConfiguration`: **Spring Boot의 자동 설정**을 활성화. 클래스패스에 있는 라이브러리와 설정을 기반으로 자동 설정을 수행
-- `@ComponentScan`: 현재 패키지를 포함한 하위 패키지를 **스캔**하여 `@Component`, `@Service`, `@Repository`, `@Controller` 등이 붙은 클래스를 **자동으로 빈으로 등록** -> Spring Framework의 기본 어노테이션이므로 이 글에서는 상세한 설명을 생략한다.
+- `@ComponentScan`은 현재 패키지를 포함한 하위 패키지를 **스캔**하여 `@Component`, `@Service`, `@Repository`, `@Controller` 등이 붙은 클래스를 **자동으로 빈으로 등록** -> Spring Framework의 기본 어노테이션이므로 이 글에서는 상세한 설명을 생략한다.
 
 ### @SpringBootApplication
 
@@ -221,4 +221,3 @@ getAutoConfigurationEntry()
        ↓
 Spring 컨텍스트에 @Import 처리됨 (빈 등록)
 ```
-

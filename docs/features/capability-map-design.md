@@ -64,8 +64,8 @@ items:
     topic_url: "/topics/database-internals/"
     roadmap_url: "/roadmaps/backend-core/"
     representative_posts:
-      - "_posts/archive/database/2025-07-29-mvcc.md"
-      - "_posts/archive/database/2025-07-29-gap-lock.md"
+      - "_posts/notes/database/2025-07-29-mvcc.md"
+      - "_posts/notes/database/2025-07-29-gap-lock.md"
 ```
 
 Why this model:

@@ -220,7 +220,7 @@ home:
 content_types:
   eyebrow: Content type
   directory_title: Browse by writing style
-  directory_description: Separate quick learning notes, evergreen archive pieces, and broader long-form articles.
+  directory_description: Separate quick learning notes, evergreen technical notes, and broader long-form articles.
   post_count: ":COUNT posts"
 
 post_statuses:

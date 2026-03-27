@@ -1,29 +1,29 @@
 ---
-title: Spring Lifecycle
+title: Spring Bean Lifecycle
 date: 2025-06-30
 categories: [Archive, Spring]
 tags: [Spring, Bean Lifecycle]
 ---
 
-## Spring Lifecycle
+## Spring Bean Lifecycle
 
 스프링 프레임워크는 스프링 컨테이너라는 틀 안에서 모든 객체가 실행되고 종료된다. 스프링 컨테이너는 Bean이라는 객체를 생성, 의존성 주입, 생명주기 관리, 설정 등을 담당하는 핵심 구성요소이다.
 
 이 스프링 컨테이너가 관리하는 Bean은 공통적인 생명주기(lifecycle)을 갖는다. 이는 스프링 컨테이너가 Bean 객체를 생성, 초기화, 사용, 소멸하는 전체 과정을 의미한다. 따라서 이를 이해하면 Bean의 생명주기를 제어하고 필요한 시점에 원하는 작업을 수행할 수 있다. 전체 흐름은 다음과 같다.
 
 > 1. Spring 컨테이너 초기화
-> 2. Bean 인스턴스 생성
-> 3. 의존성 주입 (DI)
-> 4. Bean 이름 설정 및 BeanFactory 설정
-> 5. 초기화 콜백 (@PostConstruct, InitializingBean 등)
-> 6. Bean 사용
-> 7. 소멸 콜백 (@PreDestroy, DisposableBean 등)
+> 2. **Bean 인스턴스 생성**
+> 3. **의존성 주입 (DI)**
+> 4. **Bean 이름 설정 및 BeanFactory 설정**
+> 5. **초기화 콜백 (@PostConstruct, InitializingBean 등)**
+> 6. **Bean 사용**
+> 7. **소멸 콜백 (@PreDestroy, DisposableBean 등)**
 > 8. 컨테이너 종료
 
 ## 1. Spring 컨테이너 초기화
 
 Spring 빈 생명주기에서 **스프링 컨테이너 초기화 단계**는 가장 첫 단계로, 전체 애플리케이션 동작의 출발점이다.
- 이 단계에서는 **Spring 컨테이너(ApplicationContext)**가 생성되고, 구성정보(`@Configuration`, `@ComponentScan`, `@Bean`)를 바탕으로 Bean들을 준비한다.
+ 이 단계에서는 **Spring 컨테이너(ApplicationContext)**가 생성되고, 구성정보(`@Configuration`, `@ComponentScan`, `@Bean`)를 바탕으로 Bean들을 준비한다. Spring 컨테이너 초기화는 다음과 같은 작업을 수행하는 과정이다.
 
 - `ApplicationContext` 또는 `AnnotationConfigApplicationContext` 등의 컨테이너 객체 생성
 - 설정 클래스(`@Configuration`, XML 등) 기반으로 Bean 정의 로딩
@@ -63,7 +63,7 @@ ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.cl
 - `@Configuration`, `@Component`, `@ComponentScan`, `@Bean` 등을 파싱하여 **BeanDefinition 객체** 생성
 - BeanDefinition에는 클래스 타입, scope, lazy 여부, 의존성 정보 등 메타정보가 포함됨
 
-예:
+예를 들어, 다음과 같이 `@Bean`으로 정의된 메서드가 있다면, 기본적으로 myService라는 BeanDefinition이 생성된다.
 
 ```java
 @Bean
@@ -72,14 +72,12 @@ public MyService myService() {
 }
 ```
 
-→ `myService`라는 이름의 BeanDefinition 생성됨
-
 ### 1.3. BeanFactoryPostProcessor 실행
 
-- 컨테이너 초기화 과정에서 **BeanFactoryPostProcessor** (예: `ConfigurationClassPostProcessor`)가 실행되어,
-  - 프로퍼티 값 치환 (`@Value`)
-  - 프로파일 활성화 (`@Profile`)
-  - 설정 클래스에서 추가적인 Bean 등록 등을 처리함
+컨테이너 초기화 과정에서 **BeanFactoryPostProcessor** (예: `ConfigurationClassPostProcessor`)가 실행되어 다음 내용을 처리한다.
+- 프로퍼티 값 치환 (`@Value`)
+- 프로파일 활성화 (`@Profile`)
+- 설정 클래스에서 추가적인 Bean 등록
 
 ### 1.4. Bean 생성 전 후처리기 등록 (BeanPostProcessor)
 
@@ -714,3 +712,16 @@ public class ShutdownListener implements ApplicationListener<ContextClosedEvent>
 | **순서**        | `SmartLifecycle.stop()` → `@PreDestroy` → `destroy()` → `ContextClosedEvent` |
 | **주의**        | 비동기 작업, 커넥션, 쓰레드 종료 누락 주의                   |
 | **실무 포인트** | 상태 저장, 알림 전송, 외부 연결 해제, shutdown log 처리      |
+
+---
+
+## 참고자료
+
+- [Spring Docs. *Customizing the Nature of a Bean*](https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html)
+- [Lokesh Gupta, HowToDoInJava (Oct 22, 2023). *Spring Bean Lifecycle: Best Practices and Pitfalls*](https://howtodoinjava.com/spring-core/spring-bean-life-cycle/)
+- [*What is the Spring Bean Lifecycle?*](https://www.tuanh.net/blog/spring/what-is-the-spring-bean-lifecycle)
+- [Vikram (Jul 28, 2023). *Spring Bean Life Cycle*](https://medium.com/@sendvjs/spring-bean-life-cycle-9363332c335e)
+- [Arvind Rai (Mar 15, 2023). *Spring Bean Life Cycle*](https://www.concretepage.com/spring/spring-bean-life-cycle-tutorial)
+- [GeeksForGeeks (Jul 12, 2025). *Bean Life Cycle in Java Spring*](https://www.geeksforgeeks.org/java/bean-life-cycle-in-java-spring/)
+- [Dinesh on Java (Jun 30, 2021). *Spring Bean Life Cycle and Callbacks*](https://www.dineshonjava.com/bean-lifecycle-and-callbacks/)
+- 

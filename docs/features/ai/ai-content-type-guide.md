@@ -9,7 +9,7 @@ For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 Content type separation helps users distinguish between:
 
 - TIL
-- Archive
+- Notes
 - Article
 
 The first rollout should be path-based, not metadata-heavy.
@@ -19,7 +19,7 @@ The first rollout should be path-based, not metadata-heavy.
 Use `post.path`:
 
 - `_posts/TIL/...` => `til`
-- `_posts/archive/...` => `archive`
+- `_posts/notes/...` => `notes`
 - everything else in `_posts` => `article`
 
 Do not bulk-edit posts to add explicit type metadata unless requested.
@@ -52,13 +52,13 @@ Do not make type labels visually heavier than titles.
 
 Type pages should list matching posts and explain what the type means.
 
-Keep them simple and archive-like.
+Keep them simple and note-like.
 
 ## Validation
 
 Before finishing:
 
-1. verify classification logic works for TIL, archive, and non-TIL/non-archive posts
+1. verify classification logic works for TIL, notes, and non-TIL/non-notes posts
 2. verify pages render without changing existing posts
 3. ensure homepage and post pages display type badges correctly
 4. run `bundle exec jekyll build` when feasible

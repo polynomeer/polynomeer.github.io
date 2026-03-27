@@ -77,12 +77,12 @@ enabled: true
 description: High-signal writing samples that best represent the blog.
 
 items:
-  - path: "_posts/archive/database/2025-07-29-mvcc.md"
+  - path: "_posts/notes/database/2025-07-29-mvcc.md"
     summary: "Shows database concurrency understanding through a core transactional consistency topic."
     capability: "Database internals"
     surfaces: [recruit, panel]
 
-  - path: "_posts/archive/spring/2025-06-30-spring-lifecycle.md"
+  - path: "_posts/notes/spring/2025-06-30-spring-lifecycle.md"
     summary: "Highlights practical Spring runtime knowledge beyond superficial framework usage."
     capability: "Spring backend"
     surfaces: [recruit, panel]

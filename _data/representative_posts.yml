@@ -4,7 +4,7 @@ description:
   en: High-signal posts that best represent the blog's technical depth and writing style.
 
 items:
-  - path: _posts/archive/database/2025-07-29-mvcc.md
+  - path: _posts/notes/database/2025-07-29-mvcc.md
     summary:
       ko-KR: 핵심 트랜잭션 정합성 주제를 통해 데이터베이스 동시성 이해를 보여줍니다.
       en: Shows database concurrency understanding through a core transactional consistency topic.
@@ -12,7 +12,7 @@ items:
       ko-KR: 데이터베이스 내부 동작
       en: Database internals
     surfaces: [recruit, panel]
-  - path: _posts/archive/database/2025-07-29-gap-lock.md
+  - path: _posts/notes/database/2025-07-29-gap-lock.md
     summary:
       ko-KR: 락 동작과 경계 상황의 동시성 제어를 정밀하게 추론하는 글입니다.
       en: Demonstrates precise reasoning about locking behavior and edge-case concurrency control.
@@ -20,7 +20,7 @@ items:
       ko-KR: 동시성과 락
       en: Concurrency and locking
     surfaces: [recruit, panel]
-  - path: _posts/archive/spring/2025-06-30-spring-lifecycle.md
+  - path: _posts/notes/spring/2025-06-30-spring-lifecycle.md
     summary:
       ko-KR: 피상적인 프레임워크 사용을 넘어선 실용적인 Spring 런타임 이해를 보여줍니다.
       en: Highlights practical Spring runtime knowledge beyond superficial framework usage.
@@ -28,7 +28,7 @@ items:
       ko-KR: Spring 백엔드
       en: Spring backend
     surfaces: [recruit, panel]
-  - path: _posts/archive/common/2026-03-20-architectural-decisions.md
+  - path: _posts/notes/common/2026-03-20-architectural-decisions.md
     summary:
       ko-KR: 엔지니어링 판단과 트레이드오프를 명시적으로 설명하는 능력을 드러냅니다.
       en: Surfaces engineering judgment and the ability to reason about tradeoffs explicitly.
