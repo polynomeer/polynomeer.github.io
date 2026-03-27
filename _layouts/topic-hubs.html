@@ -47,9 +47,17 @@ layout: page
         <article class="topic-card">
           <a href="{{ topic_page.url | relative_url }}" class="topic-card-link">
             <div class="topic-card-header">
-              {% if hub.icon %}
-                <i class="{{ hub.icon }}"></i>
-              {% endif %}
+              <div class="topic-card-title-wrap">
+                {% if hub.icon %}
+                  <i class="{{ hub.icon }}"></i>
+                {% endif %}
+                <h3
+                  data-l10n-ko="{{ hub.title['ko-KR'] | default: hub.title | escape }}"
+                  data-l10n-en="{{ hub.title.en | default: hub.title | escape }}"
+                >
+                  {% include localized-value.html value=hub.title lang=lang %}
+                </h3>
+              </div>
               <span class="topic-count">
                 {{
                   site.data.locales[lang].topics.post_count
@@ -57,12 +65,6 @@ layout: page
                 }}
               </span>
             </div>
-            <h3
-              data-l10n-ko="{{ hub.title['ko-KR'] | default: hub.title | escape }}"
-              data-l10n-en="{{ hub.title.en | default: hub.title | escape }}"
-            >
-              {% include localized-value.html value=hub.title lang=lang %}
-            </h3>
             <p
               data-l10n-ko="{{ hub.description['ko-KR'] | default: hub.description | escape }}"
               data-l10n-en="{{ hub.description.en | default: hub.description | escape }}"

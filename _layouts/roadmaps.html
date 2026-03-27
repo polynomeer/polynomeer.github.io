@@ -22,9 +22,17 @@ layout: page
         <article class="roadmap-card">
           <a href="{{ roadmap_page.url | relative_url }}" class="roadmap-card-link">
             <div class="roadmap-card-header">
-              {% if roadmap.icon %}
-                <i class="{{ roadmap.icon }}"></i>
-              {% endif %}
+              <div class="roadmap-card-title-wrap">
+                {% if roadmap.icon %}
+                  <i class="{{ roadmap.icon }}"></i>
+                {% endif %}
+                <h3
+                  data-l10n-ko="{{ roadmap.title['ko-KR'] | default: roadmap.title | escape }}"
+                  data-l10n-en="{{ roadmap.title.en | default: roadmap.title | escape }}"
+                >
+                  {% include localized-value.html value=roadmap.title lang=lang %}
+                </h3>
+              </div>
               <span class="roadmap-count">
                 {{
                   site.data.locales[lang].roadmaps.post_count
@@ -32,12 +40,6 @@ layout: page
                 }}
               </span>
             </div>
-            <h3
-              data-l10n-ko="{{ roadmap.title['ko-KR'] | default: roadmap.title | escape }}"
-              data-l10n-en="{{ roadmap.title.en | default: roadmap.title | escape }}"
-            >
-              {% include localized-value.html value=roadmap.title lang=lang %}
-            </h3>
             <p
               data-l10n-ko="{{ roadmap.description['ko-KR'] | default: roadmap.description | escape }}"
               data-l10n-en="{{ roadmap.description.en | default: roadmap.description | escape }}"
