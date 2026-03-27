@@ -46,6 +46,7 @@
 .post-filter-input,
 .post-filter-select {
   width: 100%;
+  height: 2.6rem;
   min-height: 2.6rem;
   padding: 0.58rem 0.8rem;
   border-radius: 0.9rem;
@@ -63,6 +64,12 @@
     border-color: rgba(139, 233, 253, 0.32);
     box-shadow: 0 0 0 0.18rem rgba(139, 233, 253, 0.08);
   }
+}
+
+.post-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 1.2;
 }
 
 .post-status-filter-btn {
