@@ -1102,7 +1102,7 @@ $btn-mb: 0.5rem;
     margin-bottom: 1.5rem;
 
     $btn-size: 1.75rem;
-    $control-width: ($btn-size * 4) + ($sb-btn-gap * 3);
+    $contact-width: ($btn-size * 5) + ($sb-btn-gap * 4);
 
     %button {
       width: $btn-size;
@@ -1145,7 +1145,7 @@ $btn-mb: 0.5rem;
     .sidebar-controls-row {
       margin-bottom: 0.9rem;
       align-items: stretch;
-      width: $control-width;
+      width: $contact-width;
 
       .lang-switcher {
         width: 100%;
@@ -1154,8 +1154,8 @@ $btn-mb: 0.5rem;
     }
 
     .sidebar-contact-row {
-      flex-wrap: wrap;
-      width: $control-width;
+      flex-wrap: nowrap;
+      width: $contact-width;
       justify-content: space-between;
     }
   } /* .sidebar-bottom */
@@ -1851,7 +1851,7 @@ search {
       margin-bottom: 1.75rem;
 
       $btn-size-lg: 1.75rem;
-      $control-width-lg: ($btn-size-lg * 4) + ($sb-btn-gap-lg * 3);
+      $contact-width-lg: ($btn-size-lg * 5) + ($sb-btn-gap-lg * 4);
 
       .sidebar-controls-row,
       .sidebar-contact-row {
@@ -1860,7 +1860,7 @@ search {
 
       .sidebar-controls-row,
       .sidebar-contact-row {
-        width: $control-width-lg;
+        width: $contact-width-lg;
       }
     }
   }
