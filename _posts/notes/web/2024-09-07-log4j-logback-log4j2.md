@@ -1,6 +1,64 @@
-# Log4j vs Logback vs Log4j2
+---
+title: Log4j vs Logback vs Log4j2
+date: 2024-09-07
+categories: [Notes, Web]
+tags: [Logging, Log4j, Logback]
+---
 
-- https://0soo.tistory.com/241
-- https://shplab.tistory.com/entry/log4j-vs-logback-vs-log4j2
-- https://blog.naver.com/sqlpro/223132863513?trackingCode=rss
-- https://stackify.com/compare-java-logging-frameworks/
+## 세 프레임워크의 관계
+
+Java 로깅 생태계에서는 API와 구현체를 구분해서 보는 것이 중요하다. 보통 애플리케이션은 `SLF4J` 같은 로깅 API를 사용하고, 실제 출력은 Logback이나 Log4j2 같은 구현체가 담당한다.
+
+- `Log4j`: 오래된 Apache 로깅 프레임워크
+- `Logback`: SLF4J 작성자가 만든 후속 구현체
+- `Log4j2`: Log4j의 후속 세대 구현체
+
+현재 기준으로는 Log4j 1.x는 사실상 레거시로 봐야 한다.
+
+## Log4j 1.x
+
+과거에는 널리 쓰였지만 지금은 유지보수 관점에서 추천하기 어렵다.
+
+- 오래된 설정 방식
+- 성능과 확장성 한계
+- 보안 및 유지보수 이슈
+
+신규 프로젝트에서 선택할 이유는 거의 없다.
+
+## Logback
+
+Spring Boot에서 오랫동안 기본 구현체로 많이 사용됐다. 설정이 비교적 단순하고, SLF4J와의 궁합이 좋다.
+
+장점:
+
+- Spring 생태계와 친숙함
+- 설정이 비교적 단순함
+- 일반적인 웹 애플리케이션에는 충분함
+
+## Log4j2
+
+고성능과 비동기 로깅을 강하게 밀어온 구현체다.
+
+장점:
+
+- 비동기 로깅 지원이 강함
+- 확장성과 플러그인 구조가 좋음
+- 고성능 로그 처리에 유리
+
+고트래픽 환경이나 로깅 처리량이 중요한 시스템에서 더 자주 검토된다.
+
+## 무엇을 선택할까
+
+일반적인 Spring 서비스:
+
+- 기본 요구사항이면 `SLF4J + Logback`
+
+로그 처리량이 많고 비동기 로깅이 중요한 경우:
+
+- `SLF4J + Log4j2`
+
+중요한 것은 특정 프레임워크 이름보다 **로깅 API를 코드에 고정하고 구현체는 교체 가능하게 두는 것**이다.
+
+## 정리
+
+신규 프로젝트라면 Log4j 1.x는 피하고, 보통은 Logback이나 Log4j2 중 하나를 선택하면 된다. 선택 기준은 생태계 호환성, 운영 성능, 설정 복잡도다.

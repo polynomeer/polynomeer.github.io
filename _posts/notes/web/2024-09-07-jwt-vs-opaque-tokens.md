@@ -1,8 +1,74 @@
-# JWT vs Opaque Tokens
+---
+title: JWT vs Opaque Token
+date: 2024-09-07
+categories: [Notes, Web]
+tags: [Authentication, JWT, OAuth]
+---
 
-## References
+## 두 토큰의 차이
 
-- https://zitadel.com/blog/jwt-vs-opaque-tokens
-- https://medium.com/identity-beyond-borders/jwt-vs-opaque-tokens-all-you-need-to-know-307bf19bade8
-- https://martinhongsw.medium.com/jwt-vs-opaque-tokens-%EB%B9%84%EA%B5%90-8fa5ff6da2f8
-- https://www.ory.sh/docs/oauth2-oidc/jwt-access-token
+`JWT`는 토큰 자체 안에 클레임이 들어 있는 self-contained token이다. 반면 `Opaque Token`은 의미를 해석할 수 없는 식별자에 가깝고, 서버가 별도 저장소나 인증 서버를 통해 조회해야 한다.
+
+예를 들어:
+
+- `JWT`: 토큰만 보고도 사용자 ID, 만료 시간, 권한 정보를 읽을 수 있다.
+- `Opaque Token`: 토큰 문자열만으로는 아무것도 알 수 없고, 검증 서버가 필요하다.
+
+## JWT의 장점과 한계
+
+장점:
+
+- 검증 서버 조회 없이 로컬 검증 가능
+- 분산 시스템에서 빠르게 처리 가능
+- 클레임 전달이 쉬움
+
+한계:
+
+- 발급 후 강제 폐기가 어렵다.
+- 토큰 크기가 상대적으로 크다.
+- 너무 많은 정보를 넣으면 노출 위험이 커진다.
+
+즉 JWT는 확장성과 성능에 강하지만, 회수와 통제는 까다롭다.
+
+## Opaque Token의 장점과 한계
+
+장점:
+
+- 서버 측에서 즉시 폐기하기 쉽다.
+- 토큰 내부 데이터 노출이 없다.
+- 세션처럼 통제하기 쉽다.
+
+한계:
+
+- 검증마다 저장소나 인증 서버 호출이 필요할 수 있다.
+- 중앙 인증 인프라 의존도가 높다.
+- 인증 서버 장애가 전파될 수 있다.
+
+즉 Opaque Token은 통제에 강하지만, 검증 비용과 의존성이 생긴다.
+
+## 어떤 상황에서 무엇을 고를까
+
+JWT가 잘 맞는 경우:
+
+- 서비스가 많고 토큰 검증이 자주 일어난다.
+- 인증 서버 왕복 비용을 줄이고 싶다.
+- 만료 시간이 짧고, 재발급 전략이 명확하다.
+
+Opaque Token이 잘 맞는 경우:
+
+- 강제 로그아웃, 권한 회수 요구가 강하다.
+- 내부망이나 단일 인증 서버 중심 구조다.
+- 토큰 상태를 중앙에서 세밀하게 통제해야 한다.
+
+## 실무 판단 기준
+
+토큰 선택은 "최신 기술" 문제가 아니라 **통제 비용과 검증 비용의 트레이드오프**다.
+
+- 빠른 로컬 검증이 중요한가
+- 즉시 폐기와 중앙 통제가 중요한가
+- 토큰을 어디까지 신뢰할 것인가
+- 인증 서버 장애를 얼마나 감수할 수 있는가
+
+## 정리
+
+JWT는 분산 검증에 유리하고, Opaque Token은 중앙 통제에 유리하다. 둘 중 무엇이 더 좋다기보다, 인증 시스템에서 어떤 비용을 감당할지 먼저 정해야 한다.
