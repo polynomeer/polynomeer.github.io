@@ -60,6 +60,7 @@ Because of this, changes that affect listing, search, archives, or taxonomy page
 - Do not clean up unrelated untracked files.
 - Assume modified post files belong to the user unless told otherwise.
 - Keep customizations compatible with the existing Chirpy structure.
+- If the task involves post writing or editing, follow [`content-writing-style-guide.md`](./content-writing-style-guide.md).
 
 ## Feature Work Guidance
 
@@ -103,4 +104,3 @@ Examples:
 - `docs(agent): add repository guidance for AI contributors`
 - `feat(home): add topic hub section`
 - `fix(theme): correct dark mode card contrast`
-

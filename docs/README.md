@@ -11,6 +11,7 @@ High-level workflow and maintenance references:
 - [`guides/blog-development-operations-guide.md`](./guides/blog-development-operations-guide.md)
 - [`guides/ai-blog-feature-maintenance-guide.md`](./guides/ai-blog-feature-maintenance-guide.md)
 - [`guides/ai-agent-guide.md`](./guides/ai-agent-guide.md)
+- [`guides/content-writing-style-guide.md`](./guides/content-writing-style-guide.md)
 
 ### Feature Design Docs
 
@@ -69,5 +70,6 @@ For AI agents:
 
 1. [`../AGENTS.md`](../AGENTS.md)
 2. [`guides/ai-agent-guide.md`](./guides/ai-agent-guide.md)
-3. [`guides/ai-blog-feature-maintenance-guide.md`](./guides/ai-blog-feature-maintenance-guide.md)
-4. relevant feature AI guide
+3. [`guides/content-writing-style-guide.md`](./guides/content-writing-style-guide.md)
+4. [`guides/ai-blog-feature-maintenance-guide.md`](./guides/ai-blog-feature-maintenance-guide.md)
+5. relevant feature AI guide

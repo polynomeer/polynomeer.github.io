@@ -24,6 +24,36 @@ This file defines the working rules for human contributors and AI agents in this
 - Do not rename, move, or delete posts, images, or tabs without explicit approval.
 - Preserve front matter fields unless the task requires changing them.
 
+## Content Writing Rules
+
+- When the task asks for new post content or editing post copy, keep the tone consistent with the repository's technical writing style.
+- Avoid AI-assistant phrasing such as:
+  - "물론입니다"
+  - "좋습니다"
+  - "원하시면 이어서"
+  - "다음으로 바로"
+  - "필요하시면 추가해드릴게요"
+- Do not leave prompt-response scaffolding in posts.
+- Avoid excessive emoji use in titles, headings, callouts, and body copy.
+- Prefer zero emoji. Use one only when there is a clear editorial reason, not for decoration.
+- Prefer direct technical prose over salesy or inflated language.
+- Keep the voice factual, calm, and specific. Do not alternate between formal article prose and chatbot-style conversational copy in the same post.
+- Use concise headings that describe the technical point. Avoid vague section titles and avoid decorative punctuation-heavy headers.
+- Keep category and tag values aligned with the current repository taxonomy. Prefer `Notes` over legacy `Archive` values for notes content.
+- When creating or editing front matter, ensure it is valid Jekyll YAML:
+  - start and end front matter with `---`
+  - quote titles when they include `:`, `@`, `#`, brackets, or other YAML-sensitive characters
+  - use YAML arrays for `categories` and `tags`
+  - keep `date`, `series`, `series_title`, and `series_order` syntactically valid
+  - do not leave duplicated front matter blocks or stray `---` separators at the top of the file
+- Before finishing content work, scan the edited posts for:
+  - broken or duplicated front matter
+  - leftover assistant text
+  - inconsistent title and series naming
+  - tags or categories that do not match repository conventions
+
+For detailed content guidance, see [`docs/guides/content-writing-style-guide.md`](./docs/guides/content-writing-style-guide.md).
+
 ## Jekyll and Theme Conventions
 
 - Reuse existing layouts and includes before creating new ones.
@@ -90,4 +120,3 @@ Examples:
 3. Edit only the files required for the task.
 4. Verify with a local build when feasible.
 5. Commit only the task-specific files using Conventional Commits.
-
