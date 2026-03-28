@@ -241,7 +241,7 @@ capability_map:
   directory_description: 백엔드, 데이터베이스, 아키텍처, 채용 관련 글을 역량 증거 중심으로 빠르게 살펴볼 수 있습니다.
   related_topic: 관련 주제
   related_path: 관련 경로
-  evidence: 대표 증거 글
+  evidence: 대표 글
 
 sidebar:
   quick_links: 빠른 이동
