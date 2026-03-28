@@ -1,37 +1,13 @@
 ---
 title: 캐시 스탬피드(Cache Stampede)
 date: 2025-04-22
-categories: [Archive, Cache & Session]
+categories: [Notes, Cache]
 tags: [Cache, Redis]
 ---
 
 ## 캐시 스탬피드(Cache Stampede)란?
 
-**캐시 스탬피드(Cache Stampede)**는 다수의 요청이 **동시에 캐시 미스(Cache Miss)**를 발생시키면서, 백엔드(예: DB, 외부 API 등)에 부하가 집중되는 현상을 말한다. 캐시가 만료된 후 같은 데이터를 요청하는 다수의 클라이언트가 모두 캐시를 우회해서 원본 소스로 요청하게 되면, 시스템에 심각한 부하가 발생하거나 장애가 발생할 수 있다.
-
-> A cache stampede, also known as the dogpile effect or thundering herd, is a phenomenon in caching systems where multiple clients **simultaneously** try to **retrieve and update the same data** from a backend source after a cache entry **expires**. This surge of requests can overload the backend system, leading to performance degradation and potential outages.
->
-> What causes it?
->
-> - **Cache Expiration:** When a cached item expires, multiple client requests that were previously served by the cache now need to fetch the data directly from the backend.
-> - **Simultaneous Requests:** If these requests arrive at the same time, they can overwhelm the backend, especially if the backend is a database or other resource-intensive service.
-> - **Lack of Protection:** Without proper mechanisms to prevent multiple clients from accessing the backend simultaneously, a cache stampede can occur. 
-> - **How it impacts the system:** Increased Load: The backend system experiences a sudden surge in requests, leading to increased latency and potential resource exhaustion.
-> - **Performance Degradation:** The system may become slower or unresponsive due to the overload.
-> - **Potential Outages:** In extreme cases, the backend system can crash or become unavailable, causing a complete outage. 
->
-> Examples:
-> Imagine a website with cached content (e.g., news articles) that expires every 30 minutes. If a large number of users visit the site at the same time, just after the cache expires, they will all try to retrieve the updated content from the database simultaneously, causing a cache stampede. 
-> A similar situation can occur when a configuration file or a piece of application data is cached. If a server restart causes the cache to expire, all the processes that rely on that data will try to fetch it again from the underlying store, potentially causing a stampede. 
->
-> How to prevent it:
->
-> - **Mutex Locks:** Use a mechanism (like a mutex) to ensure that only one client can regenerate the cache data at a time. 
-> - **Delayed Regeneration:** Instead of immediately regenerating the cache when it expires, introduce a delay to stagger the requests. 
-> - **Conditional Updates:** Only regenerate the cache if necessary, based on a check to see if it has already been updated. 
-> - **Cache Invalidation Strategies:** Instead of relying solely on expiration, use more precise mechanisms for invalidating cache entries (e.g., invalidating entries on data updates).
->
-> _source: Google Generative AI_
+캐시 스탬피드는 많은 요청이 동시에 같은 캐시 키를 조회하는 순간, 그 키가 비어 있거나 만료되어 원본 저장소로 요청이 한꺼번에 몰리는 현상이다. 평소에는 캐시가 흡수하던 부하가 한순간에 DB나 외부 API로 전환되기 때문에, 응답 시간 급증과 장애로 이어지기 쉽다.
 
 아래의 간단한 예시를 통해 발생원인을 쉽게 이해할 수 있다.
 

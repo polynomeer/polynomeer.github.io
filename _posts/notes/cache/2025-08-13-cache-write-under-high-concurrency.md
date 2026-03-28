@@ -1,7 +1,7 @@
 ---
 title: Preventing Cache Write Amplification under High Concurrency
 date: 2025-08-13
-categories: [Archive, Cache]
+categories: [Notes, Cache]
 tags: [Cache, Redis, Distributed Lock, Redisson]
 ---
 
