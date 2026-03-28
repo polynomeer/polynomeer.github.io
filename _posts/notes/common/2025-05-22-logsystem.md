@@ -5,11 +5,11 @@ categories: [Notes, Common]
 tags: [Logging, ISMS, Elasticsearch, Kibana, Audit Log]
 ---
 
-# ✅ ISMS 인증을 위한 로그 수집 체계 전면 개선기
+# ISMS 인증을 위한 로그 수집 체계 전면 개선기
 
 *– JSON 포맷, MDC, Filebeat, Elasticsearch-Kibana로 완성한 실시간 감사 로그 대시보드*
 
-## 🧩 배경: 왜 로그 시스템을 개선해야 했는가?
+## 배경: 왜 로그 시스템을 개선해야 했는가?
 
 정보보호 관리체계(ISMS) 인증을 준비하면서 가장 강하게 마주한 요구사항 중 하나는 **감사 추적의 정밀도와 실시간 대응력**이었습니다.
 
@@ -22,7 +22,7 @@ tags: [Logging, ISMS, Elasticsearch, Kibana, Audit Log]
 
 ---
 
-## 📐 개선 방향
+## 개선 방향
 
 ### 1. 로그 포맷 표준화: JSON 기반 구조 설계
 
@@ -80,7 +80,7 @@ MDC.put("traceId", UUID.randomUUID().toString());
 
 ---
 
-## 💡 기대 효과
+## 기대 효과
 
 | 개선 전          | 개선 후              |
 | ------------- | ----------------- |
@@ -92,7 +92,7 @@ MDC.put("traceId", UUID.randomUUID().toString());
 
 ---
 
-## 🎯 결과 및 성과
+## 결과 및 성과
 
 * **ISMS 인증 심사 3회 연속 통과**
 * 보안 감사 응대 시간 평균 70% 단축
@@ -101,7 +101,7 @@ MDC.put("traceId", UUID.randomUUID().toString());
 
 ---
 
-## 🧭 마무리하며
+## 마무리하며
 
 보안 로그는 더 이상 단순한 출력이 아니라, **시스템의 상태를 추적하고, 사용자의 행위를 설명하며, 보안 위협에 대응하는 핵심 데이터**입니다.
 

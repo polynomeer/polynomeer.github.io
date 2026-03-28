@@ -5,13 +5,13 @@ categories: [Notes, Common]
 tags: [Excel, SQS, S3, Async Processing, Performance]
 ---
 
-## 📊 대량 엑셀 다운로드, 메시지 큐와 S3 사전 생성을 활용한 구조 개선기
+## 대량 엑셀 다운로드를 메시지 큐와 S3 사전 생성으로 개선한 구조
 
 대량 데이터 엑셀 다운로드는 흔한 요구지만, 설계가 미흡하면 API 서버가 쉽게 병목 지점이 됩니다. 우리는 실제 운영 환경에서 전체 데이터를 조건 없이 반복 다운로드하는 요청으로 인해 **API 서버 CPU 사용률이 85%까지 상승**하는 문제를 경험했고, 이를 **비동기 메시지 큐 처리 + S3 사전 생성 전략**으로 구조적으로 해결했습니다. 그 결과, CPU 사용률은 **40% 수준으로 절반 이상 감소**하였고, 사용자 경험 또한 개선되었습니다.
 
 ---
 
-## 🧩 배경
+## 배경
 
 서비스 내에서는 다양한 필터 조건에 따라 통계성 데이터를 엑셀로 다운로드할 수 있는 기능을 제공하고 있었습니다. 사용자는 주기적으로 전체 데이터를 필터 없이 다운로드하는 경우가 많았고, 이로 인해 다음과 같은 문제가 발생했습니다.
 
@@ -24,7 +24,7 @@ tags: [Excel, SQS, S3, Async Processing, Performance]
 
 ---
 
-## 🔧 개선 전략
+## 개선 전략
 
 ### 1. 요청 구조 구조화 및 메시지 큐 기반 분리 처리
 
@@ -87,7 +87,7 @@ GET /api/download?preset=ALL
 
 ---
 
-## 💡 회고
+## 회고
 
 ### 핵심 개선 포인트
 
@@ -115,7 +115,7 @@ GET /api/download?preset=ALL
 
 ---
 
-## ✅ 1. **메시지 식별자 (Message Deduplication ID) 사용**
+## 1. 메시지 식별자 사용
 
 ### 🔹 전략
 
@@ -151,7 +151,7 @@ if (repository.existsByRequestId(requestId)) {
 
 ---
 
-## ✅ 2. **SQS FIFO 큐 + DeduplicationId 설정**
+## 2. SQS FIFO 큐와 DeduplicationId 설정
 
 ### 🔹 사용 조건
 
@@ -176,7 +176,7 @@ SendMessageRequest request = new SendMessageRequest()
 
 ---
 
-## ✅ 3. **Idempotent Consumer 패턴 적용**
+## 3. Idempotent Consumer 패턴 적용
 
 ### 🔹 핵심 개념
 
@@ -190,7 +190,7 @@ SendMessageRequest request = new SendMessageRequest()
 
 ---
 
-## ✅ 4. **메시지 본문 해시(Hash) 기반 중복 판별**
+## 4. 메시지 본문 해시 기반 중복 판별
 
 ### 🔹 필터 조건이 같더라도 ID가 다르면 중복될 수 있으므로,
 
@@ -210,7 +210,7 @@ String hash = DigestUtils.sha256Hex(filterJson);
 
 ---
 
-## ✅ 5. **분산락 or 원자적 연산으로 동시 요청 제어**
+## 5. 분산 락 또는 원자적 연산으로 동시 요청 제어
 
 * 다수의 동일한 요청이 동시에 들어올 경우 **Redis 기반 분산락**을 사용하여 선점 처리
 * 또는 DB에서 `requestId`를 `UNIQUE`로 정의하고 insert 시 예외 처리
@@ -232,7 +232,7 @@ CREATE UNIQUE INDEX idx_request_id ON export_requests(request_id);
 
 ---
 
-## 🔁 메시지 중복 처리, 어떻게 방지했는가
+## 메시지 중복 처리, 어떻게 방지했는가
 
 엑셀 다운로드 시스템을 비동기 메시지 큐 기반으로 전환한 후, 또 하나의 중요한 과제가 생겼습니다.
 바로 **같은 요청이 반복되었을 때 메시지나 처리 작업이 중복되지 않도록 방지**하는 것이었습니다.
@@ -240,7 +240,7 @@ CREATE UNIQUE INDEX idx_request_id ON export_requests(request_id);
 
 ---
 
-## 🎯 우리가 직면한 문제
+## 우리가 직면한 문제
 
 * 사용자가 동일한 필터로 엑셀 다운로드 요청을 여러 번 보낼 수 있음
 * API 서버나 워커에서 동일한 메시지를 중복 처리할 위험이 있음
@@ -248,7 +248,7 @@ CREATE UNIQUE INDEX idx_request_id ON export_requests(request_id);
 
 ---
 
-## ✅ 해결 전략 요약
+## 해결 전략 요약
 
 | 구분           | 전략                                |
 | ------------ | --------------------------------- |

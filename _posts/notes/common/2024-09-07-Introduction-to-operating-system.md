@@ -1,7 +1,7 @@
 ---
 title: Introduction to Operating System
 date: 2024-09-05
-categories: [Archive, Common]
+categories: [Notes, Common]
 tags: [Operating System]
 ---
 

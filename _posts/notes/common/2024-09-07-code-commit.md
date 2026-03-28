@@ -1,8 +1,8 @@
 ---
 title: AWS Code Commit
 date: 2024-09-05
-categories: [Archive, Common]
-tags: [Computer Science]
+categories: [Notes, Common]
+tags: [AWS, CodeCommit, Git]
 ---
 
 # AWS Code Commit

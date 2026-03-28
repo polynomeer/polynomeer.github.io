@@ -1,8 +1,8 @@
 ---
 title: Concurrency Control
 date: 2024-09-05
-categories: [Archive, Common]
-tags: [Computer Science]
+categories: [Notes, Common]
+tags: [Concurrency, Computer Science]
 ---
 
 # Concurrency Control

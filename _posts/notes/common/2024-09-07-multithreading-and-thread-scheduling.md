@@ -1,8 +1,8 @@
 ---
 title: MultiThreading and Thread Scheduling
 date: 2024-09-05
-categories: [Archive, Common]
-tags: [Computer Science]
+categories: [Notes, Common]
+tags: [Thread, Scheduling, Operating System]
 ---
 
 # MultiThreading and Thread Scheduling

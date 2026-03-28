@@ -24,7 +24,7 @@ tags: [Batch, Bulk Insert, Concurrency, Redis, Performance]
 
 ## 문제 해결 전략
 
-### 1. 등록 특성 분석: 💡 한 달 단위 주기
+### 1. 등록 특성 분석: 한 달 단위 주기
 
 * 협회 지분율은 *매월 1회*만 갱신됨
 * 이를 기반으로 *동일 월 기준의 데이터는 별도로 분기 처리 가능*
@@ -49,7 +49,7 @@ WHERE partner_id = :partnerId
 - 월 단위 요청이라도 전체 테이블을 스캔하여 **불필요한 기간도 포함**
 - 불필요한 연산량 증가 → **쿼리 응답 지연**
 
-#### ✅ 개선 방안
+#### 개선 방안
 
 ```sql
 SELECT *
@@ -140,4 +140,3 @@ chunks.parallelStream().forEach(chunk -> shareRateRepository.saveAll(chunk));
 | 등록 처리 시간 | 40분     | 12분            | 70% 단축  |
 | 정합성 보장   | 없음      | Redis 락 도입     | 충돌 제거   |
 | 병렬 처리    | 단일 트랜잭션 | Chunk 기반 병렬 처리 | 리소스 최적화 |
-

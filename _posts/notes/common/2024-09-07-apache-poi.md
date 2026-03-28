@@ -1,7 +1,7 @@
 ---
 title: Apache POI SXSSF vs XSSF vs HSSF
 date: 2020-09-05
-categories: [Archive, Common]
+categories: [Notes, Common]
 tags: [Apache POI, Excel]
 ---
 

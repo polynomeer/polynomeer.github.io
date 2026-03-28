@@ -9,7 +9,7 @@ tags: [Logging, Observability, Monitoring, Spring Boot]
 
 ---
 
-## ✅ 1. **로깅 설계 원칙**
+## 1. 로깅 설계 원칙
 
 | 항목         | 설명                                     |
 | ---------- | -------------------------------------- |
@@ -20,7 +20,7 @@ tags: [Logging, Observability, Monitoring, Spring Boot]
 
 ---
 
-## 🔢 2. **로깅 레벨 사용 가이드**
+## 2. 로깅 레벨 사용 가이드
 
 | 레벨      | 사용 예시                               |
 | ------- | ----------------------------------- |
@@ -34,9 +34,9 @@ tags: [Logging, Observability, Monitoring, Spring Boot]
 
 ---
 
-## 🛠 3. **기술 적용 예시 (Spring Boot + Logback)**
+## 3. 기술 적용 예시 (Spring Boot + Logback)
 
-### ✅ MDC (Mapped Diagnostic Context) 활용
+### MDC (Mapped Diagnostic Context) 활용
 
 ```java
 MDC.put("userId", user.getId());
@@ -47,7 +47,7 @@ MDC.clear();
 
 → 사용자 추적 및 요청 단위 구분 용이
 
-### ✅ JSON 로그 포맷 예시 (logback-spring.xml)
+### JSON 로그 포맷 예시 (logback-spring.xml)
 
 ```xml
 <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
@@ -65,7 +65,7 @@ MDC.clear();
 
 ---
 
-## 📊 4. **로그 수집 및 조회 체계**
+## 4. 로그 수집 및 조회 체계
 
 | 항목  | 추천 도구             | 목적            |
 | --- | ----------------- | ------------- |
@@ -120,7 +120,7 @@ MDC.clear();
 
 ---
 
-## ✅ 1. 로깅의 일반적 대상 분류
+## 로깅의 일반적 대상 분류
 
 | 대상            | 예시                    | 주 목적             |
 | ------------- | --------------------- | ---------------- |
@@ -278,7 +278,7 @@ public class DailyReportJob {
 
 ---
 
-## 🎯 목적별 로깅 전략 요약
+## 목적별 로깅 전략 요약
 
 | 목적     | 시점                | 포맷               |
 | ------ | ----------------- | ---------------- |
@@ -290,7 +290,7 @@ public class DailyReportJob {
 
 ---
 
-## ✅ 마무리 체크리스트
+## 마무리 체크리스트
 
 * [ ] 로그는 **도메인 중심의 의미 있는 메시지**로 작성
 * [ ] 민감정보는 절대 출력하지 않음

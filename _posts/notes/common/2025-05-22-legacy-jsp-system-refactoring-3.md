@@ -1,15 +1,11 @@
 ---
-title: "JSP 기반 시스템의 구조적 문제를 해결한 아키텍처 전환기: 시퀀스 테이블 기반 코드 생성의 병목을 해결한 이야기"
+title: "JSP 기반 시스템의 구조적 문제를 해결한 아키텍처 전환기: MyBatis와 JPA 공존 환경의 데이터 정합성 전략"
 date: 2025-05-22
-categories: [Archive, Common]
-tags: [Key Generation Strategy, Sequence, Legacy, Refactoring]
+categories: [Notes, Common]
+tags: [MyBatis, JPA, Legacy, Data Integrity, Refactoring]
 ---
 
-아래는 **레거시(MyBatis 기반) 시스템과 신규(JPA 기반) 시스템의 공존 및 배포 과정에서 발생할 수 있는 데이터 정합성 문제**와 이를 해결하기 위한 **전략 및 실무적 대응 방법**을 상세하게 정리한 기술 문서 스타일의 글입니다. 기술 블로그나 사내 문서로도 바로 활용 가능하게 구성했습니다.
-
----
-
-# 💡 레거시(MyBatis)와 JPA 시스템의 공존 시 데이터 정합성 전략
+# 레거시(MyBatis)와 JPA 시스템의 공존 시 데이터 정합성 전략
 
 새로운 시스템을 도입하면서 기존 레거시 시스템을 완전히 폐기하기는 현실적으로 어렵습니다. 이로 인해 두 시스템이 **동시에 운영**되거나 **점진적 전환**이 필요할 때, 데이터 정합성 문제는 필연적으로 발생합니다.
 
@@ -17,7 +13,7 @@ tags: [Key Generation Strategy, Sequence, Legacy, Refactoring]
 
 ---
 
-## ⚙️ 시스템 구성
+## 시스템 구성
 
 | 구분     | 레거시 시스템              | 신규 시스템                      |
 | ------ | -------------------- | --------------------------- |
@@ -28,7 +24,7 @@ tags: [Key Generation Strategy, Sequence, Legacy, Refactoring]
 
 ---
 
-## 🧨 1. 문제 상황들
+## 문제 상황들
 
 ### 1-1. Enum 매핑 불일치 문제
 
@@ -68,7 +64,7 @@ tags: [Key Generation Strategy, Sequence, Legacy, Refactoring]
 
 ## 🛡 2. 해결 전략 및 실무 적용 예시
 
-### ✅ 전략 1. Enum 매핑 안전화
+### 전략 1. Enum 매핑 안전화
 
 #### 방법
 
@@ -91,7 +87,7 @@ public enum Status {
 
 ---
 
-### ✅ 전략 2. 데이터 보정 스크립트 + 릴리즈 체크리스트화
+### 전략 2. 데이터 보정 스크립트 + 릴리즈 체크리스트화
 
 #### 상황
 
@@ -114,7 +110,7 @@ UPDATE content SET created_at = updated_at WHERE created_at IS NULL;
 
 ---
 
-### ✅ 전략 3. 공통 DTO 및 Adapter Layer 도입
+### 전략 3. 공통 DTO 및 Adapter Layer 도입
 
 * 데이터 변환을 위한 어댑터 혹은 DTO를 두 시스템에서 동일하게 사용하도록 정의
 * 특히 **enum ↔ String**, **LocalDate ↔ Timestamp**, **NULL ↔ Default값** 매핑 규칙을 일관되게 유지
@@ -131,7 +127,7 @@ public UserDto toDto(User entity) {
 
 ---
 
-### ✅ 전략 4. 읽기/쓰기 분리 운영
+### 전략 4. 읽기/쓰기 분리 운영
 
 * 초기에는 **읽기는 JPA**, **쓰기는 MyBatis**처럼 역할을 분리
 * 점진적으로 JPA 쓰기 로직을 도입하면서 보정 및 검증을 진행
@@ -140,7 +136,7 @@ public UserDto toDto(User entity) {
 
 ---
 
-### ✅ 전략 5. 운영 중 정합성 모니터링 지표화
+### 전략 5. 운영 중 정합성 모니터링 지표화
 
 * 잘못된 enum 값 수, null 비율, 마이그레이션 비율 등을 **지표화**
 * ex: Grafana + Custom Query, Prometheus Exporter, Kibana에서 쿼리 저장 등
@@ -151,7 +147,7 @@ SELECT status, COUNT(*) FROM user GROUP BY status;
 
 ---
 
-## 🎯 결론 및 권장 프로세스
+## 결론 및 권장 프로세스
 
 | 단계  | 작업 내용                                  |
 | --- | -------------------------------------- |
@@ -164,7 +160,7 @@ SELECT status, COUNT(*) FROM user GROUP BY status;
 
 ---
 
-## 📌 마무리하며
+## 마무리하며
 
 레거시 시스템과 신규 시스템이 병행 운영될 때 \*\*가장 위험한 부분은 “묵인된 정합성 오류”\*\*입니다.
 \*\*“JPA는 믿지 말고, 확인하라.”\*\*는 말이 있듯이, 보이지 않는 데이터 오류는 서비스 장애의 씨앗이 됩니다.
@@ -174,5 +170,4 @@ JPA의 엄격함을 이점으로 바꾸기 위해선, 사전에 정합성을 진
 
 ---
 
-필요하시면 위 글을 마크다운 문서나 사내 위키 스타일로 구성해드릴 수 있습니다.
 또는 `Enum 대응 공통 컴포넌트`, `SQL 진단 템플릿`, `배포 전 체크리스트` 문서로 분리해드릴 수도 있습니다.

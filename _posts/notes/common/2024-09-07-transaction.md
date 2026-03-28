@@ -1,8 +1,8 @@
 ---
 title: Transaction
 date: 2024-09-05
-categories: [Archive, Common]
-tags: [Transaction]
+categories: [Notes, Common]
+tags: [Transaction, Database]
 ---
 
 # Transaction

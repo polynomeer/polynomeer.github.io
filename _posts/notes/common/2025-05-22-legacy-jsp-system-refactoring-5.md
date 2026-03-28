@@ -1,11 +1,11 @@
 ---
 title: "JSP 기반 시스템의 구조적 문제를 해결한 아키텍처 전환기: JavaScript에 과도하게 집중된 로직 분리하기"
 date: 2025-05-22
-categories: [Archive, Common]
+categories: [Notes, Common]
 tags: [Legacy, Refactoring]
 ---
 
-## 💡 JavaScript에 얽힌 로직을 백엔드로, 프론트-백 분리 개편기
+## JavaScript에 얽힌 로직을 백엔드로 분리한 개편기
 
 레거시 JSP 시스템에서 JPA 기반의 백엔드와 프론트엔드 분리 구조로 개편하는 과정에서, 우리는 흔히 다음과 같은 문제를 마주합니다.
 
@@ -15,7 +15,7 @@ tags: [Legacy, Refactoring]
 
 ------
 
-### 🧱 레거시 구조의 문제점
+### 레거시 구조의 문제점
 
 JSP 기반의 레거시 시스템은 다음과 같은 특징을 가집니다:
 
@@ -34,7 +34,7 @@ if (userRole === 'ADMIN' && orderStatus === 'REQUESTED' && orderAmount > 10000) 
 
 ------
 
-### 🎯 목표: 역할 분리 & 서버 중심 검증
+### 목표: 역할 분리와 서버 중심 검증
 
 프론트는 “표현(UI)”에 집중하고, 백엔드는 “판단(로직)”을 담당하는 구조로 바꾸고자 했습니다.
 
@@ -47,7 +47,7 @@ if (userRole === 'ADMIN' && orderStatus === 'REQUESTED' && orderAmount > 10000) 
 
 ### 🔄 리팩토링 전략
 
-#### ✅ **1. JavaScript 코드 분석 및 분류**
+#### 1. JavaScript 코드 분석 및 분류
 
 | 기능                                | 백엔드 이관 여부                      |
 | ----------------------------------- | ------------------------------------- |
@@ -59,9 +59,9 @@ if (userRole === 'ADMIN' && orderStatus === 'REQUESTED' && orderAmount > 10000) 
 
 ------
 
-#### ✅ **2. Spring Boot로 로직 이전: 예시**
+#### 2. Spring Boot로 로직 이전
 
-##### 🎯 요구 사항
+##### 요구 사항
 
 - 관리자이면서
 - 주문 상태가 REQUESTED이고
@@ -105,7 +105,7 @@ public boolean canApproveOrder(Long orderId, CustomUserDetails user) {
 
 ------
 
-#### ✅ **3. 입력 검증은 Bean Validation으로 통일**
+#### 3. 입력 검증은 Bean Validation으로 통일
 
 ```java
 public class OrderRequest {
@@ -131,7 +131,7 @@ public class OrderRequest {
 
 ------
 
-### ✅ 정리: 프론트와 백엔드의 책임을 다시 세우다
+### 정리: 프론트와 백엔드의 책임을 다시 세우다
 
 | 항목           | 개편 전 (JS 중심) | 개편 후 (Spring 중심)              |
 | -------------- | ----------------- | ---------------------------------- |
@@ -142,7 +142,7 @@ public class OrderRequest {
 
 ------
 
-### ✍️ 마무리하며
+### 마무리하며
 
 프론트에 로직이 얽혀 있다는 건 단순한 코드 문제가 아닙니다. **설계의 분리 실패**입니다.
 
