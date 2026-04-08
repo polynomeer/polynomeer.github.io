@@ -176,6 +176,7 @@ Purpose:
 Main files:
 
 - `docs/features/home-curation-design.md`
+- `docs/features/home-feed-ordering-policy.md`
 - `docs/features/ai/ai-home-curation-guide.md`
 - `_includes/home-curation.html`
 - `_layouts/home.html`
@@ -186,6 +187,7 @@ Operational note:
 
 - Home curation markup may exist even if it is not currently rendered.
 - If homepage behavior changes, verify whether `_layouts/home.html` includes or excludes the curation include.
+- Homepage feed ordering policy is documented separately and should be treated as an editorial rule, not an incidental implementation detail.
 
 ### 6. Content Type Separation
 
