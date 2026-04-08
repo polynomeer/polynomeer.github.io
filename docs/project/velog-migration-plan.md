@@ -17,9 +17,22 @@ As of April 8, 2026:
 
 - Velog profile metadata reports `56` total posts
 - Velog RSS feed exposes the latest `20` posts
+- Velog GraphQL public post listing currently exposes `50` public posts for `@polynomeer`
 - the current repository already contains many rewritten `Notes`, `TIL`, and `Recruit` posts that cover part of the same subject area
 
 This means migration should be handled as a staged editorial merge, not as a raw bulk import.
+
+## Migration Status
+
+As of April 8, 2026, all `50` posts exposed by the current public Velog GraphQL listing have been migrated, rewritten, or intentionally merged into stronger local equivalents.
+
+Current status:
+
+- public Velog posts discovered through GraphQL: `50`
+- migrated or merged into this repository: `50`
+- remaining public posts from the current listing: `0`
+
+The profile metadata count `56` was not reproducible through the current public GraphQL post listing. If additional historical posts become accessible later, they should be treated as a follow-up migration batch instead of reopening already migrated content.
 
 ## Source of Truth
 
