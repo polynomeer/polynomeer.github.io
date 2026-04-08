@@ -153,6 +153,15 @@
         gap: 0.85rem;
       }
 
+      .card-title-badges {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.45rem;
+        flex: 0 0 auto;
+        flex-wrap: wrap;
+      }
+
       .card-title {
         @extend %text-clip;
 
@@ -166,10 +175,10 @@
         color: var(--link-color);
       }
 
-      .content-type-badge {
-        flex-shrink: 0;
-        align-self: flex-start;
-        border-color: rgba(139, 233, 253, 0.24);
+        .content-type-badge {
+          flex-shrink: 0;
+          align-self: flex-start;
+          border-color: rgba(139, 233, 253, 0.24);
         background: rgba(139, 233, 253, 0.1);
         transition:
           color 0.2s ease,
@@ -186,7 +195,22 @@
           box-shadow: 0 0 0 0.15rem rgba(139, 233, 253, 0.1);
           transform: translateY(-1px);
         }
-      }
+        }
+
+        .home-pin-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          padding: 0.38rem 0.72rem;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 184, 108, 0.28);
+          background: rgba(255, 184, 108, 0.12);
+          color: #ffb86c;
+          font-size: 0.75rem;
+          font-weight: 700;
+          line-height: 1;
+          white-space: nowrap;
+        }
 
       %muted {
         color: var(--text-muted-color) !important;
