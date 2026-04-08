@@ -3,6 +3,7 @@ title: Spring Bean Lifecycle 정리
 date: 2025-06-30
 categories: [Notes, Spring]
 tags: [Spring, Bean Lifecycle, Bean]
+pin: true
 ---
 
 ## 왜 생명주기를 알아야 하는가
