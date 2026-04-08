@@ -4,6 +4,10 @@ This document is the main handbook for developing and operating the customized b
 
 It complements the feature-specific design docs under `docs/` and explains how the features work together in day-to-day maintenance.
 
+Related project policy documents:
+
+- `docs/project/velog-migration-plan.md`
+
 ## Purpose
 
 This blog is no longer just a chronological post feed.
@@ -42,6 +46,7 @@ The goal of this guide is to explain:
 - Avoid bulk-editing posts unless the change is clearly intentional.
 - Treat modified and untracked post files as user work in progress.
 - Prefer data-driven curation through `_data` and front matter over hardcoded markup.
+- When migrating external blog content, follow `docs/project/velog-migration-plan.md` instead of importing posts in bulk.
 
 ## Core Feature Map
 
