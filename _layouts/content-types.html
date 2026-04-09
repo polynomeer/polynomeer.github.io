@@ -3,6 +3,7 @@ layout: page
 ---
 
 {% include lang.html %}
+{% assign posts_by_type = site.posts | group_by_exp: 'post', "post.path | split: '/' | slice: 2, 1 | first" %}
 
 <section class="content-type-directory">
   <div class="content-type-hero">
@@ -17,9 +18,8 @@ layout: page
       {% assign content_type = site.data.content_types[type_page.content_type_id] %}
       {% if content_type %}
         {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: type_page.content_type_id %}
-        {% assign type_segment = '/' | append: type_page.content_type_id | append: '/' %}
-        {% assign matching_posts = site.posts | where_exp: 'post', "post.path contains type_segment" %}
-        {% assign post_count = matching_posts | size %}
+        {% assign matching_group = posts_by_type | where: 'name', type_page.content_type_id | first %}
+        {% assign post_count = matching_group.items | size | default: 0 %}
 
         <article class="content-type-card">
           <a href="{{ type_page.url | relative_url }}" class="content-type-card-link">
