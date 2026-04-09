@@ -54,6 +54,7 @@ AI-agent-oriented feature maintenance references:
 Project-level upstream and repository policy references:
 
 - [`project/blog-scale-and-growth-strategy.md`](./project/blog-scale-and-growth-strategy.md)
+- [`project/blog-baseline-monitoring.md`](./project/blog-baseline-monitoring.md)
 - [`project/image-asset-management-policy.md`](./project/image-asset-management-policy.md)
 - [`project/velog-migration-plan.md`](./project/velog-migration-plan.md)
 - [`project/release-notes-2026-03-27.md`](./project/release-notes-2026-03-27.md)
