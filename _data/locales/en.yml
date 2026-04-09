@@ -30,6 +30,7 @@ tabs:
   capabilities: Capabilities
   types: Types
   statuses: Statuses
+  series: Series
   categories: Categories
   tags: Tags
   archives: Archives
