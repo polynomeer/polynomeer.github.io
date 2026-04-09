@@ -1023,30 +1023,10 @@ header {
   }
 }
 
-.learning-evidence-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-
-.learning-evidence-card {
-  padding: 1.2rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(98, 114, 164, 0.16);
-  background: rgba(68, 71, 90, 0.12);
-}
-
-.learning-evidence-card-header,
-.learning-evidence-badges {
+.learning-evidence-overview {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
   flex-wrap: wrap;
-}
-
-.learning-evidence-card-header {
-  justify-content: space-between;
-  margin-bottom: 0.8rem;
+  gap: 0.8rem;
 }
 
 .learning-evidence-type-badge,
@@ -1063,39 +1043,157 @@ header {
   text-transform: uppercase;
 }
 
+.learning-evidence-tile {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 13rem;
+  max-width: 22rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(98, 114, 164, 0.16);
+  border-radius: 0.95rem;
+  background: rgba(68, 71, 90, 0.1);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.35);
+    background: rgba(68, 71, 90, 0.16);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(16, 18, 28, 0.14);
+    text-decoration: none;
+  }
+}
+
+.learning-evidence-tile[data-learning-type='course'] {
+  border-color: rgba(80, 250, 123, 0.2);
+}
+
+.learning-evidence-tile[data-learning-type='book'] {
+  border-color: rgba(255, 184, 108, 0.2);
+}
+
+.learning-evidence-tile-title {
+  color: var(--heading-color);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.learning-evidence-tile-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
 .learning-evidence-period,
-.learning-evidence-provider,
-.learning-evidence-card-summary {
+.learning-evidence-provider {
   color: var(--text-muted-color);
 }
 
-.learning-evidence-provider {
-  margin-bottom: 0.6rem;
-  font-weight: 600;
-}
-
-.learning-evidence-card-summary {
-  margin-bottom: 1rem;
-  line-height: 1.7;
-}
-
-.learning-evidence-links + .learning-evidence-links {
+.learning-evidence-detail {
   margin-top: 1rem;
 }
 
-.learning-evidence-links {
-  h5 {
-    margin-bottom: 0.55rem;
-    font-size: 0.92rem;
+.learning-evidence-backlink {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.learning-evidence-detail-hero {
+  padding: 1.45rem 1.5rem;
+  border: 1px solid rgba(98, 114, 164, 0.16);
+  border-radius: 1.05rem;
+  background: rgba(68, 71, 90, 0.12);
+}
+
+.learning-evidence-detail-meta,
+.learning-evidence-detail-facts,
+.learning-evidence-sibling-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.learning-evidence-detail-facts {
+  margin-top: 0.9rem;
+  color: var(--text-muted-color);
+}
+
+.learning-evidence-detail-facts span + span::before {
+  content: '\2022';
+  padding-right: 0.55rem;
+}
+
+.learning-evidence-detail-summary {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  color: var(--text-muted-color);
+  line-height: 1.75;
+}
+
+.learning-evidence-detail-sections {
+  margin-top: 1.6rem;
+}
+
+.learning-evidence-detail-section + .learning-evidence-detail-section {
+  margin-top: 1.4rem;
+}
+
+.learning-evidence-detail-section {
+  padding: 1.2rem 1.25rem;
+  border: 1px solid rgba(98, 114, 164, 0.14);
+  border-radius: 0.95rem;
+  background: rgba(68, 71, 90, 0.08);
+}
+
+.learning-evidence-post-list {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.learning-evidence-post-item + .learning-evidence-post-item {
+  margin-top: 0.95rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid rgba(98, 114, 164, 0.12);
+}
+
+.learning-evidence-post-item a {
+  font-weight: 600;
+}
+
+.learning-evidence-post-item p {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
+.learning-evidence-sibling-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(98, 114, 164, 0.16);
+  border-radius: 999px;
+  background: rgba(40, 42, 54, 0.35);
+}
+
+@media (max-width: 767px) {
+  .learning-evidence-hero,
+  .learning-evidence-detail-hero,
+  .learning-evidence-detail-section {
+    padding: 1rem;
   }
 
-  ul {
-    margin-bottom: 0;
-    padding-left: 1.1rem;
-  }
-
-  li + li {
-    margin-top: 0.35rem;
+  .learning-evidence-tile {
+    min-width: 100%;
+    max-width: none;
   }
 }
 

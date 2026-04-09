@@ -281,7 +281,9 @@ learning_evidence_meta:
 
 learning_evidence:
   eyebrow: 학습 성과
-  directory_title: 학습 입력과 작성 결과를 함께 보기
-  directory_description: 수강한 강의, 읽은 책, 그리고 그 학습이 어떤 글과 산출물로 이어졌는지 한 곳에서 볼 수 있습니다.
+  directory_title: 학습 입력을 개요 중심으로 빠르게 살펴보기
+  directory_description: 책과 강의를 먼저 가볍게 훑고, 각 항목 상세 페이지에서 학습 기록 글과 결과 글을 이어서 볼 수 있습니다.
   source_posts: 학습 기록 글
   related_posts: 연결된 결과 글
+  back_to_directory: 학습 성과 개요로 돌아가기
+  same_group: 같은 그룹의 다른 학습 항목

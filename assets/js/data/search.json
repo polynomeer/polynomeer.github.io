@@ -3,12 +3,12 @@ layout: compress
 swcache: true
 ---
 
-{% assign search_cutoff_ts = site.time | date: '%s' | minus: 63072000 %}
+{% assign search_cutoff_ts = site.time | date: '%s' | plus: 0 | minus: 63072000 %}
 {% assign search_first_item = true %}
 
 [
   {% for post in site.posts %}
-  {% assign post_ts = post.date | date: '%s' %}
+  {% assign post_ts = post.date | date: '%s' | plus: 0 %}
   {% assign include_in_search = false %}
   {% if post.path contains '/notes/' or post.pin == true or post_ts >= search_cutoff_ts %}
     {% assign include_in_search = true %}

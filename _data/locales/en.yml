@@ -286,7 +286,9 @@ learning_evidence_meta:
 
 learning_evidence:
   eyebrow: Learning evidence
-  directory_title: Trace learning inputs and written outputs together
-  directory_description: Follow the courses, books, and study records that were turned into reusable technical writing and portfolio evidence.
+  directory_title: Browse learning inputs through a compact overview
+  directory_description: Scan books and courses quickly, then open each item to see study notes and the posts that grew out of that learning.
   source_posts: Source study posts
   related_posts: Related output posts
+  back_to_directory: Back to learning overview
+  same_group: More from this learning group

@@ -192,6 +192,9 @@ collections:
   post_statuses:
     output: true
     sort_by: order
+  learning_evidence_items:
+    output: true
+    sort_by: order
 
 defaults:
   - scope:
@@ -234,6 +237,11 @@ defaults:
       type: post_statuses
     values:
       layout: post-status
+  - scope:
+      path: ""
+      type: learning_evidence_items
+    values:
+      layout: learning-evidence-item
 
 sass:
   style: compressed

@@ -33,11 +33,20 @@ layout: page
           {% endif %}
         </div>
 
-        <div class="learning-evidence-grid">
+        <div class="learning-evidence-overview">
           {% for item in group.items %}
-            <article class="learning-evidence-card">
-              <div class="learning-evidence-card-header">
-                <div class="learning-evidence-badges">
+            {% assign detail_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
+            {% if detail_page %}
+              <a
+                class="learning-evidence-tile"
+                href="{{ detail_page.url | relative_url }}"
+                data-learning-type="{{ item.type }}"
+                data-learning-status="{{ item.status }}"
+              >
+                <span class="learning-evidence-tile-title">
+                  {% include localized-value.html value=item.title lang=lang %}
+                </span>
+                <span class="learning-evidence-tile-meta">
                   <span class="learning-evidence-type-badge" data-i18n="learning_evidence_meta.{{ item.type }}">
                     {{ site.data.locales[lang].learning_evidence_meta[item.type] | default: item.type }}
                   </span>
@@ -46,63 +55,15 @@ layout: page
                       {{ site.data.locales[lang].learning_evidence_meta[item.status] | default: item.status }}
                     </span>
                   {% endif %}
-                </div>
-                {% if item.period %}
-                  <span class="learning-evidence-period">{{ item.period }}</span>
-                {% endif %}
-              </div>
-
-              <h4
-                data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}"
-                data-l10n-en="{{ item.title.en | default: item.title | escape }}"
-              >
-                {% include localized-value.html value=item.title lang=lang %}
-              </h4>
-
-              {% if item.provider %}
-                <p class="learning-evidence-provider">{{ item.provider }}</p>
-              {% endif %}
-
-              {% if item.summary %}
-                <p
-                  class="learning-evidence-card-summary"
-                  data-l10n-ko="{{ item.summary['ko-KR'] | default: item.summary | escape }}"
-                  data-l10n-en="{{ item.summary.en | default: item.summary | escape }}"
-                >
-                  {% include localized-value.html value=item.summary lang=lang %}
-                </p>
-              {% endif %}
-
-              {% assign source_posts = item.source_posts | default: empty %}
-              {% if source_posts and source_posts.size > 0 %}
-                <div class="learning-evidence-links">
-                  <h5 data-i18n="learning_evidence.source_posts">{{ site.data.locales[lang].learning_evidence.source_posts }}</h5>
-                  <ul>
-                    {% for post_path in source_posts %}
-                      {% assign matched_post = site.posts | where: 'path', post_path | first %}
-                      {% if matched_post %}
-                        <li><a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a></li>
-                      {% endif %}
-                    {% endfor %}
-                  </ul>
-                </div>
-              {% endif %}
-
-              {% assign related_posts = item.related_posts | default: empty %}
-              {% if related_posts and related_posts.size > 0 %}
-                <div class="learning-evidence-links">
-                  <h5 data-i18n="learning_evidence.related_posts">{{ site.data.locales[lang].learning_evidence.related_posts }}</h5>
-                  <ul>
-                    {% for post_path in related_posts %}
-                      {% assign matched_post = site.posts | where: 'path', post_path | first %}
-                      {% if matched_post %}
-                        <li><a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a></li>
-                      {% endif %}
-                    {% endfor %}
-                  </ul>
-                </div>
-              {% endif %}
-            </article>
+                  {% if item.provider %}
+                    <span class="learning-evidence-provider">{{ item.provider }}</span>
+                  {% endif %}
+                  {% if item.period %}
+                    <span class="learning-evidence-period">{{ item.period }}</span>
+                  {% endif %}
+                </span>
+              </a>
+            {% endif %}
           {% endfor %}
         </div>
       </section>
