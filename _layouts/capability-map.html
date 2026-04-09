@@ -5,54 +5,155 @@ layout: page
 {% include lang.html %}
 
 {% assign capability_map = site.data.capability_map %}
+{% assign capability_nodes = capability_map.nodes | default: capability_map.items %}
+{% assign default_focus = capability_map.default_focus | default: capability_nodes.first.id %}
 
-{% if capability_map and capability_map.enabled and capability_map.items and capability_map.items.size > 0 %}
-  <section class="capability-map-directory">
+{% if capability_map and capability_map.enabled and capability_nodes and capability_nodes.size > 0 %}
+  {% assign default_node = capability_nodes | where: 'id', default_focus | first %}
+  {% if default_node == nil %}
+    {% assign default_node = capability_nodes | first %}
+    {% assign default_focus = default_node.id %}
+  {% endif %}
+
+  <section class="capability-map-directory" data-capability-graph data-default-focus="{{ default_focus }}">
     <div class="capability-map-hero">
       <p class="capability-map-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
       <h2 data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</h2>
       <p class="capability-map-summary" data-i18n="capability_map.directory_description">{{ site.data.locales[lang].capability_map.directory_description }}</p>
     </div>
 
-    <div class="capability-map-grid">
-      {% for capability in capability_map.items %}
-        <article class="capability-map-card">
-          <div class="capability-map-card-body">
-            <div class="capability-map-card-header">
-              <div class="capability-map-card-title">
-                {% if capability.icon %}
-                  <i class="{{ capability.icon }}"></i>
+    {% if capability_map.clusters and capability_map.clusters.size > 0 %}
+      <div class="capability-map-legend" aria-label="{{ site.data.locales[lang].capability_map.cluster_legend }}">
+        {% for cluster in capability_map.clusters %}
+          <span class="capability-map-legend-item capability-map-legend-item--{{ cluster.tone | default: 'violet' }}">
+            <span class="capability-map-legend-dot"></span>
+            <span>{% include localized-value.html value=cluster.title lang=lang %}</span>
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="capability-map-shell">
+      <div class="capability-map-graph-panel">
+        <div class="capability-map-graph-header">
+          <h3>{{ site.data.locales[lang].capability_map.graph_title }}</h3>
+          <p>{{ site.data.locales[lang].capability_map.graph_description }}</p>
+        </div>
+
+        <div class="capability-map-canvas" role="group" aria-label="{{ site.data.locales[lang].capability_map.graph_title }}">
+          <svg class="capability-map-edge-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            {% for edge in capability_map.edges %}
+              {% assign from_node = capability_nodes | where: 'id', edge.from | first %}
+              {% assign to_node = capability_nodes | where: 'id', edge.to | first %}
+              {% if from_node and to_node %}
+                <line
+                  class="capability-map-edge capability-map-edge--{{ edge.strength | default: 'medium' }}{% if edge.from == default_focus or edge.to == default_focus %} is-active{% else %} is-dimmed{% endif %}"
+                  data-capability-edge
+                  data-from="{{ edge.from }}"
+                  data-to="{{ edge.to }}"
+                  x1="{{ from_node.x }}"
+                  y1="{{ from_node.y }}"
+                  x2="{{ to_node.x }}"
+                  y2="{{ to_node.y }}"
+                ></line>
+              {% endif %}
+            {% endfor %}
+          </svg>
+
+          <div class="capability-map-node-layer">
+            {% for capability in capability_nodes %}
+              {% assign connected_ids = '' | split: '' %}
+              {% for edge in capability_map.edges %}
+                {% if edge.from == capability.id %}
+                  {% assign connected_ids = connected_ids | push: edge.to %}
+                {% elsif edge.to == capability.id %}
+                  {% assign connected_ids = connected_ids | push: edge.from %}
                 {% endif %}
-                <h3
-                  data-l10n-ko="{{ capability.title['ko-KR'] | default: capability.title | escape }}"
-                  data-l10n-en="{{ capability.title.en | default: capability.title | escape }}"
-                >
-                  {% include localized-value.html value=capability.title lang=lang %}
-                </h3>
+              {% endfor %}
+              {% assign capability_cluster = capability_map.clusters | where: 'id', capability.cluster | first %}
+
+              <button
+                type="button"
+                class="capability-map-node capability-map-node--{{ capability.tone | default: capability_cluster.tone | default: 'violet' }}{% if capability.id == default_focus %} is-active{% elsif connected_ids contains default_focus %} is-connected{% else %} is-dimmed{% endif %}"
+                data-capability-node="{{ capability.id }}"
+                data-neighbors="{{ connected_ids | join: ' ' }}"
+                aria-controls="capability-map-detail"
+                aria-label="{% include localized-value.html value=capability.title lang=lang %}"
+                style="--node-x: {{ capability.x }}%; --node-y: {{ capability.y }}%;"
+              >
+                <span class="capability-map-node-glow"></span>
+                <span class="capability-map-node-body">
+                  {% if capability.icon %}
+                    <i class="{{ capability.icon }}" aria-hidden="true"></i>
+                  {% endif %}
+                  <span class="capability-map-node-title">{% include localized-value.html value=capability.title lang=lang %}</span>
+                </span>
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <aside class="capability-map-detail" id="capability-map-detail" aria-live="polite">
+        <h3 class="capability-map-detail-heading">{{ site.data.locales[lang].capability_map.detail_title }}</h3>
+
+        {% for capability in capability_nodes %}
+          {% assign capability_cluster = capability_map.clusters | where: 'id', capability.cluster | first %}
+          {% assign capability_posts = capability.representative_posts | default: empty %}
+          {% assign connected_ids = '' | split: '' %}
+          {% for edge in capability_map.edges %}
+            {% if edge.from == capability.id %}
+              {% assign connected_ids = connected_ids | push: edge.to %}
+            {% elsif edge.to == capability.id %}
+              {% assign connected_ids = connected_ids | push: edge.from %}
+            {% endif %}
+          {% endfor %}
+
+          <section class="capability-map-detail-panel{% if capability.id == default_focus %} is-active{% endif %}" data-capability-panel="{{ capability.id }}"{% unless capability.id == default_focus %} hidden{% endunless %}>
+            <div class="capability-map-detail-intro">
+              <div class="capability-map-detail-kicker">
+                {% if capability_cluster %}
+                  <span class="capability-map-cluster capability-map-cluster--{{ capability_cluster.tone | default: capability.tone | default: 'violet' }}">
+                    {% include localized-value.html value=capability_cluster.title lang=lang %}
+                  </span>
+                {% endif %}
+              </div>
+
+              <div class="capability-map-detail-title">
+                {% if capability.icon %}
+                  <i class="{{ capability.icon }}" aria-hidden="true"></i>
+                {% endif %}
+                <div>
+                  <h4>{% include localized-value.html value=capability.title lang=lang %}</h4>
+                  <p>{% include localized-value.html value=capability.summary lang=lang %}</p>
+                </div>
               </div>
             </div>
 
-            {% if capability.summary %}
-              <p
-                class="capability-map-card-summary"
-                data-l10n-ko="{{ capability.summary['ko-KR'] | default: capability.summary | escape }}"
-                data-l10n-en="{{ capability.summary.en | default: capability.summary | escape }}"
-              >
-                {% include localized-value.html value=capability.summary lang=lang %}
-              </p>
+            {% if capability.why_it_matters %}
+              <div class="capability-map-detail-block">
+                <h5>{{ site.data.locales[lang].capability_map.why_it_matters }}</h5>
+                <p>{% include localized-value.html value=capability.why_it_matters lang=lang %}</p>
+              </div>
             {% endif %}
 
-            <div class="capability-map-links">
-            </div>
+            {% if capability.signals and capability.signals.size > 0 %}
+              <div class="capability-map-detail-block">
+                <h5>{{ site.data.locales[lang].capability_map.signal_points }}</h5>
+                <ul class="capability-map-signal-list">
+                  {% for signal in capability.signals %}
+                    <li>{% include localized-value.html value=signal lang=lang %}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
 
-            {% assign capability_posts = capability.representative_posts | default: empty %}
             {% if capability_posts and capability_posts.size > 0 %}
-              <div class="capability-map-evidence">
-                <h4 data-i18n="capability_map.evidence">{{ site.data.locales[lang].capability_map.evidence }}</h4>
+              <div class="capability-map-detail-block">
+                <h5>{{ site.data.locales[lang].capability_map.evidence }}</h5>
                 <ul class="capability-map-post-list">
                   {% for post_path in capability_posts %}
                     {% assign matched_post = site.posts | where: 'path', post_path | first %}
-
                     {% if matched_post %}
                       <li>
                         <a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a>
@@ -62,9 +163,118 @@ layout: page
                 </ul>
               </div>
             {% endif %}
-          </div>
-        </article>
-      {% endfor %}
+
+            {% if capability.supporting_links and capability.supporting_links.size > 0 %}
+              <div class="capability-map-detail-block">
+                <h5>{{ site.data.locales[lang].capability_map.supporting_links }}</h5>
+                <div class="capability-map-links">
+                  {% for link in capability.supporting_links %}
+                    <a class="feature-chip" href="{{ link.url | relative_url }}">
+                      {% include localized-value.html value=link.title lang=lang %}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if connected_ids and connected_ids.size > 0 %}
+              <div class="capability-map-detail-block">
+                <h5>{{ site.data.locales[lang].capability_map.connected_capabilities }}</h5>
+                <div class="capability-map-links">
+                  {% for connected_id in connected_ids %}
+                    {% assign connected_node = capability_nodes | where: 'id', connected_id | first %}
+                    {% if connected_node %}
+                      <button type="button" class="feature-chip capability-map-focus-chip" data-capability-focus="{{ connected_node.id }}">
+                        {% include localized-value.html value=connected_node.title lang=lang %}
+                      </button>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          </section>
+        {% endfor %}
+      </aside>
     </div>
   </section>
 {% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.querySelector('[data-capability-graph]');
+
+    if (!root) {
+      return;
+    }
+
+    const nodeButtons = Array.from(root.querySelectorAll('[data-capability-node]'));
+    const panels = Array.from(root.querySelectorAll('[data-capability-panel]'));
+    const edgeElements = Array.from(root.querySelectorAll('[data-capability-edge]'));
+    const focusButtons = Array.from(root.querySelectorAll('[data-capability-focus]'));
+    const nodeMap = new Map(nodeButtons.map((button) => [button.dataset.capabilityNode, button]));
+
+    const applySelection = (capabilityId) => {
+      const activeNode = nodeMap.get(capabilityId);
+
+      if (!activeNode) {
+        return;
+      }
+
+      const neighbors = new Set(
+        (activeNode.dataset.neighbors || '')
+          .split(' ')
+          .map((item) => item.trim())
+          .filter(Boolean)
+      );
+
+      neighbors.add(capabilityId);
+
+      nodeButtons.forEach((button) => {
+        const nodeId = button.dataset.capabilityNode;
+        const isActive = nodeId === capabilityId;
+        const isConnected = !isActive && neighbors.has(nodeId);
+        const isDimmed = !neighbors.has(nodeId);
+
+        button.classList.toggle('is-active', isActive);
+        button.classList.toggle('is-connected', isConnected);
+        button.classList.toggle('is-dimmed', isDimmed);
+        button.setAttribute('aria-pressed', String(isActive));
+      });
+
+      edgeElements.forEach((edge) => {
+        const isActive = edge.dataset.from === capabilityId || edge.dataset.to === capabilityId;
+        edge.classList.toggle('is-active', isActive);
+        edge.classList.toggle('is-dimmed', !isActive);
+      });
+
+      panels.forEach((panel) => {
+        const isActive = panel.dataset.capabilityPanel === capabilityId;
+        panel.classList.toggle('is-active', isActive);
+        panel.hidden = !isActive;
+      });
+
+      if (window.location.hash !== `#${capabilityId}`) {
+        window.history.replaceState(null, '', `#${capabilityId}`);
+      }
+    };
+
+    nodeButtons.forEach((button) => {
+      button.addEventListener('click', () => applySelection(button.dataset.capabilityNode));
+    });
+
+    focusButtons.forEach((button) => {
+      button.addEventListener('click', () => applySelection(button.dataset.capabilityFocus));
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hashId = window.location.hash.replace('#', '');
+
+      if (hashId) {
+        applySelection(hashId);
+      }
+    });
+
+    const initialId = window.location.hash.replace('#', '') || root.dataset.defaultFocus;
+    applySelection(initialId);
+  });
+</script>

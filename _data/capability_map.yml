@@ -1,54 +1,174 @@
 enabled: true
+default_focus: architecture-judgment
 
-items:
+clusters:
+  - id: systems
+    tone: cyan
+    title:
+      ko-KR: 시스템과 데이터
+      en: Systems and Data
+
+  - id: application
+    tone: green
+    title:
+      ko-KR: 애플리케이션 구현
+      en: Application Delivery
+
+  - id: judgment
+    tone: violet
+    title:
+      ko-KR: 설계 판단
+      en: Design Judgment
+
+  - id: career
+    tone: amber
+    title:
+      ko-KR: 채용과 전달
+      en: Hiring Signal
+
+nodes:
   - id: database-internals
+    cluster: systems
+    x: 20
+    y: 58
+    icon: fas fa-database
+    tone: cyan
     title:
       ko-KR: 데이터베이스 내부 동작
       en: Database Internals
     summary:
       ko-KR: 트랜잭션, MVCC, 락, 리플리케이션을 표면적 사용법이 아니라 시스템 수준의 사고로 설명합니다.
-      en: Explains transactions, MVCC, locking, and replication in a way that shows systems-level reasoning rather than surface usage.
-    icon: fas fa-database
+      en: Explains transactions, MVCC, locking, and replication through systems-level reasoning instead of surface usage.
+    why_it_matters:
+      ko-KR: 저장소의 내부 동작을 이해해야 정합성과 성능 문제를 설계 수준에서 다룰 수 있다는 점을 보여주는 축입니다.
+      en: Shows the ability to reason about consistency and performance at the storage layer rather than treating the database as a black box.
+    signals:
+      - ko-KR: 트랜잭션 정합성과 격리 수준을 실제 설계 판단과 연결합니다.
+        en: Connects transactional consistency and isolation levels to practical design choices.
+      - ko-KR: 락과 복제처럼 운영 결과에 직접 영향을 주는 내부 메커니즘을 설명합니다.
+        en: Explains internals such as locking and replication that directly affect production behavior.
     representative_posts:
       - _posts/notes/database/2025-07-29-mvcc.md
       - _posts/notes/database/2025-07-29-gap-lock.md
       - _posts/notes/database/2025-08-17-db-replication.md
 
   - id: spring-backend
+    cluster: application
+    x: 38
+    y: 24
+    icon: fas fa-leaf
+    tone: green
     title:
       ko-KR: Spring 백엔드
       en: Spring Backend
     summary:
       ko-KR: Spring과 Spring Boot에서 런타임 라이프사이클, 프레임워크 경계, 실제 백엔드 애플리케이션 동작을 다룹니다.
       en: Covers runtime lifecycle, framework boundaries, and practical backend application behavior in Spring and Spring Boot.
-    icon: fas fa-leaf
+    why_it_matters:
+      ko-KR: 프레임워크 사용법을 넘어서, 애플리케이션이 어떻게 시작되고 경계를 나누며 운영되는지 설명하는 역량을 보여줍니다.
+      en: Demonstrates an understanding of how applications boot, draw boundaries, and behave in production beyond framework syntax.
+    signals:
+      - ko-KR: 런타임 라이프사이클과 애노테이션의 실제 의미를 다룹니다.
+        en: Explains the practical runtime meaning of lifecycle stages and annotations.
+      - ko-KR: 이벤트, 트랜잭션, 구성 경계를 운영 관점으로 연결합니다.
+        en: Connects events, transactions, and configuration boundaries to operational concerns.
     representative_posts:
       - _posts/notes/spring/2025-06-30-spring-lifecycle.md
       - _posts/notes/spring/2025-08-07-spring-boot-application-annotation.md
       - _posts/notes/spring/2025-05-13-transactional-event-listener.md
 
   - id: architecture-judgment
+    cluster: judgment
+    x: 58
+    y: 40
+    icon: fas fa-sitemap
+    tone: violet
     title:
       ko-KR: 아키텍처와 의사결정
       en: Architecture and Decision Making
     summary:
       ko-KR: 트레이드오프를 명시적으로 드러내고, 설계 선택이 운영 결과와 어떻게 연결되는지 보여줍니다.
-      en: Makes tradeoffs explicit, shows system-level reasoning, and connects design choices to operational consequences.
-    icon: fas fa-sitemap
+      en: Makes tradeoffs explicit and shows how design choices connect to operational outcomes.
+    why_it_matters:
+      ko-KR: 개별 기술 지식을 실제 구조 선택과 운영 판단으로 이어붙이는 중심 노드입니다.
+      en: Acts as the central node that turns isolated technical knowledge into actual structural and operational judgment.
+    signals:
+      - ko-KR: 설계 선택의 비용과 이익을 동시에 설명합니다.
+        en: Explains both the cost and the upside of a design decision.
+      - ko-KR: 네트워크, 저장소, 애플리케이션 계층을 하나의 판단 흐름으로 묶습니다.
+        en: Connects network, storage, and application layers into one decision narrative.
     representative_posts:
       - _posts/notes/common/2026-03-20-architectural-decisions.md
       - _posts/notes/web/2026-02-25-netty.md
       - _posts/notes/web/2026-02-13-presigned-url.md
+    supporting_links:
+      - title:
+          ko-KR: 시리즈에서 구조적으로 읽기
+          en: Read through connected series
+        url: /series/
 
   - id: hiring-readiness
+    cluster: career
+    x: 82
+    y: 62
+    icon: fas fa-user-tie
+    tone: amber
     title:
       ko-KR: 채용 및 면접 준비도
       en: Hiring and Interview Readiness
     summary:
       ko-KR: 면접 준비, 질문 분석, 채용 담당자용 자료를 짧은 증거 흐름으로 정리합니다.
       en: Organizes interview preparation, question analysis, and recruiter-facing material into a compact evidence trail.
-    icon: fas fa-user-tie
+    why_it_matters:
+      ko-KR: 기술 내용을 전달 가능한 형태로 압축하고, 채용 맥락에서 읽히는 구조로 재배치하는 능력을 보여줍니다.
+      en: Shows the ability to compress technical material into a readable form and reframe it for hiring contexts.
+    signals:
+      - ko-KR: 면접 질문을 단순 암기가 아니라 사고 구조로 재구성합니다.
+        en: Reframes interview questions as reasoning structures instead of memorization lists.
+      - ko-KR: 채용 담당자가 빠르게 판단할 수 있는 읽기 동선을 제공합니다.
+        en: Provides a guided reading path for recruiters who need to evaluate quickly.
     representative_posts:
       - _posts/recruit/Interview/2025-08-05-real-interview-questions.md
       - _posts/recruit/Interview/2025-08-05-system-design-interview-preparation.md
       - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
+    supporting_links:
+      - title:
+          ko-KR: 채용 모드에서 전체 흐름 보기
+          en: Open the recruiter path
+        url: /recruit/
+
+edges:
+  - from: database-internals
+    to: architecture-judgment
+    strength: strong
+    label:
+      ko-KR: 정합성과 구조 판단
+      en: Consistency to structure
+
+  - from: spring-backend
+    to: architecture-judgment
+    strength: strong
+    label:
+      ko-KR: 구현에서 설계로
+      en: Delivery to design
+
+  - from: database-internals
+    to: spring-backend
+    strength: medium
+    label:
+      ko-KR: 트랜잭션 경계
+      en: Transaction boundaries
+
+  - from: architecture-judgment
+    to: hiring-readiness
+    strength: medium
+    label:
+      ko-KR: 판단의 전달
+      en: Communicating judgment
+
+  - from: spring-backend
+    to: hiring-readiness
+    strength: light
+    label:
+      ko-KR: 실무 설명력
+      en: Practical explanation

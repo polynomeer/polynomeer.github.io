@@ -227,10 +227,17 @@ pdr:
 
 capability_map:
   eyebrow: Capability map
-  directory_title: Browse the blog by demonstrated engineering strength
-  directory_description: Follow the strongest evidence trails for backend, database, architecture, and hiring-oriented writing.
-  related_path: Related path
+  directory_title: Read the blog as a connected capability graph
+  directory_description: See which strengths anchor the map first, then inspect the supporting evidence and reasoning in the detail panel.
   evidence: Representative Posts
+  graph_title: Connected capability graph
+  graph_description: Click a node to focus the graph and update the detail panel with evidence and explanation for that capability.
+  detail_title: Selected capability
+  why_it_matters: Why it matters
+  signal_points: What to look for
+  supporting_links: Follow-up paths
+  connected_capabilities: Connected capabilities
+  cluster_legend: Capability cluster legend
 
 sidebar:
   quick_links: Quick Access
