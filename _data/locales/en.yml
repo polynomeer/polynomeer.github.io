@@ -204,6 +204,15 @@ home:
   search_filter_placeholder: Search posts
   type_filter_label: Type
   tag_filter_label: Tag
+  tag_filter_trigger: Choose tag
+  tag_filter_title: Filter feed by tag
+  tag_filter_description: Quickly narrow the homepage feed down to posts with a selected tag.
+  tag_filter_search_placeholder: Search tags
+  tag_filter_popular: Popular tags
+  tag_filter_all_tags: All tags
+  tag_filter_empty: No tags match your search.
+  tag_filter_selected: "Tag: :TAG"
+  tag_filter_clear: Clear tag
   year_filter_label: Year
   status_filter_label: Filter by status
   filter_all: All

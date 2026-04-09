@@ -99,6 +99,73 @@ refactor: true
           {% endfor %}
         </select>
       </label>
+
+      <div class="post-filter-field post-filter-field-tag">
+        <button
+          id="home-tag-filter-trigger"
+          type="button"
+          class="post-filter-trigger"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="home-tag-filter-dialog"
+          aria-label="{{ site.data.locales[lang].home.tag_filter_trigger }}"
+        >
+          <span class="post-filter-trigger-label">{{ site.data.locales[lang].home.tag_filter_label }}</span>
+          <span id="home-tag-filter-value" class="post-filter-trigger-value">{{ site.data.locales[lang].home.filter_all }}</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <button id="home-filter-reset" type="button" class="post-filter-reset" hidden>
+        {{ site.data.locales[lang].home.filter_reset }}
+      </button>
+    </div>
+  </div>
+
+  <div id="home-tag-filter-dialog" class="tag-filter-dialog" hidden>
+    <div id="home-tag-filter-backdrop" class="tag-filter-backdrop"></div>
+    <div
+      class="tag-filter-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="home-tag-filter-title"
+      aria-describedby="home-tag-filter-description"
+    >
+      <div class="tag-filter-panel-header">
+        <div>
+          <h2 id="home-tag-filter-title">{{ site.data.locales[lang].home.tag_filter_title }}</h2>
+          <p id="home-tag-filter-description">{{ site.data.locales[lang].home.tag_filter_description }}</p>
+        </div>
+        <button id="home-tag-filter-close" type="button" class="tag-filter-close" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <label class="tag-filter-search-field">
+        <input
+          id="home-tag-filter-search"
+          type="search"
+          class="post-filter-input"
+          placeholder="{{ site.data.locales[lang].home.tag_filter_search_placeholder }}"
+          aria-label="{{ site.data.locales[lang].home.tag_filter_search_placeholder }}"
+        >
+      </label>
+
+      <section class="tag-filter-section">
+        <div class="tag-filter-section-header">
+          <h3>{{ site.data.locales[lang].home.tag_filter_popular }}</h3>
+          <button id="home-tag-filter-clear" type="button" class="tag-filter-clear">
+            {{ site.data.locales[lang].home.tag_filter_clear }}
+          </button>
+        </div>
+        <div id="home-tag-filter-popular" class="tag-filter-chip-grid"></div>
+      </section>
+
+      <section class="tag-filter-section">
+        <h3>{{ site.data.locales[lang].home.tag_filter_all_tags }}</h3>
+        <div id="home-tag-filter-all" class="tag-filter-chip-grid tag-filter-chip-grid-all"></div>
+        <p id="home-tag-filter-empty" class="tag-filter-empty" hidden>{{ site.data.locales[lang].home.tag_filter_empty }}</p>
+      </section>
     </div>
   </div>
 </section>
@@ -222,14 +289,29 @@ refactor: true
 
     const searchInput = document.getElementById('home-post-search');
     const typeSelect = document.getElementById('home-type-filter');
+    const tagFilterTrigger = document.getElementById('home-tag-filter-trigger');
+    const tagFilterValue = document.getElementById('home-tag-filter-value');
+    const tagFilterDialog = document.getElementById('home-tag-filter-dialog');
+    const tagFilterBackdrop = document.getElementById('home-tag-filter-backdrop');
+    const tagFilterClose = document.getElementById('home-tag-filter-close');
+    const tagFilterSearch = document.getElementById('home-tag-filter-search');
+    const tagFilterPopular = document.getElementById('home-tag-filter-popular');
+    const tagFilterAll = document.getElementById('home-tag-filter-all');
+    const tagFilterEmpty = document.getElementById('home-tag-filter-empty');
+    const tagFilterClear = document.getElementById('home-tag-filter-clear');
+    const filterReset = document.getElementById('home-filter-reset');
     const perPage = {{ paginator.per_page | default: site.paginate | default: 10 }};
     const searchDataUrl = {{ '/assets/js/data/search.json' | relative_url | jsonify }};
     const homeFeedDataUrl = {{ '/assets/js/data/home-feed.json' | relative_url | jsonify }};
     const noResultsMessage = {{ site.data.locales[lang].search.no_results | jsonify }};
     const pinPrompt = {{ site.data.locales[lang].post.pin_prompt | jsonify }};
+    const filterAllLabel = {{ site.data.locales[lang].home.filter_all | jsonify }};
+    const selectedTagLabelTemplate = {{ site.data.locales[lang].home.tag_filter_selected | jsonify }};
     let allPosts = null;
     let currentPage = 1;
     let searchableByUrl = null;
+    let selectedTag = '';
+    let tagIndex = [];
 
     const escapeHtml = (value = '') =>
       String(value)
@@ -248,6 +330,90 @@ refactor: true
           <span class="categories">${escapeHtml(categories.join(', '))}</span>
         </span>
       `;
+    };
+
+    const escapeAttribute = (value = '') => escapeHtml(value).replace(/"/g, '&quot;');
+
+    const updateResetButton = () => {
+      if (!filterReset) return;
+      const hasFilter =
+        (searchInput && searchInput.value.trim() !== '') ||
+        (typeSelect && typeSelect.value !== 'all') ||
+        selectedTag !== '';
+      filterReset.hidden = !hasFilter;
+    };
+
+    const updateTagTrigger = () => {
+      if (!tagFilterValue || !tagFilterTrigger) return;
+      tagFilterValue.textContent = selectedTag || filterAllLabel;
+      tagFilterTrigger.classList.toggle('is-active', selectedTag !== '');
+      tagFilterTrigger.setAttribute(
+        'aria-label',
+        selectedTag ? selectedTagLabelTemplate.replace(':TAG', selectedTag) : filterAllLabel
+      );
+    };
+
+    const closeTagDialog = ({ restoreFocus = true } = {}) => {
+      if (!tagFilterDialog || tagFilterDialog.hidden) return;
+      tagFilterDialog.hidden = true;
+      tagFilterTrigger?.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('tag-filter-open');
+      if (tagFilterSearch) tagFilterSearch.value = '';
+      if (restoreFocus) tagFilterTrigger?.focus();
+    };
+
+    const renderTagChip = ({ tag, count, popular = false }) => `
+      <button
+        type="button"
+        class="tag-filter-chip${selectedTag === tag ? ' active' : ''}${popular ? ' is-popular' : ''}"
+        data-tag="${escapeAttribute(tag)}"
+      >
+        <span class="tag-filter-chip-name">${escapeHtml(tag)}</span>
+        <span class="tag-filter-chip-count">${count}</span>
+      </button>
+    `;
+
+    const renderTagLists = (query = '') => {
+      if (!tagFilterPopular || !tagFilterAll || !tagFilterEmpty) return;
+
+      const normalizedQuery = query.trim().toLowerCase();
+      const filteredTags = normalizedQuery === ''
+        ? tagIndex
+        : tagIndex.filter((entry) => entry.tag.toLowerCase().includes(normalizedQuery));
+      const popularTags = filteredTags.slice(0, 12);
+
+      tagFilterPopular.innerHTML = popularTags.map((entry) => renderTagChip({ ...entry, popular: true })).join('');
+      tagFilterAll.innerHTML = filteredTags.map((entry) => renderTagChip(entry)).join('');
+      tagFilterEmpty.hidden = filteredTags.length > 0;
+    };
+
+    const buildTagIndex = (posts) => {
+      const counts = new Map();
+
+      posts.forEach((post) => {
+        if (!Array.isArray(post.tags)) return;
+        post.tags.forEach((tag) => {
+          if (!tag) return;
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      tagIndex = Array.from(counts.entries())
+        .map(([tag, count]) => ({ tag, count }))
+        .sort((a, b) => {
+          if (b.count !== a.count) return b.count - a.count;
+          return a.tag.localeCompare(b.tag);
+        });
+    };
+
+    const openTagDialog = async () => {
+      const posts = await loadHomeFeed();
+      if (tagIndex.length === 0) buildTagIndex(posts);
+      renderTagLists();
+      tagFilterDialog.hidden = false;
+      tagFilterTrigger?.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('tag-filter-open');
+      queueMicrotask(() => tagFilterSearch?.focus());
     };
 
     const renderTypeBadge = (post) => {
@@ -282,7 +448,7 @@ refactor: true
       ` : '';
 
       return `
-        <article class="card-wrapper card" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}">
+        <article class="card-wrapper card" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}" data-post-tags="${escapeAttribute((post.tags || []).join(','))}">
           <div class="post-preview row g-0 flex-md-row-reverse">
             ${renderImage(post)}
             <div class="col-md-${cardBodyCol}">
@@ -464,11 +630,12 @@ refactor: true
     const applyFilter = async ({ resetPage = false } = {}) => {
       const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
       const selectedType = typeSelect ? typeSelect.value : 'all';
-      const hasFilter = searchTerm !== '' || selectedType !== 'all';
+      const hasFilter = searchTerm !== '' || selectedType !== 'all' || selectedTag !== '';
 
       if (!hasFilter) {
         currentPage = 1;
         toggleFilteredMode(false);
+        updateResetButton();
         return;
       }
 
@@ -484,12 +651,14 @@ refactor: true
 
       const filteredPosts = homeFeed.filter((post) => {
         const matchesType = selectedType === 'all' || post.typeId === selectedType;
+        const matchesTag = selectedTag === '' || (Array.isArray(post.tags) && post.tags.includes(selectedTag));
         const searchable = searchMap ? searchMap[post.url] || '' : '';
         const matchesSearch = searchTerm === '' || searchable.includes(searchTerm);
-        return matchesType && matchesSearch;
+        return matchesType && matchesTag && matchesSearch;
       });
 
       toggleFilteredMode(true);
+      updateResetButton();
 
       if (filteredPosts.length === 0) {
         renderEmptyState();
@@ -526,6 +695,56 @@ refactor: true
         });
       });
 
+    tagFilterTrigger?.addEventListener('click', () => {
+      if (tagFilterDialog && !tagFilterDialog.hidden) {
+        closeTagDialog();
+      } else {
+        openTagDialog();
+      }
+    });
+
+    tagFilterClose?.addEventListener('click', () => closeTagDialog());
+    tagFilterBackdrop?.addEventListener('click', () => closeTagDialog({ restoreFocus: false }));
+
+    tagFilterSearch?.addEventListener('input', () => {
+      renderTagLists(tagFilterSearch.value);
+    });
+
+    [tagFilterPopular, tagFilterAll].forEach((container) => {
+      container?.addEventListener('click', (event) => {
+        const chip = event.target.closest('[data-tag]');
+        if (!chip) return;
+        const nextTag = chip.dataset.tag || '';
+        selectedTag = selectedTag === nextTag ? '' : nextTag;
+        updateTagTrigger();
+        renderTagLists(tagFilterSearch?.value || '');
+        applyFilter({ resetPage: true });
+        closeTagDialog({ restoreFocus: false });
+      });
+    });
+
+    tagFilterClear?.addEventListener('click', () => {
+      selectedTag = '';
+      updateTagTrigger();
+      renderTagLists(tagFilterSearch?.value || '');
+      applyFilter({ resetPage: true });
+    });
+
+    filterReset?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      if (typeSelect) typeSelect.value = 'all';
+      selectedTag = '';
+      updateTagTrigger();
+      closeTagDialog({ restoreFocus: false });
+      applyFilter({ resetPage: true });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeTagDialog();
+      }
+    });
+
     filteredPagination.addEventListener('click', (event) => {
       const pageButton = event.target.closest('[data-page]');
       if (!pageButton || pageButton.closest('.disabled')) return;
@@ -536,6 +755,8 @@ refactor: true
 
     bindCardNavigation(staticPostList);
     bindCardNavigation(filteredPostList);
+    updateTagTrigger();
+    updateResetButton();
     applyFilter();
   });
 </script>

@@ -74,6 +74,7 @@ swcache: true
       "summary": {{ summary | jsonify }},
       "dateLabel": {{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},
       "categories": {{ post.categories | jsonify }},
+      "tags": {{ post.tags | jsonify }},
       "imageSrc": {{ src | jsonify }},
       "imageAlt": {{ alt | jsonify }},
       "pin": {{ post.pin | default: false | jsonify }}
