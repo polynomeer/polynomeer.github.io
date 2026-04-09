@@ -287,3 +287,6 @@ learning_evidence:
   related_posts: 연결된 결과 글
   back_to_directory: 학습 성과 개요로 돌아가기
   same_group: 같은 그룹의 다른 학습 항목
+  nav_aria: 같은 학습 그룹의 이전 또는 다음 항목
+  previous_item: 이전 학습
+  next_item: 다음 학습

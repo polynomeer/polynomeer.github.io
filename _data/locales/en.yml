@@ -292,3 +292,6 @@ learning_evidence:
   related_posts: Related output posts
   back_to_directory: Back to learning overview
   same_group: More from this learning group
+  nav_aria: Previous or next item in this learning group
+  previous_item: Previous
+  next_item: Next

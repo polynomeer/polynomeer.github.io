@@ -21,6 +21,35 @@ layout: page
 {% endfor %}
 
 {% if current_item %}
+  {% assign previous_item = nil %}
+  {% assign previous_candidate = nil %}
+  {% assign next_item = nil %}
+  {% assign found_current = false %}
+
+  {% if current_group %}
+    {% for item in current_group.items %}
+      {% if item.id == current_item.id %}
+        {% assign previous_item = previous_candidate %}
+        {% assign found_current = true %}
+      {% elsif found_current and next_item == nil %}
+        {% assign next_item = item %}
+        {% break %}
+      {% else %}
+        {% assign previous_candidate = item %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% assign previous_page = nil %}
+  {% if previous_item %}
+    {% assign previous_page = site.learning_evidence_items | where: 'item_id', previous_item.id | first %}
+  {% endif %}
+
+  {% assign next_page = nil %}
+  {% if next_item %}
+    {% assign next_page = site.learning_evidence_items | where: 'item_id', next_item.id | first %}
+  {% endif %}
+
   <article class="learning-evidence-detail">
     <a class="learning-evidence-backlink" href="{{ '/learning-evidence/' | relative_url }}">
       <i class="fas fa-arrow-left me-2"></i>{{ site.data.locales[lang].learning_evidence.back_to_directory }}
@@ -69,6 +98,30 @@ layout: page
         </p>
       {% endif %}
     </header>
+
+    {% if previous_page or next_page %}
+      <nav class="learning-evidence-detail-nav" aria-label="{{ site.data.locales[lang].learning_evidence.nav_aria }}">
+        {% if previous_page %}
+          <a class="learning-evidence-detail-nav-link is-previous" href="{{ previous_page.url | relative_url }}">
+            <span class="learning-evidence-detail-nav-label">
+              <i class="fas fa-arrow-left"></i>
+              {{ site.data.locales[lang].learning_evidence.previous_item }}
+            </span>
+            <strong>{% include localized-value.html value=previous_item.title lang=lang %}</strong>
+          </a>
+        {% endif %}
+
+        {% if next_page %}
+          <a class="learning-evidence-detail-nav-link is-next" href="{{ next_page.url | relative_url }}">
+            <span class="learning-evidence-detail-nav-label">
+              {{ site.data.locales[lang].learning_evidence.next_item }}
+              <i class="fas fa-arrow-right"></i>
+            </span>
+            <strong>{% include localized-value.html value=next_item.title lang=lang %}</strong>
+          </a>
+        {% endif %}
+      </nav>
+    {% endif %}
 
     <div class="learning-evidence-detail-sections">
       {% assign source_posts = current_item.source_posts | default: empty %}
