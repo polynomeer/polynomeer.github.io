@@ -7,6 +7,7 @@ It complements the feature-specific design docs under `docs/` and explains how t
 Related project policy documents:
 
 - `docs/project/blog-scale-and-growth-strategy.md`
+- `docs/project/image-asset-management-policy.md`
 - `docs/project/velog-migration-plan.md`
 
 ## Purpose
