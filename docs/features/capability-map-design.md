@@ -1,139 +1,302 @@
-# Capability Map Design
+# Capability Map Graph Redesign
 
 ## Goal
 
-Add a capability-oriented directory page that helps visitors understand the author's engineering strengths as a structured map.
+Renew the capability map so visitors can understand not only the list of strengths, but also how those strengths connect.
 
-The feature should help visitors answer:
+The redesigned page should answer:
 
-- what technical areas does this blog demonstrate strongly?
-- which posts provide evidence for each capability?
-- where can I go next for deeper reading in the same area?
+- which engineering strengths are central
+- how one capability relates to another
+- what evidence supports each capability
+- where a reader should go next after selecting a node
 
-## Why This Feature Fits This Repository
+## Why The Existing Card Grid Is Not Enough
 
-This repository already has:
+The current capability map is readable, but it treats every capability as an isolated card.
 
-- series
-- representative posts
-- recruit mode
+That weakens two important signals:
 
-Those features organize content by reading sequence or recruiter journey.
+- structural relationships between strengths
+- the difference between core capabilities and supporting capabilities
 
-A capability map organizes the same content by demonstrated engineering strength.
+For a recruiter or first-time visitor, a graph makes the model easier to grasp:
 
-That is especially useful for:
+- database internals can connect to architecture judgment
+- Spring backend can connect to architecture and hiring readiness
+- a central capability can visually anchor the rest of the map
 
-- recruiters
-- hiring managers
-- first-time visitors evaluating fit quickly
+## Recommended UX Model
 
-## Problem
+Use a two-column interaction model:
 
-Visitors can discover content through chronology, tags, topics, or curated pages, but those paths do not directly answer:
+1. graph canvas
+2. detail panel
 
-- what can this author actually do well?
+### Graph canvas
 
-Without a capability-oriented surface, readers must infer strengths from many separate posts.
+Show:
 
-## Design Principles
+- one node per capability
+- connecting lines between related capabilities
+- compact labels and icons
+- active, connected, and dimmed states
 
-- Keep the capability model explicit and editorial.
-- Reuse existing series and representative posts.
-- Focus on evidence, not self-description alone.
-- Keep the page compact enough for fast scanning.
-- Avoid introducing a separate collection.
+The graph should look closer to an Obsidian knowledge view than a dashboard chart, but remain curated and readable.
 
-## Data Model
+### Detail panel
 
-Prefer a dedicated data file:
-
-- `_data/capability_map.yml`
-
-Recommended shape:
-
-```yaml
-enabled: true
-
-items:
-  - id: database-internals
-    title: "Database Internals"
-    summary: "Transactions, MVCC, locks, and replication behavior."
-    icon: "fas fa-database"
-    series_url: "/series/"
-    representative_posts:
-      - "_posts/notes/database/2025-07-29-mvcc.md"
-      - "_posts/notes/database/2025-07-29-gap-lock.md"
-```
-
-Why this model:
-
-- keeps capability definitions explicit
-- allows curated evidence per capability
-- stays stable as the archive grows
-- works on static hosting
-
-## Rendering Model
-
-Add a dedicated page:
-
-- `/capabilities/`
-
-Recommended files:
-
-- `_tabs/capabilities.md`
-- `_layouts/capability-map.html`
-
-Each capability card should show:
+When a node is selected, show:
 
 - title
 - short summary
-- one or two supporting links such as series or representative post clusters
-- 2 to 3 representative posts
+- why it matters
+- representative posts
+- related series or follow-up links
+- connected capabilities
 
-## Selection Rules
+The graph is the discovery surface. The detail panel is the reading surface.
 
-- Keep the capability list short, ideally 4 to 8 items.
-- Prefer broad engineering strengths, not narrow keywords.
-- Link each capability to concrete evidence.
-- Reuse representative posts when possible.
-- Use series as deeper navigation, not as the primary proof.
+## Information Architecture
+
+### Page role
+
+`/capabilities/` should become a graph-based overview page.
+
+It should no longer render all capabilities as equal-height cards in one long grid.
+
+### Default state
+
+- first capability is selected by default
+- its node is highlighted
+- directly connected nodes remain emphasized
+- unrelated nodes are slightly dimmed
+
+### Interaction
+
+- click a node to update the detail panel
+- click another node to move focus
+- on mobile, keep the same behavior but stack the detail panel below the graph
+
+## Data Model
+
+Keep one dedicated source of truth:
+
+- `_data/capability_map.yml`
+
+Recommended structure:
+
+```yaml
+enabled: true
+default_focus: architecture-judgment
+
+nodes:
+  - id: architecture-judgment
+    cluster: core
+    x: 56
+    y: 34
+    icon: "fas fa-sitemap"
+    tone: "violet"
+    title:
+      ko-KR: "아키텍처와 의사결정"
+      en: "Architecture and Decision Making"
+    summary:
+      ko-KR: "트레이드오프와 운영 결과를 연결하는 판단 능력"
+      en: "Engineering judgment that connects tradeoffs to operational outcomes."
+    why_it_matters:
+      ko-KR: "단순 기술 사용이 아니라 설계 판단의 질을 보여주는 중심 축입니다."
+      en: "Acts as a central proof of design judgment rather than surface tool usage."
+    representative_posts:
+      - "_posts/notes/common/2026-03-20-architectural-decisions.md"
+    related_series:
+      - id: authentication-basics
+
+edges:
+  - from: database-internals
+    to: architecture-judgment
+    strength: strong
+    label:
+      ko-KR: "정합성 판단"
+      en: "Consistency decisions"
+```
+
+## Field Guidance
+
+### `nodes`
+
+Each node should define:
+
+- `id`
+- `title`
+- `summary`
+- `icon`
+- `x`, `y`
+
+Optional but recommended:
+
+- `cluster`
+- `tone`
+- `why_it_matters`
+- `representative_posts`
+- `related_series`
+- `supporting_links`
+
+### `edges`
+
+Each edge should define:
+
+- `from`
+- `to`
+
+Optional:
+
+- `strength`: `strong`, `medium`, `light`
+- `label`
+
+### `default_focus`
+
+Defines which node is selected when the page loads.
+
+## Rendering Model
+
+### Layout
+
+Recommended structure:
+
+- hero
+- graph shell
+- graph panel
+- detail panel
+
+### Graph rendering
+
+Implementation should stay fully static-hosting compatible.
+
+Recommended approach:
+
+- SVG lines for edges
+- positioned HTML buttons for nodes
+- light client-side JavaScript to switch selected state
+
+Avoid:
+
+- heavy graph libraries
+- force simulations that cause layout instability
+- server-backed graph generation
+
+### Detail rendering
+
+Render node details from server-side templates and switch them client-side.
+
+Preferred implementation:
+
+- pre-render hidden templates per node
+- replace detail panel content on node click
+
+This keeps the page static and localization-friendly.
+
+## Visual Direction
+
+The graph should feel intentional and editorial rather than analytical.
+
+Recommended cues:
+
+- slightly atmospheric background
+- soft grid or constellation-style overlay
+- colored node halos by cluster or tone
+- active edges brighter than inactive ones
+- detail panel styled as a compact dossier
+
+Do not turn it into a noisy network chart.
+
+## Cluster Model
+
+Use a small number of curated cluster labels if helpful.
+
+Suggested examples:
+
+- `core`
+- `platform`
+- `delivery`
+- `career`
+
+Clusters should influence color and legend treatment, not filtering logic in the first iteration.
+
+## Content Rules
+
+- Keep node count small, ideally 4 to 8.
+- Prefer broad strengths over narrow keywords.
+- Every node should have direct evidence.
+- Every edge should reflect a real conceptual relationship, not decorative linkage.
 
 ## Non-Goals
 
-- Do not auto-score posts into capabilities.
-- Do not replace tags, series, or recruit mode.
-- Do not require all posts to declare a capability.
-- Do not create a skill graph with dynamic filtering in the first iteration.
+- Do not auto-build the graph from tags or categories.
+- Do not render every post as a node.
+- Do not add free-form zoom and pan in the first iteration.
+- Do not introduce backend services.
 
-### Weak evidence
+## Risks
 
-Risk:
-
-- capability labels may look unsupported if evidence links are weak
-
-Mitigation:
-
-- keep the list curated
-- attach only strong representative posts
-
-### Maintenance drift
+### Visual complexity
 
 Risk:
 
-- new strong posts may never be reflected in the map
+- a graph can become harder to read than cards
 
 Mitigation:
 
-- review the map when updating representative posts
+- keep node count low
+- curate positions manually
+- use a strong default focus state
 
-## Recommended First Implementation
+### Weak relationships
 
-Implement:
+Risk:
 
-1. `_data/capability_map.yml`
-2. `_layouts/capability-map.html`
-3. `_tabs/capabilities.md`
-4. locale labels for the capability map page
+- arbitrary edges reduce trust
 
-This creates a recruiter-friendly overview that reuses the current content architecture instead of replacing it.
+Mitigation:
+
+- connect only capabilities with a clear explanatory relationship
+- allow sparse graphs
+
+### Mobile compression
+
+Risk:
+
+- graph layouts can collapse poorly on narrow screens
+
+Mitigation:
+
+- use a fixed aspect-ratio canvas
+- stack the detail panel below
+- allow horizontal overflow only as a last resort
+
+## Recommended Rollout
+
+### Phase 1
+
+- define node and edge schema
+- rewrite the capability map data file
+- redesign the page as graph plus detail panel
+
+### Phase 2
+
+- improve visual highlighting for adjacent nodes
+- add cluster legend
+- add supporting links such as related series
+
+### Phase 3
+
+- consider card/list toggle if some readers prefer a non-graph view
+
+## Validation
+
+After implementation:
+
+1. confirm the graph renders without JavaScript errors
+2. confirm default node selection works
+3. confirm detail panel updates when clicking another node
+4. confirm representative post links still resolve
+5. confirm mobile layout remains readable

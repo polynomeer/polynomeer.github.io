@@ -43,6 +43,7 @@ AI-agent-oriented feature maintenance references:
 - [`features/ai/ai-search-guide.md`](./features/ai/ai-search-guide.md)
 - [`features/ai/ai-home-curation-guide.md`](./features/ai/ai-home-curation-guide.md)
 - [`features/ai/ai-home-tag-filter-guide.md`](./features/ai/ai-home-tag-filter-guide.md)
+- [`features/ai/ai-capability-map-guide.md`](./features/ai/ai-capability-map-guide.md)
 - [`features/ai/ai-content-type-guide.md`](./features/ai/ai-content-type-guide.md)
 - [`features/ai/ai-learning-evidence-guide.md`](./features/ai/ai-learning-evidence-guide.md)
 - [`features/ai/ai-post-status-guide.md`](./features/ai/ai-post-status-guide.md)
