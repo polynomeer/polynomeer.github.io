@@ -117,6 +117,7 @@ layout: page
     {% assign cur_year = year_group.name %}
     {% assign year_posts = year_group.items %}
     {% assign year_post_count = year_posts | size %}
+    {% assign year_type_groups = year_posts | group_by_exp: 'post', "post.path | split: '/' | slice: 2, 1 | first" %}
     {% assign is_open = false %}
     {% if cur_year == latest_year %}
       {% assign is_open = true %}
@@ -157,9 +158,8 @@ layout: page
 
                 {% assign content_type_id = type_page.content_type_id %}
                 {% assign content_type = site.data.content_types[content_type_id] %}
-                {% assign type_segment = '/' | append: content_type_id | append: '/' %}
-                {% assign matching_type_posts = year_posts | where_exp: 'post', "post.path contains type_segment" %}
-                {% assign matching_type_count = matching_type_posts | size %}
+                {% assign matching_type_group = year_type_groups | where: 'name', content_type_id | first %}
+                {% assign matching_type_count = matching_type_group.items | size | default: 0 %}
 
                 {% if matching_type_count > 0 %}
                   {% assign shown_type_count = shown_type_count | plus: 1 %}
