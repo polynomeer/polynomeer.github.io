@@ -6,36 +6,27 @@ swcache: true
 {% include lang.html %}
 {% assign home_feed_excluded_segment = '/problemsolving/' %}
 {% assign home_feed_cutoff_ts = site.time | date: '%s' | plus: 0 | minus: 63072000 %}
-{% assign pinned = '' | split: '' %}
-{% assign default_entries = '' | split: '' %}
+{% assign ordered_entries = '' | split: '' %}
 
 {% for post in site.posts %}
   {% unless post.path contains home_feed_excluded_segment %}
-    {% if post.pin == true and post.hidden != true %}
-      {% assign pinned = pinned | push: post %}
-    {% endif %}
-
-    {% if post.pin != true and post.hidden != true %}
-      {% assign sort_datetime = post.last_modified_at | default: post.date %}
-      {% capture default_entry %}{{ sort_datetime | date: '%Y%m%d%H%M%S' }}::{{ forloop.index0 }}{% endcapture %}
-      {% assign default_entries = default_entries | push: default_entry %}
+    {% if post.hidden != true %}
+      {% capture ordered_entry %}{{ post.date | date: '%Y%m%d%H%M%S' }}::{{ forloop.index0 }}{% endcapture %}
+      {% assign ordered_entries = ordered_entries | push: ordered_entry %}
     {% endif %}
   {% endunless %}
 {% endfor %}
 
-{% assign default_entries = default_entries | sort | reverse %}
-{% assign default = '' | split: '' %}
+{% assign ordered_entries = ordered_entries | sort | reverse %}
+{% assign ordered_posts = '' | split: '' %}
 
-{% for entry in default_entries %}
+{% for entry in ordered_entries %}
   {% assign index = entry | split: '::' | last | plus: 0 %}
-  {% assign default = default | push: site.posts[index] %}
+  {% assign ordered_posts = ordered_posts | push: site.posts[index] %}
 {% endfor %}
 
 {% assign feed_posts = '' | split: '' %}
-{% for post in pinned %}
-  {% assign feed_posts = feed_posts | push: post %}
-{% endfor %}
-{% for post in default %}
+{% for post in ordered_posts %}
   {% assign feed_posts = feed_posts | push: post %}
 {% endfor %}
 
