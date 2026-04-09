@@ -80,24 +80,28 @@ refactor: true
         >
       </label>
 
-      <label class="post-filter-field post-filter-field-compact">
-        <select
-          id="home-type-filter"
-          class="post-filter-select"
-          data-i18n-aria-label="home.type_filter_label"
-          aria-label="{{ site.data.locales[lang].home.type_filter_label }}"
-        >
-          <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
-          {% for type_page in sorted_content_types %}
-            {% if type_page.content_type_id == 'problemsolving' %}
-              {% continue %}
-            {% endif %}
-            {% assign content_type_id = type_page.content_type_id %}
-            {% assign content_type = site.data.content_types[content_type_id] %}
-            {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-            <option value="{{ content_type_id }}">{{ content_type_label }}</option>
-          {% endfor %}
-        </select>
+      <label class="post-filter-field post-filter-field-compact post-filter-field-select">
+        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.type_filter_label }}</span>
+        <span class="post-filter-select-wrap">
+          <select
+            id="home-type-filter"
+            class="post-filter-select"
+            data-i18n-aria-label="home.type_filter_label"
+            aria-label="{{ site.data.locales[lang].home.type_filter_label }}"
+          >
+            <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
+            {% for type_page in sorted_content_types %}
+              {% if type_page.content_type_id == 'problemsolving' %}
+                {% continue %}
+              {% endif %}
+              {% assign content_type_id = type_page.content_type_id %}
+              {% assign content_type = site.data.content_types[content_type_id] %}
+              {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+              <option value="{{ content_type_id }}">{{ content_type_label }}</option>
+            {% endfor %}
+          </select>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </span>
       </label>
 
       <div class="post-filter-field post-filter-field-tag">
