@@ -18,10 +18,9 @@
     "build:css": "purgecss -c purgecss.config.js",
     "build:js": "rollup -c --bundleConfigAsCjs --environment BUILD:production",
     "watch:js": "rollup -c --bundleConfigAsCjs -w",
-    "lint:js": "eslint .",
     "lint:scss": "stylelint _sass/**/*.scss",
     "lint:fix:scss": "npm run lint:scss -- --fix",
-    "test": "npm run lint:js && npm run lint:scss",
+    "test": "npm run lint:scss",
     "prepare": "husky"
   },
   "dependencies": {
@@ -34,7 +33,6 @@
     "@babel/preset-env": "^7.25.4",
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@eslint/js": "^9.26.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
@@ -44,8 +42,6 @@
     "@semantic-release/git": "^10.0.1",
     "concurrently": "^8.2.2",
     "conventional-changelog-conventionalcommits": "^8.0.0",
-    "eslint": "^9.26.0",
-    "globals": "^16.0.0",
     "husky": "^9.1.5",
     "purgecss": "^6.0.0",
     "rollup": "^4.21.0",
@@ -70,6 +66,41 @@
         0,
         "always"
       ]
+    }
+  },
+  "stylelint": {
+    "extends": "stylelint-config-standard-scss",
+    "rules": {
+      "no-descending-specificity": null,
+      "shorthand-property-no-redundant-values": null,
+      "at-rule-no-vendor-prefix": null,
+      "property-no-vendor-prefix": null,
+      "selector-no-vendor-prefix": null,
+      "value-no-vendor-prefix": null,
+      "color-function-notation": "legacy",
+      "alpha-value-notation": "number",
+      "selector-not-notation": "simple",
+      "color-hex-length": "long",
+      "declaration-block-single-line-max-declarations": 3,
+      "scss/operator-no-newline-after": null,
+      "rule-empty-line-before": [
+        "always",
+        {
+          "ignore": [
+            "after-comment",
+            "first-nested"
+          ]
+        }
+      ],
+      "value-keyword-case": [
+        "lower",
+        {
+          "ignoreProperties": [
+            "/^\\$/"
+          ]
+        }
+      ],
+      "media-feature-range-notation": "prefix"
     }
   },
   "release": {
