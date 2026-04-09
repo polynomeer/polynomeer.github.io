@@ -15,7 +15,6 @@
         </div>
         <div class="search-result-badges">
           {series_title}
-          {roadmaps}
           {topics}
         </div>
       </div>
@@ -87,10 +86,6 @@
 
       if (prop === 'series_title') {
         return hasDisplayValue(value) ? `<span class="search-chip search-chip-series">${value}</span>` : '';
-      }
-
-      if (prop === 'roadmaps') {
-        return hasDisplayValue(value) ? `<span class="search-chip search-chip-roadmap">${value}</span>` : '';
       }
 
       if (prop === 'topics') {

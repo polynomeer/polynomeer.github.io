@@ -1,8 +1,7 @@
-<!-- Recommend related posts using series, roadmaps, topic hubs, tags, and categories. -->
+<!-- Recommend related posts using series, topic hubs, tags, and categories. -->
 
 {% assign TOTAL_SIZE = 3 %}
 {% assign SERIES_SCORE = 10 %}
-{% assign ROADMAP_SCORE = 4 %}
 {% assign TOPIC_SCORE = 3 %}
 {% assign TAG_SCORE = 1.5 %}
 {% assign CATEGORY_SCORE = 0.75 %}
@@ -14,7 +13,6 @@
   {% assign hub_id = hub_pair[0] %}
   {% assign hub = hub_pair[1] %}
   {% assign hub_series = hub.featured_series | default: '' | split: ',' %}
-  {% assign hub_roadmaps = hub.featured_roadmaps | default: '' | split: ',' %}
   {% assign page_in_hub = false %}
 
   {% for category in page.categories %}
@@ -33,14 +31,6 @@
     {% assign page_in_hub = true %}
   {% endif %}
 
-  {% if page.roadmaps %}
-    {% for roadmap_id in page.roadmaps %}
-      {% if hub_roadmaps contains roadmap_id %}
-        {% assign page_in_hub = true %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-
   {% if page_in_hub %}
     {% assign current_topics = current_topics | push: hub_id %}
   {% endif %}
@@ -55,7 +45,6 @@
 
   {% assign score = 0 %}
   {% assign same_series = false %}
-  {% assign same_roadmap = false %}
   {% assign same_topic = false %}
   {% assign shared_tag_count = 0 %}
   {% assign shared_category_count = 0 %}
@@ -65,20 +54,10 @@
     {% assign same_series = true %}
   {% endif %}
 
-  {% if page.roadmaps and post.roadmaps %}
-    {% for roadmap_id in post.roadmaps %}
-      {% if page.roadmaps contains roadmap_id %}
-        {% assign score = score | plus: ROADMAP_SCORE %}
-        {% assign same_roadmap = true %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-
   {% if current_topics.size > 0 %}
     {% for topic_id in current_topics %}
       {% assign hub = site.data.topic_hubs[topic_id] %}
       {% assign hub_series = hub.featured_series | default: '' | split: ',' %}
-      {% assign hub_roadmaps = hub.featured_roadmaps | default: '' | split: ',' %}
       {% assign post_in_hub = false %}
 
       {% for category in post.categories %}
@@ -95,14 +74,6 @@
 
       {% if post.series and hub_series contains post.series %}
         {% assign post_in_hub = true %}
-      {% endif %}
-
-      {% if post.roadmaps %}
-        {% for roadmap_id in post.roadmaps %}
-          {% if hub_roadmaps contains roadmap_id %}
-            {% assign post_in_hub = true %}
-          {% endif %}
-        {% endfor %}
       {% endif %}
 
       {% if post_in_hub %}
@@ -128,7 +99,7 @@
 
   {% if score > 0 %}
     {% capture candidate %}
-      {{- score -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}{{ SEPARATOR }}{{- same_series -}}{{ SEPARATOR }}{{- same_roadmap -}}{{ SEPARATOR }}{{- same_topic -}}
+      {{- score -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}{{ SEPARATOR }}{{- same_series -}}{{ SEPARATOR }}{{- same_topic -}}
     {% endcapture %}
     {% assign match_posts = match_posts | push: candidate %}
   {% endif %}
@@ -153,15 +124,11 @@
         {% assign entry_parts = entry | split: SEPARATOR %}
         {% assign index = entry_parts[2] | plus: 0 %}
         {% assign show_series_badge = false %}
-        {% assign show_roadmap_badge = false %}
         {% assign show_topic_badge = false %}
         {% if entry_parts[3] == 'true' %}
           {% assign show_series_badge = true %}
         {% endif %}
         {% if entry_parts[4] == 'true' %}
-          {% assign show_roadmap_badge = true %}
-        {% endif %}
-        {% if entry_parts[5] == 'true' %}
           {% assign show_topic_badge = true %}
         {% endif %}
         {% assign post = site.posts[index] %}
@@ -171,13 +138,10 @@
             <div class="card-body">
               {% include datetime.html date=post.date lang=include.lang %}
               <h4 class="pt-0 my-2">{{ post.title }}</h4>
-              {% if show_series_badge or show_roadmap_badge or show_topic_badge %}
+              {% if show_series_badge or show_topic_badge %}
                 <div class="recommendation-badges mb-2">
                   {% if show_series_badge %}
                     <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_series }}</span>
-                  {% endif %}
-                  {% if show_roadmap_badge %}
-                    <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_roadmap }}</span>
                   {% endif %}
                   {% if show_topic_badge %}
                     <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_topic }}</span>

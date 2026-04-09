@@ -1,0 +1,67 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign series_entries = '' | split: '' %}
+
+{% for post in site.posts %}
+  {% if post.series %}
+    {% unless series_entries contains post.series %}
+      {% assign series_entries = series_entries | push: post.series %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{% if series_entries.size > 0 %}
+  <section class="series-directory">
+    <div class="series-hero">
+      <p class="series-eyebrow" data-i18n="series_directory.eyebrow">{{ site.data.locales[lang].series_directory.eyebrow }}</p>
+      <h2 data-i18n="series_directory.directory_title">{{ site.data.locales[lang].series_directory.directory_title }}</h2>
+      <p class="series-summary" data-i18n="series_directory.directory_description">{{ site.data.locales[lang].series_directory.directory_description }}</p>
+    </div>
+
+    <div class="series-grid">
+      {% for series_id in series_entries %}
+        {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
+        {% assign first_post = series_posts | first %}
+        {% assign last_post = series_posts | sort: 'date' | last %}
+        {% if first_post %}
+          <article class="series-card">
+            <a href="{{ first_post.url | relative_url }}" class="series-card-link">
+              <div class="series-card-header">
+                <div class="series-card-title-wrap">
+                  <span class="series-card-label">{{ site.data.locales[lang].post.series }}</span>
+                  <h3>{{ first_post.series_title | default: series_id }}</h3>
+                </div>
+                <span class="series-count">
+                  {{
+                    site.data.locales[lang].series_directory.post_count
+                    | replace: ':COUNT', series_posts.size
+                  }}
+                </span>
+              </div>
+
+              <p class="series-card-description">
+                {{ first_post.series_description | default: site.data.locales[lang].series_directory.fallback_description }}
+              </p>
+
+              <div class="series-card-meta">
+                <span class="series-card-start">
+                  {{ site.data.locales[lang].series_directory.start_from }}
+                  <strong>{{ first_post.title }}</strong>
+                </span>
+                {% if last_post %}
+                  <span class="series-card-updated">
+                    {% include datetime.html date=last_post.date lang=lang %}
+                  </span>
+                {% endif %}
+              </div>
+            </a>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

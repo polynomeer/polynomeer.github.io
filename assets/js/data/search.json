@@ -38,14 +38,6 @@ swcache: true
       {% assign in_hub = true %}
     {% endif %}
 
-    {% if post.roadmaps %}
-      {% for roadmap_id in post.roadmaps %}
-        {% if hub.featured_roadmaps contains roadmap_id %}
-          {% assign in_hub = true %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-
     {% if in_hub %}
       {% capture topic_title %}{% include localized-value.html value=hub.title lang=site.lang %}{% endcapture %}
       {% assign topic_title = topic_title | strip %}
@@ -61,7 +53,6 @@ swcache: true
     "date_label": {{ post.date | date: site.data.locales[site.lang].df.post.strftime | jsonify }},
     "series": {{ post.series | jsonify }},
     "series_title": {{ post.series_title | jsonify }},
-    "roadmaps": {{ post.roadmaps | join: ', ' | jsonify }},
     "topics": {{ topic_ids | join: ', ' | jsonify }},
     {% include no-linenos.html content=post.content %}
     {% assign _content = content | strip_html | strip_newlines | normalize_whitespace %}

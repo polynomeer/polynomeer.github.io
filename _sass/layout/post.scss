@@ -801,6 +801,7 @@ header {
   }
 }
 
+.series-directory,
 .roadmap-directory,
 .roadmap-detail,
 .capability-map-directory {
@@ -1314,6 +1315,7 @@ header {
   }
 }
 
+.series-hero,
 .roadmap-hero {
   margin-bottom: 2rem;
   padding: 1.5rem;
@@ -1322,6 +1324,7 @@ header {
   background: rgba(68, 71, 90, 0.18);
 }
 
+.series-eyebrow,
 .roadmap-eyebrow {
   margin-bottom: 0.45rem;
   color: var(--label-color);
@@ -1331,17 +1334,20 @@ header {
   text-transform: uppercase;
 }
 
+.series-summary,
 .roadmap-summary {
   margin-bottom: 0;
   color: var(--text-muted-color);
 }
 
+.series-grid,
 .roadmap-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.series-card,
 .roadmap-card {
   border-radius: 1rem;
   border: 1px solid var(--btn-border-color);
@@ -1349,6 +1355,7 @@ header {
   overflow: hidden;
 }
 
+.series-card-link,
 .roadmap-card-link {
   display: block;
   height: 100%;
@@ -1356,23 +1363,36 @@ header {
   color: var(--text-color);
 }
 
+.series-card-header,
 .roadmap-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.9rem;
   gap: 0.8rem;
-
-  i {
-    color: var(--label-color);
-    font-size: 1rem;
-  }
 }
 
+.roadmap-card-header i {
+  color: var(--label-color);
+  font-size: 1rem;
+}
+
+.series-card-label {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0.35rem;
+  color: var(--label-color);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.series-card-title-wrap,
 .roadmap-card-title-wrap {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
+  flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
   flex: 1 1 auto;
 
@@ -1384,10 +1404,30 @@ header {
   }
 }
 
+.series-count,
 .roadmap-count {
   flex-shrink: 0;
   color: var(--text-muted-color);
   font-size: 0.82rem;
+}
+
+.series-card-description {
+  margin-bottom: 1rem;
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
+.series-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--text-muted-color);
+  font-size: 0.83rem;
+}
+
+.series-card-start strong {
+  color: var(--heading-color);
+  font-weight: 600;
 }
 
 .roadmap-stage {

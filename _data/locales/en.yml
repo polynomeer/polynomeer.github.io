@@ -124,11 +124,7 @@ post:
   series_progress: "Part :CURRENT of :TOTAL"
   series_previous: Previous in series
   series_next: Next in series
-  roadmaps: Roadmaps
-  roadmaps_title: Continue in a roadmap
-  roadmap_stage: "Stage: :STAGE"
   recommendation_series: Same series
-  recommendation_roadmap: Same roadmap
   recommendation_topic: Same topic
   read_time:
     unit: min
@@ -184,6 +180,14 @@ roadmaps:
   directory_description: Follow curated sequences of posts instead of browsing only by time, category, or tag.
   post_count: ":COUNT posts"
   standalone_title: Supporting articles
+
+series_directory:
+  eyebrow: Connected series
+  directory_title: Read through ordered series
+  directory_description: Browse connected sequences of posts in one place and start each series from the first entry.
+  post_count: ":COUNT posts"
+  fallback_description: A connected sequence of posts designed to be read in order.
+  start_from: Start with
 
 topics:
   eyebrow: Curated topic hub
