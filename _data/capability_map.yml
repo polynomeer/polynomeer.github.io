@@ -106,7 +106,7 @@ nodes:
       - _posts/notes/parity-pay/2026-02-11-parity-pay-invariants.md
       - _posts/notes/parity-pay/2026-02-19-parity-pay-lock-hold-time.md
       - _posts/notes/parity-pay/2026-03-16-parity-pay-outbox.md
-      - _posts/notes/parity-pay/2026-09-16-parity-pay-kafka-failures.md
+      - _posts/notes/parity-pay/2026-04-09-parity-pay-kafka-failures.md
       - _posts/notes/parity-pay/2026-09-16-parity-pay-external-isolation.md
       - _posts/notes/parity-pay/2026-09-16-parity-pay-lock-lease.md
     supporting_links:
