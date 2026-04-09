@@ -64,15 +64,6 @@ refactor: true
 {% endif %}
 
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
-{% assign feed_posts = '' | split: '' %}
-
-{% for post in pinned %}
-  {% assign feed_posts = feed_posts | push: post %}
-{% endfor %}
-
-{% for post in default %}
-  {% assign feed_posts = feed_posts | push: post %}
-{% endfor %}
 
 <section id="home-discovery-filter" class="px-xl-1">
   <div class="post-status-filter-bar">
@@ -219,41 +210,6 @@ refactor: true
 
 <div id="filtered-post-pagination" class="px-xl-1" hidden></div>
 
-<script id="home-feed-metadata" type="application/json">
-  [
-    {% for post in feed_posts %}
-      {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-      {% assign post_content_type_id = post_content_type_id | strip %}
-      {% assign content_type = site.data.content_types[post_content_type_id] %}
-      {% capture summary %}{% include post-description.html %}{% endcapture %}
-      {% assign summary = summary | strip | strip_newlines %}
-      {% assign src = nil %}
-      {% assign alt = nil %}
-      {% if post.image %}
-        {% assign src = post.image.path | default: post.image %}
-        {% unless src contains '//' %}
-          {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
-        {% endunless %}
-        {% assign alt = post.image.alt | default: 'Preview Image' %}
-      {% endif %}
-      {
-        "title": {{ post.title | jsonify }},
-        "url": {{ post.url | relative_url | jsonify }},
-        "typeId": {{ post_content_type_id | jsonify }},
-        "typeLabel": {{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},
-        "typeIcon": {{ content_type.icon | jsonify }},
-        "typeUrl": {{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},
-        "summary": {{ summary | jsonify }},
-        "dateLabel": {{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},
-        "categories": {{ post.categories | jsonify }},
-        "imageSrc": {{ src | jsonify }},
-        "imageAlt": {{ alt | jsonify }},
-        "pin": {{ post.pin | default: false | jsonify }}
-      }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
-  ]
-</script>
-
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const filterRoot = document.getElementById('home-discovery-filter');
@@ -262,25 +218,18 @@ refactor: true
     const filteredPostList = document.getElementById('filtered-post-list');
     const staticPagination = document.getElementById('static-post-pagination');
     const filteredPagination = document.getElementById('filtered-post-pagination');
-    const metadataScript = document.getElementById('home-feed-metadata');
-
-    if (!filterRoot || !postList || !staticPostList || !filteredPostList || !metadataScript) return;
+    if (!filterRoot || !postList || !staticPostList || !filteredPostList) return;
 
     const searchInput = document.getElementById('home-post-search');
     const typeSelect = document.getElementById('home-type-filter');
     const perPage = {{ paginator.per_page | default: site.paginate | default: 10 }};
     const searchDataUrl = {{ '/assets/js/data/search.json' | relative_url | jsonify }};
+    const homeFeedDataUrl = {{ '/assets/js/data/home-feed.json' | relative_url | jsonify }};
     const noResultsMessage = {{ site.data.locales[lang].search.no_results | jsonify }};
     const pinPrompt = {{ site.data.locales[lang].post.pin_prompt | jsonify }};
-    let allPosts = [];
+    let allPosts = null;
     let currentPage = 1;
     let searchableByUrl = null;
-
-    try {
-      allPosts = JSON.parse(metadataScript.textContent);
-    } catch (_error) {
-      return;
-    }
 
     const escapeHtml = (value = '') =>
       String(value)
@@ -486,6 +435,19 @@ refactor: true
       return searchableByUrl;
     };
 
+    const loadHomeFeed = async () => {
+      if (allPosts) return allPosts;
+
+      try {
+        const response = await fetch(homeFeedDataUrl, { credentials: 'same-origin' });
+        allPosts = await response.json();
+      } catch (_error) {
+        allPosts = [];
+      }
+
+      return allPosts;
+    };
+
     const toggleFilteredMode = (enabled) => {
       staticPostList.hidden = enabled;
       filteredPostList.hidden = !enabled;
@@ -514,12 +476,13 @@ refactor: true
         currentPage = 1;
       }
 
+      const homeFeed = await loadHomeFeed();
       let searchMap = null;
       if (searchTerm) {
         searchMap = await loadSearchIndex();
       }
 
-      const filteredPosts = allPosts.filter((post) => {
+      const filteredPosts = homeFeed.filter((post) => {
         const matchesType = selectedType === 'all' || post.typeId === selectedType;
         const searchable = searchMap ? searchMap[post.url] || '' : '';
         const matchesSearch = searchTerm === '' || searchable.includes(searchTerm);

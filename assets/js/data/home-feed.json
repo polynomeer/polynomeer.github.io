@@ -1,0 +1,72 @@
+---
+layout: compress
+swcache: true
+---
+
+{% include lang.html %}
+{% assign home_feed_excluded_segment = '/problemsolving/' %}
+{% assign pinned = '' | split: '' %}
+{% assign default_entries = '' | split: '' %}
+
+{% for post in site.posts %}
+  {% unless post.path contains home_feed_excluded_segment %}
+    {% if post.pin == true and post.hidden != true %}
+      {% assign pinned = pinned | push: post %}
+    {% endif %}
+
+    {% if post.pin != true and post.hidden != true %}
+      {% assign sort_datetime = post.last_modified_at | default: post.date %}
+      {% capture default_entry %}{{ sort_datetime | date: '%Y%m%d%H%M%S' }}::{{ forloop.index0 }}{% endcapture %}
+      {% assign default_entries = default_entries | push: default_entry %}
+    {% endif %}
+  {% endunless %}
+{% endfor %}
+
+{% assign default_entries = default_entries | sort | reverse %}
+{% assign default = '' | split: '' %}
+
+{% for entry in default_entries %}
+  {% assign index = entry | split: '::' | last | plus: 0 %}
+  {% assign default = default | push: site.posts[index] %}
+{% endfor %}
+
+{% assign feed_posts = '' | split: '' %}
+{% for post in pinned %}
+  {% assign feed_posts = feed_posts | push: post %}
+{% endfor %}
+{% for post in default %}
+  {% assign feed_posts = feed_posts | push: post %}
+{% endfor %}
+
+[
+  {% for post in feed_posts %}
+    {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+    {% assign post_content_type_id = post_content_type_id | strip %}
+    {% assign content_type = site.data.content_types[post_content_type_id] %}
+    {% capture summary %}{% include post-description.html %}{% endcapture %}
+    {% assign summary = summary | strip | strip_newlines %}
+    {% assign src = nil %}
+    {% assign alt = nil %}
+    {% if post.image %}
+      {% assign src = post.image.path | default: post.image %}
+      {% unless src contains '//' %}
+        {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
+      {% endunless %}
+      {% assign alt = post.image.alt | default: 'Preview Image' %}
+    {% endif %}
+    {
+      "title": {{ post.title | jsonify }},
+      "url": {{ post.url | relative_url | jsonify }},
+      "typeId": {{ post_content_type_id | jsonify }},
+      "typeLabel": {{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},
+      "typeIcon": {{ content_type.icon | jsonify }},
+      "typeUrl": {{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},
+      "summary": {{ summary | jsonify }},
+      "dateLabel": {{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},
+      "categories": {{ post.categories | jsonify }},
+      "imageSrc": {{ src | jsonify }},
+      "imageAlt": {{ alt | jsonify }},
+      "pin": {{ post.pin | default: false | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
