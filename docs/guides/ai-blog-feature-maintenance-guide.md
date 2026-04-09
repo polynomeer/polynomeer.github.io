@@ -31,40 +31,22 @@ When a user asks for a feature or adjustment:
 
 ## Feature Ownership Map
 
-### Series and Roadmaps
+### Series
 
 Source of truth:
 
 - post front matter
-- `_data/roadmaps.yml`
 
 Rendering:
 
 - `_includes/series-navigation.html`
-- `_includes/roadmap-membership.html`
 - `_layouts/post.html`
-- `_layouts/roadmaps.html`
-- `_layouts/roadmap.html`
-
-### Topic Hubs
-
-Source of truth:
-
-- `_data/topic_hubs.yml`
-- `_topics/`
-
-Rendering:
-
-- `_layouts/topic-hubs.html`
-- `_layouts/topic-hub.html`
 
 ### Related Recommendations
 
 Source of truth:
 
 - series
-- roadmaps
-- topic hub relationships
 - tags
 - categories
 

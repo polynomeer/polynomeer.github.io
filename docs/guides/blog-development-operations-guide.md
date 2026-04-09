@@ -8,6 +8,7 @@ Related project policy documents:
 
 - `docs/project/blog-scale-and-growth-strategy.md`
 - `docs/project/blog-baseline-monitoring.md`
+- `docs/project/chirpy-upstream-upgrade-plan.md`
 - `docs/project/image-asset-management-policy.md`
 - `docs/project/velog-migration-plan.md`
 
@@ -17,23 +18,22 @@ This blog is no longer just a chronological post feed.
 
 It now includes layered discovery and curation features:
 
-1. series and roadmaps
-2. topic hub pages
-3. higher-quality related post recommendations
-4. enriched search
-5. homepage curation
-6. content type separation
-7. post status metadata
-8. representative posts
-9. archive enhancement
-10. capability map
-11. practical validation badges
-12. fixed profile links
-13. recruiter panel
-14. learning evidence
-15. problem decision result
-16. recruiter mode
-17. Supabase post likes
+1. series
+2. higher-quality related post recommendations
+3. enriched search
+4. homepage curation
+5. content type separation
+6. post status metadata
+7. representative posts
+8. archive enhancement
+9. capability map
+10. practical validation badges
+11. fixed profile links
+12. recruiter panel
+13. learning evidence
+14. problem decision result
+15. recruiter mode
+16. Supabase post likes
 
 The goal of this guide is to explain:
 
@@ -53,66 +53,26 @@ The goal of this guide is to explain:
 
 ## Core Feature Map
 
-### 1. Series and Roadmaps
+### 1. Series
 
 Purpose:
 
 - Series connect posts that should be read in a strict local order.
-- Roadmaps organize multiple series or standalone posts into topic-level reading stages.
 
 Main files:
 
-- `docs/features/series-roadmap-design.md`
-- `docs/features/ai/ai-series-roadmap-guide.md`
 - `_includes/series-navigation.html`
-- `_includes/roadmap-membership.html`
 - `_layouts/post.html`
-- `_data/roadmaps.yml`
-- `_layouts/roadmaps.html`
-- `_layouts/roadmap.html`
-- `_roadmaps/`
-- `_tabs/roadmaps.md`
 
 How to operate:
 
 - Add `series`, `series_title`, `series_order`, and optional `series_description` in post front matter.
-- Add `roadmaps` and `roadmap_stage` in post front matter when the post belongs to one or more roadmaps.
-- Update `_data/roadmaps.yml` when adding a new roadmap or stage structure.
-- Add or edit a page in `_roadmaps/` to expose the roadmap in navigation.
 
 Recommended use:
 
 - Use series for 2-10 closely connected posts.
-- Use roadmaps for broader topic progression such as beginner and intermediate stages.
 
-### 2. Topic Hub Pages
-
-Purpose:
-
-- Topic hubs are subject-first landing pages.
-- They gather featured posts, related series, and related roadmaps into a curated entry point.
-
-Main files:
-
-- `docs/features/topic-hub-design.md`
-- `docs/features/ai/ai-topic-hub-guide.md`
-- `_data/topic_hubs.yml`
-- `_layouts/topic-hubs.html`
-- `_layouts/topic-hub.html`
-- `_topics/`
-- `_tabs/topics.md`
-
-How to operate:
-
-- Add a new topic definition in `_data/topic_hubs.yml`.
-- Add a matching page in `_topics/`.
-- Link featured posts, series ids, and roadmap ids from the topic data file.
-
-Recommended use:
-
-- Use topic hubs for important themes where new readers need a clear starting page.
-
-### 3. Related Post Quality
+### 2. Related Post Quality
 
 Purpose:
 
@@ -123,7 +83,6 @@ Main files:
 - `docs/features/recommendation-quality-design.md`
 - `docs/features/ai/ai-recommendation-guide.md`
 - `_includes/related-posts.html`
-- `_data/topic_hubs.yml`
 - `_data/locales/en.yml`
 - `_data/locales/ko-KR.yml`
 - `_sass/layout/post.scss`
@@ -131,17 +90,15 @@ Main files:
 Current ranking signals:
 
 - same series
-- same roadmap
-- same topic hub
 - shared tags
 - shared categories
 
 How to operate:
 
 - Improve metadata quality first.
-- If recommendations look weak, check whether posts are missing series, roadmap, or topic relationships before changing ranking code.
+- If recommendations look weak, check whether posts are missing series or taxonomy quality before changing ranking code.
 
-### 4. Search Enhancement
+### 3. Search Enhancement
 
 Purpose:
 
@@ -167,15 +124,13 @@ Indexed metadata now includes:
 - content excerpt/body
 - date label
 - series
-- roadmap ids
-- derived topic relationships
 
 How to operate:
 
 - Extend `assets/js/data/search.json` when adding new searchable metadata.
 - Keep result UI changes coordinated with the JavaScript display module and locale strings.
 
-### 5. Homepage Curation
+### 4. Homepage Curation
 
 Purpose:
 
@@ -321,7 +276,7 @@ Main files:
 How to operate:
 
 - Keep capability definitions explicit and evidence-oriented.
-- Reuse representative posts, topic hubs, and roadmap links.
+- Reuse representative posts and series links.
 - Keep the list short enough to scan quickly.
 
 Recommended use:
@@ -468,7 +423,7 @@ How to operate:
 
 - Keep recruiter curation explicit in one data file.
 - Prefer representative evergreen posts over latest posts.
-- Reuse topic hubs, roadmaps, and content type badges instead of creating a parallel content model.
+- Reuse series and content type badges instead of creating a parallel content model.
 - Keep resume and contact links current.
 
 Recommended use:
@@ -505,15 +460,13 @@ Important:
 
 ## Content Metadata Cheat Sheet
 
-### Series and Roadmap
+### Series
 
 ```yaml
 series: authentication-basics
 series_title: Authentication Basics
 series_order: 2
 series_description: Core authentication and authorization concepts for backend engineers.
-roadmaps: [backend-core, security-foundations]
-roadmap_stage: beginner
 ```
 
 ### Post Status
@@ -538,16 +491,8 @@ Classification depends on file path:
 
 1. Create the post in the correct `_posts/...` location.
 2. Add `series`, `series_title`, `series_order`.
-3. Add `roadmaps` and `roadmap_stage` if it belongs to roadmap flows.
-4. Add `status` only if the editorial state is clear.
-5. Verify post page navigation and related posts.
-
-### Add a New Topic Hub
-
-1. Add a data entry in `_data/topic_hubs.yml`.
-2. Add a page in `_topics/`.
-3. Link featured posts, relevant series, and roadmap ids.
-4. Check the topic directory and topic detail page.
+3. Add `status` only if the editorial state is clear.
+4. Verify post page navigation and related posts.
 
 ### Add a New Post Status
 
@@ -634,8 +579,7 @@ Check:
 Check:
 
 - missing `series`
-- missing `roadmaps`
-- weak topic hub coverage
+- weak tag or category coverage
 
 ### Search feels incomplete
 
@@ -648,13 +592,10 @@ Check:
 
 - Add metadata gradually and deliberately.
 - Prefer a small number of clear curation assets over many partially maintained ones.
-- Keep roadmaps topic-oriented.
 - Keep statuses editorially meaningful.
 
 ## Related Docs
 
-- `docs/features/series-roadmap-design.md`
-- `docs/features/topic-hub-design.md`
 - `docs/features/recommendation-quality-design.md`
 - `docs/features/search-enhancement-design.md`
 - `docs/features/home-curation-design.md`

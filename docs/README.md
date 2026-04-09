@@ -17,8 +17,6 @@ High-level workflow and maintenance references:
 
 Feature-level design and operational modeling:
 
-- [`features/series-roadmap-design.md`](./features/series-roadmap-design.md)
-- [`features/topic-hub-design.md`](./features/topic-hub-design.md)
 - [`features/recommendation-quality-design.md`](./features/recommendation-quality-design.md)
 - [`features/search-enhancement-design.md`](./features/search-enhancement-design.md)
 - [`features/home-curation-design.md`](./features/home-curation-design.md)
@@ -41,8 +39,6 @@ Feature-level design and operational modeling:
 
 AI-agent-oriented feature maintenance references:
 
-- [`features/ai/ai-series-roadmap-guide.md`](./features/ai/ai-series-roadmap-guide.md)
-- [`features/ai/ai-topic-hub-guide.md`](./features/ai/ai-topic-hub-guide.md)
 - [`features/ai/ai-recommendation-guide.md`](./features/ai/ai-recommendation-guide.md)
 - [`features/ai/ai-search-guide.md`](./features/ai/ai-search-guide.md)
 - [`features/ai/ai-home-curation-guide.md`](./features/ai/ai-home-curation-guide.md)
@@ -58,6 +54,7 @@ Project-level upstream and repository policy references:
 
 - [`project/blog-scale-and-growth-strategy.md`](./project/blog-scale-and-growth-strategy.md)
 - [`project/blog-baseline-monitoring.md`](./project/blog-baseline-monitoring.md)
+- [`project/chirpy-upstream-upgrade-plan.md`](./project/chirpy-upstream-upgrade-plan.md)
 - [`project/image-asset-management-policy.md`](./project/image-asset-management-policy.md)
 - [`project/velog-migration-plan.md`](./project/velog-migration-plan.md)
 - [`project/release-notes-2026-03-27.md`](./project/release-notes-2026-03-27.md)

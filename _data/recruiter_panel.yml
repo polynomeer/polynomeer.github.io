@@ -31,18 +31,10 @@ reading_path:
       en: Scan the capability map
     url: /capabilities/
   - title:
-      ko-KR: 추천 로드맵 읽기
-      en: Read the featured roadmap
-    url: /roadmaps/backend-core/
+      ko-KR: 시리즈 흐름 따라가기
+      en: Follow an ordered series
+    url: /series/
 
 featured:
-  roadmap:
-    title:
-      ko-KR: 백엔드 핵심 로드맵
-      en: Backend Core Roadmap
-    url: /roadmaps/backend-core/
-    summary:
-      ko-KR: 백엔드 핵심 개념과 연결된 글을 짧은 동선으로 따라가는 구조화된 경로입니다.
-      en: A compact structured path through backend fundamentals and supporting articles.
   series:
     id: authentication-basics

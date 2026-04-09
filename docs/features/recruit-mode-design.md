@@ -12,7 +12,7 @@ The feature should help a recruiter answer:
 
 ## Why This Feature Fits This Repository
 
-This repository already has strong long-form technical content, structured topic hubs, roadmaps, and content type separation.
+This repository already has strong long-form technical content, structured series, and content type separation.
 
 Those features are useful for readers who want to explore deeply.
 
@@ -91,8 +91,7 @@ Show 3-6 curated capability cards such as:
 
 Each card should link to either:
 
-- a topic hub
-- a roadmap
+- a series page
 - a representative post
 
 ### 3. Featured proof posts
@@ -162,10 +161,10 @@ hero:
 strengths:
   - title: "Database Internals"
     description: "Transactions, MVCC, locks, replication, and storage behavior."
-    url: "/topics/database/"
+    url: "/series/"
   - title: "Spring Backend"
     description: "Lifecycle, annotations, transaction boundaries, and application structure."
-    url: "/topics/spring/"
+    url: "/series/"
 
 featured_links:
   - title: "GitHub"
@@ -219,7 +218,7 @@ That should remain optional and should not block the landing page rollout.
 ### Strength cards
 
 - use manually curated items from `_data/recruit_mode.yml`
-- prefer links to existing topic hubs and roadmaps
+- prefer links to existing series and representative posts
 - cap at 6 items
 
 ### Featured posts

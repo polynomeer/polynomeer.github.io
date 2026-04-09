@@ -7,7 +7,7 @@ Improve on-site search so that users can identify the right result faster, not j
 The current search already works, but it is limited by:
 
 - sparse result presentation
-- no visibility into series, roadmap, or topic context
+- no visibility into series and editorial context
 - limited metadata in the search index
 
 This design improves both search data quality and result readability.
@@ -45,8 +45,6 @@ It displays:
 Users often need to know:
 
 - whether the result is part of a series
-- whether it belongs to a roadmap
-- which topic hub it fits into
 - how recent it is
 
 ### Problem 2: Search results look too similar
@@ -64,7 +62,7 @@ The UI currently does not clearly indicate:
 
 - Keep the search fully static and client-side.
 - Improve retrieval context before replacing the search engine itself.
-- Reuse the metadata already introduced for series, roadmaps, and topic hubs.
+- Reuse the metadata already introduced for series and post metadata.
 - Keep fallback behavior intact for older posts with sparse metadata.
 
 ## Data Model Changes
@@ -73,8 +71,6 @@ Extend `search.json` to include:
 
 - `series`
 - `series_title`
-- `roadmaps`
-- `topics`
 - `date_label`
 
 These fields improve rendering and optional future ranking.
@@ -87,16 +83,10 @@ Each search result should show:
 - formatted date
 - categories
 - tags
-- optional chips for series, roadmap, and topic context
+- optional chips for series and content context
 - snippet
 
 This turns search from a plain list into a decision-friendly result view.
-
-## Topic Context in Search Index
-
-Topic hub membership should be derived at build time from `_data/topic_hubs.yml`.
-
-This avoids requiring new topic metadata on every post.
 
 ## UI Enhancements
 
@@ -136,10 +126,9 @@ When query is cleared:
 
 Implement the following first:
 
-1. add series, roadmap, and topic metadata to `search.json`
+1. add series metadata to `search.json`
 2. improve search result template
 3. add result count summary
 4. fix small UX gaps in search state reset
 
 This gives immediate user-facing improvement with a small surface area.
-

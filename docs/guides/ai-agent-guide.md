@@ -69,7 +69,7 @@ Good candidates:
 - navigation improvements
 - taxonomy and archive UX improvements
 - post metadata enhancements
-- series or topic hub features
+- series features
 - search presentation improvements
 - theme and readability improvements
 
@@ -102,5 +102,5 @@ type(scope): summary
 Examples:
 
 - `docs(agent): add repository guidance for AI contributors`
-- `feat(home): add topic hub section`
+- `feat(series): add ordered reading directory`
 - `fix(theme): correct dark mode card contrast`

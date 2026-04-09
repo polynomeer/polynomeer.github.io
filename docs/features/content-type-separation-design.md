@@ -130,7 +130,7 @@ A post is `article` when:
 ## Non-Goals
 
 - Do not redesign the entire taxonomy around types.
-- Do not replace categories, tags, topic hubs, series, or roadmaps.
+- Do not replace categories, tags, or series.
 - Do not force all older posts to add explicit front matter fields.
 
 ## Risks

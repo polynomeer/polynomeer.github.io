@@ -22,8 +22,6 @@ This should be treated as the baseline fallback behavior.
 Recommendation ranking should now consider:
 
 - series overlap
-- roadmap overlap
-- topic hub overlap
 - tags
 - categories
 
@@ -40,29 +38,15 @@ In that order of importance.
 
 Suggested priorities:
 
-- same series > same roadmap > same topic hub > shared tags > shared categories
+- same series > shared tags > shared categories
 
 Exact weights may vary, but do not let category-only matches outrank same-series matches.
-
-## Topic Hub Matching
-
-Topic hub overlap can be derived from `_data/topic_hubs.yml`.
-
-Both current page and candidate post may be considered part of a hub if:
-
-- they match categories in that hub
-- or they match tags in that hub
-- or their series / roadmaps connect to the hub definition
-
-This can be computed inline for the initial implementation.
 
 ## UI Guidance
 
 If display enhancements are added, prefer lightweight badges such as:
 
 - `Series`
-- `Roadmap`
-- `Topic`
 
 Do not add large explanatory text blocks inside each recommendation card.
 
@@ -87,9 +71,7 @@ Before finishing:
 Update [`_includes/related-posts.html`](../_includes/related-posts.html) so that ranking uses:
 
 1. same series
-2. shared roadmaps
-3. topic hub overlap
-4. shared tags
-5. shared categories
+2. shared tags
+3. shared categories
 
 This is the highest-value improvement with the smallest surface area.

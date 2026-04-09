@@ -18,8 +18,7 @@ The repository already has:
 - recruit mode
 - representative posts
 - capability map
-- topic hubs
-- roadmaps
+- series
 
 The right-side panel is the most persistent desktop-side discovery surface.
 
@@ -94,7 +93,7 @@ Recommended flow:
 
 1. recruiter overview
 2. capability map
-3. representative posts or roadmap
+3. representative posts or series
 
 ### 5. Proof Signals
 
@@ -106,11 +105,10 @@ Recommended metrics:
 
 - total posts
 - representative posts
-- topic hubs
-- roadmaps
+- series
 - recruit-focused posts
 
-### 6. Featured Series or Roadmap
+### 6. Featured Series
 
 Purpose:
 
@@ -118,7 +116,6 @@ Purpose:
 
 Show:
 
-- one featured roadmap
 - one featured series
 
 ## Data Model
@@ -150,13 +147,10 @@ reading_path:
     url: "/recruit/"
   - title: "Review the capability map"
     url: "/capabilities/"
-  - title: "Follow the featured roadmap"
-    url: "/roadmaps/backend-core/"
+  - title: "Follow the featured series"
+    url: "/series/"
 
 featured:
-  roadmap:
-    title: "Backend Core Roadmap"
-    url: "/roadmaps/backend-core/"
   series:
     id: "authentication-basics"
 ```

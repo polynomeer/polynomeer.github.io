@@ -5,26 +5,6 @@
     <h2 class="panel-heading" data-i18n="panel.featured_focus">{{- site.data.locales[include.lang].panel.featured_focus -}}</h2>
 
     <div class="featured-focus-list">
-      {% if panel.featured.roadmap and panel.featured.roadmap.url %}
-        <a class="featured-focus-card" href="{{ panel.featured.roadmap.url | relative_url }}">
-          <span class="featured-focus-label" data-i18n="panel.focus_roadmap">{{ site.data.locales[include.lang].panel.focus_roadmap }}</span>
-          <strong
-            data-l10n-ko="{{ panel.featured.roadmap.title['ko-KR'] | default: panel.featured.roadmap.title | escape }}"
-            data-l10n-en="{{ panel.featured.roadmap.title.en | default: panel.featured.roadmap.title | escape }}"
-          >
-            {% include localized-value.html value=panel.featured.roadmap.title lang=include.lang %}
-          </strong>
-          {% if panel.featured.roadmap.summary %}
-            <span
-              data-l10n-ko="{{ panel.featured.roadmap.summary['ko-KR'] | default: panel.featured.roadmap.summary | escape }}"
-              data-l10n-en="{{ panel.featured.roadmap.summary.en | default: panel.featured.roadmap.summary | escape }}"
-            >
-              {% include localized-value.html value=panel.featured.roadmap.summary lang=include.lang %}
-            </span>
-          {% endif %}
-        </a>
-      {% endif %}
-
       {% if panel.featured.series and panel.featured.series.id %}
         {% assign series_posts = site.posts | where: 'series', panel.featured.series.id | sort: 'series_order' %}
         {% assign first_post = series_posts | first %}

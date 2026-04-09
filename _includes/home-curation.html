@@ -1,4 +1,3 @@
-{% assign roadmap_pages = site.roadmaps | sort: 'order' %}
 {% assign featured_series = '' | split: '' %}
 
 {% for post in site.posts %}
@@ -10,40 +9,6 @@
 {% endfor %}
 
 <section id="home-curation" class="px-xl-1">
-  {% if roadmap_pages.size > 0 %}
-    <section class="home-curation-section">
-      <div class="home-curation-header">
-        <div>
-          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_roadmaps_eyebrow }}</p>
-          <h2>{{ site.data.locales[include.lang].home.curation_roadmaps_title }}</h2>
-        </div>
-        <a href="{{ '/roadmaps/' | relative_url }}" class="home-curation-link">
-          {{ site.data.locales[include.lang].home.curation_explore }}
-        </a>
-      </div>
-
-      <div class="home-curation-grid compact">
-        {% for roadmap_page in roadmap_pages limit: 2 %}
-          {% assign roadmap = site.data.roadmaps[roadmap_page.roadmap_id] %}
-          {% if roadmap %}
-            <article class="home-curation-card">
-              <a href="{{ roadmap_page.url | relative_url }}" class="home-curation-card-link">
-                <div class="home-curation-card-header">
-                  {% if roadmap.icon %}
-                    <i class="{{ roadmap.icon }}"></i>
-                  {% endif %}
-                  <span class="home-curation-chip">{{ site.data.locales[include.lang].tabs.roadmaps }}</span>
-                </div>
-                <h3>{{ roadmap.title }}</h3>
-                <p>{{ roadmap.description }}</p>
-              </a>
-            </article>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
   {% if featured_series.size > 0 %}
     <section class="home-curation-section">
       <div class="home-curation-header">

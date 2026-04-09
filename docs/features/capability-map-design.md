@@ -14,12 +14,11 @@ The feature should help visitors answer:
 
 This repository already has:
 
-- topic hubs
-- roadmaps
+- series
 - representative posts
 - recruit mode
 
-Those features organize content by topic or reader journey.
+Those features organize content by reading sequence or recruiter journey.
 
 A capability map organizes the same content by demonstrated engineering strength.
 
@@ -40,7 +39,7 @@ Without a capability-oriented surface, readers must infer strengths from many se
 ## Design Principles
 
 - Keep the capability model explicit and editorial.
-- Reuse existing topic hubs, roadmaps, and representative posts.
+- Reuse existing series and representative posts.
 - Focus on evidence, not self-description alone.
 - Keep the page compact enough for fast scanning.
 - Avoid introducing a separate collection.
@@ -61,8 +60,7 @@ items:
     title: "Database Internals"
     summary: "Transactions, MVCC, locks, and replication behavior."
     icon: "fas fa-database"
-    topic_url: "/topics/database-internals/"
-    roadmap_url: "/roadmaps/backend-core/"
+    series_url: "/series/"
     representative_posts:
       - "_posts/notes/database/2025-07-29-mvcc.md"
       - "_posts/notes/database/2025-07-29-gap-lock.md"
@@ -90,7 +88,7 @@ Each capability card should show:
 
 - title
 - short summary
-- one or two supporting links such as topic hub or roadmap
+- one or two supporting links such as series or representative post clusters
 - 2 to 3 representative posts
 
 ## Selection Rules
@@ -99,27 +97,14 @@ Each capability card should show:
 - Prefer broad engineering strengths, not narrow keywords.
 - Link each capability to concrete evidence.
 - Reuse representative posts when possible.
-- Use topic hubs and roadmaps as deeper navigation, not as the primary proof.
+- Use series as deeper navigation, not as the primary proof.
 
 ## Non-Goals
 
 - Do not auto-score posts into capabilities.
-- Do not replace topics, roadmaps, or recruit mode.
+- Do not replace tags, series, or recruit mode.
 - Do not require all posts to declare a capability.
 - Do not create a skill graph with dynamic filtering in the first iteration.
-
-## Risks
-
-### Overlap with topic hubs
-
-Risk:
-
-- capability cards may feel redundant with topics
-
-Mitigation:
-
-- frame capabilities as evidence of strength
-- frame topic hubs as subject-first exploration
 
 ### Weak evidence
 

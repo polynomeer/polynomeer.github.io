@@ -21,7 +21,6 @@ layout:
   post: 포스트
   category: 카테고리
   tag: 태그
-  roadmap: 로드맵
 
 # The tabs of sidebar
 tabs:
@@ -34,7 +33,6 @@ tabs:
   categories: 카테고리
   tags: 태그
   archives: 아카이브
-  roadmaps: 로드맵
   recruit: 채용
   about: 정보
 
@@ -52,12 +50,10 @@ panel:
   core_strengths: 핵심 역량
   reading_path: 채용 담당자용 읽기 순서
   proof_signals: 통계
-  featured_focus: 추천 시리즈 또는 로드맵
-  focus_roadmap: 추천 로드맵
+  featured_focus: 추천 시리즈
   focus_series: 추천 시리즈
   signal_posts: 전체 글
   signal_representative: 대표 글
-  signal_roadmaps: 로드맵
   signal_recruit: 채용 글
   trending_tags: 인기 태그
   toc: 바로가기
@@ -166,13 +162,6 @@ categories:
   category_measure: 카테고리
   post_measure: 포스트
 
-roadmaps:
-  eyebrow: 학습 경로
-  directory_title: 로드맵으로 글을 순서대로 탐색하기
-  directory_description: 시간순 목록이나 태그 검색 대신, 주제별 읽기 경로를 따라 핵심 글을 탐색할 수 있습니다.
-  post_count: ":COUNT개 글"
-  standalone_title: 함께 읽을 글
-
 series_directory:
   eyebrow: 연결된 시리즈
   directory_title: 순서형 시리즈로 이어 읽기
@@ -203,8 +192,6 @@ home:
   curation_explore: 더 보기
   curation_paths_eyebrow: 학습 경로
   curation_paths_title: 순서가 있는 독서·학습 경로로 시작하기
-  curation_roadmaps_eyebrow: 구조화된 학습
-  curation_roadmaps_title: 로드맵 기반 읽기 경로 따라가기
   curation_series_eyebrow: 순서형 시리즈
   curation_series_title: 연결된 시리즈로 이어 읽기
   curation_series_count: ":COUNT개 글"

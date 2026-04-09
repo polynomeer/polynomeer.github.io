@@ -33,15 +33,9 @@ Improve search in this order:
 
 - `series`
 - `series_title`
-- `roadmaps`
-- `topics`
 - formatted date label
 
 These are useful even if ranking stays simple.
-
-## Topic Derivation
-
-Topic membership should be derived from `_data/topic_hubs.yml`, not manually duplicated into every post.
 
 ## UI Rules
 
@@ -53,7 +47,7 @@ Show:
 - date
 - categories
 - tags
-- compact chips for series, roadmap, topic
+- compact chips for series and other post context
 - snippet
 
 Avoid:
@@ -77,7 +71,7 @@ Be careful not to use `textContent` where `value` is intended for input elements
 Before finishing:
 
 1. confirm old posts still appear in search
-2. confirm posts with series/roadmap metadata render richer search cards
+2. confirm posts with series metadata render richer search cards
 3. confirm empty query resets UI correctly
 4. run `bundle exec jekyll build` when feasible
 

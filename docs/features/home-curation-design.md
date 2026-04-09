@@ -20,8 +20,6 @@ The current homepage in [`_layouts/home.html`](../_layouts/home.html) primarily 
 This is functional, but it underuses the richer structures recently added to the site:
 
 - series
-- roadmaps
-- topic hubs
 
 ## Problem
 
@@ -31,44 +29,19 @@ It makes it hard to:
 
 - onboard new readers
 - expose evergreen technical articles
-- surface curated learning paths
+- surface curated reading sequences
 - make the site feel intentionally organized
 
 ## Design Principles
 
 - Keep the homepage readable and editorial, not dashboard-like.
 - Use a small number of high-value curated sections.
-- Reuse topic hubs, roadmaps, and featured series rather than creating one-off homepage data.
+- Reuse featured series and existing post metadata rather than creating one-off homepage data.
 - Show curated sections only on page 1 of pagination.
 
 ## Recommended Homepage Structure
 
-### Section 1: Topic hubs
-
-Purpose:
-
-- help readers pick a subject area quickly
-
-Show:
-
-- top 3 topic hubs
-- icon
-- title
-- description
-
-### Section 2: Roadmaps
-
-Purpose:
-
-- show readers structured reading paths
-
-Show:
-
-- top roadmap cards
-- title
-- short description
-
-### Section 3: Featured series
+### Section 1: Featured series
 
 Purpose:
 
@@ -81,7 +54,7 @@ Show:
 - number of posts
 - link to the first post
 
-### Section 4: Latest feed
+### Section 2: Latest feed
 
 Purpose:
 
@@ -93,25 +66,15 @@ This remains the main list below curated sections.
 
 Prefer existing data:
 
-- topic hubs from `_data/topic_hubs.yml`
-- roadmaps from `_data/roadmaps.yml`
 - series inferred from posts already using `series` metadata
 
 Avoid adding a dedicated homepage data file in the first iteration unless curation becomes more complex.
 
 ## Rendering Rules
 
-### Topic hubs
-
-- use the first 3 topic hubs sorted by `order`
-
-### Roadmaps
-
-- use the first 2 or 3 roadmap pages sorted by `order`
-
 ### Featured series
 
-- derive unique featured series from topic hub definitions
+- derive unique featured series from posts using `series` metadata
 - resolve them to the series' first post
 
 ### Pagination
@@ -145,17 +108,14 @@ Risk:
 
 Mitigation:
 
-- derive sections from existing topic hub and roadmap data
+- derive sections from existing series metadata
 - use featured series that already have editorial meaning
 
 ## Recommended First Implementation
 
 Implement:
 
-1. topic hub cards
-2. roadmap cards
-3. featured series cards
-4. keep the existing post list unchanged below them
+1. featured series cards
+2. keep the existing post list unchanged below them
 
 This gives immediate structural improvement while minimizing new complexity.
-

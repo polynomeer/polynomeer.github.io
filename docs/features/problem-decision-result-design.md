@@ -18,8 +18,7 @@ This blog already includes:
 
 - recruiter mode
 - representative posts
-- topic hubs
-- roadmaps
+- series
 - long-form technical explanations
 
 Those structures help users find important content.

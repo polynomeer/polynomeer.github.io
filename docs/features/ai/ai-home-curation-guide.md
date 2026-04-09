@@ -12,8 +12,6 @@ Make the homepage a stronger guided entry point without removing the existing ch
 
 Homepage work should reuse:
 
-- `_data/topic_hubs.yml`
-- `_data/roadmaps.yml`
 - `series` metadata on posts
 
 Avoid introducing a separate homepage curation config file in the first implementation.
@@ -32,8 +30,6 @@ Optional:
 
 ## Recommended Homepage Sections
 
-- topic hub cards
-- roadmap cards
 - featured series cards
 - existing post feed
 
@@ -42,13 +38,12 @@ Optional:
 - Show curated sections only on the first pagination page.
 - Keep sections compact and high-signal.
 - Do not remove pinned or paginated post logic.
-- Reuse current route structure such as `/topics/...` and `/roadmaps/...`.
 
 ## Featured Series Derivation
 
 Preferred first approach:
 
-- gather `featured_series` from topic hub definitions
+- gather `featured_series` from posts already carrying series metadata
 - resolve each series to its first post and summary metadata
 
 Do not require adding a separate series registry unless it becomes necessary later.
@@ -73,8 +68,6 @@ Before finishing:
 
 Add curated homepage sections above the post list using:
 
-1. top topic hubs
-2. top roadmaps
-3. featured series
+1. featured series
 
 Then leave the existing post feed intact below them.

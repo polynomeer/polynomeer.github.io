@@ -48,8 +48,8 @@ strengths:
       ko-KR: 구조화된 학습
       en: Structured Learning
     description:
-      ko-KR: 개념이 고립된 메모로 끝나지 않도록, 연결 관계가 보이는 로드맵을 제공합니다.
-      en: Uses curated roadmaps to show how concepts connect instead of staying as isolated notes.
+      ko-KR: 개념이 고립된 메모로 끝나지 않도록, 연결된 시리즈와 학습 경로로 구조를 보여줍니다.
+      en: Uses connected series and learning paths so concepts do not stay isolated notes.
     url: /series/
     icon: fas fa-map
 
@@ -69,19 +69,3 @@ featured_links:
       en: About
     url: /about/
     icon: fas fa-user
-
-featured_roadmaps:
-  - title:
-      ko-KR: 백엔드 핵심 로드맵
-      en: Backend Core Roadmap
-    url: /roadmaps/backend-core/
-    description:
-      ko-KR: 백엔드 핵심 개념과 연결된 글을 순서 있게 따라가는 구조화된 경로입니다.
-      en: A structured route through core backend concepts and supporting articles.
-  - title:
-      ko-KR: 보안 기초 로드맵
-      en: Security Foundations Roadmap
-    url: /roadmaps/security-foundations/
-    description:
-      ko-KR: 인증, 인가, 전송 보안의 기본 축을 연결해서 따라가는 로드맵입니다.
-      en: A roadmap connecting the fundamentals of authentication, authorization, and transport security.

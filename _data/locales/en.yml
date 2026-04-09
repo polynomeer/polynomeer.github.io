@@ -21,7 +21,6 @@ layout:
   post: Post
   category: Category
   tag: Tag
-  roadmap: Roadmap
 
 # The tabs of sidebar
 tabs:
@@ -34,7 +33,6 @@ tabs:
   categories: Categories
   tags: Tags
   archives: Archives
-  roadmaps: Roadmaps
   recruit: Recruit
   about: About
 
@@ -52,12 +50,10 @@ panel:
   core_strengths: Core Strengths
   reading_path: Reading Path for Recruiters
   proof_signals: Stats
-  featured_focus: Featured Series or Roadmap
-  focus_roadmap: Featured roadmap
+  featured_focus: Featured series
   focus_series: Featured series
   signal_posts: Posts
   signal_representative: Representative
-  signal_roadmaps: Roadmaps
   signal_recruit: Recruit posts
   trending_tags: Trending Tags
   toc: Contents
@@ -171,13 +167,6 @@ categories:
     singular: post
     plural: posts
 
-roadmaps:
-  eyebrow: Learning path
-  directory_title: Explore roadmap-based reading paths
-  directory_description: Follow curated sequences of posts instead of browsing only by time, category, or tag.
-  post_count: ":COUNT posts"
-  standalone_title: Supporting articles
-
 series_directory:
   eyebrow: Connected series
   directory_title: Read through ordered series
@@ -208,8 +197,6 @@ home:
   curation_explore: Explore
   curation_paths_eyebrow: Guided learning
   curation_paths_title: Follow curated reading and study paths
-  curation_roadmaps_eyebrow: Structured learning
-  curation_roadmaps_title: Follow roadmap-based reading paths
   curation_series_eyebrow: Ordered series
   curation_series_title: Read through connected series
   curation_series_count: ":COUNT posts"

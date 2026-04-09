@@ -14,8 +14,7 @@ The feature should help visitors answer:
 
 This repository already includes:
 
-- topic hubs
-- roadmaps
+- series
 - content type badges
 - recruiter-oriented entry points
 
@@ -141,7 +140,7 @@ Show:
 ## Non-Goals
 
 - Do not auto-rank all posts for representativeness.
-- Do not replace topic hubs or roadmaps.
+- Do not replace series or archive navigation.
 - Do not require front matter additions across the archive.
 - Do not create a separate content collection just for flagship posts.
 
