@@ -47,16 +47,17 @@ swcache: true
     "url": {{ post.url | relative_url | jsonify }},
     "categories": {{ post.categories | join: ', ' | jsonify }},
     "tags": {{ post.tags | join: ', ' | jsonify }},
-    "date": "{{ post.date }}",
     "date_label": {{ post.date | date: site.data.locales[site.lang].df.post.strftime | jsonify }},
     "series": {{ post.series | jsonify }},
     "series_title": {{ post.series_title | jsonify }},
     "roadmaps": {{ post.roadmaps | join: ', ' | jsonify }},
     "topics": {{ topic_ids | join: ', ' | jsonify }},
     {% include no-linenos.html content=post.content %}
-    {% assign _content = content | strip_html | strip_newlines %}
-    "snippet": {{ _content | truncate: 200 | jsonify }},
-    "content": {{ _content | jsonify }}
+    {% assign _content = content | strip_html | strip_newlines | normalize_whitespace %}
+    {% assign _snippet = _content | truncate: 180 %}
+    {% assign _searchable = _content | truncate: 900 %}
+    "snippet": {{ _snippet | jsonify }},
+    "content": {{ _searchable | jsonify }}
   }{% unless forloop.last %},{% endunless %}
   {% endfor %}
 ]
