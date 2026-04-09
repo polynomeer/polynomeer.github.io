@@ -75,11 +75,8 @@
   {% endif %}
 
   {% if current_topics.size > 0 %}
-    {% assign candidate_topics = '' | split: '' %}
-
-    {% for hub_pair in site.data.topic_hubs %}
-      {% assign hub_id = hub_pair[0] %}
-      {% assign hub = hub_pair[1] %}
+    {% for topic_id in current_topics %}
+      {% assign hub = site.data.topic_hubs[topic_id] %}
       {% assign hub_series = hub.featured_series | default: '' | split: ',' %}
       {% assign hub_roadmaps = hub.featured_roadmaps | default: '' | split: ',' %}
       {% assign post_in_hub = false %}
@@ -109,12 +106,6 @@
       {% endif %}
 
       {% if post_in_hub %}
-        {% assign candidate_topics = candidate_topics | push: hub_id %}
-      {% endif %}
-    {% endfor %}
-
-    {% for topic_id in candidate_topics %}
-      {% if current_topics contains topic_id %}
         {% assign score = score | plus: TOPIC_SCORE %}
         {% assign same_topic = true %}
       {% endif %}
@@ -137,99 +128,43 @@
 
   {% if score > 0 %}
     {% capture candidate %}
-      {{- score -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}
+      {{- score -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}{{ SEPARATOR }}{{- same_series -}}{{ SEPARATOR }}{{- same_roadmap -}}{{ SEPARATOR }}{{- same_topic -}}
     {% endcapture %}
     {% assign match_posts = match_posts | push: candidate %}
   {% endif %}
 {% endfor %}
 
-{% assign relate_posts = '' | split: '' %}
+{% assign relate_entries = '' | split: '' %}
 
 {% if match_posts.size > 0 %}
   {% assign match_posts = match_posts | sort | reverse %}
   {% for entry in match_posts limit: TOTAL_SIZE %}
-    {% assign index = entry | split: SEPARATOR | last | to_integer %}
-    {% assign relate_posts = relate_posts | push: site.posts[index] %}
+    {% assign relate_entries = relate_entries | push: entry %}
   {% endfor %}
 {% endif %}
 
-{% if relate_posts.size > 0 %}
+{% if relate_entries.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
     <h3 class="mb-4" id="related-label">
       {{- site.data.locales[include.lang].post.relate_posts -}}
     </h3>
     <nav class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
-      {% for post in relate_posts %}
+      {% for entry in relate_entries %}
+        {% assign entry_parts = entry | split: SEPARATOR %}
+        {% assign index = entry_parts[2] | plus: 0 %}
         {% assign show_series_badge = false %}
         {% assign show_roadmap_badge = false %}
         {% assign show_topic_badge = false %}
-
-        {% if page.series and post.series and page.series == post.series %}
+        {% if entry_parts[3] == 'true' %}
           {% assign show_series_badge = true %}
         {% endif %}
-
-        {% if page.roadmaps and post.roadmaps %}
-          {% for roadmap_id in post.roadmaps %}
-            {% if page.roadmaps contains roadmap_id %}
-              {% assign show_roadmap_badge = true %}
-            {% endif %}
-          {% endfor %}
+        {% if entry_parts[4] == 'true' %}
+          {% assign show_roadmap_badge = true %}
         {% endif %}
-
-        {% for hub_pair in site.data.topic_hubs %}
-          {% assign hub_id = hub_pair[0] %}
-          {% assign hub = hub_pair[1] %}
-          {% assign hub_series = hub.featured_series | default: '' | split: ',' %}
-          {% assign hub_roadmaps = hub.featured_roadmaps | default: '' | split: ',' %}
-          {% assign page_in_hub = false %}
-          {% assign post_in_hub = false %}
-
-          {% for category in page.categories %}
-            {% if hub.categories contains category %}
-              {% assign page_in_hub = true %}
-            {% endif %}
-          {% endfor %}
-          {% for tag in page.tags %}
-            {% if hub.tags contains tag %}
-              {% assign page_in_hub = true %}
-            {% endif %}
-          {% endfor %}
-          {% if page.series and hub_series contains page.series %}
-            {% assign page_in_hub = true %}
-          {% endif %}
-          {% if page.roadmaps %}
-            {% for roadmap_id in page.roadmaps %}
-              {% if hub_roadmaps contains roadmap_id %}
-                {% assign page_in_hub = true %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-
-          {% for category in post.categories %}
-            {% if hub.categories contains category %}
-              {% assign post_in_hub = true %}
-            {% endif %}
-          {% endfor %}
-          {% for tag in post.tags %}
-            {% if hub.tags contains tag %}
-              {% assign post_in_hub = true %}
-            {% endif %}
-          {% endfor %}
-          {% if post.series and hub_series contains post.series %}
-            {% assign post_in_hub = true %}
-          {% endif %}
-          {% if post.roadmaps %}
-            {% for roadmap_id in post.roadmaps %}
-              {% if hub_roadmaps contains roadmap_id %}
-                {% assign post_in_hub = true %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-
-          {% if page_in_hub and post_in_hub %}
-            {% assign show_topic_badge = true %}
-          {% endif %}
-        {% endfor %}
+        {% if entry_parts[5] == 'true' %}
+          {% assign show_topic_badge = true %}
+        {% endif %}
+        {% assign post = site.posts[index] %}
 
         <article class="col">
           <a href="{{ post.url | relative_url }}" class="post-preview card h-100">

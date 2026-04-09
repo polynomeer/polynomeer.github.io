@@ -5,9 +5,11 @@ layout: page
 {% include lang.html %}
 
 {% assign hub = site.data.topic_hubs[page.topic_hub_id] %}
+{% assign all_categories = site.categories %}
+{% assign all_tags = site.tags %}
 
 {% if hub %}
-  {% assign featured_urls = hub.featured_posts | default: '' | split: ',' %}
+  {% assign hub_posts = '' | split: '' %}
   <section class="topic-detail">
     <div class="topic-hero">
       <p class="topic-eyebrow">{{ site.data.locales[lang].topics.eyebrow }}</p>
@@ -31,13 +33,15 @@ layout: page
         <h3>{{ site.data.locales[lang].topics.featured_posts }}</h3>
         <ul class="topic-post-list">
           {% for post_url in hub.featured_posts %}
-            {% for post in site.posts %}
-              {% if post.url == post_url %}
-                <li>
-                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                </li>
-              {% endif %}
-            {% endfor %}
+            {% assign featured_post = site.posts | where: 'url', post_url | first %}
+            {% if featured_post %}
+              {% unless hub_posts contains featured_post %}
+                {% assign hub_posts = hub_posts | push: featured_post %}
+              {% endunless %}
+              <li>
+                <a href="{{ featured_post.url | relative_url }}">{{ featured_post.title }}</a>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       </section>
@@ -97,36 +101,63 @@ layout: page
     <section class="topic-section">
       <h3>{{ site.data.locales[lang].topics.additional_posts }}</h3>
       <ul class="topic-post-list">
-        {% for post in site.posts %}
-          {% assign is_match = false %}
-          {% for category in post.categories %}
-            {% if hub.categories contains category %}
-              {% assign is_match = true %}
-            {% endif %}
-          {% endfor %}
-          {% for tag in post.tags %}
-            {% if hub.tags contains tag %}
-              {% assign is_match = true %}
-            {% endif %}
-          {% endfor %}
-          {% if post.series and hub.featured_series contains post.series %}
-            {% assign is_match = true %}
-          {% endif %}
-          {% if post.roadmaps %}
-            {% for roadmap_id in post.roadmaps %}
-              {% if hub.featured_roadmaps contains roadmap_id %}
-                {% assign is_match = true %}
-              {% endif %}
+        {% for category in hub.categories %}
+          {% assign category_group = all_categories[category] %}
+          {% if category_group %}
+            {% for post in category_group %}
+              {% unless hub_posts contains post %}
+                {% assign hub_posts = hub_posts | push: post %}
+              {% endunless %}
             {% endfor %}
           {% endif %}
+        {% endfor %}
 
-          {% if is_match %}
-            {% unless hub.featured_posts contains post.url %}
+        {% for tag in hub.tags %}
+          {% assign tag_group = all_tags[tag] %}
+          {% if tag_group %}
+            {% for post in tag_group %}
+              {% unless hub_posts contains post %}
+                {% assign hub_posts = hub_posts | push: post %}
+              {% endunless %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+
+        {% if hub.featured_series %}
+          {% for series_id in hub.featured_series %}
+            {% assign series_posts = site.posts | where: 'series', series_id %}
+            {% for post in series_posts %}
+              {% unless hub_posts contains post %}
+                {% assign hub_posts = hub_posts | push: post %}
+              {% endunless %}
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+
+        {% if hub.featured_roadmaps %}
+          {% for post in site.posts %}
+            {% if post.roadmaps %}
+              {% assign include_post = false %}
+              {% for roadmap_id in post.roadmaps %}
+                {% if hub.featured_roadmaps contains roadmap_id %}
+                  {% assign include_post = true %}
+                {% endif %}
+              {% endfor %}
+              {% if include_post %}
+                {% unless hub_posts contains post %}
+                  {% assign hub_posts = hub_posts | push: post %}
+                {% endunless %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% for post in hub_posts %}
+          {% unless hub.featured_posts contains post.url %}
             <li>
               <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
             </li>
-            {% endunless %}
-          {% endif %}
+          {% endunless %}
         {% endfor %}
       </ul>
     </section>
