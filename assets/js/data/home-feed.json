@@ -5,6 +5,7 @@ swcache: true
 
 {% include lang.html %}
 {% assign home_feed_excluded_segment = '/problemsolving/' %}
+{% assign home_feed_cutoff_ts = site.time | date: '%s' | minus: 63072000 %}
 {% assign pinned = '' | split: '' %}
 {% assign default_entries = '' | split: '' %}
 
@@ -39,7 +40,16 @@ swcache: true
 {% endfor %}
 
 [
+  {% assign home_feed_first_item = true %}
   {% for post in feed_posts %}
+    {% assign post_ts = post.date | date: '%s' %}
+    {% assign include_in_home_feed_data = false %}
+    {% if post.path contains '/notes/' or post.pin == true or post_ts >= home_feed_cutoff_ts %}
+      {% assign include_in_home_feed_data = true %}
+    {% endif %}
+    {% if include_in_home_feed_data %}
+      {% unless home_feed_first_item %},{% endunless %}
+      {% assign home_feed_first_item = false %}
     {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% assign content_type = site.data.content_types[post_content_type_id] %}
@@ -67,6 +77,7 @@ swcache: true
       "imageSrc": {{ src | jsonify }},
       "imageAlt": {{ alt | jsonify }},
       "pin": {{ post.pin | default: false | jsonify }}
-    }{% unless forloop.last %},{% endunless %}
+    }
+    {% endif %}
   {% endfor %}
 ]

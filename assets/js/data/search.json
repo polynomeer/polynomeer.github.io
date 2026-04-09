@@ -3,8 +3,19 @@ layout: compress
 swcache: true
 ---
 
+{% assign search_cutoff_ts = site.time | date: '%s' | minus: 63072000 %}
+{% assign search_first_item = true %}
+
 [
   {% for post in site.posts %}
+  {% assign post_ts = post.date | date: '%s' %}
+  {% assign include_in_search = false %}
+  {% if post.path contains '/notes/' or post.pin == true or post_ts >= search_cutoff_ts %}
+    {% assign include_in_search = true %}
+  {% endif %}
+  {% if include_in_search %}
+  {% unless search_first_item %},{% endunless %}
+  {% assign search_first_item = false %}
   {% assign topic_ids = '' | split: '' %}
   {% for hub_pair in site.data.topic_hubs %}
     {% assign hub_id = hub_pair[0] %}
@@ -58,6 +69,7 @@ swcache: true
     {% assign _searchable = _content | truncate: 900 %}
     "snippet": {{ _snippet | jsonify }},
     "content": {{ _searchable | jsonify }}
-  }{% unless forloop.last %},{% endunless %}
+  }
+  {% endif %}
   {% endfor %}
 ]
