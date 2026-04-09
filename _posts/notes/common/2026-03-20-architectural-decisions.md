@@ -3,7 +3,6 @@ title: "키 생성 병목을 추적해 구조를 바꾼 기록: Part 2 - SELECT 
 date: 2026-03-20
 categories: [Notes, Common]
 tags: [Sequence, Performance, Database, Lock]
-pin: true
 series: sequence-bottleneck
 series_title: 키 생성 병목을 추적해 구조를 바꾼 기록
 series_order: 2
