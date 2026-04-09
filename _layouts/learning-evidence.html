@@ -14,60 +14,65 @@ layout: page
       <p class="learning-evidence-summary" data-i18n="learning_evidence.directory_description">{{ site.data.locales[lang].learning_evidence.directory_description }}</p>
     </div>
 
-    {% for group in learning_evidence.groups %}
+    {% assign learning_types = 'book,course' | split: ',' %}
+    {% for learning_type in learning_types %}
+      {% assign type_item_count = 0 %}
+      {% for group in learning_evidence.groups %}
+        {% for item in group.items %}
+          {% if item.type == learning_type %}
+            {% assign type_item_count = type_item_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+
+      {% if type_item_count > 0 %}
       <section class="learning-evidence-group">
         <div class="learning-evidence-group-header">
-          <h3
-            data-l10n-ko="{{ group.title['ko-KR'] | default: group.title | escape }}"
-            data-l10n-en="{{ group.title.en | default: group.title | escape }}"
-          >
-            {% include localized-value.html value=group.title lang=lang %}
+          <h3 data-i18n="learning_evidence_meta.{{ learning_type }}">
+            {{ site.data.locales[lang].learning_evidence_meta[learning_type] | default: learning_type }}
           </h3>
-          {% if group.description %}
-            <p
-              data-l10n-ko="{{ group.description['ko-KR'] | default: group.description | escape }}"
-              data-l10n-en="{{ group.description.en | default: group.description | escape }}"
-            >
-              {% include localized-value.html value=group.description lang=lang %}
-            </p>
-          {% endif %}
         </div>
 
         <div class="learning-evidence-overview">
-          {% for item in group.items %}
-            {% assign detail_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
-            {% if detail_page %}
-              <a
-                class="learning-evidence-tile"
-                href="{{ detail_page.url | relative_url }}"
-                data-learning-type="{{ item.type }}"
-                data-learning-status="{{ item.status }}"
-              >
-                <span class="learning-evidence-tile-spine" aria-hidden="true"></span>
-                <span class="learning-evidence-tile-title">
-                  {% include localized-value.html value=item.title lang=lang %}
-                </span>
-                <span class="learning-evidence-tile-meta">
-                  <span class="learning-evidence-type-badge" data-i18n="learning_evidence_meta.{{ item.type }}">
-                    {{ site.data.locales[lang].learning_evidence_meta[item.type] | default: item.type }}
-                  </span>
-                  {% if item.status %}
-                    <span class="learning-evidence-status-badge" data-i18n="learning_evidence_meta.{{ item.status }}">
-                      {{ site.data.locales[lang].learning_evidence_meta[item.status] | default: item.status }}
+          {% for group in learning_evidence.groups %}
+            {% for item in group.items %}
+              {% if item.type == learning_type %}
+                {% assign detail_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
+                {% if detail_page %}
+                  <a
+                    class="learning-evidence-tile"
+                    href="{{ detail_page.url | relative_url }}"
+                    data-learning-type="{{ item.type }}"
+                    data-learning-status="{{ item.status }}"
+                  >
+                    <span class="learning-evidence-tile-spine" aria-hidden="true"></span>
+                    <span class="learning-evidence-tile-title">
+                      {% include localized-value.html value=item.title lang=lang %}
                     </span>
-                  {% endif %}
-                  {% if item.provider %}
-                    <span class="learning-evidence-provider">{{ item.provider }}</span>
-                  {% endif %}
-                  {% if item.period %}
-                    <span class="learning-evidence-period">{{ item.period }}</span>
-                  {% endif %}
-                </span>
-              </a>
-            {% endif %}
+                    <span class="learning-evidence-tile-meta">
+                      <span class="learning-evidence-type-badge" data-i18n="learning_evidence_meta.{{ item.type }}">
+                        {{ site.data.locales[lang].learning_evidence_meta[item.type] | default: item.type }}
+                      </span>
+                      {% if item.status %}
+                        <span class="learning-evidence-status-badge" data-i18n="learning_evidence_meta.{{ item.status }}">
+                          {{ site.data.locales[lang].learning_evidence_meta[item.status] | default: item.status }}
+                        </span>
+                      {% endif %}
+                      {% if item.provider %}
+                        <span class="learning-evidence-provider">{{ item.provider }}</span>
+                      {% endif %}
+                      {% if item.period %}
+                        <span class="learning-evidence-period">{{ item.period }}</span>
+                      {% endif %}
+                    </span>
+                  </a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
           {% endfor %}
         </div>
       </section>
+      {% endif %}
     {% endfor %}
   </section>
 {% endif %}

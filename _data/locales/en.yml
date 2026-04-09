@@ -291,7 +291,7 @@ learning_evidence:
   source_posts: Source study posts
   related_posts: Related output posts
   back_to_directory: Back to learning overview
-  same_group: More from this learning group
-  nav_aria: Previous or next item in this learning group
+  same_type: More in this format
+  nav_aria: Previous or next item in the same format
   previous_item: Previous
   next_item: Next

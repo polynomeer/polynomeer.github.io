@@ -5,13 +5,11 @@ layout: page
 {% include lang.html %}
 
 {% assign current_item = nil %}
-{% assign current_group = nil %}
 
 {% for group in site.data.learning_evidence.groups %}
   {% for item in group.items %}
     {% if item.id == page.item_id %}
       {% assign current_item = item %}
-      {% assign current_group = group %}
       {% break %}
     {% endif %}
   {% endfor %}
@@ -26,19 +24,24 @@ layout: page
   {% assign next_item = nil %}
   {% assign found_current = false %}
 
-  {% if current_group %}
-    {% for item in current_group.items %}
-      {% if item.id == current_item.id %}
-        {% assign previous_item = previous_candidate %}
-        {% assign found_current = true %}
-      {% elsif found_current and next_item == nil %}
-        {% assign next_item = item %}
-        {% break %}
-      {% else %}
-        {% assign previous_candidate = item %}
+  {% for group in site.data.learning_evidence.groups %}
+    {% for item in group.items %}
+      {% if item.type == current_item.type %}
+        {% if item.id == current_item.id %}
+          {% assign previous_item = previous_candidate %}
+          {% assign found_current = true %}
+        {% elsif found_current and next_item == nil %}
+          {% assign next_item = item %}
+          {% break %}
+        {% else %}
+          {% assign previous_candidate = item %}
+        {% endif %}
       {% endif %}
     {% endfor %}
-  {% endif %}
+    {% if next_item %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
 
   {% assign previous_page = nil %}
   {% if previous_item %}
@@ -80,11 +83,6 @@ layout: page
         {% endif %}
         {% if current_item.period %}
           <span>{{ current_item.period }}</span>
-        {% endif %}
-        {% if current_group %}
-          <span>
-            {% include localized-value.html value=current_group.title lang=lang %}
-          </span>
         {% endif %}
       </div>
 
@@ -164,20 +162,22 @@ layout: page
         </section>
       {% endif %}
 
-      {% if current_group %}
-        {% assign sibling_count = 0 %}
-        {% for item in current_group.items %}
-          {% if item.id != current_item.id %}
+      {% assign sibling_count = 0 %}
+      {% for group in site.data.learning_evidence.groups %}
+        {% for item in group.items %}
+          {% if item.type == current_item.type and item.id != current_item.id %}
             {% assign sibling_count = sibling_count | plus: 1 %}
           {% endif %}
         {% endfor %}
+      {% endfor %}
 
-        {% if sibling_count > 0 %}
-          <section class="learning-evidence-detail-section">
-            <h2 data-i18n="learning_evidence.same_group">{{ site.data.locales[lang].learning_evidence.same_group }}</h2>
-            <div class="learning-evidence-sibling-list">
-              {% for item in current_group.items %}
-                {% if item.id != current_item.id %}
+      {% if sibling_count > 0 %}
+        <section class="learning-evidence-detail-section">
+          <h2 data-i18n="learning_evidence.same_type">{{ site.data.locales[lang].learning_evidence.same_type }}</h2>
+          <div class="learning-evidence-sibling-list">
+            {% for group in site.data.learning_evidence.groups %}
+              {% for item in group.items %}
+                {% if item.type == current_item.type and item.id != current_item.id %}
                   {% assign sibling_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
                   {% if sibling_page %}
                     <a class="learning-evidence-sibling-link" href="{{ sibling_page.url | relative_url }}">
@@ -186,9 +186,9 @@ layout: page
                   {% endif %}
                 {% endif %}
               {% endfor %}
-            </div>
-          </section>
-        {% endif %}
+            {% endfor %}
+          </div>
+        </section>
       {% endif %}
     </div>
   </article>
