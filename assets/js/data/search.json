@@ -16,35 +16,6 @@ swcache: true
   {% if include_in_search %}
   {% unless search_first_item %},{% endunless %}
   {% assign search_first_item = false %}
-  {% assign topic_ids = '' | split: '' %}
-  {% for hub_pair in site.data.topic_hubs %}
-    {% assign hub_id = hub_pair[0] %}
-    {% assign hub = hub_pair[1] %}
-    {% assign in_hub = false %}
-
-    {% for category in post.categories %}
-      {% if hub.categories contains category %}
-        {% assign in_hub = true %}
-      {% endif %}
-    {% endfor %}
-
-    {% for tag in post.tags %}
-      {% if hub.tags contains tag %}
-        {% assign in_hub = true %}
-      {% endif %}
-    {% endfor %}
-
-    {% if post.series and hub.featured_series contains post.series %}
-      {% assign in_hub = true %}
-    {% endif %}
-
-    {% if in_hub %}
-      {% capture topic_title %}{% include localized-value.html value=hub.title lang=site.lang %}{% endcapture %}
-      {% assign topic_title = topic_title | strip %}
-      {% assign topic_ids = topic_ids | push: topic_title %}
-    {% endif %}
-  {% endfor %}
-
   {
     "title": {{ post.title | jsonify }},
     "url": {{ post.url | relative_url | jsonify }},
@@ -53,7 +24,6 @@ swcache: true
     "date_label": {{ post.date | date: site.data.locales[site.lang].df.post.strftime | jsonify }},
     "series": {{ post.series | jsonify }},
     "series_title": {{ post.series_title | jsonify }},
-    "topics": {{ topic_ids | join: ', ' | jsonify }},
     {% include no-linenos.html content=post.content %}
     {% assign _content = content | strip_html | strip_newlines | normalize_whitespace %}
     {% assign _snippet = _content | truncate: 180 %}

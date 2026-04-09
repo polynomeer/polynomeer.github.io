@@ -43,13 +43,6 @@ layout: page
             {% endif %}
 
             <div class="capability-map-links">
-              {% if capability.topic_url %}
-                <a class="feature-chip" href="{{ capability.topic_url | relative_url }}">
-                  <i class="fas fa-compass"></i>
-                  <span data-i18n="capability_map.related_topic">{{ site.data.locales[lang].capability_map.related_topic }}</span>
-                </a>
-              {% endif %}
-
               {% if capability.roadmap_url %}
                 <a class="feature-chip" href="{{ capability.roadmap_url | relative_url }}">
                   <i class="fas fa-map"></i>

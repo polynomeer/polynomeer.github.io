@@ -1,52 +1,15 @@
-{% assign topic_pages = site.topics | sort: 'order' %}
 {% assign roadmap_pages = site.roadmaps | sort: 'order' %}
 {% assign featured_series = '' | split: '' %}
 
-{% for hub_pair in site.data.topic_hubs %}
-  {% assign hub = hub_pair[1] %}
-  {% assign hub_series = hub.featured_series | default: '' | split: ',' %}
-  {% for series_id in hub_series %}
-    {% unless series_id == empty or featured_series contains series_id %}
-      {% assign featured_series = featured_series | push: series_id %}
+{% for post in site.posts %}
+  {% if post.series %}
+    {% unless featured_series contains post.series %}
+      {% assign featured_series = featured_series | push: post.series %}
     {% endunless %}
-  {% endfor %}
+  {% endif %}
 {% endfor %}
 
 <section id="home-curation" class="px-xl-1">
-  {% if topic_pages.size > 0 %}
-    <section class="home-curation-section">
-      <div class="home-curation-header">
-        <div>
-          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_topics_eyebrow }}</p>
-          <h2>{{ site.data.locales[include.lang].home.curation_topics_title }}</h2>
-        </div>
-        <a href="{{ '/topics/' | relative_url }}" class="home-curation-link">
-          {{ site.data.locales[include.lang].home.curation_explore }}
-        </a>
-      </div>
-
-      <div class="home-curation-grid">
-        {% for topic_page in topic_pages limit: 3 %}
-          {% assign hub = site.data.topic_hubs[topic_page.topic_hub_id] %}
-          {% if hub %}
-            <article class="home-curation-card">
-              <a href="{{ topic_page.url | relative_url }}" class="home-curation-card-link">
-                <div class="home-curation-card-header">
-                  {% if hub.icon %}
-                    <i class="{{ hub.icon }}"></i>
-                  {% endif %}
-                  <span class="home-curation-chip">{{ site.data.locales[include.lang].tabs.topics }}</span>
-                </div>
-                <h3>{{ hub.title }}</h3>
-                <p>{{ hub.description }}</p>
-              </a>
-            </article>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
-
   {% if roadmap_pages.size > 0 %}
     <section class="home-curation-section">
       <div class="home-curation-header">

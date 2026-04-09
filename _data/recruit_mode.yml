@@ -26,7 +26,7 @@ strengths:
     description:
       ko-KR: 트랜잭션, MVCC, 락, 리플리케이션을 동작 관점부터 구현 디테일까지 설명합니다.
       en: Transactions, MVCC, locks, and replication explained from behavior to implementation detail.
-    url: /topics/database-internals/
+    url: /posts/2025-07-29-mvcc/
     icon: fas fa-database
   - title:
       ko-KR: Spring 백엔드
@@ -34,7 +34,7 @@ strengths:
     description:
       ko-KR: 라이프사이클, 애너테이션, 트랜잭션 경계, 백엔드 애플리케이션 구조를 다룹니다.
       en: Lifecycle, annotations, transactional boundaries, and backend application structure.
-    url: /topics/spring-backend/
+    url: /posts/2025-06-30-spring-lifecycle/
     icon: fas fa-leaf
   - title:
       ko-KR: 백엔드 기초 체력
@@ -42,7 +42,7 @@ strengths:
     description:
       ko-KR: 인증, 전송 계층 신뢰, 타임아웃 동작, 운영 기본기를 다룹니다.
       en: Authentication, transport trust, timeout behavior, and production fundamentals.
-    url: /topics/backend-foundations/
+    url: /posts/2024-09-07-authentication/
     icon: fas fa-server
   - title:
       ko-KR: 구조화된 학습
@@ -50,7 +50,7 @@ strengths:
     description:
       ko-KR: 개념이 고립된 메모로 끝나지 않도록, 연결 관계가 보이는 로드맵을 제공합니다.
       en: Uses curated roadmaps to show how concepts connect instead of staying as isolated notes.
-    url: /roadmaps/
+    url: /series/
     icon: fas fa-map
 
 featured_links:

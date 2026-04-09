@@ -22,7 +22,6 @@ layout:
   category: 카테고리
   tag: 태그
   roadmap: 로드맵
-  topic-hub: 토픽 허브
 
 # The tabs of sidebar
 tabs:
@@ -31,7 +30,6 @@ tabs:
   capabilities: 역량 맵
   types: 타입
   statuses: 상태
-  topics: 토픽
   categories: 카테고리
   tags: 태그
   archives: 아카이브
@@ -58,7 +56,6 @@ panel:
   focus_series: 추천 시리즈
   signal_posts: 전체 글
   signal_representative: 대표 글
-  signal_topics: 토픽 허브
   signal_roadmaps: 로드맵
   signal_recruit: 채용 글
   trending_tags: 인기 태그
@@ -125,7 +122,6 @@ post:
   series_previous: 이전 시리즈 글
   series_next: 다음 시리즈 글
   recommendation_series: 같은 시리즈
-  recommendation_topic: 같은 토픽
   read_time:
     unit: 분
     prompt: 읽는 시간
@@ -184,16 +180,6 @@ series_directory:
   fallback_description: 순서대로 읽을 수 있도록 묶인 연속 시리즈입니다.
   start_from: 시작 글
 
-topics:
-  eyebrow: 큐레이션 토픽 허브
-  directory_title: 주제 중심 진입 페이지로 탐색하기
-  directory_description: 대표 글, 시리즈, 로드맵, 추가 읽을거리를 묶은 주제별 허브 페이지를 탐색할 수 있습니다.
-  post_count: ":COUNT개 글"
-  featured_posts: 먼저 읽을 글
-  featured_roadmaps: 함께 보면 좋은 로드맵
-  featured_series: 핵심 시리즈
-  additional_posts: 추가 읽을 글
-
 home:
   search_filter_label: 검색
   search_filter_placeholder: 글 검색
@@ -216,8 +202,6 @@ home:
   curation_explore: 더 보기
   curation_paths_eyebrow: 학습 경로
   curation_paths_title: 순서가 있는 독서·학습 경로로 시작하기
-  curation_topics_eyebrow: 큐레이션 토픽
-  curation_topics_title: 주제별 진입점부터 시작하기
   curation_roadmaps_eyebrow: 구조화된 학습
   curation_roadmaps_title: 로드맵 기반 읽기 경로 따라가기
   curation_series_eyebrow: 순서형 시리즈
@@ -252,7 +236,6 @@ capability_map:
   eyebrow: 역량 맵
   directory_title: 보여지는 역량 기준으로 블로그 탐색하기
   directory_description: 백엔드, 데이터베이스, 아키텍처, 채용 관련 글을 역량 증거 중심으로 빠르게 살펴볼 수 있습니다.
-  related_topic: 관련 주제
   related_path: 관련 경로
   evidence: 대표 글
 

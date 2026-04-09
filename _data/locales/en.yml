@@ -22,7 +22,6 @@ layout:
   category: Category
   tag: Tag
   roadmap: Roadmap
-  topic-hub: Topic Hub
 
 # The tabs of sidebar
 tabs:
@@ -31,7 +30,6 @@ tabs:
   capabilities: Capabilities
   types: Types
   statuses: Statuses
-  topics: Topics
   categories: Categories
   tags: Tags
   archives: Archives
@@ -58,7 +56,6 @@ panel:
   focus_series: Featured series
   signal_posts: Posts
   signal_representative: Representative
-  signal_topics: Topics
   signal_roadmaps: Roadmaps
   signal_recruit: Recruit posts
   trending_tags: Trending Tags
@@ -125,7 +122,6 @@ post:
   series_previous: Previous in series
   series_next: Next in series
   recommendation_series: Same series
-  recommendation_topic: Same topic
   read_time:
     unit: min
     prompt: read
@@ -189,16 +185,6 @@ series_directory:
   fallback_description: A connected sequence of posts designed to be read in order.
   start_from: Start with
 
-topics:
-  eyebrow: Curated topic hub
-  directory_title: Start from topic-first entry pages
-  directory_description: Explore curated topic landing pages that combine featured reads, related series, roadmaps, and supporting posts.
-  post_count: ":COUNT posts"
-  featured_posts: Start here
-  featured_roadmaps: Related roadmaps
-  featured_series: Key series
-  additional_posts: Additional reading
-
 home:
   search_filter_label: Search
   search_filter_placeholder: Search posts
@@ -221,8 +207,6 @@ home:
   curation_explore: Explore
   curation_paths_eyebrow: Guided learning
   curation_paths_title: Follow curated reading and study paths
-  curation_topics_eyebrow: Curated topics
-  curation_topics_title: Start with strong subject entry points
   curation_roadmaps_eyebrow: Structured learning
   curation_roadmaps_title: Follow roadmap-based reading paths
   curation_series_eyebrow: Ordered series
@@ -257,7 +241,6 @@ capability_map:
   eyebrow: Capability map
   directory_title: Browse the blog by demonstrated engineering strength
   directory_description: Follow the strongest evidence trails for backend, database, architecture, and hiring-oriented writing.
-  related_topic: Related topic
   related_path: Related path
   evidence: Representative Posts
 
