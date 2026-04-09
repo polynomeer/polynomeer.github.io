@@ -2,91 +2,133 @@
 
 ## Goal
 
-Add a dedicated page that shows learning outcomes as a connected record of:
+Restructure the learning evidence surface into two levels:
 
-- courses taken
-- books read
-- related posts written from that study
+1. an overview page that works as a compact discovery index
+2. a detail page for each course or book
 
-The page should make it easy for a visitor to understand not only what was consumed, but what was turned into reusable output.
-
-## Why This Feature Fits This Repository
-
-This repository already has clear content types for:
-
-- `book`
-- `lecture`
-- `archive`
-- `reference`
-
-It also has recruiter-oriented surfaces such as:
-
-- About hub
-- Recruit mode
-- Capability map
-
-A learning evidence page fits naturally between those systems.
-
-It would answer a different question from ordinary post browsing:
-
-- what learning investments were made, and what concrete artifacts came out of them?
+This avoids a long stack of oversized cards as the number of learning items grows.
 
 ## Problem
 
-Right now, books, lectures, and follow-up posts are spread across different directories and browsing modes.
+The current page mixes two different jobs:
 
-That makes it hard to see:
+- listing all learning items
+- explaining each item in depth
 
-- which books or lectures were actually completed
-- which later posts were produced from that learning
-- how learning turned into blog output and technical growth
+That works with a small set, but it scales badly when books and lectures increase.
 
-This is especially valuable for:
+The result is:
 
-- recruiters
-- portfolio reviewers
-- readers who want to see long-term learning discipline
+- too much scrolling
+- weak scanability
+- repeated large-card layout even when the visitor only wants a quick overview
 
-## Design Principles
+## New Information Architecture
 
-- Show learning as input and output together.
-- Prefer explicit editorial links over inferred automation in the first iteration.
-- Reuse existing post structure instead of migrating old content.
-- Keep the page readable as a portfolio surface, not a raw log dump.
-- Make it easy to extend over time.
+### 1. Overview Page
 
-## Recommended Page Positioning
-
-Add a dedicated page linked from `About`.
-
-Recommended route:
+Route:
 
 - `/learning-evidence/`
 
-This keeps the page profile-oriented without turning it into a top-level navigation priority for all readers.
+Purpose:
 
-## Content Model
+- show the learning catalog at a glance
+- let readers scan titles quickly
+- route readers into the specific item they want
 
-The page should represent one learning item as a bundle:
+This page should not try to show every source post and result post inline.
 
-- source type
+### 2. Detail Page
+
+Route:
+
+- `/learning-evidence/<slug>/`
+
+Purpose:
+
+- explain one course or book in depth
+- show source study notes
+- show related result posts written from that learning
+
+## Core Design Principle
+
+The overview page is for scanning.
+
+The detail page is for understanding.
+
+Do not collapse those goals into one card layout again.
+
+## Recommended Overview UI
+
+The overview page should feel more like a curated shelf or editorial index than a stack of article cards.
+
+Preferred characteristics:
+
+- smaller footprint per item
+- title-first presentation
+- visually differentiated labels by type or topic
+- low reading burden before click
+
+Recommended item contents on the overview page:
+
 - title
-- provider or author
-- period or status
-- short takeaway summary
-- related posts produced from that study
+- type badge
+- status badge
+- provider or period
 
-Supported source types:
+Do not show:
 
-- `course`
-- `book`
-- optional later types such as `conference` or `study-group`
+- long summaries
+- source post lists
+- related post lists
+
+Those belong on the detail page only.
+
+## Recommended Detail Page UI
+
+Each learning item page should include:
+
+1. hero
+2. concise summary
+3. source study posts
+4. related result posts
+5. optional neighboring items from the same group
+
+### Hero
+
+Show:
+
+- title
+- type
+- status
+- provider
+- period
+- short summary
+
+### Source Study Posts
+
+These are the direct notes created while consuming the material.
+
+Typical sources:
+
+- `_posts/book/...`
+- `_posts/lecture/...`
+
+### Related Result Posts
+
+These are posts that demonstrate synthesis or application.
+
+Typical results:
+
+- archive posts
+- notes posts
+- recruit/interview posts
 
 ## Data Model
 
-Prefer a dedicated data file:
-
-- `_data/learning_evidence.yml`
+Keep `_data/learning_evidence.yml` as the curated source of truth for grouped metadata.
 
 Recommended shape:
 
@@ -94,161 +136,110 @@ Recommended shape:
 enabled: true
 
 groups:
-  - id: backend-systems
-    title: "Backend and Systems Learning"
-    description: "Books and courses that shaped backend, Spring, database, and architecture understanding."
+  - id: backend-and-web
+    title:
+      ko-KR: 백엔드와 웹 기초
+      en: Backend and Web Foundations
+    description:
+      ko-KR: 프로토콜 이해, 백엔드 기본기, 실용적인 웹 사고를 강화한 강의와 책입니다.
+      en: Courses and books that strengthened protocol understanding, backend fundamentals, and practical web reasoning.
     items:
-      - id: spring-mvc-basic
+      - id: inflearn-http-basics
         type: course
-        title: "모든 개발자를 위한 HTTP 웹 기본 지식"
-        provider: "Inflearn"
+        title: 모든 개발자를 위한 HTTP 웹 기본 지식
+        provider: Inflearn
         status: completed
         period: "2024"
-        summary: "Built stronger grounding in HTTP semantics and request-response reasoning."
+        summary:
+          ko-KR: HTTP 의미 체계, 요청-응답 흐름, 백엔드 웹 통신의 기본 사고 모델을 강화했습니다.
+          en: Strengthened HTTP semantics, request-response flow understanding, and the mental model behind backend web communication.
         source_posts:
-          - "_posts/lecture/http/모든_개발자를_위한_HTTP_웹_기본_지식.md"
+          - _posts/lecture/http/모든_개발자를_위한_HTTP_웹_기본_지식.md
         related_posts:
-          - "_posts/notes/web/2025-08-22-error-handling.md"
-          - "_posts/notes/web/2026-02-13-presigned-url.md"
-
-      - id: fundamentals-software-architecture
-        type: book
-        title: "Fundamentals of Software Architecture"
-        provider: "O'Reilly"
-        status: in_progress
-        period: "2025"
-        summary: "Studied architectural characteristics and tradeoff-driven design."
-        source_posts:
-          - "_posts/book/fundamentals-of-software-architecture/2025-05-13-fundamentals-of-software-architecture-chap2.md"
-        related_posts:
-          - "_posts/notes/common/2026-03-20-architectural-decisions.md"
+          - _posts/notes/web/2026-02-13-presigned-url.md
+          - _posts/notes/web/2026-02-25-netty.md
 ```
 
-Why this model:
+## Routing Model
 
-- explicit and reviewable
-- works across books and courses
-- captures both learning inputs and writing outputs
-- does not require retrofitting every existing post
+Add a dedicated collection for detail pages.
+
+Recommended collection:
+
+- `_learning_evidence_items/`
+
+Each item page should contain:
+
+```yml
+title: 모든 개발자를 위한 HTTP 웹 기본 지식
+layout: learning-evidence-item
+item_id: inflearn-http-basics
+permalink: /learning-evidence/inflearn-http-basics/
+```
+
+The page body can remain empty if the layout reads its metadata from `_data/learning_evidence.yml`.
+
+## Why Use a Collection
+
+This gives:
+
+- stable URLs for each item
+- easy linking from the overview page
+- room for item-specific longform content later if needed
+- a clean separation between index and detail concerns
 
 ## Rendering Model
 
 Recommended files:
 
 - `_data/learning_evidence.yml`
+- `learning-evidence.md`
 - `_layouts/learning-evidence.html`
-- `_tabs/learning-evidence.md` or a standalone page linked from About
-
-### Page structure
-
-#### 1. Hero
-
-Explain what the page is:
-
-- long-term learning inputs
-- written outputs
-- evidence of growth and synthesis
-
-#### 2. Grouped sections
-
-Group items by a few broad themes such as:
-
-- backend and systems
-- Java and Spring
-- architecture and design
-- hiring and career growth
-
-#### 3. Item cards
-
-Each item card should show:
-
-- type badge such as book or course
-- title
-- provider/author
-- status
-- short summary
-- source study posts
-- related output posts
-
-## Linking Rules
-
-### Source study posts
-
-Use for direct notes from the book or course itself.
-
-Examples:
-
-- `_posts/book/...`
-- `_posts/lecture/...`
-
-### Related output posts
-
-Use for later posts that clearly show the learning being applied or extended.
-
-Examples:
-
-- archive posts
-- recruit/interview preparation posts
-- roadmap-linked technical articles
+- `_layouts/learning-evidence-item.html`
+- `_learning_evidence_items/`
 
 ## Selection Rules
 
-- Start with 5 to 10 high-signal learning items.
-- Prefer items that produced visible writing output.
-- Keep summaries short and outcome-oriented.
-- Do not try to list every single chapter note in the first version.
-- Group by meaning, not by provider brand alone.
+- Keep the overview page compact.
+- Put all meaningful explanation on the detail page.
+- Prefer a curated subset over exhaustive raw logs.
+- Link only clear source and result posts.
 
 ## Non-Goals
 
-- Do not auto-infer relationships from file paths in the first iteration.
-- Do not create a full study log dashboard.
-- Do not require every book or lecture post to be included.
-- Do not replace existing `book` or `lecture` browsing modes.
+- Do not turn the overview page into a chapter log.
+- Do not auto-generate learning items from all `book` or `lecture` posts.
+- Do not duplicate long explanations both on the index and detail pages.
 
 ## Risks
 
-### Too much raw history
+### Metadata duplication
 
 Risk:
 
-- the page can become a long undifferentiated archive
+- a collection page and data file may drift apart
 
 Mitigation:
 
-- curate only strong items first
-- emphasize related output posts
+- keep the item page minimal
+- use `item_id` to read most metadata from the data file
 
-### Weak relationship quality
+### Weak detail pages
 
 Risk:
 
-- related posts may feel loosely connected
+- detail pages may feel empty if summaries and links are thin
 
 Mitigation:
 
-- keep relationships explicit in the data file
-- choose only clear evidence links
+- only create detail pages for high-signal items first
+- ensure each item has at least one source or result post
 
-### Duplicate navigation
+## Recommended Implementation
 
-Risk:
+1. keep `_data/learning_evidence.yml` as the source of truth
+2. create `_learning_evidence_items/` for detail routing
+3. redesign the index page as a compact title-first overview
+4. move source and result post lists to the detail page
 
-- the page may overlap with About, Recruit, and Capability Map
-
-Mitigation:
-
-- position this page as learning input/output evidence
-- keep Recruit focused on evaluation
-- keep Capability Map focused on strengths
-
-## Recommended First Implementation
-
-Implement:
-
-1. `_data/learning_evidence.yml`
-2. one dedicated page linked from `About`
-3. grouped cards for books and courses
-4. explicit related-post links showing learning outputs
-
-This gives the blog a strong "learning turns into artifacts" surface without requiring a large migration.
+This creates a scalable structure without losing the original "learning turns into output" concept.
