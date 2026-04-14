@@ -53,12 +53,12 @@ refactor: true
         >
       </label>
 
-      <label class="post-filter-field post-filter-field-compact post-filter-field-select">
+      <div class="post-filter-field post-filter-field-compact post-filter-field-select">
         <span class="post-filter-visible-label">{{ site.data.locales[lang].home.type_filter_label }}</span>
-        <span class="post-filter-select-wrap">
+        <div class="post-filter-select-wrap">
           <select
             id="home-type-filter"
-            class="post-filter-select"
+            class="post-filter-select-native"
             data-i18n-aria-label="home.type_filter_label"
             aria-label="{{ site.data.locales[lang].home.type_filter_label }}"
           >
@@ -73,9 +73,37 @@ refactor: true
               <option value="{{ content_type_id }}">{{ content_type_label }}</option>
             {% endfor %}
           </select>
-          <i class="fas fa-chevron-down" aria-hidden="true"></i>
-        </span>
-      </label>
+          <button
+            id="home-type-filter-trigger"
+            type="button"
+            class="post-filter-trigger post-filter-trigger-select"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="home-type-filter-menu"
+          >
+            <span id="home-type-filter-value" class="post-filter-trigger-value">{{ site.data.locales[lang].home.filter_all }}</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div id="home-type-filter-menu" class="type-filter-menu" role="listbox" hidden>
+            <button type="button" class="type-filter-option" data-type-option="all" role="option" aria-selected="true">
+              <span class="type-filter-option-check"><i class="fas fa-check"></i></span>
+              <span>{{ site.data.locales[lang].home.filter_all }}</span>
+            </button>
+            {% for type_page in sorted_content_types %}
+              {% if type_page.content_type_id == 'problemsolving' %}
+                {% continue %}
+              {% endif %}
+              {% assign content_type_id = type_page.content_type_id %}
+              {% assign content_type = site.data.content_types[content_type_id] %}
+              {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+              <button type="button" class="type-filter-option" data-type-option="{{ content_type_id }}" role="option" aria-selected="false">
+                <span class="type-filter-option-check"><i class="fas fa-check"></i></span>
+                <span>{{ content_type_label }}</span>
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
 
       <div class="post-filter-field post-filter-field-tag">
         <button
@@ -266,6 +294,10 @@ refactor: true
 
     const searchInput = document.getElementById('home-post-search');
     const typeSelect = document.getElementById('home-type-filter');
+    const typeFilterTrigger = document.getElementById('home-type-filter-trigger');
+    const typeFilterValue = document.getElementById('home-type-filter-value');
+    const typeFilterMenu = document.getElementById('home-type-filter-menu');
+    const typeFilterOptions = Array.from(document.querySelectorAll('[data-type-option]'));
     const tagFilterTrigger = document.getElementById('home-tag-filter-trigger');
     const tagFilterValue = document.getElementById('home-tag-filter-value');
     const tagFilterDialog = document.getElementById('home-tag-filter-dialog');
@@ -318,6 +350,32 @@ refactor: true
         (typeSelect && typeSelect.value !== 'all') ||
         selectedTag !== '';
       filterReset.hidden = !hasFilter;
+    };
+
+    const closeTypeMenu = () => {
+      if (!typeFilterMenu || !typeFilterTrigger || typeFilterMenu.hidden) return;
+      typeFilterMenu.hidden = true;
+      typeFilterTrigger.setAttribute('aria-expanded', 'false');
+      typeFilterTrigger.classList.remove('is-open');
+    };
+
+    const updateTypeTrigger = () => {
+      if (!typeSelect || !typeFilterValue) return;
+      const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+      typeFilterValue.textContent = selectedOption ? selectedOption.textContent.trim() : filterAllLabel;
+
+      typeFilterOptions.forEach((option) => {
+        const isSelected = option.dataset.typeOption === typeSelect.value;
+        option.classList.toggle('is-selected', isSelected);
+        option.setAttribute('aria-selected', String(isSelected));
+      });
+    };
+
+    const openTypeMenu = () => {
+      if (!typeFilterMenu || !typeFilterTrigger) return;
+      typeFilterMenu.hidden = false;
+      typeFilterTrigger.setAttribute('aria-expanded', 'true');
+      typeFilterTrigger.classList.add('is-open');
     };
 
     const updateTagTrigger = () => {
@@ -666,9 +724,28 @@ refactor: true
       .filter(Boolean)
       .forEach((control) => {
         control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', () => {
+          if (control === typeSelect) {
+            updateTypeTrigger();
+          }
           applyFilter({ resetPage: true });
         });
       });
+
+    typeFilterTrigger?.addEventListener('click', () => {
+      if (typeFilterMenu?.hidden) {
+        openTypeMenu();
+      } else {
+        closeTypeMenu();
+      }
+    });
+
+    typeFilterMenu?.addEventListener('click', (event) => {
+      const option = event.target.closest('[data-type-option]');
+      if (!option || !typeSelect) return;
+      typeSelect.value = option.dataset.typeOption || 'all';
+      typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      closeTypeMenu();
+    });
 
     tagFilterTrigger?.addEventListener('click', () => {
       if (tagFilterDialog && !tagFilterDialog.hidden) {
@@ -708,16 +785,25 @@ refactor: true
     filterReset?.addEventListener('click', () => {
       if (searchInput) searchInput.value = '';
       if (typeSelect) typeSelect.value = 'all';
+      updateTypeTrigger();
       selectedTag = '';
       updateTagTrigger();
+      closeTypeMenu();
       closeTagDialog({ restoreFocus: false });
       applyFilter({ resetPage: true });
     });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
+        closeTypeMenu();
         closeTagDialog();
       }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!typeFilterMenu || !typeFilterTrigger || typeFilterMenu.hidden) return;
+      if (event.target.closest('.post-filter-select-wrap')) return;
+      closeTypeMenu();
     });
 
     filteredPagination.addEventListener('click', (event) => {
@@ -730,6 +816,7 @@ refactor: true
 
     bindCardNavigation(staticPostList);
     bindCardNavigation(filteredPostList);
+    updateTypeTrigger();
     updateTagTrigger();
     updateResetButton();
     applyFilter();

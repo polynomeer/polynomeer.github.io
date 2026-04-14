@@ -122,7 +122,7 @@
           {% capture _new_class %}class="{{ _remain }}"{% endcapture %}
           {% assign _left = _left | append: _new_class %}
         {% endunless %}
-      {% endif %}
+      {% endunless %}
     {% endif %}
 
     {% assign _final_src = null %}
