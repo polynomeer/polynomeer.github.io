@@ -16,6 +16,11 @@ labs:
         headline:
           ko-KR: "`/api/fast` p50 2.9ms → 30초(클라이언트 타임아웃), 실패 66.7%. 요청 스레드 200개 전부가 소켓 읽기에 정지. 조치 후 같은 조건에서 p50 2.9ms·실패 0%"
           en: "`/api/fast` p50 2.9 ms to the 30 s client timeout, 66.7% failed, all 200 request threads parked in a socket read. After the fix, p50 2.9 ms and 0% failures under the same conditions"
+      - slug: g1-vs-zgc-tail-latency
+        question: { ko-KR: pause가 300배 짧아지면 p99는 얼마나 좋아지는가, en: If pauses get 300x shorter, how much does p99 improve }
+        headline:
+          ko-KR: "ZGC의 최악 pause는 0.07ms, G1은 24.13ms인데 피해자 p99는 13.62 → 12.07ms로 11%만 좋아졌다. 정작 이득은 할당하는 엔드포인트가 37%(17.95 → 11.26ms)로 더 컸고, 가장 느린 요청을 pause로 설명할 수 있는 수집기는 Parallel뿐이었다"
+          en: "ZGC's worst pause is 0.07 ms against G1's 24.13 ms, and the victim's p99 improved by 11% (13.62 to 12.07 ms). The endpoint doing the allocating gained 37%, and only Parallel's slowest request is explained by a pause"
 
   - id: data-ops-lab
     name: { ko-KR: data-ops-lab, en: data-ops-lab }
