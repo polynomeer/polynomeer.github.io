@@ -21,6 +21,11 @@ labs:
         headline:
           ko-KR: "ZGC의 최악 pause는 0.07ms, G1은 24.13ms인데 피해자 p99는 13.62 → 12.07ms로 11%만 좋아졌다. 정작 이득은 할당하는 엔드포인트가 37%(17.95 → 11.26ms)로 더 컸고, 가장 느린 요청을 pause로 설명할 수 있는 수집기는 Parallel뿐이었다"
           en: "ZGC's worst pause is 0.07 ms against G1's 24.13 ms, and the victim's p99 improved by 11% (13.62 to 12.07 ms). The endpoint doing the allocating gained 37%, and only Parallel's slowest request is explained by a pause"
+      - slug: virtual-thread-pinning-experiment
+        question: { ko-KR: 핀닝은 얼마를 앗아가고 스레드 수가 상한이 아니면 무엇이 상한인가, en: What does pinning cost, and what is the limit once the thread count is not }
+        headline:
+          ko-KR: "경합이 전혀 없는 synchronized 하나가 가상 스레드에서 완료 14,398건을 392건으로 만들었다. 동시 처리는 100에서 1로, 캐리어 수와 같아졌다. 2부에서 세 조건의 성공 처리량은 모두 풀 용량이었고 달라진 것은 실패의 값이다(성공 p50 2,003 → 103ms)"
+          en: "One uncontended synchronized block takes 14,398 completions to 392 once requests run on virtual threads, and in-flight from 100 to 1 - the carrier count. In part B all three conditions reach the pool's throughput; only the cost of failure differs"
 
   - id: data-ops-lab
     name: { ko-KR: data-ops-lab, en: data-ops-lab }
