@@ -28,8 +28,13 @@ layout: page
         {% assign first_post = series_posts | first %}
         {% assign last_post = series_posts | sort: 'date' | last %}
         {% if first_post %}
+          {% assign series_page = site.pages | where: 'series_id', series_id | first %}
+          {% assign series_url = first_post.url %}
+          {% if series_page %}
+            {% assign series_url = series_page.url %}
+          {% endif %}
           <article class="series-card">
-            <a href="{{ first_post.url | relative_url }}" class="series-card-link">
+            <a href="{{ series_url | relative_url }}" class="series-card-link">
               <div class="series-card-header">
                 <div class="series-card-title-wrap">
                   <span class="series-card-label">{{ site.data.locales[lang].post.series }}</span>

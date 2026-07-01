@@ -11,6 +11,7 @@
   {% assign current_index = -1 %}
   {% assign previous_post = nil %}
   {% assign next_post = nil %}
+  {% assign series_page = site.pages | where: 'series_id', page.series | first %}
 
   {% for post in series_posts %}
     {% if post.url == page.url %}
@@ -32,7 +33,13 @@
       <div class="feature-panel-header d-flex flex-column flex-lg-row justify-content-between gap-3">
         <div>
           <span class="feature-panel-label">{{ site.data.locales[include.lang].post.series }}</span>
-          <h3 id="series-navigation-title" class="feature-panel-title mb-1">{{ series_title }}</h3>
+          <h3 id="series-navigation-title" class="feature-panel-title mb-1">
+            {% if series_page %}
+              <a href="{{ series_page.url | relative_url }}">{{ series_title }}</a>
+            {% else %}
+              {{ series_title }}
+            {% endif %}
+          </h3>
           <p class="feature-panel-copy mb-0">
             {{
               site.data.locales[include.lang].post.series_progress
@@ -43,6 +50,12 @@
         </div>
 
         <div class="series-navigation-links d-flex flex-column align-items-start align-items-lg-end gap-2">
+          {% if series_page %}
+            <a class="series-link" href="{{ series_page.url | relative_url }}">
+              <span class="series-link-label">Series Overview</span>
+              <strong>전체 시리즈 보기</strong>
+            </a>
+          {% endif %}
           {% if previous_post %}
             <a class="series-link" href="{{ previous_post.url | relative_url }}">
               <span class="series-link-label">{{ site.data.locales[include.lang].post.series_previous }}</span>
