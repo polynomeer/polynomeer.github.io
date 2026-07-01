@@ -3,6 +3,10 @@ title: "Circuit Breaker로 외부 API 장애 격리 — Resilience4j + KIS·Yaho
 date: 2026-06-29
 categories: [Monticker, Observability]
 tags: [monticker, circuit-breaker, resilience4j, fallback, kotlin, reliability]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 22
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## 외부 API 장애가 전체 시스템을 멈추는 이유

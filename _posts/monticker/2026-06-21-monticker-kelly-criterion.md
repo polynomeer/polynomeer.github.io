@@ -3,6 +3,10 @@ title: "Kelly Criterion: 수학적 파산 방지 베팅 비율 — Half Kelly와
 date: 2026-06-21
 categories: [Monticker, QuantAnalytics]
 tags: [monticker, kelly-criterion, position-sizing, math, quant, risk-management]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 16
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## 왜 베팅 비율이 중요한가

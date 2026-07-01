@@ -3,6 +3,10 @@ title: "OpenTelemetry + Jaeger로 분산 추적 — 시세 파이프라인 지�
 date: 2026-06-28
 categories: [Monticker, Observability]
 tags: [monticker, opentelemetry, jaeger, tracing, observability, micrometer, kotlin]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 21
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## 분산 시스템에서 "느리다"를 어떻게 찾는가

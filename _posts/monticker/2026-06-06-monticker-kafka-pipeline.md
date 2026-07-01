@@ -3,6 +3,10 @@ title: "Kafka로 시세 파이프라인 분리하기 — 토픽 설계와 at-lea
 date: 2026-06-06
 categories: [Monticker, Realtime]
 tags: [monticker, kafka, spring-kafka, pipeline, at-least-once, partitioning]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 5
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## 왜 Kafka를 넣었는가

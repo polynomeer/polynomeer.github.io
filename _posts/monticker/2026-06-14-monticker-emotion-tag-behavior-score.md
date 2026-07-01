@@ -3,6 +3,10 @@ title: "감정 태그 × 수익률 — 투자 습관을 데이터로 기록하�
 date: 2026-06-14
 categories: [Monticker, InvestmentWallet]
 tags: [monticker, emotion-tag, behavior-score, investment-wallet, behavioral-finance]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 11
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## 투자와 감정

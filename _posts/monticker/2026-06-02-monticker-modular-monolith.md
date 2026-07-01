@@ -3,6 +3,10 @@ title: "모듈식 모놀리스를 선택한 이유 — MSA의 유혹을 거부�
 date: 2026-06-02
 categories: [Monticker, Architecture]
 tags: [monticker, architecture, modular-monolith, spring-boot, kotlin]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 2
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## "그냥 MSA로 가면 안 되나요?"

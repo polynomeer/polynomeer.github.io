@@ -3,6 +3,10 @@ title: "Go goroutine으로 202개 종목 동시 수집하기 — Market Gateway 
 date: 2026-06-05
 categories: [Monticker, Realtime]
 tags: [monticker, go, goroutine, kafka, market-gateway, concurrency]
+series: monticker
+series_title: monticker 설계와 구현 기록
+series_order: 4
+series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
 ---
 
 ## 왜 Go인가
