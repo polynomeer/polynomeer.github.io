@@ -60,22 +60,35 @@ layout: page
         </div>
       </div>
 
-      <div class="archives-filter-group">
-        <span class="archives-filter-label" data-i18n="archives.filter_status">{{ site.data.locales[lang].archives.filter_status }}</span>
-        <div class="archives-filter-options" data-filter-group="status">
-          <button type="button" class="archives-filter-chip active" data-filter-group="status" data-filter-value="all" data-i18n="archives.filter_all">
-            {{ site.data.locales[lang].archives.filter_all }}
-          </button>
-          {% assign sorted_post_statuses = site.post_statuses | sort: 'order' %}
-          {% for status_page in sorted_post_statuses %}
-            {% assign status_id = status_page.post_status_id %}
-            {% assign post_status = site.data.post_statuses[status_id] %}
-            <button type="button" class="archives-filter-chip" data-filter-group="status" data-filter-value="{{ status_id }}">
-              {{ post_status.title }}
+      {% assign sorted_post_statuses = site.post_statuses | sort: 'order' %}
+      {% assign visible_status_count = 0 %}
+      {% for status_page in sorted_post_statuses %}
+        {% assign status_id = status_page.post_status_id %}
+        {% assign matching_posts = site.posts | where: 'status', status_id %}
+        {% if matching_posts.size > 0 %}
+          {% assign visible_status_count = visible_status_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      {% if visible_status_count > 1 %}
+        <div class="archives-filter-group">
+          <span class="archives-filter-label" data-i18n="archives.filter_status">{{ site.data.locales[lang].archives.filter_status }}</span>
+          <div class="archives-filter-options" data-filter-group="status">
+            <button type="button" class="archives-filter-chip active" data-filter-group="status" data-filter-value="all" data-i18n="archives.filter_all">
+              {{ site.data.locales[lang].archives.filter_all }}
             </button>
-          {% endfor %}
+            {% for status_page in sorted_post_statuses %}
+              {% assign status_id = status_page.post_status_id %}
+              {% assign post_status = site.data.post_statuses[status_id] %}
+              {% assign matching_posts = site.posts | where: 'status', status_id %}
+              {% if post_status and matching_posts.size > 0 %}
+                <button type="button" class="archives-filter-chip" data-filter-group="status" data-filter-value="{{ status_id }}">
+                  {{ post_status.title }}
+                </button>
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </section>
 

@@ -18,6 +18,9 @@ layout: page
       {% if post_status %}
         {% assign matching_posts = site.posts | where: 'status', status_page.post_status_id %}
         {% assign post_count = matching_posts | size %}
+        {% if post_count == 0 %}
+          {% continue %}
+        {% endif %}
 
         <article class="post-status-card">
           <a href="{{ status_page.url | relative_url }}" class="post-status-card-link">
