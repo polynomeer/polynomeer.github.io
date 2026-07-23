@@ -68,6 +68,17 @@ labs:
           ko-KR: "컬럼에 붙인 암묵적 형변환이 0.07ms를 208.7ms로, 추정은 실제의 417배. 낡은 통계는 31.7배 틀렸는데도 계획이 안 바뀌었다"
           en: "An implicit cast on the column turns 0.07 ms into 208.7 ms with a 417x estimate error. Stale statistics were 31.7x off without changing the plan"
 
+  - id: jvm-bench-lab
+    name: { ko-KR: jvm-bench-lab, en: jvm-bench-lab }
+    focus: { ko-KR: 측정 자체가 틀리는 방식, en: How the measurement itself gets it wrong }
+    repo: https://github.com/polynomeer/jvm-bench-lab
+    items:
+      - slug: microbenchmark-faults-experiment
+        question: { ko-KR: 손으로 만든 마이크로벤치마크는 어느 방향으로 몇 배 틀리고 언제는 안 틀리는가, en: How many times wrong is a hand-written microbenchmark, in which direction, and when is it not }
+        headline:
+          ko-KR: "결과를 지우는 결함은 유리한 방향으로 틀렸다. 제거 21.4배, 상수 접힘 12.3배. 일을 더하는 결함은 반대 방향으로 워밍업 없음 19.9배, 반복마다 타이머 14.8배. 그런데 620ns짜리 배열 합에서는 차이가 1.5%로 사라졌다"
+          en: "The faults that erase work flatter you: 21.4x for eliminated code, 12.3x for constant folding. The ones that add work cost 19.9x for no warmup and 14.8x for a per-iteration timer. On a 620 ns array sum the difference falls to 1.5%"
+
   - id: parity-pay
     name: { ko-KR: ParityPay, en: ParityPay }
     focus: { ko-KR: 장애 아래에서 금융 불변조건이 지켜지는가, en: Do financial invariants hold under failure }
