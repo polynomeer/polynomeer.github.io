@@ -180,6 +180,9 @@ collections:
   tabs:
     output: true
     sort_by: order
+  series_pages:
+    output: true
+    sort_by: series_id
   content_types:
     output: true
     sort_by: order
@@ -211,6 +214,11 @@ defaults:
     values:
       layout: page
       permalink: /:title/
+  - scope:
+      path: ""
+      type: series_pages
+    values:
+      layout: series-detail
   - scope:
       path: ""
       type: content_types

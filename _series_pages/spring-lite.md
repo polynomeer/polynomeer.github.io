@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: spring-lite로 이해하는 Spring 구현
 series_id: spring-lite
 permalink: /series/spring-lite/

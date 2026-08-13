@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: Authentication Basics
 series_id: authentication-basics
 permalink: /series/authentication-basics/

@@ -23,7 +23,7 @@
           {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
           {% assign first_post = series_posts | first %}
           {% if first_post %}
-            {% assign series_page = site.pages | where: 'series_id', series_id | first %}
+            {% assign series_page = site.series_pages | where: 'series_id', series_id | first %}
             {% assign series_url = first_post.url %}
             {% if series_page %}
               {% assign series_url = series_page.url %}

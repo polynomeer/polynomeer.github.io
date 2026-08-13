@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: 키 생성 병목을 추적해 구조를 바꾼 기록
 series_id: sequence-bottleneck
 permalink: /series/sequence-bottleneck/

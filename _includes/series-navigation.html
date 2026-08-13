@@ -11,7 +11,7 @@
   {% assign current_index = -1 %}
   {% assign previous_post = nil %}
   {% assign next_post = nil %}
-  {% assign series_page = site.pages | where: 'series_id', page.series | first %}
+  {% assign series_page = site.series_pages | where: 'series_id', page.series | first %}
 
   {% for post in series_posts %}
     {% if post.url == page.url %}

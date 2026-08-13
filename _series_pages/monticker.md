@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: monticker 기술 블로그 시리즈 설계
 series_id: monticker
 permalink: /series/monticker/

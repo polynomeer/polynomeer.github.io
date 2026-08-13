@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: 대량 배치 안정성을 높이기 위한 구조 개선
 series_id: batch-structure-improvement
 permalink: /series/batch-structure-improvement/

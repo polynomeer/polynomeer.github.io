@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: redis-lite-java로 이해하는 Redis 구현
 series_id: redis-lite-java
 permalink: /series/redis-lite-java/

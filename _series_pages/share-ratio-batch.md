@@ -1,5 +1,4 @@
 ---
-layout: series-detail
 title: 운에 맡기던 배치를 시스템으로 바꾸기
 series_id: share-ratio-batch
 permalink: /series/share-ratio-batch/
