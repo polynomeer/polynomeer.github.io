@@ -1,6 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 5 - Bean lifecycle과 후처리기"
 date: 2026-08-13
+draft: true
 categories: [Notes, Spring]
 tags: [Spring, Bean Lifecycle, BeanPostProcessor, PostConstruct, Java]
 series: spring-internals-lab

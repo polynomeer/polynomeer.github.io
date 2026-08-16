@@ -1,6 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 1 - 이 프로젝트는 무엇을 검증하려는가"
 date: 2026-08-13
+draft: true
 categories: [Notes, Spring]
 tags: [Spring, Java, Framework, Debugging, Architecture]
 series: spring-internals-lab

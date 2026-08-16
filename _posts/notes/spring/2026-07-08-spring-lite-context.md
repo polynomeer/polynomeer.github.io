@@ -1,6 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 2 - AnnotationConfigApplicationContext로 보는 IoC와 생명주기
 date: 2026-07-04
+draft: true
 categories: [Notes, Spring]
 tags: [Spring, IoC, DI, Bean Lifecycle, Java]
 series: spring-lite

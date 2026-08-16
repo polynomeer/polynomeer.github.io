@@ -1,6 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 4 - DispatcherServlet과 MVC 요청 처리 파이프라인
 date: 2026-07-06
+draft: true
 categories: [Notes, Spring]
 tags: [Spring, MVC, DispatcherServlet, Web, Java]
 series: spring-lite

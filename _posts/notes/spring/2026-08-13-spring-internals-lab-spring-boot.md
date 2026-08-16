@@ -1,6 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 9 - Spring Boot는 무엇을 자동으로 조립하는가"
 date: 2026-08-13
+draft: true
 categories: [Notes, Spring]
 tags: [Spring Boot, Auto Configuration, Condition, SpringApplication, Java]
 series: spring-internals-lab

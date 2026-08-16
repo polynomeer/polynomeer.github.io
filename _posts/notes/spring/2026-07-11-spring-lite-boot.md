@@ -1,6 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 5 - MiniSpringApplication과 자동 설정 조립 방식
 date: 2026-07-07
+draft: true
 categories: [Notes, Spring]
 tags: [Spring Boot, Auto Configuration, Java, Framework, MVC]
 series: spring-lite

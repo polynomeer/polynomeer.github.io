@@ -1,6 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 3 - refresh()와 Bean 생성 파이프라인"
 date: 2026-08-13
+draft: true
 categories: [Notes, Spring]
 tags: [Spring, ApplicationContext, Bean Lifecycle, IoC, Java]
 series: spring-internals-lab
