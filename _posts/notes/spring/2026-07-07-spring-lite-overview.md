@@ -9,11 +9,13 @@ series_order: 1
 series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, AOP, MVC, 트랜잭션, 부트스트랩을 구현 관점에서 해설하는 시리즈.
 ---
 
-## 왜 spring-lite를 읽는가
+## 왜 굳이 `spring-lite`를 읽었나
 
-Spring Framework를 사용할 때는 `@Component`, `@Configuration`, `@Transactional`, `@RestController` 같은 애노테이션을 자연스럽게 쓰게 된다. 하지만 실제로는 이 애노테이션들이 각각 독립된 마법이 아니라, 컨테이너, 프록시, 웹 디스패치, 트랜잭션, 부트스트랩 계층이 맞물린 결과다.
+Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@Component`, `@Configuration`, `@Transactional`, `@RestController` 같은 것들이다. 문제는 익숙해질수록 오히려 내부가 더 안 보인다는 점이다. 잘 돌아가니까 그냥 쓰게 되고, 어느 순간부터는 "왜 이렇게 동작하는가"보다 "원래 이런가 보다" 쪽으로 넘어가게 된다.
 
-`spring-lite`는 이 흐름을 아주 큰 프레임워크 전체가 아니라, 학습 가능한 크기의 코드로 다시 쪼개서 보여주는 프로젝트다. README 기준 목표 범위도 비교적 명확하다.
+`spring-lite`를 읽기 시작한 이유도 딱 그 지점이었다. Spring 전체 소스를 처음부터 끝까지 파는 건 범위가 너무 크고, 반대로 블로그 글이나 강의 자료만 보면 구조가 너무 평평하게 정리돼 있다. 그 중간쯤에서, **실제로 손으로 다시 만들어 볼 수 있을 만큼 작지만 그래도 Spring의 핵심 축은 남아 있는 코드**가 필요했다.
+
+이 프로젝트가 다루는 범위는 꽤 명확하다.
 
 - `@Component` 기반 Bean 등록과 생성자 주입
 - `ApplicationContext`와 `@Configuration` / `@Bean`
@@ -22,9 +24,9 @@ Spring Framework를 사용할 때는 `@Component`, `@Configuration`, `@Transacti
 - `@Transactional`과 JDBC 템플릿
 - `MiniSpringApplication.run()` 형태의 부트스트랩
 
-즉, "Spring을 완전히 재구현한다"보다 **실무에서 가장 자주 만지는 핵심 축을 직접 손으로 다시 만들어 본다**는 방향에 가깝다.
+즉 "Spring을 완전히 다시 만든다"보다, **실무에서 자주 만지는 축을 직접 구현하면서 비교 학습한다**는 쪽에 가깝다.
 
-## 모듈이 어떻게 나뉘어 있는가
+## 처음 봤을 때 좋았던 건 모듈 경계였다
 
 이 프로젝트는 멀티 모듈 구조다.
 
@@ -38,11 +40,11 @@ Spring Framework를 사용할 때는 `@Component`, `@Configuration`, `@Transacti
 - `spring-lite-test`
 - `example-app`
 
-이 나눔이 좋은 이유는, Spring이 실제로도 하나의 덩어리라기보다 계층적으로 쌓인 프레임워크라는 점을 잘 드러내기 때문이다.
+이 구성이 좋았던 이유는 Spring을 "하나의 큰 프레임워크"가 아니라 **층층이 쌓인 조합물**로 보게 만들기 때문이다.
 
-### core
+### `core`는 아직 컨테이너가 아니다
 
-`spring-lite-core`에는 공통 애노테이션과 리플렉션, 프로퍼티 해석이 들어 있다.
+`spring-lite-core`에는 애노테이션과 공통 유틸리티가 들어 있다.
 
 - `@Component`, `@Service`, `@Repository`, `@Controller`
 - `@Configuration`, `@Bean`
@@ -50,11 +52,11 @@ Spring Framework를 사용할 때는 `@Component`, `@Configuration`, `@Transacti
 - `ConditionalOnBean`, `ConditionalOnClass`, `ConditionalOnMissingBean`, `ConditionalOnProperty`
 - `ReflectionUtils`, `PropertyResolver`
 
-여기서는 아직 컨테이너가 없다. 대신 컨테이너가 해석해야 할 **메타데이터와 공통 유틸리티**가 먼저 정의된다.
+처음엔 이 모듈이 약간 심심해 보였는데, 오히려 이게 중요했다. 여기에는 아직 컨테이너가 없다. 대신 컨테이너가 읽어야 할 **메타데이터와 공통 도구**만 먼저 있다. Spring도 결국 이런 순서로 쌓인다.
 
-### context
+### `context`에서 비로소 "Spring 같다"는 느낌이 난다
 
-실제 IoC 컨테이너의 중심은 `spring-lite-context`에 있다.
+실제 IoC 컨테이너의 중심은 `spring-lite-context`다.
 
 - `ApplicationContext`
 - `BeanDefinition`
@@ -62,32 +64,30 @@ Spring Framework를 사용할 때는 `@Component`, `@Configuration`, `@Transacti
 - `ClassPathScanner`
 - `BeanPostProcessor`
 
-Spring의 핵심을 하나만 꼽으라면 결국 컨테이너인데, 이 모듈이 그 컨테이너를 담당한다.
+이 모듈을 읽기 시작하면 애노테이션이 직접 일을 하는 게 아니라, 결국 컨테이너가 메타데이터를 읽고 객체 그래프를 조립한다는 감각이 생긴다. Spring 공부를 하면서 자꾸 "애노테이션 중심"으로 생각하게 되는데, 실제로는 언제나 컨테이너가 중심이라는 걸 여기서 다시 확인하게 된다.
 
-### aop / tx / jdbc
+### AOP, 트랜잭션, JDBC가 나뉘어 있는 게 인상적이었다
 
-그다음 레이어가 흥미롭다.
+그다음이 `spring-lite-aop`, `spring-lite-tx`, `spring-lite-jdbc`다.
 
 - `spring-lite-aop`: 프록시와 인터셉션
 - `spring-lite-tx`: `@Transactional`과 트랜잭션 경계
 - `spring-lite-jdbc`: `JdbcTemplate`, `RowMapper`, `DataSource`
 
-즉, 트랜잭션을 단독 기능으로 보지 않고 **AOP 위에 얹힌 JDBC 사용 경험**으로 구현했다. 이건 Spring을 이해할 때 중요한 설계 감각이다.
+이 구조를 보고 좋았던 건, 트랜잭션을 별도 DB 기능처럼 두지 않고 **AOP 위에 얹힌 JDBC 사용 경험**으로 풀어냈다는 점이다. `@Transactional`을 이해할 때 프록시를 먼저 봐야 하는 이유가 이 모듈 경계만으로도 꽤 잘 드러난다.
 
-### web / boot
-
-웹과 부트스트랩도 분리돼 있다.
+### `web`과 `boot`는 결국 "조립의 마지막 단계"처럼 보인다
 
 - `spring-lite-web`: `DispatcherServlet`, `HandlerMapping`, `HandlerAdapter`, argument resolver
 - `spring-lite-boot`: `MiniSpringApplication`, 자동 설정, `JdkWebServer`
 
-이 구조를 보면 왜 실제 Spring도 `spring-context`, `spring-webmvc`, `spring-jdbc`, `spring-tx`, `spring-boot`처럼 나뉘는지 감이 온다.
+이쯤 오면 Spring이 왜 `spring-context`, `spring-webmvc`, `spring-jdbc`, `spring-tx`, `spring-boot`처럼 나뉘는지 감이 온다. 전부 한 번에 이해하려고 하면 너무 크지만, 이렇게 레이어를 잘라 보면 어느 정도 손에 잡힌다.
 
-## example-app이 중요한 이유
+## `example-app`이 같이 있는 게 꽤 중요했다
 
-이 프로젝트는 프레임워크 모듈만 있는 것이 아니라 `example-app`이 함께 있다. 이 점이 중요하다.
+이 프로젝트는 프레임워크 코드만 모아 둔 저장소가 아니다. `example-app`이 같이 있다.
 
-예제 앱에는 주문 조회/생성 시나리오가 있고, 다음 흐름이 실제로 연결된다.
+처음엔 그냥 데모 정도로 생각했는데, 읽다 보니 오히려 이게 중요한 축이었다.
 
 - `@MiniSpringBootApplication`으로 실행
 - 컨테이너 초기화
@@ -95,39 +95,39 @@ Spring의 핵심을 하나만 꼽으라면 결국 컨테이너인데, 이 모듈
 - `DispatcherServlet`으로 HTTP 요청 처리
 - 서비스 계층에 `@Transactional` 적용
 
-즉, 프레임워크 코드를 따로 읽는 것만으로 끝나지 않고, **어떤 사용자 코드가 어떤 인프라를 거쳐 동작하는가**를 바로 확인할 수 있다.
+즉 프레임워크 내부만 따로 읽는 게 아니라, **사용자 코드가 그 위에 올라가면 실제로 어떤 흐름이 되는지**를 바로 확인할 수 있다. 개인적으로는 이 연결이 있어야 "아, 이 구현이 여기서 쓰이겠구나"라는 감각이 생겼다.
 
-## 이 프로젝트를 읽을 때 좋은 순서
+## 내가 읽은 순서는 이랬다
 
-레포 README에도 문서 읽기 순서가 정리돼 있지만, 코드 기준으로는 아래 순서가 가장 자연스럽다.
+README에도 정리돼 있지만, 실제로는 다음 순서가 제일 자연스러웠다.
 
 1. `MiniSpringApplication.run()`으로 시작점을 본다.
-2. `AnnotationConfigApplicationContext`에서 컨테이너 생성 흐름을 본다.
+2. `AnnotationConfigApplicationContext`에서 컨테이너 흐름을 본다.
 3. `ProxyFactory`와 `TransactionalBeanPostProcessor`로 프록시 적용 방식을 본다.
 4. `DispatcherServlet`과 `RequestMappingHandlerMapping`으로 웹 요청 흐름을 본다.
 5. `JdbcTemplate`과 `TransactionManager`로 데이터 접근과 트랜잭션 경계를 본다.
 
-이 순서가 좋은 이유는 프레임워크 내부 계층이 실제 실행 순서와 꽤 비슷하게 연결되기 때문이다.
+이 순서가 좋았던 이유는, 실제 실행 흐름에 꽤 가깝기 때문이다. Boot가 시작점을 만들고, 컨테이너가 Bean을 만들고, 후처리기가 프록시를 붙이고, 웹 요청이 들어오고, 그 안에서 JDBC가 연결을 쓴다. 추상 설명보다 훨씬 덜 헷갈린다.
 
-## spring-lite가 보여주는 설계 감각
+## 읽고 나서 남은 한 줄 요약
 
-이 프로젝트를 보면 Spring의 핵심을 다음처럼 요약할 수 있다.
+`spring-lite`를 보고 나서 Spring을 다시 요약하면 대략 이렇다.
 
-- 애노테이션은 메타데이터일 뿐이다.
-- 진짜 핵심은 그것을 해석하는 컨테이너다.
+- 애노테이션은 메타데이터다.
+- 진짜 중심은 그것을 해석하는 컨테이너다.
 - 부가기능은 프록시와 후처리기로 붙는다.
-- 웹은 별도 디스패치 파이프라인 위에 올라간다.
-- Boot는 모든 것을 조립해서 실행 진입점을 만든다.
+- 웹은 별도 디스패치 파이프라인으로 올라간다.
+- Boot는 이 전체를 실행 가능한 애플리케이션으로 묶는다.
 
-즉, 우리가 평소 쓰는 Spring 경험은 사실 하나의 기술이 아니라 **계층적으로 겹쳐진 여러 작은 메커니즘의 합성 결과**다.
+이 말 자체는 익숙한 정리처럼 들릴 수 있는데, 직접 구현 코드를 한 번 보고 나면 느낌이 조금 다르다. "원래 그런가 보다"가 아니라 "정말 저 구조로 이어져 있구나" 쪽에 가까워진다.
 
-## 이 시리즈에서 볼 것
+## 이 시리즈에서는 뭘 보게 될까
 
-이후 글에서는 이 구조를 실제 구현 기준으로 하나씩 풀어 본다.
+이후 글에서는 이 구조를 하나씩 조금 더 가까이에서 본다.
 
 1. `AnnotationConfigApplicationContext`로 보는 IoC/DI와 Bean lifecycle
 2. `ProxyFactory`, `TransactionalBeanPostProcessor`, `JdbcTemplate`로 보는 AOP와 트랜잭션
 3. `DispatcherServlet`, `HandlerMapping`, argument resolver로 보는 MVC 요청 처리
 4. `MiniSpringApplication`과 자동 설정으로 보는 부트스트랩 조립 방식
 
-`spring-lite`의 장점은 코드 양이 작아서가 아니라, **Spring의 핵심을 계층별로 분해해서 읽게 만든다**는 데 있다. 그래서 이 프로젝트를 읽는 과정 자체가 곧 Spring의 내부 구조를 다시 이해하는 과정이 된다.
+내가 `spring-lite`를 좋게 본 이유는 "작아서 읽기 쉽다"보다, **Spring의 핵심을 딱 비교 학습하기 좋은 크기로 쪼개 놨다**는 데 있다. 그래서 이 시리즈도 강의 노트처럼 정리하기보다, 직접 구현해 보면서 어떤 감각이 남았는지에 더 가깝게 풀어보려고 한다.
