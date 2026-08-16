@@ -11,7 +11,7 @@ series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, A
 
 ## 웹 프레임워크를 다시 보니 결국 디스패치 문제였다
 
-Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼저 눈에 들어온다. 그런데 `spring-lite-web`을 읽고 나면 시선이 조금 바뀐다. 핵심은 문법보다 먼저 디스패치였다.
+Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼저 눈에 들어온다. 그런데 `spring-lite-web`을 구현하고 따라가다 보면 시선이 조금 바뀐다. 핵심은 문법보다 먼저 디스패치였다.
 
 - 어떤 요청이 왔는가
 - 어떤 핸들러가 처리할 것인가
@@ -45,7 +45,7 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 
 ## `HandlerMapping`이 먼저 보이기 시작했다
 
-`RequestMappingHandlerMapping`은 `ApplicationContext`에서 `@RestController` Bean을 가져와서 메서드 수준의 `@GetMapping`, `@PostMapping`을 읽는다.
+`RequestMappingHandlerMapping`은 `ApplicationContext`에서 `@RestController` Bean을 가져와서 메서드 수준의 `@GetMapping`, `@PostMapping`을 확인한다.
 
 이 부분에서 좋았던 건, 웹 계층도 결국 **컨테이너가 만든 Bean** 위에 올라간다는 점이 자연스럽게 드러난다는 것이다. 라우팅도 결국 따로 존재하는 게 아니라, 컨트롤러 Bean을 기준으로 만들어진다.
 
@@ -71,7 +71,7 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 
 핸들러를 찾았다고 바로 메서드를 호출할 수 있는 건 아니다. 파라미터를 채우고, 호출 규칙을 적용해야 한다. 이 역할을 `RequestMappingHandlerAdapter`가 맡는다.
 
-이 분리가 중요한 이유는 읽다 보면 바로 체감된다.
+이 분리가 중요한 이유는 구현을 따라가다 보면 바로 체감된다.
 
 - `HandlerMapping`: 무엇을 호출할지 결정
 - `HandlerAdapter`: 어떻게 호출할지 결정
@@ -89,7 +89,7 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 
 즉 메서드 파라미터를 한 번에 처리하지 않고, **파라미터 종류별 전략 체인**으로 나눈다.
 
-이 구조는 실제로 구현을 읽는 입장에서도 장점이 컸다.
+이 구조는 실제로 구현을 따라가는 입장에서도 장점이 컸다.
 
 - 새 파라미터 모델을 추가하기 쉽고
 - 웹 규칙이 한 클래스에 몰리지 않고
