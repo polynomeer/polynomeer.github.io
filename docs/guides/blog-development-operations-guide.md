@@ -212,7 +212,8 @@ Current status model:
 How to operate:
 
 - Add `status` in post front matter when editorial intent is clear.
-- Do not force a status onto every post.
+- Do not use `draft` or `published` as separate editorial controls.
+- Posts without `status` are treated as `published` by the repository plugin.
 
 ### 8. Representative Posts
 

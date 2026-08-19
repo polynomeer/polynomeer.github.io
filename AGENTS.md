@@ -45,6 +45,7 @@ This file defines the working rules for human contributors and AI agents in this
   - quote titles when they include `:`, `@`, `#`, brackets, or other YAML-sensitive characters
   - use YAML arrays for `categories` and `tags`
   - keep `date`, `series`, `series_title`, and `series_order` syntactically valid
+  - use `status` as the single editorial visibility field; do not add `draft` or `published`
   - do not leave duplicated front matter blocks or stray `---` separators at the top of the file
 - Before finishing content work, scan the edited posts for:
   - broken or duplicated front matter

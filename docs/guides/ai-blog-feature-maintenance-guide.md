@@ -102,6 +102,11 @@ Source of truth:
 - `status` front matter
 - `_data/post_statuses.yml`
 
+Rules:
+
+- treat `status` as the only editorial visibility field
+- do not add `draft` or `published` front matter for post visibility
+
 Rendering:
 
 - `_includes/post-status-badge.html`

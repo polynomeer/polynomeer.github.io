@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 2 - BeanDefinition과 등록 단계"
 date: 2026-08-13
-draft: true
+status: writing
 categories: [Notes, Spring]
 tags: [Spring, BeanDefinition, IoC, Java, Framework]
 series: spring-internals-lab

@@ -5,13 +5,14 @@ Jekyll::Hooks.register :site, :post_read do |site|
   next unless posts_collection
 
   visible_posts = posts_collection.docs.select do |post|
-    status = post.data['status']
+    data = post.data
+    status = data['status']&.to_s&.strip
 
-    if status.nil? || status.to_s.strip.empty?
-      post.data['status'] = 'published'
+    if status.nil? || status.empty?
+      data['status'] = 'published'
       true
     else
-      status.to_s == 'published'
+      status == 'published'
     end
   end
 

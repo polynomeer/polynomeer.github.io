@@ -1,7 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 3 - ProxyFactory, @Transactional, JdbcTemplate 연결
 date: 2026-07-05
-draft: true
+status: writing
 categories: [Notes, Spring]
 tags: [Spring, AOP, Transaction, JDBC, Proxy]
 series: spring-lite

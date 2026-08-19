@@ -21,6 +21,8 @@ Use post front matter:
 status: published
 ```
 
+Do not use `draft: true` or `published: false` for editorial visibility in this repository.
+
 Do not try to infer status automatically from post dates.
 
 ## Primary Files Likely to Change
@@ -56,6 +58,7 @@ Status detail pages should list posts with that status.
 - do not bulk-edit all posts to assign status
 - start with a small curated sample
 - keep fallback behavior graceful when status is absent
+- keep `status` as the only editorial visibility field
 
 ## Validation
 

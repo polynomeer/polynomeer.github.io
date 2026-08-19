@@ -70,7 +70,9 @@ Optional future fields:
 status_note: "Examples are being refreshed for Spring Boot 3.x."
 ```
 
-For the first rollout, only `status` is required.
+`status` is the only editorial state field in this repository.
+
+Do not combine it with `draft: true` or `published: false`.
 
 ## Design Principles
 
@@ -78,6 +80,7 @@ For the first rollout, only `status` is required.
 - small number of statuses
 - strong visual clarity without overwhelming the post header
 - graceful fallback when metadata is absent
+- one editorial field instead of overlapping visibility flags
 
 ## Rendering Model
 
@@ -160,6 +163,7 @@ archived:
 - Do not auto-assign status to all posts.
 - Do not infer status purely from date.
 - Do not add too many statuses.
+- Do not reintroduce `draft` or `published` front matter for editorial visibility.
 
 ## Risks
 
