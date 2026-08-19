@@ -206,7 +206,7 @@ content_types:
 post_statuses:
   eyebrow: 글 상태
   directory_title: 관리 상태별로 글 탐색하기
-  directory_description: 지금도 신뢰 가능한 글인지, 계속 보강 중인 글인지, 참고용으로만 보관된 글인지 빠르게 구분할 수 있습니다.
+  directory_description: 아직 초안인 글인지, 일반 공개 상태의 글인지, 참고용으로만 보관된 글인지 빠르게 구분할 수 있습니다.
   post_count: ":COUNT개 글"
 
 representative_posts:

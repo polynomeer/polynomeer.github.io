@@ -1,7 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 1 - 프로젝트 구조와 설계 범위
 date: 2026-07-03
-status: writing
+status: draft
 categories: [Notes, Spring]
 tags: [Spring, Java, Framework, Architecture, DI]
 series: spring-lite

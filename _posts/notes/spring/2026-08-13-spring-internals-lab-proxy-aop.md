@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 6 - 프록시와 AOP"
 date: 2026-08-13
-status: writing
+status: draft
 categories: [Notes, Spring]
 tags: [Spring, AOP, Proxy, Interceptor, Java]
 series: spring-internals-lab

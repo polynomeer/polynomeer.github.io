@@ -211,7 +211,7 @@ content_types:
 post_statuses:
   eyebrow: Editorial status
   directory_title: Browse by maintenance state
-  directory_description: Quickly tell which posts are long-lived references, actively evolving, or kept only for historical context.
+  directory_description: Quickly tell which posts are still drafts, normally published, or kept only for historical context.
   post_count: ":COUNT posts"
 
 representative_posts:

@@ -8,9 +8,8 @@ For general repository rules, read [`AGENTS.md`](../../../AGENTS.md) first.
 
 Expose editorial maintenance state through a small set of post statuses:
 
-- writing
+- draft
 - published
-- modifying
 - archived
 
 ## Preferred Metadata

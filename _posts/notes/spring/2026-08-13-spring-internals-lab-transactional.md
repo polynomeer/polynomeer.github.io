@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 7 - @Transactional의 실체"
 date: 2026-08-13
-status: writing
+status: draft
 categories: [Notes, Spring]
 tags: [Spring, Transaction, AOP, JDBC, Java]
 series: spring-internals-lab

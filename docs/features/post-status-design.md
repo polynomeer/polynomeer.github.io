@@ -6,9 +6,8 @@ Introduce explicit post status metadata so readers can quickly understand the ma
 
 The feature should answer:
 
-- is this article still being written?
+- is this article still a draft?
 - is this article published and readable as a normal post?
-- is this article currently being revised?
 - is this article kept for reference but no longer actively maintained?
 
 ## Why This Feature Fits This Repository
@@ -29,27 +28,21 @@ Date alone is not enough to communicate whether a post is:
 
 Recommended first rollout statuses:
 
-- `writing`
+- `draft`
 - `published`
-- `modifying`
 - `archived`
 
 ### Definitions
 
-#### writing
+#### draft
 
-- content is still being written
+- content is still being drafted
 - readers should expect incomplete structure or changing scope
 
 #### published
 
 - content is publicly readable in its normal state
 - this is the default “good to read now” status
-
-#### modifying
-
-- content is already public but currently under revision
-- readers should expect updates, corrections, or expansion
 
 #### archived
 
@@ -103,9 +96,8 @@ Add `/status/` or `/statuses/` style entry points for browsing posts by status.
 Recommended first implementation:
 
 - `/statuses/`
-- `/statuses/writing/`
+- `/statuses/draft/`
 - `/statuses/published/`
-- `/statuses/modifying/`
 - `/statuses/archived/`
 
 ### 4. Future search integration
@@ -119,9 +111,9 @@ Store display metadata in `_data/post_statuses.yml`.
 Recommended shape:
 
 ```yaml
-writing:
-  title: "Writing"
-  description: "Still being written and not yet fully settled."
+draft:
+  title: "Draft"
+  description: "Still in progress and not ready for normal publication."
   icon: "fas fa-pen"
   order: 1
 
@@ -131,17 +123,11 @@ published:
   icon: "fas fa-check-circle"
   order: 2
 
-modifying:
-  title: "Modifying"
-  description: "Public content that is currently being revised."
-  icon: "fas fa-pen-ruler"
-  order: 3
-
 archived:
   title: "Archived"
   description: "Kept for reference, not actively maintained."
   icon: "fas fa-box-archive"
-  order: 4
+  order: 3
 ```
 
 ## Rollout Plan

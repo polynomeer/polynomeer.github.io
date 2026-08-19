@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 8 - DispatcherServlet과 MVC 요청 흐름"
 date: 2026-08-13
-status: writing
+status: draft
 categories: [Notes, Spring]
 tags: [Spring MVC, DispatcherServlet, HandlerMapping, HandlerAdapter, Java]
 series: spring-internals-lab

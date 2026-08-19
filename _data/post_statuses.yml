@@ -1,6 +1,6 @@
-writing:
-  title: "Writing"
-  description: "Still being written and not yet fully settled."
+draft:
+  title: "Draft"
+  description: "Still in progress and not ready for normal publication."
   icon: "fas fa-pen"
   order: 1
 
@@ -10,14 +10,8 @@ published:
   icon: "fas fa-check-circle"
   order: 2
 
-modifying:
-  title: "Modifying"
-  description: "Public content that is currently being revised."
-  icon: "fas fa-pen-ruler"
-  order: 3
-
 archived:
   title: "Archived"
   description: "Kept for reference, not actively maintained."
   icon: "fas fa-box-archive"
-  order: 4
+  order: 3

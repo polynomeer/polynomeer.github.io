@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 4 - 의존성 주입과 후보 선택"
 date: 2026-08-13
-status: writing
+status: draft
 categories: [Notes, Spring]
 tags: [Spring, DI, Qualifier, Primary, Circular Dependency, Java]
 series: spring-internals-lab

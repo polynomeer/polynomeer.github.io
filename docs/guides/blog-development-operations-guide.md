@@ -204,9 +204,8 @@ Main files:
 
 Current status model:
 
-- `writing`
+- `draft`
 - `published`
-- `modifying`
 - `archived`
 
 How to operate:
