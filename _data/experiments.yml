@@ -104,6 +104,12 @@ labs:
         headline:
           ko-KR: "플랫폼 스레드 200개는 3회 모두 23.7~24.0초에 고갈. 재시도 3회는 기관 요청을 정확히 3.00배로 만들었고 지터는 봉우리를 낮추지 못했다. 벌크헤드 50은 무관한 API를 p95 10ms로 지켰다"
           en: "200 platform threads exhausted at 23.7-24.0 s in all three runs. Three retries multiplied institution load by exactly 3.00x and jitter did not flatten the peak"
+      - slug: parity-pay-retry-jitter
+        question: { ko-KR: 지터는 언제 값을 하고 무엇을 하지 않는가, en: When does jitter earn its place, and what does it not do }
+        headline:
+          ko-KR: "폭주를 만들자 지터가 재시도 봉우리를 100ms당 141건에서 38건으로 3.7배 낮췄다. 총량은 두 조건 모두 정확히 3.00배로 같다. 같은 데이터를 1초 눈금으로 보면 둘 다 150이고, 앞선 실험이 쓴 자가 현상보다 굵었던 것이다"
+          en: "With a synchronized surge, jitter cuts the retry peak from 141 to 38 per 100 ms. Both arms stay at exactly 3.00x total - jitter changes when requests arrive, never how many. At 1 s granularity both read 150, which is the gauge the earlier experiment used"
+
       - slug: parity-pay-experiments-and-defects
         question: { ko-KR: 부하·장애 실험이 문서와 코드가 못 찾은 것을 찾는가, en: Does load and failure testing find what documents and code review miss }
         headline:
