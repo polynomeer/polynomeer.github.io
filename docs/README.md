@@ -58,6 +58,7 @@ Project-level upstream and repository policy references:
 - [`project/chirpy-upstream-upgrade-plan.md`](./project/chirpy-upstream-upgrade-plan.md)
 - [`project/image-asset-management-policy.md`](./project/image-asset-management-policy.md)
 - [`project/velog-migration-plan.md`](./project/velog-migration-plan.md)
+- [`project/content-plan-2026-09.md`](./project/content-plan-2026-09.md)
 - [`project/release-notes-2026-03-27.md`](./project/release-notes-2026-03-27.md)
 - [`project/CHANGELOG.md`](./project/CHANGELOG.md)
 - [`project/CODE_OF_CONDUCT.md`](./project/CODE_OF_CONDUCT.md)
