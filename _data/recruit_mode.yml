@@ -5,53 +5,53 @@ hero:
     ko-KR: 채용 담당자용
     en: For Recruiters
   title:
-    ko-KR: 신뢰할 수 있는 시스템, 실용적 아키텍처, 기술 글쓰기에 집중해 온 백엔드 엔지니어
-    en: Backend engineer focused on reliable systems, practical architecture, and technical writing
+    ko-KR: 상태 전이와 동시성, 트랜잭션 정합성이 중요한 시스템을 안정적으로 운영 가능한 구조로 설계해 온 백엔드 엔지니어
+    en: Backend engineer who designs systems where state transitions, concurrency, and transactional consistency have to hold
   summary:
-    ko-KR: 백엔드 핵심 개념을 분명하게 설명하고, 지식을 재사용 가능한 학습 구조로 정리하며, 실무 시스템에서 중요한 트레이드오프를 글로 남깁니다.
-    en: Explains backend fundamentals clearly, organizes knowledge into reusable learning structures, and writes about tradeoffs that matter in production systems.
+    ko-KR: 정산·배치처럼 실패하면 안 되는 흐름의 병목을 계측으로 찾고, 상태 전이와 락 설계로 정합성을 구조에서 강제하며, 그 과정을 수치와 함께 글로 남깁니다.
+    en: Finds bottlenecks in settlement and batch flows through measurement, enforces consistency through explicit state transitions and lock design, and writes the process down with numbers.
   roles:
     - ko-KR: 백엔드 엔지니어
       en: Backend Engineer
-    - ko-KR: 플랫폼 엔지니어
-      en: Platform Engineer
-    - ko-KR: Java/Spring 엔지니어
-      en: Java/Spring Engineer
+    - ko-KR: 정산·결제 플랫폼 엔지니어
+      en: Settlement and Payment Platform Engineer
+    - ko-KR: Java/Kotlin · Spring 엔지니어
+      en: Java/Kotlin · Spring Engineer
   contact_email: polynomeer@gmail.com
 
 strengths:
   - title:
-      ko-KR: 데이터베이스 내부 동작
-      en: Database Internals
+      ko-KR: 정합성과 상태 전이 설계
+      en: Consistency and State Transition Design
     description:
-      ko-KR: 트랜잭션, MVCC, 락, 리플리케이션을 동작 관점부터 구현 디테일까지 설명합니다.
-      en: Transactions, MVCC, locks, and replication explained from behavior to implementation detail.
-    url: /posts/2025-07-29-mvcc/
-    icon: fas fa-database
+      ko-KR: 삭제중, 삭제완료, 등록중, 등록완료처럼 상태를 명시해 정산 데이터의 정합성을 운영자의 호출 순서가 아니라 시스템이 강제하도록 설계합니다.
+      en: Makes the system enforce settlement data consistency through explicit states instead of relying on operators calling APIs in the right order.
+    url: /posts/2026-01-03-bulk-insert-with-lock-part5/
+    icon: fas fa-sitemap
   - title:
-      ko-KR: Spring 백엔드
-      en: Spring Backend
+      ko-KR: 동시성 제어와 분산락
+      en: Concurrency Control and Distributed Locks
     description:
-      ko-KR: 라이프사이클, 애너테이션, 트랜잭션 경계, 백엔드 애플리케이션 구조를 다룹니다.
-      en: Lifecycle, annotations, transactional boundaries, and backend application structure.
-    url: /posts/2025-06-30-spring-lifecycle/
-    icon: fas fa-leaf
+      ko-KR: 분산락이 있는데도 레이스가 난 원인을 로그로 추적하고, SETNX와 소유 토큰, 조건부 해제로 락을 재설계했습니다.
+      en: Traced why a race still happened under a distributed lock and redesigned it with SETNX, ownership tokens, and conditional release.
+    url: /posts/2026-01-03-bulk-insert-with-lock-part4/
+    icon: fas fa-lock
   - title:
-      ko-KR: 백엔드 기초 체력
-      en: Backend Foundations
+      ko-KR: 대량 배치 성능
+      en: Large-Scale Batch Performance
     description:
-      ko-KR: 인증, 전송 계층 신뢰, 타임아웃 동작, 운영 기본기를 다룹니다.
-      en: Authentication, transport trust, timeout behavior, and production fundamentals.
-    url: /posts/2024-09-07-authentication/
-    icon: fas fa-server
+      ko-KR: 80만 건 이상의 삭제·등록 배치를 청크 분할과 병렬 처리로 재설계해 처리 시간을 2시간에서 5분으로 줄였습니다.
+      en: Redesigned a delete-and-reload batch of over 800k rows with chunking and parallelism, cutting runtime from 2 hours to 5 minutes.
+    url: /posts/2026-01-03-bulk-insert-with-lock-part3/
+    icon: fas fa-gauge-high
   - title:
-      ko-KR: 구조화된 학습
-      en: Structured Learning
+      ko-KR: 계측 기반 레거시 재설계
+      en: Measurement-Driven Legacy Redesign
     description:
-      ko-KR: 개념이 고립된 메모로 끝나지 않도록, 연결된 시리즈와 학습 경로로 구조를 보여줍니다.
-      en: Uses connected series and learning paths so concepts do not stay isolated notes.
-    url: /series/
-    icon: fas fa-map
+      ko-KR: 느린 INSERT의 진짜 원인이 시퀀스 채번의 행 락이었음을 추적해 구조를 바꾸고, 화면 단위 API를 도메인 중심 구조와 CQRS로 옮겼습니다.
+      en: Traced a slow INSERT to row locks in sequence allocation and restructured it, and moved screen-driven APIs to a domain-centric structure with CQRS.
+    url: /posts/2026-01-03-sequence-part1/
+    icon: fas fa-magnifying-glass-chart
 
 featured_links:
   - title:
