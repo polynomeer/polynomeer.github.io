@@ -1,7 +1,7 @@
 ---
 title: Stateless(무상태)가 Idempotent(멱등성)을 의미하는가?
 date: 2025-07-03
-categories: [Archive, Web]
+categories: [Notes, Web]
 tags: [Stateless, Idempotent]
 ---
 

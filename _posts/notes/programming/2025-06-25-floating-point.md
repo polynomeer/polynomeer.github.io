@@ -1,7 +1,7 @@
 ---
 title: Floating Point
 date: 2025-06-25
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Floating Point]
 ---
 

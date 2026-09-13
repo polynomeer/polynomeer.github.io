@@ -1,7 +1,7 @@
 ---
 title: "응집도와 결합도에 관하여: About Cohesion and Coupling"
 date: 2025-04-21
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Cohesion, Coupling]
 ---
 

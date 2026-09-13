@@ -1,7 +1,7 @@
 ---
 title: "Evolution of Java: Version-by-Version Breakdown"
 date: 2025-07-23
-categories: [Archive, Java]
+categories: [Notes, Java]
 tags: [Java Features, Java Versions]
 ---
 

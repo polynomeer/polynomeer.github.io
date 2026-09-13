@@ -1,7 +1,7 @@
 ---
 title: Load Balancing Algorithms
 date: 2025-05-19
-categories: [Archive, Network]
+categories: [Notes, Network]
 tags: [Load Balancing]
 ---
 

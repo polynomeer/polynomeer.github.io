@@ -1,7 +1,7 @@
 ---
 title: Reverse Proxy
 date: 2024-09-05
-categories: [Archive, Infrastructure]
+categories: [Notes, Infrastructure]
 tags: [Reverse Proxy]
 ---
 

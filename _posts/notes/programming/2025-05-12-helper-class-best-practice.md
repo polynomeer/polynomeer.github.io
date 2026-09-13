@@ -1,7 +1,7 @@
 ---
 title: 헬퍼 클래스는 안티패턴일까?
 date: 2025-05-12
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Helper Class, Utility Class]
 ---
 

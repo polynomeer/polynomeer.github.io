@@ -1,7 +1,7 @@
 ---
 title: ELB vs ALB vs NLB
 date: 2024-09-10
-categories: [Archive, Network]
+categories: [Notes, Network]
 tags: [AWS, ELB, ALB, NLB]
 ---
 

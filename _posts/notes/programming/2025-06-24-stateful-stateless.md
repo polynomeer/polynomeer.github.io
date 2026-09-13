@@ -1,7 +1,7 @@
 ---
 title: Stateful vs Stateless
 date: 2025-06-24
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Stateful, Stateless]
 ---
 

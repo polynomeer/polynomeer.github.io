@@ -1,7 +1,7 @@
 ---
 title: Single Flight
 date: 2025-09-02
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Single Flight]
 ---
 

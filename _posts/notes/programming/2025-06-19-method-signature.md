@@ -1,7 +1,7 @@
 ---
 title: Function Signature
 date: 2025-06-19
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Function Signature]
 ---
 

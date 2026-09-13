@@ -1,7 +1,7 @@
 ---
 title: "Understanding HTTP Versions: From 0.9 to 3.0"
 date: 2025-07-22
-categories: [Archive, Web]
+categories: [Notes, Web]
 tags: [HTTP]
 ---
 

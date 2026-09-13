@@ -1,7 +1,7 @@
 ---
 title: Apache vs Tomcat
 date: 2024-09-10
-categories: [Archive, Web]
+categories: [Notes, Web]
 tags: [Apache, Tomcat]
 ---
 

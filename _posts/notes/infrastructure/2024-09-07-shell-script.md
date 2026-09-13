@@ -1,7 +1,7 @@
 ---
 title: Shell Script
 date: 2024-09-05
-categories: [Archive, Infrastructure]
+categories: [Notes, Infrastructure]
 tags: [Linux, Shell Script]
 ---
 

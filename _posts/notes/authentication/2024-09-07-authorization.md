@@ -1,7 +1,7 @@
 ---
 title: Authorization
 date: 2024-09-05
-categories: [Archive, Authentication]
+categories: [Notes, Authentication]
 tags: [Authorization]
 series: authentication-basics
 series_title: Authentication Basics

@@ -1,7 +1,7 @@
 ---
 title: Network Load Balancers(NLB)
 date: 2024-09-09
-categories: [Archive, Network]
+categories: [Notes, Network]
 tags: [Timeout, NLB, AWS]
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Reverse Proxy
 date: 2024-09-11
-categories: [Archive, Web]
+categories: [Notes, Web]
 tags: [Reverse Proxy]
 ---
 

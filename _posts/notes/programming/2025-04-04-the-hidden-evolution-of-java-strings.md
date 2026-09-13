@@ -1,7 +1,7 @@
 ---
 title: The Hidden Evolution of Java Strings
 date: 2025-04-04
-categories: [Archive, Programming]
+categories: [Notes, Programming]
 tags: [Java, String]
 ---
 

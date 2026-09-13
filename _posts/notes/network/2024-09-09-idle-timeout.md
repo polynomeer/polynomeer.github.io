@@ -1,7 +1,7 @@
 ---
 title: Idle Timeout
 date: 2024-09-09
-categories: [Archive, Network]
+categories: [Notes, Network]
 tags: [Timeout, Idle Timeout]
 status: archived
 ---

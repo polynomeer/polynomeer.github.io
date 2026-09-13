@@ -1,7 +1,7 @@
 ---
 title: "Inside ArrayList: Capacity Expansion Mechanism"
 date: 2025-07-22
-categories: [Archive, Java]
+categories: [Notes, Java]
 tags: [ArrayList]
 ---
 

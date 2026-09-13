@@ -1,7 +1,7 @@
 ---
 title: "조건 기반 예측 캐싱: 고속 엑셀 다운로드 처리 구조 설계"
 date: 2025-05-22
-categories: [Archive, Architecture]
+categories: [Notes, Architecture]
 tags: [Excel, Performance]
 ---
 

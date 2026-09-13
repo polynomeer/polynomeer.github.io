@@ -1,7 +1,7 @@
 ---
 title: Microservice Architecture
 date: 2025-07-01
-categories: [Archive, Web]
+categories: [Notes, Web]
 tags: [MSA, Microservice Architecture]
 ---
 

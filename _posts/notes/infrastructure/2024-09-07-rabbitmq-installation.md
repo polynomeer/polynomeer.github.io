@@ -1,7 +1,7 @@
 ---
 title: RabbitMQ Installation
 date: 2024-09-05
-categories: [Archive, Infrastructure]
+categories: [Notes, Infrastructure]
 tags: [Message Queue, RabbitMQ]
 ---
 

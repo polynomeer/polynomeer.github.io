@@ -1,7 +1,7 @@
 ---
 title: Problem Details for HTTP APIs
 date: 2025-08-08
-categories: [Archive, Web]
+categories: [Notes, Web]
 tags: [HTTP, Problem Details]
 ---
 
