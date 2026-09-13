@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "jekyll-serve",
+      "runtimeExecutable": "bundle",
+      "runtimeArgs": ["exec", "jekyll", "serve", "--incremental", "--port", "4000"],
+      "port": 4000
+    },
+    {
+      "name": "site-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4001", "--directory", "_site"],
+      "port": 4001
+    }
+  ]
+}
