@@ -82,7 +82,7 @@ nodes:
       - title:
           ko-KR: 시리즈 1부부터 읽기
           en: Read the series from part 1
-        url: /posts/2026-01-03-bulk-insert-with-lock-part1/
+        url: /posts/bulk-insert-with-lock-part1/
 
   - id: spring-backend
     cluster: application

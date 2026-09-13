@@ -26,7 +26,7 @@ strengths:
     description:
       ko-KR: 삭제중, 삭제완료, 등록중, 등록완료처럼 상태를 명시해 정산 데이터의 정합성을 운영자의 호출 순서가 아니라 시스템이 강제하도록 설계합니다.
       en: Makes the system enforce settlement data consistency through explicit states instead of relying on operators calling APIs in the right order.
-    url: /posts/2026-01-03-bulk-insert-with-lock-part5/
+    url: /posts/bulk-insert-with-lock-part5/
     icon: fas fa-sitemap
   - title:
       ko-KR: 동시성 제어와 분산락
@@ -34,7 +34,7 @@ strengths:
     description:
       ko-KR: 분산락이 있는데도 레이스가 난 원인을 로그로 추적하고, SETNX와 소유 토큰, 조건부 해제로 락을 재설계했습니다.
       en: Traced why a race still happened under a distributed lock and redesigned it with SETNX, ownership tokens, and conditional release.
-    url: /posts/2026-01-03-bulk-insert-with-lock-part4/
+    url: /posts/bulk-insert-with-lock-part4/
     icon: fas fa-lock
   - title:
       ko-KR: 대량 배치 성능
@@ -42,7 +42,7 @@ strengths:
     description:
       ko-KR: 80만 건 이상의 삭제·등록 배치를 청크 분할과 병렬 처리로 재설계해 처리 시간을 2시간에서 5분으로 줄였습니다.
       en: Redesigned a delete-and-reload batch of over 800k rows with chunking and parallelism, cutting runtime from 2 hours to 5 minutes.
-    url: /posts/2026-01-03-bulk-insert-with-lock-part3/
+    url: /posts/bulk-insert-with-lock-part3/
     icon: fas fa-gauge-high
   - title:
       ko-KR: 계측 기반 레거시 재설계
@@ -50,7 +50,7 @@ strengths:
     description:
       ko-KR: 느린 INSERT의 진짜 원인이 시퀀스 채번의 행 락이었음을 추적해 구조를 바꾸고, 화면 단위 API를 도메인 중심 구조와 CQRS로 옮겼습니다.
       en: Traced a slow INSERT to row locks in sequence allocation and restructured it, and moved screen-driven APIs to a domain-centric structure with CQRS.
-    url: /posts/2026-01-03-sequence-part1/
+    url: /posts/sequence-part1/
     icon: fas fa-magnifying-glass-chart
 
 featured_links:
