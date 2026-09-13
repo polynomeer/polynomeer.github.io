@@ -1,11 +1,11 @@
 ---
-title: "운에 맡기던 배치를 시스템으로 바꾸기: Part 1 — 왜 이 배치는 가끔 터질까?"
+title: "대량 배치 안정성을 높이기 위한 구조 개선: Part 0 - 왜 이 배치는 가끔 터질까?"
 date: 2025-12-19
 categories: [Notes, Common]
 tags: [Batch, Concurrency, Redis Lock, Reliability]
-series: share-ratio-batch
-series_title: 운에 맡기던 배치를 시스템으로 바꾸기
-series_order: 1
+series: batch-structure-improvement
+series_title: 대량 배치 안정성을 높이기 위한 구조 개선
+series_order: 0
 ---
 
 > 이 시리즈는 **80만 건 이상 데이터를 처리하는 배치 시스템**을 운영하며 겪은 문제와 개선 과정을 기록한 글입니다.
@@ -176,7 +176,7 @@ Redis 락만 잘 걸면 된다고 생각했다.
 * 흔히 쓰는 `SET/DEL` 락 패턴은 왜 운영에서 위험할까?
 * Redis를 어디까지 믿어도 되는 걸까?
 
-👉 **Part 2: *Redis 락이 있는데도 레이스가 발생하는 이유***에서 이어진다.
+**1편. 시스템을 압박하기 시작한 배치**에서 구조를 다시 보는 것부터 시작하고, 락 문제는 4편에서 다룬다.
 
 ---
 
