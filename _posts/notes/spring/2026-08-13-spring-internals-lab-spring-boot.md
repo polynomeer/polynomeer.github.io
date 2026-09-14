@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 9 - Spring Boot는 무엇을 자동으로 조립하는가"
 date: 2026-08-13
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring Boot, Auto Configuration, Condition, SpringApplication, Java]
 series: spring-internals-lab
@@ -10,7 +10,7 @@ series_order: 9
 series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨테이너, AOP, 트랜잭션, MVC, Boot 내부 구조를 실제 실험과 축소 구현으로 해설하는 시리즈.
 ---
 
-[GitHub 저장소](https://github.com/polynomeer/spring-internals-lab)
+[GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
 ## Spring Boot를 별도 프레임워크처럼 보면 오해가 생긴다
 

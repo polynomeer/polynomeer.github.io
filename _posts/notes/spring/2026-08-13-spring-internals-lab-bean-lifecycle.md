@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 5 - Bean lifecycle과 후처리기"
 date: 2026-08-13
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring, Bean Lifecycle, BeanPostProcessor, PostConstruct, Java]
 series: spring-internals-lab
@@ -10,7 +10,7 @@ series_order: 5
 series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨테이너, AOP, 트랜잭션, MVC, Boot 내부 구조를 실제 실험과 축소 구현으로 해설하는 시리즈.
 ---
 
-[GitHub 저장소](https://github.com/polynomeer/spring-internals-lab)
+[GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
 ## Bean lifecycle은 한 줄로 끝나지 않는다
 
