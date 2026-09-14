@@ -24,9 +24,9 @@ strengths:
       ko-KR: 정합성과 상태 전이 설계
       en: Consistency and State Transition Design
     description:
-      ko-KR: 삭제중, 삭제완료, 등록중, 등록완료처럼 상태를 명시해 정산 데이터의 정합성을 운영자의 호출 순서가 아니라 시스템이 강제하도록 설계합니다.
-      en: Makes the system enforce settlement data consistency through explicit states instead of relying on operators calling APIs in the right order.
-    url: /posts/bulk-insert-with-lock-part5/
+      ko-KR: 정산 중 수정 차단, 배치 상태 전이, 결제의 UNKNOWN 상태처럼 "지금 어떤 상태인가"를 명시해 정합성을 운영자의 호출 순서가 아니라 시스템이 강제하도록 설계합니다.
+      en: Makes the system enforce consistency through explicit states, from settlement write guards and batch transitions to a payment UNKNOWN state, instead of relying on call order.
+    url: /posts/settlement-write-guard/
     icon: fas fa-sitemap
   - title:
       ko-KR: 동시성 제어와 분산락
@@ -50,7 +50,7 @@ strengths:
     description:
       ko-KR: 느린 INSERT의 진짜 원인이 시퀀스 채번의 행 락이었음을 추적해 구조를 바꾸고, 화면 단위 API를 도메인 중심 구조와 CQRS로 옮겼습니다.
       en: Traced a slow INSERT to row locks in sequence allocation and restructured it, and moved screen-driven APIs to a domain-centric structure with CQRS.
-    url: /posts/sequence-part1/
+    url: /posts/sequence-part3/
     icon: fas fa-magnifying-glass-chart
 
 featured_links:
