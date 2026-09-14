@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 6 - 프록시와 AOP"
 date: 2026-08-13
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring, AOP, Proxy, Interceptor, Java]
 series: spring-internals-lab
@@ -10,7 +10,7 @@ series_order: 6
 series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨테이너, AOP, 트랜잭션, MVC, Boot 내부 구조를 실제 실험과 축소 구현으로 해설하는 시리즈.
 ---
 
-[GitHub 저장소](https://github.com/polynomeer/spring-internals-lab)
+[GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
 ## 이번 글의 질문
 

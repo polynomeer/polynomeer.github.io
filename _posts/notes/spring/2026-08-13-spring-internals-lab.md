@@ -1,7 +1,7 @@
 ---
 title: "spring-internals-lab로 다시 읽는 Spring 1 - 이 프로젝트는 무엇을 검증하려는가"
 date: 2026-08-13
-draft: true
+status: published
 categories: [Notes, Spring]
 tags: [Spring, Java, Framework, Debugging, Architecture]
 series: spring-internals-lab
@@ -10,21 +10,23 @@ series_order: 1
 series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨테이너, AOP, 트랜잭션, MVC, Boot 내부 구조를 실제 실험과 축소 구현으로 해설하는 시리즈.
 ---
 
-[GitHub 저장소](https://github.com/polynomeer/spring-internals-lab)
+[GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
-## 왜 이런 저장소가 따로 필요한가
+> 이 시리즈는 저장소의 핵심 20주 로드맵(IoC 컨테이너부터 Spring Boot 자동 설정까지)을 기준으로 쓴 것이다. 저장소는 그 뒤로도 로드맵 너머의 주제와 캡스톤으로 계속 확장됐고, 확장된 부분은 저장소의 회고 문서(`docs/retrospective/retrospective.md`)에 정리되어 있다. 이름도 `spring-internals-lab`에서 `spring-lab`으로 바뀌었다.
 
-Spring을 오래 써도 아래 질문은 의외로 끝까지 흐릿하게 남는다.
+## Spring Internals Lab
 
-- Bean은 등록만 된 상태와 실제 생성된 상태가 어떻게 다른가
-- `BeanPostProcessor`는 정확히 어느 타이밍에 개입하는가
-- `@Transactional`은 왜 프록시를 통해서만 동작하는가
-- `DispatcherServlet`은 요청을 어떤 단계로 분해해서 처리하는가
-- Spring Boot는 Framework 위에 무엇을 추가하는가
+스프링을 오래 써도 핵심원리와 내부동작을 깊이 학습하지 않으면, 그 활용도 깊이가 없다. 스프링 관련 면접 질문을 깊게 들어가면 바로 답변하기 어려워지고, 가끔가다 마주치는 스프링의 고급활용이 필요한 순간에도 바로 해법을 꺼내어 쓸 수 없다. 특히 아래의 질문은 머릿속에 흐릿하게 남아서 완벽히 답하기 어렵다.
 
-이 질문들은 API 사용법만으로는 답하기 어렵다. 설정 클래스를 작성하고 애노테이션을 붙이는 쪽에서 보면 Spring은 너무 매끄럽게 동작한다. 하지만 장애 분석이나 설계 판단은 늘 그 아래 계층에서 벌어진다.
+- Bean은 등록만 된 상태와 실제 생성된 상태가 어떻게 다른가?
+- `BeanPostProcessor`는 정확히 어느 타이밍에 개입하는가?
+- `@Transactional`은 왜 프록시를 통해서만 동작하는가?
+- `DispatcherServlet`은 요청을 어떤 단계로 분해해서 처리하는가?
+- Spring Boot는 Framework 위에 무엇을 추가하는가?
 
-`spring-internals-lab`은 이 간극을 메우기 위한 학습 저장소다. 핵심은 단순하다. Spring을 추상 개념으로 외우지 않고, 실제 동작을 실험으로 관찰하고, 그 결과를 축소 구현으로 다시 만들며, 마지막에 설계 의도를 문서로 정리한다.
+이 질문들은 단순히 API 사용법만으로는 답하기 어렵다. 설정 클래스를 작성하고 애노테이션을 붙이는 쪽에서 보면 Spring은 너무 매끄럽게 동작한다. 하지만 장애 분석이나 설계 판단은 늘 그 아래 계층에서 벌어진다.
+
+`spring-internals-lab`은 이 간극을 메우기 위한 학습 저장소다. 핵심은 단순하다. 스프링을 추상 개념으로 외우지 않고, 실제 동작을 디버깅과 실험으로 관찰하고, 그 결과를 축소 구현으로 다시 만들며, 마지막에 설계 의도를 문서로 정리한다.
 
 ## 이 저장소가 반복하는 학습 루프
 
@@ -45,7 +47,7 @@ README에 적힌 학습 루프가 이 프로젝트의 핵심이다.
 | 축소 구현 | 메커니즘을 직접 재구성 | 내부 구조를 이해했다고 착각하는 일 |
 | 설계 의도 정리 | 왜 그렇게 나뉘는지 언어로 설명 | 동작은 봤지만 이유를 설명 못하는 상태 |
 
-즉 이 저장소는 "Spring 소스코드를 읽는다"보다 한 단계 더 나간다. 읽은 내용을 반드시 실행 결과와 구현 결과로 닫는다.
+즉 이 프로젝트를 통해 "스프링 소스코드를 읽는다"보다 한 단계 더 나아가는 것이 목표이다. 읽은 내용을 반드시 실행 결과와 구현 결과로 마무리한다.
 
 ## 저장소 전체 구조
 
@@ -105,19 +107,19 @@ flowchart LR
 
 | 모듈 | 확인하려는 질문 |
 | --- | --- |
-| `ioc-container-lab` | BeanFactory와 ApplicationContext는 어떻게 다른가 |
-| `bean-lifecycle-recorder` | init, post-process, destroy는 어떤 순서로 실행되는가 |
-| `context-refresh-visualizer` | `refresh()`는 어떤 단계를 거쳐 컨테이너를 완성하는가 |
-| `proxy-playground` | JDK 동적 프록시와 서브클래스 프록시는 어디서 갈리는가 |
-| `transaction-propagation-playground` | self-invocation, rollback 규칙, propagation은 어떻게 동작하는가 |
-| `dispatcher-servlet-trace` | 요청이 HandlerMapping, Adapter, Resolver를 어떻게 통과하는가 |
-| `spring-application-lifecycle` | Boot 이벤트와 웹 서버 시작 시점은 언제인가 |
+| `ioc-container-lab` | BeanFactory와 ApplicationContext는 어떻게 다른가? |
+| `bean-lifecycle-recorder` | init, post-process, destroy는 어떤 순서로 실행되는가? |
+| `context-refresh-visualizer` | `refresh()`는 어떤 단계를 거쳐 컨테이너를 완성하는가? |
+| `proxy-playground` | JDK 동적 프록시와 서브클래스 프록시는 어디서 갈리는가? |
+| `transaction-propagation-playground` | self-invocation, rollback 규칙, propagation은 어떻게 동작하는가? |
+| `dispatcher-servlet-trace` | 요청이 HandlerMapping, Adapter, Resolver를 어떻게 통과하는가? |
+| `spring-application-lifecycle` | Boot 이벤트와 웹 서버 시작 시점은 언제인가? |
 
-이런 실험 모듈의 강점은 "실제 Spring이 진짜 그렇게 동작하는가"를 먼저 고정할 수 있다는 데 있다.
+이런 실험 모듈의 강점은 "실제 스프링이 진짜 그렇게 동작하는가"를 먼저 통제변인으로 고정할 수 있다는 데 있다.
 
 ## `mini-spring`은 설명 가능한 크기로 줄여 놓은 구현이다
 
-실험만으로는 구조 이해가 완결되지 않는다. 그래서 이 프로젝트는 같은 주제를 축소 구현으로 다시 한 번 다룬다.
+실험만으로는 구조 이해가 완결되지 않는다. 실제 스프링은 훨씬 방대하고 복잡하기 때문이다. 따라서 이 프로젝트는 같은 주제를 축소 구현으로 다시 한 번 다룬다.
 
 대표 모듈은 다음과 같다.
 
@@ -163,18 +165,6 @@ timeline
 ```
 
 이 구조를 보면 왜 시리즈를 추상 개념별이 아니라 주차별 핵심 메커니즘 기준으로 나누는 게 좋은지도 알 수 있다. 각 문서가 하나의 질문을 닫기 때문이다.
-
-## 숫자로 보면 프로젝트 크기가 감이 온다
-
-README와 회고 문서 기준으로 드러나는 숫자는 이렇다.
-
-- 핵심 20주 로드맵 완료
-- 자동화 테스트 217개 통과
-- 코드 모듈 22개 이상 운용
-- 주차 문서 20개 이상 작성
-- 이후 추가 주제 21~26번까지 확장
-
-이 숫자가 중요한 이유는 "블로그용 미니 프로젝트" 수준이 아니라는 점을 보여주기 때문이다. 특히 테스트 수가 많다는 것은 이 저장소가 생각 정리가 아니라 관찰 결과를 재현 가능한 형태로 고정해 두고 있다는 뜻이다.
 
 ## 어떤 질문을 어떤 모듈로 검증하는가
 
