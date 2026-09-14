@@ -1,6 +1,6 @@
 ---
 title: "Shadow Release로 조회를 옮기기: MyBatis 결과와 QueryDSL 결과를 나란히 비교하며 전환한 기록"
-date: 2026-09-15
+date: 2026-09-14
 categories: [Notes, Common]
 tags: [CQRS, QueryDSL, MyBatis, Migration, Legacy, Shadow Release]
 mermaid: true

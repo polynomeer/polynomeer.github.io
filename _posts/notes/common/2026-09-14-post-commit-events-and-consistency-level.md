@@ -1,6 +1,6 @@
 ---
 title: "모든 도메인이 100% 정합성을 요구하지는 않는다: Post-Commit 이벤트와 재시도 3회 정책을 정한 기준"
-date: 2026-09-15
+date: 2026-09-14
 categories: [Notes, Common]
 tags: [Spring, Transaction, Event, Consistency, Outbox, Architecture]
 mermaid: true
