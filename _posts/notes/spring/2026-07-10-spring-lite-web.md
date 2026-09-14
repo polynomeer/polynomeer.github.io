@@ -1,7 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 4 - DispatcherServlet과 MVC 요청 처리 파이프라인
 date: 2026-07-06
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring, MVC, DispatcherServlet, Web, Java]
 series: spring-lite
@@ -9,6 +9,8 @@ series_title: spring-lite로 이해하는 Spring 구현
 series_order: 4
 series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, AOP, MVC, 트랜잭션, 부트스트랩을 구현 관점에서 해설하는 시리즈.
 ---
+
+[GitHub 저장소](https://github.com/polynomeer/spring-lite)
 
 ## 웹 프레임워크를 다시 보니 결국 디스패치 문제였다
 

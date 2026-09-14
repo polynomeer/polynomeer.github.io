@@ -1,7 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 5 - MiniSpringApplication과 자동 설정 조립 방식
 date: 2026-07-07
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring Boot, Auto Configuration, Java, Framework, MVC]
 series: spring-lite
@@ -9,6 +9,8 @@ series_title: spring-lite로 이해하는 Spring 구현
 series_order: 5
 series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, AOP, MVC, 트랜잭션, 부트스트랩을 구현 관점에서 해설하는 시리즈.
 ---
+
+[GitHub 저장소](https://github.com/polynomeer/spring-lite)
 
 ## 마지막에 다시 보니 Boot는 "조립 담당"에 가까웠다
 

@@ -1,7 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 1 - 프로젝트 구조와 설계 범위
 date: 2026-07-03
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring, Java, Framework, Architecture, DI]
 series: spring-lite
@@ -9,6 +9,10 @@ series_title: spring-lite로 이해하는 Spring 구현
 series_order: 1
 series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, AOP, MVC, 트랜잭션, 부트스트랩을 구현 관점에서 해설하는 시리즈.
 ---
+
+[GitHub 저장소](https://github.com/polynomeer/spring-lite)
+
+> 이 시리즈는 [spring-internals-lab로 다시 읽는 Spring](/series/spring-internals-lab/)과 짝이다. 그쪽이 실제 Spring의 소스와 실행을 분석하는 기록이라면, 이쪽은 같은 메커니즘을 처음부터 다시 구현하며 확인하는 기록이다. 분석 → 재구현 순서로 읽는 것이 자연스럽지만, 각 시리즈는 독립적으로도 읽힌다.
 
 ## 왜 `spring-lite`를 만들고 들여다봤나
 
