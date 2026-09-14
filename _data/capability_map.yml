@@ -54,8 +54,8 @@ nodes:
 
   - id: settlement-consistency
     cluster: systems
-    x: 34
-    y: 80
+    x: 46
+    y: 76
     icon: fas fa-lock
     tone: cyan
     title:
@@ -76,13 +76,49 @@ nodes:
         en: Made the system enforce consistency through explicit states instead of relying on operators calling APIs in order.
     representative_posts:
       - _posts/notes/common/2026-01-03-bulk-insert-with-lock-part4.md
-      - _posts/notes/common/2026-01-03-bulk-insert-with-lock-part3.md
-      - _posts/notes/common/2026-01-03-bulk-insert-with-lock-part5.md
+      - _posts/notes/common/2026-09-13-settlement-write-guard.md
+      - _posts/notes/common/2026-09-14-batch-heap-dump-to-chunk.md
     supporting_links:
       - title:
           ko-KR: 시리즈 1부부터 읽기
           en: Read the series from part 1
         url: /posts/bulk-insert-with-lock-part1/
+
+  - id: payment-consistency
+    cluster: systems
+    x: 14
+    y: 88
+    icon: fas fa-money-bill-transfer
+    tone: cyan
+    title:
+      ko-KR: 결제 정합성 검증
+      en: Payment Consistency Verification
+    summary:
+      ko-KR: 결제·원장 백엔드 ParityPay에서 중복 요청, 동시 차감, 외부 응답 유실, 프로세스 재시작 아래에서 금융 불변조건을 지키는지 26종의 부하·장애 실험으로 검증한 기록입니다.
+      en: Verifies with 26 load and failure experiments that a payment and ledger backend keeps its financial invariants under duplicate requests, concurrent debits, lost external responses, and process restarts.
+    why_it_matters:
+      ko-KR: 실무에서 배운 정합성 원칙을 돈이 걸린 도메인에 한 단계 더 엄밀하게 적용하고, 실험이 찾은 결함과 측정의 실수까지 기록했다는 것을 보여주는 축입니다.
+      en: Shows the consistency principles from production work pushed one step further in a money domain, with the defects the experiments found and the measurement mistakes recorded alongside.
+    signals:
+      - ko-KR: 이중부기 원장의 균형과 불변성을 애플리케이션이 아니라 DB 트리거로 강제했습니다.
+        en: Enforces ledger balance and immutability with database triggers rather than application code.
+      - ko-KR: 외부 승인 응답 유실을 실패로 확정하지 않고 UNKNOWN 상태로 보존해 조회로 수렴시켰습니다.
+        en: Preserves a lost external approval as UNKNOWN and converges it through queries instead of failing it.
+      - ko-KR: 잠금 보유 구간을 문장 단위로 측정해 17ms에서 1ms로 줄이고, 설명하지 못한 측정 결과는 그대로 남겼습니다.
+        en: Measured lock hold at statement level from 17 ms down to 1 ms and left unexplained measurements on the record.
+    representative_posts:
+      - _posts/notes/parity-pay/2026-09-14-parity-pay-invariants.md
+      - _posts/notes/parity-pay/2026-09-14-parity-pay-lock-hold-time.md
+      - _posts/notes/parity-pay/2026-09-14-parity-pay-unknown-state.md
+    supporting_links:
+      - title:
+          ko-KR: 시리즈 전체 보기
+          en: Read the whole series
+        url: /series/parity-pay/
+      - title:
+          ko-KR: GitHub 저장소
+          en: GitHub repository
+        url: https://github.com/polynomeer/parity-pay
 
   - id: spring-backend
     cluster: application
@@ -130,9 +166,9 @@ nodes:
       - ko-KR: 네트워크, 저장소, 애플리케이션 계층을 하나의 판단 흐름으로 묶습니다.
         en: Connects network, storage, and application layers into one decision narrative.
     representative_posts:
-      - _posts/notes/common/2026-03-20-architectural-decisions.md
-      - _posts/notes/common/2025-05-22-legacy-jsp-system-refactoring-3.md
-      - _posts/notes/programming/2025-05-22-bulk-excel-performance.md
+      - _posts/notes/common/2026-09-13-sequence-part3.md
+      - _posts/notes/common/2026-09-14-archunit-guardrails-on-legacy.md
+      - _posts/notes/common/2026-09-14-polling-to-sqs-pipeline.md
     supporting_links:
       - title:
           ko-KR: 시리즈에서 구조적으로 읽기
@@ -170,6 +206,13 @@ nodes:
         url: /recruit/
 
 edges:
+  - from: settlement-consistency
+    to: payment-consistency
+    strength: strong
+    label:
+      ko-KR: 실무 원칙을 실험으로
+      en: Production principles to experiments
+
   - from: settlement-consistency
     to: architecture-judgment
     strength: strong
