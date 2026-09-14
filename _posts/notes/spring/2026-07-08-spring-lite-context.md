@@ -1,7 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현 2 - AnnotationConfigApplicationContext로 보는 IoC와 생명주기
 date: 2026-07-04
-status: draft
+status: published
 categories: [Notes, Spring]
 tags: [Spring, IoC, DI, Bean Lifecycle, Java]
 series: spring-lite
@@ -9,6 +9,8 @@ series_title: spring-lite로 이해하는 Spring 구현
 series_order: 2
 series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, AOP, MVC, 트랜잭션, 부트스트랩을 구현 관점에서 해설하는 시리즈.
 ---
+
+[GitHub 저장소](https://github.com/polynomeer/spring-lite)
 
 ## 결국 먼저 봐야 하는 건 컨테이너였다
 
