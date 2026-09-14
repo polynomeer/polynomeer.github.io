@@ -262,6 +262,13 @@ about:
   profile_hub_summary: Use these shortcuts for the shortest path through recruiter-facing material, strengths, and project links.
   learning_evidence: Learning Evidence
   core_strengths: Core Strengths
+  portfolio_career_eyebrow: Career Projects
+  portfolio_career_title: Production work
+  portfolio_personal_eyebrow: Personal Projects
+  portfolio_personal_title: Personal projects
+  portfolio_role: Role
+  portfolio_tech: Stack
+  portfolio_read_more: Read more
 
 recruit_mode:
   strength_snapshot_eyebrow: Strength Snapshot
