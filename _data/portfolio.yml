@@ -1,0 +1,165 @@
+enabled: true
+
+# Source: career-hub portfolio.html and facts/ (2026-08 revision). Numbers are the
+# ones already published on the resume; do not add figures that facts/ does not have.
+
+career:
+  note:
+    ko-KR: (주)드림어스컴퍼니(FLO) 재직 중(2021.12 – 2025.2) 수행한 프로젝트입니다. 각 항목의 상세 과정은 연결된 글에서 다룹니다.
+    en: Projects delivered at Dreamus Company (FLO), 2021.12 – 2025.2. Each entry links to the posts that walk through the work in detail.
+  items:
+    - id: mcp-revamp
+      title:
+        ko-KR: 음원 콘텐츠 플랫폼(MCP) 전면 개편
+        en: Music Contents Platform (MCP) redesign
+      period: 2024.1 – 2024.11
+      role:
+        ko-KR: 백엔드 리딩(3인 팀) — 배포 전략·도메인 규칙 설계 및 공유, 공통 기능·ArchUnit 아키텍처 규칙·핵심 도메인 API 개발
+        en: Backend lead (team of 3) — designed and shared deployment strategy and domain rules; built shared features, ArchUnit architecture rules, and core domain APIs
+      summary:
+        ko-KR: 복잡한 상태 전이와 검증 규칙을 가진 콘텐츠 플랫폼을 도메인 중심 아키텍처로 재설계해 성능, 정합성, 확장성을 개선했습니다.
+        en: Redesigned a content platform with complex state transitions and validation rules around a domain-centric architecture, improving performance, consistency, and extensibility.
+      detail:
+        ko-KR: 화면 단위로 흩어진 API를 도메인 책임 기반으로 재설계해 응답 시간을 1.5초에서 300ms로 단축했습니다. 시퀀스 채번 구조를 바꿔 동시 요청 시 계약 생성 대기 시간을 2분에서 10초로 줄였고, 직접 설계한 ArchUnit 규칙과 SonarCloud 게이트로 정적 분석 위반을 480건에서 75건으로 줄였습니다.
+        en: Rebuilt screen-driven APIs around domain responsibilities, cutting response time from 1.5 s to 300 ms. Restructured sequence allocation to bring contract creation under concurrent load from 2 minutes to 10 seconds, and reduced static analysis violations from 480 to 75 with ArchUnit rules and SonarCloud gates I designed.
+      metrics:
+        - label: { ko-KR: API 응답, en: API response }
+          from: 1.5초
+          to: 300ms
+        - label: { ko-KR: 계약 생성, en: Contract creation }
+          from: 2분
+          to: 10초
+        - label: { ko-KR: 정적 분석 위반, en: Static analysis violations }
+          from: 480건
+          to: 75건
+      tech: [Java, Spring Boot, JPA, QueryDSL, MyBatis, MapStruct, MySQL, RabbitMQ, ArchUnit]
+      posts:
+        - /posts/sequence-part3/
+        - /posts/shadow-release-query-migration/
+        - /posts/archunit-guardrails-on-legacy/
+
+    - id: equity-system
+      title:
+        ko-KR: 지분율 시스템 트랜잭션 안정성 및 동시성 개선
+        en: Equity share system — transaction stability and concurrency
+      period: 2022.8 – 2022.11
+      role:
+        ko-KR: 단독 설계 및 구현
+        en: Sole designer and implementer
+      summary:
+        ko-KR: 저작권·실연권 지분율을 대량으로 처리하는 정산 시스템에서 동시성 문제와 배치 병목을 개선해 데이터 정합성과 처리 성능을 높였습니다.
+        en: Fixed concurrency problems and batch bottlenecks in a settlement system that processes copyright and performance-right shares in bulk, improving both consistency and throughput.
+      detail:
+        ko-KR: 인덱스 재설계와 청크 기반 트랜잭션 전환으로 80만 건 이상의 대량 삭제 처리 시간을 2시간에서 5분으로 단축했습니다. Redis 분산락을 SETNX와 Lock Token 기반으로 재설계하고 삭제중, 삭제완료, 등록중, 등록완료 상태 전이 모델을 도입해 Race Condition을 제거했으며, 병렬 파이프라인으로 대량 등록 시간을 40분에서 12분으로 줄였습니다.
+        en: Index redesign and chunked transactions cut a bulk delete of over 800k rows from 2 hours to 5 minutes. Redesigned the Redis lock around SETNX with an ownership token, introduced an explicit state transition model, and removed the race condition; a parallel pipeline brought bulk registration from 40 to 12 minutes.
+      metrics:
+        - label: { ko-KR: 대량 삭제, en: Bulk delete }
+          from: 2시간
+          to: 5분
+        - label: { ko-KR: 대량 등록, en: Bulk registration }
+          from: 40분
+          to: 12분
+      tech: [Java, Spring Boot, Redis, MySQL, AWS]
+      posts:
+        - /posts/bulk-insert-with-lock-part4/
+        - /posts/bulk-insert-with-lock-part3/
+        - /series/batch-structure-improvement/
+
+    - id: mds
+      title:
+        ko-KR: 글로벌 유통 시스템(MDS) 구축
+        en: Global Music Distribution System (MDS)
+      period: 2023.1 – 2024.1
+      role:
+        ko-KR: 시니어 개발자가 설계한 ArchUnit 기반 공통 인터페이스 계약에 따라 콘텐츠·라이선스 관리 API 개발, 이후 계약 관리까지 인수인계받아 정담당자로 유지보수
+        en: Built content and license management APIs on the ArchUnit-enforced interface contract designed by a senior engineer; later took over contract management as the owning maintainer
+      summary:
+        ko-KR: 글로벌 파트너사가 앨범을 등록하고 관리자가 검수하는 음원 유통 시스템을 구축하고, DDEX 기반 자동 전송으로 해외 플랫폼과의 직접 유통·정산 구조를 지원했습니다.
+        en: Built a distribution system where global partners register albums and administrators review them, with DDEX-based automated delivery supporting direct distribution and settlement with overseas platforms.
+      detail:
+        ko-KR: 정산 대상 단위에 상태 플래그 기반 경량 락을 설계해 정산 중 메타데이터 변경을 사전 차단했습니다. 폴링 기반 배치를 Amazon SQS 이벤트 파이프라인으로 전환해 평균 처리 대기 시간을 3~5분에서 1분 내외로 줄였습니다.
+        en: Designed a state-flag lightweight lock per settlement target to block metadata edits during settlement runs. Replaced a polling batch with an Amazon SQS event pipeline, bringing average wait from 3–5 minutes to about 1 minute.
+      metrics:
+        - label: { ko-KR: 처리 대기, en: Processing wait }
+          from: 3~5분
+          to: 1분 내외
+      tech: [Java, Spring Boot, JPA, Spring Batch, MySQL, Amazon SQS, ArchUnit]
+      posts:
+        - /posts/settlement-write-guard/
+        - /posts/polling-to-sqs-pipeline/
+
+    - id: batch-excel
+      title:
+        ko-KR: 대용량 배치·Excel 처리 최적화
+        en: Large-scale batch and Excel processing
+      period: 2022.9 – 2022.12
+      role:
+        ko-KR: 단독 수행
+        en: Sole implementer
+      summary:
+        ko-KR: 대용량 Excel과 배치 처리에서 반복되던 메모리 급증과 장기 트랜잭션 문제를 청크 기반 배치와 스트리밍 구조로 개선해 OOM을 제거했습니다.
+        en: Removed recurring OOM and long-transaction problems in large batch and Excel workloads by moving to chunked batches and streaming generation.
+      detail:
+        ko-KR: Heap Dump, GC 로그, Thread Dump 분석으로 원인이 영속성 컨텍스트 누적임을 확인한 뒤 배치를 청크 기반 트랜잭션으로 전환해 메모리 피크를 3.8GB에서 1.6GB로 줄였습니다. Excel 생성은 SXSSF 스트리밍으로 바꿔 메모리 사용량을 1.2GB에서 180MB로 줄였습니다.
+        en: Used heap dumps, GC logs, and thread dumps to trace the cause to persistence context accumulation, then moved the batch to chunked transactions, cutting peak memory from 3.8 GB to 1.6 GB. Switched Excel generation to SXSSF streaming, reducing memory from 1.2 GB to 180 MB.
+      metrics:
+        - label: { ko-KR: 배치 메모리 피크, en: Batch peak memory }
+          from: 3.8GB
+          to: 1.6GB
+        - label: { ko-KR: Excel 생성 메모리, en: Excel generation memory }
+          from: 1.2GB
+          to: 180MB
+      tech: [Java, Spring Batch, JPA, MySQL, Apache POI (SXSSF)]
+      posts:
+        - /posts/batch-heap-dump-to-chunk/
+
+personal:
+  note:
+    ko-KR: 전부 GitHub에 공개되어 있습니다. 실무에서 배운 원칙을 다른 도메인에서 다시 검증하거나, 실무에서는 하기 어려운 실험을 해보기 위한 프로젝트입니다.
+    en: All public on GitHub. These projects re-verify principles learned in production in other domains, or run the experiments that production systems do not allow.
+  items:
+    - id: parity-pay
+      title:
+        ko-KR: ParityPay — 장애 아래에서 금융 불변조건을 지키는 결제·원장 백엔드
+        en: ParityPay — a payment and ledger backend that keeps financial invariants under failure
+      period: 2026.9 –
+      summary:
+        ko-KR: 이중부기 원장, 멱등성, Transactional Outbox, UNKNOWN 상태 복구로 중복 요청, 동시 차감, 외부 응답 유실, 프로세스 재시작 아래에서도 돈의 기록이 정확한지를 부하·장애 실험 26종으로 검증했습니다. 결함 12건을 찾아 원인과 "왜 테스트가 못 잡았나"까지 기록했습니다.
+        en: Verified with 26 load and failure experiments that a double-entry ledger with idempotency, a transactional outbox, and UNKNOWN-state recovery keeps money records correct under duplicate requests, concurrent debits, lost external responses, and process restarts. Found 12 defects and recorded each cause and why the existing tests missed it.
+      tech: [Java 21, Spring Boot, PostgreSQL, Kafka/Redpanda, Testcontainers, k6]
+      repo: https://github.com/polynomeer/parity-pay
+      posts:
+        - /series/parity-pay/
+
+    - id: monticker
+      title:
+        ko-KR: monticker — 이벤트 중심 주식 관찰 앱
+        en: monticker — event-centric stock monitoring
+      period: 2026.1 –
+      summary:
+        ko-KR: 가격·거래량이 평소와 다르게 움직이는 순간을 EMA 기반 이상 탐지로 잡아 이벤트 타임라인으로 보여주는 앱입니다. Worker가 1초 주기로 수집하고, 이상을 이벤트로 정규화해 기록합니다. Claude Code를 페어로 활용해 설계는 직접 결정하고 구현 속도를 높이는 방식으로 1인 개발했습니다.
+        en: Detects moments when price or volume departs from its usual pattern with EMA-based anomaly detection and shows them as an event timeline. A worker samples every second and normalizes anomalies into recorded events. Built solo with Claude Code as a pair, keeping design decisions my own while speeding up implementation.
+      tech: [Kotlin, Spring Boot, Next.js, TimescaleDB, Redis]
+      repo: https://github.com/polynomeer/monticker
+
+    - id: starkraft
+      title:
+        ko-KR: starkraft — 결정론적 RTS 시뮬레이션 엔진
+        en: starkraft — deterministic RTS simulation engine
+      period: 2025.9 – 2026.3
+      summary:
+        ko-KR: 같은 입력이면 어디서 계산하든 같은 결과가 나오는 fixed-tick 결정론적 루프 위에 이동, 전투, 시야, 건설, 생산, 자원 채집을 구현한 게임 코어입니다. sim, server, client, tools, shared-protocol 5개 모듈로 나누고, 프로토콜을 스키마로 버전 관리하며, 리플레이 재현 검증과 CI, 릴리스 체크섬, 운영 런북까지 갖췄습니다.
+        en: A game core with movement, combat, fog of war, construction, production, and resource gathering on a fixed-tick deterministic loop where the same input yields the same result anywhere. Split into sim, server, client, tools, and shared-protocol modules with a versioned protocol schema, replay determinism checks, CI, release checksums, and an operations runbook.
+      tech: [Kotlin, Gradle, libGDX, GitHub Actions]
+      repo: https://github.com/polynomeer/starkraft
+
+    - id: iterview
+      title:
+        ko-KR: iterview — AI 면접 트레이닝 플랫폼
+        en: iterview — AI interview training platform
+      period: 2026.3 –
+      summary:
+        ko-KR: 매일 문제 카드를 받고 답변을 제출하면 채점되어, 낮은 점수는 재시도 큐로, 높은 점수는 아카이브로 이동하는 간격 반복 학습 루프를 면접 준비에 적용했습니다. 백엔드는 도메인 단위 패키지 11개, 프론트엔드는 Feature-Sliced Design으로 나누고, 설계 문서를 먼저 쓴 뒤 구현했습니다.
+        en: "Applies a spaced-repetition loop to interview practice: daily question cards, scored answers, low scores back to a retry queue, high scores to an archive. Backend split into 11 domain packages, frontend organized with Feature-Sliced Design, documented before implemented."
+      tech: [Kotlin, Spring Boot, TypeScript, Feature-Sliced Design]
+      repo: https://github.com/polynomeer/iterview

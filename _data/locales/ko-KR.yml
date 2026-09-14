@@ -257,6 +257,13 @@ about:
   profile_hub_summary: 채용 담당자용 자료, 핵심 역량, 프로젝트 링크를 가장 짧은 동선으로 보려면 아래 바로가기를 사용하세요.
   learning_evidence: 학습 성과
   core_strengths: 핵심 역량
+  portfolio_career_eyebrow: Career Projects
+  portfolio_career_title: 실무 프로젝트
+  portfolio_personal_eyebrow: Personal Projects
+  portfolio_personal_title: 개인 프로젝트
+  portfolio_role: 역할
+  portfolio_tech: 기술
+  portfolio_read_more: 관련 글
 
 recruit_mode:
   strength_snapshot_eyebrow: 역량 스냅샷

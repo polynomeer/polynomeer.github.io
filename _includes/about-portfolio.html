@@ -1,0 +1,118 @@
+{%- assign portfolio = site.data.portfolio -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- if portfolio and portfolio.enabled -%}
+<section class="about-portfolio">
+{%- if portfolio.career and portfolio.career.items and portfolio.career.items.size > 0 -%}
+<section class="about-portfolio-group" id="career-projects">
+<p class="about-portfolio-eyebrow" data-i18n="about.portfolio_career_eyebrow">{{ site.data.locales[lang].about.portfolio_career_eyebrow }}</p>
+<h2 data-i18n="about.portfolio_career_title">{{ site.data.locales[lang].about.portfolio_career_title }}</h2>
+{%- if portfolio.career.note -%}
+<p class="about-portfolio-note" data-l10n-ko="{{ portfolio.career.note['ko-KR'] | escape }}" data-l10n-en="{{ portfolio.career.note.en | escape }}">
+{%- include localized-value.html value=portfolio.career.note lang=lang -%}
+</p>
+{%- endif -%}
+{%- for item in portfolio.career.items -%}
+<article class="about-portfolio-item" id="{{ item.id }}">
+<header class="about-portfolio-item-head">
+<h3 data-l10n-ko="{{ item.title['ko-KR'] | escape }}" data-l10n-en="{{ item.title.en | escape }}">
+{%- include localized-value.html value=item.title lang=lang -%}
+</h3>
+<span class="about-portfolio-period">{{ item.period }}</span>
+</header>
+<p class="about-portfolio-summary" data-l10n-ko="{{ item.summary['ko-KR'] | escape }}" data-l10n-en="{{ item.summary.en | escape }}">
+{%- include localized-value.html value=item.summary lang=lang -%}
+</p>
+{%- if item.metrics and item.metrics.size > 0 -%}
+<ul class="about-portfolio-metrics">
+{%- for m in item.metrics -%}
+<li>
+<span class="about-portfolio-metric-label" data-l10n-ko="{{ m.label['ko-KR'] | escape }}" data-l10n-en="{{ m.label.en | escape }}">
+{%- include localized-value.html value=m.label lang=lang -%}
+</span>
+<span class="about-portfolio-metric-value">
+<span class="from">{{ m.from }}</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span class="to">{{ m.to }}</span>
+</span>
+</li>
+{%- endfor -%}
+</ul>
+{%- endif -%}
+<p class="about-portfolio-detail" data-l10n-ko="{{ item.detail['ko-KR'] | escape }}" data-l10n-en="{{ item.detail.en | escape }}">
+{%- include localized-value.html value=item.detail lang=lang -%}
+</p>
+<dl class="about-portfolio-facts">
+<dt data-i18n="about.portfolio_role">{{ site.data.locales[lang].about.portfolio_role }}</dt>
+<dd data-l10n-ko="{{ item.role['ko-KR'] | escape }}" data-l10n-en="{{ item.role.en | escape }}">
+{%- include localized-value.html value=item.role lang=lang -%}
+</dd>
+<dt data-i18n="about.portfolio_tech">{{ site.data.locales[lang].about.portfolio_tech }}</dt>
+<dd class="about-portfolio-tags">
+{%- for t in item.tech -%}<span class="about-portfolio-tag">{{ t }}</span>{%- endfor -%}
+</dd>
+</dl>
+{%- if item.posts and item.posts.size > 0 -%}
+<div class="about-portfolio-links">
+<span class="about-portfolio-links-label" data-i18n="about.portfolio_read_more">{{ site.data.locales[lang].about.portfolio_read_more }}</span>
+{%- for url in item.posts -%}
+{%- assign matched = site.posts | where: 'url', url | first -%}
+{%- if matched -%}
+<a href="{{ url | relative_url }}">{{ matched.title }}</a>
+{%- else -%}
+{%- assign series = site.series_pages | where: 'permalink', url | first -%}
+{%- if series -%}
+<a href="{{ url | relative_url }}">{{ series.title }}</a>
+{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+</div>
+{%- endif -%}
+</article>
+{%- endfor -%}
+</section>
+{%- endif -%}
+{%- if portfolio.personal and portfolio.personal.items and portfolio.personal.items.size > 0 -%}
+<section class="about-portfolio-group" id="personal-projects">
+<p class="about-portfolio-eyebrow" data-i18n="about.portfolio_personal_eyebrow">{{ site.data.locales[lang].about.portfolio_personal_eyebrow }}</p>
+<h2 data-i18n="about.portfolio_personal_title">{{ site.data.locales[lang].about.portfolio_personal_title }}</h2>
+{%- if portfolio.personal.note -%}
+<p class="about-portfolio-note" data-l10n-ko="{{ portfolio.personal.note['ko-KR'] | escape }}" data-l10n-en="{{ portfolio.personal.note.en | escape }}">
+{%- include localized-value.html value=portfolio.personal.note lang=lang -%}
+</p>
+{%- endif -%}
+<div class="about-portfolio-personal-grid">
+{%- for item in portfolio.personal.items -%}
+<article class="about-portfolio-item about-portfolio-item-compact" id="{{ item.id }}">
+<header class="about-portfolio-item-head">
+<h3 data-l10n-ko="{{ item.title['ko-KR'] | escape }}" data-l10n-en="{{ item.title.en | escape }}">
+{%- include localized-value.html value=item.title lang=lang -%}
+</h3>
+<span class="about-portfolio-period">{{ item.period }}</span>
+</header>
+<p class="about-portfolio-summary" data-l10n-ko="{{ item.summary['ko-KR'] | escape }}" data-l10n-en="{{ item.summary.en | escape }}">
+{%- include localized-value.html value=item.summary lang=lang -%}
+</p>
+<div class="about-portfolio-tags">
+{%- for t in item.tech -%}<span class="about-portfolio-tag">{{ t }}</span>{%- endfor -%}
+</div>
+<div class="about-portfolio-links">
+{%- if item.repo -%}
+<a href="{{ item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+{%- endif -%}
+{%- for url in item.posts -%}
+{%- assign series = site.series_pages | where: 'permalink', url | first -%}
+{%- if series -%}
+<a href="{{ url | relative_url }}">{{ series.title }}</a>
+{%- else -%}
+{%- assign matched = site.posts | where: 'url', url | first -%}
+{%- if matched -%}<a href="{{ url | relative_url }}">{{ matched.title }}</a>{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+</div>
+</article>
+{%- endfor -%}
+</div>
+</section>
+{%- endif -%}
+</section>
+{%- endif -%}

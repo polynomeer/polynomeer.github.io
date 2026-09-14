@@ -28,4 +28,6 @@ order: 5
 - `AWS (EC2/RDS/ECS)`, `Docker`, `Jenkins`
 - `Datadog`, `Sentry`, `JUnit 5`, `ArchUnit`
 
-{% include about-profile-hub.html %}
+{% include about-portfolio.html lang=lang %}
+
+{% include about-profile-hub.html lang=lang %}
