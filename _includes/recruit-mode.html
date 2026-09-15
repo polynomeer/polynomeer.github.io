@@ -122,7 +122,9 @@
       </section>
     {% endif %}
 
-    {% include representative-posts.html lang=include.lang surface='recruit' variant='full' limit=6 %}
+    {% unless include.skip_posts %}
+      {% include representative-posts.html lang=include.lang surface='recruit' variant='full' limit=6 %}
+    {% endunless %}
 
   </section>
 {% endif %}

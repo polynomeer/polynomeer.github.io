@@ -6,9 +6,9 @@ for_recruiters:
     en: Start here for the shortest recruiter-friendly path through the blog.
   links:
     - title:
-        ko-KR: 채용 개요
-        en: Recruit Overview
-      url: /recruit/
+        ko-KR: 소개와 포트폴리오
+        en: About and Portfolio
+      url: /about/
       icon: fas fa-user-tie
     - title:
         ko-KR: 역량 맵
@@ -23,9 +23,9 @@ for_recruiters:
 
 reading_path:
   - title:
-      ko-KR: 채용 개요 먼저 보기
-      en: Review the recruiter overview
-    url: /recruit/
+      ko-KR: 소개와 포트폴리오 먼저 보기
+      en: Start with the About page
+    url: /about/
   - title:
       ko-KR: 역량 맵 훑어보기
       en: Scan the capability map

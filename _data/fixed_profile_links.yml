@@ -5,12 +5,6 @@ eyebrow:
 
 items:
   - title:
-      ko-KR: 채용 개요
-      en: Recruit Overview
-    url: /recruit/
-    icon: fas fa-user-tie
-    external: false
-  - title:
       ko-KR: 역량 맵
       en: Capability Map
     url: /capabilities/

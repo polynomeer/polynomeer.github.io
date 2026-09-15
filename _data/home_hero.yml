@@ -29,16 +29,16 @@ metrics:
 
 actions:
   - title:
-      ko-KR: 채용 담당자용 보기
-      en: For recruiters
-    url: /recruit/
+      ko-KR: 소개와 포트폴리오
+      en: About and portfolio
+    url: /about/
     icon: fas fa-user-tie
     primary: true
   - title:
-      ko-KR: 실무 프로젝트
-      en: Production work
-    url: /about/#career-projects
-    icon: fas fa-briefcase
+      ko-KR: 역량 맵
+      en: Capability map
+    url: /capabilities/
+    icon: fas fa-diagram-project
   - title:
       ko-KR: GitHub
       en: GitHub
