@@ -201,9 +201,9 @@ nodes:
       - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
     supporting_links:
       - title:
-          ko-KR: 채용 모드에서 전체 흐름 보기
-          en: Open the recruiter path
-        url: /recruit/
+          ko-KR: 소개 페이지에서 전체 흐름 보기
+          en: Open the About page
+        url: /about/
 
 edges:
   - from: settlement-consistency

@@ -2,8 +2,8 @@ enabled: true
 
 hero:
   eyebrow:
-    ko-KR: 채용 담당자용
-    en: For Recruiters
+    ko-KR: Backend Engineer · 채용 담당자용 소개
+    en: Backend Engineer · For Recruiters
   short_title:
     ko-KR: 상태 전이, 동시성, 트랜잭션 정합성이 중요한 시스템을 계측으로 풀어온 백엔드 엔지니어
     en: Backend engineer who solves state transition, concurrency, and consistency problems by measuring first
@@ -68,7 +68,7 @@ featured_links:
     url: mailto:polynomeer@gmail.com
     icon: fas fa-envelope
   - title:
-      ko-KR: About
-      en: About
-    url: /about/
-    icon: fas fa-user
+      ko-KR: 역량 맵
+      en: Capability Map
+    url: /capabilities/
+    icon: fas fa-diagram-project

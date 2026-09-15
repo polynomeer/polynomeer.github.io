@@ -1264,6 +1264,24 @@ header {
   margin-top: 2.2rem;
 }
 
+.about-technical-focus {
+  margin-top: 2rem;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  ul {
+    padding-left: 1.2rem;
+  }
+}
+
+.about-blog-note {
+  margin-top: 1rem;
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
 .about-portfolio-group + .about-portfolio-group {
   margin-top: 2.4rem;
 }

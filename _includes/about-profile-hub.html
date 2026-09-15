@@ -49,38 +49,4 @@
     </div>
   {% endif %}
 
-  {% if recruit and recruit.strengths and recruit.strengths.size > 0 %}
-    <section class="about-profile-strengths">
-      <h3 data-i18n="about.core_strengths">{{ site.data.locales[include.lang].about.core_strengths }}</h3>
-      <div class="about-profile-strength-grid">
-        {% for strength in recruit.strengths limit: 4 %}
-          {% assign href = strength.url %}
-          {% unless href contains '://' %}
-            {% assign href = href | relative_url %}
-          {% endunless %}
-          <a class="about-profile-strength-card" href="{{ href }}">
-            <div class="about-profile-card-header">
-              {% if strength.icon %}
-                <i class="{{ strength.icon }}"></i>
-              {% endif %}
-              <strong
-                data-l10n-ko="{{ strength.title['ko-KR'] | default: strength.title | escape }}"
-                data-l10n-en="{{ strength.title.en | default: strength.title | escape }}"
-              >
-                {% include localized-value.html value=strength.title lang=include.lang %}
-              </strong>
-            </div>
-            {% if strength.description %}
-              <span
-                data-l10n-ko="{{ strength.description['ko-KR'] | default: strength.description | escape }}"
-                data-l10n-en="{{ strength.description.en | default: strength.description | escape }}"
-              >
-                {% include localized-value.html value=strength.description lang=include.lang %}
-              </span>
-            {% endif %}
-          </a>
-        {% endfor %}
-      </div>
-    </section>
-  {% endif %}
 </section>

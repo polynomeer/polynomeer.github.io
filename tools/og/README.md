@@ -1,8 +1,8 @@
 # Social preview images
 
-`og-default.html` and `og-recruit.html` are the sources for `assets/img/og-default.png`
-(site-wide fallback, `social_preview_image` in `_config.yml`) and `assets/img/og-recruit.png`
-(`image` on `_tabs/recruit.md`). Re-render after editing:
+`og-default.html` and `og-about.html` are the sources for `assets/img/og-default.png`
+(site-wide fallback, `social_preview_image` in `_config.yml`) and `assets/img/og-about.png`
+(`image` on `_tabs/about.html`). Re-render after editing:
 
 ```bash
 for n in default recruit; do

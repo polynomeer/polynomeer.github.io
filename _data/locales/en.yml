@@ -266,8 +266,8 @@ about:
   intro_summary_3: This blog records the engineering judgment and experiments that came out of that work. I write mostly about database internals, Spring backend behavior, architectural decisions, performance improvement, concurrency control, and operating batch or settlement systems with higher reliability.
   technical_focus: Technical Focus
   profile_hub_eyebrow: Profile Hub
-  profile_hub_title: Start Here
-  profile_hub_summary: Use these shortcuts for the shortest path through recruiter-facing material, strengths, and project links.
+  profile_hub_title: Where to go next
+  profile_hub_summary: Shortcuts to the capability map, learning evidence, and GitHub.
   learning_evidence: Learning Evidence
   core_strengths: Core Strengths
   portfolio_career_eyebrow: Career Projects
