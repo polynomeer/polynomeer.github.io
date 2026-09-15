@@ -122,6 +122,7 @@ post:
   series_progress: ":TOTAL편 중 :CURRENT편"
   series_previous: 이전 시리즈 글
   series_next: 다음 시리즈 글
+  recommendation_project: 같은 프로젝트
   recommendation_series: 같은 시리즈
   read_time:
     unit: 분
@@ -175,6 +176,8 @@ series_directory:
   start_from: 시작 글
 
 home:
+  case_study_mark: "실무 사례"
+  series_part: ":N편"
   hero_label: 소개
   search_filter_label: 검색
   search_filter_placeholder: 글 검색

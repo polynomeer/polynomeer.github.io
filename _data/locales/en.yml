@@ -122,6 +122,7 @@ post:
   series_progress: "Part :CURRENT of :TOTAL"
   series_previous: Previous in series
   series_next: Next in series
+  recommendation_project: Same project
   recommendation_series: Same series
   read_time:
     unit: min
@@ -180,6 +181,8 @@ series_directory:
   start_from: Start with
 
 home:
+  case_study_mark: "Case study"
+  series_part: "Part :N"
   hero_label: Introduction
   search_filter_label: Search
   search_filter_placeholder: Search posts

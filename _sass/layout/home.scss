@@ -1098,3 +1098,30 @@ body.tag-filter-open {
     flex: none;
   }
 }
+
+/* Card hierarchy: case-study marker and series meta */
+.card-wrapper.is-case-study {
+  border-left: 3px solid var(--metric-color);
+  border-radius: $radius-lg;
+}
+
+.card-case-mark {
+  margin-right: 0.35rem;
+  font-size: 0.8em;
+  color: var(--metric-color);
+  vertical-align: 0.1em;
+}
+
+.post-meta-series {
+  a {
+    color: inherit;
+  }
+
+  .post-meta-series-order {
+    margin-left: 0.25rem;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(98, 114, 164, 0.3);
+    font-size: 0.75em;
+  }
+}
