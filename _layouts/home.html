@@ -11,7 +11,15 @@ refactor: true
 {% for post in site.posts %}
   {% unless post.path contains home_feed_excluded_segment %}
     {% if post.hidden != true %}
-      {% capture ordered_entry %}{{ post.date | date: '%Y%m%d%H%M%S' }}::{{ forloop.index0 }}{% endcapture %}
+      {% assign order_group = '~' %}
+      {% assign order_rank = 999 %}
+      {% if post.series %}
+        {% assign order_group = post.series %}
+        {% assign order_rank = 999 | minus: post.series_order %}
+      {% endif %}
+      {% assign order_rank = order_rank | prepend: '000' | slice: -3, 3 %}
+      {% assign order_index = forloop.index0 | prepend: '00000' | slice: -5, 5 %}
+      {% capture ordered_entry %}{{ post.date | date: '%Y%m%d%H%M%S' }}::{{ order_group }}::{{ order_rank }}::{{ order_index }}{% endcapture %}
       {% assign ordered_entries = ordered_entries | push: ordered_entry %}
     {% endif %}
   {% endunless %}
