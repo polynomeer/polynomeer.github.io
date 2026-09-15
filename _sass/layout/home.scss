@@ -828,3 +828,48 @@ body.tag-filter-open {
     }
   } /* .pagination */
 }
+
+/* Recruiter entry strip — shown only where the right panel is hidden (below xl) */
+.mobile-recruit-strip {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(98, 114, 164, 0.22);
+  background: rgba(68, 71, 90, 0.16);
+}
+
+.mobile-recruit-strip-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--heading-color);
+}
+
+.mobile-recruit-strip-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.mobile-recruit-strip-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.3);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+
+  i {
+    color: var(--label-color);
+  }
+
+  &:hover {
+    text-decoration: none;
+    border-color: var(--link-color);
+  }
+}
