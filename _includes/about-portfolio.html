@@ -19,6 +19,9 @@
 </h3>
 <span class="about-portfolio-period">{{ item.period }}</span>
 </header>
+<p class="about-portfolio-role" data-l10n-ko="{{ item.role['ko-KR'] | escape }}" data-l10n-en="{{ item.role.en | escape }}">
+{%- include localized-value.html value=item.role lang=lang -%}
+</p>
 <p class="about-portfolio-summary" data-l10n-ko="{{ item.summary['ko-KR'] | escape }}" data-l10n-en="{{ item.summary.en | escape }}">
 {%- include localized-value.html value=item.summary lang=lang -%}
 </p>
@@ -38,19 +41,9 @@
 {%- endfor -%}
 </ul>
 {%- endif -%}
-<p class="about-portfolio-detail" data-l10n-ko="{{ item.detail['ko-KR'] | escape }}" data-l10n-en="{{ item.detail.en | escape }}">
-{%- include localized-value.html value=item.detail lang=lang -%}
-</p>
-<dl class="about-portfolio-facts">
-<dt data-i18n="about.portfolio_role">{{ site.data.locales[lang].about.portfolio_role }}</dt>
-<dd data-l10n-ko="{{ item.role['ko-KR'] | escape }}" data-l10n-en="{{ item.role.en | escape }}">
-{%- include localized-value.html value=item.role lang=lang -%}
-</dd>
-<dt data-i18n="about.portfolio_tech">{{ site.data.locales[lang].about.portfolio_tech }}</dt>
-<dd class="about-portfolio-tags">
+<div class="about-portfolio-tags">
 {%- for t in item.tech -%}<span class="about-portfolio-tag">{{ t }}</span>{%- endfor -%}
-</dd>
-</dl>
+</div>
 {%- if item.posts and item.posts.size > 0 -%}
 <div class="about-portfolio-links">
 <span class="about-portfolio-links-label" data-i18n="about.portfolio_read_more">{{ site.data.locales[lang].about.portfolio_read_more }}</span>

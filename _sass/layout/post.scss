@@ -1277,7 +1277,7 @@ header {
 }
 
 .about-blog-note {
-  margin-top: 1rem;
+  margin-top: 2rem;
   color: var(--text-muted-color);
   line-height: 1.7;
 }
@@ -1339,10 +1339,11 @@ header {
   line-height: 1.7;
 }
 
-.about-portfolio-detail {
-  margin-bottom: 0.9rem;
+.about-portfolio-role {
+  margin: -0.35rem 0 0.7rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
   color: var(--text-muted-color);
-  line-height: 1.7;
 }
 
 .about-portfolio-metrics {
@@ -1387,28 +1388,11 @@ header {
   }
 }
 
-.about-portfolio-facts {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.35rem 0.9rem;
-  margin: 0 0 0.9rem;
-  font-size: 0.9rem;
-
-  dt {
-    color: var(--text-muted-color);
-    font-weight: 600;
-  }
-
-  dd {
-    margin: 0;
-    line-height: 1.6;
-  }
-}
-
 .about-portfolio-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+  margin-top: 0.2rem;
 }
 
 .about-portfolio-tag {
@@ -1434,6 +1418,43 @@ header {
 }
 
 .about-portfolio-links-label {
+  color: var(--text-muted-color);
+}
+
+.about-representative {
+  margin-top: 2.4rem;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.about-representative-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid rgba(98, 114, 164, 0.18);
+
+    &:last-child {
+      border-bottom: 1px solid rgba(98, 114, 164, 0.18);
+    }
+  }
+
+  a {
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--heading-color);
+  }
+}
+
+.about-representative-capability {
+  font-size: 0.8rem;
   color: var(--text-muted-color);
 }
 

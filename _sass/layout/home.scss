@@ -880,22 +880,6 @@ body.tag-filter-open {
   color: var(--text-muted-color);
 }
 
-.home-hero-roles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0 0 1.1rem;
-}
-
-.home-hero-role {
-  padding: 0.22rem 0.65rem;
-  border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.3);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-muted-color);
-}
-
 .home-hero-metrics {
   display: flex;
   gap: 0.6rem;
@@ -1008,102 +992,6 @@ body.tag-filter-open {
   }
 }
 
-/* Home curation — "start here" series row */
-#home-curation {
-  margin: 0 0 1.4rem;
-}
-
-.home-curation-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.8rem;
-
-  h2 {
-    margin: 0;
-    font-size: 1.1rem;
-  }
-}
-
-.home-curation-eyebrow {
-  margin: 0 0 0.2rem;
-  color: var(--label-color);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.home-curation-grid {
-  display: flex;
-  gap: 0.75rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.home-curation-card {
-  flex: 0 0 78%;
-  margin: 0;
-  scroll-snap-align: start;
-}
-
-.home-curation-card-link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  height: 100%;
-  padding: 0.95rem 1.05rem;
-  border-radius: 0.95rem;
-  border: 1px solid rgba(98, 114, 164, 0.2);
-  background: rgba(68, 71, 90, 0.12);
-  color: var(--text-color);
-
-  &:hover {
-    text-decoration: none;
-    border-color: var(--link-color);
-  }
-
-  h3 {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.4;
-    color: var(--heading-color);
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.86rem;
-    line-height: 1.55;
-    color: var(--text-muted-color);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-
-.home-curation-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--text-muted-color);
-
-  i {
-    color: var(--label-color);
-  }
-}
-
-.home-curation-chip {
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.3);
-}
-
 @media all and (min-width: 768px) {
   .home-hero {
     padding: 1.8rem 1.8rem 1.6rem;
@@ -1126,15 +1014,6 @@ body.tag-filter-open {
     }
   }
 
-  .home-curation-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    overflow: visible;
-  }
-
-  .home-curation-card {
-    flex: none;
-  }
 }
 
 /* Card hierarchy: case-study marker and series meta */
