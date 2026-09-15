@@ -2,7 +2,7 @@
 title: "잔고를 저장하지 말고 재구성하라 — 이벤트 소싱 원장 설계"
 date: 2026-06-13
 categories: [Monticker, InvestmentWallet]
-tags: [monticker, event-sourcing, ledger, kotlin, cqrs, investment-wallet]
+tags: [monticker, event-sourcing, Ledger, kotlin, CQRS, investment-wallet]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 10

@@ -2,7 +2,7 @@
 title: "MockK로 JdbcTemplate 목킹하기 — 311개 테스트 작성 경험"
 date: 2026-06-26
 categories: [Monticker, Testing]
-tags: [monticker, mockk, junit5, kotlin, testing, jdbctemplate, backend]
+tags: [monticker, mockk, junit5, kotlin, Testing, jdbctemplate, Backend]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 20

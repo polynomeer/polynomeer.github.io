@@ -2,7 +2,7 @@
 title: "Markowitz 최적화를 솔버 없이 구현하기 — 프로젝션 경사하강법"
 date: 2026-06-20
 categories: [Monticker, QuantAnalytics]
-tags: [monticker, markowitz, portfolio-optimization, gradient-descent, kotlin, math]
+tags: [monticker, markowitz, portfolio-optimization, gradient-descent, kotlin, Math]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 15

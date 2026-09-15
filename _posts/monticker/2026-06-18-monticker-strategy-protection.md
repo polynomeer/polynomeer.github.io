@@ -2,7 +2,7 @@
 title: "전략 지문(SHA-256)으로 룰셋 보호하기 — 서버 사이드 실행과 역공학 방어"
 date: 2026-06-18
 categories: [Monticker, QuantLab]
-tags: [monticker, strategy, sha256, security, server-side, quant]
+tags: [monticker, strategy, sha256, Security, server-side, quant]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 14

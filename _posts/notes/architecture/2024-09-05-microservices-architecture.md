@@ -2,7 +2,7 @@
 title: Microservices Architecture
 date: 2024-09-05
 categories: [Notes, Architecture]
-tags: [architecture]
+tags: [Architecture]
 ---
 
 # Microservices Architecture

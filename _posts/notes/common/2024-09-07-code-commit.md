@@ -2,7 +2,7 @@
 title: AWS Code Commit
 date: 2024-09-05
 categories: [Notes, Common]
-tags: [AWS, CodeCommit, Git]
+tags: [AWS, AWS CodeCommit, Git]
 ---
 
 # AWS Code Commit

@@ -2,7 +2,7 @@
 title: 테스트 코드는 왜 작성해야 할까?
 date: 2025-09-02
 categories: [Notes, Programming]
-tags: [Test, Test Code]
+tags: [Testing, Test Code]
 ---
 
 ## 왜 테스트 코드를 작성해야 할까?

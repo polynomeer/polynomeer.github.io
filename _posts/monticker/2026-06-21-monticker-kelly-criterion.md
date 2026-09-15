@@ -2,7 +2,7 @@
 title: "Kelly Criterion: 수학적 파산 방지 베팅 비율 — Half Kelly와 백테스트 연동"
 date: 2026-06-21
 categories: [Monticker, QuantAnalytics]
-tags: [monticker, kelly-criterion, position-sizing, math, quant, risk-management]
+tags: [monticker, kelly-criterion, position-sizing, Math, quant, risk-management]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 16

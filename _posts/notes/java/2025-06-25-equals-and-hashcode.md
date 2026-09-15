@@ -2,7 +2,7 @@
 title: "equals()와 hashCode()를 함께 오버라이드해야 하는 이유"
 date: 2025-06-25
 categories: [Notes, Java]
-tags: [Java, equals, hashCode, Collection]
+tags: [Java, equals, hashCode, Collections]
 ---
 
 Java에서 `equals()`와 `hashCode()`는 객체 동일성을 다룰 때 가장 자주 마주치는 메서드다. 문제는 이 둘을 따로 생각하면 거의 항상 오류가 생긴다는 점이다. 특히 `HashMap`, `HashSet` 같은 해시 기반 컬렉션에서는 둘의 계약을 지키지 않으면 겉으로는 멀쩡해 보여도 논리적으로 잘못된 동작이 발생한다.

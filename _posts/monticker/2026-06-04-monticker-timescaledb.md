@@ -2,7 +2,7 @@
 title: "TimescaleDB를 시계열 DB로 고른 이유 — Hypertable과 연속 집계"
 date: 2026-06-04
 categories: [Monticker, Architecture]
-tags: [monticker, timescaledb, postgresql, time-series, database, hypertable]
+tags: [monticker, timescaledb, PostgreSQL, time-series, Database, hypertable]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 3
