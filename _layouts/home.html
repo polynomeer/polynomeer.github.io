@@ -187,7 +187,7 @@ refactor: true
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
     <article
-      class="card-wrapper card"
+      class="card-wrapper card{% if post.problem_decision_result %} is-case-study{% endif %}"
       data-post-url="{{ post.url | relative_url }}"
       data-post-type="{{ post_content_type_id }}"
       data-post-search="{{ post_search_blob | escape }}"
@@ -222,6 +222,9 @@ refactor: true
           <div class="card-body d-flex flex-column">
             <div class="card-title-row my-2 mt-md-0">
               <h1 class="card-title">
+                {% if post.problem_decision_result %}
+                  <i class="fas fa-flask card-case-mark" aria-hidden="true" title="{{ site.data.locales[lang].home.case_study_mark }}"></i>
+                {% endif %}
                 <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
               </h1>
               <div class="card-title-badges">
@@ -260,6 +263,21 @@ refactor: true
                           {%- unless forloop.last -%},{%- endunless -%}
                         {% endfor %}
                       </span>
+                    </span>
+                  {% endif %}
+
+                  {% if post.series %}
+                    {% assign card_series_page = site.series_pages | where: 'series_id', post.series | first %}
+                    <span class="post-meta-item post-meta-series">
+                      <i class="fas fa-list-ol fa-fw"></i>
+                      {% if card_series_page %}
+                        <a href="{{ card_series_page.url | relative_url }}">{{ card_series_page.title }}</a>
+                      {% else %}
+                        <span>{{ post.series_title | default: post.series }}</span>
+                      {% endif %}
+                      {% if post.series_order %}
+                        <span class="post-meta-series-order">{{ site.data.locales[lang].home.series_part | replace: ':N', post.series_order }}</span>
+                      {% endif %}
                     </span>
                   {% endif %}
                 </div>

@@ -6,7 +6,39 @@
 {% assign CATEGORY_SCORE = 0.75 %}
 {% assign SEPARATOR = '::' %}
 
+{% assign PROJECT_SCORE = 8 %}
 {% assign match_posts = '' | split: '' %}
+
+{% comment %} Posts that belong to the same _data/portfolio.yml entry as this page. {% endcomment %}
+{% assign project_urls = '' | split: '' %}
+{% if site.data.portfolio and site.data.portfolio.enabled %}
+  {% if page.series %}
+    {% assign page_series_page = site.series_pages | where: 'series_id', page.series | first %}
+  {% endif %}
+  {% assign portfolio_groups = site.data.portfolio.career.items | concat: site.data.portfolio.personal.items %}
+  {% for item in portfolio_groups %}
+    {% assign hit = false %}
+    {% if item.posts contains page.url %}
+      {% assign hit = true %}
+    {% elsif page_series_page and item.posts contains page_series_page.permalink %}
+      {% assign hit = true %}
+    {% endif %}
+    {% if hit %}
+      {% for url in item.posts %}
+        {% if url contains '/posts/' %}
+          {% assign project_urls = project_urls | push: url %}
+        {% else %}
+          {% assign sp = site.series_pages | where: 'permalink', url | first %}
+          {% if sp %}
+            {% assign sp_posts = site.posts | where: 'series', sp.series_id %}
+            {% for spp in sp_posts %}{% assign project_urls = project_urls | push: spp.url %}{% endfor %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 {% for post in site.posts %}
   {% if post.url == page.url %}
@@ -15,12 +47,18 @@
 
   {% assign score = 0 %}
   {% assign same_series = false %}
+  {% assign same_project = false %}
   {% assign shared_tag_count = 0 %}
   {% assign shared_category_count = 0 %}
 
   {% if page.series and post.series and page.series == post.series %}
     {% assign score = score | plus: SERIES_SCORE %}
     {% assign same_series = true %}
+  {% endif %}
+
+  {% if project_urls contains post.url %}
+    {% assign score = score | plus: PROJECT_SCORE %}
+    {% assign same_project = true %}
   {% endif %}
 
   {% for tag in post.tags %}
@@ -38,8 +76,10 @@
   {% endfor %}
 
   {% if score > 0 %}
+    {% comment %} Zero-pad the score so string sorting matches numeric order. {% endcomment %}
+    {% assign score_key = score | times: 100 | round | prepend: '000000' | slice: -6, 6 %}
     {% capture candidate %}
-      {{- score -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}{{ SEPARATOR }}{{- same_series -}}
+      {{- score_key -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}{{ SEPARATOR }}{{- same_series -}}{{ SEPARATOR }}{{- same_project -}}
     {% endcapture %}
     {% assign match_posts = match_posts | push: candidate %}
   {% endif %}
@@ -64,8 +104,12 @@
         {% assign entry_parts = entry | split: SEPARATOR %}
         {% assign index = entry_parts[2] | plus: 0 %}
         {% assign show_series_badge = false %}
+        {% assign show_project_badge = false %}
         {% if entry_parts[3] == 'true' %}
           {% assign show_series_badge = true %}
+        {% endif %}
+        {% if entry_parts[4] == 'true' and show_series_badge == false %}
+          {% assign show_project_badge = true %}
         {% endif %}
         {% assign post = site.posts[index] %}
 
@@ -74,10 +118,13 @@
             <div class="card-body">
               {% include datetime.html date=post.date lang=include.lang %}
               <h4 class="pt-0 my-2">{{ post.title }}</h4>
-              {% if show_series_badge %}
+              {% if show_series_badge or show_project_badge %}
                 <div class="recommendation-badges mb-2">
                   {% if show_series_badge %}
                     <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_series }}</span>
+                  {% endif %}
+                  {% if show_project_badge %}
+                    <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_project }}</span>
                   {% endif %}
                 </div>
               {% endif %}
