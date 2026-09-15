@@ -15,15 +15,6 @@
 {%- include localized-value.html value=recruit.hero.summary lang=lang -%}
 </p>
 {%- endif -%}
-{%- if include.show_summary and recruit.hero.roles -%}
-<div class="home-hero-roles">
-{%- for role in recruit.hero.roles -%}
-<span class="home-hero-role" data-l10n-ko="{{ role['ko-KR'] | escape }}" data-l10n-en="{{ role.en | escape }}">
-{%- include localized-value.html value=role lang=lang -%}
-</span>
-{%- endfor -%}
-</div>
-{%- endif -%}
 {%- if hero.metrics and hero.metrics.size > 0 -%}
 <ul class="home-hero-metrics">
 {%- for m in hero.metrics -%}

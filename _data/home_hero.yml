@@ -44,9 +44,8 @@ actions:
       en: Capability map
     url: /capabilities/
     icon: fas fa-diagram-project
-
-# Series shown in the "start here" row, in this order.
-featured_series:
-  - batch-structure-improvement
-  - parity-pay
-  - sequence-bottleneck
+  - title:
+      ko-KR: 학습 성과
+      en: Learning evidence
+    url: /learning-evidence/
+    icon: fas fa-book-open-reader

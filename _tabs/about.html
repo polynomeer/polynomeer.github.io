@@ -13,9 +13,8 @@ image:
 
 {% include home-hero.html lang=lang show_summary=true %}
 
-{% include recruit-mode.html lang=lang skip_posts=true skip_hero=true %}
-
 <section class="about-technical-focus">
+  <p class="about-portfolio-eyebrow">Stack</p>
   <h2 data-i18n="about.technical_focus">{{ site.data.locales[lang].about.technical_focus }}</h2>
   <ul>
     <li><code>Java</code>, <code>Kotlin</code>, <code>Go</code>, <code>Python</code></li>
@@ -24,11 +23,10 @@ image:
     <li><code>AWS (EC2/RDS/ECS)</code>, <code>Docker</code>, <code>Jenkins</code></li>
     <li><code>Datadog</code>, <code>Sentry</code>, <code>JUnit 5</code>, <code>ArchUnit</code></li>
   </ul>
-  <p class="about-blog-note" data-i18n="about.intro_summary_3">{{ site.data.locales[lang].about.intro_summary_3 }}</p>
 </section>
 
 {% include about-portfolio.html lang=lang %}
 
-{% include representative-posts.html lang=lang surface='recruit' variant='full' limit=6 %}
+{% include about-representative-posts.html lang=lang %}
 
-{% include about-profile-hub.html lang=lang %}
+<p class="about-blog-note" data-i18n="about.intro_summary_3">{{ site.data.locales[lang].about.intro_summary_3 }}</p>

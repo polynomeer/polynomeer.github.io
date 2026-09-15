@@ -1,0 +1,23 @@
+{%- assign representative = site.data.representative_posts -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- if representative and representative.enabled and representative.items -%}
+<section class="about-representative" id="representative-posts">
+<p class="about-portfolio-eyebrow" data-i18n="panel.representative_posts">{{ site.data.locales[lang].panel.representative_posts }}</p>
+<h2 data-i18n="representative_posts.title">{{ site.data.locales[lang].representative_posts.title }}</h2>
+<ul class="about-representative-list">
+{%- for item in representative.items limit: 6 -%}
+{%- assign matched = site.posts | where: 'path', item.path | first -%}
+{%- if matched -%}
+<li>
+<a href="{{ matched.url | relative_url }}">{{ matched.title }}</a>
+{%- if item.capability -%}
+<span class="about-representative-capability" data-l10n-ko="{{ item.capability['ko-KR'] | escape }}" data-l10n-en="{{ item.capability.en | escape }}">
+{%- include localized-value.html value=item.capability lang=lang -%}
+</span>
+{%- endif -%}
+</li>
+{%- endif -%}
+{%- endfor -%}
+</ul>
+</section>
+{%- endif -%}
