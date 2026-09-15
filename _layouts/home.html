@@ -8,6 +8,12 @@ refactor: true
 
 {% assign ordered_entries = '' | split: '' %}
 
+{% comment %}
+  Newest first. Posts sharing a date are grouped by series and listed in
+  series_order, so a multi-part series published in one day reads 1, 2, 3
+  instead of the reverse. The key is sorted then reversed, hence the
+  inverted rank and the '~' group that sorts standalone posts first.
+{% endcomment %}
 {% for post in site.posts %}
   {% unless post.path contains home_feed_excluded_segment %}
     {% if post.hidden != true %}
@@ -305,7 +311,7 @@ refactor: true
 
 {% if paginator.total_pages > 1 %}
   <div id="static-post-pagination">
-    {% include post-paginator.html %}
+    {% include post-paginator.html lang=lang %}
   </div>
 {% endif %}
 

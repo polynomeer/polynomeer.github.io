@@ -177,6 +177,7 @@ home:
   case_study_mark: "실무 사례"
   series_part: ":N편"
   hero_label: 소개
+  browse_archive: 아카이브에서 전체 글 보기
   search_filter_label: 검색
   search_filter_placeholder: 글 검색
   type_filter_label: 타입

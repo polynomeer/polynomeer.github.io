@@ -182,6 +182,7 @@ home:
   case_study_mark: "Case study"
   series_part: "Part :N"
   hero_label: Introduction
+  browse_archive: Browse every post in the archive
   search_filter_label: Search
   search_filter_placeholder: Search posts
   type_filter_label: Type

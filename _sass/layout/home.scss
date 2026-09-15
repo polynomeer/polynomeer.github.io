@@ -671,10 +671,17 @@ body.tag-filter-open {
 .pagination {
   color: var(--text-color);
   font-family: Lato, sans-serif;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 0.35rem;
 
   a:hover {
     text-decoration: none;
+  }
+
+  .page-index {
+    padding: 0 0.6rem;
+    font-size: 0.9rem;
+    color: var(--text-muted-color);
   }
 
   .page-item {
@@ -712,6 +719,23 @@ body.tag-filter-open {
     }
   } /* .page-item */
 } /* .pagination */
+
+.home-paginator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.home-paginator-archive {
+  font-size: 0.85rem;
+  color: var(--text-muted-color);
+
+  &:hover {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+}
 
 /* Tablet */
 @media all and (min-width: 768px) {
@@ -770,14 +794,6 @@ body.tag-filter-open {
       }
     }
   }
-
-  .pagination {
-    .page-item {
-      &:not(:first-child):not(:last-child) {
-        display: none;
-      }
-    }
-  }
 }
 
 @media all and (max-width: 576px) {
@@ -827,21 +843,6 @@ body.tag-filter-open {
   #home-curation {
     margin-top: 2rem;
   }
-
-  .pagination {
-    font-size: 0.85rem;
-    justify-content: center;
-
-    .page-item {
-      &:not(:last-child) {
-        margin-right: 0.7rem;
-      }
-    }
-
-    .page-index {
-      display: none;
-    }
-  } /* .pagination */
 }
 
 /* Home hero — page 1 only */
