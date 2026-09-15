@@ -1,0 +1,48 @@
+{%- assign hero = site.data.home_hero -%}
+{%- assign recruit = site.data.recruit_mode -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- if hero and hero.enabled -%}
+{%- assign title = recruit.hero.short_title | default: recruit.hero.title -%}
+<section class="home-hero" aria-label="{{ site.data.locales[lang].home.hero_label }}">
+<p class="home-hero-eyebrow" data-l10n-ko="{{ hero.eyebrow['ko-KR'] | escape }}" data-l10n-en="{{ hero.eyebrow.en | escape }}">
+{%- include localized-value.html value=hero.eyebrow lang=lang -%}
+</p>
+<h2 class="home-hero-title" data-l10n-ko="{{ title['ko-KR'] | escape }}" data-l10n-en="{{ title.en | escape }}">
+{%- include localized-value.html value=title lang=lang -%}
+</h2>
+{%- if hero.metrics and hero.metrics.size > 0 -%}
+<ul class="home-hero-metrics">
+{%- for m in hero.metrics -%}
+{%- assign href = m.url -%}{%- unless href contains '://' -%}{%- assign href = href | relative_url -%}{%- endunless -%}
+<li>
+<a href="{{ href }}">
+<span class="home-hero-metric-value">
+{%- if m.from -%}
+<span class="from">{{ m.from }}</span><span class="arrow" aria-hidden="true">→</span><span class="to">{{ m.to }}</span>
+{%- else -%}
+<span class="to" data-l10n-ko="{{ m.value | escape }}" data-l10n-en="{{ m.value_en | default: m.value | escape }}">{{ m.value }}</span>
+{%- endif -%}
+</span>
+<span class="home-hero-metric-label" data-l10n-ko="{{ m.label['ko-KR'] | escape }}" data-l10n-en="{{ m.label.en | escape }}">
+{%- include localized-value.html value=m.label lang=lang -%}
+</span>
+</a>
+</li>
+{%- endfor -%}
+</ul>
+{%- endif -%}
+{%- if hero.actions and hero.actions.size > 0 -%}
+<div class="home-hero-actions">
+{%- for a in hero.actions -%}
+{%- assign href = a.url -%}{%- unless href contains '://' or href contains 'mailto:' -%}{%- assign href = href | relative_url -%}{%- endunless -%}
+<a class="home-hero-action{% if a.primary %} is-primary{% endif %}" href="{{ href }}"{% if a.url contains '://' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+{%- if a.icon -%}<i class="{{ a.icon }}"></i>{%- endif -%}
+<span data-l10n-ko="{{ a.title['ko-KR'] | escape }}" data-l10n-en="{{ a.title.en | escape }}">
+{%- include localized-value.html value=a.title lang=lang -%}
+</span>
+</a>
+{%- endfor -%}
+</div>
+{%- endif -%}
+</section>
+{%- endif -%}

@@ -180,6 +180,7 @@ series_directory:
   start_from: Start with
 
 home:
+  hero_label: Introduction
   search_filter_label: Search
   search_filter_placeholder: Search posts
   type_filter_label: Type
@@ -201,8 +202,8 @@ home:
   curation_explore: Explore
   curation_paths_eyebrow: Guided learning
   curation_paths_title: Follow curated reading and study paths
-  curation_series_eyebrow: Ordered series
-  curation_series_title: Read through connected series
+  curation_series_eyebrow: Start here
+  curation_series_title: Series to read in order
   curation_series_count: ":COUNT posts"
   curation_series_fallback: A connected sequence of posts designed to be read in order.
 

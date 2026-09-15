@@ -1,20 +1,24 @@
 {% assign featured_series = '' | split: '' %}
 
-{% for post in site.posts %}
-  {% if post.series %}
-    {% unless featured_series contains post.series %}
-      {% assign featured_series = featured_series | push: post.series %}
-    {% endunless %}
-  {% endif %}
-{% endfor %}
+{% if site.data.home_hero and site.data.home_hero.featured_series %}
+  {% assign featured_series = site.data.home_hero.featured_series %}
+{% else %}
+  {% for post in site.posts %}
+    {% if post.series %}
+      {% unless featured_series contains post.series %}
+        {% assign featured_series = featured_series | push: post.series %}
+      {% endunless %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 <section id="home-curation" class="px-xl-1">
   {% if featured_series.size > 0 %}
     <section class="home-curation-section">
       <div class="home-curation-header">
         <div>
-          <p class="home-curation-eyebrow">{{ site.data.locales[include.lang].home.curation_series_eyebrow }}</p>
-          <h2>{{ site.data.locales[include.lang].home.curation_series_title }}</h2>
+          <p class="home-curation-eyebrow" data-i18n="home.curation_series_eyebrow">{{ site.data.locales[include.lang].home.curation_series_eyebrow }}</p>
+          <h2 data-i18n="home.curation_series_title">{{ site.data.locales[include.lang].home.curation_series_title }}</h2>
         </div>
       </div>
 
@@ -40,7 +44,7 @@
                   </span>
                 </div>
                 <h3>{{ first_post.series_title | default: series_id }}</h3>
-                <p>{{ first_post.series_description | default: site.data.locales[include.lang].home.curation_series_fallback }}</p>
+                <p>{{ series_page.description | default: first_post.series_description | default: site.data.locales[include.lang].home.curation_series_fallback }}</p>
               </a>
             </article>
           {% endif %}
