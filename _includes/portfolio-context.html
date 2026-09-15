@@ -1,0 +1,64 @@
+{%- comment -%}
+Reverse lookup from the current post to its _data/portfolio.yml entry.
+Matches on the post URL or, for personal projects, on the post's series page permalink.
+{%- endcomment -%}
+{%- assign portfolio = site.data.portfolio -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign matched_item = nil -%}
+{%- assign matched_kind = nil -%}
+{%- if portfolio and portfolio.enabled -%}
+  {%- if page.series -%}
+    {%- assign page_series = site.series_pages | where: 'series_id', page.series | first -%}
+  {%- endif -%}
+  {%- for item in portfolio.career.items -%}
+    {%- if item.posts contains page.url -%}
+      {%- assign matched_item = item -%}{%- assign matched_kind = 'career' -%}{%- break -%}
+    {%- elsif page_series and item.posts contains page_series.permalink -%}
+      {%- assign matched_item = item -%}{%- assign matched_kind = 'career' -%}{%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if matched_item == nil -%}
+    {%- for item in portfolio.personal.items -%}
+      {%- if item.posts contains page.url -%}
+        {%- assign matched_item = item -%}{%- assign matched_kind = 'personal' -%}{%- break -%}
+      {%- elsif page_series and item.posts contains page_series.permalink -%}
+        {%- assign matched_item = item -%}{%- assign matched_kind = 'personal' -%}{%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if matched_item -%}
+<aside class="portfolio-context" aria-label="{{ site.data.locales[lang].post.portfolio_context_label }}">
+<div class="portfolio-context-main">
+<i class="fas {% if matched_kind == 'career' %}fa-briefcase{% else %}fa-flask{% endif %}" aria-hidden="true"></i>
+<p>
+{%- assign ctx_key = 'portfolio_context_' | append: matched_kind -%}
+<span data-i18n="post.{{ ctx_key }}">{{ site.data.locales[lang].post[ctx_key] }}</span>
+<a class="portfolio-context-title" href="{{ '/about/' | relative_url }}#{{ matched_item.id }}" data-l10n-ko="{{ matched_item.title['ko-KR'] | escape }}" data-l10n-en="{{ matched_item.title.en | escape }}">
+{%- include localized-value.html value=matched_item.title lang=lang -%}
+</a>
+{%- if matched_item.period %} <span class="portfolio-context-period">({{ matched_item.period }})</span>{% endif -%}
+</p>
+</div>
+{%- assign siblings = '' | split: '' -%}
+{%- for url in matched_item.posts -%}
+  {%- if url != page.url -%}
+    {%- assign sib = site.posts | where: 'url', url | first -%}
+    {%- if sib -%}{%- assign siblings = siblings | push: sib -%}{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if siblings.size > 0 or matched_item.repo -%}
+<div class="portfolio-context-links">
+{%- if siblings.size > 0 -%}
+<span class="portfolio-context-links-label" data-i18n="post.portfolio_context_siblings">{{ site.data.locales[lang].post.portfolio_context_siblings }}</span>
+{%- for sib in siblings -%}
+<a href="{{ sib.url | relative_url }}">{{ sib.title }}</a>
+{%- endfor -%}
+{%- endif -%}
+{%- if matched_item.repo -%}
+<a href="{{ matched_item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+{%- endif -%}
+</div>
+{%- endif -%}
+</aside>
+{%- endif -%}

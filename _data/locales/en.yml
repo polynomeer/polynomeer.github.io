@@ -106,6 +106,10 @@ comments:
 # ----- Posts related labels -----
 
 post:
+  portfolio_context_label: Project context
+  portfolio_context_career: This post is a case study from
+  portfolio_context_personal: This post is part of the personal project
+  portfolio_context_siblings: From the same project
   written_by: By
   posted: Posted
   updated: Updated

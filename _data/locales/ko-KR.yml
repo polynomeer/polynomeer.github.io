@@ -106,6 +106,10 @@ comments:
 # ----- Posts related labels -----
 
 post:
+  portfolio_context_label: 프로젝트 문맥
+  portfolio_context_career: "이 글은 실무 프로젝트의 사례입니다:"
+  portfolio_context_personal: "이 글은 개인 프로젝트의 기록입니다:"
+  portfolio_context_siblings: 같은 프로젝트의 글
   written_by: By
   posted: 게시
   updated: 업데이트

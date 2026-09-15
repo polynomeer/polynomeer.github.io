@@ -1435,6 +1435,57 @@ header {
   }
 }
 
+.portfolio-context {
+  margin: 0.4rem 0 1.4rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(98, 114, 164, 0.22);
+  border-left: 3px solid var(--label-color);
+  background: rgba(68, 71, 90, 0.12);
+  font-size: 0.9rem;
+}
+
+.portfolio-context-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+
+  > i {
+    margin-top: 0.2rem;
+    color: var(--label-color);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-muted-color);
+  }
+}
+
+.portfolio-context-title {
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.portfolio-context-period {
+  color: var(--text-muted-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.portfolio-context-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.85rem;
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed rgba(98, 114, 164, 0.25);
+  font-size: 0.86rem;
+}
+
+.portfolio-context-links-label {
+  color: var(--text-muted-color);
+}
+
 .learning-evidence-directory {
   margin-top: 1rem;
 }
