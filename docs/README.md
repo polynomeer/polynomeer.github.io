@@ -20,6 +20,7 @@ Feature-level design and operational modeling:
 - [`features/recommendation-quality-design.md`](./features/recommendation-quality-design.md)
 - [`features/search-enhancement-design.md`](./features/search-enhancement-design.md)
 - [`features/home-curation-design.md`](./features/home-curation-design.md)
+- [`features/recruiter-first-ui-redesign.md`](./features/recruiter-first-ui-redesign.md)
 - [`features/home-tag-filter-design.md`](./features/home-tag-filter-design.md)
 - [`features/home-feed-ordering-policy.md`](./features/home-feed-ordering-policy.md)
 - [`features/capability-map-design.md`](./features/capability-map-design.md)
