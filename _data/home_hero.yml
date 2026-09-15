@@ -1,6 +1,6 @@
 enabled: true
 
-# Home page 1 hero. The title falls back to recruit_mode.hero.title; short_title in
+# Hero at the top of the About page (originally the home page). The title falls back to recruit_mode.hero.title; short_title in
 # recruit_mode.yml overrides it. Metric values must match _data/portfolio.yml.
 
 eyebrow:
@@ -29,21 +29,21 @@ metrics:
 
 actions:
   - title:
-      ko-KR: 소개와 포트폴리오
-      en: About and portfolio
-    url: /about/
-    icon: fas fa-user-tie
+      ko-KR: GitHub
+      en: GitHub
+    url: https://github.com/polynomeer
+    icon: fab fa-github
     primary: true
+  - title:
+      ko-KR: 이메일
+      en: Email
+    url: mailto:polynomeer@gmail.com
+    icon: fas fa-envelope
   - title:
       ko-KR: 역량 맵
       en: Capability map
     url: /capabilities/
     icon: fas fa-diagram-project
-  - title:
-      ko-KR: GitHub
-      en: GitHub
-    url: https://github.com/polynomeer
-    icon: fab fa-github
 
 # Series shown in the "start here" row, in this order.
 featured_series:

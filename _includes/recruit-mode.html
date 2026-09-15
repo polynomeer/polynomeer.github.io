@@ -4,6 +4,7 @@
   <section class="recruit-mode">
     {% assign hero = recruit.hero %}
 
+    {% unless include.skip_hero %}
     <section class="recruit-hero">
       {% if hero.eyebrow %}
         <p
@@ -82,6 +83,7 @@
         {% endif %}
       </div>
     </section>
+    {% endunless %}
 
     {% if recruit.strengths and recruit.strengths.size > 0 %}
       <section class="recruit-section">
