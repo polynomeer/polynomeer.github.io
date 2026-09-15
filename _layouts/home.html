@@ -230,9 +230,9 @@ refactor: true
         <div class="col-md-{{ card_body_col }}">
           <div class="card-body d-flex flex-column">
             <div class="card-title-row my-2 mt-md-0">
-              <h1 class="card-title">
+              <h2 class="card-title">
                 <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
-              </h1>
+              </h2>
               <div class="card-title-badges">
                 {% if post.problem_decision_result %}
                   <span class="home-case-badge">
@@ -524,9 +524,9 @@ refactor: true
             <div class="col-md-${cardBodyCol}">
               <div class="card-body d-flex flex-column">
                 <div class="card-title-row my-2 mt-md-0">
-                  <h1 class="card-title">
+                  <h2 class="card-title">
                     <a href="${escapeHtml(post.url)}" class="post-card-title-link">${escapeHtml(post.title)}</a>
-                  </h1>
+                  </h2>
                   <div class="card-title-badges">
                     ${pinBadge}
                     ${renderTypeBadge(post)}
