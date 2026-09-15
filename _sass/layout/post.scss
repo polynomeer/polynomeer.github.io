@@ -887,8 +887,8 @@ header {
 
 .capability-map-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.9fr);
-  gap: 1.1rem;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
   align-items: start;
 }
 
@@ -1096,15 +1096,57 @@ header {
 }
 
 .capability-map-detail {
-  padding: 1rem 1.05rem;
+  padding: 0;
+
+  &[open] .capability-map-detail-chevron {
+    transform: rotate(180deg);
+  }
 }
 
 .capability-map-detail-heading {
-  margin-bottom: 0.85rem;
-  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.85rem 1.05rem;
+  font-size: 0.85rem;
   color: var(--text-muted-color);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:hover {
+    color: var(--text-color);
+  }
+}
+
+.capability-map-detail-current {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--heading-color);
+}
+
+.capability-map-detail-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.capability-map-detail-body {
+  padding: 0 1.05rem 1.05rem;
+  border-top: 1px solid rgba(98, 114, 164, 0.14);
+  padding-top: 0.9rem;
 }
 
 .capability-map-detail-panel {
@@ -1851,12 +1893,7 @@ header {
 }
 
 @media (max-width: 767px) {
-  .capability-map-shell {
-    grid-template-columns: 1fr;
-  }
-
-  .capability-map-graph-panel,
-  .capability-map-detail {
+  .capability-map-graph-panel {
     padding: 0.9rem;
   }
 
