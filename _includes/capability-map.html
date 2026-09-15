@@ -88,8 +88,13 @@
         </div>
       </div>
 
-      <aside class="capability-map-detail" id="capability-map-detail" aria-live="polite">
-        <h3 class="capability-map-detail-heading">{{ site.data.locales[lang].capability_map.detail_title }}</h3>
+      <details class="capability-map-detail" id="capability-map-detail" data-capability-details>
+        <summary class="capability-map-detail-heading">
+          <span class="capability-map-detail-label">{{ site.data.locales[lang].capability_map.detail_title }}</span>
+          <span class="capability-map-detail-current" data-capability-current></span>
+          <i class="fas fa-chevron-down capability-map-detail-chevron" aria-hidden="true"></i>
+        </summary>
+        <div class="capability-map-detail-body" aria-live="polite">
 
         {% for capability in capability_nodes %}
           {% assign capability_cluster = capability_map.clusters | where: 'id', capability.cluster | first %}
@@ -188,7 +193,8 @@
             {% endif %}
           </section>
         {% endfor %}
-      </aside>
+        </div>
+      </details>
     </div>
   </section>
 {% endif %}
@@ -206,6 +212,8 @@
     const edgeElements = Array.from(root.querySelectorAll('[data-capability-edge]'));
     const focusButtons = Array.from(root.querySelectorAll('[data-capability-focus]'));
     const nodeMap = new Map(nodeButtons.map((button) => [button.dataset.capabilityNode, button]));
+    const details = root.querySelector('[data-capability-details]');
+    const currentLabel = root.querySelector('[data-capability-current]');
 
     const applySelection = (capabilityId) => {
       const activeNode = nodeMap.get(capabilityId);
@@ -247,17 +255,33 @@
         panel.hidden = !isActive;
       });
 
+      if (currentLabel) {
+        currentLabel.textContent = activeNode.getAttribute('aria-label') || '';
+      }
+
       if (window.location.hash !== `#${capabilityId}`) {
         window.history.replaceState(null, '', `#${capabilityId}`);
       }
     };
 
+    const openDetails = () => {
+      if (details && !details.open) {
+        details.open = true;
+      }
+    };
+
     nodeButtons.forEach((button) => {
-      button.addEventListener('click', () => applySelection(button.dataset.capabilityNode));
+      button.addEventListener('click', () => {
+        applySelection(button.dataset.capabilityNode);
+        openDetails();
+      });
     });
 
     focusButtons.forEach((button) => {
-      button.addEventListener('click', () => applySelection(button.dataset.capabilityFocus));
+      button.addEventListener('click', () => {
+        applySelection(button.dataset.capabilityFocus);
+        openDetails();
+      });
     });
 
     window.addEventListener('hashchange', () => {
