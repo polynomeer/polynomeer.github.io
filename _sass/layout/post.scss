@@ -390,12 +390,8 @@ header {
   border-radius: 1rem;
   background: rgba(68, 71, 90, 0.14);
 
-  .problem-decision-result-header {
-    margin-bottom: 0.95rem;
-  }
-
   .problem-decision-result-eyebrow {
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.95rem;
     color: var(--text-muted-highlight-color);
     font-size: 0.8rem;
     font-weight: 700;
@@ -2777,6 +2773,9 @@ header {
   .card {
     h4 {
       @extend %text-clip;
+
+      /* Series titles share a long prefix; two lines cut off the part that differs. */
+      -webkit-line-clamp: 3;
     }
   }
 }

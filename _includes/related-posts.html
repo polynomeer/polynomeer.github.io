@@ -127,7 +127,10 @@
               {% if show_series_badge or show_project_badge %}
                 <div class="recommendation-badges mb-2">
                   {% if show_series_badge %}
-                    <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_series }}</span>
+                    <span class="recommendation-badge">
+                      {{- site.data.locales[include.lang].post.recommendation_series -}}
+                      {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
+                    </span>
                   {% endif %}
                   {% if show_project_badge %}
                     <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_project }}</span>
