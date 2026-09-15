@@ -7,7 +7,7 @@ series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 3
 series_description: monticker를 구상하고 설계하고 구현해 가는 과정을 제품, 아키텍처, 인프라, 정량 분석 관점에서 정리한 시리즈.
-status: draft
+status: published
 ---
 
 ## 주식 데이터는 왜 특별한가
@@ -192,10 +192,10 @@ TimescaleDB 대신 다른 시계열 데이터베이스를 선택하지 않은 �
 
 | 항목 | TimescaleDB | InfluxDB | ClickHouse |
 |------|-------------|----------|------------|
-| PostgreSQL 호환 | ✅ 완전 호환 | ❌ | ❌ |
+| PostgreSQL 호환 | 완전 호환 | 없음 | 없음 |
 | SQL 문법 | 표준 SQL | Flux/InfluxQL | SQL 방언 |
-| JOIN 지원 | ✅ 완전 | 제한적 | ✅ |
-| 기존 ORM 재사용 | ✅ JPA/JDBC | ❌ | 제한적 |
+| JOIN 지원 | 완전 | 제한적 | 완전 |
+| 기존 ORM 재사용 | JPA/JDBC 그대로 | 불가 | 제한적 |
 | 운영 복잡도 | 낮음 (PostgreSQL과 동일) | 높음 | 높음 |
 
 monticker는 PostgreSQL에 이미 `users`, `stocks`, `stock_events` 등 일반 비즈니스 테이블이 있다. TimescaleDB를 쓰면 하나의 PostgreSQL 인스턴스에서 비즈니스 데이터와 시계열 데이터를 동시에 다룰 수 있다. 
@@ -223,4 +223,4 @@ SELECT add_retention_policy('candles_1m', INTERVAL '1 year');
 - 기존 SQL과 ORM을 그대로 사용할 수 있어 도입 비용이 낮다
 - 연속 집계로 다중 해상도 캔들 데이터를 쿼리 비용 없이 서빙할 수 있다
 
-다음 시리즈(Series 2)에서는 실시간 시세 파이프라인의 첫 번째 단계인 **Go Market Gateway**를 다룬다. 202개 종목에 goroutine을 하나씩 할당하는 구조를 살펴본다.
+다음 글에서는 이 저장소 위에서 거래량 급증을 어떻게 판단하는지, EMA 기반 이상 탐지를 다룬다.
