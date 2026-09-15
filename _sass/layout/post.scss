@@ -806,6 +806,14 @@ header {
   margin-top: 1rem;
 }
 
+.capability-map-head {
+  margin: 2.4rem 0 1rem;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
 .capability-map-hero {
   margin-bottom: 2rem;
   padding: 1.5rem;
@@ -913,7 +921,7 @@ header {
 
 .capability-map-canvas {
   position: relative;
-  min-height: 34rem;
+  min-height: 27rem;
   overflow: hidden;
   border-radius: 0.95rem;
   border: 1px solid rgba(98, 114, 164, 0.12);
@@ -1262,18 +1270,6 @@ header {
 
 .about-portfolio {
   margin-top: 2.2rem;
-}
-
-.about-technical-focus {
-  margin-top: 2rem;
-
-  h2 {
-    margin-top: 0;
-  }
-
-  ul {
-    padding-left: 1.2rem;
-  }
 }
 
 .about-blog-note {
