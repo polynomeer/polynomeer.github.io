@@ -625,6 +625,12 @@ main {
     margin-top: 2rem;
   }
 
+  /* Tab pages that carry their h1 inside a hero card keep the h2 scale */
+  .page-hero-title {
+    margin: 0 0 0.75rem;
+    font-size: 1.54rem;
+  }
+
   p {
     > a.popup {
       &:not(.normal):not(.left):not(.right) {

@@ -7,9 +7,9 @@
 <p class="home-hero-eyebrow" data-l10n-ko="{{ hero.eyebrow['ko-KR'] | escape }}" data-l10n-en="{{ hero.eyebrow.en | escape }}">
 {%- include localized-value.html value=hero.eyebrow lang=lang -%}
 </p>
-<h2 class="home-hero-title" data-l10n-ko="{{ title['ko-KR'] | escape }}" data-l10n-en="{{ title.en | escape }}">
+<h1 class="home-hero-title" data-l10n-ko="{{ title['ko-KR'] | escape }}" data-l10n-en="{{ title.en | escape }}">
 {%- include localized-value.html value=title lang=lang -%}
-</h2>
+</h1>
 {%- if include.show_summary and recruit.hero.summary -%}
 <p class="home-hero-summary" data-l10n-ko="{{ recruit.hero.summary['ko-KR'] | escape }}" data-l10n-en="{{ recruit.hero.summary.en | escape }}">
 {%- include localized-value.html value=recruit.hero.summary lang=lang -%}
