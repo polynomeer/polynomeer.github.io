@@ -4,6 +4,7 @@ icon: fas fa-info-circle
 order: 6
 redirect_from:
   - /recruit/
+  - /capabilities/
 image:
   path: /assets/img/og-about.png
   alt: 소개와 포트폴리오 페이지 미리보기
@@ -13,17 +14,7 @@ image:
 
 {% include home-hero.html lang=lang show_summary=true %}
 
-<section class="about-technical-focus">
-  <p class="about-portfolio-eyebrow">Stack</p>
-  <h2 data-i18n="about.technical_focus">{{ site.data.locales[lang].about.technical_focus }}</h2>
-  <ul>
-    <li><code>Java</code>, <code>Kotlin</code>, <code>Go</code>, <code>Python</code></li>
-    <li><code>Spring Boot</code>, <code>Spring Batch</code>, <code>JPA</code>, <code>QueryDSL</code>, <code>MyBatis</code></li>
-    <li><code>MySQL</code>, <code>Redis</code>, <code>Amazon SQS</code>, <code>RabbitMQ</code></li>
-    <li><code>AWS (EC2/RDS/ECS)</code>, <code>Docker</code>, <code>Jenkins</code></li>
-    <li><code>Datadog</code>, <code>Sentry</code>, <code>JUnit 5</code>, <code>ArchUnit</code></li>
-  </ul>
-</section>
+{% include capability-map.html lang=lang %}
 
 {% include about-portfolio.html lang=lang %}
 

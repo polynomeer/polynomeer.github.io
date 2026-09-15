@@ -1,9 +1,4 @@
----
-layout: page
----
-
-{% include lang.html %}
-
+{% assign lang = include.lang | default: site.lang %}
 {% assign capability_map = site.data.capability_map %}
 {% assign capability_nodes = capability_map.nodes | default: capability_map.items %}
 {% assign default_focus = capability_map.default_focus | default: capability_nodes.first.id %}
@@ -15,11 +10,10 @@ layout: page
     {% assign default_focus = default_node.id %}
   {% endif %}
 
-  <section class="capability-map-directory" data-capability-graph data-default-focus="{{ default_focus }}">
-    <div class="capability-map-hero">
-      <p class="capability-map-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
+  <section class="capability-map-directory" id="capabilities" data-capability-graph data-default-focus="{{ default_focus }}">
+    <div class="capability-map-head">
+      <p class="about-portfolio-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
       <h2 data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</h2>
-      <p class="capability-map-summary" data-i18n="capability_map.directory_description">{{ site.data.locales[lang].capability_map.directory_description }}</p>
     </div>
 
     {% if capability_map.clusters and capability_map.clusters.size > 0 %}
@@ -267,14 +261,14 @@ layout: page
     });
 
     window.addEventListener('hashchange', () => {
-      const hashId = window.location.hash.replace('#', '');
+      const nextId = window.location.hash.replace('#', '');
 
-      if (hashId) {
-        applySelection(hashId);
+      if (nodeMap.has(nextId)) {
+        applySelection(nextId);
       }
     });
 
-    const initialId = window.location.hash.replace('#', '') || root.dataset.defaultFocus;
-    applySelection(initialId);
+    const hashId = window.location.hash.replace('#', '');
+    applySelection(nodeMap.has(hashId) ? hashId : root.dataset.defaultFocus);
   });
 </script>

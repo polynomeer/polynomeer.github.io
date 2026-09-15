@@ -20,16 +20,10 @@ clusters:
       ko-KR: 설계 판단
       en: Design Judgment
 
-  - id: career
-    tone: amber
-    title:
-      ko-KR: 채용과 전달
-      en: Hiring Signal
-
 nodes:
   - id: database-internals
     cluster: systems
-    x: 20
+    x: 18
     y: 58
     icon: fas fa-database
     tone: cyan
@@ -54,8 +48,8 @@ nodes:
 
   - id: settlement-consistency
     cluster: systems
-    x: 46
-    y: 76
+    x: 50
+    y: 70
     icon: fas fa-lock
     tone: cyan
     title:
@@ -86,8 +80,8 @@ nodes:
 
   - id: payment-consistency
     cluster: systems
-    x: 14
-    y: 88
+    x: 80
+    y: 82
     icon: fas fa-money-bill-transfer
     tone: cyan
     title:
@@ -122,8 +116,8 @@ nodes:
 
   - id: spring-backend
     cluster: application
-    x: 38
-    y: 24
+    x: 28
+    y: 20
     icon: fas fa-leaf
     tone: green
     title:
@@ -147,8 +141,8 @@ nodes:
 
   - id: architecture-judgment
     cluster: judgment
-    x: 58
-    y: 40
+    x: 72
+    y: 30
     icon: fas fa-sitemap
     tone: violet
     title:
@@ -174,36 +168,6 @@ nodes:
           ko-KR: 시리즈에서 구조적으로 읽기
           en: Read through connected series
         url: /series/
-
-  - id: hiring-readiness
-    cluster: career
-    x: 82
-    y: 62
-    icon: fas fa-user-tie
-    tone: amber
-    title:
-      ko-KR: 채용 및 면접 준비도
-      en: Hiring and Interview Readiness
-    summary:
-      ko-KR: 면접 준비, 질문 분석, 채용 담당자용 자료를 짧은 증거 흐름으로 정리합니다.
-      en: Organizes interview preparation, question analysis, and recruiter-facing material into a compact evidence trail.
-    why_it_matters:
-      ko-KR: 기술 내용을 전달 가능한 형태로 압축하고, 채용 맥락에서 읽히는 구조로 재배치하는 능력을 보여줍니다.
-      en: Shows the ability to compress technical material into a readable form and reframe it for hiring contexts.
-    signals:
-      - ko-KR: 면접 질문을 단순 암기가 아니라 사고 구조로 재구성합니다.
-        en: Reframes interview questions as reasoning structures instead of memorization lists.
-      - ko-KR: 채용 담당자가 빠르게 판단할 수 있는 읽기 동선을 제공합니다.
-        en: Provides a guided reading path for recruiters who need to evaluate quickly.
-    representative_posts:
-      - _posts/recruit/Interview/2025-08-05-real-interview-questions.md
-      - _posts/recruit/Interview/2025-08-05-system-design-interview-preparation.md
-      - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
-    supporting_links:
-      - title:
-          ko-KR: 소개 페이지에서 전체 흐름 보기
-          en: Open the About page
-        url: /about/
 
 edges:
   - from: settlement-consistency
@@ -248,16 +212,3 @@ edges:
       ko-KR: 트랜잭션 경계
       en: Transaction boundaries
 
-  - from: architecture-judgment
-    to: hiring-readiness
-    strength: medium
-    label:
-      ko-KR: 판단의 전달
-      en: Communicating judgment
-
-  - from: spring-backend
-    to: hiring-readiness
-    strength: light
-    label:
-      ko-KR: 실무 설명력
-      en: Practical explanation

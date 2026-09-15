@@ -7,7 +7,7 @@ items:
   - title:
       ko-KR: 역량 맵
       en: Capability Map
-    url: /capabilities/
+    url: /about/#capabilities
     icon: fas fa-diagram-project
     external: false
   - title:

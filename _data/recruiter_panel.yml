@@ -13,7 +13,7 @@ for_recruiters:
     - title:
         ko-KR: 역량 맵
         en: Capability Map
-      url: /capabilities/
+      url: /about/#capabilities
       icon: fas fa-diagram-project
     - title:
         ko-KR: 이메일
@@ -29,7 +29,7 @@ reading_path:
   - title:
       ko-KR: 역량 맵 훑어보기
       en: Scan the capability map
-    url: /capabilities/
+    url: /about/#capabilities
   - title:
       ko-KR: 시리즈 흐름 따라가기
       en: Follow an ordered series

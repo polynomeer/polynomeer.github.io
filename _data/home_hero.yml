@@ -40,11 +40,6 @@ actions:
     url: mailto:polynomeer@gmail.com
     icon: fas fa-envelope
   - title:
-      ko-KR: 역량 맵
-      en: Capability map
-    url: /capabilities/
-    icon: fas fa-diagram-project
-  - title:
       ko-KR: 학습 성과
       en: Learning evidence
     url: /learning-evidence/
