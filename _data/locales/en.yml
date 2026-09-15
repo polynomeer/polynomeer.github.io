@@ -227,7 +227,6 @@ representative_posts:
 
 pdr:
   eyebrow: Engineering summary
-  title: Problem Decision Result
   problem: Problem
   decision: Decision
   result: Result

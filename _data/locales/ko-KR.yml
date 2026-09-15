@@ -222,7 +222,6 @@ representative_posts:
 
 pdr:
   eyebrow: 엔지니어링 요약
-  title: Problem Decision Result
   problem: Problem
   decision: Decision
   result: Result
