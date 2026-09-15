@@ -5,13 +5,17 @@
 {% endif %}
 
 {% assign total_post_count = site.posts | size %}
-{% assign recruit_post_count = 0 %}
+{% assign series_ids = '' | split: '' %}
 
 {% for post in site.posts %}
-  {% if post.path contains '/_posts/recruit/' %}
-    {% assign recruit_post_count = recruit_post_count | plus: 1 %}
+  {% if post.series %}
+    {% unless series_ids contains post.series %}
+      {% assign series_ids = series_ids | push: post.series %}
+    {% endunless %}
   {% endif %}
 {% endfor %}
+
+{% assign series_count = series_ids | size %}
 
 <section class="panel-section proof-signals-panel">
   <h2 class="panel-heading" data-i18n="panel.proof_signals">{{- site.data.locales[include.lang].panel.proof_signals -}}</h2>
@@ -25,8 +29,8 @@
       <span data-i18n="panel.signal_representative">{{ site.data.locales[include.lang].panel.signal_representative }}</span>
     </div>
     <div class="proof-signal-card">
-      <strong>{{ recruit_post_count }}</strong>
-      <span data-i18n="panel.signal_recruit">{{ site.data.locales[include.lang].panel.signal_recruit }}</span>
+      <strong>{{ series_count }}</strong>
+      <span data-i18n="panel.signal_series">{{ site.data.locales[include.lang].panel.signal_series }}</span>
     </div>
   </div>
 </section>

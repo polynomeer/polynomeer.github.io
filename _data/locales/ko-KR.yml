@@ -54,7 +54,7 @@ panel:
   focus_series: 추천 시리즈
   signal_posts: 전체 글
   signal_representative: 대표 글
-  signal_recruit: 채용 글
+  signal_series: 시리즈
   trending_tags: 인기 태그
   toc: 바로가기
 
