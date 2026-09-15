@@ -1,6 +1,6 @@
 {% assign post_status = site.data.post_statuses[include.post.status] %}
 
-{% if post_status %}
+{% if post_status and include.post.status != 'published' %}
   {% if include.link == false %}
     <span class="post-status-badge">
       {% if post_status.icon %}

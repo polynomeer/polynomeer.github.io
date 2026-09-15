@@ -904,6 +904,10 @@ body.tag-filter-open {
   color: var(--heading-color);
   line-height: 1.3;
 
+  .to {
+    color: var(--metric-color);
+  }
+
   .from {
     color: var(--text-muted-color);
     font-weight: 500;
