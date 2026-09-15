@@ -128,8 +128,7 @@ personal:
         en: Verified with 26 load and failure experiments that a double-entry ledger with idempotency, a transactional outbox, and UNKNOWN-state recovery keeps money records correct under duplicate requests, concurrent debits, lost external responses, and process restarts. Found 12 defects and recorded each cause and why the existing tests missed it.
       tech: [Java 21, Spring Boot, PostgreSQL, Kafka/Redpanda, Testcontainers, k6]
       repo: https://github.com/polynomeer/parity-pay
-      posts:
-        - /series/parity-pay/
+      series: parity-pay
 
     - id: monticker
       title:
@@ -141,6 +140,7 @@ personal:
         en: Detects moments when price or volume departs from its usual pattern with EMA-based anomaly detection and shows them as an event timeline. A worker samples every second and normalizes anomalies into recorded events. Built solo with Claude Code as a pair, keeping design decisions my own while speeding up implementation.
       tech: [Kotlin, Spring Boot, Next.js, TimescaleDB, Redis]
       repo: https://github.com/polynomeer/monticker
+      series: monticker
 
     - id: starkraft
       title:

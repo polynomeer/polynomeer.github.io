@@ -75,10 +75,34 @@
 {%- endif -%}
 <div class="about-portfolio-personal-grid">
 {%- for item in portfolio.personal.items -%}
-<article class="about-portfolio-item about-portfolio-item-compact" id="{{ item.id }}">
+{%- comment -%} Card target: the project's series page when it has published posts, otherwise the repository. {%- endcomment -%}
+{%- assign card_href = item.repo -%}
+{%- assign card_external = true -%}
+{%- assign card_series = nil -%}
+{%- assign card_series_count = 0 -%}
+{%- if item.series -%}
+  {%- assign card_series = site.series_pages | where: 'series_id', item.series | first -%}
+  {%- if card_series -%}
+    {%- assign card_series_posts = site.posts | where: 'series', item.series -%}
+    {%- assign card_series_count = card_series_posts.size -%}
+    {%- if card_series_count > 0 -%}
+      {%- assign card_href = card_series.url | relative_url -%}
+      {%- assign card_external = false -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+<article class="about-portfolio-item about-portfolio-item-compact{% if card_href %} is-linked{% endif %}" id="{{ item.id }}">
 <header class="about-portfolio-item-head">
-<h3 data-l10n-ko="{{ item.title['ko-KR'] | escape }}" data-l10n-en="{{ item.title.en | escape }}">
+<h3>
+{%- if card_href -%}
+<a class="stretched-link" href="{{ card_href }}"{% if card_external %} target="_blank" rel="noopener noreferrer"{% endif %} data-l10n-ko="{{ item.title['ko-KR'] | escape }}" data-l10n-en="{{ item.title.en | escape }}">
 {%- include localized-value.html value=item.title lang=lang -%}
+</a>
+{%- else -%}
+<span data-l10n-ko="{{ item.title['ko-KR'] | escape }}" data-l10n-en="{{ item.title.en | escape }}">
+{%- include localized-value.html value=item.title lang=lang -%}
+</span>
+{%- endif -%}
 </h3>
 <span class="about-portfolio-period">{{ item.period }}</span>
 </header>
@@ -89,6 +113,9 @@
 {%- for t in item.tech -%}<span class="about-portfolio-tag">{{ t }}</span>{%- endfor -%}
 </div>
 <div class="about-portfolio-links">
+{%- if card_series and card_series_count > 0 -%}
+<a href="{{ card_series.url | relative_url }}"><i class="fas fa-list-ol"></i> {{ site.data.locales[lang].home.curation_series_count | replace: ':COUNT', card_series_count }}</a>
+{%- endif -%}
 {%- if item.repo -%}
 <a href="{{ item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
 {%- endif -%}

@@ -1472,6 +1472,26 @@ header {
   .about-portfolio-tags {
     margin-top: 0.2rem;
   }
+
+  &.is-linked {
+    position: relative;
+    transition: border-color 0.15s ease;
+
+    h3 a {
+      color: inherit;
+      border-bottom: none;
+    }
+
+    &:hover {
+      border-color: var(--link-color);
+    }
+
+    /* keep the footer links clickable above the stretched title link */
+    .about-portfolio-links {
+      position: relative;
+      z-index: 2;
+    }
+  }
 }
 
 .portfolio-context {

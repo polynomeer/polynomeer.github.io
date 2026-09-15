@@ -20,10 +20,16 @@
     {% assign hit = false %}
     {% if item.posts contains page.url %}
       {% assign hit = true %}
+    {% elsif page.series and item.series == page.series %}
+      {% assign hit = true %}
     {% elsif page_series_page and item.posts contains page_series_page.permalink %}
       {% assign hit = true %}
     {% endif %}
     {% if hit %}
+      {% if item.series %}
+        {% assign series_members = site.posts | where: 'series', item.series %}
+        {% for spp in series_members %}{% assign project_urls = project_urls | push: spp.url %}{% endfor %}
+      {% endif %}
       {% for url in item.posts %}
         {% if url contains '/posts/' %}
           {% assign project_urls = project_urls | push: url %}
