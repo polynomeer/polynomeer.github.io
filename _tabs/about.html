@@ -11,7 +11,9 @@ image:
 
 {% include lang.html %}
 
-{% include recruit-mode.html lang=lang skip_posts=true %}
+{% include home-hero.html lang=lang show_summary=true %}
+
+{% include recruit-mode.html lang=lang skip_posts=true skip_hero=true %}
 
 <section class="about-technical-focus">
   <h2 data-i18n="about.technical_focus">{{ site.data.locales[lang].about.technical_focus }}</h2>

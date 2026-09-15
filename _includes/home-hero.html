@@ -10,6 +10,20 @@
 <h2 class="home-hero-title" data-l10n-ko="{{ title['ko-KR'] | escape }}" data-l10n-en="{{ title.en | escape }}">
 {%- include localized-value.html value=title lang=lang -%}
 </h2>
+{%- if include.show_summary and recruit.hero.summary -%}
+<p class="home-hero-summary" data-l10n-ko="{{ recruit.hero.summary['ko-KR'] | escape }}" data-l10n-en="{{ recruit.hero.summary.en | escape }}">
+{%- include localized-value.html value=recruit.hero.summary lang=lang -%}
+</p>
+{%- endif -%}
+{%- if include.show_summary and recruit.hero.roles -%}
+<div class="home-hero-roles">
+{%- for role in recruit.hero.roles -%}
+<span class="home-hero-role" data-l10n-ko="{{ role['ko-KR'] | escape }}" data-l10n-en="{{ role.en | escape }}">
+{%- include localized-value.html value=role lang=lang -%}
+</span>
+{%- endfor -%}
+</div>
+{%- endif -%}
 {%- if hero.metrics and hero.metrics.size > 0 -%}
 <ul class="home-hero-metrics">
 {%- for m in hero.metrics -%}
@@ -35,7 +49,7 @@
 <div class="home-hero-actions">
 {%- for a in hero.actions -%}
 {%- assign href = a.url -%}{%- unless href contains '://' or href contains 'mailto:' -%}{%- assign href = href | relative_url -%}{%- endunless -%}
-<a class="home-hero-action{% if a.primary %} is-primary{% endif %}" href="{{ href }}"{% if a.url contains '://' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+<a class="home-hero-action{% if a.primary %} is-primary{% endif %}" href="{{ href }}"{% if a.url contains '://' or a.url contains 'mailto:' %} target="_blank" rel="noopener noreferrer"{% endif %}>
 {%- if a.icon -%}<i class="{{ a.icon }}"></i>{%- endif -%}
 <span data-l10n-ko="{{ a.title['ko-KR'] | escape }}" data-l10n-en="{{ a.title.en | escape }}">
 {%- include localized-value.html value=a.title lang=lang -%}

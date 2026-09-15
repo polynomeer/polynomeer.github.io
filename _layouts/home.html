@@ -39,7 +39,6 @@ refactor: true
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
 
 {% if paginator.page == 1 %}
-  {% include home-hero.html lang=lang %}
   {% include home-curation.html lang=lang %}
 {% endif %}
 
