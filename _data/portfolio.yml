@@ -115,51 +115,51 @@ career:
 
 personal:
   note:
-    ko-KR: 전부 GitHub에 공개되어 있습니다. 실무에서 배운 원칙을 다른 도메인에서 다시 검증하거나, 실무에서는 하기 어려운 실험을 해보기 위한 프로젝트입니다.
-    en: All public on GitHub. These projects re-verify principles learned in production in other domains, or run the experiments that production systems do not allow.
+    ko-KR: 주식 관찰 앱, 개발자 Q&A, 백엔드 실습 서비스, 결제 시스템을 만들었습니다. 모두 1인 개발이고 코드와 테스트는 GitHub에 공개되어 있습니다.
+    en: A stock monitoring app, a developer Q&A, a backend practice service, and a payment system. All solo projects; code and tests are public on GitHub.
   items:
-    - id: parity-pay
-      title:
-        ko-KR: ParityPay — 장애 아래에서 금융 불변조건을 지키는 결제·원장 백엔드
-        en: ParityPay — a payment and ledger backend that keeps financial invariants under failure
-      period: 2026.9 –
-      summary:
-        ko-KR: 이중부기 원장, 멱등성, Transactional Outbox, UNKNOWN 상태 복구로 중복 요청, 동시 차감, 외부 응답 유실, 프로세스 재시작 아래에서도 돈의 기록이 정확한지를 부하·장애 실험 26종으로 검증했습니다. 결함 12건을 찾아 원인과 "왜 테스트가 못 잡았나"까지 기록했습니다.
-        en: Verified with 26 load and failure experiments that a double-entry ledger with idempotency, a transactional outbox, and UNKNOWN-state recovery keeps money records correct under duplicate requests, concurrent debits, lost external responses, and process restarts. Found 12 defects and recorded each cause and why the existing tests missed it.
-      tech: [Java 21, Spring Boot, PostgreSQL, Kafka/Redpanda, Testcontainers, k6]
-      repo: https://github.com/polynomeer/parity-pay
-      series: parity-pay
-
     - id: monticker
       title:
-        ko-KR: monticker — 이벤트 중심 주식 관찰 앱
-        en: monticker — event-centric stock monitoring
+        ko-KR: Monticker — 이벤트 중심 주식 관찰 앱
+        en: Monticker — event-centric stock monitoring
       period: 2026.1 –
       summary:
-        ko-KR: 가격·거래량이 평소와 다르게 움직이는 순간을 EMA 기반 이상 탐지로 잡아 이벤트 타임라인으로 보여주는 앱입니다. Worker가 1초 주기로 수집하고, 이상을 이벤트로 정규화해 기록합니다. Claude Code를 페어로 활용해 설계는 직접 결정하고 구현 속도를 높이는 방식으로 1인 개발했습니다.
-        en: Detects moments when price or volume departs from its usual pattern with EMA-based anomaly detection and shows them as an event timeline. A worker samples every second and normalizes anomalies into recorded events. Built solo with Claude Code as a pair, keeping design decisions my own while speeding up implementation.
-      tech: [Kotlin, Spring Boot, Next.js, TimescaleDB, Redis]
+        ko-KR: 관심 종목의 가격과 거래량 변화를 시간순으로 모아 보는 앱입니다. 종목마다 거래 규모가 달라 지수이동평균(EMA) 대비 배율로 급증을 판단하고, 같은 변화가 1분 안에 반복되면 한 번만 기록하도록 저장 전 검사와 DB 제약을 함께 뒀습니다. 지금은 직접 생성한 데이터로 동작을 확인한 단계입니다.
+        en: Collects price and volume changes for watched stocks into a timeline. Because volume scale differs per stock, surges are judged as multiples of an exponential moving average, and repeats of the same change within a minute are stored once through a pre-save check plus a database constraint. Verified so far on generated data.
+      tech: [Kotlin, Spring Boot, PostgreSQL, Redis, Next.js]
       repo: https://github.com/polynomeer/monticker
       series: monticker
 
-    - id: starkraft
+    - id: quno
       title:
-        ko-KR: starkraft — 결정론적 RTS 시뮬레이션 엔진
-        en: starkraft — deterministic RTS simulation engine
-      period: 2025.9 – 2026.3
+        ko-KR: Quno — 변경 이력을 남기는 개발자 Q&A
+        en: Quno — developer Q&A with revision history
+      period: 2026.8 –
       summary:
-        ko-KR: 같은 입력이면 어디서 계산하든 같은 결과가 나오는 fixed-tick 결정론적 루프 위에 이동, 전투, 시야, 건설, 생산, 자원 채집을 구현한 게임 코어입니다. sim, server, client, tools, shared-protocol 5개 모듈로 나누고, 프로토콜을 스키마로 버전 관리하며, 리플레이 재현 검증과 CI, 릴리스 체크섬, 운영 런북까지 갖췄습니다.
-        en: A game core with movement, combat, fog of war, construction, production, and resource gathering on a fixed-tick deterministic loop where the same input yields the same result anywhere. Split into sim, server, client, tools, and shared-protocol modules with a versioned protocol schema, replay determinism checks, CI, release checksums, and an operations runbook.
-      tech: [Kotlin, Gradle, libGDX, GitHub Actions]
-      repo: https://github.com/polynomeer/starkraft
+        ko-KR: 질문을 계속 수정할 수 있고 이전 내용과 버전별 차이를 보존하는 Q&A입니다. 동시에 수정해도 버전 번호가 겹치지 않도록 질문 행을 잠그고(SELECT FOR UPDATE) 다음 버전을 계산하며, 질문 변경과 알림 요청을 한 트랜잭션에 묶었습니다. 8개 요청을 동시에 실행하는 통합 테스트로 누락과 중복이 없음을 확인했습니다.
+        en: A Q&A where questions keep being revised while earlier content and per-version diffs are preserved. Concurrent edits lock the question row (SELECT FOR UPDATE) before computing the next version, and the change and its notification request commit in one transaction. An 8-thread integration test confirms no missing or duplicate versions.
+      tech: [Kotlin, Spring Boot, PostgreSQL, MongoDB, Redis, React]
+      repo: https://github.com/polynomeer/quno
 
-    - id: iterview
+    - id: sys-drill
       title:
-        ko-KR: iterview — AI 면접 트레이닝 플랫폼
-        en: iterview — AI interview training platform
-      period: 2026.3 –
+        ko-KR: SysDrill — 백엔드 장애 대응 훈련 플랫폼
+        en: SysDrill — backend failure-handling practice platform
+      period: 2026.8 –
       summary:
-        ko-KR: 매일 문제 카드를 받고 답변을 제출하면 채점되어, 낮은 점수는 재시도 큐로, 높은 점수는 아카이브로 이동하는 간격 반복 학습 루프를 면접 준비에 적용했습니다. 백엔드는 도메인 단위 패키지 11개, 프론트엔드는 Feature-Sliced Design으로 나누고, 설계 문서를 먼저 쓴 뒤 구현했습니다.
-        en: "Applies a spaced-repetition loop to interview practice: daily question cards, scored answers, low scores back to a retry queue, high scores to an archive. Backend split into 11 domain packages, frontend organized with Feature-Sliced Design, documented before implemented."
-      tech: [Kotlin, Spring Boot, TypeScript, Feature-Sliced Design]
-      repo: https://github.com/polynomeer/iterview
+        ko-KR: 요청 폭주나 작업 실패 같은 상황을 다루는 실습 6개를 풀고, 코드는 단계별 테스트로, 설계 설명은 AI 평가로 피드백을 받는 학습 서비스입니다. AI 응답은 정해진 항목과 점수 범위만 읽어 서버가 총점을 다시 계산하고, 평가는 Redis 대기열에서 별도 작업이 처리하며 반복 실패는 재시도 상한 뒤 실패 상태로 남깁니다.
+        en: A practice service with six exercises on request bursts and failing jobs; code is graded by staged tests and design answers by an AI evaluator. The server reads only fixed fields and score ranges from the AI response and recomputes the total, evaluation runs from a Redis queue in a separate worker, and repeated failures stop after a retry limit and are recorded as failed.
+      tech: [Kotlin, Spring Boot, Python, Redis, PostgreSQL, Next.js]
+      repo: https://github.com/polynomeer/sys-drill
+
+    - id: parity-pay
+      title:
+        ko-KR: ParityPay — 결제·원장 백엔드
+        en: ParityPay — payment and ledger backend
+      period: 2026.9 –
+      summary:
+        ko-KR: 선불 지갑의 결제 내역과 원장을 함께 관리하는 백엔드입니다. 같은 결제가 두 번 들어오거나 은행 응답이 끊겨도 중복 차감되지 않도록, 응답 유실은 실패로 단정하지 않고 미확정 상태로 보관한 뒤 별도 조회로 확정합니다. 잔액 차감 순서를 바꿔 같은 지갑의 잠금 시간을 줄였고, 프로세스 종료와 응답 유실 등 11개 장애 상황을 테스트 서버로 재현해 잔액과 원장이 맞는지 확인했습니다.
+        en: Manages a prepaid wallet's payments together with a double-entry ledger. Duplicate requests and lost bank responses never debit twice; a lost response is kept as an undetermined state and settled by a separate status query rather than treated as failure. Moving the balance debit to the end of the transaction shortened lock hold on the same wallet, and 11 failure scenarios such as process kills and lost responses were reproduced against mock institutions to verify balances and ledger.
+      tech: [Java, Spring Boot, PostgreSQL, Kafka, Testcontainers, ArchUnit]
+      repo: https://github.com/polynomeer/parity-pay
+      series: parity-pay
