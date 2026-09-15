@@ -38,10 +38,6 @@ refactor: true
 
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
 
-{% if paginator.page == 1 %}
-  {% include home-curation.html lang=lang %}
-{% endif %}
-
 <section id="home-discovery-filter" class="px-xl-1">
   <div class="post-status-filter-bar">
     <div class="post-filter-row post-filter-row-inline">
