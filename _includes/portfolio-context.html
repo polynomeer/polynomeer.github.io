@@ -21,6 +21,8 @@ Matches on the post URL or, for personal projects, on the post's series page per
     {%- for item in portfolio.personal.items -%}
       {%- if item.posts contains page.url -%}
         {%- assign matched_item = item -%}{%- assign matched_kind = 'personal' -%}{%- break -%}
+      {%- elsif page.series and item.series == page.series -%}
+        {%- assign matched_item = item -%}{%- assign matched_kind = 'personal' -%}{%- break -%}
       {%- elsif page_series and item.posts contains page_series.permalink -%}
         {%- assign matched_item = item -%}{%- assign matched_kind = 'personal' -%}{%- break -%}
       {%- endif -%}
