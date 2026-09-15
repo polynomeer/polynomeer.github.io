@@ -218,29 +218,18 @@
     };
 
     const syncUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
+      // getSession() resolves to a null session for anonymous visitors,
+      // whereas getUser() rejects with AuthSessionMissingError.
+      const { data, error } = await supabase.auth.getSession();
 
       if (error) {
         throw error;
       }
 
-      currentUser = data.user;
+      currentUser = data.session?.user || null;
       setComposerState();
       renderComments();
     };
-
-    loginButton.addEventListener('click', async () => {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: config.authProvider,
-        options: {
-          redirectTo: window.location.href
-        }
-      });
-
-      if (error) {
-        console.error('comment auth error', error);
-      }
-    });
 
     inlineLoginButton.addEventListener('click', async () => {
       const { error } = await supabase.auth.signInWithOAuth({
