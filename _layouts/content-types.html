@@ -3,7 +3,7 @@ layout: page
 ---
 
 {% include lang.html %}
-{% assign posts_by_type = site.posts | group_by_exp: 'post', "post.path | split: '/' | slice: 2, 1 | first" %}
+{% assign posts_by_type = site.posts | group_by_exp: 'post', "post.path | split: '/' | slice: 1, 1 | first | downcase" %}
 
 <section class="content-type-directory">
   <div class="content-type-hero">

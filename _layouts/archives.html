@@ -130,7 +130,7 @@ layout: page
     {% assign cur_year = year_group.name %}
     {% assign year_posts = year_group.items %}
     {% assign year_post_count = year_posts | size %}
-    {% assign year_type_groups = year_posts | group_by_exp: 'post', "post.path | split: '/' | slice: 2, 1 | first" %}
+    {% assign year_type_groups = year_posts | group_by_exp: 'post', "post.path | split: '/' | slice: 1, 1 | first | downcase" %}
     {% assign is_open = false %}
     {% if cur_year == latest_year %}
       {% assign is_open = true %}
