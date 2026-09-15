@@ -1,5 +1,33 @@
 <!-- mermaid-js loader -->
 <script type="text/javascript">
+  {%- comment -%}
+    Mermaid scales every SVG down to the column width. A wide left-to-right
+    flowchart ends up with unreadable labels, so past a threshold we keep
+    the natural size and let the block scroll sideways like a code block.
+  {%- endcomment -%}
+  const MERMAID_MIN_SCALE = 0.75;
+
+  function fitMermaid() {
+    document.querySelectorAll('.mermaid > svg').forEach((svg) => {
+      const container = svg.parentElement;
+      const naturalWidth = parseFloat(svg.style.maxWidth);
+
+      if (!naturalWidth || !container.clientWidth) {
+        return;
+      }
+
+      if (container.clientWidth / naturalWidth < MERMAID_MIN_SCALE) {
+        svg.style.maxWidth = 'none';
+        svg.style.width = `${naturalWidth}px`;
+        container.classList.add('mermaid-scroll');
+      }
+    });
+  }
+
+  function renderMermaid() {
+    return mermaid.run({ querySelector: '.mermaid' }).then(fitMermaid);
+  }
+
   function updateMermaid(event) {
     if (event.source === window && event.data && event.data.direction === ModeToggle.ID) {
       const mode = event.data.message;
@@ -8,7 +36,7 @@
         return;
       }
 
-      let expectedTheme = mode === ModeToggle.DARK_MODE ? 'dark' : 'default';
+      let expectedTheme = mode === ModeToggle.DARK_MODE ? 'dark' : 'neutral';
       let config = { theme: expectedTheme };
 
       {%- comment -%}
@@ -20,15 +48,16 @@
         const svgCode = elem.previousSibling.children.item(0).innerHTML;
         elem.innerHTML = svgCode;
         elem.removeAttribute('data-processed');
+        elem.classList.remove('mermaid-scroll');
       });
 
       mermaid.initialize(config);
-      mermaid.init(undefined, '.mermaid');
+      renderMermaid();
     }
   }
 
   (function () {
-    let initTheme = 'default';
+    let initTheme = 'neutral';
     const html = document.documentElement;
 
     if (
@@ -39,7 +68,8 @@
     }
 
     let mermaidConf = {
-      theme: initTheme {%- comment -%}  <default | dark | forest | neutral> {%- endcomment -%}
+      startOnLoad: false,
+      theme: initTheme {%- comment -%}  <default | dark | forest | neutral>; neutral matches the light palette better than default's yellow and lavender {%- endcomment -%}
     };
 
     {%- comment -%} Create mermaid tag {%- endcomment -%}
@@ -57,6 +87,7 @@
     });
 
     mermaid.initialize(mermaidConf);
+    renderMermaid();
     window.addEventListener('message', updateMermaid);
   })();
 </script>
