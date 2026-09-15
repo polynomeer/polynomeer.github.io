@@ -558,6 +558,21 @@ body.tag-filter-open {
         }
         }
 
+        .home-case-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          padding: 0.38rem 0.72rem;
+          border-radius: 999px;
+          border: 1px solid color-mix(in srgb, var(--metric-color) 32%, transparent);
+          background: color-mix(in srgb, var(--metric-color) 8%, transparent);
+          color: var(--metric-color);
+          font-size: 0.75rem;
+          font-weight: 700;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
         .home-pin-badge {
           display: inline-flex;
           align-items: center;
@@ -1103,13 +1118,6 @@ body.tag-filter-open {
 .card-wrapper.is-case-study {
   border-left: 3px solid var(--metric-color);
   border-radius: $radius-lg;
-}
-
-.card-case-mark {
-  margin-right: 0.35rem;
-  font-size: 0.8em;
-  color: var(--metric-color);
-  vertical-align: 0.1em;
 }
 
 .post-meta-series {

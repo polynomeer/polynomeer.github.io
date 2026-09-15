@@ -222,12 +222,15 @@ refactor: true
           <div class="card-body d-flex flex-column">
             <div class="card-title-row my-2 mt-md-0">
               <h1 class="card-title">
-                {% if post.problem_decision_result %}
-                  <i class="fas fa-flask card-case-mark" aria-hidden="true" title="{{ site.data.locales[lang].home.case_study_mark }}"></i>
-                {% endif %}
                 <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
               </h1>
               <div class="card-title-badges">
+                {% if post.problem_decision_result %}
+                  <span class="home-case-badge">
+                    <i class="fas fa-flask fa-fw"></i>
+                    <span>{{ site.data.locales[lang].home.case_study_mark }}</span>
+                  </span>
+                {% endif %}
                 {% if post.pin %}
                   <span class="home-pin-badge">
                     <i class="fas fa-thumbtack fa-fw"></i>
