@@ -1,0 +1,52 @@
+enabled: true
+
+# Home page 1 hero. The title falls back to recruit_mode.hero.title; short_title in
+# recruit_mode.yml overrides it. Metric values must match _data/portfolio.yml.
+
+eyebrow:
+  ko-KR: Backend Engineer
+  en: Backend Engineer
+
+metrics:
+  - from: 2시간
+    to: 5분
+    label:
+      ko-KR: 80만 건 정산 배치 처리 시간
+      en: 800k-row settlement batch runtime
+    url: /posts/bulk-insert-with-lock-part3/
+  - from: 480건
+    to: 75건
+    label:
+      ko-KR: 레거시 정적 분석 위반
+      en: Static analysis violations on legacy code
+    url: /posts/archunit-guardrails-on-legacy/
+  - value: 실험 26종 · 결함 12건
+    value_en: 26 experiments · 12 defects
+    label:
+      ko-KR: ParityPay 결제 백엔드 장애 실험
+      en: ParityPay payment backend failure experiments
+    url: /posts/parity-pay-experiments-and-defects/
+
+actions:
+  - title:
+      ko-KR: 채용 담당자용 보기
+      en: For recruiters
+    url: /recruit/
+    icon: fas fa-user-tie
+    primary: true
+  - title:
+      ko-KR: 실무 프로젝트
+      en: Production work
+    url: /about/#career-projects
+    icon: fas fa-briefcase
+  - title:
+      ko-KR: GitHub
+      en: GitHub
+    url: https://github.com/polynomeer
+    icon: fab fa-github
+
+# Series shown in the "start here" row, in this order.
+featured_series:
+  - batch-structure-improvement
+  - parity-pay
+  - sequence-bottleneck

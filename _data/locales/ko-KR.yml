@@ -175,6 +175,7 @@ series_directory:
   start_from: 시작 글
 
 home:
+  hero_label: 소개
   search_filter_label: 검색
   search_filter_placeholder: 글 검색
   type_filter_label: 타입
@@ -196,8 +197,8 @@ home:
   curation_explore: 더 보기
   curation_paths_eyebrow: 학습 경로
   curation_paths_title: 순서가 있는 독서·학습 경로로 시작하기
-  curation_series_eyebrow: 순서형 시리즈
-  curation_series_title: 연결된 시리즈로 이어 읽기
+  curation_series_eyebrow: 여기서 시작하기
+  curation_series_title: 순서대로 읽는 실무 시리즈
   curation_series_count: ":COUNT개 글"
   curation_series_fallback: 순서대로 읽을 수 있도록 묶인 연속 시리즈입니다.
 
