@@ -15,6 +15,14 @@
     font-size: 80%;
   }
 
+  /* Touch devices cannot hover, so the hash would sit permanently after
+     every heading and often wrap onto its own line. */
+  @media (hover: none) {
+    .anchor {
+      display: none;
+    }
+  }
+
   @media (hover: hover) {
     .anchor {
       visibility: hidden;
