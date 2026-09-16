@@ -13,7 +13,7 @@ series_groups:
     ends_at: 2
   - label: 외부 불확실성
     title: 응답이 사라졌을 때
-    summary: 타임아웃을 실패로 확정하지 않는 UNKNOWN 상태와, 실험 26종이 문서와 테스트 밖에서 찾아낸 결함 12건.
+    summary: 타임아웃을 실패로 확정하지 않는 UNKNOWN 상태와, 실험 27종이 문서와 테스트 밖에서 찾아낸 결함 12건.
     tone: green
     starts_at: 3
     ends_at: 4

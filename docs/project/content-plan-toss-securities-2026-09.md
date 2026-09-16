@@ -66,7 +66,7 @@
 | 6 Kafka 중복 소비 방지 | ADR-006 | **P1** |
 | 7 대사 배치 | `reconciliation/` | **P2** |
 | 8 Rate Limiter·Circuit Breaker | 없음 | Track F |
-| 9 장애 주입과 모니터링 | 실험 26종 | 4편 |
+| 9 장애 주입과 모니터링 | 실험 27종(글 작성 시점) | 4편 |
 | 10 부하 테스트와 한계 | 부분 | Track F·S |
 
 | # | 제목 (가제) | 가이드 대응 | 원고 위치 | 가이드가 요구하는 추가 재료 |
@@ -184,7 +184,7 @@ M을 진행하면 봉인된 Kafka·Netty 글은 그대로 두고, 새 글에서 
 | 각 글 완료 | career-hub `interview-prep/toss-securities-2026-08.md` | 해당 질문 답변 끝에 글 URL 연결. 특히 Q4~Q5(Kafka·Netty)는 M 트랙 전까지 "설계 배경은 ADR" 답변 유지 |
 | 각 글 완료 | career-hub `facts/side-projects/parity-pay.md` | 현재 없음. F 트랙 실험 결과(수치)를 facts로 먼저 기록하고 글에서 인용하는 순서를 지킨다 |
 
-`facts/side-projects/parity-pay.md`가 없는 것은 지금 바로 고칠 수 있는 항목이다. 1~4편과 보고서에 이미 실린 수치(실험 26종·결함 12건, 31ms 트랜잭션 중 17ms 잠금, 테스트 317건)를 facts로 옮겨 두면 이력서·블로그·면접 답변이 같은 숫자를 가리킨다.
+`facts/side-projects/parity-pay.md`가 없는 것은 지금 바로 고칠 수 있는 항목이다. 1~4편과 보고서에 이미 실린 수치(실험 27종·결함 12건, 31ms 트랜잭션 중 17ms 잠금, 테스트 317건)를 facts로 옮겨 두면 이력서·블로그·면접 답변이 같은 숫자를 가리킨다.
 
 ## 6. 글쓰기 규칙 (이 계획 추가분)
 
