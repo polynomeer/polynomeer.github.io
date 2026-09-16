@@ -68,7 +68,14 @@
           {{- page_title -}}
         </span>
       {% else %}
-        <span data-i18n="layout.{{ page.layout }}">{{- site.data.locales[include.lang].layout[page.layout] | default: page.layout | capitalize -}}</span>
+        {% assign layout_label = site.data.locales[include.lang].layout[page.layout] %}
+        {% if layout_label %}
+          <span data-i18n="layout.{{ page.layout }}">{{- layout_label -}}</span>
+        {% else %}
+          {% comment %} Layouts without a generic label (series, content type, status) show their own title. {% endcomment %}
+          {% assign layout_fallback = page.layout | capitalize %}
+          <span>{{- page.title | default: layout_fallback -}}</span>
+        {% endif %}
       {% endif %}
     </div>
 
