@@ -14,7 +14,11 @@ Spring Boot 서버가 **어떻게 무너지는지를 재현하고, 무너지는 
 | --- | --- |
 | `sys-drill` 재사용 | Toxiproxy 구성(docker-compose, ADR-0015)은 그대로 가져올 가치가 있다. 그러나 sys-drill은 세션·조직·AI 평가·과금 검토까지 있는 **제품**이고 Kotlin이다. 스레드 풀 고갈 실험을 넣으면 실험 코드와 제품 코드가 섞이고, 부하 결과가 제품 기능의 오버헤드와 뒤섞인다 |
 | `parity-pay` 재사용 | 결제 도메인이 붙어 있어 "무관한 API가 왜 느려지는가"를 결제 로직과 분리해 설명하기 어렵다. F3(외부기관 장애 격리)과 S5(비즈니스 메트릭 알림)는 parity-pay에서 하고, 순수 JVM·Tomcat·풀 실험은 여기서 한다 |
+| `spring-lab`(spring-internals-lab) 재사용 | 20주 로드맵·22개 모듈·217개 테스트로 **Spring 내부 동작**(IoC, 빈 생명주기, AOP 프록시, 트랜잭션 전파, MVC, Boot 자동 설정)을 소스 수준에서 검증한 학습 기록이다. `experiments/` 40여 개는 전부 JVM 안에서 단위 테스트로 확인하는 실험이고, 컨테이너·부하·장애 주입·관측 스택이 없다. 질문이 다르다 — spring-lab은 "Spring이 왜 이렇게 동작하는가", Track S는 "그 서버가 부하 아래에서 어떻게 무너지는가". 겹치는 지점은 S2(b)의 `REQUIRES_NEW`뿐이고, 그것도 spring-lab 14주차가 전파 규칙의 **동작**을, S2가 그 동작이 커넥션 풀에 미치는 **비용**을 다룬다. 글에서 서로 링크한다 |
+| `spring-lite` 재사용 | Spring의 축소 재구현(IoC/DI, 프록시 AOP, `@Transactional`, MVC 디스패처). 실험 대상이 아니라 실험 도구를 다시 만든 것이라 Tomcat·HikariCP·실제 부하와 무관하다 |
 | 새 저장소 `spring-ops-lab` | 도메인이 없어 실험 변수만 남는다. 재현 조건을 프로필 하나로 바꿀 수 있고, 저장소 자체가 "이 사람은 서버가 무너지는 방식을 안다"의 증거가 된다 |
+
+세 저장소의 관계를 한 줄로 두면 이렇다. **spring-lite는 Spring을 만들어 보고, spring-lab은 Spring을 읽고, spring-ops-lab은 Spring 서버를 무너뜨려 본다.** 이름이 비슷해 채용 담당자가 셋을 같은 것으로 읽을 위험이 있으므로, 새 저장소의 description과 README 첫 문장에서 "runtime failure"를 앞세워 spring-lab과의 차이를 먼저 말한다. 이름을 `spring-failure-lab`으로 두는 선택지도 있다.
 
 Java 21 + Spring Boot로 간다. parity-pay와 같은 스택이라 두 저장소의 실험 하니스와 보고서 형식을 공유할 수 있고, 이력서의 주 언어와 맞다. Kotlin 코루틴 실험(가이드 §6)은 범위 밖이다.
 
