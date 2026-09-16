@@ -10,7 +10,7 @@
 블로그에는 글이 부족한 게 아니라, **이력서가 주장하는 강점을 뒷받침하는 글이 채용 표면에 연결되어 있지 않다.** 세 가지 불일치가 핵심이다.
 
 1. **이력서와 블로그의 강점 정의가 다르다.** career-hub는 "정합성·동시성·정산 배치 성능·레거시 개선"을 팔고, 블로그 `/recruit` 페이지는 "DB 내부 동작 설명·Spring·구조화된 학습·기술 글쓰기"를 판다. 대표 글 4개 중 실무 성과를 다룬 글은 1개뿐이다.
-2. **실무 경험 시리즈가 미완이고, 가장 야심찬 시리즈 36편이 Draft 배지를 단 채 공개돼 있다.** `키 생성 병목` 시리즈는 2부에서 "다음 글에서"로 끝났고(2026-03-20 이후 정지), monticker 22편·Spring 내부 14편은 모두 `status: draft`로 노출 중이다.
+2. **실무 경험 시리즈가 미완이고, 가장 야심찬 시리즈 36편이 초안 상태로 멈춰 있다.** `키 생성 병목` 시리즈는 2부에서 "다음 글에서"로 끝났고(2026-03-20 이후 정지), monticker 22편·Spring 내부 14편은 모두 `status: draft`다. (정정 2026-09-16: 처음 이 문서는 draft가 배지를 단 채 공개된다고 적었으나, `_plugins/published-status-filter.rb`가 `published`가 아닌 글을 빌드에서 제외하므로 draft는 공개되지 않는다. 문제는 노출이 아니라 36편이 채용 표면에 기여하지 못한 채 묻혀 있었다는 것이다.)
 3. **가장 타깃에 맞는 최신 프로젝트(parity-pay)가 블로그와 GitHub 프로필 어디에도 없다.** 지원 대상은 토스인컴·토스증권·카카오뱅크·티빙 빌링, 즉 결제·정산·원장 도메인인데 parity-pay(2026-09, 결제·원장·멱등성·대사)는 글 0편, GitHub pinned에도 없다. pinned 4개는 `spring-practice`, `java-practice`, `romanticker`(현재 이름 monticker), `redis-lite-java`로 2025년 상태다.
 
 우선순위는 **표면 정비(글을 안 써도 되는 것) → 미완 시리즈 완결 → 이력서 bullet 1:1 대응 글 → parity-pay 시리즈 → 초안 정리** 순이다.
@@ -63,7 +63,7 @@ career-hub에는 `확인 필요`로 남은 미확정 사실이 있다(청크 크
 | 대량 배치 안정성을 높이기 위한 구조 개선 | 5 | 완결 (2026-01-03) | equity-system |
 | 키 생성 병목을 추적해 구조를 바꾼 기록 | 2 | **미완** — 2부가 "다음 글에서 어떻게 바꿨는지"로 끝남 | mcp-platform-revamp §4 |
 | 운에 맡기던 배치를 시스템으로 바꾸기 | 1 | **고아** — 대량 배치 시리즈와 주제 중복 | equity-system |
-| JSP 기반 시스템의 구조적 문제를 해결한 아키텍처 전환기 | 5 | 2025-05-22 하루에 일괄 등록 (Velog 이관본으로 추정) | mcp-platform-revamp §1~3 |
+| JSP 기반 시스템의 구조적 문제를 해결한 아키텍처 전환기 | 5 | 2025-05-22 하루에 일괄 등록. Velog 이관본은 아님(2026-09-16 확인: Velog 글 56편은 전부 2020~2021년) | mcp-platform-revamp §1~3 |
 | ISMS 대응을 위한 로그 수집 체계 개선 | 1 | 단편 | creator-studio §2 |
 | 대량 엑셀 다운로드 3편 | 3 | 단편 | batch-excel-optimization |
 
@@ -84,9 +84,9 @@ career-hub에는 `확인 필요`로 남은 미확정 사실이 있다(청크 크
 - spring-internals-lab — 9편 전부 draft.
 - starkraft(781 commits), iterview, code-drill, sys-drill, quno — 0편. 이 중 백엔드 포지션에 의미 있는 건 starkraft의 결정론적 시뮬레이션·프로토콜 버저닝 정도이며 우선순위는 낮다.
 
-**Draft 노출**
+**Draft 처리**
 
-`status: draft`는 배지가 붙은 채 공개된다. 현재 노출 중인 draft 36편:
+(정정 2026-09-16: draft는 빌드에서 제외되므로 공개되지 않는다. 아래 "노출" 표현은 "묻혀 있음"으로 읽는다.) draft 36편:
 
 - monticker 22편 — career-hub의 2026-08-16 결정은 "이력서에는 EMA 이벤트 탐지 + Claude Code 페어 개발만 남기고 CLOB·VaR·Kafka/Go/Netty·TimescaleDB 세부는 제외한다(면접에서 방어하기 어렵다)"였다. 그런데 블로그에는 제외하기로 한 세부 전부가 draft로 노출돼 있다. 검토자가 블로그에서 CLOB 매칭 엔진 글을 읽고 면접에서 물으면 이력서 전략과 충돌한다.
 - spring-internals-lab 9편, spring-lite 5편 — 저장소는 완료 상태(20주, 217 테스트)인데 글만 미완이다.
@@ -118,7 +118,7 @@ career-hub에는 `확인 필요`로 남은 미확정 사실이 있다(청크 크
 | D5 | GitHub README 스택 배지 정리 | Kubernetes·Kafka·Maven 제거. 소개 3문장을 이력서 소개문과 같은 톤으로. 블로그 About과 문구 통일 |
 | D6 | monticker draft 22편 상태 결정 | 이력서 노출 결정과 정렬: 아키텍처 3편 + EMA 이상 탐지 1편 + 관측성 2편 = 6편은 완성 후 `published`, 나머지 16편(CLOB·리스크 게이트·Quant Lab·Quant Analytics·Wallet·Testing)은 `archived`로 전환해 배지 노출을 끊는다. 더 자신 있어지면 되돌린다 |
 | D7 | `운에 맡기던 배치` 1부 처리 | 대량 배치 시리즈 0부(서문)로 `series` 변경·병합하거나 `archived` |
-| D8 | 스타일 정리 | `👉` 제거, 2025년 글의 `Archive` → `Notes`, JSP 전환기 5편 날짜를 원본 작성 시점으로 복원할지 판단 |
+| D8 | 스타일 정리 | `👉` 제거, 2025년 글의 `Archive` → `Notes`, JSP 전환기 5편 날짜를 원본 작성 시점으로 복원할지 판단 — **판단 완료(2026-09-16): 복원하지 않는다.** 원본 작성 시점을 증명할 자료가 없다. Velog에 없고(2020~2021년 글뿐), 저장소 첫 커밋(a391d57~6fe2a78, 2025-05-22 16:29~16:30)이 가장 이른 기록이며, career-hub Evidence도 "없음"이다. 확인할 수 없는 날짜로 바꾸는 것은 근거 없는 수치를 쓰지 않는다는 규칙(§4)에 어긋난다. 프로젝트 기간(2024.1–2024.11)은 About의 포트폴리오 항목이 이미 보여준다 |
 
 D1~D3은 `docs/features/recruit-mode-design.md`, `representative-posts-design.md`의 데이터 모델 안에서 값만 바꾸는 작업이다.
 
