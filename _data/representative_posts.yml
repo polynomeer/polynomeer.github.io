@@ -44,10 +44,10 @@ items:
       ko-KR: 대량 배치 성능
       en: Large-scale batch performance
     surfaces: [recruit]
-  - path: _posts/notes/parity-pay/2026-09-14-parity-pay-unknown-state.md
+  - path: _posts/notes/parity-pay/2026-09-15-parity-pay-outbox.md
     summary:
-      ko-KR: 외부 승인 응답이 유실됐을 때 타임아웃을 실패로 확정하지 않고 UNKNOWN 상태로 보존해 조회로 수렴시키는 설계와, 실험이 드러낸 문서에 없던 경로를 다룹니다.
-      en: Preserves a lost external approval as UNKNOWN instead of failing it, converges through queries, and documents the paths the experiments found missing from the design.
+      ko-KR: DB 커밋과 Kafka 발행 사이의 창을 Transactional Outbox로 닫고, 발행기 4대에서 순서가 뒤집혀 정산 금액이 달라진 결함과 소비자 SIGKILL로 만든 실제 중복 1,934건을 멱등 소비자가 흡수한 실측을 다룹니다.
+      en: Closes the gap between DB commit and Kafka publish with a Transactional Outbox, then records the ordering defect four publishers exposed and the 1,934 real duplicates a SIGKILLed consumer produced, all absorbed by idempotent consumers.
     capability:
       ko-KR: 결제 정합성
       en: Payment consistency
