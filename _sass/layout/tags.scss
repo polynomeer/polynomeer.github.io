@@ -16,4 +16,14 @@
     font-size: 0.7em;
     font-family: Oswald, sans-serif;
   }
+
+  &.tag-major {
+    font-size: 1.1em;
+    font-weight: 600;
+  }
+
+  &.tag-minor {
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
 }

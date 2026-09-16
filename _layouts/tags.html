@@ -3,19 +3,33 @@ layout: page
 # All the Tags of posts.
 ---
 
+{% comment %}
+  Most-used tags first (ties alphabetical). The key inverts the count so a
+  plain ascending sort gives count-descending, name-ascending order.
+{% endcomment %}
+{% assign tag_keys = '' | split: '' %}
+{% for t in site.tags %}
+  {% assign inverted = 99999 | minus: t[1].size | prepend: '00000' | slice: -5, 5 %}
+  {% capture tag_key %}{{ inverted }}::{{ t[0] }}{% endcapture %}
+  {% assign tag_keys = tag_keys | push: tag_key %}
+{% endfor %}
+
+{% assign tag_keys = tag_keys | sort_natural %}
+
 <div id="tags" class="d-flex flex-wrap mx-xl-2">
-  {% assign tags = '' | split: '' %}
-  {% for t in site.tags %}
-    {% assign tags = tags | push: t[0] %}
-  {% endfor %}
-
-  {% assign sorted_tags = tags | sort_natural %}
-
-  {% for t in sorted_tags %}
+  {% for key in tag_keys %}
+    {% assign t = key | split: '::' | last %}
+    {% assign count = site.tags[t].size %}
+    {% assign tier = '' %}
+    {% if count >= 10 %}
+      {% assign tier = ' tag-major' %}
+    {% elsif count == 1 %}
+      {% assign tier = ' tag-minor' %}
+    {% endif %}
     <div>
-      <a class="tag" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
+      <a class="tag{{ tier }}" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
         {{ t -}}
-        <span class="text-muted">{{ site.tags[t].size }}</span>
+        <span class="text-muted">{{ count }}</span>
       </a>
     </div>
   {% endfor %}
