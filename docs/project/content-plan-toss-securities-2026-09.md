@@ -134,6 +134,21 @@ M을 진행하면 봉인된 Kafka·Netty 글은 그대로 두고, 새 글에서 
 
 ## 4. 우선순위와 일정
 
+**진행 상황 (2026-09-16 갱신)**
+
+| 항목 | 상태 | 산출 |
+| --- | --- | --- |
+| P1 Outbox·멱등 소비자 | 완료 | `/posts/parity-pay-outbox/` (5편) |
+| P2 대사 | 완료 | `/posts/parity-pay-reconciliation/` (6편) |
+| P3 이중부기 원장 | 완료 | `/posts/parity-pay-ledger/` (7편) |
+| F1 Kafka 중복·유실·순서 역전 | 완료 | parity-pay reports/11 M-015~018, 결함 M 발견·수정. `/posts/parity-pay-kafka-failures/` (8편) |
+| F3 외부기관 장애 격리 | 진행 중 | parity-pay 세션에 위임(2026-09-16) |
+| F2 락 lease 만료·fencing token | 대기 | F3 뒤 |
+| Track S | **별도 프로젝트로 분리** | 설계는 `spring-ops-lab-design.md`에 있고, 실행은 이 계획 밖에서 별도 저장소로 진행한다. 이 문서의 11~20주차 일정은 무효 |
+| Track M | 조건부 유지 | — |
+| 표면 반영 | P1~P3·F1분 완료 | 대표 글, 시리즈 3그룹, 역량 맵 `payment-consistency` 노드, `portfolio.yml`, GitHub README, career-hub `facts/side-projects/parity-pay.md` |
+
+
 1차 계획 12주가 끝난 뒤(C1·C2·A6·A7까지 완료된 현재 시점) 이어지는 일정이다. 주 1편 상한은 유지한다. Track F·S는 실험이 붙으므로 글 한 편에 2주를 잡는다.
 
 | 주차 | 작업 | 산출 |
