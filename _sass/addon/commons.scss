@@ -542,6 +542,7 @@ sup {
 
       th {
         @extend %table-cell;
+        @extend %table-cell-wrap;
       }
     }
 
@@ -559,6 +560,7 @@ sup {
 
         td {
           @extend %table-cell;
+          @extend %table-cell-wrap;
         }
       }
     } /* tbody */

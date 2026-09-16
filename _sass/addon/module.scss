@@ -51,6 +51,15 @@
   white-space: nowrap;
 }
 
+/* Prose tables wrap inside the column instead of forcing a horizontal scroll.
+   Korean keeps words whole; min-width stops narrow columns from collapsing. */
+%table-cell-wrap {
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  min-width: 6rem;
+}
+
 %link-hover {
   color: #50fa7b !important;
   border-bottom: 1px solid #50fa7b;
