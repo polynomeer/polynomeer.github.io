@@ -143,10 +143,10 @@ M을 진행하면 봉인된 Kafka·Netty 글은 그대로 두고, 새 글에서 
 | P3 이중부기 원장 | 완료 | `/posts/parity-pay-ledger/` (7편) |
 | F1 Kafka 중복·유실·순서 역전 | 완료 | parity-pay reports/11 M-015~018, 결함 M 발견·수정. `/posts/parity-pay-kafka-failures/` (8편) |
 | F3 외부기관 장애 격리 | 완료 | parity-pay reports/11 M-019~023, 결함 N 발견·수정, ADR-014로 벌크헤드·차단기 기본값 채택. `/posts/parity-pay-external-isolation/` (9편) |
-| F2 락 lease 만료·fencing token | 대기 | 다음 위임 대상 |
+| F2 락 lease 만료·fencing token | 완료 | parity-pay reports/11 M-024~028(실험 경로, 채택 안 함), ADR-004 Outcome. `/posts/parity-pay-lock-lease/` (10편). Track F 완결 |
 | Track S | **별도 프로젝트로 분리** | 설계는 `spring-ops-lab-design.md`에 있고, 실행은 이 계획 밖에서 별도 저장소로 진행한다. 이 문서의 11~20주차 일정은 무효 |
 | Track M | 조건부 유지 | — |
-| 표면 반영 | P1~P3·F1·F3분 완료 | 대표 글, 시리즈 3그룹, 역량 맵 `payment-consistency` 노드, `portfolio.yml`, GitHub README, career-hub `facts/side-projects/parity-pay.md` |
+| 표면 반영 | P1~P3·F1~F3분 완료 | 대표 글, 시리즈 3그룹, 역량 맵 `payment-consistency` 노드, `portfolio.yml`, GitHub README, career-hub `facts/side-projects/parity-pay.md` |
 
 
 1차 계획 12주가 끝난 뒤(C1·C2·A6·A7까지 완료된 현재 시점) 이어지는 일정이다. 주 1편 상한은 유지한다. Track F·S는 실험이 붙으므로 글 한 편에 2주를 잡는다.

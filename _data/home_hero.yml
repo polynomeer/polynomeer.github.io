@@ -20,8 +20,8 @@ metrics:
       ko-KR: 레거시 정적 분석 위반
       en: Static analysis violations on legacy code
     url: /posts/archunit-guardrails-on-legacy/
-  - value: 실험 36종 · 결함 14건
-    value_en: 36 experiments · 14 defects
+  - value: 실험 41종 · 결함 14건
+    value_en: 41 experiments · 14 defects
     label:
       ko-KR: ParityPay 결제 백엔드 장애 실험
       en: ParityPay payment backend failure experiments
