@@ -8,11 +8,19 @@
   const MERMAID_MIN_SCALE = 0.75;
 
   function fitMermaid() {
+    let deferred = false;
+
     document.querySelectorAll('.mermaid > svg').forEach((svg) => {
       const container = svg.parentElement;
       const naturalWidth = parseFloat(svg.style.maxWidth);
 
-      if (!naturalWidth || !container.clientWidth) {
+      if (!naturalWidth) {
+        return;
+      }
+
+      {%- comment -%} A background tab has no layout yet; measure once it is shown. {%- endcomment -%}
+      if (!container.clientWidth) {
+        deferred = true;
         return;
       }
 
@@ -22,6 +30,11 @@
         container.classList.add('mermaid-scroll');
       }
     });
+
+    if (deferred) {
+      document.addEventListener('visibilitychange', fitMermaid, { once: true });
+      window.addEventListener('resize', fitMermaid, { once: true });
+    }
   }
 
   function renderMermaid() {
