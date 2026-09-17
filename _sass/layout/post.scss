@@ -2827,3 +2827,137 @@ header {
     margin-right: -0.5rem;
   }
 }
+
+/* Tech blog directory and review map (/tech-blogs/) */
+.tech-blog-intro {
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
+.tech-blog-summary {
+  font-size: 0.9rem;
+  color: var(--text-muted-color);
+
+  strong {
+    color: var(--metric-color);
+  }
+}
+
+.tech-blog-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1.5rem;
+
+  a {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.3));
+    font-size: 0.85rem;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      border-color: var(--link-color);
+      color: var(--link-color);
+    }
+  }
+}
+
+.tech-blog-item {
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.25));
+
+  &:last-child {
+    border-bottom: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.25));
+  }
+}
+
+.tech-blog-item-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+}
+
+.tech-blog-count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--metric-color);
+  white-space: nowrap;
+
+  &.is-empty {
+    color: var(--text-muted-color);
+    font-weight: 400;
+  }
+}
+
+.tech-blog-focus {
+  margin: 0.4rem 0 0.6rem;
+  color: var(--text-muted-color);
+  font-size: 0.92rem;
+}
+
+.tech-blog-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-blog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.3));
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &.is-primary {
+    border-color: color-mix(in srgb, var(--link-color) 45%, transparent);
+    background: color-mix(in srgb, var(--link-color) 8%, transparent);
+  }
+}
+
+.tech-blog-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted-color);
+}
+
+.tech-blog-reviews {
+  margin: 0.8rem 0 0;
+  padding-left: 0;
+  list-style: none;
+
+  li {
+    padding: 0.3rem 0;
+    line-height: 1.5;
+  }
+}
+
+.tech-blog-review-kind {
+  display: inline-block;
+  min-width: 2.2em;
+  margin-right: 0.3rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--metric-color) 12%, transparent);
+  color: var(--metric-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.tech-blog-review-source {
+  margin-left: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted-color);
+}

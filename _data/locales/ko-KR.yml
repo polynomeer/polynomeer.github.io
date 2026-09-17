@@ -251,6 +251,8 @@ pages:
     title: 역량 맵
   learning_evidence:
     title: 학습 성과
+  tech_blogs:
+    title: 기술 블로그 리뷰
 
 about:
   motto: Make Non Polynomial Polynomial
@@ -295,3 +297,14 @@ learning_evidence:
   nav_aria: 같은 형식의 이전 또는 다음 항목
   previous_item: 이전 학습
   next_item: 다음 학습
+
+tech_blogs:
+  summary_blogs: 블로그
+  summary_reviews: 리뷰
+  summary_covered: 리뷰한 블로그
+  review_count: 리뷰 :COUNT편
+  no_review: 아직 리뷰 없음
+  original: 원문 블로그
+  source: 원문
+  kind_blog: 글
+  kind_talk: 발표

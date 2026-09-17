@@ -256,6 +256,8 @@ pages:
     title: Capability Map
   learning_evidence:
     title: Learning Evidence
+  tech_blogs:
+    title: Tech Blog Reviews
 
 about:
   motto: Make Non Polynomial Polynomial
@@ -300,3 +302,14 @@ learning_evidence:
   nav_aria: Previous or next item in the same format
   previous_item: Previous
   next_item: Next
+
+tech_blogs:
+  summary_blogs: Blogs
+  summary_reviews: Reviews
+  summary_covered: Blogs reviewed
+  review_count: ":COUNT reviews"
+  no_review: No review yet
+  original: Original blog
+  source: source
+  kind_blog: Post
+  kind_talk: Talk

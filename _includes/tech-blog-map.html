@@ -1,0 +1,58 @@
+{%- comment -%}
+Big-tech engineering blog directory and the review map.
+Reviews are matched by category: [TechBlog, <category>] for blog post reviews, [Conference, <category>] for talk reviews.
+{%- endcomment -%}
+{%- include lang.html -%}
+{%- assign data = site.data.tech_blogs -%}
+{%- if data and data.enabled -%}
+{%- assign loc = site.data.locales[lang].tech_blogs -%}
+<p class="tech-blog-intro" data-l10n-ko="{{ data.intro['ko-KR'] | escape }}" data-l10n-en="{{ data.intro.en | escape }}">{% include localized-value.html value=data.intro lang=lang %}</p>
+{%- assign total_reviews = 0 -%}
+{%- assign covered = 0 -%}
+{%- for item in data.items -%}
+{%- assign blog_reviews = site.posts | where_exp: 'p', 'p.categories contains "TechBlog"' | where_exp: 'p', 'p.categories contains item.category' -%}
+{%- assign talk_reviews = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.categories contains item.category' -%}
+{%- assign n = blog_reviews.size | plus: talk_reviews.size -%}
+{%- assign total_reviews = total_reviews | plus: n -%}
+{%- if n > 0 -%}{%- assign covered = covered | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+<p class="tech-blog-summary"><span data-i18n="tech_blogs.summary_blogs">{{ loc.summary_blogs }}</span> <strong>{{ data.items.size }}</strong> · <span data-i18n="tech_blogs.summary_reviews">{{ loc.summary_reviews }}</span> <strong>{{ total_reviews }}</strong> · <span data-i18n="tech_blogs.summary_covered">{{ loc.summary_covered }}</span> <strong>{{ covered }}</strong></p>
+<div class="tech-blog-toc">
+{%- for item in data.items -%}
+<a href="#{{ item.id }}" data-l10n-ko="{{ item.name['ko-KR'] | escape }}" data-l10n-en="{{ item.name.en | escape }}">{% include localized-value.html value=item.name lang=lang %}</a>
+{%- endfor -%}
+</div>
+<section class="tech-blog-list">
+{%- for item in data.items -%}
+{%- assign blog_reviews = site.posts | where_exp: 'p', 'p.categories contains "TechBlog"' | where_exp: 'p', 'p.categories contains item.category' -%}
+{%- assign talk_reviews = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.categories contains item.category' -%}
+{%- assign n = blog_reviews.size | plus: talk_reviews.size -%}
+<article class="tech-blog-item" id="{{ item.id }}">
+<header class="tech-blog-item-head">
+<h2 data-l10n-ko="{{ item.name['ko-KR'] | escape }}" data-l10n-en="{{ item.name.en | escape }}">{% include localized-value.html value=item.name lang=lang %}</h2>
+<span class="tech-blog-count{% if n == 0 %} is-empty{% endif %}">{% if n > 0 %}{{ loc.review_count | replace: ':COUNT', n }}{% else %}{{ loc.no_review }}{% endif %}</span>
+</header>
+<p class="tech-blog-focus" data-l10n-ko="{{ item.focus['ko-KR'] | escape }}" data-l10n-en="{{ item.focus.en | escape }}">{% include localized-value.html value=item.focus lang=lang %}</p>
+<div class="tech-blog-links">
+<a class="tech-blog-link is-primary" href="{{ item.blog }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-up-right-from-square"></i> <span data-i18n="tech_blogs.original">{{ loc.original }}</span></a>
+{%- for l in item.links -%}
+<a class="tech-blog-link" href="{{ l.url }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-link"></i> {{ l.title }}</a>
+{%- endfor -%}
+</div>
+{%- if item.note -%}
+<p class="tech-blog-note" data-l10n-ko="{{ item.note['ko-KR'] | escape }}" data-l10n-en="{{ item.note.en | escape }}">{% include localized-value.html value=item.note lang=lang %}</p>
+{%- endif -%}
+{%- if n > 0 -%}
+<ul class="tech-blog-reviews">
+{%- for p in blog_reviews -%}
+<li><span class="tech-blog-review-kind" data-i18n="tech_blogs.kind_blog">{{ loc.kind_blog }}</span> <a href="{{ p.url | relative_url }}">{{ p.title }}</a>{% if p.source_url %} <a class="tech-blog-review-source" href="{{ p.source_url }}" target="_blank" rel="noopener noreferrer" data-i18n="tech_blogs.source">{{ loc.source }}</a>{% endif %}</li>
+{%- endfor -%}
+{%- for p in talk_reviews -%}
+<li><span class="tech-blog-review-kind" data-i18n="tech_blogs.kind_talk">{{ loc.kind_talk }}</span> <a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>
+{%- endfor -%}
+</ul>
+{%- endif -%}
+</article>
+{%- endfor -%}
+</section>
+{%- endif -%}
