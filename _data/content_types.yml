@@ -38,6 +38,16 @@ conference:
   icon: fas fa-microphone-lines
   order: 4
 
+techblog:
+  title:
+    ko-KR: 기술 블로그 리뷰
+    en: Tech Blog Review
+  description:
+    ko-KR: 빅테크 기술 블로그의 글을 읽고 내 실무·프로젝트 경험과 대조한 리뷰와 분석입니다. 원문 목록과 대응표는 /tech-blogs/ 에 있습니다.
+    en: Reviews and analyses of big-tech engineering blog posts, compared against my own production and project experience. The directory and review map live at /tech-blogs/.
+  icon: fas fa-newspaper
+  order: 5
+
 lecture:
   title:
     ko-KR: 강의
@@ -46,7 +56,7 @@ lecture:
     ko-KR: 강의, 부트캠프, 구조화된 수업 내용을 다시 보기 쉽게 정리한 노트입니다.
     en: Course, bootcamp, and structured lecture notes organized for later review.
   icon: fas fa-chalkboard-teacher
-  order: 5
+  order: 6
 
 problemsolving:
   title:
@@ -56,7 +66,7 @@ problemsolving:
     ko-KR: 코딩 테스트, 알고리즘, 문제 해결 연습 과정을 기록한 글입니다.
     en: Coding test, algorithm, and problem-solving practice writeups.
   icon: fas fa-puzzle-piece
-  order: 6
+  order: 7
 
 recruit:
   title:
@@ -66,7 +76,7 @@ recruit:
     ko-KR: 면접 준비, 채용 메모, 채용 관련 자료를 정리한 글입니다.
     en: Interview preparation, hiring notes, and recruiting-related materials.
   icon: fas fa-user-tie
-  order: 7
+  order: 8
 
 reference:
   title:
@@ -76,4 +86,4 @@ reference:
     ko-KR: 빠르게 찾아보는 메모, 키워드, 치트시트, 개발 참고 자료입니다.
     en: Quick lookup notes, keywords, cheat sheets, and development references.
   icon: fas fa-bookmark
-  order: 8
+  order: 9

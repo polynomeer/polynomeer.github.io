@@ -195,10 +195,9 @@ refactor: true
     {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
-    {% comment %} Case-study badge: career posts are "실무 사례", posts of a personal portfolio project are "개인 프로젝트". {% endcomment %}
+    {% comment %} Case-study badge (notes only): career posts are "실무 사례", posts of a personal portfolio project are "개인 프로젝트". Reviews and conference notes carry a PDR card too but are not case studies. {% endcomment %}
     {% assign card_kind = nil %}
     {% if post.problem_decision_result %}
-      {% assign card_kind = 'career' %}
       {% if site.data.portfolio and site.data.portfolio.personal %}
         {% for item in site.data.portfolio.personal.items %}
           {% if item.series and item.series == post.series %}
@@ -207,6 +206,9 @@ refactor: true
             {% assign card_kind = 'personal' %}{% break %}
           {% endif %}
         {% endfor %}
+      {% endif %}
+      {% if card_kind == nil and post_content_type_id == 'notes' %}
+        {% assign card_kind = 'career' %}
       {% endif %}
     {% endif %}
     <article
