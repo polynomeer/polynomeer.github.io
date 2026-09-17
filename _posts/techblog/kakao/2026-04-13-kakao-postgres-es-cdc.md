@@ -5,7 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, CDC, Debezium, Kafka Connect, PostgreSQL, Elasticsearch, Transactional Outbox]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 66
+series_order: 28
 source_url: https://tech.kakao.com/posts/776
 
 problem_decision_result:

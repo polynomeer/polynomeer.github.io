@@ -5,7 +5,7 @@ categories: [TechBlog, KakaoPay]
 tags: [Tech Blog Review, KakaoPay, Payment, Idempotency, Unknown State, Retry, MSA]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 68
+series_order: 47
 source_url: https://tech.kakaopay.com/post/msa-transaction/
 
 problem_decision_result:

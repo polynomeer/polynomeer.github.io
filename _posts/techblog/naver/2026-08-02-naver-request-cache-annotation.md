@@ -5,7 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Spring, Cache, Request Scope, Annotation, AOP, Java]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 46
+series_order: 54
 source_url: https://d2.naver.com/helloworld/7610642
 ---
 

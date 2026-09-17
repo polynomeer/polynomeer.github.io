@@ -5,7 +5,7 @@ categories: [TechBlog, Kurly]
 tags: [Tech Blog Review, Kurly, Transactional Outbox, Retry Topic, Dead Letter Topic, Kafka, Idempotency, Spring Kafka]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 69
+series_order: 51
 source_url: https://helloworld.kurly.com/blog/2026-outbox-pattern-and-retry-topic/
 
 problem_decision_result:

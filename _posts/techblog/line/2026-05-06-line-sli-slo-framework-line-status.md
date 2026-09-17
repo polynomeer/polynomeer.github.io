@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, SLI, SLO, Error Budget, Observability, Reliability]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 30
+series_order: 32
 source_url: https://techblog.lycorp.co.jp/ko/using-sli-slo-for-improving-reliability-1-developing-framework-and-line-status
 ---
 

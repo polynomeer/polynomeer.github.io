@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Migration, Verification, Kafka, CDC, ksqlDB, OpenSearch, Shadow Testing, E-Commerce]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 28
+series_order: 29
 source_url: https://techblog.lycorp.co.jp/ko/internalizing-without-specification-proving-equivalence-through-verification-logic
 ---
 

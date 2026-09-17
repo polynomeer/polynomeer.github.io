@@ -5,7 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, VictoriaMetrics, Monitoring, Cardinality, Retention, Query Optimization, Cost]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 49
+series_order: 58
 source_url: https://d2.naver.com/helloworld/5788040
 ---
 

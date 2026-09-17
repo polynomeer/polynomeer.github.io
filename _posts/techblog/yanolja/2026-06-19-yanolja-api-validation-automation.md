@@ -5,7 +5,7 @@ categories: [TechBlog, Yanolja]
 tags: [Tech Blog Review, Yanolja, API Validation, JSON Schema, OpenAPI, Contract, TypeScript, ArchUnit]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 74
+series_order: 41
 source_url: https://medium.com/yanoljacloud-tech/restful-api-validation-%EC%9E%90%EB%8F%99%ED%99%94-%ED%95%98%EA%B8%B0-dea98968fb7f
 
 problem_decision_result:

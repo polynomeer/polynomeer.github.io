@@ -5,7 +5,7 @@ categories: [TechBlog, Coupang]
 tags: [Tech Blog Review, Coupang, CQRS, Read Model, Cache, Eventual Consistency, High Availability, Circuit Breaker]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 64
+series_order: 59
 source_url: https://medium.com/coupang-engineering/184f7fdb1367
 
 problem_decision_result:

@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Private Cloud, OpenStack, Infrastructure, VPC, IaC, Open Source, SRv6]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 31
+series_order: 34
 source_url: https://techblog.lycorp.co.jp/ko/ly-corporation-next-generation-cloud-platform-flava-introduction
 ---
 

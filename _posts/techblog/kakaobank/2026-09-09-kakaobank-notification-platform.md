@@ -5,7 +5,7 @@ categories: [TechBlog, KakaoBank]
 tags: [Tech Blog Review, KakaoBank, Tail Latency, Work Stealing, Head-of-line Blocking, Thread Pool, Lock-Free, Platform]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 67
+series_order: 69
 source_url: https://tech.kakaobank.com/posts/2609-new-notification-platform-1/
 
 problem_decision_result:

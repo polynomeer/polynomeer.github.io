@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Content Moderation, Multimodal LLM, Machine Learning, vLLM, ONNX, CLIP, Trust and Safety]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 34
+series_order: 37
 source_url: https://techblog.lycorp.co.jp/ko/image-content-moderation-at-scale-with-multimodal-llm
 ---
 

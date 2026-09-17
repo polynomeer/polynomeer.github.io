@@ -5,7 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MongoDB, Replication, Sharding, Query Optimizer, TCMalloc, Database]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 35
+series_order: 38
 source_url: https://tech.kakao.com/posts/803
 ---
 

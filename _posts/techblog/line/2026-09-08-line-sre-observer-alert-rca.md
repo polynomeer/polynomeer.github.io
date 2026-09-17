@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, AIOps, LLM, MCP, Observability, Root Cause Analysis, Incident Response]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 57
+series_order: 68
 source_url: https://techblog.lycorp.co.jp/ko/building-sre-observer-for-alert-root-cause-analysis
 ---
 

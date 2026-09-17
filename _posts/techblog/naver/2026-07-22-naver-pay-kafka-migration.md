@@ -5,7 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Kafka, Transactional Outbox, CDC, MirrorMaker, Migration, Shadow Release]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 72
+series_order: 49
 source_url: https://d2.naver.com/helloworld/9581727
 
 problem_decision_result:

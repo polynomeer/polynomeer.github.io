@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, LLM, RAG, AI Agent, ReAct, Fine-tuning, Context Engineering, Cloud Platform]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 48
+series_order: 57
 source_url: https://techblog.lycorp.co.jp/ko/building-an-llm-service-for-enterprise-2-agent-engineering
 ---
 

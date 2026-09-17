@@ -5,7 +5,7 @@ categories: [TechBlog, Banksalad]
 tags: [Tech Blog Review, Banksalad, Optimistic Lock, Lost Update, Concurrency, Compare-and-Set, Replication Lag]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 63
+series_order: 30
 source_url: https://blog.banksalad.com/tech/banksalad-optimistic-lock/
 
 problem_decision_result:

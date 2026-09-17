@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Kafka, Quota, Multi-tenancy, Batching, Isolation]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 70
+series_order: 63
 source_url: https://engineering.linecorp.com/ko/blog/how-to-use-kafka-in-line-1/
 
 problem_decision_result:

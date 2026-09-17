@@ -5,7 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Testing, Unit Test, Humble Object, SOLID, Dependency Injection, TypeScript]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 32
+series_order: 35
 source_url: https://d2.naver.com/helloworld/9921217
 ---
 

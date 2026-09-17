@@ -5,7 +5,7 @@ categories: [TechBlog, Daangn]
 tags: [Tech Blog Review, Daangn, Daangn Pay, Payment, EMV QR, VAN, Approval, Unknown State]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 65
+series_order: 39
 source_url: https://medium.com/daangn/c311780b9b75
 
 problem_decision_result:

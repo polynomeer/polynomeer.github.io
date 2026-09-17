@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Apache Kafka, Encryption, Security, KMS, Envelope Encryption, Zero Downtime]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 55
+series_order: 66
 source_url: https://techblog.lycorp.co.jp/ko/applying-e2ee-to-apache-kafka-in-line-app
 ---
 

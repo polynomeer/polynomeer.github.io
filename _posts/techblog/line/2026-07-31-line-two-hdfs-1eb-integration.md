@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Hadoop, HDFS, DistCP, Kerberos, Data Platform, Tech-Verse]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 44
+series_order: 52
 source_url: https://techblog.lycorp.co.jp/ko/techverse2026-184
 ---
 

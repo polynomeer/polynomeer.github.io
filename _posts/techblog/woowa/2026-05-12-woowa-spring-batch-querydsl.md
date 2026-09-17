@@ -5,7 +5,7 @@ categories: [TechBlog, Woowa]
 tags: [Tech Blog Review, Woowa Brothers, Spring Batch, Querydsl, Pagination, JPA, Settlement]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 73
+series_order: 33
 source_url: https://techblog.woowahan.com/2662/
 
 problem_decision_result:

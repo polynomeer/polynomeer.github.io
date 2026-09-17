@@ -5,7 +5,7 @@ categories: [TechBlog, Musinsa]
 tags: [Tech Blog Review, Musinsa, CDC, Kafka Streams, Debezium, Strimzi, Strangler Fig, Data Migration]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 71
+series_order: 56
 source_url: https://techblog.musinsa.com/kafka%EC%99%80-strimzi%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-6%EA%B0%9C%EC%9D%98-%EB%8F%84%EB%A9%94%EC%9D%B8%EC%9D%84-%ED%95%98%EB%82%98%EC%9D%98-%EB%8F%84%EB%A9%94%EC%9D%B8%EC%9C%BC%EB%A1%9C-%ED%95%A9%EC%B3%90%EB%B3%B4%EC%95%98%EC%8A%B5%EB%8B%88%EB%8B%A4-e0264cfee0de
 
 problem_decision_result:

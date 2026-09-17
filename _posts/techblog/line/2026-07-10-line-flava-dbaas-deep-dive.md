@@ -5,7 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, DBaaS, Kubernetes, Operator Pattern, MySQL, Migration, Cloud Platform, Tech-Verse]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 40
+series_order: 45
 source_url: https://techblog.lycorp.co.jp/ko/techverse2026-231
 ---
 

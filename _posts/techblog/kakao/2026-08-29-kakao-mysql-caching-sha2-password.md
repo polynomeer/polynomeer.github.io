@@ -5,7 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MySQL, Authentication, SHA-256, TLS, Security, Database]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
-series_order: 53
+series_order: 64
 source_url: https://tech.kakao.com/posts/712
 ---
 
