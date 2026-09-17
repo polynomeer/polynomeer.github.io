@@ -122,6 +122,9 @@ post:
   series_progress: ":TOTAL편 중 :CURRENT편"
   series_previous: 이전 시리즈 글
   series_next: 다음 시리즈 글
+  series_pager_prev: 이전 페이지
+  series_pager_next: 다음 페이지
+  series_pager_nav: 시리즈 목록 페이지
   recommendation_project: 같은 프로젝트
   recommendation_series: 같은 시리즈
   read_time:

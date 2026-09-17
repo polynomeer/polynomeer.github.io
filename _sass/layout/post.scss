@@ -769,6 +769,60 @@ header {
   font-weight: 700;
 }
 
+.series-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: 1rem;
+  font-family: Lato, sans-serif;
+}
+
+.series-pager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.6rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--btn-patinator-text-color);
+  font-size: 0.9rem;
+  line-height: 1;
+
+  &:hover:not(:disabled):not([aria-current]) {
+    box-shadow: inset var(--btn-border-color) 0 0 0 1px;
+  }
+
+  &[aria-current] {
+    background: var(--btn-paginator-hover-color);
+    font-weight: 700;
+  }
+
+  &:disabled {
+    color: rgba(108, 117, 125, 0.57);
+    cursor: not-allowed;
+  }
+}
+
+.series-pager-arrow {
+  font-size: 1.15rem;
+}
+
+.series-pager-gap {
+  padding: 0 0.2rem;
+  color: var(--text-muted-color);
+}
+
+.series-pager-range {
+  margin-left: 0.5rem;
+  color: var(--text-muted-color);
+  font-size: 0.82rem;
+}
+
 .feature-chip-list {
   display: flex;
   flex-wrap: wrap;

@@ -1,9 +1,15 @@
 import { basic, initSidebar, initTopbar } from './modules/layouts';
-import { loadImg, imgPopup, initClipboard } from './modules/plugins';
+import {
+  loadImg,
+  imgPopup,
+  initClipboard,
+  initSeriesPager
+} from './modules/plugins';
 
 loadImg();
 imgPopup();
 initSidebar();
 initTopbar();
 initClipboard();
+initSeriesPager();
 basic();

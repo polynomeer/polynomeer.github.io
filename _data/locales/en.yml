@@ -122,6 +122,9 @@ post:
   series_progress: "Part :CURRENT of :TOTAL"
   series_previous: Previous in series
   series_next: Next in series
+  series_pager_prev: Previous page
+  series_pager_next: Next page
+  series_pager_nav: Series list pages
   recommendation_project: Same project
   recommendation_series: Same series
   read_time:

@@ -71,9 +71,15 @@
         </div>
       </div>
 
-      <ol class="series-navigation-list list-unstyled mb-0">
+      <ol
+        class="series-navigation-list list-unstyled mb-0"
+        data-series-pager="10"
+        data-label-prev="{{ site.data.locales[include.lang].post.series_pager_prev }}"
+        data-label-next="{{ site.data.locales[include.lang].post.series_pager_next }}"
+        data-label-nav="{{ site.data.locales[include.lang].post.series_pager_nav }}"
+      >
         {% for post in series_posts %}
-          <li class="{% if post.url == page.url %}active{% endif %}">
+          <li class="{% if post.url == page.url %}active{% endif %}" data-pager-item{% if post.url == page.url %} data-pager-active{% endif %}>
             {% if post.url == page.url %}
               <span>
                 <span class="series-step">{{ forloop.index }}</span>

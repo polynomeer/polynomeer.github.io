@@ -66,11 +66,17 @@ layout: page
                 <p class="series-cluster-summary">{{ group.summary }}</p>
               {% endif %}
 
-              <ol class="series-cluster-list list-unstyled mb-0">
+              <ol
+                class="series-cluster-list list-unstyled mb-0"
+                data-series-pager="10"
+                data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
+                data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
+                data-label-nav="{{ site.data.locales[lang].post.series_pager_nav }}"
+              >
                 {% for post in group_posts %}
                   {% assign detail_tags = post.tags | slice: 1, 3 %}
                   {% assign detail_meta = detail_tags | join: ' · ' %}
-                  <li class="series-cluster-item">
+                  <li class="series-cluster-item" data-pager-item>
                     <a href="{{ post.url | relative_url }}" class="series-cluster-link">
                       <span class="series-cluster-step">{{ post.series_order }}</span>
                       <div class="series-cluster-post">
@@ -103,11 +109,17 @@ layout: page
               <p class="series-cluster-summary">{{ page.bonus_group.summary }}</p>
             {% endif %}
 
-            <div class="series-bonus-grid">
+            <div
+              class="series-bonus-grid"
+              data-series-pager="9"
+              data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
+              data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
+              data-label-nav="{{ site.data.locales[lang].post.series_pager_nav }}"
+            >
               {% for post in bonus_posts %}
                 {% assign detail_tags = post.tags | slice: 1, 3 %}
                 {% assign detail_meta = detail_tags | join: ' · ' %}
-                <a href="{{ post.url | relative_url }}" class="series-bonus-card">
+                <a href="{{ post.url | relative_url }}" class="series-bonus-card" data-pager-item>
                   <span class="series-bonus-step">{{ post.series_order }}</span>
                   <strong>{{ post.title }}</strong>
                   {% if detail_meta and detail_meta != empty %}
@@ -153,11 +165,17 @@ layout: page
           </div>
         </header>
 
-        <ol class="series-cluster-list list-unstyled mb-0">
+        <ol
+          class="series-cluster-list list-unstyled mb-0"
+          data-series-pager="10"
+          data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
+          data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
+          data-label-nav="{{ site.data.locales[lang].post.series_pager_nav }}"
+        >
           {% for post in series_posts %}
             {% assign detail_tags = post.tags | slice: 0, 4 %}
             {% assign detail_meta = detail_tags | join: ' · ' %}
-            <li class="series-cluster-item">
+            <li class="series-cluster-item" data-pager-item>
               <a href="{{ post.url | relative_url }}" class="series-cluster-link">
                 <span class="series-cluster-step">{{ post.series_order | default: forloop.index }}</span>
                 <div class="series-cluster-post">
