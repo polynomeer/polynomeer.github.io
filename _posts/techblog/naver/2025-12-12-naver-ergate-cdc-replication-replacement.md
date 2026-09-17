@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, CDC, Apache Flink, Replication, Kafka, Migration, Reconciliation, Circuit Breaker]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 16
 source_url: https://d2.naver.com/helloworld/6388660
 ---
 

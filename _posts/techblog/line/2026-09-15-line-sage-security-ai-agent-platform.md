@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Security, LLM, AI Agent, RAG, Langflow, Human-in-the-Loop, Jira, Slack]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 62
 source_url: https://techblog.lycorp.co.jp/ko/ai-agent-platform-sage-dev-log-part-1
 ---
 

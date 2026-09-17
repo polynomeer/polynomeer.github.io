@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, AI Coding Agent, Spec-Driven Development, OpenAPI, Testing, Nix, Local Development, Tech-Verse]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 37
 source_url: https://techblog.lycorp.co.jp/ko/techverse2026-223
 ---
 

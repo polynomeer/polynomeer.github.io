@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Kubernetes, Linux, cgroups, CPU Throttling, Resource Management]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 12
 source_url: https://d2.naver.com/helloworld/7248350
 ---
 

@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Kubernetes, Batch, Kubernetes Job, Custom Controller, Kubebuilder, Operator Pattern]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 3
 source_url: https://d2.naver.com/helloworld/4142663
 ---
 

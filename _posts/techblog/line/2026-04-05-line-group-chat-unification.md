@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Messaging, Data Migration, Dual Read, Product Design, API Design]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 24
 source_url: https://techblog.lycorp.co.jp/ko/unification-of-group-chat-on-the-line-app
 ---
 

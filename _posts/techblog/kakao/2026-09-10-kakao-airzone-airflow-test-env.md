@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Airflow, Kubernetes, Helm, Developer Experience, Data Pipeline, Platform Engineering]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 58
 source_url: https://tech.kakao.com/posts/829
 ---
 

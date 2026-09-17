@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Flink, Flink CDC, CDC, MySQL, Debezium, Kafka, Binlog]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 8
 source_url: https://tech.kakao.com/posts/632
 ---
 

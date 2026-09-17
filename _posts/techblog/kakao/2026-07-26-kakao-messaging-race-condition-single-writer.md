@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Race Condition, Transaction, Transactional Outbox, Single Writer, Spring, JPA, Messaging]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 43
 source_url: https://tech.kakao.com/posts/810
 ---
 

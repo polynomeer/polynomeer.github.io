@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Iceberg, Apache Flink, Flink CDC, MySQL, Data Lakehouse, Compaction, Hive Metastore]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 19
 source_url: https://tech.kakao.com/posts/656
 ---
 

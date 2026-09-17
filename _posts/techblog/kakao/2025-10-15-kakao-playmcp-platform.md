@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MCP, LLM, AI Agent, OAuth, Streamable HTTP, Platform Engineering]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 13
 source_url: https://tech.kakao.com/posts/734
 ---
 

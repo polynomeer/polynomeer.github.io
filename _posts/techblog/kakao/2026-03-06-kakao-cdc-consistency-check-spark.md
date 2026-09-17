@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Spark, CDC, Data Consistency, Scala, JDBC, Apache Iceberg, Design Patterns]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 21
 source_url: https://tech.kakao.com/posts/717
 ---
 

@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MySQL, InnoDB, Redo Log, WAL, Mini Transaction, Database Internals]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 27
 source_url: https://tech.kakao.com/posts/721
 ---
 

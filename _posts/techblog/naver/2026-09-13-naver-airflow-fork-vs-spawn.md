@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Airflow, Python, Multiprocessing, fork, Copy-on-Write, Memory]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 60
 source_url: https://d2.naver.com/helloworld/4452165
 ---
 

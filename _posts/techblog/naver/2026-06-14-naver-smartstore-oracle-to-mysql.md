@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Oracle, MySQL, Database Migration, Dual Write, JPA, MyBatis, Spring Batch]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 36
 source_url: https://d2.naver.com/helloworld/6512234
 ---
 

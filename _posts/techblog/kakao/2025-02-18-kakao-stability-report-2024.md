@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Reliability, Resilience, Data Center, Incident Response, BCM, Multi-DC, Deployment, Security]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 2
 source_url: https://tech.kakao.com/posts/672
 ---
 

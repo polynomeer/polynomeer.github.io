@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Kubernetes, Ingress Nginx, Prometheus, Go, pprof, Troubleshooting, Mutex]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 54
 source_url: https://tech.kakao.com/posts/683
 ---
 

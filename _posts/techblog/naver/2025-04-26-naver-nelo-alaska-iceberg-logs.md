@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Apache Iceberg, Elasticsearch, Trino, Logging, Object Storage, Kafka, Data Lake]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 6
 source_url: https://d2.naver.com/helloworld/8998207
 ---
 

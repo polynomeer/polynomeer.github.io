@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, IaC, OpenTofu, Terragrunt, GitOps, ChatOps, SRE, AI Agent, Tech-Verse]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 51
 source_url: https://techblog.lycorp.co.jp/ko/techverse2026-86
 ---
 

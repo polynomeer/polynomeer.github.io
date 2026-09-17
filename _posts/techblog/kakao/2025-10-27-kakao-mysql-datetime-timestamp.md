@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MySQL, DATETIME, TIMESTAMP, Y2K38, Time Zone, Database]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 14
 source_url: https://tech.kakao.com/posts/778
 ---
 

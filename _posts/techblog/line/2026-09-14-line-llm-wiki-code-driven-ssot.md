@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, LLM, Knowledge Management, Spec-Driven Development, MSA, GitHub Actions, Documentation]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 61
 source_url: https://techblog.lycorp.co.jp/ko/llm-wiki-code-driven-knowledge-ssot
 ---
 

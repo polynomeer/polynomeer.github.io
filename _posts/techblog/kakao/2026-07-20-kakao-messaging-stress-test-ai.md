@@ -5,6 +5,7 @@ categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Performance Testing, Locust, JVM, Observability, Claude Code, LLM, KakaoTalk]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 42
 source_url: https://tech.kakao.com/posts/822
 ---
 

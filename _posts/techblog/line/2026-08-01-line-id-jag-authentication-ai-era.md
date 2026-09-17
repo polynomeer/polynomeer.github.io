@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, OAuth, Authentication, Authorization, AI Agent, JWT, IdP, Security, Athenz]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 45
 source_url: https://techblog.lycorp.co.jp/ko/id-jag-next-generation-authentication-ai-era
 ---
 

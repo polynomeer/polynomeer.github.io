@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Go, Garbage Collection, Memory Leak, cgo, valgrind, Profiling, GOGC]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 7
 source_url: https://d2.naver.com/helloworld/5316262
 ---
 

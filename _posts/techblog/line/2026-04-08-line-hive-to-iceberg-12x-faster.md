@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Apache Iceberg, Apache Flink, CDC, Kafka, MongoDB, Kubernetes, Data Pipeline, E-Commerce]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 26
 source_url: https://techblog.lycorp.co.jp/ko/from-hive-to-iceberg-12x-faster-data-updates
 ---
 

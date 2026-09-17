@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Log Pipeline, Kafka, Apache Storm, Backpressure, Priority, Sampling, OpenSearch]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 25
 source_url: https://d2.naver.com/helloworld/0004394
 ---
 

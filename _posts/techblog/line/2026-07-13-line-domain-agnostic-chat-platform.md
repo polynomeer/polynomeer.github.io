@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Messaging, Chat, Platform Engineering, WebSocket, Event-Driven, Chatbot, Customer Service]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 41
 source_url: https://techblog.lycorp.co.jp/ko/how-we-built-a-domain-agnostic-chat-platform
 ---
 

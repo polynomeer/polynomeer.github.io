@@ -5,6 +5,7 @@ categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, DevOps, Slack Bot, Jira, Automation, Redis, Hexagonal Architecture]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 33
 source_url: https://techblog.lycorp.co.jp/ko/reduce-repetitive-tasks-with-sre-bot
 ---
 

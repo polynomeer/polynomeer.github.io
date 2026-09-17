@@ -5,6 +5,7 @@ categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, StarRocks, ClickHouse, OLAP, Apache Iceberg, LSM Tree, Data Engineering]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
+series_order: 56
 source_url: https://d2.naver.com/helloworld/1168674
 ---
 
