@@ -1,6 +1,7 @@
 ---
 title: "LINE 「Hive에서 Iceberg로: 데이터 반영 속도 12배 향상의 비밀」 리뷰 — 60분 배치를 5분 스트리밍으로 바꾼 것보다, 5분마다 커밋해도 무너지지 않게 만든 것이 본체"
 date: 2026-04-08
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Apache Iceberg, Apache Flink, CDC, Kafka, MongoDB, Kubernetes, Data Pipeline, E-Commerce]
 series: bigtech-blog-reviews

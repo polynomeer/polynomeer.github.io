@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 토스에서는 테이블 정보를 어떻게 관리하나요: 테이블 센터의 검색 우선순위, 태그 동의어, 정규식 영향도 검색, DQ 룰"
 date: 2026-02-12
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Data Engineering, Data Catalog, Metadata, Data Quality, Data Lineage]
 series: toss-backend-talks

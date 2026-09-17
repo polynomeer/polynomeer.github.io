@@ -1,6 +1,7 @@
 ---
 title: "LINE 「SRE 팀의 반복 작업을 10분의 1로 줄인 SRE 봇 개발기」 리뷰 — 먼저 일주일을 재고, 슬래시 명령어 대신 워크플로를, GET-SET 대신 WATCH-MULTI를"
 date: 2026-05-24
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, DevOps, Slack Bot, Jira, Automation, Redis, Hexagonal Architecture]
 series: bigtech-blog-reviews

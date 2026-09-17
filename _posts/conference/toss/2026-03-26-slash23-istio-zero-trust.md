@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - 고객 불안을 0으로 만드는 토스의 Istio Zero Trust: STRICT mTLS, Sidecar 화이트리스트, 계열사·마이데이터 통신"
 date: 2026-03-26
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, DevOps, Istio, Zero Trust, mTLS, Security, Kubernetes, MyData]
 series: toss-backend-talks

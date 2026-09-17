@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 토스팀 인프라 자동화의 시작: 서버 20대 배포 1,470분을 160분으로, 11단계를 1단계로"
 date: 2026-02-27
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Infrastructure, Automation, InfraOps, Network, CMDB]
 series: toss-backend-talks

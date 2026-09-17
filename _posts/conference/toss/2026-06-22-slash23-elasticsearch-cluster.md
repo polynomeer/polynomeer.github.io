@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - 대규모 로그 처리도 OK! Elasticsearch 클러스터 개선기: 하루 53억 건 앞에서 매핑, Vector, 두 IDC 한 클러스터"
 date: 2026-06-22
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Elasticsearch, Logging, Observability, Data Engineering]
 series: toss-securities-talks

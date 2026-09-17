@@ -1,6 +1,7 @@
 ---
 title: "카카오 「같은 장애를 두 번 겪지 않기 위해, 배포 전에 리뷰합니다 — KRIS 개발기」 리뷰 — '위반했는가'는 코드가, '얼마나 위험한가'는 LLM이, 그리고 규칙은 더하는 게 아니라 덜어내는 것"
 date: 2026-09-11
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, LLM, AI Code Review, Deployment, Incident Prevention, RAG, DevOps, Policy as Code]
 series: bigtech-blog-reviews

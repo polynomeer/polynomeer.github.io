@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「StarRocks의 도입 배경과 성능 최적화」 리뷰 — ELT 시대의 OLAP 엔진은 JOIN을 잘해야 하고, 그 성능은 정렬 키·파티션·버킷 세 가지 설계에서 나온다"
 date: 2026-09-07
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, StarRocks, ClickHouse, OLAP, Apache Iceberg, LSM Tree, Data Engineering]
 series: bigtech-blog-reviews

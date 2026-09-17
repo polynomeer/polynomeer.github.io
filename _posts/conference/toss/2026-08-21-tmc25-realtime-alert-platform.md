@@ -1,6 +1,7 @@
 ---
 title: "TMC 25 리뷰 - 증권사 실시간 alert 플랫폼 고군분투기: 폴링 알림을 스트림 탐지로 바꾸고 로그·메트릭을 ClickHouse 한곳에 모으다"
 date: 2026-08-21
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, TMC, Observability, ClickHouse, Kafka, Alerting, Data Engineering]
 series: toss-securities-talks

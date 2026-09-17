@@ -1,6 +1,7 @@
 ---
 title: "SLASH 21 리뷰 - 실수 없이 안전하게 쿠버네티스 운영하기: Argo CD App of Apps, Vault 시크릿 오퍼레이터, OPA Gatekeeper"
 date: 2026-01-24
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, DevOps, Kubernetes, GitOps, Argo CD, OPA, Vault, Helm]
 series: toss-backend-talks

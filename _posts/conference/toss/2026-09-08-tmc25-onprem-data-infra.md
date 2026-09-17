@@ -1,6 +1,7 @@
 ---
 title: "TMC 25 리뷰 - 급증하는 데이터를 위한 온프레미스 인프라 개선: 12PB에서 5년 뒤 90PB로, Iceberg 정렬 최적화와 Ceph 오브젝트 스토리지"
 date: 2026-09-08
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, TMC, Hadoop, Apache Iceberg, Ceph, Object Storage, Data Engineering]
 series: toss-securities-talks

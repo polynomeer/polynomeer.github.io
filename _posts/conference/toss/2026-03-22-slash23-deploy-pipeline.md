@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - 유연하고 안전하게 배포 Pipeline 운영하기: 400개 파이프라인을 YAML, Helm 템플릿, 렌더링 diff CI로"
 date: 2026-03-22
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Toss Bank, DevOps, CI/CD, GoCD, Helm, Pipeline as Code, Kubernetes]
 series: toss-backend-talks

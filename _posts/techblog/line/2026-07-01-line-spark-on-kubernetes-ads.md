@@ -1,6 +1,7 @@
 ---
 title: "LINE 「LINE 서비스의 대규모 광고 데이터를 처리하기 위한 Spark on Kubernetes 적용기」 리뷰 — 코어를 절반으로 줄이고도 226% 빨라진 이유는 HDFS와 CPU를 떼어 놓았기 때문"
 date: 2026-07-01
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Apache Spark, Kubernetes, YARN, Hadoop, YuniKorn, Data Pipeline, Advertising]
 series: bigtech-blog-reviews

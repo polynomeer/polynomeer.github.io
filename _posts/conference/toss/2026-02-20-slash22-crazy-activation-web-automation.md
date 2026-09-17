@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 금융의 모든 순간을 자동화할 때까지, Toss Crazy Activation: 보이지 않는 웹뷰, 페이지 매니저, RxJS 메시지 채널"
 date: 2026-02-20
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Web Automation, Node.js, RxJS, WebView, Architecture]
 series: toss-backend-talks

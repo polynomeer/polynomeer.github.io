@@ -1,6 +1,7 @@
 ---
 title: "LINE 「대규모 서비스 환경에서의 이미지 콘텐츠 모더레이션(feat. 멀티모달 LLM)」 리뷰 — 90%는 가벼운 분류기가 걸러내고, 애매한 것만 LLM으로, 그리고 모델은 점수만 내고 정책은 따로"
 date: 2026-05-25
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Content Moderation, Multimodal LLM, Machine Learning, vLLM, ONNX, CLIP, Trust and Safety]
 series: bigtech-blog-reviews

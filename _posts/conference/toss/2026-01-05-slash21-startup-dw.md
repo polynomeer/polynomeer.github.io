@@ -1,6 +1,7 @@
 ---
 title: "SLASH 21 리뷰 - 빠르게 성장하는 스타트업의 DW: 통제 대신 빠른 탐지, 그리고 여섯 개의 키워드"
 date: 2026-01-05
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Data Warehouse, Data Engineering, Airflow, Data Quality]
 series: toss-backend-talks

@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - 머신러닝으로 더 똑똑하게 증권 뉴스 제공하기: 종목 매칭, 주가 변동률로 정의한 중요도, 액티브 러닝으로 고른 번역 데이터"
 date: 2026-06-10
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Machine Learning, NLP, Active Learning, MLOps]
 series: toss-securities-talks

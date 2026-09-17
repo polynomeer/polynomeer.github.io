@@ -1,6 +1,7 @@
 ---
 title: "LINE 「Flava DBaaS 딥다이브」 리뷰 — 오퍼레이터 패턴 위의 DB 서비스, 마이그레이션 도구, 그리고 DBA as a Service"
 date: 2026-07-10
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, DBaaS, Kubernetes, Operator Pattern, MySQL, Migration, Cloud Platform, Tech-Verse]
 series: bigtech-blog-reviews

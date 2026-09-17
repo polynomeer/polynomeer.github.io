@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - 미처 알지 못했던 Kernel까지 Observability 향상시키기: NUMA 소켓 피닝으로 CPU 13%, 그리고 Redis 지연 20ms의 범인 run_timer_softirq"
 date: 2026-05-08
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, DevOps, eBPF, NUMA, Kubernetes, Linux Kernel, Observability, Redis, Cilium]
 series: toss-backend-talks

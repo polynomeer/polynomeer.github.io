@@ -1,6 +1,7 @@
 ---
 title: "LINE 「Grafana에서 자연어로 장애 원인을 분석하기: LLM 에이전트 기반 SRELens 개발기」 리뷰 — 프롬프트를 세 층으로 나누고, 루프의 가드레일을 코드로 두고, 라벨 지식을 YAML로 압축하다"
 date: 2026-08-03
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, Grafana, LLM, AI Agent, MCP, Observability, Prometheus, Loki, Tempo]
 series: bigtech-blog-reviews

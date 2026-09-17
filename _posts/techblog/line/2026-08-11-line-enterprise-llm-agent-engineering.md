@@ -1,6 +1,7 @@
 ---
 title: "LINE 「엔터프라이즈 LLM 서비스 구축기 2: 에이전트 엔지니어링」 리뷰 — 파인 튜닝을 빼고, 청킹을 빼고, 계획 단계를 뺐더니 응답률 96%"
 date: 2026-08-11
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, LLM, RAG, AI Agent, ReAct, Fine-tuning, Context Engineering, Cloud Platform]
 series: bigtech-blog-reviews

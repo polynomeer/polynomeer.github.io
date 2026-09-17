@@ -1,6 +1,7 @@
 ---
 title: "TMC 25 리뷰 - STEAL THE SHOW, 금융 특화 LLM 내재화 전략: 상용 LLM으로 PMF를 찾고, 살아남은 서비스만 자동으로 증류한다"
 date: 2026-08-15
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, TMC, LLM, MLOps, Knowledge Distillation, Kubeflow]
 series: toss-securities-talks

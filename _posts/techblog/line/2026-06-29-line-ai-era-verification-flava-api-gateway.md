@@ -1,6 +1,7 @@
 ---
 title: "LINE 「AI 시대의 개발 능력은 검증력으로 결정된다」 리뷰 — 스펙 먼저, 15초 테스트, Nix 로컬 환경이 에이전트를 붙잡는 방법"
 date: 2026-06-29
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, AI Coding Agent, Spec-Driven Development, OpenAPI, Testing, Nix, Local Development, Tech-Verse]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "TMC 25 리뷰 - Compose로 증권 앱을 만들며 마주한 문제들: 초당 수십 번 바뀌는 가격 앞에서 리컴포지션 범위를 줄이는 세 가지 방법"
 date: 2026-08-27
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, TMC, Android, Jetpack Compose, Performance]
 series: toss-securities-talks

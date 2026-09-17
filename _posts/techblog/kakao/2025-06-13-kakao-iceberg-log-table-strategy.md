@@ -1,6 +1,7 @@
 ---
 title: "카카오 「로그 유형별 Iceberg 테이블 적재 및 운영 전략」 리뷰 — DB 로그와 서버 로그는 같은 Iceberg여도 파티션·커밋 주기·최적화가 전부 다르다"
 date: 2025-06-13
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Iceberg, Apache Flink, Kafka, Parquet, zstd, Compaction, Data Lakehouse]
 series: bigtech-blog-reviews

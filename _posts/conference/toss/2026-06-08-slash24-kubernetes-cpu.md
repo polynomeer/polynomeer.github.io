@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - Kubernetes CPU 알뜰하게 사용하기: CFS 스로틀링, 리퀘스트 2배 정책, max_over_time 중첩, 토스 믹서, 토폴로지 분산"
 date: 2026-06-08
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, DevOps, Kubernetes, CPU, CFS, Prometheus, Istio, Cost Optimization, Right Sizing]
 series: toss-backend-talks

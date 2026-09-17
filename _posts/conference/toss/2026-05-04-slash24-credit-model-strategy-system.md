@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - 유연하면서도 안정적인, 토스뱅크만의 신용 모형/전략 시스템 구축하기: 트래픽 복제로 전수 검증, 섀도우 배포, Ray, AutoML 박스"
 date: 2026-05-04
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Toss Bank, Credit Scoring, Machine Learning, Shadow Deployment, Ray, MLOps, Compliance]
 series: toss-backend-talks

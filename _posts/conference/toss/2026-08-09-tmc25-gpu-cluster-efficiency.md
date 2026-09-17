@@ -1,6 +1,7 @@
 ---
 title: "TMC 25 리뷰 - 비싼 GPU, 낭비 없이 제대로 운영하는 법: 낭비를 네 등급으로 정의하고, 알림과 MIG로 80%를 잡다"
 date: 2026-08-09
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, TMC, GPU, MLOps, Kubernetes, Machine Learning]
 series: toss-securities-talks

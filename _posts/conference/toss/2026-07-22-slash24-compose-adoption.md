@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - Compose를 토스팀에 안착시키기까지: 래핑으로 반응을 보고, 슬롯 컴포넌트로 다시 만들다"
 date: 2026-07-22
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Android, Jetpack Compose, Design System]
 series: toss-securities-talks

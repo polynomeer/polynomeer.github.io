@@ -1,6 +1,7 @@
 ---
 title: "LINE 「LY Corporation의 클라우드 인프라 개편: 거대한 두 개의 클라우드를 통합한 차세대 플랫폼 Flava의 아키텍처 소개」 리뷰 — 하이퍼바이저 3만 8천 대, VM 35만 대를 하나로 합치며 버린 것과 지킨 것"
 date: 2026-05-20
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Private Cloud, OpenStack, Infrastructure, VPC, IaC, Open Source, SRv6]
 series: bigtech-blog-reviews

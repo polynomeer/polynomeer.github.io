@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - 은행 데이터플랫폼 오픈소스로 전환하기: Oracle Exadata에서 Hadoop으로, 정합성 배치, Spark가 Impala를 이긴 이유, 전자금융감독규정과 Airflow"
 date: 2026-04-30
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Toss Bank, Data Platform, Hadoop, Spark, Airflow, Migration, Compliance, Apache Ranger]
 series: toss-backend-talks

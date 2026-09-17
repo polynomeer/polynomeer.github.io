@@ -1,6 +1,7 @@
 ---
 title: "카카오 「MongoDB WiredTiger의 파일 구조」·「WiredTiger의 B+Tree」 리뷰 — wt와 bsondump로 파일을 열고 gdb로 메모리를 들여다본, InnoDB와 정반대인 설계"
 date: 2025-01-24
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MongoDB, WiredTiger, B+Tree, Storage Engine, MVCC, Database Internals]
 series: bigtech-blog-reviews

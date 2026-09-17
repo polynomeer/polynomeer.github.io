@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - ClickHouse로 토스증권 랭킹 서비스 구조 개선하기: 1분 배치 랭킹을 초 단위 쿼리로 바꾼 테이블 엔진 선택"
 date: 2026-07-28
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, ClickHouse, Kafka, Data Engineering, OLAP]
 series: toss-securities-talks

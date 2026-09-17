@@ -1,6 +1,7 @@
 ---
 title: "카카오 「CDC 파이프라인 정합성 검사 Spark 잡 개발」(Part 1·2) 리뷰 — Reader·Translator·Comparator·Reporter로 나누고, DB 부하와 병렬도 사이의 균형점을 찾은 이야기"
 date: 2026-03-06
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Spark, CDC, Data Consistency, Scala, JDBC, Apache Iceberg, Design Patterns]
 series: bigtech-blog-reviews

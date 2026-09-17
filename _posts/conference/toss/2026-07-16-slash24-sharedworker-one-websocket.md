@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - N개의 탭, 단 하나의 웹소켓: SharedWorker로 브라우저당 연결 하나를 만들고 WeakRef로 닫힌 탭을 찾다"
 date: 2026-07-16
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, WebSocket, Frontend, Browser]
 series: toss-securities-talks

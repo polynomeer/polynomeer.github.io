@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - Feature Store로 유연하게 ML 고도화하기: 피처 테이블·뷰·서비스, 온라인 피처의 SLA와 트랜스폼, 드리프트 시 적재 차단"
 date: 2026-05-31
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Machine Learning, Feature Store, MLOps, Aerospike, Kafka, Data Quality, Platform]
 series: toss-backend-talks

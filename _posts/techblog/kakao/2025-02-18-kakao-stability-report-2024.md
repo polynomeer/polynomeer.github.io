@@ -1,6 +1,7 @@
 ---
 title: "카카오 「안정성 보고서 2024」(6편) 리뷰 — 장애를 기술 난이도가 아니라 '몇 명이 얼마나 오래 자주'로 재는 회사의 인프라·클라우드·품질·복구·보안"
 date: 2025-02-18
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Reliability, Resilience, Data Center, Incident Response, BCM, Multi-DC, Deployment, Security]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 은행 앱에도 Service Mesh 도입이 가능한가요: 토스뱅크의 Istio 활용과 운영 노하우"
 date: 2026-03-18
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Toss Bank, Istio, Service Mesh, Envoy, Kubernetes, DevOps, Observability]
 series: toss-backend-talks

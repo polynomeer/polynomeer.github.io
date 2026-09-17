@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - 대외계 구조 개선과 모니터링 강화로 시스템 연속성 확보하기: ISP별 고정 모니터링, BGP 우회, NAT·프록시·GSLB"
 date: 2026-06-12
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Network, BGP, Monitoring, NAT, Load Balancer, GSLB, Infrastructure]
 series: toss-backend-talks

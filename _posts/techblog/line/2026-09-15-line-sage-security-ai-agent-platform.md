@@ -1,6 +1,7 @@
 ---
 title: "LINE 「보안 업무를 위한 AI 에이전트 플랫폼 SAGE 개발기 1편: 판단은 사람에게 남기는 설계」 리뷰 — '가능합니다'를 금지하고, 복잡도에 따라 짧게 답하고, 운영 팀이 규칙을 쓰게 한 구조"
 date: 2026-09-15
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Security, LLM, AI Agent, RAG, Langflow, Human-in-the-Loop, Jira, Slack]
 series: bigtech-blog-reviews

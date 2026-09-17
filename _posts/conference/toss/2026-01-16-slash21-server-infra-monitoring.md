@@ -1,6 +1,7 @@
 ---
 title: "SLASH 21 리뷰 - 토스의 서버 인프라 모니터링: Istio 응답 플래그, USE 메서드, Prometheus 샤딩과 Thanos"
 date: 2026-01-16
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, DevOps, Monitoring, Istio, Kubernetes, Prometheus, Thanos, Observability]
 series: toss-backend-talks

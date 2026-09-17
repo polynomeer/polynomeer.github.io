@@ -1,6 +1,7 @@
 ---
 title: "LINE 「LINE 앱의 다자간 대화 기능 통합」 리뷰 — 사용자는 '여러 명과의 대화'와 '그룹'의 차이를 몰랐고, 그래서 둘을 합쳤다"
 date: 2026-04-05
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Messaging, Data Migration, Dual Read, Product Design, API Design]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 어떻게 안정적인 서비스를 빠르게, 자주 출시할 것인가: 보일러플레이트, 공유 빌드 캐시, 액티브-액티브 클러스터, 100% 로그 뷰어"
 date: 2026-03-11
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Toss Payments, DevOps, CI/CD, Observability, Kubernetes, Istio, Alerting]
 series: toss-backend-talks

@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「실시간 유효 광고 선정을 위한 Flink에서 Apache Paimon 도입기」 리뷰 — 스트리밍 처리에 '테이블'을 끼워 넣으면 무엇이 쉬워지나"
 date: 2025-08-16
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Apache Flink, Apache Paimon, Apache Iceberg, Lakehouse, Streaming, CDC, LSM Tree]
 series: bigtech-blog-reviews

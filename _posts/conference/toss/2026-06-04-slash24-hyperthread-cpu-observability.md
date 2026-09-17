@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - CPU Observability 높이는 Hyperthread 톺아보기: 사용률은 답이 아니다, 인스트럭션 처리량과 Top-down 분석"
 date: 2026-06-04
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Server Platform, Hyperthreading, CPU, perf, Performance Counter, Elasticsearch, Observability]
 series: toss-backend-talks

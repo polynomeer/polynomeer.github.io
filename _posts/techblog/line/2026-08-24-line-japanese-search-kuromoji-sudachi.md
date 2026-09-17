@@ -1,6 +1,7 @@
 ---
 title: "LINE 「일본어 상품 검색 정확도 높이기: Elasticsearch + Kuromoji에서 OpenSearch + Sudachi로」 리뷰 — 형태소 분석기를 바꿔도 모델 번호와 나카구로는 안 풀리고, 그래서 Multi-field가 필요하다"
 date: 2026-08-24
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, OpenSearch, Elasticsearch, Search, Japanese NLP, Sudachi, Kuromoji, E-Commerce]
 series: bigtech-blog-reviews

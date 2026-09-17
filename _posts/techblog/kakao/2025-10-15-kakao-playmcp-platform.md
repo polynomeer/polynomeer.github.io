@@ -1,6 +1,7 @@
 ---
 title: "카카오 「PlayMCP: 제로부터 시작하는 MCP 플랫폼 개발」 리뷰 — Host·Client에 레지스트리와 인증 바인딩을 더하면 마켓이 되고, Stateful 프로토콜을 원격에서 쓰는 대가는 따로 있다"
 date: 2025-10-15
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MCP, LLM, AI Agent, OAuth, Streamable HTTP, Platform Engineering]
 series: bigtech-blog-reviews

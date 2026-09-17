@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「NELO Alaska: 대용량 로그 데이터 저장을 위한 Apache Iceberg 도입기」 리뷰 — 검색의 95%가 당일 데이터라면 나머지 로그는 검색 엔진에 있을 이유가 없다"
 date: 2025-04-26
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Apache Iceberg, Elasticsearch, Trino, Logging, Object Storage, Kafka, Data Lake]
 series: bigtech-blog-reviews

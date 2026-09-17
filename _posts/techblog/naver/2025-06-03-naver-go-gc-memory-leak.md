@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「Go GC를 너무 믿지 마세요 - 메모리 누수 탐지와 GC 주기 조절」 리뷰 — RES와 heap의 차이가 크면 Go 바깥을 의심하고, GC는 자주 돌린다고 메모리가 주는 게 아니다"
 date: 2025-06-03
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Go, Garbage Collection, Memory Leak, cgo, valgrind, Profiling, GOGC]
 series: bigtech-blog-reviews

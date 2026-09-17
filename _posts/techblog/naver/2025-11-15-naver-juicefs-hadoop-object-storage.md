@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「JuiceFS: 오브젝트 스토리지를 활용하는 HDFS 호환 분산 파일 시스템」 리뷰 — HDFS도 오브젝트 스토리지도 아닌 세 번째 선택지가 필요한 이유"
 date: 2025-11-15
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Hadoop, HDFS, Object Storage, JuiceFS, Kubernetes, Storage]
 series: bigtech-blog-reviews

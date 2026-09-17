@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 물 흐르듯 자연스러운 ML 서비스 만들기: MLOps 프레임워크 대신 최소 의존성, ONNX 변환, JVM에서 서빙하기"
 date: 2026-03-03
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Machine Learning, MLOps, ONNX, Model Serving, JVM, Kotlin, Platform]
 series: toss-backend-talks

@@ -1,6 +1,7 @@
 ---
 title: "LINE 「LLM Wiki: 코드 기준으로 자동 최신화되는 도메인 지식 SSOT 만들기」 리뷰 — raw는 쌓고 knowledge는 최신만, 그리고 식별자 무결성을 lint로"
 date: 2026-09-14
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, LLM, Knowledge Management, Spec-Driven Development, MSA, GitHub Actions, Documentation]
 series: bigtech-blog-reviews

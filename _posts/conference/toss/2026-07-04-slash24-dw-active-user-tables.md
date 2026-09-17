@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - 전천후 데이터 분석을 위한 DW 설계 및 운영하기: 액트 타입 하나로 열 개의 테이블을 찍어 내는 활성 유저 모델"
 date: 2026-07-04
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Data Warehouse, Data Modeling, Airflow, Spark]
 series: toss-securities-talks

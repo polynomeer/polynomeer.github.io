@@ -1,6 +1,7 @@
 ---
 title: "LINE 「코드형 인프라(IaC)로 자동화에서 AI까지: OpenTofu와 ChatOps 도입기」 리뷰 — 달리는 기차의 바퀴를 코드로 갈아 끼우기"
 date: 2026-08-21
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, IaC, OpenTofu, Terragrunt, GitOps, ChatOps, SRE, AI Agent, Tech-Verse]
 series: bigtech-blog-reviews

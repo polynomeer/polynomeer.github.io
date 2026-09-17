@@ -1,6 +1,7 @@
 ---
 title: "LINE 「총 용량 1EB 초과! 서로 역사가 다른 두 HDFS를 어떻게 연결할까?」 리뷰 — ViewFS와 RBF, 테이블 권한과 경로 권한을 잇는 설계"
 date: 2026-07-31
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, Hadoop, HDFS, DistCP, Kerberos, Data Platform, Tech-Verse]
 series: bigtech-blog-reviews

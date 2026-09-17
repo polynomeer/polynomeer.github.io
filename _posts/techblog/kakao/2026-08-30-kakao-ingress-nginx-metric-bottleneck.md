@@ -1,6 +1,7 @@
 ---
 title: "카카오 「Ingress Nginx Controller의 Prometheus Metric 병목 현상」(1·2부) 리뷰 — 메트릭이 사라진 이유는 Nginx가 아니라 summary 타입의 뮤텍스였다"
 date: 2026-08-30
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Kubernetes, Ingress Nginx, Prometheus, Go, pprof, Troubleshooting, Mutex]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "LINE 「장애 Alert의 원인을 스스로 찾다: SRE Observer 개발기」 리뷰 — 알림을 세 축으로 묶고, 다섯 가설을 강제하고, 근거 없는 확신은 가드레일이 깎는다"
 date: 2026-09-08
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, AIOps, LLM, MCP, Observability, Root Cause Analysis, Incident Response]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「Kubernetes Job과 커스텀 컨트롤러를 활용한 배치 처리 경험기」 리뷰 — 배치를 VM에서 Job으로 옮기고, 순서가 필요한 것은 suspend와 Reconcile로 잇는다"
 date: 2025-03-16
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Kubernetes, Batch, Kubernetes Job, Custom Controller, Kubebuilder, Operator Pattern]
 series: bigtech-blog-reviews

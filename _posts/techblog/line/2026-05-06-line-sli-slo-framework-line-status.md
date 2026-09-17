@@ -1,6 +1,7 @@
 ---
 title: "LINE 「신뢰성 향상을 위한 SLI/SLO」 도입 3편·활용 1편 리뷰 — CUJ에서 시작해 28일 99.9%로 합의하고, 그것을 조직의 공통 언어로 만드는 프레임워크와 LINE Status"
 date: 2026-05-06
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, SRE, SLI, SLO, Error Budget, Observability, Reliability]
 series: bigtech-blog-reviews

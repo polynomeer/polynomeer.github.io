@@ -1,6 +1,7 @@
 ---
 title: "LINE 「AI 시대에 인증 과제를 해결할 차세대 표준 후보, ID-JAG」 리뷰 — SSO의 신뢰를 API 접근으로 확장해, 에이전트가 늘어도 동의 팝업과 토큰이 늘지 않게"
 date: 2026-08-01
+status: draft
 categories: [TechBlog, LINE]
 tags: [Tech Blog Review, LINE, OAuth, Authentication, Authorization, AI Agent, JWT, IdP, Security, Athenz]
 series: bigtech-blog-reviews

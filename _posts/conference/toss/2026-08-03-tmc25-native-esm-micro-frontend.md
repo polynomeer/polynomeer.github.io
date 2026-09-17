@@ -1,6 +1,7 @@
 ---
 title: "TMC 25 리뷰 - Native ESM에 올라탄 마이크로 프론트엔드: 450페이지 Next.js 하나를 Import Map으로 N개 배포로 나누다"
 date: 2026-08-03
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, TMC, Frontend, Micro Frontend, ESM, Deployment]
 series: toss-securities-talks

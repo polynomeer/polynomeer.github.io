@@ -1,6 +1,7 @@
 ---
 title: "카카오 「YEYE가 지켜보고 있다 – 카카오의 공격 표면 관리 이야기」 리뷰 — 자산을 범위·타입·식별로 정의하고, 스캔의 병목은 CPU가 아니라 대역폭이었다"
 date: 2026-08-20
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Security, Attack Surface Management, Scanning, Asset Management, DevSecOps]
 series: bigtech-blog-reviews

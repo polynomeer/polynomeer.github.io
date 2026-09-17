@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - ML 플랫폼으로 개발 속도와 안정성 높이기: 피처 스토어, DAG 빌더, 모니터링으로 타겟 세그먼트와 CTR 예측을 재사용 가능한 오퍼레이터로 만들기"
 date: 2026-05-12
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Machine Learning, MLOps, Feature Store, Airflow, MLflow, CTR Prediction, Platform]
 series: toss-backend-talks

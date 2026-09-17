@@ -1,6 +1,7 @@
 ---
 title: "SLASH 21 리뷰 - 토스 데이터의 흐름과 활용: 로그 센터, 액티브-액티브 Kafka, Impala의 한계와 극복, HDFS+Kudu 람다"
 date: 2026-02-01
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Data Platform, Kafka, Hadoop, Impala, Kudu, Data Engineering]
 series: toss-backend-talks

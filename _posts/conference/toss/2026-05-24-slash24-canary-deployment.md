@@ -1,6 +1,7 @@
 ---
 title: "SLASH 24 리뷰 - 생산성과 안정성 모두 잡는 마스터키, Canary 배포 개선기: 스티키 카나리와 오토 롤백"
 date: 2026-05-24
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Toss Bank, DevOps, SRE, Canary Deployment, Istio, Deployment, Rollback]
 series: toss-backend-talks

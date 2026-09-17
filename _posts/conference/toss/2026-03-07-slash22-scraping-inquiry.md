@@ -1,6 +1,7 @@
 ---
 title: "SLASH 22 리뷰 - 스크래핑으로 우아한 조회 경험을 만든 방법: 에러율 30%→0.5%, 20초→5초, 배포 없는 벤더 설정"
 date: 2026-03-07
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Web Automation, Scraping, Node.js, WebView, Observability, Middleware]
 series: toss-backend-talks

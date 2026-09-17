@@ -1,6 +1,7 @@
 ---
 title: "카카오 「개인화된 Airflow 테스트 환경 구축 및 운영 경험」 리뷰 — PR을 열면 5분 안에 내 Airflow가 생기는 AirZone의 세 가지 설계 결정"
 date: 2026-09-10
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Airflow, Kubernetes, Helm, Developer Experience, Data Pipeline, Platform Engineering]
 series: bigtech-blog-reviews

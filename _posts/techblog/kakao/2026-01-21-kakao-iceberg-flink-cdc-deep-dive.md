@@ -1,6 +1,7 @@
 ---
 title: "카카오 「Apache Iceberg와 Flink CDC 심층 탐구」 리뷰 — 메타데이터 파일을 하나하나 뜯어보고, compaction 없이 일주일 두면 조회가 2.8분에서 60분이 되는 것을 확인한 기록"
 date: 2026-01-21
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Iceberg, Apache Flink, Flink CDC, MySQL, Data Lakehouse, Compaction, Hive Metastore]
 series: bigtech-blog-reviews

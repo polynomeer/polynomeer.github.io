@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「리눅스의 Control Groups 기능이 Kubernetes에 어떻게 적용되는지 살펴보기」 리뷰 — requests와 limits가 실제로 커널의 어떤 파일에 쓰이는지"
 date: 2025-10-08
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Kubernetes, Linux, cgroups, CPU Throttling, Resource Management]
 series: bigtech-blog-reviews

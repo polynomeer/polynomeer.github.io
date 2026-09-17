@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「Python의 멀티프로세싱과 Airflow, 그리고 관련된 문제 해결기 1편」 리뷰 — fork가 spawn보다 50배 빠르고 메모리를 7배 아끼는 이유, 그리고 그 공짜 점심이 끝나는 순간"
 date: 2026-09-13
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Airflow, Python, Multiprocessing, fork, Copy-on-Write, Memory]
 series: bigtech-blog-reviews

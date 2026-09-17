@@ -1,6 +1,7 @@
 ---
 title: "카카오 「분산 추적 기반 AI 운영 생태계」 리뷰 — 롤로 LLM을 갈아 끼우고, 민감 정보는 토큰으로 바꾸고, 상태는 절대값이 아니라 일주일 전과 비교한다"
 date: 2026-01-02
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Observability, APM, LLM, AIOps, OpenTelemetry, Incident Response, MCP]
 series: bigtech-blog-reviews

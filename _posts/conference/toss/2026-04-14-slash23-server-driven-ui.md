@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - Server-driven UI로 다이나믹한 서비스 효율화하기: 토스 홈의 DST, 50개 UI와 13개 핸들러, 서버가 정의하는 이벤트 로그"
 date: 2026-04-14
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Server-driven UI, API Design, Mobile, Architecture, Event Logging]
 series: toss-backend-talks

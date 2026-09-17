@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「비용, 성능, 안정성을 목표로 한 지능형 로그 파이프라인 도입」 리뷰 — 낮의 로그를 새벽에 처리하고, 비상시엔 중요한 로그부터 보내고, 저장은 일부만 하는 파이프라인"
 date: 2026-04-06
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, Log Pipeline, Kafka, Apache Storm, Backpressure, Priority, Sampling, OpenSearch]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "카카오 「Log Aggregation의 진화: 카카오의 Fluentd 대체기」 리뷰 — 프로토콜은 그대로 두고 수집기만 Go로 바꾸자 서버가 절반으로"
 date: 2025-03-29
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Fluentd, Logging, Go, Kafka, Observability, Migration]
 series: bigtech-blog-reviews

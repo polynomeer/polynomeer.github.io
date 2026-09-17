@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「VictoriaMetrics 운영기 2편 — 장비 증설 없이 리소스 위기를 해결한 3단계 최적화 전략」 리뷰 — 큰 쿼리를 36개로 쪼개고, 보관 기간을 반으로 줄이고, 수집 대상의 91%를 뺀 이야기"
 date: 2026-08-13
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, VictoriaMetrics, Monitoring, Cardinality, Retention, Query Optimization, Cost]
 series: bigtech-blog-reviews

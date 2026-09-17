@@ -1,6 +1,7 @@
 ---
 title: "네이버 D2 「네이버 검색의 대규모 메트릭 저장소, VictoriaMetrics 운영기」 리뷰 — 시계열 12.5억 개를 다루는 저장소의 장비 180대를 멈추지 않고 바꾼 방법"
 date: 2026-04-27
+status: draft
 categories: [TechBlog, Naver]
 tags: [Tech Blog Review, Naver, VictoriaMetrics, Time Series, Monitoring, Rendezvous Hashing, Migration, Kubernetes]
 series: bigtech-blog-reviews

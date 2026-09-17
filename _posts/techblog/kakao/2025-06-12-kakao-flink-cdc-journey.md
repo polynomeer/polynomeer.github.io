@@ -1,6 +1,7 @@
 ---
 title: "카카오 「Journey with Apache Flink & Flink CDC」 리뷰 — 스냅샷과 binlog를 한 시스템에서, 그리고 라이브러리를 고쳐 쓰기까지"
 date: 2025-06-12
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, Apache Flink, Flink CDC, CDC, MySQL, Debezium, Kafka, Binlog]
 series: bigtech-blog-reviews

@@ -1,6 +1,7 @@
 ---
 title: "카카오 「MongoDB 8.0 업그레이드 해야하는 12가지 이유」 리뷰 — majority의 기준을 '적용'에서 '기록'으로 옮긴 것 하나가 쓰기 30~47%를 만들었다"
 date: 2026-05-26
+status: draft
 categories: [TechBlog, Kakao]
 tags: [Tech Blog Review, Kakao, MongoDB, Replication, Sharding, Query Optimizer, TCMalloc, Database]
 series: bigtech-blog-reviews

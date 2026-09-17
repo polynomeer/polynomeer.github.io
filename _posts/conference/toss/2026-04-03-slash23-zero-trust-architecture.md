@@ -1,6 +1,7 @@
 ---
 title: "SLASH 23 리뷰 - 금융사 최초의 Zero Trust 아키텍처 도입기: AD와 SSL VPN을 걷어내고 IAM·SSE·ZTNA·UEM·EPP로"
 date: 2026-04-03
+status: draft
 categories: [Conference, Toss]
 tags: [Conference, SLASH, Security, Zero Trust, IAM, ZTNA, SSE, Endpoint Security, Infrastructure]
 series: toss-backend-talks
