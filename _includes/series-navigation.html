@@ -30,46 +30,53 @@
   {% if series_total > 0 and current_index >= 0 %}
     {% assign current_part = current_index | plus: 1 %}
     <section class="feature-panel series-navigation" aria-labelledby="series-navigation-title">
-      <div class="feature-panel-header d-flex flex-column flex-lg-row justify-content-between gap-3">
-        <div>
-          <span class="feature-panel-label">{{ site.data.locales[include.lang].post.series }}</span>
-          <h3 id="series-navigation-title" class="feature-panel-title mb-1">
-            {% if series_page %}
-              <a href="{{ series_page.url | relative_url }}">{{ series_title }}</a>
-            {% else %}
-              {{ series_title }}
-            {% endif %}
-          </h3>
-          <p class="feature-panel-copy mb-0">
-            {{
-              site.data.locales[include.lang].post.series_progress
-              | replace: ':CURRENT', current_part
-              | replace: ':TOTAL', series_total
-            }}
-          </p>
-        </div>
-
-        <div class="series-navigation-links d-flex flex-column align-items-start align-items-lg-end gap-2">
+      <div class="feature-panel-header">
+        <span class="feature-panel-label">{{ site.data.locales[include.lang].post.series }}</span>
+        <h3 id="series-navigation-title" class="feature-panel-title mb-1">
           {% if series_page %}
-            <a class="series-link" href="{{ series_page.url | relative_url }}">
-              <span class="series-link-label">Series Overview</span>
-              <strong>전체 시리즈 보기</strong>
+            <a class="series-navigation-title-link" href="{{ series_page.url | relative_url }}">
+              {{ series_title }}
+              <i class="fas fa-angle-right fa-fw" aria-hidden="true"></i>
             </a>
+          {% else %}
+            {{ series_title }}
           {% endif %}
+        </h3>
+        <p class="feature-panel-copy mb-0">
+          {{
+            site.data.locales[include.lang].post.series_progress
+            | replace: ':CURRENT', current_part
+            | replace: ':TOTAL', series_total
+          }}
+        </p>
+      </div>
+
+      {% if previous_post or next_post %}
+        <div class="series-navigation-links">
           {% if previous_post %}
-            <a class="series-link" href="{{ previous_post.url | relative_url }}">
+            <a
+              class="series-link series-link-prev"
+              href="{{ previous_post.url | relative_url }}"
+              data-title="{{ previous_post.title | escape }}"
+              aria-label="{{ site.data.locales[include.lang].post.series_previous }}: {{ previous_post.title | escape }}"
+            >
               <span class="series-link-label">{{ site.data.locales[include.lang].post.series_previous }}</span>
               <strong>{{ previous_post.title }}</strong>
             </a>
           {% endif %}
           {% if next_post %}
-            <a class="series-link" href="{{ next_post.url | relative_url }}">
+            <a
+              class="series-link series-link-next"
+              href="{{ next_post.url | relative_url }}"
+              data-title="{{ next_post.title | escape }}"
+              aria-label="{{ site.data.locales[include.lang].post.series_next }}: {{ next_post.title | escape }}"
+            >
               <span class="series-link-label">{{ site.data.locales[include.lang].post.series_next }}</span>
               <strong>{{ next_post.title }}</strong>
             </a>
           {% endif %}
         </div>
-      </div>
+      {% endif %}
 
       <ol
         class="series-navigation-list list-unstyled mb-0"

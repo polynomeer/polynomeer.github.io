@@ -686,21 +686,52 @@ header {
   }
 }
 
+.series-navigation-title-link {
+  color: var(--heading-color);
+
+  i {
+    font-size: 0.85em;
+    color: var(--text-muted-color);
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: var(--link-color);
+    text-decoration: none;
+
+    i {
+      transform: translateX(0.15rem);
+    }
+  }
+}
+
 .series-navigation-links {
-  min-width: 0;
-  min-width: min(100%, 18rem);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 1rem;
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .series-link {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  width: 100%;
   min-width: 0;
   padding: 0.65rem 0.85rem;
   border-radius: 0.8rem;
   border: 1px solid rgba(98, 114, 164, 0.18);
   background: rgba(68, 71, 90, 0.22);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.32);
+    text-decoration: none;
+  }
 
   .series-link-label {
     color: var(--text-muted-color);
@@ -710,9 +741,55 @@ header {
   }
 
   strong {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
     color: var(--text-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* full title on hover */
+  &[data-title]::after {
+    content: attr(data-title);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 0.4rem);
+    z-index: 5;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.6rem;
+    border: 1px solid var(--btn-border-color);
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow, 0 6px 18px rgba(0, 0, 0, 0.18));
+    color: var(--text-color);
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
     white-space: normal;
     overflow-wrap: anywhere;
+    opacity: 0;
+    transform: translateY(0.25rem);
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    pointer-events: none;
+  }
+
+  &[data-title]:hover::after,
+  &[data-title]:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.series-link-next {
+  grid-column: 2;
+  text-align: right;
+
+  @media (max-width: 575.98px) {
+    grid-column: auto;
   }
 }
 
