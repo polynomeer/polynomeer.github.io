@@ -180,6 +180,7 @@ series_directory:
 
 home:
   case_study_mark: "Case study"
+  project_study_mark: "Side project"
   series_part: "Part :N"
   hero_label: Introduction
   browse_archive: Browse every post in the archive

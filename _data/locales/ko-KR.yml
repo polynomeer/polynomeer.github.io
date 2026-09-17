@@ -175,6 +175,7 @@ series_directory:
 
 home:
   case_study_mark: "실무 사례"
+  project_study_mark: "개인 프로젝트"
   series_part: ":N편"
   hero_label: 소개
   browse_archive: 아카이브에서 전체 글 보기
