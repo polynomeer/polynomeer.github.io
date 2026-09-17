@@ -2,7 +2,7 @@
 title: "Circuit Breaker로 외부 API 장애 격리 — Resilience4j + KIS·Yahoo 폴백 체인"
 date: 2026-06-29
 categories: [Monticker, Observability]
-tags: [monticker, Circuit Breaker, resilience4j, fallback, kotlin, Reliability]
+tags: [monticker, Circuit Breaker, resilience4j, fallback, Kotlin, Reliability]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 22

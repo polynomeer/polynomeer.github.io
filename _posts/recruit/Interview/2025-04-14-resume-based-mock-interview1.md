@@ -1,7 +1,7 @@
 ---
 title: 이력서 기반의 면접 예상질문 자문자답
 date: 2025-04-14
-categories: [recruit, interview]
+categories: [Recruit, Interview]
 tags: [Recruit, Interview, Career]
 ---
 
@@ -52,7 +52,7 @@ tags: [Recruit, Interview, Career]
 ### 공통 질문 (전체 프로젝트 기반)
 
 **Q. 사용했던 Java 버전 중 Java 21의 주요 기능은 무엇이며, 어떻게 활용하셨나요?**
-A. Java 21에서는 Record Patterns, Virtual Threads, Sequenced Collections 등의 기능이 도입되었습니다. 이 중 Virtual Thread는 Blocking I/O 처리 성능을 개선할 수 있어 대규모 비동기 작업의 부하 분산에 유용하며, 테스트 환경 및 비동기 이벤트 리스너 구현에서 적용을 검토했습니다. [Java 21 Features]({{posts/java-21-features}})
+A. Java 21에서는 Record Patterns, Virtual Threads, Sequenced Collections 등의 기능이 도입되었습니다. 이 중 Virtual Thread는 Blocking I/O 처리 성능을 개선할 수 있어 대규모 비동기 작업의 부하 분산에 유용하며, 테스트 환경 및 비동기 이벤트 리스너 구현에서 적용을 검토했습니다. [Java 21 Features](/posts/java-21-features/)
 
 **Q. `Spring Boot 3.2.2`로 전환하면서 겪은 주요 이슈나 마이그레이션 포인트는 무엇이었나요?**
 A. Jakarta EE 10으로 전환되며 `javax.*` → `jakarta.*` 네임스페이스 변경이 있었고, 서드파티 라이브러리 호환성 이슈가 발생했습니다. 또한 Spring Security 구조 변경으로 인해 기존의 `WebSecurityConfigurerAdapter` 폐지 대응이 필요했습니다.
@@ -219,4 +219,4 @@ HeapDump:
 - 이벤트 발행 전 `TransactionSynchronizationManager.isActualTransactionActive()`를 검사하여 트랜잭션 유무를 판단
 - 테스트 환경에서는 `@Transactional(propagation = REQUIRES_NEW)`를 강제로 부여하여 이벤트 리스너 활성화 여부를 검증
 
-즉, "트랜잭션이 없을 경우 이벤트가 동작하지 않는다"는 특성을 정확히 인지하고, 설계 시 필터링 로직 또는 대체 전략을 마련했습니다. [`@TransactionalEventListener` : 트랜잭션 유무에 따른 동작 원리와 실전 대응 전략]({{posts/}})
+즉, "트랜잭션이 없을 경우 이벤트가 동작하지 않는다"는 특성을 정확히 인지하고, 설계 시 필터링 로직 또는 대체 전략을 마련했습니다. [`@TransactionalEventListener` : 트랜잭션 유무에 따른 동작 원리와 실전 대응 전략](/posts/transactional-event-listener/)

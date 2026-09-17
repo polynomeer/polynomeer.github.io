@@ -1,6 +1,7 @@
 ---
 title: "@TransactionalEventListener 빠른 체크 노트"
 date: 2025-05-13
+slug: transactional-event-listener-checklist
 categories: [Notes, Spring]
 tags: [Spring, Transaction, "@TransactionalEventListener"]
 ---

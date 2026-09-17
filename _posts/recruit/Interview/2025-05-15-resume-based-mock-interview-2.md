@@ -1,7 +1,7 @@
 ---
 title: 이력서 기반의 면접 예상질문 자문자답 2
 date: 2025-05-15
-categories: [recruit, interview]
+categories: [Recruit, Interview]
 tags: [Recruit, Interview, Career]
 ---
 

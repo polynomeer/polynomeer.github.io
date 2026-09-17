@@ -2,7 +2,7 @@
 title: "Netty로 수만 연결에 시세 브로드캐스트하기 — NioEventLoopGroup 리액터 패턴"
 date: 2026-06-08
 categories: [Monticker, Realtime]
-tags: [monticker, Netty, websocket, Reactor, broadcast, Concurrency]
+tags: [monticker, Netty, WebSocket, Reactor, broadcast, Concurrency]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 6

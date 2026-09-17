@@ -2,7 +2,7 @@
 title: "룰 엔진: RSI·MACD 조건식을 JSON DSL로 — Quant Lab 설계"
 date: 2026-06-16
 categories: [Monticker, QuantLab]
-tags: [monticker, quant, rule-engine, dsl, rsi, macd, kotlin]
+tags: [monticker, quant, rule-engine, dsl, rsi, macd, Kotlin]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 12

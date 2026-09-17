@@ -2,7 +2,7 @@
 title: "주문 전 동기 리스크 게이트 설계 — VaR, 집중도, 일일손실 5가지 규칙"
 date: 2026-06-12
 categories: [Monticker, MatchingEngine]
-tags: [monticker, risk-management, var, pre-trade, kotlin, paper-trading]
+tags: [monticker, risk-management, var, pre-trade, Kotlin, paper-trading]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 9

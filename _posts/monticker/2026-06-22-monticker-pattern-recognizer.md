@@ -2,7 +2,7 @@
 title: "ZigZag + 패턴 템플릿 매칭으로 차트 패턴 감지 — 헤드앤숄더·이중바닥"
 date: 2026-06-22
 categories: [Monticker, QuantAnalytics]
-tags: [monticker, pattern-recognition, zigzag, chart-pattern, kotlin, technical-analysis]
+tags: [monticker, pattern-recognition, zigzag, chart-pattern, Kotlin, technical-analysis]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 17

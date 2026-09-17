@@ -1,6 +1,7 @@
 ---
 title: Spring 예외 처리 전략 정리
 date: 2024-09-07
+slug: spring-exception-handling
 categories: [Notes, Spring]
 tags: [Spring, Exception Handling, ControllerAdvice]
 ---

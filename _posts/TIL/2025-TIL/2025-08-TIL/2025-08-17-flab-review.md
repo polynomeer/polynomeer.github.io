@@ -1,6 +1,7 @@
 ---
 title: 애프랩(F-Lab) Java Backend 2개월 후기
 date: 2025-08-17
+slug: flab-review-2
 categories: [TIL, 2025-TIL]
 tags: [TIL]
 ---

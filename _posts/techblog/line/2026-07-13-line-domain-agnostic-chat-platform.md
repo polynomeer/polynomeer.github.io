@@ -2,7 +2,7 @@
 title: "LINE 「도메인에 의존하지 않는 채팅 플랫폼은 어떻게 만들었을까?」 리뷰 — 사용자를 모르는 채팅 플랫폼, 웹으로 만든 클라이언트, SOFT STOP으로 갈아 끼우는 챗봇 시나리오"
 date: 2026-07-13
 categories: [TechBlog, LINE]
-tags: [Tech Blog Review, LINE, Messaging, Chat, Platform Engineering, WebSocket, Event-Driven, Chatbot, Customer Service]
+tags: [Tech Blog Review, LINE, Messaging, Chat, Platform Engineering, WebSocket, Event Driven, Chatbot, Customer Service]
 series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
 series_order: 46

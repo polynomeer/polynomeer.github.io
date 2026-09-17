@@ -2,7 +2,7 @@
 title: "ADX로 시장 국면 분류하기 — BULL·BEAR·SIDEWAYS·HIGH_VOL"
 date: 2026-06-24
 categories: [Monticker, QuantAnalytics]
-tags: [monticker, regime-detection, adx, market-regime, kotlin, technical-analysis]
+tags: [monticker, regime-detection, adx, market-regime, Kotlin, technical-analysis]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 18

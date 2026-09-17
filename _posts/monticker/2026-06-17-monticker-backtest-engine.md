@@ -2,7 +2,7 @@
 title: "백테스트 엔진: look-ahead 없는 시뮬레이션 — Sharpe·MDD·PF 계산"
 date: 2026-06-17
 categories: [Monticker, QuantLab]
-tags: [monticker, backtest, sharpe-ratio, mdd, kotlin, quant]
+tags: [monticker, backtest, sharpe-ratio, mdd, Kotlin, quant]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 13

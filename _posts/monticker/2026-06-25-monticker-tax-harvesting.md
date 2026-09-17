@@ -2,7 +2,7 @@
 title: "손익통산으로 세금 줄이기 — Tax-Loss Harvesting 시뮬레이션"
 date: 2026-06-25
 categories: [Monticker, QuantAnalytics]
-tags: [monticker, tax, tax-harvesting, kotlin, investment, education]
+tags: [monticker, tax, tax-harvesting, Kotlin, investment, education]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 19

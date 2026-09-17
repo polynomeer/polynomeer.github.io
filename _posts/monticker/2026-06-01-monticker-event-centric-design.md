@@ -2,7 +2,7 @@
 title: "가격이 아니라 이벤트를 팔자 — monticker 설계 철학"
 date: 2026-06-01
 categories: [Monticker, Architecture]
-tags: [monticker, product-design, Event Driven, stock, Architecture]
+tags: [monticker, Product Design, Event Driven, stock, Architecture]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 1

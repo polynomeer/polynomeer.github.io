@@ -2,7 +2,7 @@
 title: "EMA 기반 이상 탐지 — 가격 급등과 거래량 서지 실시간 감지"
 date: 2026-06-09
 categories: [Monticker, Realtime]
-tags: [monticker, ema, event-detection, anomaly, kotlin, statistics]
+tags: [monticker, ema, event-detection, anomaly, Kotlin, statistics]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 7

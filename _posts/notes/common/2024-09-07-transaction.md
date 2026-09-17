@@ -1,6 +1,7 @@
 ---
 title: Transaction
 date: 2024-09-05
+slug: transaction-links
 categories: [Notes, Common]
 tags: [Transaction, Database]
 ---
