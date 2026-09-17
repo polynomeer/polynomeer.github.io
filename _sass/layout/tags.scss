@@ -2,6 +2,9 @@
   Styles for Tab Tags
 */
 
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
 .tag {
   border-radius: 0.7em;
   padding: 6px 8px 7px;

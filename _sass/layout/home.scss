@@ -2,6 +2,9 @@
   Style for Homepage
 */
 
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
 #post-status-filter {
   margin-top: 1.25rem;
 }

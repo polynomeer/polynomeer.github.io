@@ -2,6 +2,9 @@
   Style for Archives
 */
 
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
 #archives {
   letter-spacing: 0.03rem;
   display: grid;
