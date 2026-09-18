@@ -35,6 +35,7 @@ tabs:
   archives: Archives
   recruit: Recruit
   about: About
+  tech-blogs: Tech Blogs
 
 # the text displayed in the search bar & search results
 search:
@@ -307,6 +308,11 @@ learning_evidence:
   next_item: Next
 
 tech_blogs:
+  lead: A directory of engineering blogs from Korean and global tech companies and long-running personal blogs, mapped to the reviews of their posts and talks written here. Expand an entry to see the source links and the review list.
+  expand_all: Expand all
+  collapse_all: Collapse all
+  pager_nav: Review list pages
+  no_review_note: No post from this blog has been reviewed yet; only the source links are collected here.
   summary_blogs: Blogs
   summary_reviews: Reviews
   summary_covered: Blogs reviewed

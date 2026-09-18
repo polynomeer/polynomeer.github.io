@@ -1,0 +1,118 @@
+# 자바·스프링·코틀린·소프트웨어 분야의 권위자와 유명 개인 블로그 목록과 리뷰 대응표의 데이터. /tech-blogs/ 페이지에서 쓴다.
+# `category`는 리뷰 글의 두 번째 카테고리와 일치시킨다: categories: [TechBlog, <category>].
+enabled: true
+intro:
+  ko-KR: 자바·스프링·코틀린과 분산 시스템, 소프트웨어 설계 분야에서 오래 읽히는 개인 블로그의 원문 링크와, 이 블로그에서 그 글을 읽고 쓴 리뷰의 대응표입니다. 회사 블로그와 달리 한 사람의 관점이 길게 이어지는 글이라, 리뷰는 그 주장을 내 실측이 어디까지 확인하고 어디서 갈리는지를 기준으로 씁니다.
+  en: Links to long-running personal blogs by authorities in Java, Spring, Kotlin, distributed systems and software design, mapped to the reviews written here. Unlike company blogs these carry one person's argument over years, so each review checks how far my own measurements confirm the claim and where they diverge.
+items:
+  - id: kleppmann
+    category: Kleppmann
+    name: { ko-KR: Martin Kleppmann, en: Martin Kleppmann }
+    blog: https://martin.kleppmann.com/
+    links:
+      - { title: Designing Data-Intensive Applications, url: https://dataintensive.net/ }
+    focus: { ko-KR: "분산 시스템의 안전성, 분산락과 fencing token, 로컬 퍼스트 소프트웨어", en: "Safety in distributed systems, distributed locks and fencing tokens, local-first software" }
+  - id: fowler
+    category: Fowler
+    name: { ko-KR: Martin Fowler, en: Martin Fowler }
+    blog: https://martinfowler.com/
+    links: []
+    focus: { ko-KR: "리팩터링, 아키텍처 패턴, 마이크로서비스와 모놀리스, 지속적 전달", en: "Refactoring, architecture patterns, microservices and monoliths, continuous delivery" }
+  - id: vladmihalcea
+    category: VladMihalcea
+    name: { ko-KR: Vlad Mihalcea, en: Vlad Mihalcea }
+    blog: https://vladmihalcea.com/
+    links: []
+    focus: { ko-KR: "Hibernate·JPA 내부, 트랜잭션 격리와 락, SQL 성능", en: "Hibernate and JPA internals, transaction isolation and locking, SQL performance" }
+  - id: thorbenjanssen
+    category: ThorbenJanssen
+    name: { ko-KR: Thorben Janssen, en: Thorben Janssen }
+    blog: https://thorben-janssen.com/
+    links: []
+    focus: { ko-KR: "Hibernate·JPA 실전 팁, Spring Data JPA, 매핑과 성능", en: "Practical Hibernate and JPA, Spring Data JPA, mapping and performance" }
+  - id: nipafx
+    category: NicolaiParlog
+    name: { ko-KR: Nicolai Parlog (nipafx), en: Nicolai Parlog (nipafx) }
+    blog: https://nipafx.dev/
+    links: []
+    focus: { ko-KR: "최신 Java 언어·플랫폼 기능, 모듈 시스템, 가상 스레드", en: "Modern Java language and platform features, module system, virtual threads" }
+  - id: shipilev
+    category: Shipilev
+    name: { ko-KR: Aleksey Shipilëv, en: Aleksey Shipilëv }
+    blog: https://shipilev.net/
+    links: []
+    focus: { ko-KR: "JVM 성능과 GC, JMH 벤치마크 방법론, Java 메모리 모델", en: "JVM performance and GC, JMH benchmarking methodology, Java memory model" }
+  - id: morling
+    category: GunnarMorling
+    name: { ko-KR: Gunnar Morling, en: Gunnar Morling }
+    blog: https://www.morling.dev/
+    links: []
+    focus: { ko-KR: "CDC와 Debezium, Kafka, Java 성능 실험(1BRC)", en: "CDC and Debezium, Kafka, Java performance experiments (1BRC)" }
+  - id: brooker
+    category: MarcBrooker
+    name: { ko-KR: Marc Brooker, en: Marc Brooker }
+    blog: https://brooker.co.za/blog/
+    links: []
+    focus: { ko-KR: "AWS 분산 시스템 설계, 재시도와 백오프, 지연과 큐잉 이론", en: "Distributed systems design at AWS, retries and backoff, latency and queueing theory" }
+  - id: vogels
+    category: WernerVogels
+    name: { ko-KR: Werner Vogels (All Things Distributed), en: Werner Vogels (All Things Distributed) }
+    blog: https://www.allthingsdistributed.com/
+    links: []
+    focus: { ko-KR: "최종 일관성, 대규모 서비스 운영 원칙, Amazon의 아키텍처 결정", en: "Eventual consistency, operating large services, Amazon's architecture decisions" }
+  - id: danluu
+    category: DanLuu
+    name: { ko-KR: Dan Luu, en: Dan Luu }
+    blog: https://danluu.com/
+    links: []
+    focus: { ko-KR: "성능과 지연 측정, 장애 사례 분석, 엔지니어링 문화에 대한 데이터 기반 글", en: "Performance and latency measurement, failure case studies, data-driven writing on engineering culture" }
+  - id: brendangregg
+    category: BrendanGregg
+    name: { ko-KR: Brendan Gregg, en: Brendan Gregg }
+    blog: https://www.brendangregg.com/blog/
+    links: []
+    focus: { ko-KR: "시스템 성능, eBPF·플레임 그래프, USE 방법론", en: "Systems performance, eBPF and flame graphs, the USE method" }
+  - id: vanlightly
+    category: JackVanlightly
+    name: { ko-KR: Jack Vanlightly, en: Jack Vanlightly }
+    blog: https://jack-vanlightly.com/
+    links: []
+    focus: { ko-KR: "Kafka·Pulsar 내부, TLA+와 형식 검증, 스트리밍 시스템 분석", en: "Kafka and Pulsar internals, TLA+ and formal verification, streaming systems analysis" }
+  - id: aphyr
+    category: Aphyr
+    name: { ko-KR: Kyle Kingsbury (Aphyr, Jepsen), en: Kyle Kingsbury (Aphyr, Jepsen) }
+    blog: https://aphyr.com/
+    links:
+      - { title: Jepsen analyses, url: https://jepsen.io/analyses }
+    focus: { ko-KR: "분산 데이터베이스의 정합성 검증, 격리 수준 이상 현상, Jepsen 분석", en: "Consistency testing of distributed databases, isolation anomalies, Jepsen analyses" }
+  - id: joshlong
+    category: JoshLong
+    name: { ko-KR: Josh Long, en: Josh Long }
+    blog: https://joshlong.com/
+    links:
+      - { title: Spring Blog, url: https://spring.io/blog }
+    focus: { ko-KR: "Spring 생태계 전반, Spring Boot·Cloud 최신 기능, 리액티브와 가상 스레드", en: "The Spring ecosystem, latest Spring Boot and Cloud features, reactive and virtual threads" }
+  - id: elizarov
+    category: RomanElizarov
+    name: { ko-KR: Roman Elizarov, en: Roman Elizarov }
+    blog: https://elizarov.medium.com/
+    links: []
+    focus: { ko-KR: "Kotlin 코루틴 설계, 구조적 동시성, Kotlin 언어 결정", en: "Kotlin coroutines design, structured concurrency, Kotlin language decisions" }
+  - id: jakewharton
+    category: JakeWharton
+    name: { ko-KR: Jake Wharton, en: Jake Wharton }
+    blog: https://jakewharton.com/blog/
+    links: []
+    focus: { ko-KR: "Kotlin·JVM 바이트코드, 라이브러리 설계(OkHttp, Retrofit), 빌드와 툴링", en: "Kotlin and JVM bytecode, library design (OkHttp, Retrofit), build and tooling" }
+  - id: toby
+    category: Toby
+    name: { ko-KR: 이일민 (토비), en: Toby Lee }
+    blog: https://toby.epril.com/
+    links: []
+    focus: { ko-KR: "Spring 설계 원리, 토비의 스프링, 리액티브와 테스트 주도 개발", en: "Spring design principles, Toby's Spring, reactive programming and TDD" }
+  - id: jojoldu
+    category: Jojoldu
+    name: { ko-KR: 이동욱 (향로), en: Dong-wook Lee (jojoldu) }
+    blog: https://jojoldu.tistory.com/
+    links: []
+    focus: { ko-KR: "Spring Boot·JPA 실전, 테스트 코드, 백엔드 개발 문화", en: "Practical Spring Boot and JPA, test code, backend engineering culture" }

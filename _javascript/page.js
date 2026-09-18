@@ -3,7 +3,8 @@ import {
   loadImg,
   imgPopup,
   initClipboard,
-  initSeriesPager
+  initSeriesPager,
+  initBlogMap
 } from './modules/plugins';
 
 loadImg();
@@ -12,4 +13,5 @@ initSidebar();
 initTopbar();
 initClipboard();
 initSeriesPager();
+initBlogMap();
 basic();

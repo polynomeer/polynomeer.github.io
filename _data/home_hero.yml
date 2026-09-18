@@ -44,8 +44,3 @@ actions:
       en: Learning evidence
     url: /learning-evidence/
     icon: fas fa-book-open-reader
-  - title:
-      ko-KR: 기술 블로그 리뷰
-      en: Tech blog reviews
-    url: /tech-blogs/
-    icon: fas fa-book-open

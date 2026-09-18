@@ -35,6 +35,7 @@ tabs:
   archives: 아카이브
   recruit: 채용
   about: 소개
+  tech-blogs: 기술 블로그
 
 # the text displayed in the search bar & search results
 search:
@@ -302,6 +303,11 @@ learning_evidence:
   next_item: 다음 학습
 
 tech_blogs:
+  lead: 국내외 빅테크의 엔지니어링 블로그와 오래 읽히는 개인 블로그의 원문 목록, 그리고 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰의 대응표입니다. 항목을 펼치면 원문 링크와 리뷰 목록이 보입니다.
+  expand_all: 모두 펼치기
+  collapse_all: 모두 접기
+  pager_nav: 리뷰 목록 페이지
+  no_review_note: 아직 이 블로그의 글을 리뷰하지 않았습니다. 원문 링크만 정리해 두었습니다.
   summary_blogs: 블로그
   summary_reviews: 리뷰
   summary_covered: 리뷰한 블로그
