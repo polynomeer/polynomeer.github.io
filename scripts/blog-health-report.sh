@@ -51,3 +51,7 @@ if [[ -f "_site/assets/js/data/search.json" ]]; then
 else
   printf "Generated search index size: n/a (_site/assets/js/data/search.json missing)\n"
 fi
+
+printf "\n"
+printf "Post consistency (tags, slugs, front matter, internal links)\n"
+LC_ALL=en_US.UTF-8 ruby scripts/check-post-consistency.rb || true

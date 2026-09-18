@@ -1893,3 +1893,17 @@ search {
     }
   }
 } /* min-width: 1650px */
+
+/* internal links whose target post is hidden or does not exist (post-link-guard.rb) */
+.post-link-unavailable {
+  color: var(--text-muted-color);
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: default;
+
+  .post-link-unavailable-mark {
+    font-size: 0.8em;
+    color: var(--text-muted-color);
+    white-space: nowrap;
+  }
+}

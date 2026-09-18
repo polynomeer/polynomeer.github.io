@@ -185,3 +185,30 @@ Implement:
 4. a few curated sample posts with explicit `status`
 
 This keeps the feature concrete without requiring repository-wide migration.
+
+## Build-Time Behaviour (implemented)
+
+Two plugins and one script enforce the status model at build time.
+
+- `_plugins/published-status-filter.rb` removes every post whose `status` is
+  not `published` before rendering, and records their URLs in
+  `site.data.hidden_post_urls`. Setting `JEKYLL_SHOW_DRAFTS=1` (or
+  `show_drafts_locally: true` in `_config.yml`) keeps them for local preview;
+  they render with their status badge.
+
+  ```bash
+  JEKYLL_SHOW_DRAFTS=1 bundle exec jekyll serve --incremental
+  ```
+
+- `_plugins/post-link-guard.rb` rewrites internal `/posts/<slug>/` links after
+  rendering. A link to a hidden post becomes plain text with the
+  `post.link_hidden` locale mark; a link to a post that does not exist becomes
+  plain text with `post.link_missing` and is reported as a build warning. This
+  means hiding or unhiding a post never requires editing the posts that cite
+  it. Links stay intact in draft-preview mode.
+
+- `scripts/check-post-consistency.rb` (also run by
+  `scripts/blog-health-report.sh` and the husky pre-commit hook) fails on tag
+  or category values that differ only by case, and on two posts sharing one
+  `/posts/<slug>/` URL. Posts without front matter, links to missing posts, and
+  links from published posts to hidden posts are reported as warnings.

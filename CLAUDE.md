@@ -65,6 +65,18 @@ bash scripts/blog-health-report.sh
 bash scripts/audit-post-images.sh
 ```
 
+Post front matter consistency (tag/category case variants, slug collisions, missing link targets; also runs on pre-commit):
+
+```bash
+ruby scripts/check-post-consistency.rb
+```
+
+Preview hidden (`draft`/`archived`) posts locally:
+
+```bash
+JEKYLL_SHOW_DRAFTS=1 bundle exec jekyll serve --incremental
+```
+
 ## Post front matter contract
 
 ```yaml
