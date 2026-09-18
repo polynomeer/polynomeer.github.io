@@ -1,20 +1,8 @@
-# 기술 컨퍼런스 목록과 발표 리뷰 대응표의 데이터. /tech-reviews/ 페이지에서 쓴다.
-# 발표 리뷰는 categories: [Conference, <회사>]에 컨퍼런스 이름이 없으므로 `tag`로 매칭한다: tags에 <tag>가 있는 Conference 글.
-enabled: true
-original:
-  ko-KR: 행사 페이지
-  en: Event page
-summary_items:
-  ko-KR: 컨퍼런스
-  en: Conferences
-summary_covered:
-  ko-KR: 리뷰한 컨퍼런스
-  en: Conferences reviewed
-intro:
-  ko-KR: 국내외 기술 컨퍼런스의 행사 페이지 링크와, 이 블로그에서 그 발표를 보고 쓴 리뷰의 대응표입니다. 회사 항목에서도 같은 발표가 세어지지만, 여기서는 행사 단위로 묶어 봅니다. 리뷰는 발표 영상과 자막을 근거로 내용을 옮기고, 내 실측과 실무 경험에 맞대어 보는 방식으로 씁니다.
-  en: Links to the event pages of Korean and global engineering conferences mapped to the talk reviews written here. The same talks are counted under their companies above; this section groups them by event. Each review restates the talk from the video and captions, then compares it against my own measurements and production experience.
+# 기술 컨퍼런스 목록. /tech-reviews/ 페이지의 리뷰 대응표에서 쓴다.
+# 발표 리뷰는 categories: [Conference, <회사>]에 행사명이 없으므로 `tag`로 매칭한다: tags에 <tag>가 있는 Conference 글.
 items:
   - id: slash
+    kind: conference
     tag: SLASH
     name: { ko-KR: 토스 SLASH (2021–2024), en: Toss SLASH (2021–2024) }
     blog: https://toss.im/slash-24
@@ -24,12 +12,14 @@ items:
       - { title: SLASH 21, url: https://toss.im/slash-21 }
     focus: { ko-KR: "토스·토스뱅크·토스증권·토스페이먼츠의 백엔드, 인프라, 데이터 발표", en: "Backend, infrastructure and data talks from Toss, Toss Bank, Toss Securities and Toss Payments" }
   - id: tmc
+    kind: conference
     tag: TMC
     name: { ko-KR: 토스 TMC 25, en: Toss TMC 25 }
     blog: https://toss.im/tmc-25
     links: []
     focus: { ko-KR: "SLASH의 후속 행사. 결제 레거시, 코어뱅킹, 데이터 메시, 하이브리드 클라우드", en: "Successor to SLASH. Payments legacy, core banking, data mesh, hybrid cloud" }
   - id: deview
+    kind: conference
     tag: DEVIEW
     name: { ko-KR: 네이버 DEVIEW / DAN, en: NAVER DEVIEW / DAN }
     blog: https://deview.kr/
@@ -37,12 +27,14 @@ items:
       - { title: NAVER Engineering (YouTube), url: https://www.youtube.com/@naver_d2 }
     focus: { ko-KR: "검색·추천 인프라, 대규모 서비스 운영, 오픈소스", en: "Search and recommendation infrastructure, large-scale operations, open source" }
   - id: ifkakao
+    kind: conference
     tag: if(kakao)
     name: { ko-KR: if(kakao), en: if(kakao) }
     blog: https://if.kakao.com/
     links: []
     focus: { ko-KR: "카카오 계열사의 플랫폼, 데이터, AI 발표", en: "Platform, data and AI talks from Kakao and its affiliates" }
   - id: woowacon
+    kind: conference
     tag: WOOWACON
     name: { ko-KR: 우아콘 (우아한형제들), en: WOOWACON (Woowa Brothers) }
     blog: https://woowacon.com/
@@ -50,12 +42,14 @@ items:
       - { title: 우아한테크 (YouTube), url: https://www.youtube.com/@woowatech }
     focus: { ko-KR: "주문·결제·정산, 대용량 배치, 이벤트 기반 아키텍처", en: "Orders, payments and settlement, large-scale batch, event-driven architecture" }
   - id: infcon
+    kind: conference
     tag: INFCON
     name: { ko-KR: 인프콘 (인프런), en: INFCON (Inflearn) }
     blog: https://www.inflearn.com/conf/infcon-2024
     links: []
     focus: { ko-KR: "백엔드 실무, 성장과 학습, 개발 문화", en: "Backend practice, growth and learning, engineering culture" }
   - id: springone
+    kind: conference
     tag: SpringOne
     name: { ko-KR: SpringOne, en: SpringOne }
     blog: https://springone.io/
@@ -63,12 +57,14 @@ items:
       - { title: Spring Blog, url: https://spring.io/blog }
     focus: { ko-KR: "Spring Framework·Boot의 새 기능, 가상 스레드, 관측성", en: "New features in Spring Framework and Boot, virtual threads, observability" }
   - id: kotlinconf
+    kind: conference
     tag: KotlinConf
     name: { ko-KR: KotlinConf, en: KotlinConf }
     blog: https://kotlinconf.com/
     links: []
     focus: { ko-KR: "Kotlin 언어 결정, 코루틴, 서버 사이드 Kotlin", en: "Kotlin language decisions, coroutines, server-side Kotlin" }
   - id: qcon
+    kind: conference
     tag: QCon
     name: { ko-KR: QCon (InfoQ), en: QCon (InfoQ) }
     blog: https://qconferences.com/

@@ -2,8 +2,8 @@
  * Tech review directory (/tech-reviews/): collapsible entries.
  *
  * Every entry is a native <details>, so the page works without JavaScript.
- * This module adds the "expand all / collapse all" controls per group and
- * opens the entry that a hash link (#kakao) or a TOC chip points at.
+ * This module adds the "expand all / collapse all" controls and opens the
+ * entry that a hash link (#kakao) or a TOC chip points at.
  */
 
 const GROUP_SELECTOR = '[data-blog-map]';

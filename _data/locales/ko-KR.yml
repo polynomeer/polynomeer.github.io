@@ -305,17 +305,22 @@ learning_evidence:
   next_item: 다음 학습
 
 tech_blogs:
-  lead: 국내외 빅테크의 엔지니어링 블로그, 오래 읽히는 개인 블로그, 기술 컨퍼런스의 원문 목록과, 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰의 대응표입니다. 항목을 펼치면 원문 링크와 리뷰 목록이 보입니다.
+  lead: 국내외 빅테크의 엔지니어링 블로그, 오래 읽히는 개인 블로그, 기술 컨퍼런스의 원문 목록과, 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰의 대응표입니다. 리뷰는 요약이 아니라 원문의 결정을 내 실무·프로젝트의 실측에 맞대어 보는 방식으로 씁니다. 리뷰가 있는 출처가 먼저 오고, 항목을 펼치면 원문 링크와 리뷰 목록이 보입니다.
   expand_all: 모두 펼치기
   collapse_all: 모두 접기
   pager_nav: 리뷰 목록 페이지
   no_review_note: 아직 이곳의 글이나 발표를 리뷰하지 않았습니다. 원문 링크만 정리해 두었습니다.
-  summary_blogs: 블로그
+  summary_sources: 출처
   summary_reviews: 리뷰
-  summary_covered: 리뷰한 블로그
+  summary_covered: 리뷰한 출처
   review_count: 리뷰 :COUNT편
   no_review: 아직 리뷰 없음
   original: 원문 블로그
+  event: 행사 페이지
+  kind_korea: 국내 빅테크
+  kind_global: 해외 빅테크
+  kind_expert: 개인 블로그
+  kind_conference: 컨퍼런스
   source: 원문
   kind_blog: 글
   kind_talk: 발표

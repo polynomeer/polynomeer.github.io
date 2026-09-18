@@ -2969,12 +2969,7 @@ header {
 }
 
 .tech-blog-group {
-  margin-bottom: 2.5rem;
-}
-
-.tech-blog-intro {
-  color: var(--text-muted-color);
-  line-height: 1.7;
+  margin-top: 1.5rem;
 }
 
 .tech-blog-toolbar {
@@ -3115,6 +3110,24 @@ header {
     line-height: 1.35;
     transition: color 0.15s ease;
   }
+}
+
+.tech-blog-item-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tech-blog-kind {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.3));
+  color: var(--text-muted-color);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .tech-blog-focus {

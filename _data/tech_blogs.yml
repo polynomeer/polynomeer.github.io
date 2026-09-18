@@ -1,12 +1,9 @@
-# 빅테크 기술 블로그 원문 목록과 리뷰 대응표의 데이터.
+# 국내 빅테크 기술 블로그 목록. /tech-reviews/ 페이지의 리뷰 대응표에서 쓴다.
 # `category`는 리뷰 글의 두 번째 카테고리와 일치시킨다: categories: [TechBlog, <category>] 또는 [Conference, <category>].
 # 링크는 2026-09-17에 직접 확인했다.
-enabled: true
-intro:
-  ko-KR: 네이버·카카오·라인·쿠팡·우아한형제들·토스·당근·야놀자·무신사와 금융 계열사의 기술 블로그 원문 링크와, 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰·분석의 대응표입니다. 리뷰는 요약이 아니라 "내 실무·프로젝트 경험과 어디서 같고 어디서 다른가"를 기준으로 씁니다.
-  en: Links to the engineering blogs of Korea's major tech companies (Naver, Kakao, LINE, Coupang, Woowa Brothers, Toss, Daangn, Yanolja, Musinsa, and their fintech affiliates) mapped to the reviews and analyses written here. Reviews compare each post or talk against my own production and project experience rather than summarizing it.
 items:
   - id: naver
+    kind: korea
     category: Naver
     name: { ko-KR: 네이버, en: Naver }
     blog: https://d2.naver.com/home
@@ -15,6 +12,7 @@ items:
       - { title: NAVER Engineering (YouTube), url: https://www.youtube.com/@naver_d2 }
     focus: { ko-KR: "대규모 검색·추천 인프라, JVM·성능, 오픈소스(Arcus, Pinpoint)", en: "Large-scale search and recommendation infrastructure, JVM and performance, open source (Arcus, Pinpoint)" }
   - id: kakao
+    kind: korea
     category: Kakao
     name: { ko-KR: 카카오, en: Kakao }
     blog: https://tech.kakao.com/blog
@@ -22,18 +20,21 @@ items:
       - { title: if(kakao), url: https://if.kakao.com/ }
     focus: { ko-KR: "메시징·플랫폼 인프라, Kubernetes, 데이터 파이프라인", en: "Messaging and platform infrastructure, Kubernetes, data pipelines" }
   - id: kakaobank
+    kind: korea
     category: KakaoBank
     name: { ko-KR: 카카오뱅크, en: KakaoBank }
     blog: https://tech.kakaobank.com/
     links: []
     focus: { ko-KR: "뱅킹 코어·원장, 계정계 현대화, 금융 규제 아래의 배포", en: "Banking core and ledger, core-banking modernization, deployment under financial regulation" }
   - id: kakaopay
+    kind: korea
     category: KakaoPay
     name: { ko-KR: 카카오페이, en: KakaoPay }
     blog: https://tech.kakaopay.com/
     links: []
     focus: { ko-KR: "결제·정산, 분산락과 멱등성, Kotlin·Spring, MSA 전환", en: "Payments and settlement, distributed locks and idempotency, Kotlin and Spring, MSA migration" }
   - id: line
+    kind: korea
     category: LINE
     name: { ko-KR: 라인 (LY Corporation), en: LINE (LY Corporation) }
     blog: https://techblog.lycorp.co.jp/ko
@@ -41,12 +42,14 @@ items:
       - { title: LINE Engineering (구 주소, 리다이렉트), url: https://engineering.linecorp.com/ko }
     focus: { ko-KR: "메시징 스토리지, Kafka 운영, 대규모 Redis·HBase", en: "Messaging storage, Kafka operations, large-scale Redis and HBase" }
   - id: coupang
+    kind: korea
     category: Coupang
     name: { ko-KR: 쿠팡, en: Coupang }
     blog: https://medium.com/coupang-engineering
     links: []
     focus: { ko-KR: "이커머스 주문·재고·물류, 대규모 트래픽, 마이크로서비스", en: "E-commerce orders, inventory and logistics, high traffic, microservices" }
   - id: woowa
+    kind: korea
     category: Woowa
     name: { ko-KR: 우아한형제들 (배달의민족), en: Woowa Brothers (Baemin) }
     blog: https://techblog.woowahan.com/
@@ -55,6 +58,7 @@ items:
       - { title: 우아콘, url: https://woowacon.com/ }
     focus: { ko-KR: "주문·결제·정산, Spring Batch 대용량 처리, 이벤트 기반 아키텍처", en: "Orders, payments and settlement, large-scale Spring Batch, event-driven architecture" }
   - id: toss
+    kind: korea
     category: Toss
     name: { ko-KR: 토스 (토스증권·토스페이먼츠·토스뱅크 포함), en: Toss (incl. Toss Securities, Toss Payments, Toss Bank) }
     blog: https://toss.tech/
@@ -63,12 +67,14 @@ items:
       - { title: 토스 (YouTube), url: https://www.youtube.com/@tossofficial }
     focus: { ko-KR: "결제·증권 시세·뱅킹, Kafka IDC 이중화, 서비스 메시, 프론트엔드 아키텍처", en: "Payments, securities market data, banking, Kafka IDC redundancy, service mesh, frontend architecture" }
   - id: daangn
+    kind: korea
     category: Daangn
     name: { ko-KR: 당근, en: Daangn }
     blog: https://medium.com/daangn
     links: []
     focus: { ko-KR: "중고거래·채팅·결제(당근페이), Go·Kotlin, 검색·추천", en: "Marketplace, chat, payments (Daangn Pay), Go and Kotlin, search and recommendation" }
   - id: yanolja
+    kind: korea
     category: Yanolja
     name: { ko-KR: 야놀자 (NOL), en: Yanolja (NOL) }
     blog: https://medium.com/yanolja
@@ -76,18 +82,21 @@ items:
     note: { ko-KR: "techblog.yanolja.com은 2026-09 기준 NOL 메인으로 리다이렉트됩니다. Medium이 현재 원문 위치입니다.", en: "techblog.yanolja.com redirects to the NOL main site as of 2026-09; Medium is the current home." }
     focus: { ko-KR: "예약·재고, 클라우드 전환, 데이터 플랫폼", en: "Reservations and inventory, cloud migration, data platform" }
   - id: musinsa
+    kind: korea
     category: Musinsa
     name: { ko-KR: 무신사, en: Musinsa }
     blog: https://medium.com/musinsa-tech
     links: []
     focus: { ko-KR: "커머스 주문·쿠폰·검색, 트래픽 폭주 대응, MSA", en: "Commerce orders, coupons and search, traffic spikes, MSA" }
   - id: kurly
+    kind: korea
     category: Kurly
     name: { ko-KR: 컬리, en: Kurly }
     blog: https://helloworld.kurly.com/
     links: []
     focus: { ko-KR: "주문·물류·재고, 대용량 배치", en: "Orders, logistics and inventory, large batch processing" }
   - id: banksalad
+    kind: korea
     category: Banksalad
     name: { ko-KR: 뱅크샐러드, en: Banksalad }
     blog: https://blog.banksalad.com/tech/

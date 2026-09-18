@@ -310,17 +310,22 @@ learning_evidence:
   next_item: Next
 
 tech_blogs:
-  lead: A directory of engineering blogs from Korean and global tech companies, long-running personal blogs and engineering conferences, mapped to the reviews of their posts and talks written here. Expand an entry to see the source links and the review list.
+  lead: A directory of engineering blogs from Korean and global tech companies, long-running personal blogs and engineering conferences, mapped to the reviews of their posts and talks written here. Each review compares the original's decisions against my own production and project measurements rather than summarizing it. Sources with reviews come first; expand an entry to see the source links and the review list.
   expand_all: Expand all
   collapse_all: Collapse all
   pager_nav: Review list pages
   no_review_note: Nothing from this source has been reviewed yet; only the links are collected here.
-  summary_blogs: Blogs
+  summary_sources: Sources
   summary_reviews: Reviews
-  summary_covered: Blogs reviewed
+  summary_covered: Sources reviewed
   review_count: ":COUNT reviews"
   no_review: No review yet
   original: Original blog
+  event: Event page
+  kind_korea: Korean tech
+  kind_global: Global tech
+  kind_expert: Personal blog
+  kind_conference: Conference
   source: source
   kind_blog: Post
   kind_talk: Talk

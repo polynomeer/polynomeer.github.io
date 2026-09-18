@@ -1,42 +1,43 @@
-# 해외 빅테크 기술 블로그 원문 목록과 리뷰 대응표의 데이터. /tech-reviews/ 페이지에서 쓴다.
+# 해외 빅테크 기술 블로그 목록. /tech-reviews/ 페이지의 리뷰 대응표에서 쓴다.
 # `category`는 리뷰 글의 두 번째 카테고리와 일치시킨다: categories: [TechBlog, <category>].
-# 국내 빅테크는 tech_blogs.yml, 개인 블로그는 expert_blogs.yml.
-enabled: true
-intro:
-  ko-KR: 해외 빅테크의 엔지니어링 블로그 원문 링크와, 이 블로그에서 그 글을 읽고 쓴 리뷰의 대응표입니다. 리뷰는 요약이 아니라 원문의 결정을 내 프로젝트의 실측과 실무 경험에 맞대어 보는 방식으로 씁니다.
-  en: Links to the engineering blogs of major global tech companies mapped to the reviews written here. Each review compares the original post's decisions against my own measurements and production experience rather than summarizing it.
 items:
   - id: airbnb
+    kind: global
     category: Airbnb
     name: { ko-KR: Airbnb, en: Airbnb }
     blog: https://medium.com/airbnb-engineering
     links: []
     focus: { ko-KR: "결제 멱등성·정합성, SOA 전환, 데이터 품질과 실험 플랫폼", en: "Payments idempotency and consistency, SOA migration, data quality and experimentation platform" }
   - id: netflix
+    kind: global
     category: Netflix
     name: { ko-KR: Netflix, en: Netflix }
     blog: https://netflixtechblog.com/
     links: []
     focus: { ko-KR: "대규모 스트리밍 인프라, 카오스 엔지니어링, JVM 성능, 우선순위 큐와 스케줄링", en: "Large-scale streaming infrastructure, chaos engineering, JVM performance, priority queues and scheduling" }
   - id: uber
+    kind: global
     category: Uber
     name: { ko-KR: Uber, en: Uber }
     blog: https://www.uber.com/blog/engineering/
     links: []
     focus: { ko-KR: "결제 원장·정산, 대규모 MySQL·Kafka 운영, 실시간 매칭과 지리 인덱스", en: "Payments ledger and settlement, MySQL and Kafka operations at scale, real-time matching and geo-indexing" }
   - id: stripe
+    kind: global
     category: Stripe
     name: { ko-KR: Stripe, en: Stripe }
     blog: https://stripe.com/blog/engineering
     links: []
     focus: { ko-KR: "결제 API 설계, 멱등 키, 데이터 마이그레이션, 신뢰성 엔지니어링", en: "Payments API design, idempotency keys, data migration, reliability engineering" }
   - id: meta
+    kind: global
     category: Meta
     name: { ko-KR: Meta, en: Meta }
     blog: https://engineering.fb.com/
     links: []
     focus: { ko-KR: "TAO·Memcache 같은 캐시 계층, 데이터센터 규모의 인프라, 스토리지 시스템", en: "Caching layers such as TAO and Memcache, datacenter-scale infrastructure, storage systems" }
   - id: google
+    kind: global
     category: Google
     name: { ko-KR: Google, en: Google }
     blog: https://research.google/blog/
@@ -45,6 +46,7 @@ items:
       - { title: SRE Book, url: https://sre.google/books/ }
     focus: { ko-KR: "Spanner·Bigtable 같은 분산 저장소, SRE 운영 원칙, 대규모 시스템 논문", en: "Distributed storage such as Spanner and Bigtable, SRE practices, large-scale systems papers" }
   - id: aws
+    kind: global
     category: AWS
     name: { ko-KR: Amazon / AWS, en: Amazon / AWS }
     blog: https://aws.amazon.com/blogs/architecture/
@@ -52,48 +54,56 @@ items:
       - { title: Amazon Builders' Library, url: https://aws.amazon.com/builders-library/ }
     focus: { ko-KR: "재시도·백오프·타임아웃 같은 운영 원칙, 셀 기반 아키텍처, 대규모 서비스 설계", en: "Operational principles such as retries, backoff and timeouts, cell-based architecture, large-scale service design" }
   - id: shopify
+    kind: global
     category: Shopify
     name: { ko-KR: Shopify, en: Shopify }
     blog: https://shopify.engineering/
     links: []
     focus: { ko-KR: "플래시 세일 트래픽, 모듈식 모놀리스, 데이터베이스 샤딩과 재고", en: "Flash-sale traffic, modular monolith, database sharding and inventory" }
   - id: linkedin
+    kind: global
     category: LinkedIn
     name: { ko-KR: LinkedIn, en: LinkedIn }
     blog: https://www.linkedin.com/blog/engineering
     links: []
     focus: { ko-KR: "Kafka의 출발점, 대규모 스트림 처리, 피드·검색 인프라", en: "Where Kafka started, large-scale stream processing, feed and search infrastructure" }
   - id: cloudflare
+    kind: global
     category: Cloudflare
     name: { ko-KR: Cloudflare, en: Cloudflare }
     blog: https://blog.cloudflare.com/
     links: []
     focus: { ko-KR: "네트워크 엣지, 장애 사후 분석, 커널·성능 디버깅", en: "Network edge, incident postmortems, kernel and performance debugging" }
   - id: dropbox
+    kind: global
     category: Dropbox
     name: { ko-KR: Dropbox, en: Dropbox }
     blog: https://dropbox.tech/
     links: []
     focus: { ko-KR: "스토리지 인프라, 대규모 마이그레이션, 동기화 엔진", en: "Storage infrastructure, large migrations, sync engine" }
   - id: spotify
+    kind: global
     category: Spotify
     name: { ko-KR: Spotify, en: Spotify }
     blog: https://engineering.atspotify.com/
     links: []
     focus: { ko-KR: "플랫폼 엔지니어링(Backstage), 데이터 파이프라인, 조직과 아키텍처", en: "Platform engineering (Backstage), data pipelines, organization and architecture" }
   - id: slack
+    kind: global
     category: Slack
     name: { ko-KR: Slack, en: Slack }
     blog: https://slack.engineering/
     links: []
     focus: { ko-KR: "실시간 메시징, 장애 사후 분석, 대규모 MySQL 운영", en: "Real-time messaging, incident postmortems, MySQL operations at scale" }
   - id: discord
+    kind: global
     category: Discord
     name: { ko-KR: Discord, en: Discord }
     blog: https://discord.com/category/engineering
     links: []
     focus: { ko-KR: "메시지 저장소(Cassandra에서 ScyllaDB로), 실시간 게이트웨이, Rust·Elixir", en: "Message storage (Cassandra to ScyllaDB), real-time gateway, Rust and Elixir" }
   - id: github
+    kind: global
     category: GitHub
     name: { ko-KR: GitHub, en: GitHub }
     blog: https://github.blog/engineering/
