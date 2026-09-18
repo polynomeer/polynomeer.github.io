@@ -73,7 +73,7 @@ layout: page
         data-label-nav="{{ t[label_key] }}"
       >
         {% for post in section.posts %}
-          <li class="topic-post-item" data-pager-item>
+          <li class="topic-post-item" data-pager-item data-post-url="{{ post.url | relative_url }}">
             <a class="topic-post-link" href="{{ post.url | relative_url }}">
               <span class="topic-post-date">{% include datetime.html date=post.date lang=lang %}</span>
               <span class="topic-post-title">{{ post.title }}</span>

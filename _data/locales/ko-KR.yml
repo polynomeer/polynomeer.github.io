@@ -129,6 +129,11 @@ post:
   series_pager_nav: 시리즈 목록 페이지
   link_hidden: "(비공개)"
   link_missing: "(미작성)"
+  series_read_progress: ":READ/:TOTAL편 읽음"
+  series_continue: 이어 읽기
+  series_start: 첫 글부터 읽기
+  series_restart: 처음부터 다시 읽기
+  series_all_read: 모두 읽음
   recommendation_project: 같은 프로젝트
   recommendation_series: 같은 시리즈
   read_time:
@@ -192,6 +197,7 @@ series_directory:
   post_count: ":COUNT개 글"
   fallback_description: 순서대로 읽을 수 있도록 묶인 연속 시리즈입니다.
   start_from: 시작 글
+  read_progress: ":READ/:TOTAL편 읽음"
 
 home:
   case_study_mark: "실무 사례"

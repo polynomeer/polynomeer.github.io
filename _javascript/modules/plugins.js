@@ -4,5 +4,6 @@ export { loadImg } from './components/img-loading';
 export { imgPopup } from './components/img-popup';
 export { initLocaleDatetime } from './components/locale-datetime';
 export { initSeriesPager } from './components/series-pager';
+export { initSeriesProgress } from './components/series-progress';
 export { toc } from './components/toc';
 export { initBlogMap } from './components/blog-map';

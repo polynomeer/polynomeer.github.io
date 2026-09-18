@@ -1,0 +1,20 @@
+{%- comment -%}
+  Reading-progress placeholder for a series. Filled by series-progress.js from
+  localStorage; stays hidden without JavaScript.
+{%- endcomment -%}
+{%- assign lang = include.lang | default: site.lang -%}
+<div
+  class="series-progress"
+  hidden
+  data-label-progress="{{ site.data.locales[lang].post.series_read_progress }}"
+  data-label-continue="{{ site.data.locales[lang].post.series_continue }}"
+  data-label-start="{{ site.data.locales[lang].post.series_start }}"
+  data-label-restart="{{ site.data.locales[lang].post.series_restart }}"
+  data-label-all-read="{{ site.data.locales[lang].post.series_all_read }}"
+>
+  <div class="series-progress-track" aria-hidden="true"><span class="series-progress-fill"></span></div>
+  <span class="series-progress-label"></span>
+  {% if include.continue %}
+    <a class="series-continue" href="#" hidden></a>
+  {% endif %}
+</div>

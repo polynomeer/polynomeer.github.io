@@ -5,6 +5,7 @@ import {
   initLocaleDatetime,
   initClipboard,
   initSeriesPager,
+  initSeriesProgress,
   toc
 } from './modules/plugins';
 
@@ -16,4 +17,5 @@ initLocaleDatetime();
 initClipboard();
 initTopbar();
 initSeriesPager();
+initSeriesProgress();
 basic();

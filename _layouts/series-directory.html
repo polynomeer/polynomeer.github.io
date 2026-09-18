@@ -33,7 +33,8 @@ layout: page
           {% if series_page %}
             {% assign series_url = series_page.url %}
           {% endif %}
-          <article class="series-card">
+          {% assign series_urls = series_posts | map: 'url' | join: ',' %}
+          <article class="series-card" data-series-id="{{ series_id }}" data-series-posts="{{ series_urls }}">
             <a href="{{ series_url | relative_url }}" class="series-card-link">
               <div class="series-card-header">
                 <div class="series-card-title-wrap">
@@ -53,6 +54,7 @@ layout: page
               </p>
 
               <div class="series-card-meta">
+                <span class="series-card-progress" hidden data-label-progress="{{ site.data.locales[lang].series_directory.read_progress }}"></span>
                 <span class="series-card-start">
                   {{ site.data.locales[lang].series_directory.start_from }}
                   <strong>{{ first_post.title }}</strong>

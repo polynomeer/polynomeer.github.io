@@ -129,6 +129,11 @@ post:
   series_pager_nav: Series list pages
   link_hidden: "(unpublished)"
   link_missing: "(not written yet)"
+  series_read_progress: ":READ of :TOTAL read"
+  series_continue: Continue reading
+  series_start: Start with the first post
+  series_restart: Read again from the start
+  series_all_read: All read
   recommendation_project: Same project
   recommendation_series: Same series
   read_time:
@@ -197,6 +202,7 @@ series_directory:
   post_count: ":COUNT posts"
   fallback_description: A connected sequence of posts designed to be read in order.
   start_from: Start with
+  read_progress: ":READ of :TOTAL read"
 
 home:
   case_study_mark: "Case study"

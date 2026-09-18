@@ -1,0 +1,108 @@
+/*
+  Series reading progress (series-progress.js): progress bars, continue link,
+  and read marks on post lists.
+*/
+
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
+.series-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  margin-top: 0.75rem;
+  font-size: 0.84rem;
+  color: var(--text-muted-color);
+}
+
+.series-progress-track {
+  flex: 1 1 8rem;
+  max-width: 16rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: rgba(98, 114, 164, 0.22);
+  overflow: hidden;
+}
+
+.series-progress-fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--link-color);
+  transition: width 0.4s ease;
+}
+
+.series-progress-label {
+  white-space: nowrap;
+}
+
+.series-continue {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 233, 253, 0.32);
+  background: rgba(139, 233, 253, 0.08);
+  color: var(--text-color);
+  font-weight: 600;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.6);
+    color: var(--link-color);
+    text-decoration: none;
+  }
+}
+
+.series-card-progress {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--link-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* read marks */
+
+.series-navigation-list > li.is-read:not(.active) {
+  > a {
+    color: var(--text-muted-color);
+  }
+
+  .series-step {
+    background: rgba(80, 250, 123, 0.22);
+    font-size: 0;
+
+    &::after {
+      content: '✓';
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.series-cluster-item.is-read,
+.series-bonus-card.is-read,
+.topic-post-item.is-read {
+  .series-cluster-step,
+  .series-bonus-step,
+  .topic-post-date {
+    position: relative;
+  }
+
+  .series-cluster-post strong,
+  > strong,
+  .topic-post-title {
+    color: var(--text-muted-color);
+  }
+
+  .series-cluster-step::after,
+  .series-bonus-step::after,
+  .topic-post-date::after {
+    content: '✓';
+    margin-left: 0.3rem;
+    color: rgba(80, 250, 123, 0.85);
+    font-size: 0.8em;
+  }
+}

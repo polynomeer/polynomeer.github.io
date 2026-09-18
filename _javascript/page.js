@@ -4,6 +4,7 @@ import {
   imgPopup,
   initClipboard,
   initSeriesPager,
+  initSeriesProgress,
   initBlogMap
 } from './modules/plugins';
 
@@ -13,5 +14,6 @@ initSidebar();
 initTopbar();
 initClipboard();
 initSeriesPager();
+initSeriesProgress();
 initBlogMap();
 basic();
