@@ -30,9 +30,10 @@
       {% assign seo_tags = seo_tags | replace: old_url, new_url %}
     {% endunless %}
 
-  {% elsif site.social_preview_image %}
+  {% elsif page.og_image or site.social_preview_image %}
+    {% assign preview_src = page.og_image | default: site.social_preview_image %}
     {%- capture img_url -%}
-      {% include media-url.html src=site.social_preview_image absolute=true %}
+      {% include media-url.html src=preview_src absolute=true %}
     {%- endcapture -%}
 
     {%- capture og_image -%}

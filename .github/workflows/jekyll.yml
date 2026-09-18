@@ -53,6 +53,19 @@ jobs:
           fi
           bundle install
 
+      - name: Setup Node for OG image generation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate Open Graph images
+        # Renders assets/img/og/<slug>.jpg for every published post. The site
+        # falls back to the default social image if this step fails.
+        continue-on-error: true
+        run: |
+          npm install --prefix tools/og --no-audit --no-fund --no-package-lock
+          node tools/og/generate.mjs
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

@@ -1,0 +1,13 @@
+{
+  "name": "polynomeer-og-images",
+  "private": true,
+  "description": "Renders Open Graph preview images for posts (see tools/og/generate.mjs).",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.60",
+    "js-yaml": "^4.1.0"
+  }
+}

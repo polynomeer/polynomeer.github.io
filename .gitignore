@@ -59,3 +59,7 @@ package-lock.json
 
 # Claude Code local overrides
 .claude/settings.local.json
+
+# Generated Open Graph images and fonts (tools/og/generate.mjs)
+assets/img/og/
+tools/og/.fonts/

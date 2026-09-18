@@ -71,6 +71,12 @@ Post front matter consistency (tag/category case variants, slug collisions, miss
 ruby scripts/check-post-consistency.rb
 ```
 
+Generate social preview cards (`assets/img/og/`, git-ignored; the deploy workflow does this automatically):
+
+```bash
+node tools/og/generate.mjs
+```
+
 Preview hidden (`draft`/`archived`) posts locally:
 
 ```bash
