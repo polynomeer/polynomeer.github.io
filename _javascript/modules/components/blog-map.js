@@ -1,5 +1,5 @@
 /**
- * Tech blog directory (/tech-blogs/): collapsible entries.
+ * Tech review directory (/tech-reviews/): collapsible entries.
  *
  * Every entry is a native <details>, so the page works without JavaScript.
  * This module adds the "expand all / collapse all" controls per group and

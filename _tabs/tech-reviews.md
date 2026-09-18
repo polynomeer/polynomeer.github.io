@@ -1,10 +1,12 @@
 ---
 layout: page
-title: 기술 블로그 리뷰
-title_key: tech_blogs
+title: 기술 블로그·컨퍼런스 리뷰
+title_key: tech_reviews
 hero_title: true
 icon: fas fa-book-open
 order: 7
+redirect_from:
+  - /tech-blogs/
 ---
 
 {% include lang.html %}
@@ -22,3 +24,7 @@ order: 7
 <h2 id="expert-blogs" data-l10n-ko="권위자와 개인 기술 블로그" data-l10n-en="Expert and Personal Blogs">권위자와 개인 기술 블로그</h2>
 
 {% include tech-blog-map.html data=site.data.expert_blogs group_id="experts" item_heading="h3" %}
+
+<h2 id="conference-talks" data-l10n-ko="기술 컨퍼런스" data-l10n-en="Conferences">기술 컨퍼런스</h2>
+
+{% include tech-blog-map.html data=site.data.conferences group_id="conferences" item_heading="h3" %}

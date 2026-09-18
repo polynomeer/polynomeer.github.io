@@ -43,8 +43,8 @@ techblog:
     ko-KR: 기술 블로그 리뷰
     en: Tech Blog Review
   description:
-    ko-KR: 빅테크 기술 블로그의 글을 읽고 내 실무·프로젝트 경험과 대조한 리뷰와 분석입니다. 원문 목록과 대응표는 /tech-blogs/ 에 있습니다.
-    en: Reviews and analyses of big-tech engineering blog posts, compared against my own production and project experience. The directory and review map live at /tech-blogs/.
+    ko-KR: 빅테크 기술 블로그의 글을 읽고 내 실무·프로젝트 경험과 대조한 리뷰와 분석입니다. 원문 목록과 대응표는 /tech-reviews/ 에 있습니다.
+    en: Reviews and analyses of big-tech engineering blog posts, compared against my own production and project experience. The directory and review map live at /tech-reviews/.
   icon: fas fa-newspaper
   order: 5
 

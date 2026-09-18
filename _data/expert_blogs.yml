@@ -1,4 +1,4 @@
-# 자바·스프링·코틀린·소프트웨어 분야의 권위자와 유명 개인 블로그 목록과 리뷰 대응표의 데이터. /tech-blogs/ 페이지에서 쓴다.
+# 자바·스프링·코틀린·소프트웨어 분야의 권위자와 유명 개인 블로그 목록과 리뷰 대응표의 데이터. /tech-reviews/ 페이지에서 쓴다.
 # `category`는 리뷰 글의 두 번째 카테고리와 일치시킨다: categories: [TechBlog, <category>].
 enabled: true
 intro:

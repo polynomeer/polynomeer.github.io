@@ -1,4 +1,4 @@
-# 해외 빅테크 기술 블로그 원문 목록과 리뷰 대응표의 데이터. /tech-blogs/ 페이지에서 쓴다.
+# 해외 빅테크 기술 블로그 원문 목록과 리뷰 대응표의 데이터. /tech-reviews/ 페이지에서 쓴다.
 # `category`는 리뷰 글의 두 번째 카테고리와 일치시킨다: categories: [TechBlog, <category>].
 # 국내 빅테크는 tech_blogs.yml, 개인 블로그는 expert_blogs.yml.
 enabled: true

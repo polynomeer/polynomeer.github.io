@@ -35,7 +35,7 @@ tabs:
   archives: 아카이브
   recruit: 채용
   about: 소개
-  tech-blogs: 기술 블로그
+  tech-reviews: 기술 리뷰
 
 # the text displayed in the search bar & search results
 search:
@@ -126,6 +126,8 @@ post:
   series_pager_prev: 이전 페이지
   series_pager_next: 다음 페이지
   series_pager_nav: 시리즈 목록 페이지
+  link_hidden: "(비공개)"
+  link_missing: "(미작성)"
   recommendation_project: 같은 프로젝트
   recommendation_series: 같은 시리즈
   read_time:
@@ -255,8 +257,8 @@ pages:
     title: 역량 맵
   learning_evidence:
     title: 학습 성과
-  tech_blogs:
-    title: 기술 블로그 리뷰
+  tech_reviews:
+    title: 기술 블로그·컨퍼런스 리뷰
 
 about:
   motto: Make Non Polynomial Polynomial
@@ -303,11 +305,11 @@ learning_evidence:
   next_item: 다음 학습
 
 tech_blogs:
-  lead: 국내외 빅테크의 엔지니어링 블로그와 오래 읽히는 개인 블로그의 원문 목록, 그리고 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰의 대응표입니다. 항목을 펼치면 원문 링크와 리뷰 목록이 보입니다.
+  lead: 국내외 빅테크의 엔지니어링 블로그, 오래 읽히는 개인 블로그, 기술 컨퍼런스의 원문 목록과, 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰의 대응표입니다. 항목을 펼치면 원문 링크와 리뷰 목록이 보입니다.
   expand_all: 모두 펼치기
   collapse_all: 모두 접기
   pager_nav: 리뷰 목록 페이지
-  no_review_note: 아직 이 블로그의 글을 리뷰하지 않았습니다. 원문 링크만 정리해 두었습니다.
+  no_review_note: 아직 이곳의 글이나 발표를 리뷰하지 않았습니다. 원문 링크만 정리해 두었습니다.
   summary_blogs: 블로그
   summary_reviews: 리뷰
   summary_covered: 리뷰한 블로그

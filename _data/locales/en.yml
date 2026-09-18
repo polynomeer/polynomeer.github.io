@@ -35,7 +35,7 @@ tabs:
   archives: Archives
   recruit: Recruit
   about: About
-  tech-blogs: Tech Blogs
+  tech-reviews: Tech Reviews
 
 # the text displayed in the search bar & search results
 search:
@@ -126,6 +126,8 @@ post:
   series_pager_prev: Previous page
   series_pager_next: Next page
   series_pager_nav: Series list pages
+  link_hidden: "(unpublished)"
+  link_missing: "(not written yet)"
   recommendation_project: Same project
   recommendation_series: Same series
   read_time:
@@ -260,8 +262,8 @@ pages:
     title: Capability Map
   learning_evidence:
     title: Learning Evidence
-  tech_blogs:
-    title: Tech Blog Reviews
+  tech_reviews:
+    title: Tech Blog and Conference Reviews
 
 about:
   motto: Make Non Polynomial Polynomial
@@ -308,11 +310,11 @@ learning_evidence:
   next_item: Next
 
 tech_blogs:
-  lead: A directory of engineering blogs from Korean and global tech companies and long-running personal blogs, mapped to the reviews of their posts and talks written here. Expand an entry to see the source links and the review list.
+  lead: A directory of engineering blogs from Korean and global tech companies, long-running personal blogs and engineering conferences, mapped to the reviews of their posts and talks written here. Expand an entry to see the source links and the review list.
   expand_all: Expand all
   collapse_all: Collapse all
   pager_nav: Review list pages
-  no_review_note: No post from this blog has been reviewed yet; only the source links are collected here.
+  no_review_note: Nothing from this source has been reviewed yet; only the links are collected here.
   summary_blogs: Blogs
   summary_reviews: Reviews
   summary_covered: Blogs reviewed
