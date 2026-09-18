@@ -5,7 +5,7 @@ layout: page
 {% include lang.html %}
 
 {% assign t = site.data.locales[lang].topic %}
-{% assign topics = site.topics | sort: 'order' %}
+{% assign topics = site.topics | default: empty | sort: 'order' %}
 
 <section class="topic-directory">
   <div class="topic-hero">
