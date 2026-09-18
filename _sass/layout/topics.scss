@@ -1,0 +1,346 @@
+/*
+  Topic hub pages (/topics/ and /topics/<id>/) and the hub chips on posts.
+*/
+
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
+.topic-directory,
+.topic-detail {
+  margin-top: 1rem;
+}
+
+.topic-hero {
+  margin-bottom: 1.75rem;
+
+  h1,
+  h2 {
+    margin: 0.35rem 0 0.6rem;
+    color: var(--heading-color);
+  }
+}
+
+.topic-backlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  color: var(--text-muted-color);
+  font-size: 0.86rem;
+
+  &:hover {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+}
+
+.topic-eyebrow {
+  margin: 0;
+  color: var(--label-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.topic-summary {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
+.topic-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin-top: 0.9rem;
+  color: var(--text-muted-color);
+  font-size: 0.86rem;
+}
+
+.topic-body {
+  margin-bottom: 1.5rem;
+}
+
+/* directory cards */
+
+.topic-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.topic-card {
+  border-radius: 1rem;
+  border: 1px solid var(--btn-border-color);
+  background: rgba(68, 71, 90, 0.14);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.32);
+  }
+}
+
+.topic-card-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+  padding: 1.25rem;
+  color: var(--text-color);
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  h3 {
+    margin: 0;
+    color: var(--heading-color);
+    font-size: 1.12rem;
+    line-height: 1.4;
+  }
+}
+
+.topic-card-question {
+  color: var(--label-color);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.topic-card-description {
+  margin: 0;
+  color: var(--text-muted-color);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.topic-card-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.topic-card-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.18);
+  background: rgba(68, 71, 90, 0.18);
+  color: var(--text-muted-color);
+  font-size: 0.78rem;
+
+  strong {
+    color: var(--text-color);
+  }
+}
+
+.topic-card-meta {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(98, 114, 164, 0.14);
+  color: var(--text-muted-color);
+  font-size: 0.84rem;
+
+  strong {
+    display: block;
+    color: var(--text-color);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+}
+
+/* detail: featured cards */
+
+.topic-featured {
+  margin-bottom: 1.75rem;
+
+  h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+    color: var(--heading-color);
+  }
+}
+
+.topic-featured-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.topic-featured-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 0.95rem;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(98, 114, 164, 0.16);
+  border-left-width: 3px;
+  background: rgba(68, 71, 90, 0.1);
+  color: var(--text-color);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.32);
+    text-decoration: none;
+  }
+
+  strong {
+    color: var(--heading-color);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+}
+
+.topic-featured-card-own {
+  border-left-color: rgba(139, 233, 253, 0.55);
+}
+
+.topic-featured-card-review {
+  border-left-color: rgba(189, 147, 249, 0.55);
+}
+
+.topic-featured-card-talk {
+  border-left-color: rgba(80, 250, 123, 0.5);
+}
+
+.topic-card-label {
+  color: var(--label-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.topic-card-date {
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+}
+
+/* detail: sections */
+
+.topic-section {
+  margin-bottom: 1.75rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid var(--btn-border-color);
+  background: rgba(68, 71, 90, 0.1);
+}
+
+.topic-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--heading-color);
+  }
+}
+
+.topic-section-count {
+  color: var(--text-muted-color);
+  font-size: 0.84rem;
+}
+
+.topic-post-list {
+  margin: 0;
+}
+
+.topic-post-item {
+  padding: 0.7rem 0;
+  border-top: 1px solid rgba(98, 114, 164, 0.14);
+
+  &:first-child {
+    border-top: 0;
+  }
+}
+
+.topic-post-link {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  color: var(--text-color);
+
+  &:hover {
+    text-decoration: none;
+
+    .topic-post-title {
+      color: var(--link-color);
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+}
+
+.topic-post-date {
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.topic-post-title {
+  min-width: 0;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.topic-post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  padding-left: 6.95rem;
+
+  @media (max-width: 575.98px) {
+    padding-left: 0;
+  }
+}
+
+.topic-post-tag {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(98, 114, 164, 0.16);
+  color: var(--text-muted-color);
+  font-size: 0.74rem;
+}
+
+/* hub chips on a post */
+
+.post-topic-hubs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.post-topic-hub {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 233, 253, 0.28);
+  background: rgba(139, 233, 253, 0.08);
+  color: var(--text-color);
+  font-size: 0.82rem;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.6);
+    color: var(--link-color);
+  }
+}

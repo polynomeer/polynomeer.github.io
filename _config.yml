@@ -183,6 +183,9 @@ collections:
   series_pages:
     output: true
     sort_by: series_id
+  topics:
+    output: true
+    sort_by: order
   content_types:
     output: true
     sort_by: order
@@ -219,6 +222,11 @@ defaults:
       type: series_pages
     values:
       layout: series-detail
+  - scope:
+      path: ""
+      type: topics
+    values:
+      layout: topic-detail
   - scope:
       path: ""
       type: content_types

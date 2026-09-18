@@ -1,0 +1,51 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign t = site.data.locales[lang].topic %}
+{% assign topics = site.topics | sort: 'order' %}
+
+<section class="topic-directory">
+  <div class="topic-hero">
+    <p class="topic-eyebrow">{{ t.eyebrow }}</p>
+    <h1 class="page-hero-title">{{ t.directory_title }}</h1>
+    <p class="topic-summary">{{ t.directory_description }}</p>
+  </div>
+
+  <div class="topic-grid">
+    {% for topic in topics %}
+      {% assign first_featured = topic.topic_featured | first %}
+      <article class="topic-card">
+        <a class="topic-card-link" href="{{ topic.url | relative_url }}">
+          {% if topic.question %}
+            <span class="topic-card-question">{{ topic.question }}</span>
+          {% endif %}
+          <h3>{{ topic.title }}</h3>
+          {% if topic.description %}
+            <p class="topic-card-description">{{ topic.description }}</p>
+          {% endif %}
+
+          <div class="topic-card-counts">
+            {% for section in topic.topic_sections %}
+              {% assign label_key = 'section_' | append: section.key %}
+              <span class="topic-card-count topic-card-count-{{ section.key }}">
+                <strong>{{ section.posts.size }}</strong> {{ t[label_key] }}
+              </span>
+            {% endfor %}
+          </div>
+
+          {% if first_featured %}
+            <div class="topic-card-meta">
+              <span class="topic-card-start">
+                {{ t.start_from }}
+                <strong>{{ first_featured.title }}</strong>
+              </span>
+            </div>
+          {% endif %}
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+</section>

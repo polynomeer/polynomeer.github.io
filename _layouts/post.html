@@ -178,6 +178,16 @@ tail_includes:
       </div>
     {% endif %}
 
+    <!-- topic hubs (see _plugins/topic-hub.rb) -->
+    {% if page.topic_hubs.size > 0 %}
+      <div class="post-topic-hubs" aria-label="{{ site.data.locales[lang].topic.post_hubs }}">
+        <i class="fas fa-layer-group fa-fw me-1"></i>
+        {% for hub in page.topic_hubs %}
+          <a href="{{ hub.url | relative_url }}" class="post-topic-hub no-text-decoration">{{ hub.title }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <div
       class="
         post-tail-bottom

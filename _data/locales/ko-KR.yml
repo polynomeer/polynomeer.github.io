@@ -30,6 +30,7 @@ tabs:
   types: 타입
   statuses: 상태
   series: 시리즈
+  topics: 주제
   categories: 카테고리
   tags: 태그
   archives: 아카이브
@@ -170,6 +171,19 @@ archives:
 categories:
   category_measure: 카테고리
   post_measure: 포스트
+
+topic:
+  eyebrow: 주제 허브
+  directory_title: 주제별로 모아 읽기
+  directory_description: 같은 질문을 붙든 내 글과 기술 블로그 리뷰, 컨퍼런스 리뷰를 한 페이지에 모았습니다. 태그가 아니라 질문 단위로 묶었습니다.
+  post_count: ":COUNT편"
+  section_own: 직접 만들고 재 본 것
+  section_review: 기술 블로그 리뷰
+  section_talk: 컨퍼런스 발표 리뷰
+  featured: 먼저 읽을 글
+  start_from: 먼저 읽을 글
+  updated: 최근 글
+  post_hubs: 이 글이 속한 주제
 
 series_directory:
   eyebrow: 연결된 시리즈

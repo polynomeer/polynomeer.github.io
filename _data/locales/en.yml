@@ -30,6 +30,7 @@ tabs:
   types: Types
   statuses: Statuses
   series: Series
+  topics: Topics
   categories: Categories
   tags: Tags
   archives: Archives
@@ -175,6 +176,19 @@ categories:
   post_measure:
     singular: post
     plural: posts
+
+topic:
+  eyebrow: Topic hubs
+  directory_title: Read by topic
+  directory_description: My own posts, tech blog reviews and conference talk reviews that wrestle with the same question, gathered on one page each. Grouped by question, not by tag.
+  post_count: ":COUNT posts"
+  section_own: Built and measured myself
+  section_review: Tech blog reviews
+  section_talk: Conference talk reviews
+  featured: Start here
+  start_from: Start here
+  updated: Latest
+  post_hubs: Topic hubs for this post
 
 series_directory:
   eyebrow: Connected series

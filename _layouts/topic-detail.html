@@ -1,0 +1,95 @@
+---
+layout: page
+---
+
+{% include lang.html %}
+
+{% assign t = site.data.locales[lang].topic %}
+{% assign sections = page.topic_sections | default: empty %}
+{% assign skip_tags = 'Tech Blog Review,Conference,Tech,monticker' | split: ',' %}
+
+<section class="topic-detail">
+  <div class="topic-hero">
+    <a class="topic-backlink" href="{{ '/topics/' | relative_url }}">
+      <i class="fas fa-arrow-left"></i>
+      <span>{{ t.eyebrow }}</span>
+    </a>
+
+    {% if page.question %}
+      <p class="topic-eyebrow">{{ page.question }}</p>
+    {% endif %}
+    <h2>{{ page.title }}</h2>
+    {% if page.description %}
+      <p class="topic-summary">{{ page.description }}</p>
+    {% endif %}
+
+    <div class="topic-meta">
+      <span>{{ t.post_count | replace: ':COUNT', page.topic_post_count | default: 0 }}</span>
+      {% for section in sections %}
+        {% assign label_key = 'section_' | append: section.key %}
+        <span>{{ t[label_key] }} {{ section.posts.size }}</span>
+      {% endfor %}
+      {% if page.topic_last_date %}
+        <span>{{ t.updated }} {% include datetime.html date=page.topic_last_date lang=lang %}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if content and content != empty %}
+    <div class="topic-body content">{{ content }}</div>
+  {% endif %}
+
+  {% if page.topic_featured.size > 0 %}
+    <section class="topic-featured" aria-label="{{ t.featured }}">
+      <h3>{{ t.featured }}</h3>
+      <div class="topic-featured-grid">
+        {% for post in page.topic_featured %}
+          {% assign section_key = 'own' %}
+          {% if post.path contains '_posts/techblog/' %}{% assign section_key = 'review' %}{% elsif post.path contains '_posts/conference/' %}{% assign section_key = 'talk' %}{% endif %}
+          {% assign label_key = 'section_' | append: section_key %}
+          <a class="topic-featured-card topic-featured-card-{{ section_key }}" href="{{ post.url | relative_url }}">
+            <span class="topic-card-label">{{ t[label_key] }}</span>
+            <strong>{{ post.title }}</strong>
+            <span class="topic-card-date">{% include datetime.html date=post.date lang=lang %}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% for section in sections %}
+    {% assign label_key = 'section_' | append: section.key %}
+    <section class="topic-section topic-section-{{ section.key }}">
+      <header class="topic-section-header">
+        <h3>{{ t[label_key] }}</h3>
+        <span class="topic-section-count">{{ t.post_count | replace: ':COUNT', section.posts.size }}</span>
+      </header>
+
+      <ol
+        class="topic-post-list list-unstyled mb-0"
+        data-series-pager="12"
+        data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
+        data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
+        data-label-nav="{{ t[label_key] }}"
+      >
+        {% for post in section.posts %}
+          <li class="topic-post-item" data-pager-item>
+            <a class="topic-post-link" href="{{ post.url | relative_url }}">
+              <span class="topic-post-date">{% include datetime.html date=post.date lang=lang %}</span>
+              <span class="topic-post-title">{{ post.title }}</span>
+            </a>
+            {% assign shown = 0 %}
+            <span class="topic-post-tags">
+              {% for tag in post.tags %}
+                {% unless skip_tags contains tag or shown >= 4 %}
+                  <span class="topic-post-tag">{{ tag }}</span>
+                  {% assign shown = shown | plus: 1 %}
+                {% endunless %}
+              {% endfor %}
+            </span>
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+  {% endfor %}
+</section>
