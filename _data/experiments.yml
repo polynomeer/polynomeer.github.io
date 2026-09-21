@@ -110,6 +110,12 @@ labs:
           ko-KR: "폭주를 만들자 지터가 재시도 봉우리를 100ms당 141건에서 38건으로 3.7배 낮췄다. 총량은 두 조건 모두 정확히 3.00배로 같다. 같은 데이터를 1초 눈금으로 보면 둘 다 150이고, 앞선 실험이 쓴 자가 현상보다 굵었던 것이다"
           en: "With a synchronized surge, jitter cuts the retry peak from 141 to 38 per 100 ms. Both arms stay at exactly 3.00x total - jitter changes when requests arrive, never how many. At 1 s granularity both read 150, which is the gauge the earlier experiment used"
 
+      - slug: parity-pay-model-checking
+        question: { ko-KR: 실험이 못 밟는 경로가 있는가, 있다면 무엇인가, en: Is there a path the experiments cannot walk, and what is it }
+        headline:
+          ko-KR: "TLC가 '청구됐는데 실패로 확정' 상태에 5단계 만에 도달했다. 연속 없음 임계치를 2에서 8로 올려도 위반은 남고 탐색만 깊어진다. 실험 41종이 못 찾은 이유는 운이 아니라 시험 대역에 '받았고 승인할 것이고 아직 기록하지 않은' 상태가 없어서였다"
+          en: "TLC reaches charged-but-recorded-as-failed in five steps. Raising the not-found threshold from 2 to 8 keeps the violation and only deepens the search. The 41 experiments missed it because the test double has no state for an approval that is in flight"
+
       - slug: parity-pay-experiments-and-defects
         question: { ko-KR: 부하·장애 실험이 문서와 코드가 못 찾은 것을 찾는가, en: Does load and failure testing find what documents and code review miss }
         headline:
