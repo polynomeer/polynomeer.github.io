@@ -2,7 +2,7 @@
 title: "OpenTelemetry + Jaeger로 분산 추적 — 시세 파이프라인 지연 측정"
 date: 2026-06-28
 categories: [Monticker, Observability]
-tags: [monticker, OpenTelemetry, jaeger, tracing, Observability, micrometer, Kotlin]
+tags: [monticker, OpenTelemetry, jaeger, Tracing, Observability, micrometer, Kotlin]
 series: monticker
 series_title: monticker 설계와 구현 기록
 series_order: 21
