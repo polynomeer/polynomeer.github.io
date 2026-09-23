@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 /**
- * Renders an Open Graph preview image (1200x630 JPEG) for every published post
- * into assets/img/og/<slug>.jpg. The Jekyll plugin _plugins/og-image.rb picks
- * the file up and head.html emits it as og:image.
+ * Renders Open Graph preview images (1200x630 JPEG) for every published post
+ * into assets/img/og/<slug>.jpg, and for the topic hubs and series pages into
+ * assets/img/og/topics/<id>.jpg and assets/img/og/series/<id>.jpg. The Jekyll
+ * plugin _plugins/og-image.rb picks them up and head.html emits them as
+ * og:image.
  *
  * Usage (from the repository root):
  *   npm install --prefix tools/og
- *   node tools/og/generate.mjs [--force] [--limit N] [--only <slug>]
+ *   node tools/og/generate.mjs [--force] [--limit N] [--only <slug-or-id>]
  *
  * Fonts: Pretendard (OFL) is downloaded once into tools/og/.fonts/. Set
  * OG_FONT_DIR to use fonts from elsewhere, or OG_OFFLINE=1 to skip the
@@ -26,6 +28,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
 const POSTS_DIR = path.join(ROOT, '_posts');
 const OUT_DIR = path.join(ROOT, 'assets', 'img', 'og');
+const TOPICS_DIR = path.join(ROOT, '_topics');
+const SERIES_DIR = path.join(ROOT, '_series_pages');
 const AVATAR = path.join(ROOT, 'assets', 'img', 'avatar.jpg');
 const FONT_DIR = process.env.OG_FONT_DIR || path.join(HERE, '.fonts');
 const SKIP_DIRS = ['TIL', 'problemsolving'];
@@ -120,10 +124,58 @@ async function collectPosts() {
       categories: [].concat(data.categories || []).map(String),
       tags: [].concat(data.tags || []).map(String),
       series: data.series_title ? String(data.series_title) : null,
+      seriesId: data.series ? String(data.series) : null,
       seriesOrder: data.series_order || null
     });
   }
   return posts;
+}
+
+async function readCollection(dir) {
+  if (!existsSync(dir)) return [];
+  const out = [];
+  for (const name of (await fs.readdir(dir)).sort()) {
+    if (!/\.(md|markdown)$/.test(name)) continue;
+    const data = frontMatter(await fs.readFile(path.join(dir, name), 'utf8'));
+    if (data && data.title) out.push({ id: name.replace(/\.(md|markdown)$/, ''), data });
+  }
+  return out;
+}
+
+// A series page card can state its own size; a topic hub's membership is
+// computed by _plugins/topic-hub.rb, so it is not guessed at here.
+async function collectTopics() {
+  return (await readCollection(TOPICS_DIR)).map(({ id, data }) => ({
+    id: String(data.topic_id || id),
+    dir: 'topics',
+    label: 'Topic hub',
+    title: String(data.title),
+    subtitle: data.question ? String(data.question) : '',
+    chips: [].concat(data.tags || []).map(String).slice(0, 4),
+    footer: ''
+  }));
+}
+
+async function collectSeries(posts) {
+  const counts = new Map();
+  for (const post of posts) {
+    if (!post.series) continue;
+    counts.set(post.seriesId, (counts.get(post.seriesId) || 0) + 1);
+  }
+  return (await readCollection(SERIES_DIR)).map(({ id, data }) => {
+    const seriesId = String(data.series_id || id);
+    const count = counts.get(seriesId) || 0;
+    const groups = [].concat(data.series_groups || []).map((g) => String(g.label || '')).filter(Boolean);
+    return {
+      id: seriesId,
+      dir: 'series',
+      label: 'Series',
+      title: String(data.title),
+      subtitle: data.hero_note ? String(data.hero_note) : '',
+      chips: groups.slice(0, 3),
+      footer: count ? `${count}편` : ''
+    };
+  });
 }
 
 function labelFor(post) {
@@ -135,6 +187,18 @@ function labelFor(post) {
   }
   if (post.series) return post.seriesOrder ? `${post.series} · ${post.seriesOrder}` : post.series;
   return post.categories.length ? post.categories.join(' · ') : type || 'Post';
+}
+
+function postCard(post) {
+  return {
+    id: post.slug,
+    dir: '',
+    label: labelFor(post),
+    title: post.title,
+    subtitle: '',
+    chips: post.tags.filter((t) => !/^(Tech Blog Review|Conference|Tech|monticker)$/i.test(t)).slice(0, 4),
+    footer: post.date.replace(/-/g, '.')
+  };
 }
 
 function wrap(ctx, text, maxWidth, maxLines) {
@@ -188,7 +252,7 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function render(post, family, avatar) {
+function render(card, family, avatar) {
   const canvas = createCanvas(W, H);
   const ctx = canvas.getContext('2d');
 
@@ -209,16 +273,18 @@ function render(post, family, avatar) {
   ctx.fillStyle = C.label;
   ctx.font = `700 26px ${family}`;
   ctx.textBaseline = 'top';
-  ctx.fillText(labelFor(post).toUpperCase(), left, 64);
+  ctx.fillText(card.label.toUpperCase(), left, 64);
 
-  // title: shrink until it fits in 4 lines
+  // title: shrink until it fits, leaving room for a subtitle when there is one
+  const maxLines = card.subtitle ? 3 : 4;
+  const titleBox = card.subtitle ? 250 : 330;
   let size = 60;
   let lines;
   for (;;) {
     ctx.font = `700 ${size}px ${family}`;
-    lines = wrap(ctx, post.title, contentWidth, 4);
+    lines = wrap(ctx, card.title, contentWidth, maxLines);
     const needed = lines.length * size * 1.28;
-    if (needed <= 330 || size <= 38) break;
+    if (needed <= titleBox || size <= 38) break;
     size -= 4;
   }
   ctx.fillStyle = C.text;
@@ -229,8 +295,18 @@ function render(post, family, avatar) {
     y += size * 1.28;
   }
 
-  // tags
-  const tags = post.tags.filter((t) => !/^(Tech Blog Review|Conference|Tech|monticker)$/i.test(t)).slice(0, 4);
+  if (card.subtitle) {
+    ctx.fillStyle = C.muted;
+    ctx.font = `500 30px ${family}`;
+    y += 14;
+    for (const line of wrap(ctx, card.subtitle, contentWidth, 2)) {
+      ctx.fillText(line, left, y);
+      y += 42;
+    }
+  }
+
+  // chips
+  const tags = card.chips;
   let x = left;
   const chipY = 486;
   ctx.font = `500 24px ${family}`;
@@ -264,7 +340,8 @@ function render(post, family, avatar) {
   const nameWidth = ctx.measureText(SITE.name).width;
   ctx.fillStyle = C.muted;
   ctx.font = `500 22px ${family}`;
-  ctx.fillText(`${SITE.host}  ·  ${post.date.replace(/-/g, '.')}`, nameX + nameWidth + 18, footerY);
+  const footerText = card.footer ? `${SITE.host}  ·  ${card.footer}` : SITE.host;
+  ctx.fillText(footerText, nameX + nameWidth + 18, footerY);
 
   return canvas.encode('jpeg', 88);
 }
@@ -272,24 +349,32 @@ function render(post, family, avatar) {
 async function main() {
   const family = await ensureFonts();
   const avatar = existsSync(AVATAR) ? await loadImage(AVATAR) : null;
-  mkdirSync(OUT_DIR, { recursive: true });
 
-  let posts = await collectPosts();
-  if (only) posts = posts.filter((p) => p.slug === only);
-  posts = posts.slice(0, limit);
+  const posts = await collectPosts();
+  let cards = [
+    ...posts.map(postCard),
+    ...(await collectTopics()),
+    ...(await collectSeries(posts))
+  ];
+  if (only) cards = cards.filter((card) => card.id === only);
+  cards = cards.slice(0, limit);
 
   let written = 0;
   let skipped = 0;
-  for (const post of posts) {
-    const target = path.join(OUT_DIR, `${post.slug}.jpg`);
+  for (const card of cards) {
+    const dir = path.join(OUT_DIR, card.dir);
+    const target = path.join(dir, `${card.id}.jpg`);
     if (!force && existsSync(target)) {
       skipped += 1;
       continue;
     }
-    await fs.writeFile(target, await render(post, family, avatar));
+    mkdirSync(dir, { recursive: true });
+    await fs.writeFile(target, await render(card, family, avatar));
     written += 1;
   }
-  console.log(`og images: ${written} written, ${skipped} kept, ${posts.length} posts -> ${path.relative(ROOT, OUT_DIR)}`);
+  console.log(
+    `og images: ${written} written, ${skipped} kept, ${cards.length} cards -> ${path.relative(ROOT, OUT_DIR)}`
+  );
 }
 
 main().catch((err) => {
