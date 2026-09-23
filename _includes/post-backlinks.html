@@ -1,0 +1,29 @@
+<!--
+  Posts that link to this one, collected by _plugins/post-backlinks.rb.
+  A backlink is an editorial connection the author wrote, so it sits above the
+  similarity-based recommendations.
+-->
+
+{% assign backlinks = page.backlinks %}
+
+{% if backlinks.size > 0 %}
+  <aside id="post-backlinks" aria-labelledby="backlinks-label">
+    <h3 class="mb-3" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }}</h3>
+    <ul class="post-backlink-list list-unstyled mb-4">
+      {% for cited in backlinks %}
+        <li class="post-backlink-item">
+          <a href="{{ cited.url | relative_url }}" class="post-backlink-link">
+            <span class="post-backlink-date">{% include datetime.html date=cited.date lang=include.lang %}</span>
+            <span class="post-backlink-title">{{ cited.title }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% if page.backlinks_total > backlinks.size %}
+      {% assign rest = page.backlinks_total | minus: backlinks.size %}
+      <p class="post-backlink-more">
+        {{ site.data.locales[include.lang].post.backlinks_more | replace: ':COUNT', rest }}
+      </p>
+    {% endif %}
+  </aside>
+{% endif %}

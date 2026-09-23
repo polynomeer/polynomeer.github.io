@@ -140,6 +140,8 @@ post:
     unit: min
     prompt: read
   relate_posts: Further Reading
+  backlinks: Posts that cite this one
+  backlinks_more: "and :COUNT more"
   share: Share
   button:
     next: Newer

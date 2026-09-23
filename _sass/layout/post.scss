@@ -3249,3 +3249,74 @@ header {
     padding: 0 0.85rem 0.85rem;
   }
 }
+
+/* posts that link to this one (see _plugins/post-backlinks.rb) */
+#post-backlinks {
+  margin-bottom: 2rem;
+
+  h3 {
+    font-size: 1.05rem;
+    color: var(--heading-color);
+  }
+}
+
+.post-backlink-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.post-backlink-item {
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(98, 114, 164, 0.16);
+  border-left-width: 3px;
+  border-left-color: rgba(139, 233, 253, 0.45);
+  background: rgba(68, 71, 90, 0.12);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.42);
+    border-left-color: rgba(139, 233, 253, 0.75);
+  }
+}
+
+.post-backlink-link {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  color: var(--text-color);
+
+  &:hover {
+    text-decoration: none;
+
+    .post-backlink-title {
+      color: var(--link-color);
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+}
+
+.post-backlink-date {
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.post-backlink-title {
+  min-width: 0;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.post-backlink-more {
+  margin: 0;
+  color: var(--text-muted-color);
+  font-size: 0.84rem;
+}
