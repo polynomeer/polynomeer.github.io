@@ -143,3 +143,25 @@ Upgrade the current related-posts include to:
 2. keep tag/category scoring as fallback
 
 This yields an immediate recommendation quality jump without redesigning the entire component.
+
+## Implementation (2026-09)
+
+The scoring moved out of `_includes/related-posts.html` into
+`_plugins/related-posts.rb`. The include had every post loop over all ~950
+others in Liquid, which cost about 80 of the build's 267 seconds. The plugin
+indexes tags, categories, series, portfolio entries and topic hubs once at
+`site, :post_read` (`:low`, after the status filter and the topic hubs), scores
+only the candidates that actually share something, and stores the top three in
+`post.data['related_entries']`. The include renders that list.
+
+Scores: same series +10, same portfolio project +8, each shared topic hub +2,
+each shared tag +1.5, each shared category +0.75. Ties fall back to date and
+position in `site.posts`, matching what the Liquid version produced.
+
+The port was verified by diffing the rendered `#related-posts` section of all
+948 post pages against the previous build: byte-identical. Adding the topic hub
+signal afterwards changed the recommendations of 99 posts and raised the number
+of recommendations that share a topic hub with their post from 647 to 689.
+
+Build cost after the change: 0.2s in the plugin, 2.6s in the include, full
+build 267s -> 183s.

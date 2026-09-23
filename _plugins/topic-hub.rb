@@ -52,8 +52,13 @@ module Jekyll
       end
 
       def build(site)
+        return if site.data['topic_hubs_ready']
+
         topics = site.collections['topics']&.docs || []
-        return if topics.empty?
+        if topics.empty?
+          site.data['topic_hubs_ready'] = true
+          return
+        end
 
         index = matchers(topics)
         buckets = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
@@ -94,13 +99,18 @@ module Jekyll
           topic.data['topic_featured'] = sections.flat_map { |s| s['featured'] }
           topic.data['topic_last_date'] = sections.flat_map { |s| s['posts'] }.map(&:date).max
         end
+
+        site.data['topic_hubs_ready'] = true
       end
     end
   end
 end
 
-# Runs after published-status-filter.rb (normal priority) so hidden posts never
-# reach a hub.
-Jekyll::Hooks.register :site, :post_read, priority: :low do |site|
+# Registered at the default priority so it runs after published-status-filter.rb
+# (hidden posts never reach a hub) and before the :low hooks that read
+# `topic_hubs`, such as related-posts.rb. `build` is idempotent, so calling it
+# again from those hooks is a no-op.
+Jekyll::Hooks.register :site, :post_read do |site|
+  site.data['topic_hubs_ready'] = nil
   Jekyll::TopicHub.build(site)
 end

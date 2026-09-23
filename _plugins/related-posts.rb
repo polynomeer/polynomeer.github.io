@@ -16,6 +16,7 @@
 # Score per candidate:
 #   same series                    +10
 #   same portfolio project          +8
+#   each shared topic hub           +2
 #   each shared tag                 +1.5
 #   each shared category            +0.75
 # Candidates with a score of zero are dropped. Ties fall back to the same keys
@@ -26,6 +27,7 @@ module Jekyll
   module RelatedRecommendations
     SERIES_SCORE = 10.0
     PROJECT_SCORE = 8.0
+    TOPIC_SCORE = 2.0
     TAG_SCORE = 1.5
     CATEGORY_SCORE = 0.75
     TOTAL_SIZE = 3
@@ -77,6 +79,9 @@ module Jekyll
 
       def build(site)
         started = Time.now
+        # topic_hubs is set by topic-hub.rb; both hooks are :low priority, so
+        # ask for it rather than relying on plugin load order.
+        Jekyll::TopicHub.build(site) if defined?(Jekyll::TopicHub)
         posts = ordered_posts(site)
         projects = project_index(site)
 
@@ -91,10 +96,13 @@ module Jekyll
         by_tag = Hash.new { |h, k| h[k] = [] }
         by_category = Hash.new { |h, k| h[k] = [] }
         by_series = Hash.new { |h, k| h[k] = [] }
+        by_topic = Hash.new { |h, k| h[k] = [] }
         posts.each_with_index do |post, i|
           Array(post.data['tags']).each { |t| by_tag[t] << i }
           Array(post.data['categories']).each { |c| by_category[c] << i }
           by_series[post.data['series']] << i if post.data['series']
+          # set by _plugins/topic-hub.rb, which runs before this hook
+          Array(post.data['topic_hubs']).each { |hub| by_topic[hub['id']] << i }
         end
 
         posts.each_with_index do |page, page_index|
@@ -107,6 +115,9 @@ module Jekyll
           end
           Array(page.data['categories']).each do |category|
             by_category[category].each { |i| scores[i] += CATEGORY_SCORE }
+          end
+          Array(page.data['topic_hubs']).each do |hub|
+            by_topic[hub['id']].each { |i| scores[i] += TOPIC_SCORE }
           end
           if (series = page.data['series'])
             by_series[series].each do |i|
