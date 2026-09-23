@@ -24,10 +24,18 @@ Two groups, decided by what a reader starts from:
 A tab opts into the second group with `group: browse` in its front matter;
 `order` then sorts it inside that group. `_includes/sidebar.html` renders tabs
 without a `group` as icon rows (so a new tab keeps the old behaviour by
-default) and the browse group as an inline list of small links separated by
-dots, with the same active state as the primary rows. Styles live next to the
-other sidebar rules in `_sass/addon/commons.scss`; the group label comes from
-`sidebar.browse` in the locale files.
+default) and the browse group as small pill chips, each with the tab icon and
+label. Styles live next to the other sidebar rules in
+`_sass/addon/commons.scss`; the group label comes from `sidebar.browse` in the
+locale files.
+
+The chips reuse the pill language already used for tags and topic hubs:
+a muted fill, a border that appears on hover, and an accent ring plus accent
+icon on the current page, mirroring how the primary rows light up. The group
+label is a micro caption followed by a hairline that fills the rest of the row.
+Chip metrics are tuned so the three entries sit on one line at the 260px
+sidebar width, and the whole block shares the left edge of the primary rows'
+hover pills.
 
 ## Notes
 
