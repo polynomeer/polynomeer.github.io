@@ -133,7 +133,7 @@ The script reports:
 - total post count by top-level post directory
 - current `assets/img/posts` size
 - current `_site` size if present
-- current generated search index size if present
+- current generated search index size if present (see `docs/features/search-enhancement-design.md` for how the index is split between `search-meta.json` and `search.json`)
 - optional build duration when `--build` is used
 
 ## External Link Rot

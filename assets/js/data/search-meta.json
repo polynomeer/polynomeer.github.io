@@ -3,6 +3,13 @@ layout: compress
 swcache: true
 ---
 
+{%- comment -%}
+  Titles, tags and categories only: the slice of the index that makes search
+  usable immediately. `search.json` carries the same entries plus the post
+  text and is fetched right after this one, so keep the selection rule below
+  identical to the one there.
+{%- endcomment -%}
+
 {% assign search_cutoff_ts = site.time | date: '%s' | plus: 0 | minus: 63072000 %}
 {% assign search_first_item = true %}
 
@@ -24,17 +31,7 @@ swcache: true
     "date_label": {{ post.date | date: site.data.locales[site.lang].df.post.strftime | jsonify }},
     "series": {{ post.series | jsonify }},
     "series_title": {{ post.series_title | jsonify }},
-    {%- comment -%}
-      Code blocks are dropped first (see _plugins/search-text-filter.rb) so the
-      kept window holds prose, and the snippet shown in results is derived from
-      this same field in the loader instead of being stored twice. At 900
-      characters of prose the index is smaller than it was with 900 characters
-      of mixed prose and code, and matches more queries; lowering this number
-      trades recall for payload.
-    {%- endcomment -%}
-    {% include no-linenos.html content=post.content %}
-    {% assign _content = content | strip_code_blocks | strip_html | strip_newlines | normalize_whitespace %}
-    "content": {{ _content | truncate: 900 | jsonify }}
+    "content": ""
   }
   {% endif %}
   {% endfor %}

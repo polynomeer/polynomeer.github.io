@@ -18,7 +18,7 @@
         </div>
       </div>
     </header>
-    <p>{snippet}</p>
+    <p>{content}</p>
   </article>
 {% endcapture %}
 
@@ -57,10 +57,66 @@
   }
 
   {%- comment -%}
-    The index is several hundred KB, so defer fetching it until the visitor
-    actually reaches for the search box instead of on every page load.
+    The index is fetched only when the visitor reaches for the search box, and
+    in two steps: titles and tags first so results appear at once, then the
+    full index with the post text, which replaces the first one in place.
   {%- endcomment -%}
   let searchIndexRequested = false;
+  let searchInstance = null;
+
+  const searchOptions = {
+    searchInput: searchInput,
+    resultsContainer: resultsContainer,
+    searchResultTemplate: '{{ result_elem | strip_newlines }}',
+    noResultsText: '{{ not_found }}',
+    templateMiddleware: function(prop, value, template) {
+      if (prop === 'date_label') {
+        return value === '' ? '' : `<div class="search-result-date"><i class="far fa-calendar fa-fw"></i>${value}</div>`;
+      }
+
+      if (prop === 'categories') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div class="search-result-categories"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+        }
+      }
+
+      if (prop === 'tags') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div class="search-result-tags"><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+        }
+      }
+
+      if (prop === 'series_title') {
+        return hasDisplayValue(value) ? `<span class="search-chip search-chip-series">${value}</span>` : '';
+      }
+
+      // the index stores one text field; the preview is the head of it
+      if (prop === 'content') {
+        const text = String(value ?? '');
+        return text.length > 180 ? `${text.slice(0, 180).trimEnd()}...` : text;
+      }
+    }
+  };
+
+  {%- comment -%}
+    Simple-Jekyll-Search copies the data at init and exposes no destroy(), so
+    upgrading to the full index means a second instance. Both listen on the
+    input, and the one created later renders last, which is the full one.
+  {%- endcomment -%}
+  function useIndex(index) {
+    searchInstance = SimpleJekyllSearch(Object.assign({ json: index }, searchOptions));
+
+    const query = searchInput.value.trim();
+
+    if (query !== '') {
+      searchInstance.search(query);
+      renderSearchSummary();
+    }
+  }
 
   function initSearch() {
     if (searchIndexRequested) {
@@ -69,53 +125,19 @@
 
     searchIndexRequested = true;
 
-    fetch('{{ '/assets/js/data/search.json' | relative_url }}')
-      .then((response) => response.json())
-      .then((index) => {
-        const search = SimpleJekyllSearch({
-          searchInput: searchInput,
-          resultsContainer: resultsContainer,
-          json: index,
-          searchResultTemplate: '{{ result_elem | strip_newlines }}',
-          noResultsText: '{{ not_found }}',
-          templateMiddleware: function(prop, value, template) {
-            if (prop === 'date_label') {
-              return value === '' ? '' : `<div class="search-result-date"><i class="far fa-calendar fa-fw"></i>${value}</div>`;
-            }
+    const load = (path) => fetch(path).then((response) => response.json());
 
-            if (prop === 'categories') {
-              if (value === '') {
-                return `${value}`;
-              } else {
-                return `<div class="search-result-categories"><i class="far fa-folder fa-fw"></i>${value}</div>`;
-              }
-            }
-
-            if (prop === 'tags') {
-              if (value === '') {
-                return `${value}`;
-              } else {
-                return `<div class="search-result-tags"><i class="fa fa-tag fa-fw"></i>${value}</div>`;
-              }
-            }
-
-            if (prop === 'series_title') {
-              return hasDisplayValue(value) ? `<span class="search-chip search-chip-series">${value}</span>` : '';
-            }
-
-          }
-        });
-
-        // Anything typed while the index was still downloading.
-        const pendingQuery = searchInput.value.trim();
-
-        if (pendingQuery !== '') {
-          search.search(pendingQuery);
-          renderSearchSummary();
-        }
-      })
+    load('{{ '/assets/js/data/search-meta.json' | relative_url }}')
+      .then(useIndex)
       .catch((error) => {
         console.error('search index load error', error);
+      })
+      .finally(() => {
+        load('{{ '/assets/js/data/search.json' | relative_url }}')
+          .then(useIndex)
+          .catch((error) => {
+            console.error('search index load error', error);
+          });
       });
   }
 

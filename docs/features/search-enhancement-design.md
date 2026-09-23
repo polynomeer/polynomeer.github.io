@@ -132,3 +132,41 @@ Implement the following first:
 4. fix small UX gaps in search state reset
 
 This gives immediate user-facing improvement with a small surface area.
+
+## Index Payload (implemented 2026-09)
+
+The index had grown to about 1,000 KB (291 KB gzipped) for 413 entries, and
+three quarters of that was the 900-character body excerpt stored per post.
+Measuring before changing anything showed what was actually wrong:
+
+- the `snippet` field was the first 180 characters of `content`, stored twice
+- those 900 characters often held a configuration listing or a stack trace, so
+  the searchable text was code rather than the prose people type
+- TIL was not the problem: the two-year cutoff already keeps all but 51 of
+  them out of the index
+
+What changed:
+
+1. `_plugins/search-text-filter.rb` adds a `strip_code_blocks` filter, applied
+   before the excerpt is cut, so the window holds prose.
+2. `snippet` is gone; the result preview is the first 180 characters of
+   `content`, cut in the loader's `templateMiddleware`.
+3. The index is fetched in two steps. `search-meta.json` (titles, tags,
+   categories, series) is small enough to arrive immediately, and
+   `search.json` follows and replaces it.
+
+Measured over 20 representative queries (Kafka, 멱등, InnoDB, 격리 수준, …):
+
+| | before | after |
+| --- | --- | --- |
+| first fetch | 1,006 KB / 291 KB gzip | 159 KB / 27 KB gzip |
+| full index | — | 881 KB / 286 KB gzip |
+| posts matched | 161 | 170 |
+
+Dropping the excerpt to 600 characters was tried and rejected: it saves a
+further 225 KB but loses 11% of the matches (143). The excerpt length in
+`assets/js/data/search.json` is the knob if that trade is ever worth taking.
+
+Note that gzip already collapses the duplicated snippet, so the compressed
+saving comes almost entirely from splitting the fetch, not from the smaller
+file.
