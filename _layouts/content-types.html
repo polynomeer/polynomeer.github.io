@@ -21,6 +21,12 @@ layout: page
         {% assign matching_group = posts_by_type | where: 'name', type_page.content_type_id | first %}
         {% assign post_count = matching_group.items | size | default: 0 %}
 
+        {%- comment -%}
+          A type with no visible posts is not a gap to fill, it is an empty shelf. Listing it
+          makes the site look half-built, so it is left out of the directory; the type page
+          itself still exists for anything that links to it.
+        {%- endcomment -%}
+        {% if post_count > 0 %}
         <article class="content-type-card">
           <a href="{{ type_page.url | relative_url }}" class="content-type-card-link">
             <div class="content-type-card-header">
@@ -45,6 +51,7 @@ layout: page
             </p>
           </a>
         </article>
+        {% endif %}
       {% endif %}
     {% endfor %}
   </div>
