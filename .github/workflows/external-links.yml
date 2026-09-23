@@ -1,0 +1,61 @@
+# Checks the external links in posts on a schedule. Reviews depend on their
+# `source_url` staying reachable, and older posts accumulate links that rot
+# quietly, so this runs apart from the deploy workflow and never blocks it.
+name: External link check
+
+on:
+  schedule:
+    # 06:00 KST every Monday
+    - cron: '0 21 * * 0'
+  workflow_dispatch:
+    inputs:
+      all:
+        description: Include TIL and problem solving posts
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: external-links
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: false
+
+      - name: Restore link cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/external-links.json
+          key: external-links-${{ github.run_id }}
+          restore-keys: external-links-
+
+      - name: Check links
+        id: check
+        run: |
+          ruby scripts/check-external-links.rb \
+            ${{ inputs.all && '--all' || '' }} \
+            --out external-links-report.md
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-links-report
+          path: external-links-report.md
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        run: cat external-links-report.md >> "$GITHUB_STEP_SUMMARY"

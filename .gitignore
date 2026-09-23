@@ -63,3 +63,6 @@ package-lock.json
 # Generated Open Graph images and fonts (tools/og/generate.mjs)
 assets/img/og/
 tools/og/.fonts/
+
+# External link check cache (scripts/check-external-links.rb)
+.cache/

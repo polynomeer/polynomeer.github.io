@@ -136,6 +136,39 @@ The script reports:
 - current generated search index size if present
 - optional build duration when `--build` is used
 
+## External Link Rot
+
+Posts carry thousands of outbound links, and reviews depend on their
+`source_url` resolving — a dead source turns a review into an unverifiable
+claim. Links are not checked during the build (`tools/test.sh` runs
+html-proofer with `--disable-external`), so they are checked on a schedule
+instead.
+
+- Script: [`scripts/check-external-links.rb`](../../scripts/check-external-links.rb)
+- Workflow: `.github/workflows/external-links.yml`, Mondays 06:00 KST and on demand
+
+```bash
+ruby scripts/check-external-links.rb                  # posts outside TIL and problem solving
+ruby scripts/check-external-links.rb --sources-only   # just the reviews' source_url
+ruby scripts/check-external-links.rb --all            # every post
+```
+
+Results are grouped so that only real rot fails the run:
+
+| state | meaning | fails the run |
+| --- | --- | --- |
+| ok | 2xx or 3xx after redirects | no |
+| dead | 404, 410, DNS failure, connection refused | yes |
+| blocked | 401/403/429/999 or timeout — a bot check, not a broken link | no |
+| error | other 5xx, TLS problems | no |
+
+Results are cached in `.cache/external-links.json` (git-ignored, restored by
+the workflow) and rechecked after 14 days, so a weekly run only revisits what
+expired or previously failed. A failing scheduled run is the notification; the
+Markdown report is attached to the run as an artifact and repeated in the job
+summary, listing each URL with the posts that reference it and marking review
+sources.
+
 ## Practical Decision Rule
 
 Use the measurements this way:

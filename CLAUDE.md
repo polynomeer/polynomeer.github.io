@@ -71,6 +71,12 @@ Post front matter consistency (tag/category case variants, slug collisions, miss
 ruby scripts/check-post-consistency.rb
 ```
 
+External link check (scheduled weekly in CI; `--sources-only` for just the reviews' source links):
+
+```bash
+ruby scripts/check-external-links.rb
+```
+
 Generate social preview cards (`assets/img/og/`, git-ignored; the deploy workflow does this automatically):
 
 ```bash
