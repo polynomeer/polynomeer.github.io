@@ -1,104 +1,9 @@
-<!-- Recommend related posts using series, tags, and categories. -->
+<!--
+  Renders the recommendations precomputed by _plugins/related-posts.rb
+  (`page.related_entries`: post, same_series, same_project).
+-->
 
-{% assign TOTAL_SIZE = 3 %}
-{% assign SERIES_SCORE = 10 %}
-{% assign TAG_SCORE = 1.5 %}
-{% assign CATEGORY_SCORE = 0.75 %}
-{% assign SEPARATOR = '::' %}
-
-{% assign PROJECT_SCORE = 8 %}
-{% assign match_posts = '' | split: '' %}
-
-{% comment %} Posts that belong to the same _data/portfolio.yml entry as this page. {% endcomment %}
-{% assign project_urls = '' | split: '' %}
-{% if site.data.portfolio and site.data.portfolio.enabled %}
-  {% if page.series %}
-    {% assign page_series_page = site.series_pages | where: 'series_id', page.series | first %}
-  {% endif %}
-  {% assign portfolio_groups = site.data.portfolio.career.items | concat: site.data.portfolio.personal.items %}
-  {% for item in portfolio_groups %}
-    {% assign hit = false %}
-    {% if item.posts contains page.url %}
-      {% assign hit = true %}
-    {% elsif page.series and item.series == page.series %}
-      {% assign hit = true %}
-    {% elsif page_series_page and item.posts contains page_series_page.permalink %}
-      {% assign hit = true %}
-    {% endif %}
-    {% if hit %}
-      {% if item.series %}
-        {% assign series_members = site.posts | where: 'series', item.series %}
-        {% for spp in series_members %}{% assign project_urls = project_urls | push: spp.url %}{% endfor %}
-      {% endif %}
-      {% for url in item.posts %}
-        {% if url contains '/posts/' %}
-          {% assign project_urls = project_urls | push: url %}
-        {% else %}
-          {% assign sp = site.series_pages | where: 'permalink', url | first %}
-          {% if sp %}
-            {% assign sp_posts = site.posts | where: 'series', sp.series_id %}
-            {% for spp in sp_posts %}{% assign project_urls = project_urls | push: spp.url %}{% endfor %}
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-{% for post in site.posts %}
-  {% if post.url == page.url %}
-    {% continue %}
-  {% endif %}
-
-  {% assign score = 0 %}
-  {% assign same_series = false %}
-  {% assign same_project = false %}
-  {% assign shared_tag_count = 0 %}
-  {% assign shared_category_count = 0 %}
-
-  {% if page.series and post.series and page.series == post.series %}
-    {% assign score = score | plus: SERIES_SCORE %}
-    {% assign same_series = true %}
-  {% endif %}
-
-  {% if project_urls contains post.url %}
-    {% assign score = score | plus: PROJECT_SCORE %}
-    {% assign same_project = true %}
-  {% endif %}
-
-  {% for tag in post.tags %}
-    {% if page.tags contains tag %}
-      {% assign score = score | plus: TAG_SCORE %}
-      {% assign shared_tag_count = shared_tag_count | plus: 1 %}
-    {% endif %}
-  {% endfor %}
-
-  {% for category in post.categories %}
-    {% if page.categories contains category %}
-      {% assign score = score | plus: CATEGORY_SCORE %}
-      {% assign shared_category_count = shared_category_count | plus: 1 %}
-    {% endif %}
-  {% endfor %}
-
-  {% if score > 0 %}
-    {% comment %} Zero-pad the score so string sorting matches numeric order. {% endcomment %}
-    {% assign score_key = score | times: 100 | round | prepend: '000000' | slice: -6, 6 %}
-    {% capture candidate %}
-      {{- score_key -}}{{ SEPARATOR }}{{- post.date | date: '%Y%m%d%H%M%S' -}}{{ SEPARATOR }}{{- forloop.index0 -}}{{ SEPARATOR }}{{- same_series -}}{{ SEPARATOR }}{{- same_project -}}
-    {% endcapture %}
-    {% assign match_posts = match_posts | push: candidate %}
-  {% endif %}
-{% endfor %}
-
-{% assign relate_entries = '' | split: '' %}
-
-{% if match_posts.size > 0 %}
-  {% assign match_posts = match_posts | sort | reverse %}
-  {% for entry in match_posts limit: TOTAL_SIZE %}
-    {% assign relate_entries = relate_entries | push: entry %}
-  {% endfor %}
-{% endif %}
+{% assign relate_entries = page.related_entries %}
 
 {% if relate_entries.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
@@ -107,32 +12,20 @@
     </h3>
     <nav class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
       {% for entry in relate_entries %}
-        {% assign entry_parts = entry | split: SEPARATOR %}
-        {% assign index = entry_parts[2] | plus: 0 %}
-        {% assign show_series_badge = false %}
-        {% assign show_project_badge = false %}
-        {% if entry_parts[3] == 'true' %}
-          {% assign show_series_badge = true %}
-        {% endif %}
-        {% if entry_parts[4] == 'true' and show_series_badge == false %}
-          {% assign show_project_badge = true %}
-        {% endif %}
-        {% assign post = site.posts[index] %}
-
+        {% assign post = entry.post %}
         <article class="col">
           <a href="{{ post.url | relative_url }}" class="post-preview card h-100">
             <div class="card-body">
               {% include datetime.html date=post.date lang=include.lang %}
               <h4 class="pt-0 my-2">{{ post.title }}</h4>
-              {% if show_series_badge or show_project_badge %}
+              {% if entry.same_series or entry.same_project %}
                 <div class="recommendation-badges mb-2">
-                  {% if show_series_badge %}
+                  {% if entry.same_series %}
                     <span class="recommendation-badge">
                       {{- site.data.locales[include.lang].post.recommendation_series -}}
                       {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
                     </span>
-                  {% endif %}
-                  {% if show_project_badge %}
+                  {% elsif entry.same_project %}
                     <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_project }}</span>
                   {% endif %}
                 </div>
