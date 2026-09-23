@@ -152,8 +152,8 @@ def fetch(uri, method, limit = MAX_REDIRECTS)
     fetch(URI.join(uri.to_s, location), method, limit - 1)
   else
     code = response.code.to_i
-    # some servers reject HEAD but serve GET
-    return fetch(uri, :get, limit) if method == :head && [403, 405, 501].include?(code)
+    # some servers answer HEAD with 403/404/405 and still serve the page
+    return fetch(uri, :get, limit) if method == :head && [403, 404, 405, 501].include?(code)
 
     state = classify(code)
     state = :blocked if state == :dead && BOT_HOSTILE.include?(uri.host)
@@ -172,11 +172,23 @@ rescue StandardError => e
   [:error, "#{e.class}: #{e.message[0, 60]}"]
 end
 
-def check(url)
+# Name lookups and connections fail for local reasons often enough that one
+# failure is not evidence of a dead link.
+def retryable?(state, detail)
+  (state == :dead && detail.to_s.match?(/\A(dns|connection)/)) || detail == 'timeout'
+end
+
+def check(url, attempts = 2)
   uri = URI.parse(url)
   return [:error, 'not http'] unless uri.is_a?(URI::HTTP) && uri.host
 
-  fetch(uri, :head)
+  state, detail = fetch(uri, :head)
+  if attempts > 1 && retryable?(state, detail)
+    sleep 1
+    return check(url, attempts - 1)
+  end
+
+  [state, detail]
 rescue URI::InvalidURIError
   [:error, 'invalid url']
 end

@@ -72,4 +72,4 @@ topic-0/
 
 - [Kafka Documentation: Persistence](https://kafka.apache.org/documentation/#persistence)
 - [Kafka: Efficiency](https://kafka.apache.org/documentation/#maximizingefficiency)
-- Jay Kreps, [The Log: What every software engineer should know about real-time data's unifying abstraction](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)
+- Jay Kreps, [The Log: What every software engineer should know about real-time data's unifying abstraction](https://web.archive.org/web/20240105095933/https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)

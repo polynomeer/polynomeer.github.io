@@ -112,7 +112,6 @@ JDK 11에 실험적 수집기로 도입된 Epsilon 가비지 수집기는 메모
 - https://betterprogramming.pub/understanding-the-jvm-memory-model-heap-vs-non-heap-c14aa6fa703e
 - https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html
 - https://www.geeksforgeeks.org/jvm-works-jvm-architecture/
-- https://www.javatpoint.com/jvm-java-virtual-machine
 - https://dzone.com/articles/jvm-architecture-explained
 - https://inpa.tistory.com/entry/JAVA-%E2%98%95-JVM-%EB%82%B4%EB%B6%80-%EA%B5%AC%EC%A1%B0-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EC%98%81%EC%97%AD-%EC%8B%AC%ED%99%94%ED%8E%B8
 - https://dzone.com/articles/java-memory-architecture-model-garbage-collection

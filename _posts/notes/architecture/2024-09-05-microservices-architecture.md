@@ -20,7 +20,6 @@ tags: [Architecture]
 - 2010s ~ : **Resilient/Anti-Fragile**, Cloud Native
   - Flow of value의 지속적인 개선
   - 일단 만들고 고객의 피드백에 의해 자주 변경하는 형태로, 주로 애자일 프로세스로 개발
-- https://www.capterra.com/history-of-software/
 
 ## From Fragile to Antifragile Software
 
@@ -41,7 +40,7 @@ _출처: https://developers.redhat.com/blog/2016/07/20/from-fragile-to-antifragi
 
 소프트웨어 시스템이 Anti-Fragile이 되는것은 쉽지않지만, 몇 가지 방법이 제시된다. Anti-Fragile 특성을 가진 소프트웨어를 만드는 데 도움이 되는 몇 가지 도구, 플랫폼, 아키텍처 스타일, 방법론이 있다.
 
-**Auto Scaling**: 이 기능을 통해 애플리케이션은 더 많은 애플리케이션 인스턴스를 생성하여 증가하는 로드를 처리할 수 있다. 이를 달성하기 위해 소프트웨어 시스템은 변화와 스트레스를 측정하고 이에 대응할 수 있어야 한다. 몇 가지 좋은 예는 인프라 수준에서 EC2 인스턴스의 [AWS autoscaling](https://aws.amazon.com/autoscaling/)과 애플리케이션 수준에서 애플리케이션 컨테이너의 [OpenShift autoscaling](http://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/)이다. 이는 소프트웨어 시스템이 스트레스에 대응하기 위해 시스템의 한 부분에서 다른 부분으로 리소스를 이동하기 때문에, 애플리케이션을 Resiliency(탄력성)에서 Anti-Fragile로 전환하는 기능이다.
+**Auto Scaling**: 이 기능을 통해 애플리케이션은 더 많은 애플리케이션 인스턴스를 생성하여 증가하는 로드를 처리할 수 있다. 이를 달성하기 위해 소프트웨어 시스템은 변화와 스트레스를 측정하고 이에 대응할 수 있어야 한다. 몇 가지 좋은 예는 인프라 수준에서 EC2 인스턴스의 [AWS autoscaling](https://aws.amazon.com/autoscaling/)과 애플리케이션 수준에서 애플리케이션 컨테이너의 [OpenShift autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)이다. 이는 소프트웨어 시스템이 스트레스에 대응하기 위해 시스템의 한 부분에서 다른 부분으로 리소스를 이동하기 때문에, 애플리케이션을 Resiliency(탄력성)에서 Anti-Fragile로 전환하는 기능이다.
 
 **Microservices**: 스트레스를 받을 때 큰 것은 부서지기 마련이다. 이러한 현상은 포유류, 기업, 행정부 등에서 이미 관찰되었다. 소프트웨어 및 대규모 프로젝트에서 이러한 양상은 훨씬 더 자주 나타났다. 소프트웨어 프로젝트가 클수록 변경하고 스트레스에 대응하기가 더 어려워진다. 마이크로서비스는 변경을 허용하는 기능인 잘 정의된 API를 사용하여 자율적인 서비스를 제공함으로써 더 쉽게 변경할 수 있는 아키텍처 스타일이다. [Russ Miles](https://twitter.com/russmiles)는 [Antifragile Software through Microservices](https://leanpub.com/antifragilesoftware)의 강력한 신봉자이다. ([관련 영상](https://skillsmatter.com/skillscasts/5212-an-introduction-to-designing-and-buliding-antifragile-microservices-with-java))
 
@@ -118,9 +117,7 @@ _출처: https://www.instana.com/blog/cloud-native-seeing-through-hype/_
 ### Stress Testing
 
 - http://www.ktword.co.kr/test/view/view.php?no=4223
-- https://www.scienceall.com/%EB%B3%80%ED%98%95%EB%A0%A5stress/
 - https://www.guru99.com/stress-testing-tutorial.html
-- https://www.javatpoint.com/stress-testing
 - https://www.geeksforgeeks.org/stress-testing-software-testing/
 
 ### English Words

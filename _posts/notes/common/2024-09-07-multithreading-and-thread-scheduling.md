@@ -113,7 +113,6 @@ CalcThread B: 3.1415726535897894
   - https://www.tutorialspoint.com/operating_system/os_multi_threading.htm
   - https://m.blog.naver.com/PostView.nhn?blogId=qbxlvnf11&logNo=220837131449&proxyReferer=https:%2F%2Fwww.google.com%2F
   - https://www.perforce.com/blog/qac/multithreading-parallel-programming-c-cpp
-  - https://runebook.dev/ko/docs/node/child_process#child_process_child_process_execfilesync_file_args_options
   - https://ko.wikipedia.org/wiki/%EC%8A%A4%EB%A0%88%EB%93%9C_(%EC%BB%B4%ED%93%A8%ED%8C%85)
   - https://3dmpengines.tistory.com/2003
   - https://byeongmoo.tistory.com/2
@@ -122,4 +121,3 @@ CalcThread B: 3.1415726535897894
   - http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.sys_arch%2Ftopic%2Fkernel_SCHEDULING.html
   - https://www.geeksforgeeks.org/thread-scheduling/
   - https://www.infoworld.com/article/2071214/java-101--understanding-java-threads--part-3--thread-scheduling-and-wait-notify.html
-  - https://www.javatpoint.com/thread-scheduler-in-java

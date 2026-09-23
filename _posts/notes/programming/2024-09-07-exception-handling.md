@@ -88,7 +88,6 @@ catch 절에서 Throwable을 사용하면 모든 예외를 catch할 뿐만 아�
 
 - https://dzone.com/articles/best-practice-for-exception-handling-in-spring-boo
 - https://medium.com/globant/best-practice-for-exception-handling-in-springboot-540484db8a1a
-- https://climbtheladder.com/10-spring-boot-exception-handling-best-practices/
 - https://www.toptal.com/java/spring-boot-rest-api-error-handling
 - https://stackoverflow.com/questions/66762006/spring-boot-exception-handling-best-practice
 

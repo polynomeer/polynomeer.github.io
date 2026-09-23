@@ -88,4 +88,4 @@ monticker에서 Netty 이벤트 루프 모델로 다수 연결에 시세를 뿌�
 
 - [Reactive Streams 명세](https://www.reactive-streams.org/)
 - [Spring WebFlux 문서](https://docs.spring.io/spring-framework/reference/web/webflux.html)
-- [Project Reactor: Debugging](https://projectreactor.io/docs/core/release/reference/#debugging)
+- [Project Reactor: Debugging](https://projectreactor.io/docs/core/release/reference/debugging.html)

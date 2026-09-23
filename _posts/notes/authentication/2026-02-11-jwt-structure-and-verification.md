@@ -89,5 +89,5 @@ eyJhbGciOiJIUzI1NiJ9 . eyJzdWIiOiIxMjMiLCJleHAiOjE3...} . 3f6Tn...
 
 - [RFC 7519: JSON Web Token](https://datatracker.ietf.org/doc/html/rfc7519)
 - [RFC 8725: JWT Best Current Practices](https://datatracker.ietf.org/doc/html/rfc8725)
-- [OWASP: JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html)
+- [OWASP: JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html)
 - [인증 정리](/posts/authentication/), [인가 정리](/posts/authorization/)

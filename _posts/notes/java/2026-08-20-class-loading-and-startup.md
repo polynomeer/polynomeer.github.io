@@ -106,6 +106,6 @@ GraalVM native-image는 더 나간다. 도달 가능한 코드만 골라 네이�
 
 ## 참고
 
-- [Spring Boot: Class Data Sharing / AOT](https://docs.spring.io/spring-boot/reference/packaging/class-data-sharing.html)
+- [Spring Boot: Class Data Sharing / AOT](https://docs.spring.io/spring-boot/how-to/class-data-sharing.html)
 - [GraalVM Native Image: Reachability Metadata](https://www.graalvm.org/latest/reference-manual/native-image/metadata/)
 - [Spring Bean 생명주기 정리](/posts/spring-lifecycle/)
