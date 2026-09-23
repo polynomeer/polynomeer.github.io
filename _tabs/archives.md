@@ -2,5 +2,6 @@
 layout: archives
 hero_title: true
 icon: fas fa-archive
-order: 5
+order: 3
+group: browse
 ---

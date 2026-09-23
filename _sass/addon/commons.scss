@@ -1124,6 +1124,58 @@ $btn-mb: 0.5rem;
     }
   }
 
+  /* compact secondary nav for raw indexes (types, tags, archives) */
+  .sidebar-browse {
+    width: 100%;
+    padding: 0 1.5rem;
+    margin: -1.25rem 0 2rem;
+  }
+
+  .sidebar-browse-label {
+    display: block;
+    padding-left: 1rem;
+    margin-bottom: 0.4rem;
+    color: var(--text-muted-color);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .sidebar-browse-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.55rem;
+    padding: 0 1rem;
+    margin: 0;
+    list-style: none;
+
+    a {
+      display: inline-block;
+      padding: 0.15rem 0;
+      color: var(--text-muted-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+
+      &:hover {
+        color: var(--sidebar-active-color);
+        text-decoration: none;
+      }
+    }
+
+    li.active a {
+      color: var(--sidebar-active-color);
+    }
+
+    li + li::before {
+      content: '·';
+      margin-right: 0.55rem;
+      color: var(--text-muted-color);
+      opacity: 0.55;
+    }
+  }
+
   .sidebar-bottom {
     padding-left: 2rem;
     padding-right: 1rem;
