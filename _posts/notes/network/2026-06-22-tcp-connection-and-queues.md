@@ -83,7 +83,7 @@ netstat -s | grep -i listen   # overflow와 drop 누적
 
 ## 실무와의 접점
 
-[keep-alive 정리](/posts/keep-alive/)와 [타임아웃 정리](/posts/timeout/)에서 설정값을 다뤘다. 지금 보면 그 글들에 빠진 것은 **그 설정이 어느 큐에 영향을 주는가**였다. 서버의 지연 지표만 보고 "우리는 빠르다"고 말하기 전에, 요청이 그 지표에 잡히기까지 어디를 지나는지를 알아야 한다. 측정되지 않는 구간이 있으면 그 구간은 없는 것이 아니라 **보이지 않는 것**이다.
+[keep-alive 정리](/posts/keep-alive/)에서 연결 재사용 설정을 다뤘다. 지금 보면 그 글들에 빠진 것은 **그 설정이 어느 큐에 영향을 주는가**였다. 서버의 지연 지표만 보고 "우리는 빠르다"고 말하기 전에, 요청이 그 지표에 잡히기까지 어디를 지나는지를 알아야 한다. 측정되지 않는 구간이 있으면 그 구간은 없는 것이 아니라 **보이지 않는 것**이다.
 
 ## 정리
 
@@ -98,4 +98,4 @@ netstat -s | grep -i listen   # overflow와 drop 누적
 
 - [Linux man: listen(2)](https://man7.org/linux/man-pages/man2/listen.2.html), [tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html)
 - [Cloudflare: SYN packet handling in the wild](https://blog.cloudflare.com/syn-packet-handling-in-the-wild/)
-- [keep-alive 정리](/posts/keep-alive/), [타임아웃 정리](/posts/timeout/)
+- [keep-alive 정리](/posts/keep-alive/)

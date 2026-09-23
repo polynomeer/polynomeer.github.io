@@ -94,7 +94,7 @@ NIO와 Netty가 여전히 맞는 곳은 좁아졌다.
 
 ## 실무와의 접점
 
-[monticker의 Netty 브로드캐스트](/posts/monticker-netty-broadcast/)에서 `NioEventLoopGroup`으로 다수 연결에 시세를 뿌렸다. 그때 정리한 것은 리액터 패턴의 구조였고, 이 글은 그 아래에서 JVM이 하는 일이다. [WebSocket과 폴링 비교](/posts/monticker-ws-vs-polling/)에서 잰 수치도 결국 **연결 유지 비용을 어느 층이 감당하는가**의 결과였다. 다만 같은 머신에서 쟀으므로 네트워크 층의 영향은 그 수치에 들어 있지 않다.
+monticker에서 `NioEventLoopGroup`으로 다수 연결에 시세를 뿌렸다. 그때 정리한 것은 리액터 패턴의 구조였고, 이 글은 그 아래에서 JVM이 하는 일이다. [WebSocket과 폴링 비교](/posts/monticker-ws-vs-polling/)에서 잰 수치도 결국 **연결 유지 비용을 어느 층이 감당하는가**의 결과였다. 다만 같은 머신에서 쟀으므로 네트워크 층의 영향은 그 수치에 들어 있지 않다.
 
 ## 정리
 
