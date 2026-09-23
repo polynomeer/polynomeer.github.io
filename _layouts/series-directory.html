@@ -22,8 +22,33 @@ layout: page
       <p class="series-summary" data-i18n="series_directory.directory_description">{{ site.data.locales[lang].series_directory.directory_description }}</p>
     </div>
 
-    <div class="series-grid">
+    {%- comment -%}
+      Series are grouped by what they are, not by when they were written: things I built,
+      what I did at work, what I read, what I studied. The order below is the reading order
+      the groups deserve, and a series without a `group` falls into "other" rather than
+      disappearing.
+    {%- endcomment -%}
+    {% assign group_order = 'project,work,review,study,other' | split: ',' %}
+
+    {% for group_name in group_order %}
+      {% assign group_ids = '' | split: '' %}
       {% for series_id in series_entries %}
+        {% assign sp = site.series_pages | where: 'series_id', series_id | first %}
+        {% assign sp_group = sp.group | default: 'other' %}
+        {% if sp_group == group_name %}
+          {% assign group_ids = group_ids | push: series_id %}
+        {% endif %}
+      {% endfor %}
+
+      {% if group_ids.size > 0 %}
+        <h2 class="series-group-title" id="series-group-{{ group_name }}"
+          data-l10n-ko="{{ site.data.locales['ko-KR'].series_directory.groups[group_name] | escape }}"
+          data-l10n-en="{{ site.data.locales.en.series_directory.groups[group_name] | escape }}">
+          {{ site.data.locales[lang].series_directory.groups[group_name] }}
+        </h2>
+
+        <div class="series-grid">
+          {% for series_id in group_ids %}
         {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
         {% assign first_post = series_posts | first %}
         {% assign last_post = series_posts | sort: 'date' | last %}
@@ -68,7 +93,9 @@ layout: page
             </a>
           </article>
         {% endif %}
-      {% endfor %}
-    </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
   </section>
 {% endif %}

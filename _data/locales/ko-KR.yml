@@ -37,6 +37,7 @@ tabs:
   recruit: 채용
   about: 소개
   tech-reviews: 기술 리뷰
+  learning-evidence: 학습 성과
 
 # the text displayed in the search bar & search results
 search:
@@ -193,6 +194,12 @@ topic:
   post_hubs: 이 글이 속한 주제
 
 series_directory:
+  groups:
+    project: 직접 만든 프로젝트
+    work: 실무에서 겪은 일
+    review: 읽고 쓴 리뷰
+    study: 파고든 학습 기록
+    other: 그 밖의 시리즈
   eyebrow: 연결된 시리즈
   directory_title: 순서형 시리즈로 이어 읽기
   directory_description: 주제별 연속 글을 한곳에서 모아 보고, 각 시리즈의 첫 글부터 흐름대로 따라갈 수 있습니다.

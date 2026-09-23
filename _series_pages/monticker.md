@@ -1,6 +1,7 @@
 ---
 title: monticker 설계와 구현 기록
 series_id: monticker
+group: project
 permalink: /series/monticker/
 description: 가격·거래량 변화를 이벤트로 기록하는 주식 관찰 앱 monticker의 설계 결정과 구현을 정리한 시리즈. 왜 이벤트 중심인지, 모듈식 모놀리스와 TimescaleDB를 고른 이유, EMA 기반 이상 탐지, 분산 추적과 서킷 브레이커, 그리고 실시간 시세 경로를 부하와 장애로 직접 재 본 실험까지 다룬다.
 hero_note: 이벤트 중심 시세 관찰 앱

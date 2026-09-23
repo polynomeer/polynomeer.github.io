@@ -1,6 +1,7 @@
 ---
 title: 토스 커뮤니티 백엔드 발표 리뷰
 series_id: toss-backend-talks
+group: review
 permalink: /series/toss-backend-talks/
 description: 토스, 토스뱅크, 토스페이먼츠, 토스플레이스 엔지니어가 SLASH 21·22·23·24와 토스 메이커스 컨퍼런스 25에서 발표한 세션 중 서버·데이터·인프라·플랫폼에 해당하는 것을 한 편씩 리뷰한 시리즈. 발표 영상과 자막을 근거로 내용을 정리하고, 설계 결정의 이유와 대가를 짚고, 발표가 답하지 않은 질문을 남긴다. 토스증권 세션은 "토스증권 엔지니어 발표 리뷰" 시리즈에 따로 있다.
 hero_note: 세션 한 편에 리뷰 한 편

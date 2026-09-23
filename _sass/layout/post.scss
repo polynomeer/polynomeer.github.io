@@ -3320,3 +3320,16 @@ header {
   color: var(--text-muted-color);
   font-size: 0.84rem;
 }
+
+/* Series directory: one heading per kind of series (/series/) */
+.series-group-title {
+  margin: 2.5rem 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-muted-color);
+  letter-spacing: 0.01em;
+
+  &:first-of-type {
+    margin-top: 1.25rem;
+  }
+}

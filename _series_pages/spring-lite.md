@@ -1,6 +1,7 @@
 ---
 title: spring-lite로 이해하는 Spring 구현
 series_id: spring-lite
+group: project
 permalink: /series/spring-lite/
 description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, AOP, MVC, 트랜잭션, 부트스트랩을 구현 관점에서 해설하는 시리즈.
 hero_note: 구현으로 다시 읽는 Spring

@@ -37,6 +37,7 @@ tabs:
   recruit: Recruit
   about: About
   tech-reviews: Tech Reviews
+  learning-evidence: Learning evidence
 
 # the text displayed in the search bar & search results
 search:
@@ -198,6 +199,12 @@ topic:
   post_hubs: Topic hubs for this post
 
 series_directory:
+  groups:
+    project: Projects I built
+    work: From production work
+    review: Reviews of others' work
+    study: Deep-dive study logs
+    other: Other series
   eyebrow: Connected series
   directory_title: Read through ordered series
   directory_description: Browse connected sequences of posts in one place and start each series from the first entry.
