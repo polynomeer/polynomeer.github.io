@@ -1,0 +1,66 @@
+{%- comment -%}
+Reading paths for /start/, sized by how much time the reader has.
+Items point at posts by slug or at a series by id; anything hidden drops out rather than
+rendering a dead link, so a tier can go empty without breaking the page.
+{%- endcomment -%}
+{%- include lang.html -%}
+{%- assign data = site.data.start_here -%}
+{%- if data and data.enabled -%}
+{%- assign loc = site.data.locales[lang].start_here -%}
+<p class="start-intro" data-l10n-ko="{{ data.intro['ko-KR'] | escape }}" data-l10n-en="{{ data.intro.en | escape }}">{% include localized-value.html value=data.intro lang=lang %}</p>
+
+{%- for tier in data.tiers -%}
+<section class="start-tier" id="{{ tier.id }}">
+  <header class="start-tier-head">
+    <span class="start-tier-label" data-l10n-ko="{{ tier.label['ko-KR'] | escape }}" data-l10n-en="{{ tier.label.en | escape }}">{% include localized-value.html value=tier.label lang=lang %}</span>
+    <h2 data-l10n-ko="{{ tier.goal['ko-KR'] | escape }}" data-l10n-en="{{ tier.goal.en | escape }}">{% include localized-value.html value=tier.goal lang=lang %}</h2>
+  </header>
+
+  <ol class="start-item-list">
+    {%- for item in tier.items -%}
+    {%- if item.series -%}
+      {%- assign series_posts = site.posts | where: 'series', item.series | sort: 'series_order' -%}
+      {%- assign first_post = series_posts | first -%}
+      {%- if first_post -%}
+      {%- assign series_page = site.series_pages | where: 'series_id', item.series | first -%}
+      {%- assign target = series_page.url | default: first_post.url -%}
+      <li class="start-item">
+        <a class="start-item-title" href="{{ target | relative_url }}">{{ first_post.series_title | default: item.series }}</a>
+        <span class="start-item-count">{{ site.data.locales[lang].series_directory.post_count | replace: ':COUNT', series_posts.size }}</span>
+        <p class="start-item-why" data-l10n-ko="{{ item.why['ko-KR'] | escape }}" data-l10n-en="{{ item.why.en | escape }}">{% include localized-value.html value=item.why lang=lang %}</p>
+      </li>
+      {%- endif -%}
+    {%- else -%}
+      {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+      {%- if post -%}
+      <li class="start-item">
+        <a class="start-item-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <p class="start-item-why" data-l10n-ko="{{ item.why['ko-KR'] | escape }}" data-l10n-en="{{ item.why.en | escape }}">{% include localized-value.html value=item.why lang=lang %}</p>
+      </li>
+      {%- endif -%}
+    {%- endif -%}
+    {%- endfor -%}
+  </ol>
+</section>
+{%- endfor -%}
+
+{%- if data.next and data.next.size > 0 -%}
+<section class="start-next">
+  <h2 data-i18n="start_here.next_title">{{ loc.next_title }}</h2>
+  <ul class="start-next-list">
+    {%- for link in data.next -%}
+    <li>
+      {%- comment -%}
+        Both labels are inlined because the runtime locale JSON only carries a subset of the
+        tab strings; a data-i18n key that is missing there silently keeps the Korean label.
+      {%- endcomment -%}
+      <a href="{{ link.url | relative_url }}"
+        data-l10n-ko="{{ site.data.locales['ko-KR'].tabs[link.key] | escape }}"
+        data-l10n-en="{{ site.data.locales.en.tabs[link.key] | escape }}">{{ site.data.locales[lang].tabs[link.key] }}</a>
+      <span data-l10n-ko="{{ link.why['ko-KR'] | escape }}" data-l10n-en="{{ link.why.en | escape }}">{% include localized-value.html value=link.why lang=lang %}</span>
+    </li>
+    {%- endfor -%}
+  </ul>
+</section>
+{%- endif -%}
+{%- endif -%}
