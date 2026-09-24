@@ -61,9 +61,19 @@ The graph is the discovery surface. The detail panel is the reading surface.
 
 ### Page role
 
-`/capabilities/` should become a graph-based overview page.
+`/capabilities/` is the graph-based overview page, in the `기록과 소개`
+sidebar group (`_tabs/capabilities.md`).
 
-It should no longer render all capabilities as equal-height cards in one long grid.
+It does not render all capabilities as equal-height cards in one long grid.
+
+The map lived inside `/about/` for a while, below that page's hero and above
+the portfolio. It was the largest thing on the page and the only interactive
+one, so it was both buried and competing with the project list. On its own URL
+it can be linked directly, which the recruiter panel, the fixed profile links
+and the recruit mode data now do instead of pointing at `/about/#capabilities`.
+
+`_includes/capability-map.html` takes a `heading` parameter for this: `h1` when
+the map is the page, `h2` (the default) when it sits inside one.
 
 ### Default state
 

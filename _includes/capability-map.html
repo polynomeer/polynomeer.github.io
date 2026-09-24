@@ -1,4 +1,9 @@
+{% comment %}
+  The capability graph. `heading` is the level its title renders at: `h1` when
+  the map is a page of its own (/capabilities/), `h2` when it sits inside one.
+{% endcomment %}
 {% assign lang = include.lang | default: site.lang %}
+{% assign heading = include.heading | default: 'h2' %}
 {% assign capability_map = site.data.capability_map %}
 {% assign capability_nodes = capability_map.nodes | default: capability_map.items %}
 {% assign default_focus = capability_map.default_focus | default: capability_nodes.first.id %}
@@ -13,7 +18,7 @@
   <section class="capability-map-directory" id="capabilities" data-capability-graph data-default-focus="{{ default_focus }}">
     <div class="capability-map-head">
       <p class="about-portfolio-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
-      <h2 data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</h2>
+      <{{ heading }} class="capability-map-title" data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</{{ heading }}>
     </div>
 
     {% if capability_map.clusters and capability_map.clusters.size > 0 %}

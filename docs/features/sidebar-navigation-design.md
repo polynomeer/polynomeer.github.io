@@ -16,7 +16,7 @@ Three groups, decided by what the page is for:
 | --- | --- | --- |
 | Primary (icon rows) | 홈, 주제, 시리즈, 타입, 아카이브 | The five ways into the posts themselves, from the most curated to the most raw |
 | `둘러보기` (chips) | 시작하기, 태그, 카테고리, 그날의 기록 | The other ways in: a guided entry point, the two flat taxonomies, and the archive read by calendar date |
-| `기록과 소개` (chips) | 학습 성과, 실측, 기술 리뷰, 통계, 소개 | Pages about the author and the record rather than about the writing |
+| `기록과 소개` (chips) | 학습 성과, 실측, 기술 리뷰, 통계, 역량 맵, 소개 | Pages about the author and the record rather than about the writing |
 
 The first split is subject matter: the primary rows and the `둘러보기` chips
 all lead to posts, the `기록과 소개` chips do not. Keeping the portfolio pages
@@ -59,4 +59,5 @@ rows' hover pills.
   주제 before 시리즈 because hubs answer a question while series assume a
   reading order, then 타입 and 아카이브, which group everything.
 - `기록과 소개` is ordered as the reader would read it: what was learned, what
-  was measured, what was read, the archive counted, then who wrote it.
+  was measured, what was read, the archive counted, what it adds up to, then
+  who wrote it.
