@@ -1,0 +1,298 @@
+---
+layout: page
+# The same calendar date across every year the blog has been running.
+---
+
+{% include lang.html %}
+
+<div
+  id="on-this-day"
+  class="pl-xl-3"
+  data-endpoint="{{ '/assets/js/data/on-this-day.json' | relative_url }}"
+>
+  <section class="otd-hero">
+    <p class="otd-eyebrow"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.eyebrow | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.eyebrow | escape }}"
+    >{{ site.data.locales[lang].on_this_day.eyebrow }}</p>
+    <h1 class="page-hero-title"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].tabs['on-this-day'] | escape }}"
+      data-l10n-en="{{ site.data.locales.en.tabs['on-this-day'] | escape }}"
+    >{{ site.data.locales[lang].tabs['on-this-day'] }}</h1>
+    <p class="otd-summary"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.description | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.description | escape }}"
+    >{{ site.data.locales[lang].on_this_day.description }}</p>
+  </section>
+
+  <nav class="otd-controls" aria-label="{{ site.data.locales[lang].on_this_day.eyebrow }}">
+    <button type="button" class="otd-step" data-otd-step="-1" aria-label="{{ site.data.locales[lang].on_this_day.previous_day }}">
+      <i class="fas fa-chevron-left" aria-hidden="true"></i>
+    </button>
+
+    <div class="otd-date">
+      <strong class="otd-date-label" id="otd-date-label">&nbsp;</strong>
+      <span class="otd-date-meta" id="otd-date-meta"></span>
+    </div>
+
+    <button type="button" class="otd-step" data-otd-step="1" aria-label="{{ site.data.locales[lang].on_this_day.next_day }}">
+      <i class="fas fa-chevron-right" aria-hidden="true"></i>
+    </button>
+
+    <button type="button" class="otd-today" id="otd-today"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.today | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.today | escape }}"
+    >
+      {{ site.data.locales[lang].on_this_day.today }}
+    </button>
+  </nav>
+
+  <div id="otd-results" aria-live="polite"></div>
+
+  <p class="otd-notice" id="otd-empty" hidden>
+    <span
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.empty | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.empty | escape }}"
+    >{{ site.data.locales[lang].on_this_day.empty }}</span>
+    <button type="button" class="otd-nearest" id="otd-nearest" hidden
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.nearest | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.nearest | escape }}"
+    >
+      {{ site.data.locales[lang].on_this_day.nearest }}
+    </button>
+  </p>
+
+  <p class="otd-notice" id="otd-error" hidden
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.error | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.error | escape }}"
+    >
+    {{ site.data.locales[lang].on_this_day.error }}
+  </p>
+</div>
+
+<script type="application/json" id="otd-type-labels">
+  {
+    {%- for type_page in site.content_types -%}
+      {%- unless forloop.first %},{% endunless -%}
+      {%- assign type_id = type_page.content_type_id -%}
+      {%- assign content_type = site.data.content_types[type_id] -%}
+      "{{ type_id }}":{
+        "ko":{{ content_type.title['ko-KR'] | default: type_id | jsonify }},
+        "en":{{ content_type.title.en | default: content_type.title['ko-KR'] | default: type_id | jsonify }}
+      }
+    {%- endfor -%}
+  }
+</script>
+
+<script>
+  (() => {
+    const root = document.getElementById('on-this-day');
+    if (!root) return;
+
+    const results = document.getElementById('otd-results');
+    const dateLabel = document.getElementById('otd-date-label');
+    const dateMeta = document.getElementById('otd-date-meta');
+    const emptyNotice = document.getElementById('otd-empty');
+    const errorNotice = document.getElementById('otd-error');
+    const nearestButton = document.getElementById('otd-nearest');
+
+    const text = {
+      'ko-KR': {
+        year: (year) => `${year}년`,
+        date: (month, day) => `${month}월 ${day}일`,
+        meta: (posts, years) => `${years}개 연도에 걸쳐 ${posts}편`,
+        metaOne: (posts) => `${posts}편`
+      },
+      en: {
+        year: (year) => String(year),
+        date: (month, day) =>
+          `${['January','February','March','April','May','June','July','August','September','October','November','December'][month - 1]} ${day}`,
+        meta: (posts, years) => `${posts} posts across ${years} years`,
+        metaOne: (posts) => `${posts} posts`
+      }
+    };
+
+    let typeLabels = {};
+    try {
+      typeLabels = JSON.parse(document.getElementById('otd-type-labels').textContent);
+    } catch (_error) {
+      typeLabels = {};
+    }
+
+    const currentLang = () => (document.documentElement.lang === 'en' ? 'en' : 'ko-KR');
+    const pad = (value) => String(value).padStart(2, '0');
+    const keyOf = (date) => `${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+    let archive = null;
+    // a fixed leap year, so 02-29 stays reachable while stepping
+    let cursor = new Date(2024, new Date().getMonth(), new Date().getDate());
+
+    const setLocalized = (element, ko, en) => {
+      element.dataset.l10nKo = ko;
+      element.dataset.l10nEn = en;
+      element.textContent = currentLang() === 'en' ? en : ko;
+    };
+
+    const renderDay = () => {
+      const key = keyOf(cursor);
+      const entries = (archive && archive[key]) || [];
+      const month = cursor.getMonth() + 1;
+      const day = cursor.getDate();
+
+      setLocalized(dateLabel, text['ko-KR'].date(month, day), text.en.date(month, day));
+
+      const years = new Set(entries.map((entry) => entry[0]));
+      if (entries.length === 0) {
+        dateMeta.textContent = '';
+      } else if (years.size === 1) {
+        setLocalized(
+          dateMeta,
+          text['ko-KR'].metaOne(entries.length),
+          text.en.metaOne(entries.length)
+        );
+      } else {
+        setLocalized(
+          dateMeta,
+          text['ko-KR'].meta(entries.length, years.size),
+          text.en.meta(entries.length, years.size)
+        );
+      }
+
+      results.replaceChildren();
+      emptyNotice.hidden = entries.length > 0;
+      nearestButton.hidden = entries.length > 0 || !archive;
+
+      if (entries.length === 0) return;
+
+      const byYear = new Map();
+      entries.forEach((entry) => {
+        const [year] = entry;
+        if (!byYear.has(year)) byYear.set(year, []);
+        byYear.get(year).push(entry);
+      });
+
+      [...byYear.keys()]
+        .sort((a, b) => b - a)
+        .forEach((year) => {
+          const section = document.createElement('section');
+          section.className = 'otd-year';
+
+          const heading = document.createElement('h2');
+          heading.className = 'otd-year-title';
+
+          // the year sits in its own span: lang-switch.js rewrites the
+          // textContent of every [data-l10n-ko] node, badge included
+          const yearLabel = document.createElement('span');
+          setLocalized(yearLabel, text['ko-KR'].year(year), text.en.year(year));
+          heading.appendChild(yearLabel);
+
+          const ago = new Date().getFullYear() - year;
+          if (ago > 0) {
+            const badge = document.createElement('span');
+            badge.className = 'otd-year-ago';
+            setLocalized(badge, `${ago}년 전`, ago === 1 ? 'a year ago' : `${ago} years ago`);
+            heading.appendChild(badge);
+          }
+
+          const list = document.createElement('ul');
+          list.className = 'otd-post-list list-unstyled';
+
+          byYear.get(year).forEach(([, title, slug, type]) => {
+            const item = document.createElement('li');
+            item.className = 'otd-post';
+
+            const link = document.createElement('a');
+            link.className = 'otd-post-link';
+            link.href = `{{ '/posts/' | relative_url }}${slug}/`;
+            link.textContent = title;
+            item.appendChild(link);
+
+            const label = typeLabels[type];
+            if (label) {
+              const badge = document.createElement('span');
+              badge.className = 'otd-post-type';
+              setLocalized(badge, label.ko, label.en);
+              item.appendChild(badge);
+            }
+
+            list.appendChild(item);
+          });
+
+          section.append(heading, list);
+          results.appendChild(section);
+        });
+    };
+
+    const step = (days) => {
+      cursor.setDate(cursor.getDate() + days);
+      window.history.replaceState({}, '', `#${keyOf(cursor)}`);
+      renderDay();
+    };
+
+    const goToNearest = () => {
+      if (!archive) return;
+
+      for (let offset = 1; offset <= 183; offset += 1) {
+        for (const direction of [1, -1]) {
+          const candidate = new Date(cursor);
+          candidate.setDate(candidate.getDate() + offset * direction);
+          if (archive[keyOf(candidate)]) {
+            cursor = candidate;
+            window.history.replaceState({}, '', `#${keyOf(cursor)}`);
+            renderDay();
+            return;
+          }
+        }
+      }
+    };
+
+    root.querySelectorAll('[data-otd-step]').forEach((button) => {
+      button.addEventListener('click', () => step(Number(button.dataset.otdStep)));
+    });
+
+    document.getElementById('otd-today').addEventListener('click', () => {
+      const now = new Date();
+      cursor = new Date(2024, now.getMonth(), now.getDate());
+      window.history.replaceState({}, '', window.location.pathname);
+      renderDay();
+    });
+
+    nearestButton.addEventListener('click', goToNearest);
+
+    const requested = window.location.hash.replace('#', '');
+    if (/^\d{2}-\d{2}$/.test(requested)) {
+      const [month, day] = requested.split('-').map(Number);
+      if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        cursor = new Date(2024, month - 1, day);
+      }
+    }
+
+    renderDay();
+
+    window.addEventListener('hashchange', () => {
+      const next = window.location.hash.replace('#', '');
+      if (!/^\d{2}-\d{2}$/.test(next)) return;
+
+      const [month, day] = next.split('-').map(Number);
+      if (month < 1 || month > 12 || day < 1 || day > 31) return;
+
+      cursor = new Date(2024, month - 1, day);
+      renderDay();
+    });
+
+    fetch(root.dataset.endpoint)
+      .then((response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json();
+      })
+      .then((data) => {
+        archive = data;
+        errorNotice.hidden = true;
+        renderDay();
+      })
+      .catch(() => {
+        errorNotice.hidden = false;
+        emptyNotice.hidden = true;
+      });
+  })();
+</script>

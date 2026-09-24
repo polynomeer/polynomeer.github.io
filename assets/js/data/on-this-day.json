@@ -1,0 +1,26 @@
+---
+layout: compress
+swcache: true
+---
+
+{% comment %}
+  Every published post keyed by the month and day it was published, so
+  /on-this-day/ can show what was written on this calendar date in earlier
+  years. Rows are tuples rather than objects because the file carries the whole
+  archive and is fetched in one request: [year, title, slug, content type].
+{% endcomment %}
+
+{% assign posts_by_day = site.posts | group_by_exp: 'post', "post.date | date: '%m-%d'" %}
+{
+  {%- for day in posts_by_day -%}
+    {%- unless forloop.first %},{% endunless -%}
+    "{{ day.name }}":[
+    {%- for post in day.items -%}
+      {%- unless forloop.first %},{% endunless -%}
+      {%- capture content_type %}{% include content-type-id.html post=post %}{% endcapture -%}
+      {%- assign slug = post.url | split: '/posts/' | last | remove: '/' -%}
+      [{{ post.date | date: '%Y' }},{{ post.title | jsonify }},"{{ slug }}","{{ content_type | strip }}"]
+    {%- endfor -%}
+    ]
+  {%- endfor -%}
+}

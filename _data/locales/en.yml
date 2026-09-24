@@ -34,6 +34,7 @@ tabs:
   categories: Categories
   tags: Tags
   archives: Archives
+  on-this-day: On This Day
   recruit: Recruit
   about: About
   tech-reviews: Tech Reviews
@@ -165,6 +166,16 @@ df:
   archives:
     strftime: "%b"
     dayjs: "MMM"
+
+on_this_day:
+  eyebrow: The same date, other years
+  description: What this blog was writing on today's month and day in earlier years.
+  today: Today
+  previous_day: Previous day
+  next_day: Next day
+  empty: Nothing was written on this date.
+  nearest: Jump to the nearest date with posts
+  error: The archive could not be loaded.
 
 archives:
   eyebrow: Time archive

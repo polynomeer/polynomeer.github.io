@@ -34,6 +34,7 @@ tabs:
   categories: 카테고리
   tags: 태그
   archives: 아카이브
+  on-this-day: 그날의 기록
   recruit: 채용
   about: 소개
   tech-reviews: 기술 리뷰
@@ -165,6 +166,16 @@ df:
   archives:
     strftime: "%m"
     dayjs: "MM"
+
+on_this_day:
+  eyebrow: 같은 날짜 다시 보기
+  description: 오늘과 같은 월·일에 지난 몇 해 동안 무엇을 썼는지 모아서 봅니다.
+  today: 오늘
+  previous_day: 하루 전
+  next_day: 하루 뒤
+  empty: 이 날짜에 쓴 글이 없습니다.
+  nearest: 글이 있는 가장 가까운 날짜로
+  error: 기록을 불러오지 못했습니다.
 
 archives:
   eyebrow: 시간순 아카이브
