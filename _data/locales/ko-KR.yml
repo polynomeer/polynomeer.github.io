@@ -35,6 +35,7 @@ tabs:
   tags: 태그
   archives: 아카이브
   on-this-day: 그날의 기록
+  stats: 통계
   recruit: 채용
   about: 소개
   tech-reviews: 기술 리뷰
@@ -180,6 +181,46 @@ tx_lab:
     safe: 막힘
     blocked: 대기·데드락
     aborted: 직렬화 실패
+
+stats:
+  eyebrow: 숫자로 본 기록
+  description: 공개된 글에서 직접 센 수치입니다. 손으로 적은 숫자는 없고, 초안과 보관된 글은 어디에도 들어가지 않습니다.
+  unit_years: 년
+  unit_posts: 편
+  unit_hours: 시간
+  unit_series: 개
+  unit_tags: 개
+  card_posts: 공개된 글
+  card_hours: 전부 읽는 시간
+  card_series: "시리즈 · 묶인 글 :COUNT편"
+  week: ":WEEK주차"
+  count: ":COUNT편"
+  when_title: 언제 썼는가
+  when_note: 한 칸이 한 주입니다. 진할수록 그 주에 올린 글이 많습니다.
+  legend_less: 적음
+  legend_more: 많음
+  what_title: 무엇을 썼는가
+  what_note: 연도마다 글의 종류가 어떤 비율이었는지 봅니다. 띠의 길이가 그 해의 편수입니다.
+  topics_title: 주제별 글
+  tags_title: 자주 쓰는 태그
+  tags_note: TIL과 문제 풀이를 뺀 글에서 셌습니다. 그 둘을 넣으면 태그 하나가 표를 덮습니다.
+  depth_title: 얼마나 긴 글인가
+  depth_note: 읽는 시간 기준입니다. 짧은 메모와 긴 분석이 같은 아카이브 안에 있습니다.
+  bucket:
+    note: 3분 미만
+    short: 3-8분
+    long: 8-20분
+    deep: 20분 이상
+  sources_title: 무엇을 읽고 썼는가
+  sources_note: 기술 블로그와 컨퍼런스 발표를 읽고 쓴 리뷰를 출처별로 셌습니다.
+  upkeep_title: 고치고 이어 붙인 것
+  upkeep_note: 글을 쓰고 두었는지, 다시 손대고 서로 연결했는지를 보여주는 수치입니다.
+  fact_revised: 발행 후 고쳐 쓴 글
+  fact_revisions: "개정 :COUNT건"
+  fact_cited: 다른 글이 인용한 글
+  fact_citations: "인용 :COUNT건"
+  fact_tags: 쓰인 태그
+  footnote: 모든 수치는 사이트를 빌드할 때 계산합니다. 방문자 수나 조회 수는 포함하지 않습니다.
 
 on_this_day:
   eyebrow: 같은 날짜 다시 보기

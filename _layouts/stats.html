@@ -1,0 +1,278 @@
+---
+layout: page
+# Figures for the whole archive, computed by _plugins/blog-stats.rb.
+---
+
+{% include lang.html %}
+
+{% assign stats = site.data.blog_stats %}
+{% assign loc = site.data.locales[lang].stats %}
+{% assign loc_ko = site.data.locales['ko-KR'].stats %}
+{% assign loc_en = site.data.locales.en.stats %}
+
+{% if stats %}
+  {% assign totals = stats.totals %}
+
+  <div id="blog-stats" class="pl-xl-3">
+    <section class="stats-hero">
+      <p class="stats-eyebrow"
+        data-l10n-ko="{{ loc_ko.eyebrow | escape }}"
+        data-l10n-en="{{ loc_en.eyebrow | escape }}"
+      >{{ loc.eyebrow }}</p>
+      <h1 class="page-hero-title"
+        data-l10n-ko="{{ site.data.locales['ko-KR'].tabs.stats | escape }}"
+        data-l10n-en="{{ site.data.locales.en.tabs.stats | escape }}"
+      >{{ site.data.locales[lang].tabs.stats }}</h1>
+      <p class="stats-summary"
+        data-l10n-ko="{{ loc_ko.description | escape }}"
+        data-l10n-en="{{ loc_en.description | escape }}"
+      >{{ loc.description }}</p>
+
+      <div class="stats-cards">
+        {% assign span = totals.first_year | append: '–' | append: totals.last_year %}
+        {% include stats/card.html
+          value=totals.years
+          unit=loc.unit_years
+          unit_ko=loc_ko.unit_years
+          unit_en=loc_en.unit_years
+          label=span %}
+        {% include stats/card.html
+          value=totals.posts
+          unit=loc.unit_posts
+          unit_ko=loc_ko.unit_posts
+          unit_en=loc_en.unit_posts
+          label=loc.card_posts
+          label_ko=loc_ko.card_posts
+          label_en=loc_en.card_posts %}
+        {% include stats/card.html
+          value=totals.hours
+          unit=loc.unit_hours
+          unit_ko=loc_ko.unit_hours
+          unit_en=loc_en.unit_hours
+          label=loc.card_hours
+          label_ko=loc_ko.card_hours
+          label_en=loc_en.card_hours %}
+        {% capture series_label %}{{ loc.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
+        {% capture series_label_ko %}{{ loc_ko.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
+        {% capture series_label_en %}{{ loc_en.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
+        {% include stats/card.html
+          value=totals.series
+          unit=loc.unit_series
+          unit_ko=loc_ko.unit_series
+          unit_en=loc_en.unit_series
+          label=series_label
+          label_ko=series_label_ko
+          label_en=series_label_en %}
+      </div>
+    </section>
+
+    <!-- when -->
+    <section class="stats-section">
+      <h2 class="stats-section-title"
+        data-l10n-ko="{{ loc_ko.when_title | escape }}"
+        data-l10n-en="{{ loc_en.when_title | escape }}"
+      >{{ loc.when_title }}</h2>
+      <p class="stats-section-note"
+        data-l10n-ko="{{ loc_ko.when_note | escape }}"
+        data-l10n-en="{{ loc_en.when_note | escape }}"
+      >{{ loc.when_note }}</p>
+
+      <div class="stats-heatmap">
+        {% for row in stats.weeks %}
+          <div class="stats-heatmap-row">
+            <span class="stats-heatmap-year">{{ row.year }}</span>
+            <div class="stats-heatmap-weeks">
+              {% for cell in row.cells %}
+                <i
+                  class="stats-heatmap-cell"
+                  data-level="{{ cell.level }}"
+                  title="{{ row.year }} · {{ loc.week | replace: ':WEEK', cell.week }} · {{ loc.count | replace: ':COUNT', cell.count }}"
+                ></i>
+              {% endfor %}
+            </div>
+            <span class="stats-heatmap-total">{{ row.total }}</span>
+          </div>
+        {% endfor %}
+
+        <div class="stats-legend">
+          <span data-l10n-ko="{{ loc_ko.legend_less | escape }}" data-l10n-en="{{ loc_en.legend_less | escape }}">{{ loc.legend_less }}</span>
+          {% for level in (0..4) %}
+            <i class="stats-heatmap-cell" data-level="{{ level }}"></i>
+          {% endfor %}
+          <span data-l10n-ko="{{ loc_ko.legend_more | escape }}" data-l10n-en="{{ loc_en.legend_more | escape }}">{{ loc.legend_more }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- what -->
+    <section class="stats-section">
+      <h2 class="stats-section-title"
+        data-l10n-ko="{{ loc_ko.what_title | escape }}"
+        data-l10n-en="{{ loc_en.what_title | escape }}"
+      >{{ loc.what_title }}</h2>
+      <p class="stats-section-note"
+        data-l10n-ko="{{ loc_ko.what_note | escape }}"
+        data-l10n-en="{{ loc_en.what_note | escape }}"
+      >{{ loc.what_note }}</p>
+
+      <div class="stats-stacks">
+        {% for row in stats.type_by_year %}
+          <div class="stats-stack-row">
+            <span class="stats-stack-year">{{ row.year }}</span>
+            <div class="stats-stack-track">
+            <div class="stats-stack" style="width: {{ row.share }}%">
+              {% for part in row.parts %}
+                {% assign type = site.data.content_types[part.name] %}
+                {% assign type_label = type.title[lang] | default: type.title.en | default: part.name %}
+                <span
+                  class="stats-stack-part"
+                  data-type="{{ part.name }}"
+                  style="flex-grow: {{ part.count }}"
+                  title="{{ row.year }} · {{ type_label }} · {{ loc.count | replace: ':COUNT', part.count }}"
+                ></span>
+              {% endfor %}
+            </div>
+            </div>
+            <span class="stats-stack-total">{{ row.total }}</span>
+          </div>
+        {% endfor %}
+
+        <div class="stats-legend stats-legend-types">
+          {% for entry in stats.types %}
+            {% assign type = site.data.content_types[entry.name] %}
+            <span class="stats-legend-type">
+              <i class="stats-stack-part" data-type="{{ entry.name }}"></i>
+              <span
+                data-l10n-ko="{{ type.title['ko-KR'] | default: entry.name | escape }}"
+                data-l10n-en="{{ type.title.en | default: entry.name | escape }}"
+              >{{ type.title[lang] | default: type.title.en | default: entry.name }}</span>
+              <b>{{ entry.count }}</b>
+            </span>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- subjects -->
+    <section class="stats-section stats-columns">
+      <div>
+        <h2 class="stats-section-title"
+          data-l10n-ko="{{ loc_ko.topics_title | escape }}"
+          data-l10n-en="{{ loc_en.topics_title | escape }}"
+        >{{ loc.topics_title }}</h2>
+        <ul class="stats-bars">
+          {% for entry in stats.topics %}
+            {% assign topic = site.topics | where: 'topic_id', entry.name | first %}
+            <li class="stats-bar-row">
+              <a class="stats-bar-label" href="{{ topic.permalink | default: '/topics/' | relative_url }}">{{ topic.title | default: entry.name }}</a>
+              <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
+              <span class="stats-bar-value">{{ entry.count }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="stats-section-title"
+          data-l10n-ko="{{ loc_ko.tags_title | escape }}"
+          data-l10n-en="{{ loc_en.tags_title | escape }}"
+        >{{ loc.tags_title }}</h2>
+        <p class="stats-section-note"
+          data-l10n-ko="{{ loc_ko.tags_note | escape }}"
+          data-l10n-en="{{ loc_en.tags_note | escape }}"
+        >{{ loc.tags_note }}</p>
+        <ul class="stats-bars">
+          {% for entry in stats.tags %}
+            {% assign tag_slug = entry.name | slugify %}
+            <li class="stats-bar-row">
+              <a class="stats-bar-label" href="{{ '/tags/' | append: tag_slug | append: '/' | relative_url }}">{{ entry.name }}</a>
+              <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
+              <span class="stats-bar-value">{{ entry.count }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <!-- depth -->
+    <section class="stats-section">
+      <h2 class="stats-section-title"
+        data-l10n-ko="{{ loc_ko.depth_title | escape }}"
+        data-l10n-en="{{ loc_en.depth_title | escape }}"
+      >{{ loc.depth_title }}</h2>
+      <p class="stats-section-note"
+        data-l10n-ko="{{ loc_ko.depth_note | escape }}"
+        data-l10n-en="{{ loc_en.depth_note | escape }}"
+      >{{ loc.depth_note }}</p>
+
+      <div class="stats-buckets">
+        {% for entry in stats.lengths %}
+          <article class="stats-bucket" data-bucket="{{ entry.name }}">
+            <strong>{{ entry.count }}</strong>
+            <span class="stats-bucket-name"
+              data-l10n-ko="{{ loc_ko.bucket[entry.name] | escape }}"
+              data-l10n-en="{{ loc_en.bucket[entry.name] | escape }}"
+            >{{ loc.bucket[entry.name] }}</span>
+            <span class="stats-bucket-share">{{ entry.of_total }}%</span>
+            <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- read, revised, linked -->
+    <section class="stats-section stats-columns">
+      <div>
+        <h2 class="stats-section-title"
+          data-l10n-ko="{{ loc_ko.sources_title | escape }}"
+          data-l10n-en="{{ loc_en.sources_title | escape }}"
+        >{{ loc.sources_title }}</h2>
+        <p class="stats-section-note"
+          data-l10n-ko="{{ loc_ko.sources_note | escape }}"
+          data-l10n-en="{{ loc_en.sources_note | escape }}"
+        >{{ loc.sources_note }}</p>
+        <ul class="stats-bars">
+          {% for entry in stats.sources limit: 8 %}
+            <li class="stats-bar-row">
+              <span class="stats-bar-label">{{ entry.name }}</span>
+              <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
+              <span class="stats-bar-value">{{ entry.count }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="stats-section-title"
+          data-l10n-ko="{{ loc_ko.upkeep_title | escape }}"
+          data-l10n-en="{{ loc_en.upkeep_title | escape }}"
+        >{{ loc.upkeep_title }}</h2>
+        <p class="stats-section-note"
+          data-l10n-ko="{{ loc_ko.upkeep_note | escape }}"
+          data-l10n-en="{{ loc_en.upkeep_note | escape }}"
+        >{{ loc.upkeep_note }}</p>
+
+        <dl class="stats-facts">
+          {% assign c = stats.connections %}
+          <div>
+            <dt data-l10n-ko="{{ loc_ko.fact_revised | escape }}" data-l10n-en="{{ loc_en.fact_revised | escape }}">{{ loc.fact_revised }}</dt>
+            <dd>{{ c.revised_posts }}<small>{{ loc.unit_posts }}</small> <span>{{ loc.fact_revisions | replace: ':COUNT', c.revisions }}</span></dd>
+          </div>
+          <div>
+            <dt data-l10n-ko="{{ loc_ko.fact_cited | escape }}" data-l10n-en="{{ loc_en.fact_cited | escape }}">{{ loc.fact_cited }}</dt>
+            <dd>{{ c.cited_posts }}<small>{{ loc.unit_posts }}</small> <span>{{ loc.fact_citations | replace: ':COUNT', c.citations }}</span></dd>
+          </div>
+          <div>
+            <dt data-l10n-ko="{{ loc_ko.fact_tags | escape }}" data-l10n-en="{{ loc_en.fact_tags | escape }}">{{ loc.fact_tags }}</dt>
+            <dd>{{ totals.tags }}<small>{{ loc.unit_tags }}</small></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <p class="stats-footnote"
+      data-l10n-ko="{{ loc_ko.footnote | escape }}"
+      data-l10n-en="{{ loc_en.footnote | escape }}"
+    >{{ loc.footnote }}</p>
+  </div>
+{% endif %}

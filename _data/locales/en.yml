@@ -35,6 +35,7 @@ tabs:
   tags: Tags
   archives: Archives
   on-this-day: On This Day
+  stats: Stats
   recruit: Recruit
   about: About
   tech-reviews: Tech Reviews
@@ -180,6 +181,46 @@ tx_lab:
     safe: Prevented
     blocked: Waits or deadlocks
     aborted: Serialization failure
+
+stats:
+  eyebrow: The archive, counted
+  description: Every figure is counted from the published posts at build time. Nothing here is maintained by hand, and drafts and archived posts are in none of it.
+  unit_years: years
+  unit_posts: posts
+  unit_hours: hours
+  unit_series: series
+  unit_tags: tags
+  card_posts: Published posts
+  card_hours: To read it all
+  card_series: "series · :COUNT posts in one"
+  week: "week :WEEK"
+  count: ":COUNT posts"
+  when_title: When it was written
+  when_note: One cell is one week. The darker it is, the more went up that week.
+  legend_less: Less
+  legend_more: More
+  what_title: What was written
+  what_note: The mix of kinds of post in each year. The length of a bar is that year's total.
+  topics_title: Posts per topic
+  tags_title: Most used tags
+  tags_note: Counted without the TIL log and the problem-solving notes, which would otherwise put one tag on top of the chart.
+  depth_title: How long the posts are
+  depth_note: By reading time. Short notes and long analyses live in the same archive.
+  bucket:
+    note: Under 3 min
+    short: 3-8 min
+    long: 8-20 min
+    deep: 20 min and up
+  sources_title: What was read
+  sources_note: Reviews of engineering blog posts and conference talks, counted by source.
+  upkeep_title: Revised and linked
+  upkeep_note: Whether posts were written and left, or came back to and connected to each other.
+  fact_revised: Revised after publishing
+  fact_revisions: ":COUNT revisions"
+  fact_cited: Cited by another post
+  fact_citations: ":COUNT citations"
+  fact_tags: Tags in use
+  footnote: Everything is computed when the site is built. Visits and page views are not part of it.
 
 on_this_day:
   eyebrow: The same date, other years
