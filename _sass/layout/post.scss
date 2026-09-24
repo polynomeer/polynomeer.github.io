@@ -3366,3 +3366,126 @@ header {
     margin-top: 1.25rem;
   }
 }
+
+/* substantive edits after publication (see _plugins/post-revisions.rb) */
+.post-revisions {
+  margin-bottom: 2rem;
+  font-size: 0.86rem;
+}
+
+.post-revisions-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(98, 114, 164, 0.24);
+  border-radius: 999px;
+  color: var(--text-muted-color);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::before {
+    content: '\203A';
+    display: inline-block;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.42);
+    color: var(--text-color);
+  }
+}
+
+.post-revisions[open] .post-revisions-summary::before {
+  transform: rotate(90deg);
+}
+
+.post-revisions-label {
+  color: var(--heading-color);
+  font-weight: 600;
+}
+
+.post-revisions-sep {
+  margin: 0 0.15rem;
+  opacity: 0.6;
+}
+
+.post-revision-list {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-revision {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(98, 114, 164, 0.14);
+  background: rgba(68, 71, 90, 0.1);
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.15rem 0.6rem;
+  }
+}
+
+.post-revision-date {
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+  white-space: nowrap;
+
+  @media (max-width: 575.98px) {
+    grid-column: 1;
+  }
+}
+
+.post-revision-subject {
+  min-width: 0;
+  word-break: break-word;
+
+  a {
+    color: var(--text-color);
+
+    &:hover {
+      color: var(--link-color);
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+.post-revision-diff {
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.post-revision-added {
+  color: #50fa7b;
+}
+
+.post-revision-removed {
+  margin-left: 0.3rem;
+  color: #ff6e6e;
+}
+
+.post-revision-more {
+  margin: 0.6rem 0 0;
+  color: var(--text-muted-color);
+  font-size: 0.84rem;
+}

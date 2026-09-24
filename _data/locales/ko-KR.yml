@@ -143,6 +143,9 @@ post:
   relate_posts: 관련된 글
   backlinks: 이 글을 인용한 글
   backlinks_more: "그 밖에 :COUNT편이 더 있습니다"
+  revisions: 고쳐 쓴 기록
+  revisions_count: ":COUNT번 수정"
+  revisions_more: "이전 수정 :COUNT건은 생략했습니다"
   share: 공유하기
   button:
     next: 다음 글

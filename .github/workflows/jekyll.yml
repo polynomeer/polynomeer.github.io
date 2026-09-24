@@ -33,6 +33,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # _plugins/post-revisions.rb reads the commit history of _posts;
+          # the default shallow clone would leave every post without one
+          fetch-depth: 0
 
       - name: Install system dependencies (fix sass-embedded)
         run: |

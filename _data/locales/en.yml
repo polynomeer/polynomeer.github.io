@@ -143,6 +143,9 @@ post:
   relate_posts: Further Reading
   backlinks: Posts that cite this one
   backlinks_more: "and :COUNT more"
+  revisions: Revision history
+  revisions_count: ":COUNT revisions"
+  revisions_more: ":COUNT earlier revisions not shown"
   share: Share
   button:
     next: Newer

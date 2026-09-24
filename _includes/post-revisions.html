@@ -1,0 +1,54 @@
+<!--
+  The post's substantive edits, collected by _plugins/post-revisions.rb.
+  Site-wide maintenance commits are filtered out there, so every row is an
+  actual change to the writing. The commit subjects are the repository's own,
+  in English; each links to the commit so the change can be read in full.
+-->
+
+{% assign revisions = page.revisions %}
+
+{% if revisions.size > 0 %}
+  {% assign repo = site.revisions.repo %}
+  {% assign latest = revisions | first %}
+
+  <details class="post-revisions">
+    <summary class="post-revisions-summary">
+      <span class="post-revisions-label">{{ site.data.locales[include.lang].post.revisions }}</span>
+      <span class="post-revisions-state">
+        {{ site.data.locales[include.lang].post.revisions_count | replace: ':COUNT', page.revisions_total }}
+        <span class="post-revisions-sep">&middot;</span>
+        {% include datetime.html date=latest.date lang=include.lang %}
+      </span>
+    </summary>
+
+    <ol class="post-revision-list">
+      {% for revision in revisions %}
+        <li class="post-revision">
+          <time class="post-revision-date" datetime="{{ revision.date | date_to_xmlschema }}">
+            {{ revision.date | date: '%Y-%m-%d' }}
+          </time>
+          <span class="post-revision-subject">
+            {% if repo %}
+              <a href="https://github.com/{{ repo }}/commit/{{ revision.sha }}" rel="noopener noreferrer" target="_blank">
+                {{ revision.subject }}
+              </a>
+            {% else %}
+              {{ revision.subject }}
+            {% endif %}
+          </span>
+          <span class="post-revision-diff" aria-hidden="true">
+            <span class="post-revision-added">+{{ revision.insertions }}</span>
+            <span class="post-revision-removed">&minus;{{ revision.deletions }}</span>
+          </span>
+        </li>
+      {% endfor %}
+    </ol>
+
+    {% if page.revisions_total > revisions.size %}
+      {% assign rest = page.revisions_total | minus: revisions.size %}
+      <p class="post-revision-more">
+        {{ site.data.locales[include.lang].post.revisions_more | replace: ':COUNT', rest }}
+      </p>
+    {% endif %}
+  </details>
+{% endif %}

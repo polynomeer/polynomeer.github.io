@@ -120,6 +120,11 @@ social_preview_image: /assets/img/og-default.png # string, local or CORS resourc
 # boolean type, the global switch for TOC in posts.
 toc: true
 
+# Source repository for the per-post revision history rendered by
+# _includes/post-revisions.html. Leave empty to list the edits without links.
+revisions:
+  repo: polynomeer/polynomeer.github.io
+
 comments:
   provider: "supabase"
   giscus:
