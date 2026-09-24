@@ -169,6 +169,18 @@ df:
     strftime: "%m"
     dayjs: "MM"
 
+tx_lab:
+  given: 시작 상태
+  step: 한 단계 진행
+  reset: 처음으로
+  grid_caption: 엔진과 격리 수준을 고르면 이 시나리오가 어떻게 끝나는지 보여줍니다
+  non_standard: SQL 표준의 세 이상 현상에 들어 있지 않다
+  verdict:
+    anomaly: 일어남
+    safe: 막힘
+    blocked: 대기·데드락
+    aborted: 직렬화 실패
+
 on_this_day:
   eyebrow: 같은 날짜 다시 보기
   description: 오늘과 같은 월·일에 지난 몇 해 동안 무엇을 썼는지 모아서 봅니다.

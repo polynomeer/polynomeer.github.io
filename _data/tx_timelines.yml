@@ -1,0 +1,124 @@
+# Interleaved-transaction scenarios for the `lab/tx-timeline.html` widget.
+#
+# Every outcome here is stated by the post the widget is embedded in
+# (_posts/notes/database/2026-01-06-isolation-levels-and-anomalies.md) or by
+# the engine documentation it cites. Nothing is extrapolated: when a cell is
+# not something the post asserts, it says so in the note rather than guessing.
+#
+# verdict is one of
+#   anomaly   the anomaly happens
+#   safe      the engine prevents it
+#   blocked   the second transaction waits, or deadlocks
+#   aborted   the engine raises a serialization failure and the client retries
+
+isolation-anomalies:
+  row: "wallet(id=1, balance=10000)"
+  engines:
+    - { id: postgresql, name: PostgreSQL }
+    - { id: mysql, name: "MySQL (InnoDB)" }
+  levels:
+    # `short` is what the grid header shows on a phone
+    - { id: ru, name: READ UNCOMMITTED, short: RU }
+    - { id: rc, name: READ COMMITTED, short: RC }
+    - { id: rr, name: REPEATABLE READ, short: RR }
+    - { id: ser, name: SERIALIZABLE, short: SER }
+
+  scenarios:
+    - id: dirty-read
+      name: Dirty read
+      summary: 커밋되지 않은 변경을 읽는다
+      steps:
+        - { tx: 1, sql: "UPDATE wallet SET balance = 9000 WHERE id = 1;", note: "아직 커밋하지 않았다" }
+        - { tx: 2, sql: "SELECT balance FROM wallet WHERE id = 1;", reads: later }
+        - { tx: 1, sql: "ROLLBACK;", note: "T2가 읽은 9000은 존재한 적이 없는 값이 된다" }
+      outcomes:
+        postgresql:
+          ru: { verdict: safe, later_read: "10000", note: "PostgreSQL에는 READ UNCOMMITTED 구현이 없다. 요청하면 READ COMMITTED로 동작하므로 dirty read는 어느 수준에서도 일어나지 않는다." }
+          rc: { verdict: safe, later_read: "10000" }
+          rr: { verdict: safe, later_read: "10000" }
+          ser: { verdict: safe, later_read: "10000" }
+        mysql:
+          ru: { verdict: anomaly, later_read: "9000", note: "커밋되지 않은 9000이 그대로 보인다. 표준이 READ UNCOMMITTED에서 허용하는 유일한 수준이다." }
+          rc: { verdict: safe, later_read: "10000" }
+          rr: { verdict: safe, later_read: "10000" }
+          ser: { verdict: safe, later_read: "10000" }
+
+    - id: non-repeatable-read
+      name: Non-repeatable read
+      summary: 같은 행을 두 번 읽었는데 값이 다르다
+      steps:
+        - { tx: 1, sql: "SELECT balance FROM wallet WHERE id = 1;", reads: first }
+        - { tx: 2, sql: "UPDATE wallet SET balance = 9000 WHERE id = 1; COMMIT;" }
+        - { tx: 1, sql: "SELECT balance FROM wallet WHERE id = 1;", reads: later }
+      outcomes:
+        postgresql:
+          ru: { verdict: anomaly, first_read: "10000", later_read: "9000", note: "READ COMMITTED로 동작한다. 스냅샷이 문장마다 새로 잡히므로 두 번째 읽기는 커밋된 9000을 본다." }
+          rc: { verdict: anomaly, first_read: "10000", later_read: "9000" }
+          rr: { verdict: safe, first_read: "10000", later_read: "10000", note: "스냅샷이 트랜잭션 시작 시점에 고정된다." }
+          ser: { verdict: safe, first_read: "10000", later_read: "10000" }
+        mysql:
+          ru: { verdict: anomaly, first_read: "10000", later_read: "9000" }
+          rc: { verdict: anomaly, first_read: "10000", later_read: "9000" }
+          rr: { verdict: safe, first_read: "10000", later_read: "10000", note: "일관된 읽기가 트랜잭션의 첫 읽기 시점을 유지한다." }
+          ser: { verdict: blocked, first_read: "10000", note: "SERIALIZABLE에서는 일반 SELECT가 잠금 읽기가 되므로 T2의 UPDATE가 대기한다." }
+
+    - id: phantom
+      name: Phantom
+      summary: 같은 조건으로 두 번 조회했는데 행 수가 다르다
+      steps:
+        - { tx: 1, sql: "SELECT count(*) FROM wallet WHERE balance >= 5000;", reads: first }
+        - { tx: 2, sql: "INSERT INTO wallet VALUES (2, 7000); COMMIT;" }
+        - { tx: 1, sql: "SELECT count(*) FROM wallet WHERE balance >= 5000;", reads: later }
+      outcomes:
+        postgresql:
+          ru: { verdict: anomaly, first_read: "1", later_read: "2" }
+          rc: { verdict: anomaly, first_read: "1", later_read: "2" }
+          rr: { verdict: safe, first_read: "1", later_read: "1", note: "표준은 REPEATABLE READ에서 팬텀을 허용하지만, 스냅샷으로 구현한 PostgreSQL에서는 보이지 않는다. 표준보다 엄격한 쪽이다." }
+          ser: { verdict: safe, first_read: "1", later_read: "1" }
+        mysql:
+          ru: { verdict: anomaly, first_read: "1", later_read: "2" }
+          rc: { verdict: anomaly, first_read: "1", later_read: "2" }
+          rr: { verdict: safe, first_read: "1", later_read: "1", note: "일반 SELECT는 일관된 읽기라 팬텀이 안 보인다. 같은 트랜잭션에서 SELECT ... FOR UPDATE로 바꾸면 next-key 락이 T2의 INSERT를 막는다. 한 트랜잭션 안에서 잠금 없는 읽기와 잠금 읽기가 서로 다른 시점을 볼 수 있다는 뜻이다." }
+          ser: { verdict: blocked, first_read: "1", note: "일반 SELECT가 잠금 읽기가 되어 T2의 INSERT가 갭 락에 걸린다." }
+
+    - id: lost-update
+      name: Lost update
+      summary: 읽고 계산해서 쓴 값이 덮인다
+      standard: false
+      steps:
+        - { tx: 1, sql: "SELECT balance FROM wallet WHERE id = 1;", reads: first }
+        - { tx: 2, sql: "SELECT balance FROM wallet WHERE id = 1;", reads: first }
+        - { tx: 1, sql: "UPDATE wallet SET balance = 9000 WHERE id = 1; COMMIT;" }
+        - { tx: 2, sql: "UPDATE wallet SET balance = 9500 WHERE id = 1; COMMIT;", reads: later, note: "1000원 차감과 500원 차감 중 하나가 사라진다" }
+      outcomes:
+        postgresql:
+          ru: { verdict: anomaly, first_read: "10000", later_read: "9500", note: "표준의 세 현상 어디에도 해당하지 않는다. 각자 커밋된 값을 읽었고 자기 트랜잭션 안에서 값이 바뀌지도 않았다." }
+          rc: { verdict: anomaly, first_read: "10000", later_read: "9500" }
+          rr: { verdict: aborted, first_read: "10000", note: "could not serialize access due to concurrent update. 애플리케이션이 재시도를 준비해야 한다." }
+          ser: { verdict: aborted, first_read: "10000" }
+        mysql:
+          ru: { verdict: anomaly, first_read: "10000", later_read: "9500" }
+          rc: { verdict: anomaly, first_read: "10000", later_read: "9500" }
+          rr: { verdict: anomaly, first_read: "10000", later_read: "9500", note: "격리 수준을 올려도 조건 없는 UPDATE는 그대로 덮어쓴다. 먼저 커밋한 쪽이 지는 것이 아니라 나중에 쓴 쪽이 이긴다." }
+          ser: { verdict: blocked, first_read: "10000", note: "T1의 잠금 읽기가 남아 T2의 UPDATE가 대기하고, 두 쪽이 같은 모양이면 데드락이 된다." }
+
+    - id: write-skew
+      name: Write skew
+      summary: 각자 다른 행을 쓰는데 함께 제약을 깬다
+      standard: false
+      steps:
+        - { tx: 1, sql: "SELECT count(*) FROM oncall WHERE on_duty = true;", reads: first, note: "당직자는 최소 한 명이라는 규칙" }
+        - { tx: 2, sql: "SELECT count(*) FROM oncall WHERE on_duty = true;", reads: first }
+        - { tx: 1, sql: "UPDATE oncall SET on_duty = false WHERE name = 'alice'; COMMIT;" }
+        - { tx: 2, sql: "UPDATE oncall SET on_duty = false WHERE name = 'bob'; COMMIT;", reads: later, note: "각자 다른 행이라 충돌 감지에도 걸리지 않는다" }
+      outcomes:
+        postgresql:
+          ru: { verdict: anomaly, first_read: "2", later_read: "0", note: "둘 다 상대가 남아 있다고 읽고 각자 빠진다. 쓰기가 서로 다른 행이라 갱신 충돌로도 잡히지 않는다." }
+          rc: { verdict: anomaly, first_read: "2", later_read: "0" }
+          rr: { verdict: anomaly, first_read: "2", later_read: "0", note: "스냅샷 격리의 빈칸이다. 1995년 Berenson 등이 표준을 비판한 지점이 정확히 여기다." }
+          ser: { verdict: aborted, first_read: "2", note: "SSI가 읽기 의존성까지 추적해 잡아낸다. 잠금이 아니라 사후 탐지라서 직렬화 실패가 더 자주 난다." }
+        mysql:
+          ru: { verdict: anomaly, first_read: "2", later_read: "0" }
+          rc: { verdict: anomaly, first_read: "2", later_read: "0" }
+          rr: { verdict: anomaly, first_read: "2", later_read: "0" }
+          ser: { verdict: blocked, first_read: "2", note: "InnoDB의 SERIALIZABLE은 SSI가 아니라 잠금이다. 일반 SELECT가 공유 잠금을 잡으므로 두 UPDATE가 서로를 기다리다 데드락으로 끝난다." }

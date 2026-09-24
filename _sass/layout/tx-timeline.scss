@@ -1,0 +1,287 @@
+/*
+  Style for the interleaved-transaction lab (_includes/lab/tx-timeline.html)
+*/
+
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
+.txlab {
+  display: grid;
+  gap: 1rem;
+  margin: 1.75rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.25));
+  border-radius: 1rem;
+  background: rgba(68, 71, 90, 0.1);
+}
+
+.txlab-head {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.txlab-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.txlab-tab {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(98, 114, 164, 0.24);
+  border-radius: 999px;
+  background: none;
+  color: var(--text-muted-color);
+  font-size: 0.82rem;
+  line-height: 1.6;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.45);
+    color: var(--text-color);
+  }
+
+  &.is-active {
+    border-color: rgba(139, 233, 253, 0.75);
+    color: var(--text-color);
+    font-weight: 600;
+  }
+}
+
+.txlab-tab-mark {
+  color: var(--text-muted-color);
+}
+
+.txlab-row,
+.txlab-summary {
+  margin: 0;
+  color: var(--text-muted-color);
+  font-size: 0.86rem;
+}
+
+.txlab-scenario {
+  display: none;
+  gap: 0.9rem;
+
+  &.is-active {
+    display: grid;
+  }
+}
+
+.txlab-steps {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: txlab;
+}
+
+.txlab-step {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.2rem 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(98, 114, 164, 0.16);
+  background: rgba(40, 42, 54, 0.35);
+  transition: opacity 0.2s ease;
+
+  &.is-pending {
+    opacity: 0.32;
+  }
+
+  &.is-current {
+    border-color: rgba(139, 233, 253, 0.6);
+  }
+}
+
+.txlab-step-t2 {
+  margin-left: 1.5rem;
+}
+
+.txlab-tx {
+  grid-row: 1;
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--link-color);
+}
+
+.txlab-sql {
+  grid-row: 1;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+  word-break: break-word;
+}
+
+.txlab-read {
+  grid-column: 2;
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.8rem;
+  color: #50fa7b;
+}
+
+.txlab-step-note {
+  grid-column: 2;
+  color: var(--text-muted-color);
+  font-size: 0.78rem;
+}
+
+.txlab-controls {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.txlab-button {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid rgba(98, 114, 164, 0.24);
+  border-radius: 999px;
+  background: none;
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+
+  &:hover:not(:disabled) {
+    border-color: rgba(139, 233, 253, 0.45);
+    color: var(--text-color);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.txlab-level-short {
+  display: none;
+}
+
+.txlab-grid {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+
+  caption {
+    padding: 0 0 0.5rem;
+    caption-side: top;
+    color: var(--text-muted-color);
+    font-size: 0.8rem;
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: 0.25rem;
+    border: 0;
+    text-align: center;
+  }
+
+  thead th {
+    color: var(--text-muted-color);
+    font-size: 0.72rem;
+    font-weight: 400;
+  }
+
+  tbody th {
+    color: var(--text-muted-color);
+    text-align: left;
+    white-space: nowrap;
+  }
+}
+
+.txlab-cell {
+  width: 100%;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.74rem;
+  white-space: nowrap;
+
+  &.is-active {
+    border-color: currentcolor;
+    font-weight: 700;
+  }
+}
+
+.txlab-cell-anomaly {
+  background: rgba(255, 110, 110, 0.16);
+  color: #ff9d9d;
+}
+
+.txlab-cell-safe {
+  background: rgba(80, 250, 123, 0.14);
+  color: #7ee89b;
+}
+
+.txlab-cell-blocked {
+  background: rgba(255, 184, 108, 0.16);
+  color: #ffcb8a;
+}
+
+.txlab-cell-aborted {
+  background: rgba(189, 147, 249, 0.16);
+  color: #cbb0fa;
+}
+
+.txlab-note {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(98, 114, 164, 0.18);
+  color: var(--text-color);
+  font-size: 0.84rem;
+  line-height: 1.7;
+
+  strong {
+    display: block;
+    color: var(--text-muted-color);
+    font-size: 0.76rem;
+    font-weight: 600;
+  }
+}
+
+.txlab-notes {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.txlab-footnote {
+  margin: 0;
+  color: var(--text-muted-color);
+  font-size: 0.76rem;
+}
+
+@media (max-width: 575.98px) {
+  .txlab {
+    padding: 0.9rem;
+  }
+
+  .txlab-step-t2 {
+    margin-left: 0.75rem;
+  }
+
+  .txlab-grid {
+    font-size: 0.72rem;
+  }
+
+  .txlab-level-full {
+    display: none;
+  }
+
+  .txlab-level-short {
+    display: inline;
+  }
+
+  // the grid still scrolls if it has to, but letting the verdicts and the
+  // engine names wrap usually keeps all four levels on screen
+  .txlab-grid tbody th,
+  .txlab-cell {
+    white-space: normal;
+  }
+
+  .txlab-grid th,
+  .txlab-grid td {
+    padding: 0.2rem 0.1rem;
+  }
+}

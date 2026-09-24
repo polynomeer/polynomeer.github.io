@@ -169,6 +169,18 @@ df:
     strftime: "%b"
     dayjs: "MMM"
 
+tx_lab:
+  given: Starting state
+  step: Step forward
+  reset: Restart
+  grid_caption: Pick an engine and an isolation level to see how this scenario ends
+  non_standard: Not one of the three anomalies the SQL standard names
+  verdict:
+    anomaly: Happens
+    safe: Prevented
+    blocked: Waits or deadlocks
+    aborted: Serialization failure
+
 on_this_day:
   eyebrow: The same date, other years
   description: What this blog was writing on today's month and day in earlier years.

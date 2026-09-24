@@ -58,6 +58,8 @@ SERIALIZABLE은 SSI(Serializable Snapshot Isolation)로 읽기 의존성까지 �
 | Lost update | 직렬화 실패로 중단 | 먼저 커밋한 쪽이 이김(조건 없는 UPDATE면 덮어씀) |
 | 충돌 시 | 예외, 재시도 필요 | 대기 또는 데드락 |
 
+{% include lab/tx-timeline.html id="isolation-anomalies" %}
+
 여기서 실무 결론 하나가 나온다. **격리 수준을 올리는 것이 lost update의 답이 아니다.** PostgreSQL에서는 예외가 늘고 MySQL에서는 여전히 덮어쓴다. 답은 쓰기 자체를 조건부로 만드는 것이다.
 
 ```sql

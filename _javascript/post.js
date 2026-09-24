@@ -6,6 +6,7 @@ import {
   initClipboard,
   initSeriesPager,
   initSeriesProgress,
+  initTxTimeline,
   toc
 } from './modules/plugins';
 
@@ -18,4 +19,5 @@ initClipboard();
 initTopbar();
 initSeriesPager();
 initSeriesProgress();
+initTxTimeline();
 basic();

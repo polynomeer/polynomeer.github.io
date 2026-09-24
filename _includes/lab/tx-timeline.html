@@ -1,0 +1,123 @@
+{%- comment -%}
+Interleaved-transaction lab: the reader steps two transactions through a
+timeline and sees whether an anomaly happens under each engine and isolation
+level. Data comes from _data/tx_timelines.yml.
+
+    {% include lab/tx-timeline.html id="isolation-anomalies" %}
+
+Everything is rendered server-side, including the outcome grid and every note,
+so the widget reads as a table without JavaScript. tx-timeline.js turns the
+same markup into scenario tabs, a cell selector and a step-through.
+{%- endcomment -%}
+
+{%- include lang.html -%}
+{%- assign lab = site.data.tx_timelines[include.id] -%}
+
+{%- if lab -%}
+  {%- assign loc = site.data.locales[lang].tx_lab -%}
+
+  <div class="txlab" data-tx-lab data-row="{{ lab.row }}">
+    <div class="txlab-head">
+      <div class="txlab-tabs" role="tablist">
+        {%- for scenario in lab.scenarios -%}
+          <button
+            type="button"
+            class="txlab-tab{% if forloop.first %} is-active{% endif %}"
+            role="tab"
+            data-tx-tab="{{ scenario.id }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          >
+            {{ scenario.name }}
+            {%- if scenario.standard == false %} <span class="txlab-tab-mark" title="{{ loc.non_standard }}">*</span>{% endif -%}
+          </button>
+        {%- endfor -%}
+      </div>
+
+      <p class="txlab-row">{{ loc.given }} <code>{{ lab.row }}</code></p>
+    </div>
+
+    {%- for scenario in lab.scenarios -%}
+      <section
+        class="txlab-scenario{% if forloop.first %} is-active{% endif %}"
+        data-tx-scenario="{{ scenario.id }}"
+        role="tabpanel"
+      >
+        <p class="txlab-summary">{{ scenario.summary }}</p>
+
+        <ol class="txlab-steps">
+          {%- for step in scenario.steps -%}
+            <li
+              class="txlab-step txlab-step-t{{ step.tx }}"
+              data-tx-step
+              {% if step.reads %}data-tx-output="{{ step.reads }}"{% endif %}
+            >
+              <span class="txlab-tx">T{{ step.tx }}</span>
+              <code class="txlab-sql">{{ step.sql }}</code>
+              <output class="txlab-read" hidden></output>
+              {%- if step.note %}<span class="txlab-step-note">{{ step.note }}</span>{% endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+
+        <div class="txlab-controls" data-tx-controls hidden>
+          <button type="button" class="txlab-button" data-tx-play>{{ loc.step }}</button>
+          <button type="button" class="txlab-button" data-tx-reset>{{ loc.reset }}</button>
+        </div>
+
+        <table class="txlab-grid">
+          <caption>{{ loc.grid_caption }}</caption>
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              {%- for level in lab.levels -%}
+                <th scope="col" title="{{ level.name }}">
+                  <span class="txlab-level-full">{{ level.name }}</span>
+                  <span class="txlab-level-short">{{ level.short | default: level.name }}</span>
+                </th>
+              {%- endfor -%}
+            </tr>
+          </thead>
+          <tbody>
+            {%- for engine in lab.engines -%}
+              <tr>
+                <th scope="row">{{ engine.name }}</th>
+                {%- for level in lab.levels -%}
+                  {%- assign cell = scenario.outcomes[engine.id][level.id] -%}
+                  <td>
+                    <button
+                      type="button"
+                      class="txlab-cell txlab-cell-{{ cell.verdict }}"
+                      data-tx-cell="{{ engine.id }}:{{ level.id }}"
+                      data-tx-verdict="{{ cell.verdict }}"
+                      data-tx-first="{{ cell.first_read }}"
+                      data-tx-later="{{ cell.later_read }}"
+                      aria-pressed="false"
+                    >
+                      {{ loc.verdict[cell.verdict] }}
+                    </button>
+                  </td>
+                {%- endfor -%}
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="txlab-notes">
+          {%- for engine in lab.engines -%}
+            {%- for level in lab.levels -%}
+              {%- assign cell = scenario.outcomes[engine.id][level.id] -%}
+              {%- if cell.note -%}
+                <p class="txlab-note" data-tx-note="{{ engine.id }}:{{ level.id }}">
+                  <strong>{{ engine.name }} &middot; {{ level.name }}</strong>
+                  {{ cell.note }}
+                </p>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      </section>
+    {%- endfor -%}
+
+    <p class="txlab-footnote">* {{ loc.non_standard }}</p>
+  </div>
+{%- endif -%}
