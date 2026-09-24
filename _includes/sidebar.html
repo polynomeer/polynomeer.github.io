@@ -27,9 +27,9 @@
           <span data-i18n="tabs.home">{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
         </a>
       </li>
-      <!-- primary tabs -->
+      <!-- primary tabs: every tab without a `group` in its front matter -->
       {% for tab in site.tabs %}
-        {% unless tab.url == '/categories/' or tab.group %}
+        {% unless tab.group %}
           <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
             <a href="{{ tab.url | relative_url }}" class="nav-link">
               <i class="fa-fw {{ tab.icon }}"></i>
@@ -45,33 +45,41 @@
       {% endfor %}
     </ul>
 
-    <!-- browse tabs: raw indexes, kept compact so the nav stays short -->
-    {% assign browse_tabs = site.tabs | where: 'group', 'browse' | sort: 'order' %}
-    {% if browse_tabs.size > 0 %}
-      <div class="sidebar-browse">
-        <span
-          class="sidebar-browse-label"
-          data-l10n-ko="{{ site.data.locales['ko-KR'].sidebar.browse | escape }}"
-          data-l10n-en="{{ site.data.locales.en.sidebar.browse | escape }}"
-        >
-          {{ site.data.locales[include.lang].sidebar.browse }}
-        </span>
-        <ul class="sidebar-browse-list">
-          {% for tab in browse_tabs %}
-            {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
-            {% assign tab_label = site.data.locales[include.lang].tabs.[tab_name] | default: site.data.locales[include.lang].pages[tab.title_key].title | default: tab.title %}
-            {% assign tab_label_ko = site.data.locales['ko-KR'].tabs.[tab_name] | default: site.data.locales['ko-KR'].pages[tab.title_key].title | default: tab.title %}
-            {% assign tab_label_en = site.data.locales.en.tabs.[tab_name] | default: site.data.locales.en.pages[tab.title_key].title | default: tab.title %}
-            <li class="{% if tab.url == page.url %}active{% endif %}">
-              <a href="{{ tab.url | relative_url }}">
-                <i class="{{ tab.icon }}" aria-hidden="true"></i>
-                <span data-l10n-ko="{{ tab_label_ko | escape }}" data-l10n-en="{{ tab_label_en | escape }}">{{ tab_label }}</span>
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
+    <!--
+      Secondary groups, rendered as chip rows so the nav stays short. A tab
+      joins one with `group: <id>` in its front matter; the label is
+      `sidebar.<id>` in the locale files. `browse` holds the ways into the
+      posts, `portfolio` the pages about the author rather than the writing.
+    -->
+    {% assign nav_groups = 'browse,portfolio' | split: ',' %}
+    {% for group in nav_groups %}
+      {% assign group_tabs = site.tabs | where: 'group', group | sort: 'order' %}
+      {% if group_tabs.size > 0 %}
+        <div class="sidebar-nav-group">
+          <span
+            class="sidebar-nav-group-label"
+            data-l10n-ko="{{ site.data.locales['ko-KR'].sidebar[group] | escape }}"
+            data-l10n-en="{{ site.data.locales.en.sidebar[group] | escape }}"
+          >
+            {{ site.data.locales[include.lang].sidebar[group] }}
+          </span>
+          <ul class="sidebar-nav-group-list">
+            {% for tab in group_tabs %}
+              {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+              {% assign tab_label = site.data.locales[include.lang].tabs.[tab_name] | default: site.data.locales[include.lang].pages[tab.title_key].title | default: tab.title %}
+              {% assign tab_label_ko = site.data.locales['ko-KR'].tabs.[tab_name] | default: site.data.locales['ko-KR'].pages[tab.title_key].title | default: tab.title %}
+              {% assign tab_label_en = site.data.locales.en.tabs.[tab_name] | default: site.data.locales.en.pages[tab.title_key].title | default: tab.title %}
+              <li class="{% if tab.url == page.url %}active{% endif %}">
+                <a href="{{ tab.url | relative_url }}">
+                  <i class="{{ tab.icon }}" aria-hidden="true"></i>
+                  <span data-l10n-ko="{{ tab_label_ko | escape }}" data-l10n-en="{{ tab_label_en | escape }}">{{ tab_label }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endfor %}
   </nav>
 
   <div class="sidebar-bottom w-100">

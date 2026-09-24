@@ -1124,14 +1124,22 @@ $btn-mb: 0.5rem;
     }
   }
 
-  /* compact secondary nav for raw indexes (types, tags, archives) */
-  .sidebar-browse {
+  /* compact chip rows for the secondary nav groups (see _includes/sidebar.html) */
+  .sidebar-nav-group {
     width: 100%;
     padding: 0 1.5rem;
-    margin: -1rem 0 1.75rem;
+    margin: 0 0 1.25rem;
+
+    &:first-of-type {
+      margin-top: -1rem;
+    }
+
+    &:last-of-type {
+      margin-bottom: 1.75rem;
+    }
   }
 
-  .sidebar-browse-label {
+  .sidebar-nav-group-label {
     display: flex;
     align-items: center;
     gap: 0.55rem;
@@ -1154,7 +1162,7 @@ $btn-mb: 0.5rem;
     }
   }
 
-  .sidebar-browse-list {
+  .sidebar-nav-group-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.3rem;
