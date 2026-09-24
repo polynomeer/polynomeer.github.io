@@ -38,6 +38,8 @@ tabs:
   recruit: Recruit
   about: About
   tech-reviews: Tech Reviews
+  experiments: Experiments
+  start: Start here
   learning-evidence: Learning evidence
 
 # the text displayed in the search bar & search results
@@ -309,6 +311,10 @@ pages:
     title: Learning Evidence
   tech_reviews:
     title: Tech Blog and Conference Reviews
+  experiments:
+    title: Measured experiments
+  start_here:
+    title: Start here
 
 about:
   motto: Make Non Polynomial Polynomial
@@ -353,6 +359,14 @@ learning_evidence:
   nav_aria: Previous or next item in the same format
   previous_item: Previous
   next_item: Next
+
+start_here:
+  next_title: If you know what you are after
+
+experiments:
+  summary_labs: Repositories
+  summary_runs: Experiment posts
+  repo: Repository and raw results
 
 tech_blogs:
   lead: A directory of engineering blogs from Korean and global tech companies, long-running personal blogs and engineering conferences, mapped to the reviews of their posts and talks written here. Each review compares the original's decisions against my own production and project measurements rather than summarizing it. Sources with reviews come first; expand an entry to see the source links and the review list.

@@ -38,6 +38,8 @@ tabs:
   recruit: 채용
   about: 소개
   tech-reviews: 기술 리뷰
+  experiments: 실측
+  start: 시작하기
   learning-evidence: 학습 성과
 
 # the text displayed in the search bar & search results
@@ -304,6 +306,10 @@ pages:
     title: 학습 성과
   tech_reviews:
     title: 기술 블로그·컨퍼런스 리뷰
+  experiments:
+    title: 실측 기록
+  start_here:
+    title: 시작하기
 
 about:
   motto: Make Non Polynomial Polynomial
@@ -348,6 +354,14 @@ learning_evidence:
   nav_aria: 같은 형식의 이전 또는 다음 항목
   previous_item: 이전 학습
   next_item: 다음 학습
+
+start_here:
+  next_title: 찾는 것이 분명하다면
+
+experiments:
+  summary_labs: 저장소
+  summary_runs: 실험 글
+  repo: 저장소와 원본 결과
 
 tech_blogs:
   lead: 국내외 빅테크의 엔지니어링 블로그, 오래 읽히는 개인 블로그, 기술 컨퍼런스의 원문 목록과, 이 블로그에서 그 글과 발표를 읽고 쓴 리뷰의 대응표입니다. 리뷰는 요약이 아니라 원문의 결정을 내 실무·프로젝트의 실측에 맞대어 보는 방식으로 씁니다. 리뷰가 있는 출처가 먼저 오고, 항목을 펼치면 원문 링크와 리뷰 목록이 보입니다.

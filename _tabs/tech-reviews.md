@@ -4,7 +4,7 @@ title: 기술 블로그·컨퍼런스 리뷰
 title_key: tech_reviews
 hero_title: true
 icon: fas fa-book-open
-order: 3
+order: 5
 redirect_from:
   - /tech-blogs/
 ---

@@ -3489,3 +3489,165 @@ header {
   color: var(--text-muted-color);
   font-size: 0.84rem;
 }
+
+/* Start here (/start/) */
+.start-intro {
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
+.start-tier {
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.25));
+}
+
+.start-tier-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+}
+
+.start-tier-label {
+  flex: 0 0 auto;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--link-color) 12%, transparent);
+  color: var(--link-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.start-item-list {
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+
+  > li + li {
+    margin-top: 1rem;
+  }
+}
+
+.start-item-title {
+  font-weight: 600;
+}
+
+.start-item-count {
+  margin-left: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted-color);
+}
+
+.start-item-why {
+  margin: 0.3rem 0 0;
+  color: var(--text-muted-color);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.start-next {
+  margin-top: 2.5rem;
+
+  h2 {
+    font-size: 1.05rem;
+  }
+}
+
+.start-next-list {
+  padding-left: 0;
+  list-style: none;
+
+  li {
+    padding: 0.4rem 0;
+    line-height: 1.6;
+  }
+
+  a {
+    font-weight: 600;
+    margin-right: 0.4rem;
+  }
+
+  span {
+    color: var(--text-muted-color);
+    font-size: 0.92rem;
+  }
+}
+
+/* Measured experiments (/experiments/) */
+.experiment-intro {
+  color: var(--text-muted-color);
+  line-height: 1.7;
+}
+
+.experiment-summary {
+  font-size: 0.9rem;
+  color: var(--text-muted-color);
+
+  strong {
+    color: var(--metric-color);
+  }
+}
+
+.experiment-lab {
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--card-border-color, rgba(98, 114, 164, 0.25));
+  scroll-margin-top: 5.5rem;
+}
+
+.experiment-lab-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+}
+
+.experiment-repo {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.experiment-lab-focus {
+  margin: 0.3rem 0 0;
+  color: var(--text-muted-color);
+  font-size: 0.92rem;
+}
+
+.experiment-list {
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+
+  > li + li {
+    margin-top: 1.1rem;
+  }
+}
+
+.experiment-question {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted-color);
+}
+
+.experiment-title {
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.experiment-headline {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
