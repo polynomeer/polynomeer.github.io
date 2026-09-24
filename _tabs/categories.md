@@ -1,5 +1,6 @@
 ---
 layout: categories
 icon: fas fa-stream
-order: 8
+order: 3
+group: browse
 ---

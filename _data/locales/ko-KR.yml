@@ -230,6 +230,7 @@ home:
   year_filter_label: 연도
   status_filter_label: 상태 필터
   filter_all: 전체
+  filter_toggle: 필터
   filter_reset: 필터 초기화
   status_filter_empty: 현재 페이지에는 선택한 상태와 일치하는 글이 없습니다.
   curation_explore: 더 보기

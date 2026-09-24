@@ -53,7 +53,20 @@ refactor: true
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
 
 <section id="home-discovery-filter" class="px-xl-1">
-  <div class="post-status-filter-bar">
+  {%- comment -%}
+    The feed comes first; the filter opens on demand and is forced open by the
+    script whenever a filter is active, so a narrowed feed is never unexplained.
+  {%- endcomment -%}
+  <details id="home-filter-details" class="post-filter-details">
+    <summary class="post-filter-summary">
+      <i class="fas fa-sliders fa-fw" aria-hidden="true"></i>
+      <span
+        data-l10n-ko="{{ site.data.locales['ko-KR'].home.filter_toggle | escape }}"
+        data-l10n-en="{{ site.data.locales.en.home.filter_toggle | escape }}"
+      >{{ site.data.locales[lang].home.filter_toggle }}</span>
+      <span id="home-filter-state" class="post-filter-summary-state"></span>
+    </summary>
+    <div class="post-status-filter-bar">
     <div class="post-filter-row post-filter-row-inline">
       <label class="post-filter-field post-filter-field-search">
         <input
@@ -186,7 +199,8 @@ refactor: true
         <p id="home-tag-filter-empty" class="tag-filter-empty" hidden>{{ site.data.locales[lang].home.tag_filter_empty }}</p>
       </section>
     </div>
-  </div>
+    </div>
+  </details>
 </section>
 
 <div id="post-list" class="flex-grow-1 px-xl-1">
@@ -399,13 +413,39 @@ refactor: true
 
     const escapeAttribute = (value = '') => escapeHtml(value).replace(/"/g, '&quot;');
 
+    const filterDetails = document.getElementById('home-filter-details');
+    const filterState = document.getElementById('home-filter-state');
+
     const updateResetButton = () => {
-      if (!filterReset) return;
-      const hasFilter =
-        (searchInput && searchInput.value.trim() !== '') ||
-        (typeSelect && typeSelect.value !== 'all') ||
-        selectedTag !== '';
-      filterReset.hidden = !hasFilter;
+      const active = [];
+
+      if (typeSelect && typeSelect.value !== 'all' && typeFilterValue) {
+        active.push(typeFilterValue.textContent.trim());
+      }
+
+      if (selectedTag !== '') {
+        active.push(selectedTag);
+      }
+
+      if (searchInput && searchInput.value.trim() !== '') {
+        active.push(`"${searchInput.value.trim()}"`);
+      }
+
+      const hasFilter = active.length > 0;
+
+      if (filterReset) {
+        filterReset.hidden = !hasFilter;
+      }
+
+      if (filterState) {
+        filterState.textContent = active.join(' · ');
+        filterState.hidden = !hasFilter;
+      }
+
+      // never leave the feed narrowed by a control the visitor cannot see
+      if (hasFilter && filterDetails) {
+        filterDetails.open = true;
+      }
     };
 
     const closeTypeMenu = () => {

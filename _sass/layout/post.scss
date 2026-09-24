@@ -2645,6 +2645,10 @@ header {
 }
 
 .content-type-card {
+  /* holds a link plus the subcategory row, so it stacks them itself instead of
+     letting the link claim the whole height */
+  display: flex;
+  flex-direction: column;
   border-radius: 1rem;
   border: 1px solid var(--btn-border-color);
   background: rgba(68, 71, 90, 0.14);
@@ -2663,9 +2667,38 @@ header {
   overflow: hidden;
 }
 
+.content-type-subcategories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0 1.25rem 1.1rem;
+  margin-top: -0.5rem;
+}
+
+.content-type-subcategory {
+  padding: 0.16rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.18);
+  background: rgba(68, 71, 90, 0.18);
+  color: var(--text-muted-color);
+  font-size: 0.76rem;
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.32);
+    color: var(--link-color);
+    text-decoration: none;
+  }
+}
+
+.content-type-subcategory-more {
+  align-self: center;
+  color: var(--text-muted-color);
+  font-size: 0.76rem;
+}
+
 .content-type-card-link {
   display: block;
-  height: 100%;
+  flex: 1 1 auto;
   padding: 1.25rem;
   color: var(--text-color);
   transition: color 0.22s ease;

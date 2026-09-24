@@ -50,6 +50,34 @@ layout: page
               {% include localized-value.html value=content_type.description lang=lang %}
             </p>
           </a>
+
+          {%- comment -%}
+            The second level of `categories` is what a type is made of, so it
+            is listed here rather than on a separate page of its own.
+          {%- endcomment -%}
+          {% assign subcategories = '' | split: '' %}
+          {% for post in matching_group.items %}
+            {% assign sub = post.categories[1] %}
+            {% if sub and sub != empty %}
+              {% unless subcategories contains sub %}
+                {% assign subcategories = subcategories | push: sub %}
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+          {% if subcategories.size > 0 %}
+            <div class="content-type-subcategories">
+              {% assign sorted_subcategories = subcategories | sort_natural %}
+              {% for sub in sorted_subcategories limit: 8 %}
+                <a
+                  class="content-type-subcategory"
+                  href="{{ site.baseurl }}/categories/{{ sub | slugify | url_encode }}/"
+                >{{ sub }}</a>
+              {% endfor %}
+              {% if sorted_subcategories.size > 8 %}
+                <span class="content-type-subcategory-more">+{{ sorted_subcategories.size | minus: 8 }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
         </article>
         {% endif %}
       {% endif %}

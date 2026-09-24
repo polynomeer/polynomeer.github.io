@@ -119,3 +119,15 @@ Implement:
 2. keep the existing post list unchanged below them
 
 This gives immediate structural improvement while minimizing new complexity.
+
+## Filter Placement (2026-09)
+
+The type, tag and text filters used to sit above the feed, so the first thing
+on the page was a row of controls rather than a post. They now live in a
+`<details>` element that starts closed, leaving the newest post at the top.
+
+The script that already tracked whether any filter was active
+(`updateResetButton`) also writes the active values into the summary
+(`필터 · Notes · Kafka`) and forces the panel open, so a narrowed feed is never
+the result of a control the visitor cannot see. Without JavaScript the panel
+still opens and closes on its own.

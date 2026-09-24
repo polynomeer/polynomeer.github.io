@@ -14,10 +14,18 @@ Two groups, decided by what a reader starts from:
 
 | Group | Entries | Why |
 | --- | --- | --- |
-| Primary (icon rows) | 홈, 소개, 주제, 시리즈, 기술 리뷰 | Entry points: the feed, the portfolio, the curated hubs, ordered series, and the review directory |
-| Browse (compact text row under a `둘러보기` label) | 타입, 태그, 아카이브 | Raw indexes reached when looking for something specific |
+| Primary (icon rows) | 홈, 주제, 시리즈, 기술 리뷰, 학습 성과, 소개 | Entry points and curated pages: the feed, the hubs, ordered series, the review directory, the reading record, and the portfolio |
+| Browse (chips under a `둘러보기` label) | 타입, 태그, 카테고리, 아카이브 | Raw indexes reached when looking for something specific |
 
-`카테고리` stays out of the nav, as before, and is reachable from post meta.
+The rule for the split is what produced the page: a page someone curated goes
+in the primary group, a page generated from front matter goes in the browse
+group. `학습 성과` moved up under that rule, and `카테고리` moved in: its index
+page existed and was linked from every category page, but not from the nav,
+which left the site with three taxonomies and only two of them visible.
+
+The types page now lists each type's second-level categories as chips, so the
+two taxonomies read as one two-level structure (`Notes` → `Spring`,
+`Database`, …) rather than two rival lists.
 
 ## Implementation
 

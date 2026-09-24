@@ -235,6 +235,7 @@ home:
   year_filter_label: Year
   status_filter_label: Filter by status
   filter_all: All
+  filter_toggle: Filter
   filter_reset: Reset filters
   status_filter_empty: No posts on this page match the selected status.
   curation_explore: Explore

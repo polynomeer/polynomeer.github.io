@@ -9,6 +9,63 @@
   margin-top: 1.25rem;
 }
 
+.post-filter-details {
+  margin-bottom: 1rem;
+
+  &[open] .post-filter-summary {
+    margin-bottom: 0.75rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.post-filter-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.8rem;
+  border: 1px solid var(--btn-border-color);
+  background: rgba(68, 71, 90, 0.16);
+  color: var(--text-muted-color);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  transition: border-color 0.2s ease;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: '\203A';
+    margin-left: 0.15rem;
+    transform: rotate(90deg);
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    border-color: rgba(139, 233, 253, 0.32);
+    color: var(--text-color);
+  }
+}
+
+.post-filter-details[open] .post-filter-summary::after {
+  transform: rotate(-90deg);
+}
+
+.post-filter-summary-state {
+  color: var(--link-color);
+  font-weight: 600;
+
+  &::before {
+    content: '·';
+    margin-right: 0.4rem;
+    color: var(--text-muted-color);
+  }
+}
+
 #home-discovery-filter {
   margin-top: 1.25rem;
 }
