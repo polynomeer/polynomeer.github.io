@@ -37,6 +37,11 @@ labs:
         headline:
           ko-KR: "방어가 없으면 만료마다 200명 중 125.5명이 원본에 도달했다. 락 기반 single flight는 1.5회로 84배 줄이면서 처리량과 p99도 가장 좋았고, XFetch는 beta를 재계산 비용보다 키우면 오히려 나빠졌다"
           en: "Unprotected, 125.5 of 200 clients reach the origin at every expiry. Single flight holds it at 1.5, an 84x reduction, at the best throughput and p99 of any defence"
+      - slug: redis-single-thread-stalls
+        question: { ko-KR: 어떤 명령이 Redis의 단일 스레드를 얼마나 막는가, en: Which commands stall Redis' single thread, and by how much }
+        headline:
+          ko-KR: "`SCAN`은 `KEYS`보다 3.7배 오래 걸리면서 피해자 p99를 기준선 이하로 유지했다. 100만 원소 리스트의 `DEL`은 1.3ms지만 100만 멤버 Set은 121.4ms로 약 93배였고, 그 120ms 멈춤은 p99에 잡히지 않고 max에만 남았다"
+          en: "SCAN takes 3.7x longer than KEYS and keeps the victim at baseline. DEL of a 1M-element list is 1.3 ms but a 1M-member set is 121.4 ms, and that stall never reaches p99 - only max"
       - slug: when-the-index-is-not-used
         question: { ko-KR: 옵티마이저가 인덱스를 안 쓰는 것인가 못 쓰는 것인가, en: Is the planner choosing not to use the index, or unable to }
         headline:
