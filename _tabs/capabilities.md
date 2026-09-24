@@ -2,8 +2,8 @@
 layout: page
 hero_title: true
 icon: fas fa-diagram-project
-order: 5
-group: portfolio
+order: 1
+group: evidence
 ---
 
 {% include lang.html %}

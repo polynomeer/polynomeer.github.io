@@ -10,27 +10,43 @@ important.
 
 ## Model
 
-Three groups, decided by what the page is for:
+The blog has two kinds of visitor and they want different first clicks. A
+reader arrives from a search result and wants more like the post they landed
+on. Someone evaluating the author wants the evidence, and gives it a few
+minutes. Grouping the pages by *what they are about* served neither: it put
+the portfolio pages in a block a reader scrolls past, and left the evidence
+pages as chips under the fold.
 
-| Group | Entries | Why |
+The groups are by **what the visitor is trying to do**.
+
+| Group | Entries | The visitor is trying to |
 | --- | --- | --- |
-| Primary (icon rows) | 홈, 주제, 시리즈, 타입, 아카이브 | The five ways into the posts themselves, from the most curated to the most raw |
-| `둘러보기` (chips) | 시작하기, 태그, 카테고리, 그날의 기록 | The other ways in: a guided entry point, the two flat taxonomies, and the archive read by calendar date |
-| `기록과 소개` (chips) | 학습 성과, 실측, 기술 리뷰, 통계, 역량 맵, 소개 | Pages about the author and the record rather than about the writing |
+| Primary (icon rows) | 홈, 시작하기, 주제, 시리즈, 통계, 소개 | Work out what this is and whether to spend time on it |
+| `근거` (chips) | 역량 맵, 실측, 기술 리뷰, 학습 성과 | Check what the author can actually do |
+| `둘러보기` (chips) | 타입, 아카이브, 태그, 카테고리, 그날의 기록 | Look something specific up |
 
-The first split is subject matter: the primary rows and the `둘러보기` chips
-all lead to posts, the `기록과 소개` chips do not. Keeping the portfolio pages
-in the primary column made the nav look like the blog was five parts writing
-and four parts résumé, which is backwards for a reader who arrived from a
-search result.
+The primary rows are the orientation layer, and every one of them answers a
+question a stranger has in the first ten seconds: what is new (홈), where do I
+start (시작하기), what does it cover (주제), what is the substantial work
+(시리즈), how much of it is there and has it been kept up (통계), who wrote it
+(소개). Both kinds of visitor need all six, which is why they are the ones
+with icons.
 
-The second split, between the primary rows and `둘러보기`, is how much the
-page decides for the reader. 주제 and 시리즈 are curated, 타입 and 아카이브
-group everything without dropping anything, and the chips are either a flat
-index or a single entry page. `카테고리` is a chip rather than a row because
-the types page already lists each type's second-level categories
-(`Notes` → `Spring`, `Database`, …), so the two taxonomies read as one
-two-level structure rather than two rival lists.
+`근거` sits directly under them rather than at the bottom. It is the block
+someone evaluating the author opens, and it is ordered strongest first: the
+capability graph as the overview, then the measured experiments, the reviews
+of other engineers' work, and the courses and books. The label is the same
+word the repository already uses for this idea.
+
+`둘러보기` is last because a generated index is what you reach for once you
+already know what you are looking for. `카테고리` is there rather than in the
+primary rows because the types page already lists each type's second-level
+categories (`Notes` → `Spring`, `Database`, …), so the two taxonomies read as
+one two-level structure rather than two rival lists.
+
+The earlier split — primary for the pages leading to posts, a second group for
+the pages about the author — read the nav as a table of contents. This reads
+it as a path, and a recruiter's path is three clicks shorter.
 
 ## Implementation
 
@@ -39,8 +55,8 @@ then sorts it inside that group. `_includes/sidebar.html` renders tabs without
 a `group` as icon rows, so a new tab keeps the old behaviour by default, and
 loops over the group ids in `nav_groups` to render each one as a row of small
 pill chips carrying the tab icon and label. A group's label is
-`sidebar.<id>` in the locale files, so adding a third group is a front matter
-key, a locale string and one id in that list. Styles live next to the other
+`sidebar.<id>` in the locale files, so adding or reordering a group is a front
+matter key, a locale string and the ids in that list. Styles live next to the other
 sidebar rules in `_sass/addon/commons.scss`.
 
 The chips reuse the pill language already used for tags and topic hubs:
@@ -55,9 +71,12 @@ rows' hover pills.
 
 - The chips reuse `--text-muted-color` and `--sidebar-active-color`, so they
   follow the light and dark palettes without extra rules.
-- Order inside the primary group runs from the most curated to the most raw:
-  주제 before 시리즈 because hubs answer a question while series assume a
-  reading order, then 타입 and 아카이브, which group everything.
-- `기록과 소개` is ordered as the reader would read it: what was learned, what
-  was measured, what was read, the archive counted, what it adds up to, then
-  who wrote it.
+- Every tab has a distinct icon. `카테고리` moved off `fa-stream`, which
+  `시리즈` already used, and `기술 리뷰` off `fa-book-open`, which sat beside
+  `학습 성과`'s `fa-book-open-reader`.
+- Six icon rows and two chip groups do not fit an 800px-tall laptop screen
+  next to the profile block, and the sidebar hides its scrollbar, so the theme
+  and language controls simply disappeared. A `max-height: 900px` query on
+  desktop shrinks the avatar, drops the tagline and tightens the row padding,
+  which brings the sidebar from 964px to 837px without removing an entry. The
+  phone layout is untouched.

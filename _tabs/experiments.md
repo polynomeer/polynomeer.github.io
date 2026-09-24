@@ -5,7 +5,7 @@ title_key: experiments
 hero_title: true
 icon: fas fa-flask
 order: 2
-group: portfolio
+group: evidence
 ---
 
 {% include lang.html %}

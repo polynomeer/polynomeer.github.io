@@ -1216,6 +1216,55 @@ $btn-mb: 0.5rem;
     }
   }
 
+  /*
+    On a short laptop screen the profile block and six nav rows push the theme
+    and language controls below the fold, and the sidebar's scrollbar is
+    hidden, so there is nothing to say they are there. Tighten the blocks that
+    carry no information rather than dropping an entry from the nav.
+  */
+  @media (min-width: 850px) and (max-height: 900px) {
+    #avatar {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    .profile-wrapper {
+      @include mt-mb(0.75rem);
+    }
+
+    .site-title {
+      margin-top: 0.6rem;
+      margin-bottom: 0.25rem;
+      font-size: 1.5rem;
+    }
+
+    .site-subtitle {
+      display: none;
+    }
+
+    .nav {
+      a.nav-link {
+        @include pt-pb(0.34rem);
+      }
+    }
+
+    .sidebar-nav-group {
+      margin-bottom: 0.7rem;
+
+      &:first-of-type {
+        margin-top: -0.6rem;
+      }
+
+      &:last-of-type {
+        margin-bottom: 0.9rem;
+      }
+    }
+
+    .sidebar-bottom {
+      margin-bottom: 0.3rem;
+    }
+  }
+
   .sidebar-bottom {
     padding-left: 2rem;
     padding-right: 1rem;

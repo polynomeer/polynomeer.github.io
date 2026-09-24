@@ -48,10 +48,11 @@
     <!--
       Secondary groups, rendered as chip rows so the nav stays short. A tab
       joins one with `group: <id>` in its front matter; the label is
-      `sidebar.<id>` in the locale files. `browse` holds the ways into the
-      posts, `portfolio` the pages about the author rather than the writing.
+      `sidebar.<id>` in the locale files. `evidence` comes first: it is what
+      someone judging the author opens, and the icon rows above already serve
+      someone who came to read. `browse` is the lookup indexes.
     -->
-    {% assign nav_groups = 'browse,portfolio' | split: ',' %}
+    {% assign nav_groups = 'evidence,browse' | split: ',' %}
     {% for group in nav_groups %}
       {% assign group_tabs = site.tabs | where: 'group', group | sort: 'order' %}
       {% if group_tabs.size > 0 %}

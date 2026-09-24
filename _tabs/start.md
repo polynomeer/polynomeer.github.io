@@ -5,7 +5,6 @@ title_key: start_here
 hero_title: true
 icon: fas fa-compass
 order: 1
-group: browse
 permalink: /start/
 ---
 
