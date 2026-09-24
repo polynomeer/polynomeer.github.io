@@ -27,6 +27,16 @@ labs:
         headline:
           ko-KR: "같은 REPEATABLE READ에서 lost update가 갈렸다. PostgreSQL 20/20 직렬화 실패, MySQL 20/20 조용히 덮어씀. SERIALIZABLE 비용은 22~36ms 대 3,051ms"
           en: "Lost update diverges at the same REPEATABLE READ: PostgreSQL aborts 20/20, MySQL silently overwrites 20/20. SERIALIZABLE costs 22-36 ms against 3,051 ms"
+      - slug: cost-of-a-postgres-connection
+        question: { ko-KR: 커넥션 풀은 실제로 무엇을 아끼고 언제 키우면 손해인가, en: What does a pool actually save, and when does a bigger one cost }
+        headline:
+          ko-KR: "커넥션 열기 5.48ms 대 질의 0.23ms, 유휴 커넥션 하나가 1.5MB. 처리량은 풀 10에서 정점이고 150에서 15% 낮은데, 그 구간에서 획득 대기는 89.3 → 38.8ms로 줄고 총 p50은 60.2 → 69.8ms로 늘었다"
+          en: "5.48 ms to open a connection against 0.23 ms to run the query, and 1.5 MB per idle connection. Past the peak the acquire wait falls while total latency rises: the queue moved into the server"
+      - slug: cache-stampede-experiment
+        question: { ko-KR: 캐시가 만료되는 순간 몇 명이 원본까지 가고 방어는 무엇을 대가로 내는가, en: How many clients reach the origin at expiry, and what does each defence cost }
+        headline:
+          ko-KR: "방어가 없으면 만료마다 200명 중 125.5명이 원본에 도달했다. 락 기반 single flight는 1.5회로 84배 줄이면서 처리량과 p99도 가장 좋았고, XFetch는 beta를 재계산 비용보다 키우면 오히려 나빠졌다"
+          en: "Unprotected, 125.5 of 200 clients reach the origin at every expiry. Single flight holds it at 1.5, an 84x reduction, at the best throughput and p99 of any defence"
       - slug: when-the-index-is-not-used
         question: { ko-KR: 옵티마이저가 인덱스를 안 쓰는 것인가 못 쓰는 것인가, en: Is the planner choosing not to use the index, or unable to }
         headline:
