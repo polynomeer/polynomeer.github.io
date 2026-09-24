@@ -1,0 +1,49 @@
+{%- comment -%}
+Experiment index for /experiments/.
+Entries come from _data/experiments.yml and are matched to posts by slug, so a post that is
+hidden (draft or archived) simply drops out instead of rendering a dead link.
+{%- endcomment -%}
+{%- include lang.html -%}
+{%- assign data = site.data.experiments -%}
+{%- if data and data.enabled -%}
+{%- assign loc = site.data.locales[lang].experiments -%}
+{%- assign total = 0 -%}
+{%- for lab in data.labs -%}
+{%- for item in lab.items -%}
+{%- assign matched = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+{%- if matched -%}{%- assign total = total | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+{%- endfor -%}
+<p class="experiment-intro" data-l10n-ko="{{ data.intro['ko-KR'] | escape }}" data-l10n-en="{{ data.intro.en | escape }}">{% include localized-value.html value=data.intro lang=lang %}</p>
+<p class="experiment-summary"><span data-i18n="experiments.summary_labs">{{ loc.summary_labs }}</span> <strong>{{ data.labs.size }}</strong> · <span data-i18n="experiments.summary_runs">{{ loc.summary_runs }}</span> <strong>{{ total }}</strong></p>
+
+{%- for lab in data.labs -%}
+{%- assign lab_posts = '' | split: '' -%}
+{%- for item in lab.items -%}
+{%- assign matched = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+{%- if matched -%}{%- assign lab_posts = lab_posts | push: item.slug -%}{%- endif -%}
+{%- endfor -%}
+{%- if lab_posts.size > 0 -%}
+<section class="experiment-lab" id="{{ lab.id }}">
+  <header class="experiment-lab-head">
+    <h2 data-l10n-ko="{{ lab.name['ko-KR'] | escape }}" data-l10n-en="{{ lab.name.en | escape }}">{% include localized-value.html value=lab.name lang=lang %}</h2>
+    <a class="experiment-repo" href="{{ lab.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> <span data-i18n="experiments.repo">{{ loc.repo }}</span></a>
+  </header>
+  <p class="experiment-lab-focus" data-l10n-ko="{{ lab.focus['ko-KR'] | escape }}" data-l10n-en="{{ lab.focus.en | escape }}">{% include localized-value.html value=lab.focus lang=lang %}</p>
+
+  <ol class="experiment-list">
+    {%- for item in lab.items -%}
+    {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+    {%- if post -%}
+    <li class="experiment-item">
+      <p class="experiment-question" data-l10n-ko="{{ item.question['ko-KR'] | escape }}" data-l10n-en="{{ item.question.en | escape }}">{% include localized-value.html value=item.question lang=lang %}</p>
+      <a class="experiment-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <p class="experiment-headline" data-l10n-ko="{{ item.headline['ko-KR'] | escape }}" data-l10n-en="{{ item.headline.en | escape }}">{% include localized-value.html value=item.headline lang=lang %}</p>
+    </li>
+    {%- endif -%}
+    {%- endfor -%}
+  </ol>
+</section>
+{%- endif -%}
+{%- endfor -%}
+{%- endif -%}
