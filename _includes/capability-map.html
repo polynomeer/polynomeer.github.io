@@ -1,6 +1,7 @@
 {% comment %}
-  The capability graph. `heading` is the level its title renders at: `h1` when
-  the map is a page of its own (/capabilities/), `h2` when it sits inside one.
+  The capability graph. `heading` is the level its title renders at (`h2` by
+  default). Pass `head=false` when the page already introduced itself through
+  page-hero.html, so the map does not restate the title under it.
 {% endcomment %}
 {% assign lang = include.lang | default: site.lang %}
 {% assign heading = include.heading | default: 'h2' %}
@@ -16,10 +17,12 @@
   {% endif %}
 
   <section class="capability-map-directory" id="capabilities" data-capability-graph data-default-focus="{{ default_focus }}">
-    <div class="capability-map-head">
-      <p class="about-portfolio-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
-      <{{ heading }} class="capability-map-title" data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</{{ heading }}>
-    </div>
+    {% unless include.head == false %}
+      <div class="capability-map-head">
+        <p class="page-hero-eyebrow" data-i18n="capability_map.eyebrow">{{ site.data.locales[lang].capability_map.eyebrow }}</p>
+        <{{ heading }} class="capability-map-title" data-i18n="capability_map.directory_title">{{ site.data.locales[lang].capability_map.directory_title }}</{{ heading }}>
+      </div>
+    {% endunless %}
 
     {% if capability_map.clusters and capability_map.clusters.size > 0 %}
       <div class="capability-map-legend" aria-label="{{ site.data.locales[lang].capability_map.cluster_legend }}">

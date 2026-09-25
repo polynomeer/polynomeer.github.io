@@ -9,33 +9,6 @@
   display: grid;
   gap: 1.25rem;
   letter-spacing: 0.03rem;
-
-  .otd-hero {
-    display: grid;
-    gap: 0.9rem;
-    padding: 1.4rem 1.5rem;
-    border: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.25));
-    border-radius: 1.25rem;
-    background:
-      radial-gradient(circle at top right, rgba(139, 233, 253, 0.1), transparent 28%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
-    box-shadow: 0 12px 30px rgba(15, 18, 30, 0.1);
-  }
-
-  .otd-eyebrow {
-    margin: 0;
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-muted-color);
-  }
-
-  .otd-summary {
-    margin: 0;
-    color: var(--text-muted-color);
-    line-height: 1.7;
-  }
 }
 
 .otd-controls {

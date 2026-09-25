@@ -6,11 +6,13 @@ layout: page
 {% assign posts_by_type = site.posts | group_by_exp: 'post', "post.path | split: '/' | slice: 1, 1 | first | downcase" %}
 
 <section class="content-type-directory">
-  <div class="content-type-hero">
-    <p class="content-type-eyebrow" data-i18n="content_types.eyebrow">{{ site.data.locales[lang].content_types.eyebrow }}</p>
-    <h1 class="page-hero-title" data-i18n="content_types.directory_title">{{ site.data.locales[lang].content_types.directory_title }}</h1>
-    <p class="content-type-summary" data-i18n="content_types.directory_description">{{ site.data.locales[lang].content_types.directory_description }}</p>
-  </div>
+  {% assign ct_ko = site.data.locales['ko-KR'].content_types %}
+  {% assign ct_en = site.data.locales.en.content_types %}
+  {% include page-hero.html
+    lang=lang
+    eyebrow_ko=ct_ko.eyebrow eyebrow_en=ct_en.eyebrow
+    title_ko=ct_ko.directory_title title_en=ct_en.directory_title
+    summary_ko=ct_ko.directory_description summary_en=ct_en.directory_description %}
 
   <div class="content-type-grid">
     {% assign type_pages = site.content_types | sort: 'order' %}

@@ -8,11 +8,13 @@ layout: page
 {% assign topics = site.topics | default: empty | sort: 'order' %}
 
 <section class="topic-directory">
-  <div class="topic-hero">
-    <p class="topic-eyebrow">{{ t.eyebrow }}</p>
-    <h1 class="page-hero-title">{{ t.directory_title }}</h1>
-    <p class="topic-summary">{{ t.directory_description }}</p>
-  </div>
+  {% assign t_ko = site.data.locales['ko-KR'].topic %}
+  {% assign t_en = site.data.locales.en.topic %}
+  {% include page-hero.html
+    lang=lang
+    eyebrow_ko=t_ko.eyebrow eyebrow_en=t_en.eyebrow
+    title_ko=t_ko.directory_title title_en=t_en.directory_title
+    summary_ko=t_ko.directory_description summary_en=t_en.directory_description %}
 
   <div class="topic-grid">
     {% for topic in topics %}

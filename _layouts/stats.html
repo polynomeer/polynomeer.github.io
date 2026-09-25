@@ -9,62 +9,38 @@ layout: page
 {% assign loc = site.data.locales[lang].stats %}
 {% assign loc_ko = site.data.locales['ko-KR'].stats %}
 {% assign loc_en = site.data.locales.en.stats %}
+{% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
+{% assign tabs_en = site.data.locales.en.tabs %}
 
 {% if stats %}
   {% assign totals = stats.totals %}
 
   <div id="blog-stats" class="pl-xl-3">
-    <section class="stats-hero">
-      <p class="stats-eyebrow"
-        data-l10n-ko="{{ loc_ko.eyebrow | escape }}"
-        data-l10n-en="{{ loc_en.eyebrow | escape }}"
-      >{{ loc.eyebrow }}</p>
-      <h1 class="page-hero-title"
-        data-l10n-ko="{{ site.data.locales['ko-KR'].tabs.stats | escape }}"
-        data-l10n-en="{{ site.data.locales.en.tabs.stats | escape }}"
-      >{{ site.data.locales[lang].tabs.stats }}</h1>
-      <p class="stats-summary"
-        data-l10n-ko="{{ loc_ko.description | escape }}"
-        data-l10n-en="{{ loc_en.description | escape }}"
-      >{{ loc.description }}</p>
-
-      <div class="stats-cards">
-        {% assign span = totals.first_year | append: '–' | append: totals.last_year %}
-        {% include stats/card.html
-          value=totals.years
-          unit=loc.unit_years
-          unit_ko=loc_ko.unit_years
-          unit_en=loc_en.unit_years
-          label=span %}
-        {% include stats/card.html
-          value=totals.posts
-          unit=loc.unit_posts
-          unit_ko=loc_ko.unit_posts
-          unit_en=loc_en.unit_posts
-          label=loc.card_posts
-          label_ko=loc_ko.card_posts
-          label_en=loc_en.card_posts %}
-        {% include stats/card.html
-          value=totals.hours
-          unit=loc.unit_hours
-          unit_ko=loc_ko.unit_hours
-          unit_en=loc_en.unit_hours
-          label=loc.card_hours
-          label_ko=loc_ko.card_hours
-          label_en=loc_en.card_hours %}
-        {% capture series_label %}{{ loc.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
+    {% capture stats_cards %}
+      <div class="page-hero-stats">
+        {% capture year_span %}{{ totals.first_year }}&ndash;{{ totals.last_year }}{% endcapture %}
+        {% include page-hero-stat.html lang=lang value=totals.years
+          unit_ko=loc_ko.unit_years unit_en=loc_en.unit_years label=year_span %}
+        {% include page-hero-stat.html lang=lang value=totals.posts
+          unit_ko=loc_ko.unit_posts unit_en=loc_en.unit_posts
+          label_ko=loc_ko.card_posts label_en=loc_en.card_posts %}
+        {% include page-hero-stat.html lang=lang value=totals.hours
+          unit_ko=loc_ko.unit_hours unit_en=loc_en.unit_hours
+          label_ko=loc_ko.card_hours label_en=loc_en.card_hours %}
         {% capture series_label_ko %}{{ loc_ko.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
         {% capture series_label_en %}{{ loc_en.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
-        {% include stats/card.html
-          value=totals.series
-          unit=loc.unit_series
-          unit_ko=loc_ko.unit_series
-          unit_en=loc_en.unit_series
-          label=series_label
-          label_ko=series_label_ko
-          label_en=series_label_en %}
+        {% include page-hero-stat.html lang=lang value=totals.series
+          unit_ko=loc_ko.unit_series unit_en=loc_en.unit_series
+          label_ko=series_label_ko label_en=series_label_en %}
       </div>
-    </section>
+    {% endcapture %}
+
+    {% include page-hero.html
+      lang=lang
+      eyebrow_ko=loc_ko.eyebrow eyebrow_en=loc_en.eyebrow
+      title_ko=tabs_ko.stats title_en=tabs_en.stats
+      summary_ko=loc_ko.description summary_en=loc_en.description
+      extra=stats_cards %}
 
     <!-- when -->
     <section class="stats-section">

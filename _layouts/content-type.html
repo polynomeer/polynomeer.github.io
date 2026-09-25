@@ -12,10 +12,10 @@ layout: page
   {% assign matching_posts = site.posts | where_exp: 'post', "post.path contains type_segment" %}
   <section class="content-type-detail">
     <div class="content-type-hero">
-      <p class="content-type-eyebrow">{{ site.data.locales[lang].content_types.eyebrow }}</p>
+      <p class="page-hero-eyebrow">{{ site.data.locales[lang].content_types.eyebrow }}</p>
       <h2>{{ content_type_label }}</h2>
       <p
-        class="content-type-summary"
+        class="page-hero-summary"
         data-l10n-ko="{{ content_type.description['ko-KR'] | default: content_type.description | escape }}"
         data-l10n-en="{{ content_type.description.en | default: content_type.description | escape }}"
       >

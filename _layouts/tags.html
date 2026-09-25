@@ -3,6 +3,19 @@ layout: page
 # All the Tags of posts.
 ---
 
+{% include lang.html %}
+
+{% assign hero_ko = site.data.locales['ko-KR'].page_hero.tags %}
+{% assign hero_en = site.data.locales.en.page_hero.tags %}
+{% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
+{% assign tabs_en = site.data.locales.en.tabs %}
+
+{% include page-hero.html
+  lang=lang
+  eyebrow_ko=hero_ko.eyebrow eyebrow_en=hero_en.eyebrow
+  title_ko=tabs_ko.tags title_en=tabs_en.tags
+  summary_ko=hero_ko.summary summary_en=hero_en.summary %}
+
 {% comment %}
   Most-used tags first (ties alphabetical). The key inverts the count so a
   plain ascending sort gives count-descending, name-ascending order.

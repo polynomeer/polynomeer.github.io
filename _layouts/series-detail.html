@@ -19,15 +19,15 @@ layout: page
 
       <div class="series-detail-hero-copy">
         {% if page.kicker %}
-          <p class="series-eyebrow">{{ page.kicker }}</p>
+          <p class="page-hero-eyebrow">{{ page.kicker }}</p>
         {% endif %}
 
         <h2>{{ series_title }}</h2>
 
         {% if page.description %}
-          <p class="series-summary">{{ page.description }}</p>
+          <p class="page-hero-summary">{{ page.description }}</p>
         {% elsif first_post.series_description %}
-          <p class="series-summary">{{ first_post.series_description }}</p>
+          <p class="page-hero-summary">{{ first_post.series_description }}</p>
         {% endif %}
 
         <div class="series-detail-meta">

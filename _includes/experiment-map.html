@@ -14,7 +14,6 @@ hidden (draft or archived) simply drops out instead of rendering a dead link.
 {%- if matched -%}{%- assign total = total | plus: 1 -%}{%- endif -%}
 {%- endfor -%}
 {%- endfor -%}
-<p class="experiment-intro" data-l10n-ko="{{ data.intro['ko-KR'] | escape }}" data-l10n-en="{{ data.intro.en | escape }}">{% include localized-value.html value=data.intro lang=lang %}</p>
 <p class="experiment-summary"><span data-i18n="experiments.summary_labs">{{ loc.summary_labs }}</span> <strong>{{ data.labs.size }}</strong> · <span data-i18n="experiments.summary_runs">{{ loc.summary_runs }}</span> <strong>{{ total }}</strong></p>
 
 {%- for lab in data.labs -%}

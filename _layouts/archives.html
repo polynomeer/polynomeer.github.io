@@ -13,26 +13,30 @@ layout: page
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
 
 <div id="archives" class="pl-xl-3">
-  <section class="archives-hero">
-    <p class="archives-eyebrow" data-i18n="archives.eyebrow">{{ site.data.locales[lang].archives.eyebrow }}</p>
-    <h1 class="page-hero-title" data-i18n="tabs.archives">{{ site.data.locales[lang].tabs.archives }}</h1>
-    <p class="archives-summary" data-i18n="archives.description">{{ site.data.locales[lang].archives.description }}</p>
+  {% assign ar_ko = site.data.locales['ko-KR'].archives %}
+  {% assign ar_en = site.data.locales.en.archives %}
+  {% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
+  {% assign tabs_en = site.data.locales.en.tabs %}
 
-    <div class="archives-stats">
-      <article class="archives-stat-card">
-        <span class="archives-stat-label" data-i18n="archives.total_posts">{{ site.data.locales[lang].archives.total_posts }}</span>
-        <strong>{{ site.posts | size }}</strong>
-      </article>
-      <article class="archives-stat-card">
-        <span class="archives-stat-label" data-i18n="archives.active_years">{{ site.data.locales[lang].archives.active_years }}</span>
-        <strong>{{ active_years }}</strong>
-      </article>
-      <article class="archives-stat-card">
-        <span class="archives-stat-label" data-i18n="archives.latest_year">{{ site.data.locales[lang].archives.latest_year }}</span>
-        <strong>{{ latest_year }}</strong>
-      </article>
+  {% capture archives_stats %}
+    <div class="page-hero-stats">
+      {% include page-hero-stat.html lang=lang value=site.posts.size
+        label_ko=ar_ko.total_posts label_en=ar_en.total_posts %}
+      {% include page-hero-stat.html lang=lang value=active_years
+        label_ko=ar_ko.active_years label_en=ar_en.active_years %}
+      {% include page-hero-stat.html lang=lang value=latest_year
+        label_ko=ar_ko.latest_year label_en=ar_en.latest_year %}
     </div>
+  {% endcapture %}
 
+  {% include page-hero.html
+    lang=lang
+    eyebrow_ko=ar_ko.eyebrow eyebrow_en=ar_en.eyebrow
+    title_ko=tabs_ko.archives title_en=tabs_en.archives
+    summary_ko=ar_ko.description summary_en=ar_en.description
+    extra=archives_stats %}
+
+  <section class="archives-controls">
     <div class="archives-filters">
       <div class="archives-filter-group">
         <span class="archives-filter-label" data-i18n="archives.filter_type">{{ site.data.locales[lang].archives.filter_type }}</span>

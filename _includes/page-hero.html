@@ -1,0 +1,49 @@
+{%- comment -%}
+  The block every tab page opens with: a small eyebrow, the page's h1, a
+  sentence or two of summary, and optionally a row of figures.
+
+    {% capture hero_extra %}...{% endcapture %}
+    {% include page-hero.html
+       lang=lang
+       eyebrow_ko=... eyebrow_en=...
+       title_ko=...   title_en=...
+       summary_ko=... summary_en=...
+       extra=hero_extra %}
+
+  Text is passed as a ko/en pair rather than as a `data-i18n` key because the
+  `#ui-locales` blob that assets/js/lang-switch.js reads carries only a handful
+  of keys, so `data-i18n` on a page heading never switches. The
+  `data-l10n-ko` / `data-l10n-en` attributes the same script honours work for
+  anything.
+
+  Only `title_ko` is required. A page with nothing useful to say in a summary
+  leaves it out rather than padding it.
+{%- endcomment -%}
+
+{%- assign hero_lang = include.lang | default: site.lang -%}
+
+<section class="page-hero">
+  {%- if include.eyebrow_ko -%}
+    <p
+      class="page-hero-eyebrow"
+      data-l10n-ko="{{ include.eyebrow_ko | escape }}"
+      data-l10n-en="{{ include.eyebrow_en | default: include.eyebrow_ko | escape }}"
+    >{% if hero_lang == 'en' %}{{ include.eyebrow_en | default: include.eyebrow_ko }}{% else %}{{ include.eyebrow_ko }}{% endif %}</p>
+  {%- endif -%}
+
+  <h1
+    class="page-hero-title"
+    data-l10n-ko="{{ include.title_ko | escape }}"
+    data-l10n-en="{{ include.title_en | default: include.title_ko | escape }}"
+  >{% if hero_lang == 'en' %}{{ include.title_en | default: include.title_ko }}{% else %}{{ include.title_ko }}{% endif %}</h1>
+
+  {%- if include.summary_ko -%}
+    <p
+      class="page-hero-summary"
+      data-l10n-ko="{{ include.summary_ko | escape }}"
+      data-l10n-en="{{ include.summary_en | default: include.summary_ko | escape }}"
+    >{% if hero_lang == 'en' %}{{ include.summary_en | default: include.summary_ko }}{% else %}{{ include.summary_ko }}{% endif %}</p>
+  {%- endif -%}
+
+  {{ include.extra }}
+</section>

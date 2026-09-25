@@ -16,11 +16,13 @@ layout: page
 
 {% if series_entries.size > 0 %}
   <section class="series-directory">
-    <div class="series-hero">
-      <p class="series-eyebrow" data-i18n="series_directory.eyebrow">{{ site.data.locales[lang].series_directory.eyebrow }}</p>
-      <h1 class="page-hero-title" data-i18n="series_directory.directory_title">{{ site.data.locales[lang].series_directory.directory_title }}</h1>
-      <p class="series-summary" data-i18n="series_directory.directory_description">{{ site.data.locales[lang].series_directory.directory_description }}</p>
-    </div>
+    {% assign sd_ko = site.data.locales['ko-KR'].series_directory %}
+    {% assign sd_en = site.data.locales.en.series_directory %}
+    {% include page-hero.html
+      lang=lang
+      eyebrow_ko=sd_ko.eyebrow eyebrow_en=sd_en.eyebrow
+      title_ko=sd_ko.directory_title title_en=sd_en.directory_title
+      summary_ko=sd_ko.directory_description summary_en=sd_en.directory_description %}
 
     {%- comment -%}
       Series are grouped by what they are, not by when they were written: things I built,

@@ -351,6 +351,28 @@ capability_map:
   connected_capabilities: Connected capabilities
   cluster_legend: Capability cluster legend
 
+# Page heroes for the tabs whose headings were not in the locale files before
+# (see _includes/page-hero.html).
+page_hero:
+  about:
+    eyebrow: Who wrote this
+    summary: What was built at work and on my own, the decisions each one turned on, and the posts that back them.
+  start:
+    eyebrow: New here
+    summary: "Reading picked to fit the time you have: what to read in fifteen minutes, and how far an hour gets you."
+  experiments:
+    eyebrow: Measured here
+    title: Measured experiments
+  tech_reviews:
+    eyebrow: Read and reviewed
+    title: Engineering blog and conference reviews
+  tags:
+    eyebrow: Tag index
+    summary: Every tag used on a post. The fastest route when you already know the subject.
+  categories:
+    eyebrow: Category index
+    summary: The second level under each content type, the same list the types page narrows to.
+
 sidebar:
   quick_links: Quick Access
   browse: Browse

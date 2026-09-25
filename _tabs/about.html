@@ -1,5 +1,6 @@
 ---
 # the default layout is 'page'
+hero_title: true
 icon: fas fa-info-circle
 order: 5
 redirect_from:
@@ -10,6 +11,17 @@ image:
 ---
 
 {% include lang.html %}
+
+{% assign hero_ko = site.data.locales['ko-KR'].page_hero.about %}
+{% assign hero_en = site.data.locales.en.page_hero.about %}
+{% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
+{% assign tabs_en = site.data.locales.en.tabs %}
+
+{% include page-hero.html
+  lang=lang
+  eyebrow_ko=hero_ko.eyebrow eyebrow_en=hero_en.eyebrow
+  title_ko=tabs_ko.about title_en=tabs_en.about
+  summary_ko=hero_ko.summary summary_en=hero_en.summary %}
 
 {% include about-portfolio.html lang=lang %}
 

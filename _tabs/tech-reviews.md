@@ -12,6 +12,15 @@ redirect_from:
 
 {% include lang.html %}
 
-<p class="tech-blog-lead" data-i18n="tech_blogs.lead">{{ site.data.locales[lang].tech_blogs.lead }}</p>
+{% assign hero_ko = site.data.locales['ko-KR'].page_hero.tech_reviews %}
+{% assign hero_en = site.data.locales.en.page_hero.tech_reviews %}
+{% assign lead_ko = site.data.locales['ko-KR'].tech_blogs.lead %}
+{% assign lead_en = site.data.locales.en.tech_blogs.lead %}
+
+{% include page-hero.html
+  lang=lang
+  eyebrow_ko=hero_ko.eyebrow eyebrow_en=hero_en.eyebrow
+  title_ko=hero_ko.title title_en=hero_en.title
+  summary_ko=lead_ko summary_en=lead_en %}
 
 {% include tech-blog-map.html item_heading="h2" %}

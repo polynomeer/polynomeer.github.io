@@ -1,0 +1,22 @@
+{%- comment -%}
+  One figure in a page hero's stat row. `value` is the number, `unit` the small
+  suffix beside it, `label` the line underneath.
+{%- endcomment -%}
+
+{%- assign stat_lang = include.lang | default: site.lang -%}
+
+<article class="page-hero-stat">
+  <strong class="page-hero-stat-value">
+    {{ include.value }}
+    {%- if include.unit_ko -%}
+      <small
+        data-l10n-ko="{{ include.unit_ko | escape }}"
+        data-l10n-en="{{ include.unit_en | default: include.unit_ko | escape }}"
+      >{% if stat_lang == 'en' %}{{ include.unit_en | default: include.unit_ko }}{% else %}{{ include.unit_ko }}{% endif %}</small>
+    {%- endif -%}
+  </strong>
+  <span
+    class="page-hero-stat-label"
+    {% if include.label_ko %}data-l10n-ko="{{ include.label_ko | escape }}" data-l10n-en="{{ include.label_en | default: include.label_ko | escape }}"{% endif %}
+  >{% if include.label_ko %}{% if stat_lang == 'en' %}{{ include.label_en | default: include.label_ko }}{% else %}{{ include.label_ko }}{% endif %}{% else %}{{ include.label }}{% endif %}</span>
+</article>

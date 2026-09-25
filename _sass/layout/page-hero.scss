@@ -1,0 +1,97 @@
+/*
+  Style for the shared page hero (_includes/page-hero.html)
+
+  Every tab page opened with its own hero: ten near-identical blocks, each with
+  its own class names and its own copy of these rules, and three pages with no
+  heading at all. This is the one implementation.
+
+  It is deliberately not a card. A hero card repeated on fifteen pages becomes
+  wallpaper, and on the pages that open with a grid of cards it puts a card
+  around cards. A rule under the block gives every page the same rhythm at a
+  fraction of the weight.
+*/
+
+@use 'variables-hook' as *;
+@use 'addon/module' as *;
+
+.page-hero {
+  display: grid;
+  gap: 0.6rem;
+  padding-bottom: 1.4rem;
+  margin-bottom: 1.85rem;
+  border-bottom: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.25));
+
+  .page-hero-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--heading-color);
+  }
+}
+
+.page-hero-eyebrow {
+  margin: 0;
+  color: var(--text-muted-color);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.page-hero-summary {
+  max-width: 46rem;
+  margin: 0;
+  color: var(--text-muted-color);
+  line-height: 1.75;
+}
+
+/* optional row of figures, passed in through the hero's `extra` slot */
+.page-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+.page-hero-stat {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(98, 114, 164, 0.18);
+  border-radius: 0.85rem;
+  background: rgba(68, 71, 90, 0.12);
+}
+
+.page-hero-stat-value {
+  font-size: 1.45rem;
+  line-height: 1.2;
+  color: var(--heading-color);
+
+  small {
+    margin-left: 0.2rem;
+    font-size: 0.76rem;
+    font-weight: 400;
+    color: var(--text-muted-color);
+  }
+}
+
+.page-hero-stat-label {
+  color: var(--text-muted-color);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 575.98px) {
+  .page-hero {
+    margin-bottom: 1.4rem;
+
+    .page-hero-title {
+      font-size: 1.4rem;
+    }
+  }
+
+  .page-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

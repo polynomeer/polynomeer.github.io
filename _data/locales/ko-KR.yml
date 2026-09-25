@@ -346,6 +346,28 @@ capability_map:
   connected_capabilities: 연결된 역량
   cluster_legend: 역량 군집 범례
 
+# Page heroes for the tabs whose headings were not in the locale files before
+# (see _includes/page-hero.html).
+page_hero:
+  about:
+    eyebrow: 만든 사람
+    summary: 실무와 개인 프로젝트에서 무엇을 맡아 어떤 판단을 했는지, 그 근거가 된 글과 함께 정리했습니다.
+  start:
+    eyebrow: 처음 오셨다면
+    summary: 가진 시간에 맞춰 읽을 글을 골라 두었습니다. 15분이면 무엇을, 한 시간이면 어디까지 읽으면 되는지 정리했습니다.
+  experiments:
+    eyebrow: 직접 잰 것
+    title: 실측 기록
+  tech_reviews:
+    eyebrow: 읽고 쓴 것
+    title: 기술 블로그와 컨퍼런스 리뷰
+  tags:
+    eyebrow: 태그 색인
+    summary: 글에 붙은 모든 태그입니다. 찾는 주제가 분명할 때 쓰면 가장 빠릅니다.
+  categories:
+    eyebrow: 카테고리 색인
+    summary: 타입 아래의 두 번째 분류입니다. 타입 페이지에서 한 단계 좁힌 것과 같은 목록입니다.
+
 sidebar:
   quick_links: 빠른 이동
   browse: 둘러보기

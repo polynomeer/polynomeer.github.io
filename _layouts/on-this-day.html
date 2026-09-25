@@ -5,25 +5,21 @@ layout: page
 
 {% include lang.html %}
 
+{% assign loc_ko = site.data.locales['ko-KR'].on_this_day %}
+{% assign loc_en = site.data.locales.en.on_this_day %}
+{% assign otd_title_ko = site.data.locales['ko-KR'].tabs['on-this-day'] %}
+{% assign otd_title_en = site.data.locales.en.tabs['on-this-day'] %}
+
 <div
   id="on-this-day"
   class="pl-xl-3"
   data-endpoint="{{ '/assets/js/data/on-this-day.json' | relative_url }}"
 >
-  <section class="otd-hero">
-    <p class="otd-eyebrow"
-      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.eyebrow | escape }}"
-      data-l10n-en="{{ site.data.locales.en.on_this_day.eyebrow | escape }}"
-    >{{ site.data.locales[lang].on_this_day.eyebrow }}</p>
-    <h1 class="page-hero-title"
-      data-l10n-ko="{{ site.data.locales['ko-KR'].tabs['on-this-day'] | escape }}"
-      data-l10n-en="{{ site.data.locales.en.tabs['on-this-day'] | escape }}"
-    >{{ site.data.locales[lang].tabs['on-this-day'] }}</h1>
-    <p class="otd-summary"
-      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.description | escape }}"
-      data-l10n-en="{{ site.data.locales.en.on_this_day.description | escape }}"
-    >{{ site.data.locales[lang].on_this_day.description }}</p>
-  </section>
+  {% include page-hero.html
+    lang=lang
+    eyebrow_ko=loc_ko.eyebrow eyebrow_en=loc_en.eyebrow
+    title_ko=otd_title_ko title_en=otd_title_en
+    summary_ko=loc_ko.description summary_en=loc_en.description %}
 
   <nav class="otd-controls" aria-label="{{ site.data.locales[lang].on_this_day.eyebrow }}">
     <button type="button" class="otd-step" data-otd-step="-1" aria-label="{{ site.data.locales[lang].on_this_day.previous_day }}">
