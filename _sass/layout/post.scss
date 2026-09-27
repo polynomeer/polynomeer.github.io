@@ -2626,7 +2626,6 @@ header {
 
   &:hover {
     border-color: rgba(139, 233, 253, 0.32);
-    color: var(--link-color);
     text-decoration: none;
   }
 }
@@ -2644,10 +2643,7 @@ header {
   color: var(--text-color);
   transition: color 0.22s ease;
 
-  &:hover {
-    color: var(--text-color) !important;
-    border-bottom: none !important;
-  }
+  /* the hover colour is set in commons.scss, where it can outrank %link-hover */
 }
 
 .post-status-card-link {

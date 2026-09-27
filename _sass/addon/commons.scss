@@ -692,6 +692,36 @@ main {
     }
   }
 
+  /*
+    The rule above underlines every link in `.content` and repaints it green on
+    hover. That is right for prose and wrong for a link that is itself a box:
+    on a card the underline draws a line across the middle of the card, and on
+    a chip it turns one edge of the border a different colour from the other
+    three. These carry their own borders and their own hover state.
+  */
+  a.content-type-card-link,
+  a.content-type-subcategory,
+  a.topic-card-link {
+    &,
+    &:hover {
+      border-bottom: none;
+    }
+  }
+
+  /*
+    `%link-hover` also sets the text green with !important, which a component
+    rule cannot outrank from a layout partial: `.content a:not(.img-link):hover`
+    is the more specific selector. These have to sit here to win.
+  */
+  a.content-type-card-link:hover,
+  a.topic-card-link:hover {
+    color: var(--text-color) !important;
+  }
+
+  a.content-type-subcategory:hover {
+    color: var(--link-color) !important;
+  }
+
   ol,
   ul {
     &:not([class]),
