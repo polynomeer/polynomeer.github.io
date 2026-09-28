@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-22.04 # ruby is not installed by default in latest version (ubuntu-24.04)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # _plugins/post-revisions.rb reads the commit history of _posts;
           # the default shallow clone would leave every post without one
@@ -44,7 +44,7 @@ jobs:
           sudo apt-get install -y libstdc++6
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@8575951200e472d5f2d95c625da0c7bec8217c42 # v1.161.0
+        uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           ruby-version: '3.1' # Not needed with a .ruby-version file
           bundler-cache: false # runs 'bundle install' and caches installed gems automatically
@@ -58,7 +58,7 @@ jobs:
           bundle install
 
       - name: Setup Node for OG image generation
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '20'
 
@@ -72,7 +72,7 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build with Jekyll
         # Outputs to the './_site' directory by default
@@ -82,7 +82,7 @@ jobs:
 
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
 
   # Deployment job
   deploy:
@@ -94,4 +94,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
