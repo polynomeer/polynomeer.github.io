@@ -41,24 +41,12 @@ jobs:
           # the default shallow clone would leave every post without one
           fetch-depth: 0
 
-      - name: Install system dependencies (fix sass-embedded)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libstdc++6
-
       - name: Setup Ruby
         uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           ruby-version: '3.1' # Not needed with a .ruby-version file
-          bundler-cache: false # runs 'bundle install' and caches installed gems automatically
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           cache-version: 0 # Increment this number if you need to re-download cached gems
-
-      - name: Pin sass-embedded version
-        run: |
-          if ! grep -q 'sass-embedded' Gemfile; then
-            echo 'gem "sass-embedded", "~> 1.69.5"' >> Gemfile
-          fi
-          bundle install
 
       - name: Setup Node for OG image generation
         uses: actions/setup-node@v7
