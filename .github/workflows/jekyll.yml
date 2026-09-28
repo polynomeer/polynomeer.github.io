@@ -29,7 +29,10 @@ concurrency:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-22.04 # ruby is not installed by default in latest version (ubuntu-24.04)
+    # The pin was here because ubuntu-24.04 ships no system Ruby, but this job
+    # never used one: ruby/setup-ruby installs it, and it has prebuilt 3.1 for
+    # every current image. Floating keeps this off the retirement treadmill.
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -60,7 +63,9 @@ jobs:
       - name: Setup Node for OG image generation
         uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          # only runs tools/og/generate.mjs, whose one native dependency
+          # (@napi-rs/canvas) asks for node >= 10
+          node-version: '24'
 
       - name: Generate Open Graph images
         # Renders assets/img/og/<slug>.jpg for every published post. The site
