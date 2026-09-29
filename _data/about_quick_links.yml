@@ -1,0 +1,43 @@
+# About 페이지의 바로가기. url 이 비어 있으면 렌더되지 않습니다(about-quick-links.html).
+#
+# 이 목록에 넣을 것: 검토자가 About 을 읽은 뒤 실제로 이어서 볼 페이지. 사이드바에 이미 있는 항목이라도
+# 본문에서 한 번 더 짚어 주는 편이 동선이 짧습니다.
+enabled: true
+
+items:
+  - title:
+      ko-KR: 역량 맵
+      en: Capability map
+    note:
+      ko-KR: 역량별로 근거가 되는 글이 붙어 있습니다
+      en: Each capability links to the posts that evidence it
+    url: /capabilities/
+    icon: fas fa-diagram-project
+
+  - title:
+      ko-KR: 실측 기록
+      en: Measured experiments
+    note:
+      ko-KR: 재현·계측·조치·재측정을 거친 실험만 모아 둔 표입니다
+      en: Only experiments that reproduced, measured, fixed, and measured again
+    url: /experiments/
+    icon: fas fa-flask
+
+  - title:
+      ko-KR: 학습 성과
+      en: Learning evidence
+    url: /learning-evidence/
+    icon: fas fa-book-open-reader
+
+  - title:
+      ko-KR: 순서대로 읽는 시리즈
+      en: Ordered series
+    url: /series/
+    icon: fas fa-list-ol
+
+  - title:
+      ko-KR: GitHub 프로젝트
+      en: GitHub projects
+    url: https://github.com/polynomeer
+    icon: fab fa-github
+    external: true

@@ -23,8 +23,16 @@ image:
   title_ko=tabs_ko.about title_en=tabs_en.about
   summary_ko=hero_ko.summary summary_en=hero_en.summary %}
 
+{%- comment -%}
+  순서가 이 페이지의 설계입니다. 포트폴리오에서 넘어온 검토자는 "언제 어디서 한 일인가"부터 찾으므로
+  경력 요약이 대표 글·역량보다 앞에 옵니다.
+{%- endcomment -%}
+{% include about-career-summary.html lang=lang %}
+
 {% include about-portfolio.html lang=lang %}
 
 {% include about-representative-posts.html lang=lang %}
 
 <p class="about-blog-note" data-i18n="about.intro_summary_3">{{ site.data.locales[lang].about.intro_summary_3 }}</p>
+
+{% include about-quick-links.html lang=lang %}

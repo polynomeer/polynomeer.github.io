@@ -1566,6 +1566,208 @@ header {
   color: var(--text-muted-color);
 }
 
+.about-portfolio-tag.is-scripting {
+  /* 보조 수준임을 배지 자체에서 읽히게 합니다. 색만 다르면 범례 없이는 뜻이 전달되지 않으므로
+     라벨을 같이 붙입니다. */
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.about-portfolio-tag-qualifier {
+  margin-left: 0.3rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
+
+  &::before {
+    content: '·';
+    margin-right: 0.3rem;
+  }
+}
+
+/* 경력 요약 — About 의 첫 블록 */
+.about-career {
+  margin-top: 2.2rem;
+}
+
+.about-career-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.7rem;
+  margin: 0 0 1.4rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(98, 114, 164, 0.28);
+  background: var(--card-bg, transparent);
+}
+
+.about-career-status-label {
+  flex: none;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(98, 114, 164, 0.18);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted-color);
+}
+
+.about-career-status-value {
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.about-career-timeline {
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.about-career-entry {
+  display: grid;
+  grid-template-columns: 10.5rem 1fr;
+  gap: 0.2rem 1.2rem;
+  padding: 0.95rem 0;
+  border-top: 1px solid rgba(98, 114, 164, 0.2);
+
+  &:last-child {
+    border-bottom: 1px solid rgba(98, 114, 164, 0.2);
+  }
+}
+
+.about-career-period {
+  margin: 0;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted-color);
+  white-space: nowrap;
+}
+
+.about-career-body {
+  min-width: 0;
+}
+
+.about-career-org {
+  margin: 0 0 0.3rem;
+  font-size: 1.02rem;
+  line-height: 1.45;
+
+  /* h3 기본 상단 여백이 기간과 어긋나게 만듭니다. */
+  &::before {
+    content: none;
+  }
+}
+
+.about-career-role {
+  margin-left: 0.5rem;
+  font-size: 0.84rem;
+  font-weight: 400;
+  color: var(--text-muted-color);
+
+  &::before {
+    content: '·';
+    margin-right: 0.5rem;
+  }
+}
+
+.about-career-summary {
+  margin: 0 0 0.45rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text-muted-color);
+}
+
+.about-career-jump {
+  font-size: 0.84rem;
+}
+
+.about-career-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+}
+
+.about-career-contact-label {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted-color);
+}
+
+.about-career-contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.about-career-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.32);
+  font-size: 0.86rem;
+  text-decoration: none;
+
+  &.is-primary {
+    border-color: transparent;
+    background: rgba(98, 114, 164, 0.22);
+  }
+}
+
+/* 바로가기 */
+.about-quick-links {
+  margin-top: 2.2rem;
+}
+
+.about-quick-links-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.about-quick-links-list li {
+  padding: 0.6rem 0;
+  border-top: 1px solid rgba(98, 114, 164, 0.2);
+
+  &:last-child {
+    border-bottom: 1px solid rgba(98, 114, 164, 0.2);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.96rem;
+    text-decoration: none;
+  }
+}
+
+.about-quick-link-note {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  color: var(--text-muted-color);
+}
+
+@media all and (max-width: 768px) {
+  .about-career-entry {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .about-career-period {
+    font-size: 0.8rem;
+  }
+}
+
 .about-portfolio-links {
   display: flex;
   flex-wrap: wrap;

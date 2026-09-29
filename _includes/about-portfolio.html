@@ -43,6 +43,12 @@
 {%- endif -%}
 <div class="about-portfolio-tags">
 {%- for t in item.tech -%}<span class="about-portfolio-tag">{{ t }}</span>{%- endfor -%}
+{%- comment -%}
+  보조 수준으로 쓴 것은 별 표시가 붙은 배지로 구분합니다. 같은 배지로 두면 같은 숙련도로 읽힙니다.
+{%- endcomment -%}
+{%- for t in item.tech_scripting -%}
+<span class="about-portfolio-tag is-scripting">{{ t }}<span class="about-portfolio-tag-qualifier" data-l10n-ko="{{ site.data.locales['ko-KR'].about.scripting_label | escape }}" data-l10n-en="{{ site.data.locales.en.about.scripting_label | escape }}">{{ site.data.locales[lang].about.scripting_label }}</span></span>
+{%- endfor -%}
 </div>
 {%- if item.posts and item.posts.size > 0 -%}
 <div class="about-portfolio-links">
@@ -111,6 +117,12 @@
 </p>
 <div class="about-portfolio-tags">
 {%- for t in item.tech -%}<span class="about-portfolio-tag">{{ t }}</span>{%- endfor -%}
+{%- comment -%}
+  보조 수준으로 쓴 것은 별 표시가 붙은 배지로 구분합니다. 같은 배지로 두면 같은 숙련도로 읽힙니다.
+{%- endcomment -%}
+{%- for t in item.tech_scripting -%}
+<span class="about-portfolio-tag is-scripting">{{ t }}<span class="about-portfolio-tag-qualifier" data-l10n-ko="{{ site.data.locales['ko-KR'].about.scripting_label | escape }}" data-l10n-en="{{ site.data.locales.en.about.scripting_label | escape }}">{{ site.data.locales[lang].about.scripting_label }}</span></span>
+{%- endfor -%}
 </div>
 <div class="about-portfolio-links">
 {%- if card_series and card_series_count > 0 -%}

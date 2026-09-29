@@ -1,0 +1,55 @@
+# About 페이지 맨 위에 놓이는 경력 요약입니다.
+#
+# 포트폴리오에서 넘어온 검토자가 가장 먼저 찾는 것은 "언제 어디서 한 일인가"입니다. 그래서 이 블록은
+# 대표 글이나 역량보다 앞에 옵니다.
+#
+# 출처: _data/portfolio.yml 의 career.note 와 각 항목의 period. 여기에 없는 회사·기간·수치는 적지
+# 않습니다. 새 경력을 추가할 때 portfolio.yml 의 기간과 어긋나지 않게 맞춥니다.
+enabled: true
+
+# 현재 상태. 구직 여부를 명시하는 자리입니다.
+status:
+  label:
+    ko-KR: 현재
+    en: Now
+  value:
+    ko-KR: 개인 프로젝트로 백엔드 설계·계측을 이어가는 중입니다. 백엔드 엔지니어 포지션을 찾고 있습니다.
+    en: Continuing backend design and measurement work through personal projects. Open to backend engineering roles.
+
+# 역순입니다. 검토자는 최근 것을 먼저 봅니다.
+timeline:
+  - period: 2025.2 – 현재
+    period_en: 2025.2 – present
+    org:
+      ko-KR: 육아 및 개인 프로젝트
+      en: Childcare and personal projects
+    role:
+      ko-KR: 1인 개발
+      en: Solo development
+    summary:
+      ko-KR: 결제·원장, 주식 관찰, 장애 대응 훈련 플랫폼을 직접 만들면서 부하·장애 실험을 설계해 수치로 남기고 있습니다.
+      en: Building a payment and ledger backend, a stock monitoring app, and a failure-handling practice platform, designing load and failure experiments and recording the numbers.
+    anchor: "#personal-projects"
+
+  - period: 2021.12 – 2025.2
+    period_en: 2021.12 – 2025.2
+    org:
+      ko-KR: (주)드림어스컴퍼니 (FLO)
+      en: Dreamus Company (FLO)
+    role:
+      ko-KR: 백엔드 엔지니어
+      en: Backend Engineer
+    summary:
+      ko-KR: 음원 콘텐츠 플랫폼과 저작권 정산 시스템을 담당했습니다. 화면 단위 API를 도메인 중심으로 재설계하고, 대량 정산 배치의 동시성과 병목을 계측으로 풀었습니다.
+      en: Worked on the music contents platform and the copyright settlement system. Restructured screen-driven APIs around domain responsibilities and resolved concurrency and bottlenecks in large settlement batches through measurement.
+    anchor: "#career-projects"
+
+# 연락 경로. 여기 없는 것은 About 에 나타나지 않습니다.
+contact:
+  email: polynomeer@gmail.com
+  github: https://github.com/polynomeer
+  linkedin: https://www.linkedin.com/in/polynomeer
+  # 이력서 PDF 를 assets/files/ 에 넣고 아래 주석을 풀면 버튼이 나타납니다. 파일이 없는 상태로 값을
+  # 채우면 깨진 링크가 되므로, 파일을 먼저 두십시오.
+  # resume: /assets/files/polynomeer-resume.pdf
+  resume: ""
