@@ -3,8 +3,9 @@
 # 포트폴리오에서 넘어온 검토자가 가장 먼저 찾는 것은 "언제 어디서 한 일인가"입니다. 그래서 이 블록은
 # 대표 글이나 역량보다 앞에 옵니다.
 #
-# 출처: _data/portfolio.yml 의 career.note 와 각 항목의 period. 여기에 없는 회사·기간·수치는 적지
-# 않습니다. 새 경력을 추가할 때 portfolio.yml 의 기간과 어긋나지 않게 맞춥니다.
+# 출처: career-hub 의 resume.html (경력·학력) 과 _data/portfolio.yml 의 각 항목 period.
+# 여기에 없는 회사·기간·수치는 적지 않습니다. 이력서를 고치면 이 파일도 같이 고칩니다 - 두 곳이
+# 어긋나면 검토자가 먼저 발견합니다.
 enabled: true
 
 # 현재 상태. 구직 여부를 명시하는 자리입니다.
@@ -27,8 +28,8 @@ timeline:
       ko-KR: 1인 개발
       en: Solo development
     summary:
-      ko-KR: 결제·원장, 주식 관찰, 장애 대응 훈련 플랫폼을 직접 만들면서 부하·장애 실험을 설계해 수치로 남기고 있습니다.
-      en: Building a payment and ledger backend, a stock monitoring app, and a failure-handling practice platform, designing load and failure experiments and recording the numbers.
+      ko-KR: 결제·원장, 주식 관찰, 장애 대응 훈련 플랫폼을 직접 만들면서 부하·장애 실험을 설계해 수치로 남기고 있습니다. 이 기간에 F-Lab 자바 백엔드 멘토링 과정을 수료했습니다(2025.6 – 2025.9).
+      en: Building a payment and ledger backend, a stock monitoring app, and a failure-handling practice platform, designing load and failure experiments and recording the numbers. Completed the F-Lab Java backend mentoring programme during this period (2025.6 – 2025.9).
     anchor: "#personal-projects"
 
   - period: 2021.12 – 2025.2
@@ -44,12 +45,44 @@ timeline:
       en: Worked on the music contents platform and the copyright settlement system. Restructured screen-driven APIs around domain responsibilities and resolved concurrency and bottlenecks in large settlement batches through measurement.
     anchor: "#career-projects"
 
+  - period: 2021.6 – 2021.9
+    period_en: 2021.6 – 2021.9
+    org:
+      ko-KR: (주)더파이러츠
+      en: The Pirates
+    role:
+      ko-KR: IT본부 개발팀 백엔드 개발자
+      en: Backend Developer, IT Division
+    summary:
+      # 값이 작은따옴표로 시작하면 YAML 이 인용 스칼라로 읽고 뒤 문장에서 깨집니다.
+      ko-KR: "'인어교주해적단' 앱을 운영하며 제휴 상점 자동 결제와 결제 대행업체 API 연동, 상품 관리 시스템을 개발했습니다."
+      en: Worked on the Inuhae app - partner-store automated payments, payment gateway integrations, and the product management system.
+
+# 학력과 교육 과정. 경력 다음에 한 줄씩만 둡니다 - 검토자가 찾기는 하지만 오래 보지는 않습니다.
+education:
+  - period: 2025.6 – 2025.9
+    what:
+      ko-KR: F-Lab 자바 백엔드 멘토링 과정 수료
+      en: F-Lab Java backend mentoring programme
+  - period: 2021.1 – 2021.5
+    what:
+      ko-KR: 코드스쿼드 백엔드 마스터즈 과정 수료
+      en: Code Squad Backend Masters
+  - period: 2017.7 – 2018.3
+    what:
+      ko-KR: Best of the Best 6기 디지털 포렌식 트랙 수료
+      en: Best of the Best 6th, digital forensics track
+  - period: 2012.3 – 2020.2
+    what:
+      ko-KR: 영남대학교 컴퓨터공학과 졸업
+      en: BSc Computer Engineering, Yeungnam University
+
 # 연락 경로. 여기 없는 것은 About 에 나타나지 않습니다.
 contact:
   email: polynomeer@gmail.com
   github: https://github.com/polynomeer
   linkedin: https://www.linkedin.com/in/polynomeer
-  # 이력서 PDF 를 assets/files/ 에 넣고 아래 주석을 풀면 버튼이 나타납니다. 파일이 없는 상태로 값을
-  # 채우면 깨진 링크가 되므로, 파일을 먼저 두십시오.
-  # resume: /assets/files/polynomeer-resume.pdf
-  resume: ""
+  # scripts/sync-resume.sh 가 career-hub 의 resume.html 을 PDF 로 뽑아 여기에 둡니다.
+  # 값이 채워져 있어도 파일이 실제로 없으면 버튼은 나오지 않습니다(about-career-summary.html 이
+  # site.static_files 로 확인합니다). 경로를 바꾸면 스크립트의 DEST 도 같이 바꿔야 합니다.
+  resume: /assets/files/polynomeer-resume.pdf
