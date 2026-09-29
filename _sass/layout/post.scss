@@ -1585,6 +1585,170 @@ header {
   }
 }
 
+/* 성과 요약 띠 */
+.about-highlights {
+  margin-top: 2.2rem;
+}
+
+.about-highlights-list {
+  display: grid;
+
+  /* auto-fit 으로 두면 본문 폭에 따라 3+1 로 흘러 마지막 칸만 남습니다. 2x2 가 의도한 모양입니다. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0 0 0.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.about-highlight {
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(98, 114, 164, 0.28);
+}
+
+.about-highlight-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted-color);
+}
+
+.about-highlight-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0 0 0.45rem;
+  font-variant-numeric: tabular-nums;
+
+  .from {
+    font-size: 0.9rem;
+    color: var(--text-muted-color);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    opacity: 0.8;
+  }
+
+  .arrow {
+    font-size: 0.82rem;
+    opacity: 0.6;
+  }
+
+  .to {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+}
+
+.about-highlight-context {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-muted-color);
+}
+
+.about-highlight-jump {
+  font-size: 0.8rem;
+}
+
+.about-highlights-note {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text-muted-color);
+}
+
+/* 역량과 근거 */
+.about-capabilities {
+  margin-top: 2.2rem;
+}
+
+.about-capabilities-list {
+  display: grid;
+  gap: 0.15rem;
+  margin-bottom: 0.9rem;
+}
+
+.about-capability {
+  border-top: 1px solid rgba(98, 114, 164, 0.2);
+
+  &:last-of-type {
+    border-bottom: 1px solid rgba(98, 114, 164, 0.2);
+  }
+
+  &[open] .about-capability-summary {
+    font-weight: 600;
+  }
+}
+
+.about-capability-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0;
+  cursor: pointer;
+  font-size: 0.96rem;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  /* 펼침 표시를 직접 그립니다. 기본 마커는 위치가 제각각입니다. */
+  &::after {
+    content: '+';
+    margin-left: auto;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--text-muted-color);
+  }
+}
+
+.about-capability[open] .about-capability-summary::after {
+  content: '\2212';
+}
+
+.about-capability-badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(98, 114, 164, 0.18);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-muted-color);
+}
+
+.about-capability-body {
+  padding: 0 0 0.9rem 1.7rem;
+}
+
+.about-capability-description {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-muted-color);
+}
+
+.about-capability-evidence {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+}
+
+.about-capabilities-more {
+  font-size: 0.86rem;
+}
+
+/* 섹션마다 무엇으로 평가할지 */
+.about-portfolio-criteria {
+  margin: 0 0 0.35rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid rgba(98, 114, 164, 0.45);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
 /* 경력 요약 — About 의 첫 블록 */
 .about-career {
   margin-top: 2.2rem;
@@ -1755,6 +1919,12 @@ header {
   font-size: 0.83rem;
   line-height: 1.55;
   color: var(--text-muted-color);
+}
+
+@media all and (max-width: 576px) {
+  .about-highlights-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media all and (max-width: 768px) {

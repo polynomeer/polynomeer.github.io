@@ -398,6 +398,13 @@ about:
   intro_summary_1: I am a backend engineer who has designed and implemented service flows that remain operable under real-world complexity. I have spent most of my time on systems where state transitions, concurrency, and transactional consistency matter, and I focus on building platforms that remain reliable across change and failure conditions.
   intro_summary_2: In large-scale data processing environments, I analyze bottlenecks with measurement-first methods and improve both code and data structures to raise performance and stability continuously. Payment and settlement flows, where failure is unacceptable, are the kind of systems I care about most.
   intro_summary_3: This blog records the engineering judgment and experiments that came out of that work. I write mostly about database internals, Spring backend behavior, architectural decisions, performance improvement, concurrency control, and operating batch or settlement systems with higher reliability.
+  highlights_eyebrow: Results
+  highlights_title: What changed, and by how much
+  highlights_note: Before-and-after numbers measured in the work itself. Each entry links to the project it came from.
+  capabilities_eyebrow: Core strengths
+  capabilities_title: Strengths and the evidence
+  capabilities_evidence: evidence
+  capabilities_more: See the full capability map
   career_eyebrow: Career
   career_title: Where and what
   career_jump: See projects from this period

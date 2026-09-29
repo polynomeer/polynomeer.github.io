@@ -1,0 +1,51 @@
+{%- comment -%}
+  성과 요약 띠. 수치는 portfolio.yml 에서 찾아 옵니다 - about_highlights.yml 은 어느 값을 보여줄지만
+  가리킵니다. 가리킨 값을 못 찾으면 그 항목은 건너뜁니다. 빈칸이 남으면 수치가 없는 것처럼 보입니다.
+{%- endcomment -%}
+{%- assign highlights = site.data.about_highlights -%}
+{%- assign portfolio = site.data.portfolio -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- if highlights and highlights.enabled and portfolio and portfolio.career -%}
+{%- assign rendered = '' -%}
+<section class="about-highlights" aria-labelledby="about-highlights-title">
+  <p class="about-portfolio-eyebrow" data-i18n="about.highlights_eyebrow">{{ loc.highlights_eyebrow }}</p>
+  <h2 id="about-highlights-title" data-i18n="about.highlights_title">{{ loc.highlights_title }}</h2>
+  <ul class="about-highlights-list">
+  {%- for h in highlights.items -%}
+    {%- assign proj = portfolio.career.items | where: 'id', h.project | first -%}
+    {%- if proj and proj.metrics -%}
+      {%- assign metric = nil -%}
+      {%- for m in proj.metrics -%}
+        {%- if m.label['ko-KR'] == h.metric -%}{%- assign metric = m -%}{%- endif -%}
+      {%- endfor -%}
+      {%- if metric -%}
+      <li class="about-highlight">
+        <p class="about-highlight-label"
+          data-l10n-ko="{{ metric.label['ko-KR'] | escape }}"
+          data-l10n-en="{{ metric.label.en | escape }}">
+          {%- include localized-value.html value=metric.label lang=lang -%}
+        </p>
+        <p class="about-highlight-value">
+          <span class="from">{{ metric.from }}</span>
+          <span class="arrow" aria-hidden="true">→</span>
+          <span class="to">{{ metric.to }}</span>
+        </p>
+        <p class="about-highlight-context"
+          data-l10n-ko="{{ h.context['ko-KR'] | escape }}"
+          data-l10n-en="{{ h.context.en | escape }}">
+          {%- include localized-value.html value=h.context lang=lang -%}
+        </p>
+        <a class="about-highlight-jump" href="#{{ proj.id }}"
+          data-l10n-ko="{{ proj.title['ko-KR'] | escape }}"
+          data-l10n-en="{{ proj.title.en | escape }}">
+          {%- include localized-value.html value=proj.title lang=lang -%}
+        </a>
+      </li>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  </ul>
+  <p class="about-highlights-note" data-i18n="about.highlights_note">{{ loc.highlights_note }}</p>
+</section>
+{%- endif -%}

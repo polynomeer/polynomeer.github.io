@@ -6,6 +6,11 @@
 <section class="about-portfolio-group" id="career-projects">
 <p class="about-portfolio-eyebrow" data-i18n="about.portfolio_career_eyebrow">{{ site.data.locales[lang].about.portfolio_career_eyebrow }}</p>
 <h2 data-i18n="about.portfolio_career_title">{{ site.data.locales[lang].about.portfolio_career_title }}</h2>
+{%- if portfolio.career.criteria -%}
+<p class="about-portfolio-criteria" data-l10n-ko="{{ portfolio.career.criteria['ko-KR'] | escape }}" data-l10n-en="{{ portfolio.career.criteria.en | escape }}">
+{%- include localized-value.html value=portfolio.career.criteria lang=lang -%}
+</p>
+{%- endif -%}
 {%- if portfolio.career.note -%}
 <p class="about-portfolio-note" data-l10n-ko="{{ portfolio.career.note['ko-KR'] | escape }}" data-l10n-en="{{ portfolio.career.note.en | escape }}">
 {%- include localized-value.html value=portfolio.career.note lang=lang -%}
@@ -74,6 +79,11 @@
 <section class="about-portfolio-group" id="personal-projects">
 <p class="about-portfolio-eyebrow" data-i18n="about.portfolio_personal_eyebrow">{{ site.data.locales[lang].about.portfolio_personal_eyebrow }}</p>
 <h2 data-i18n="about.portfolio_personal_title">{{ site.data.locales[lang].about.portfolio_personal_title }}</h2>
+{%- if portfolio.personal.criteria -%}
+<p class="about-portfolio-criteria" data-l10n-ko="{{ portfolio.personal.criteria['ko-KR'] | escape }}" data-l10n-en="{{ portfolio.personal.criteria.en | escape }}">
+{%- include localized-value.html value=portfolio.personal.criteria lang=lang -%}
+</p>
+{%- endif -%}
 {%- if portfolio.personal.note -%}
 <p class="about-portfolio-note" data-l10n-ko="{{ portfolio.personal.note['ko-KR'] | escape }}" data-l10n-en="{{ portfolio.personal.note.en | escape }}">
 {%- include localized-value.html value=portfolio.personal.note lang=lang -%}

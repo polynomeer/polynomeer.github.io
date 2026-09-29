@@ -1,0 +1,47 @@
+{%- comment -%}
+  역량과 그 근거 글을 About 안에서 한 칸 거리로 둡니다. 역량 맵(/capabilities/)으로 보내면 검토자가
+  탭을 옮겨야 하고, 옮기는 순간 돌아오지 않습니다.
+
+  접힌 상태가 기본입니다. 제목과 근거 글 편수는 접힌 채로도 보이므로 훑기는 되고, 자세한 설명은 관심
+  있는 항목만 펼치게 합니다.
+{%- endcomment -%}
+{%- assign recruit = site.data.recruit_mode -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- if recruit and recruit.strengths and recruit.strengths.size > 0 -%}
+<section class="about-capabilities" aria-labelledby="about-capabilities-title">
+  <p class="about-portfolio-eyebrow" data-i18n="about.capabilities_eyebrow">{{ loc.capabilities_eyebrow }}</p>
+  <h2 id="about-capabilities-title" data-i18n="about.capabilities_title">{{ loc.capabilities_title }}</h2>
+  <div class="about-capabilities-list">
+  {%- for s in recruit.strengths -%}
+    {%- assign evidence = site.posts | where: 'url', s.url | first -%}
+    <details class="about-capability">
+      <summary class="about-capability-summary">
+        {%- if s.icon -%}<i class="{{ s.icon }}" aria-hidden="true"></i>{%- endif -%}
+        <span class="about-capability-title"
+          data-l10n-ko="{{ s.title['ko-KR'] | escape }}"
+          data-l10n-en="{{ s.title.en | escape }}">
+          {%- include localized-value.html value=s.title lang=lang -%}
+        </span>
+        {%- if evidence -%}
+        <span class="about-capability-badge" data-i18n="about.capabilities_evidence">{{ loc.capabilities_evidence }}</span>
+        {%- endif -%}
+      </summary>
+      <div class="about-capability-body">
+        <p class="about-capability-description"
+          data-l10n-ko="{{ s.description['ko-KR'] | escape }}"
+          data-l10n-en="{{ s.description.en | escape }}">
+          {%- include localized-value.html value=s.description lang=lang -%}
+        </p>
+        {%- if evidence -%}
+        <a class="about-capability-evidence" href="{{ evidence.url | relative_url }}">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i> {{ evidence.title }}
+        </a>
+        {%- endif -%}
+      </div>
+    </details>
+  {%- endfor -%}
+  </div>
+  <a class="about-capabilities-more" href="{{ '/capabilities/' | relative_url }}" data-i18n="about.capabilities_more">{{ loc.capabilities_more }}</a>
+</section>
+{%- endif -%}
