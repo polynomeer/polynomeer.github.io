@@ -1585,6 +1585,99 @@ header {
   }
 }
 
+/* 상단 터미널 타이핑 — GitHub 프로필 배너와 같은 내용 */
+.about-terminal {
+  position: relative;
+  height: 1.9rem;
+  margin-bottom: 1.1rem;
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 1.02rem;
+  line-height: 1.9rem;
+  color: #3f9f62;
+}
+
+html[data-mode='dark'] .about-terminal {
+  /* 지정된 초록은 어두운 배경에서만 대비가 납니다. 밝은 배경에서는 한 단계 어둡게 씁니다. */
+  color: #7ee787;
+}
+
+.about-terminal-line {
+  position: absolute;
+  inset: 0 auto 0 0;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  animation: about-terminal-line var(--cycle) infinite;
+  animation-delay: calc(var(--i) * (var(--cycle) / var(--lines)));
+
+  &.is-prompt {
+    opacity: 0;
+    color: var(--text-muted-color);
+  }
+}
+
+.about-terminal-caret {
+  position: absolute;
+  top: 0.35rem;
+  left: 0;
+  width: 0.55rem;
+  height: 1.15rem;
+  background: currentcolor;
+  opacity: 0.55;
+  animation: about-terminal-caret 1.06s steps(1) infinite;
+
+  /* 글자 뒤가 아니라 줄 시작에 두는 캐럿입니다. 줄마다 길이가 달라 끝을 따라가게 하려면
+     글자 수를 세어야 하는데, 그러면 문구를 고칠 때마다 CSS 를 고쳐야 합니다. */
+  display: none;
+}
+
+@keyframes about-terminal-line {
+  0% { max-width: 0; opacity: 0; }
+
+  1% { max-width: 0; opacity: 1; }
+
+  11% { max-width: 100%; opacity: 1; animation-timing-function: steps(32, end); }
+
+  15.5% { max-width: 100%; opacity: 1; }
+
+  16.6% { max-width: 100%; opacity: 0; }
+
+  100% { max-width: 100%; opacity: 0; }
+}
+
+@keyframes about-terminal-caret {
+  0%, 50% { opacity: 0.55; }
+
+  51%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 움직임을 끈 사용자에게는 정체를 밝히는 두 줄만 남깁니다. 나머지는 프롬프트라 정적으로
+     보여 줄 이유가 없습니다. */
+  .about-terminal {
+    height: auto;
+    line-height: 1.7;
+  }
+
+  .about-terminal-line {
+    position: static;
+    max-width: none;
+    animation: none;
+    opacity: 1;
+    display: none;
+
+    &:nth-child(2),
+    &:nth-child(4) {
+      display: block;
+    }
+
+    &.is-prompt {
+      display: none;
+    }
+  }
+}
+
 /* 히어로에 붙는 상태·수치·연락처 */
 .about-status {
   display: inline-flex;

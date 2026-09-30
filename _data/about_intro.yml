@@ -4,6 +4,21 @@
 # 군데 적으면 한쪽만 고쳐집니다.
 enabled: true
 
+# 상단 터미널 타이핑. GitHub 프로필 README 의 readme-typing-svg 와 같은 내용입니다.
+#
+# 원격 이미지를 그대로 걸지 않은 이유: 외부 서비스가 죽으면 소개 페이지 첫 화면이 비고, 이미지라
+# 텍스트가 선택·검색되지 않으며, 지정된 초록(#7EE787)이 라이트 테마에서 대비가 모자랍니다. 같은
+# 문구를 같은 리듬으로 CSS 로 그립니다.
+terminal:
+  # duration 2800ms + pause 1200ms = 줄당 4초, 6줄이니 한 바퀴 24초입니다.
+  lines:
+    - { text: "$ whoami", prompt: true }
+    - { text: "polynomeer — backend engineer" }
+    - { text: "$ cat motto.txt", prompt: true }
+    - { text: "Make Non-Polynomial Polynomial." }
+    - { text: "$ echo $INTERESTS", prompt: true }
+    - { text: "concurrency, Redis internals, someday my own product" }
+
 # 구직 여부. 검토자가 가장 먼저 확인하는 한 줄입니다.
 status:
   ko-KR: 백엔드 엔지니어 포지션을 찾고 있습니다

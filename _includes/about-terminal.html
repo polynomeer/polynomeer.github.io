@@ -1,0 +1,19 @@
+{%- comment -%}
+  GitHub 프로필의 타이핑 배너와 같은 내용을, 원격 이미지가 아니라 실제 텍스트로 그립니다.
+  줄은 겹쳐 놓고 차례로 보여 줍니다. 한 줄만 보이므로 높이는 고정입니다 - 레이아웃이 흔들리지
+  않습니다. 움직임을 끈 사용자에게는 정체를 밝히는 두 줄만 정적으로 남깁니다.
+{%- endcomment -%}
+{%- assign term = site.data.about_intro.terminal -%}
+{%- if term and term.lines and term.lines.size > 0 -%}
+{%- assign slot = 4 -%}
+{%- assign total = term.lines.size | times: slot -%}
+<div class="about-terminal" role="img"
+  aria-label="{% for l in term.lines %}{{ l.text | escape }}{% unless forloop.last %} · {% endunless %}{% endfor %}">
+  {%- for l in term.lines -%}
+  <span class="about-terminal-line{% if l.prompt %} is-prompt{% endif %}"
+    style="--i: {{ forloop.index0 }}; --lines: {{ term.lines.size }}; --cycle: {{ total }}s"
+    aria-hidden="true">{{ l.text }}</span>
+  {%- endfor -%}
+  <span class="about-terminal-caret" aria-hidden="true"></span>
+</div>
+{%- endif -%}

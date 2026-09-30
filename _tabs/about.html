@@ -19,20 +19,25 @@ image:
   경력 연표는 여기 없습니다 - /resume/ 가 그 일을 더 잘 하고, 두 군데 두면 한쪽만 갱신됩니다.
   히어로 문구는 _data/recruit_mode.yml 의 hero 를 그대로 씁니다.
 {%- endcomment -%}
-{% assign hero = site.data.recruit_mode.hero %}
 {%- comment -%}
+  제목과 요약은 이력서에서 이름 옆에 있는 tagline 과 같은 문구입니다(career-hub
+  content/resume-public.res.md). 이력서를 고치면 여기도 같이 고칩니다.
+
   include 태그의 파라미터는 대괄호 표기를 받지 않으므로 먼저 변수로 뺍니다.
 {%- endcomment -%}
-{% assign hero_title_ko = hero.short_title['ko-KR'] %}
-{% assign hero_summary_ko = hero.summary['ko-KR'] %}
+{% assign tagline_ko = 'Make Non Polynomial Polynomial.' %}
+{% assign tagline_sub_ko = '어떤 문제든 충분히 작게 쪼개면, 결국 풀어본 적 있는 문제였습니다.' %}
+{% assign tagline_sub_en = 'Break any problem down far enough and it turns out to be one you have solved before.' %}
 
 {% capture hero_extra %}{% include about-intro.html lang=lang %}{% endcapture %}
+
+{% include about-terminal.html %}
 
 {% include page-hero.html
   lang=lang
   eyebrow_ko="Backend Engineer" eyebrow_en="Backend Engineer"
-  title_ko=hero_title_ko title_en=hero.short_title.en
-  summary_ko=hero_summary_ko summary_en=hero.summary.en
+  title_ko=tagline_ko title_en=tagline_ko
+  summary_ko=tagline_sub_ko summary_en=tagline_sub_en
   extra=hero_extra %}
 
 {% include about-documents.html lang=lang %}
