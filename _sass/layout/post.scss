@@ -1585,6 +1585,96 @@ header {
   }
 }
 
+/* 히어로에 붙는 상태·수치·연락처 */
+.about-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.1rem 0 0;
+  padding: 0.35rem 0.8rem 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.32);
+  font-size: 0.88rem;
+}
+
+.about-status-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #46d17f;
+
+  /* 구직 중이라는 신호라 눈에 띄어야 하지만, 깜빡임은 읽기를 방해합니다. */
+  box-shadow: 0 0 0 3px rgba(70, 209, 127, 0.18);
+}
+
+.about-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.4rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-stats a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  text-decoration: none;
+
+  &:hover .about-stat-value,
+  &:focus-visible .about-stat-value {
+    color: var(--link-color);
+  }
+}
+
+.about-stat-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}
+
+.about-stat-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted-color);
+}
+
+.about-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.about-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.32);
+  font-size: 0.86rem;
+  text-decoration: none;
+
+  &.is-primary {
+    border-color: transparent;
+    background: rgba(98, 114, 164, 0.22);
+  }
+}
+
+@media all and (max-width: 576px) {
+  .about-stats {
+    gap: 0.5rem 1.6rem;
+  }
+
+  .about-stat-value {
+    font-size: 1.5rem;
+  }
+}
+
 /* 이력서·포트폴리오 카드 — About 의 주 동선 */
 .about-documents {
   margin-top: 2.2rem;
@@ -1642,187 +1732,7 @@ header {
   }
 }
 
-/* 경력 요약 — About 의 첫 블록 */
-.about-career {
-  margin-top: 2.2rem;
-}
 
-.about-career-status {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem 0.7rem;
-  margin: 0 0 1.4rem;
-  padding: 0.7rem 0.95rem;
-  border-radius: 0.6rem;
-  border: 1px solid rgba(98, 114, 164, 0.28);
-  background: var(--card-bg, transparent);
-}
-
-.about-career-status-label {
-  flex: none;
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(98, 114, 164, 0.18);
-  font-size: 0.74rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted-color);
-}
-
-.about-career-status-value {
-  font-size: 0.94rem;
-  line-height: 1.6;
-}
-
-.about-career-timeline {
-  margin: 0 0 1.5rem;
-  padding: 0;
-  list-style: none;
-}
-
-.about-career-entry {
-  display: grid;
-  grid-template-columns: 10.5rem 1fr;
-  gap: 0.2rem 1.2rem;
-  padding: 0.95rem 0;
-  border-top: 1px solid rgba(98, 114, 164, 0.2);
-
-  &:last-child {
-    border-bottom: 1px solid rgba(98, 114, 164, 0.2);
-  }
-}
-
-.about-career-period {
-  margin: 0;
-  font-size: 0.86rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-muted-color);
-  white-space: nowrap;
-}
-
-.about-career-body {
-  min-width: 0;
-}
-
-.about-career-org {
-  margin: 0 0 0.3rem;
-  font-size: 1.02rem;
-  line-height: 1.45;
-
-  /* h3 기본 상단 여백이 기간과 어긋나게 만듭니다. */
-  &::before {
-    content: none;
-  }
-}
-
-.about-career-role {
-  margin-left: 0.5rem;
-  font-size: 0.84rem;
-  font-weight: 400;
-  color: var(--text-muted-color);
-
-  &::before {
-    content: '·';
-    margin-right: 0.5rem;
-  }
-}
-
-.about-career-summary {
-  margin: 0 0 0.45rem;
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: var(--text-muted-color);
-}
-
-.about-career-jump {
-  font-size: 0.84rem;
-}
-
-.about-career-education {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.25rem 1.2rem;
-  margin: 0 0 1.4rem;
-  font-size: 0.86rem;
-}
-
-.about-career-education-label {
-  grid-column: 1 / -1;
-  margin-bottom: 0.15rem;
-  font-size: 0.74rem;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted-color);
-}
-
-.about-career-education-item {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 10.5rem 1fr;
-  gap: 1.2rem;
-  margin: 0;
-  color: var(--text-muted-color);
-}
-
-.about-career-education-period {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.about-career-contact {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.9rem;
-}
-
-.about-career-contact-label {
-  margin: 0;
-  font-size: 0.74rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted-color);
-}
-
-.about-career-contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.about-career-contact-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.32rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.32);
-  font-size: 0.86rem;
-  text-decoration: none;
-
-  &.is-primary {
-    border-color: transparent;
-    background: rgba(98, 114, 164, 0.22);
-  }
-}
-
-@media all and (max-width: 768px) {
-  .about-career-entry {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-  }
-
-  .about-career-period {
-    font-size: 0.8rem;
-  }
-
-  .about-career-education-item {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-}
 
 
 .about-portfolio-links {

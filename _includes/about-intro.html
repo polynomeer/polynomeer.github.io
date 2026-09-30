@@ -1,0 +1,66 @@
+{%- comment -%}
+  히어로에 딸려 나가는 블록: 구직 상태, 사이트에서 센 숫자, 연락처.
+  숫자는 데이터 파일에 적지 않고 여기서 셉니다. 적어 두면 글이 늘어도 그대로 남습니다.
+{%- endcomment -%}
+{%- assign intro = site.data.about_intro -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- if intro and intro.enabled -%}
+
+{%- if intro.status -%}
+<p class="about-status">
+  <span class="about-status-dot" aria-hidden="true"></span>
+  <span data-l10n-ko="{{ intro.status['ko-KR'] | escape }}" data-l10n-en="{{ intro.status.en | escape }}">
+    {%- include localized-value.html value=intro.status lang=lang -%}
+  </span>
+</p>
+{%- endif -%}
+
+{%- if intro.stats and intro.stats.size > 0 -%}
+{%- assign experiment_count = 0 -%}
+{%- for lab in site.data.experiments.labs -%}
+  {%- assign experiment_count = experiment_count | plus: lab.items.size -%}
+{%- endfor -%}
+<ul class="about-stats">
+  {%- for s in intro.stats -%}
+    {%- case s.key -%}
+      {%- when 'experiments' -%}{%- assign value = experiment_count -%}
+      {%- when 'posts' -%}{%- assign value = site.posts.size -%}
+      {%- when 'labs' -%}{%- assign value = site.data.experiments.labs.size -%}
+      {%- else -%}{%- assign value = nil -%}
+    {%- endcase -%}
+    {%- if value -%}
+    <li>
+      <a href="{{ s.url | relative_url }}">
+        <span class="about-stat-value">{{ value }}</span>
+        <span class="about-stat-label"
+          data-l10n-ko="{{ s.label['ko-KR'] | escape }}" data-l10n-en="{{ s.label.en | escape }}">
+          {%- include localized-value.html value=s.label lang=lang -%}
+        </span>
+      </a>
+    </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>
+{%- endif -%}
+
+{%- if intro.contact -%}
+<div class="about-contact">
+  {%- if intro.contact.email -%}
+  <a class="about-contact-link is-primary" href="mailto:{{ intro.contact.email }}">
+    <i class="fas fa-envelope" aria-hidden="true"></i> {{ intro.contact.email }}
+  </a>
+  {%- endif -%}
+  {%- if intro.contact.github -%}
+  <a class="about-contact-link" href="{{ intro.contact.github }}" target="_blank" rel="noopener noreferrer">
+    <i class="fab fa-github" aria-hidden="true"></i> GitHub
+  </a>
+  {%- endif -%}
+  {%- if intro.contact.linkedin -%}
+  <a class="about-contact-link" href="{{ intro.contact.linkedin }}" target="_blank" rel="noopener noreferrer">
+    <i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn
+  </a>
+  {%- endif -%}
+</div>
+{%- endif -%}
+
+{%- endif -%}

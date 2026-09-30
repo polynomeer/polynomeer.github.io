@@ -400,11 +400,6 @@ about:
   intro_summary_3: This blog records the engineering judgment and experiments that came out of that work. I write mostly about database internals, Spring backend behavior, architectural decisions, performance improvement, concurrency control, and operating batch or settlement systems with higher reliability.
   documents_eyebrow: Documents
   documents_title: Résumé and portfolio
-  career_eyebrow: Career
-  career_title: Where and what
-  career_jump: See projects from this period
-  career_education: Education
-  career_contact: Contact
   technical_focus: Technical Focus
   profile_hub_eyebrow: Profile Hub
   profile_hub_title: Where to go next

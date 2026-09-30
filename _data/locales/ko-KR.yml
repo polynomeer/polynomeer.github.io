@@ -395,11 +395,6 @@ about:
   intro_summary_3: 이 블로그에는 그 과정에서 얻은 실무적 판단과 실험 결과를 남깁니다. 데이터베이스 내부 동작, Spring 백엔드, 아키텍처 의사결정, 성능 개선, 동시성 제어, 배치 및 정산 시스템 운영처럼 실제 시스템을 더 정확하고 견고하게 만드는 데 필요한 주제를 주로 다룹니다.
   documents_eyebrow: 문서
   documents_title: 이력서와 포트폴리오
-  career_eyebrow: 경력
-  career_title: 어디서 무엇을 했는지
-  career_jump: 이 시기의 프로젝트 보기
-  career_education: 학력·교육
-  career_contact: 연락
   technical_focus: 기술 집중 분야
   profile_hub_eyebrow: 프로필 허브
   profile_hub_title: 더 볼 곳

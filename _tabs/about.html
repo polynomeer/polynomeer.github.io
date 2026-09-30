@@ -12,28 +12,29 @@ image:
 
 {% include lang.html %}
 
-{% assign hero_ko = site.data.locales['ko-KR'].page_hero.about %}
-{% assign hero_en = site.data.locales.en.page_hero.about %}
-{% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
-{% assign tabs_en = site.data.locales.en.tabs %}
+{%- comment -%}
+  이 페이지가 하는 일은 셋입니다. 무엇을 하는 사람인지 한 문장으로, 문서는 어디 있는지, 블로그에서
+  무엇을 읽어야 하는지.
+
+  경력 연표는 여기 없습니다 - /resume/ 가 그 일을 더 잘 하고, 두 군데 두면 한쪽만 갱신됩니다.
+  히어로 문구는 _data/recruit_mode.yml 의 hero 를 그대로 씁니다.
+{%- endcomment -%}
+{% assign hero = site.data.recruit_mode.hero %}
+{%- comment -%}
+  include 태그의 파라미터는 대괄호 표기를 받지 않으므로 먼저 변수로 뺍니다.
+{%- endcomment -%}
+{% assign hero_title_ko = hero.short_title['ko-KR'] %}
+{% assign hero_summary_ko = hero.summary['ko-KR'] %}
+
+{% capture hero_extra %}{% include about-intro.html lang=lang %}{% endcapture %}
 
 {% include page-hero.html
   lang=lang
-  eyebrow_ko=hero_ko.eyebrow eyebrow_en=hero_en.eyebrow
-  title_ko=tabs_ko.about title_en=tabs_en.about
-  summary_ko=hero_ko.summary summary_en=hero_en.summary %}
+  eyebrow_ko="Backend Engineer" eyebrow_en="Backend Engineer"
+  title_ko=hero_title_ko title_en=hero.short_title.en
+  summary_ko=hero_summary_ko summary_en=hero.summary.en
+  extra=hero_extra %}
 
-{%- comment -%}
-  순서가 이 페이지의 설계입니다. 포트폴리오에서 넘어온 검토자는 "언제 어디서 한 일인가"부터 찾으므로
-  경력 요약이 대표 글·역량보다 앞에 옵니다.
-{%- endcomment -%}
-{% include about-career-summary.html lang=lang %}
-
-{%- comment -%}
-  성과 수치·역량·프로젝트 카드를 여기서 들어냈습니다. 이력서와 포트폴리오가 같은 내용을 더 잘 보여주고,
-  두 벌을 두면 한쪽만 갱신되기 때문입니다. 이 페이지가 하는 일은 셋입니다 - 누구인지, 문서는 어디
-  있는지, 블로그에서 무엇을 읽어야 하는지.
-{%- endcomment -%}
 {% include about-documents.html lang=lang %}
 
 {% include about-representative-posts.html lang=lang %}
