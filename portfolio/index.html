@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>포트폴리오 — 함승훈</title>
+<meta name="description" content="백엔드 엔지니어 함승훈의 프로젝트 포트폴리오.">
+<link rel="canonical" href="https://polynomeer.github.io/portfolio/">
+<!-- career-hub 의 portfolio.html 에서 scripts/sync-career-docs.sh 가 가져온 것입니다.
+     이 파일을 직접 고치지 마십시오 - 다음 동기화에서 덮어써집니다. -->
+<style>
+/* ---------- tokens (resume.html과 동일한 디자인 시스템) ---------- */
+:root{
+  --bg:#F5F6F4;
+  --bg-elevated:#FFFFFF;
+  --ink:#1B1F27;
+  --ink-muted:#5B6472;
+  --ink-faint:#8A93A0;
+  --line:#DCE0E2;
+  --line-strong:#C4CACD;
+  --accent:#2454B0;
+  --accent-soft:#E8EEF9;
+  --metric-to:#1E4695;
+  --shadow: 0 1px 2px rgba(20,24,32,0.04), 0 8px 24px rgba(20,24,32,0.05);
+  --font-kr: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Roboto Mono", "Menlo", monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#10131A;
+    --bg-elevated:#171B24;
+    --ink:#E7E9ED;
+    --ink-muted:#9AA3B2;
+    --ink-faint:#6B7383;
+    --line:#282E3A;
+    --line-strong:#39404E;
+    --accent:#7DA8F2;
+    --accent-soft:rgba(125,168,242,0.12);
+    --metric-to:#8FB4F5;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10131A; --bg-elevated:#171B24; --ink:#E7E9ED; --ink-muted:#9AA3B2; --ink-faint:#6B7383;
+  --line:#282E3A; --line-strong:#39404E; --accent:#7DA8F2; --accent-soft:rgba(125,168,242,0.12); --metric-to:#8FB4F5;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+}
+:root[data-theme="light"]{
+  --bg:#F5F6F4; --bg-elevated:#FFFFFF; --ink:#1B1F27; --ink-muted:#5B6472; --ink-faint:#8A93A0;
+  --line:#DCE0E2; --line-strong:#C4CACD; --accent:#2454B0; --accent-soft:#E8EEF9; --metric-to:#1E4695;
+  --shadow: 0 1px 2px rgba(20,24,32,0.04), 0 8px 24px rgba(20,24,32,0.05);
+}
+
+*{box-sizing:border-box;}
+body{margin:0;}
+.resume{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-kr);
+  line-height:1.7;
+  font-size:15.5px;
+  word-break:keep-all;
+  -webkit-font-smoothing:antialiased;
+}
+.sheet{
+  max-width:760px;
+  margin:0 auto;
+  padding:0 24px 96px;
+}
+a{color:var(--accent); text-decoration:none;}
+a:hover{text-decoration:underline;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+h1,h2,h3,h4{text-wrap:balance; margin:0;}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:760px; margin:0 auto; padding:10px 24px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+.topbar-name{font-weight:700; font-size:0.86rem; letter-spacing:0.01em; white-space:nowrap; flex-shrink:0;}
+.quicknav{display:flex; gap:18px; overflow-x:auto; scrollbar-width:none;}
+.quicknav::-webkit-scrollbar{display:none;}
+.quicknav a{
+  font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--ink-muted); white-space:nowrap;
+}
+.quicknav a:hover{color:var(--accent); text-decoration:none;}
+.print-btn{
+  font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.04em; text-transform:uppercase;
+  border:1px solid var(--line-strong); background:var(--bg-elevated); color:var(--ink);
+  padding:6px 11px; border-radius:3px; cursor:pointer; white-space:nowrap;
+}
+.print-btn:hover{border-color:var(--accent); color:var(--accent);}
+
+/* ---------- hero ---------- */
+.hero{padding:52px 0 28px; border-bottom:1px solid var(--line);}
+.eyebrow{
+  font-family:var(--font-mono); font-size:0.85rem; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--accent); margin:0 0 10px;
+}
+.hero h1{font-size:2.35rem; font-weight:800; letter-spacing:-0.01em;}
+.tagline{color:var(--ink-muted); font-size:0.98rem; margin:12px 0 0; line-height:1.5;}
+.tagline em{color:var(--ink); font-style:normal; font-weight:600;}
+
+.contact-row{
+  display:flex; flex-wrap:nowrap; gap:8px 14px; margin-top:24px;
+  font-family:var(--font-mono); font-size:0.68rem; white-space:nowrap;
+}
+.contact-row a{color:var(--ink-muted);}
+.contact-row a:hover{color:var(--accent);}
+.contact-row .k{color:var(--ink-faint); margin-right:6px;}
+
+/* ---------- sections ---------- */
+.section{padding:44px 0; border-bottom:1px solid var(--line);}
+.section:last-child{border-bottom:none;}
+.section-head{margin-bottom:14px; break-after:avoid; page-break-after:avoid;}
+#career-projects{border-bottom:none;}
+#personal-projects .section-head{border-top:1px solid var(--line); padding-top:20px;}
+.section-note{color:var(--ink-faint); font-size:0.84rem; margin:-4px 0 18px; break-after:avoid; page-break-after:avoid;}
+
+.lede{color:var(--ink); max-width:70ch; line-height:1.55; font-size:0.89rem;}
+.lede + .lede{margin-top:12px;}
+
+/* metric inline */
+.metric{font-family:var(--font-mono); font-variant-numeric:tabular-nums; white-space:nowrap;}
+.metric .arrow{color:var(--ink-faint); margin:0 0.3em;}
+.metric .to{color:var(--metric-to); font-weight:700;}
+
+/* tags */
+.tags{display:flex; flex-wrap:wrap; gap:6px;}
+.tag{
+  display:inline-block; padding:3px 9px; border:1px solid var(--line-strong); border-radius:3px;
+  font-family:var(--font-mono); font-size:0.72rem; color:var(--ink-muted); background:var(--bg-elevated);
+  white-space:nowrap;
+}
+.tag--accent{background:var(--accent-soft); color:var(--accent); border-color:transparent;}
+
+/* career */
+.company{margin-bottom:36px; page-break-inside:avoid; break-inside:avoid;}
+.company:last-child{margin-bottom:0;}
+
+/* project cards */
+.project{
+  background:var(--bg-elevated); border:1px solid var(--line); border-radius:6px;
+  padding:24px 26px; margin-bottom:22px; box-shadow:var(--shadow);
+  page-break-inside:avoid; break-inside:avoid;
+}
+.project:last-child{margin-bottom:0;}
+.project-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.project-head h3{font-size:1.04rem; font-weight:700;}
+.project-head .meta{font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-faint); text-align:right;}
+.project-head .meta .org{display:block; color:var(--ink-muted); font-family:var(--font-kr); margin-top:2px;}
+
+.facts{display:grid; grid-template-columns:64px 1fr; gap:7px 14px; font-size:0.87rem; margin-bottom:18px;}
+.facts dt{color:var(--ink-faint); font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; padding-top:2px;}
+.facts dd{margin:0; color:var(--ink-muted);}
+
+.subsec{margin-top:18px; padding-top:18px; border-top:1px dashed var(--line);}
+.subsec:first-of-type{margin-top:0; padding-top:0; border-top:none;}
+.subsec h4{font-size:0.93rem; font-weight:700; margin-bottom:8px;}
+.subsec p{color:var(--ink-muted); font-size:0.89rem; line-height:1.72; margin:0 0 9px;}
+.subsec p:last-child{margin-bottom:0;}
+.subsec strong{color:var(--ink); font-weight:700;}
+.subsec code{
+  font-family:var(--font-mono); font-size:0.85em; background:var(--accent-soft); color:var(--accent);
+  padding:0.1em 0.35em; border-radius:3px;
+}
+
+.project-link{
+  margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);
+  font-family:var(--font-mono); font-size:0.82rem;
+  display:flex; flex-wrap:wrap; gap:6px 18px;
+}
+.project-link .k{color:var(--ink-faint); margin-right:8px;}
+
+/* repo badge (개인 프로젝트 카드용 커밋/근거 표기) */
+.repo-note{color:var(--ink-faint); font-size:0.78rem; font-family:var(--font-mono); margin-top:2px;}
+
+/* architecture diagrams */
+.diagram{
+  margin-top:16px; padding:16px 14px; background:var(--bg); border:1px solid var(--line);
+  border-radius:6px; page-break-inside:avoid; break-inside:avoid;
+}
+.diagram-title{
+  font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--ink-faint); margin:0 0 10px;
+}
+.diagram svg{display:block; width:100%; height:auto;}
+.dg-box{fill:var(--bg-elevated); stroke:var(--line-strong); stroke-width:1;}
+.dg-box--accent{fill:var(--accent-soft); stroke:var(--accent); stroke-width:1.2;}
+.dg-label{font-family:var(--font-kr); font-size:12.5px; fill:var(--ink); font-weight:600;}
+.dg-sublabel{font-family:var(--font-kr); font-size:10.5px; fill:var(--ink-muted);}
+.dg-caption{font-family:var(--font-mono); font-size:10px; fill:var(--ink-faint);}
+.dg-arrow{stroke:var(--ink-faint); stroke-width:1.4; fill:none;}
+.dg-arrow--accent{stroke:var(--accent); stroke-width:1.6; fill:none;}
+.dg-arrow-dashed{stroke:var(--ink-faint); stroke-width:1.2; fill:none; stroke-dasharray:3 3;}
+.dg-pill{fill:var(--bg-elevated); stroke:var(--line-strong); stroke-width:1;}
+.dg-pill-label{font-family:var(--font-mono); font-size:9.5px; fill:var(--ink-muted);}
+
+footer.endnote{
+  max-width:760px; margin:0 auto; padding:28px 24px 60px;
+  color:var(--ink-faint); font-family:var(--font-mono); font-size:0.72rem;
+  display:flex; justify-content:space-between;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:640px){
+  .sheet{padding:0 18px 72px;}
+  .hero{padding:40px 0 24px;}
+  .hero h1{font-size:1.9rem;}
+  .facts{grid-template-columns:56px 1fr;}
+  .quicknav{display:none;}
+  .project{padding:18px 18px;}
+  .project-head{flex-direction:column; align-items:flex-start;}
+  .project-head .meta{text-align:left;}
+}
+
+/* ---------- print ---------- */
+@media print{
+  @page{ size:A4; margin:10mm 13mm; }
+  .topbar, .print-btn{display:none !important;}
+  .resume{background:#fff; font-size:11px; line-height:1.45;}
+  .sheet{padding:0; max-width:none;}
+  .hero{padding:0 0 10px;}
+  .hero h1{font-size:1.7rem;}
+  .tagline{margin-top:6px;}
+  .contact-row{margin-top:10px;}
+  .section{padding:14px 0; border-bottom:1px solid #ddd;}
+  .section-head{margin-bottom:6px;}
+  .section-note{margin:-2px 0 10px;}
+  .lede{line-height:1.42; max-width:none;}
+  .lede + .lede{margin-top:6px;}
+  .project{box-shadow:none; border:1px solid #ccc; padding:12px 14px; margin-bottom:10px;}
+  .project-head{margin-bottom:8px;}
+  .facts{margin-bottom:10px; gap:4px 12px;}
+  .subsec{margin-top:8px; padding-top:8px;}
+  .subsec h4{margin-bottom:4px;}
+  .subsec p{line-height:1.45; margin-bottom:4px;}
+  .diagram{margin-top:10px; padding:10px 10px;}
+  .diagram-title{margin-bottom:6px;}
+  .project-link{margin-top:8px; padding-top:8px;}
+  a{color:inherit; text-decoration:none;}
+  footer.endnote{display:none;}
+}
+</style>
+<style>
+/* 블로그로 돌아가는 길. 원본 문서에는 없고 여기서만 붙입니다 - 이 페이지는 사이트 내비게이션
+   바깥에 있으므로, 없으면 방문자가 뒤로 가기 말고는 나갈 방법이 없습니다. */
+.back-to-blog{position:fixed;top:14px;left:14px;z-index:99;display:inline-flex;align-items:center;
+  gap:.4rem;padding:.4rem .8rem;border-radius:999px;border:1px solid var(--line,#DCE0E2);
+  background:var(--bg-elevated,#fff);color:var(--ink-muted,#5B6472);font-size:.85rem;
+  text-decoration:none;box-shadow:0 1px 3px rgba(20,24,32,.08)}
+.back-to-blog:hover{color:var(--accent,#2454B0);border-color:var(--accent,#2454B0)}
+@media print{.back-to-blog{display:none}}
+@media (max-width:640px){.back-to-blog{position:static;margin:12px 0 0 12px}}
+</style>
+</head>
+<body>
+<a class="back-to-blog" href="/">&larr; 블로그</a>
+
+
+<div class="resume">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="topbar-name">함승훈 — Portfolio</span>
+      <nav class="quicknav">
+        <a href="#summary">Summary</a>
+        <a href="#career-projects">Career Projects</a>
+        <a href="#personal-projects">Personal Projects</a>
+      </nav>
+      <button class="print-btn" onclick="window.print()">PDF로 저장</button>
+    </div>
+  </div>
+
+  <div class="sheet">
+
+    <header class="hero">
+      <p class="eyebrow">Backend Engineer — Portfolio</p>
+      <h1>함승훈</h1>
+      <p class="tagline"><em>Make Non Polynomial Polynomial.</em><br>아무리 복잡해도, 답은 다항시간 안에 있습니다.</p>
+
+      <div class="contact-row">
+        
+        <span><span class="k">Mail</span><a href="mailto:polynomeer@gmail.com">polynomeer@gmail.com</a></span>
+        <span><span class="k">Blog</span><a href="https://polynomeer.github.io" target="_blank" rel="noopener">polynomeer.github.io</a></span>
+        <span><span class="k">GitHub</span><a href="https://github.com/polynomeer" target="_blank" rel="noopener">github.com/polynomeer</a></span>
+      </div>
+
+    </header>
+
+    <section class="section" id="summary">
+      <div class="section-head">
+        <p class="eyebrow">Summary</p>
+      </div>
+      <p class="lede">복잡한 서비스 흐름을 안정적으로 운영 가능한 구조로 설계하고 구현해 온 백엔드 엔지니어입니다. 특히 상태 전이와 동시성, 트랜잭션 정합성이 중요한 시스템을 다루며, 다양한 예외 상황과 변화 속에서도 신뢰할 수 있게 동작하는 플랫폼을 만들어 왔습니다.</p>
+      <p class="lede">대규모 데이터 처리 환경에서는 병목을 계측 기반으로 분석하고, 코드와 데이터 구조를 함께 개선하며 성능과 안정성을 지속적으로 높여 왔습니다. 이러한 경험을 바탕으로 결제처럼 실패하면 안 되는 흐름을 더 정확하고 견고하게 만들고, 사용자와 서비스가 모두 신뢰할 수 있는 시스템을 만드는 데 기여하고자 합니다.</p>
+    </section>
+
+    <section class="section" id="career-projects">
+      <div class="section-head">
+        <p class="eyebrow">Career Projects</p>
+      </div>
+      <p class="section-note">(주)드림어스컴퍼니(FLO) 재직 중(2021.12 – 2025.2) 수행한 프로젝트입니다. 전체 경력은 별도로 전달드리는 이력서를 참고해 주세요.</p>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>음원 콘텐츠 플랫폼(Music Contents Platform) 전면 개편</h3>
+          <div class="meta">2024.1 – 2024.11 (이후 2025.2 퇴사까지 운영·유지보수)<span class="org">(주)드림어스컴퍼니(FLO)</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>복잡한 상태전이와 검증규칙을 가진 콘텐츠 플랫폼을 도메인 중심 아키텍처로 재설계하여 성능·정합성·확장성 개선</dd>
+          <dt>역할</dt><dd>백엔드 리딩(3인 팀) — 배포 전략·도메인 규칙 설계 및 공유, 공통 기능·ArchUnit 아키텍처 규칙·핵심 도메인 API 개발</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">JPA</span><span class="tag">Mapstruct</span><span class="tag">MySQL</span><span class="tag">RabbitMQ</span><span class="tag">ArchUnit</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <p>화면 단위로 흩어진 API를 도메인 책임 기반으로 재설계해 응답 시간을 <span class="metric"><span class="from">1.5초</span><span class="arrow">→</span><span class="to">300ms</span></span>(<strong>80%</strong>) 단축했습니다. 시퀀스 채번 구조도 개선해 동시 요청 시 계약 생성 대기시간을 <span class="metric"><span class="from">2분</span><span class="arrow">→</span><span class="to">10초</span></span>로 줄였습니다. 직전 MDS 프로젝트에서 시니어가 만든 ArchUnit 계약을 따라 개발했던 경험을 바탕으로 이번엔 직접 아키텍처 규칙을 설계해 정적 분석 위반을 <span class="metric"><span class="from">480건</span><span class="arrow">→</span><span class="to">75건</span></span>(<strong>84%</strong>) 감소시켰습니다.</p>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>글로벌 유통 시스템(Music Distribution System) 구축</h3>
+          <div class="meta">2023.1 – 2024.1<span class="org">(주)드림어스컴퍼니(FLO)</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>글로벌 파트너사가 앨범을 등록하고 관리자가 검수하는 음원 유통 시스템을 구축하고, DDEX 기반 음원 플랫폼 자동 전송 기능을 구현하여 해외 플랫폼과의 직접 유통·정산 구조를 지원</dd>
+          <dt>역할</dt><dd>시니어 개발자가 설계한 ArchUnit 기반 공통 인터페이스 계약에 따라 콘텐츠·라이선스 관리 API 개발, 이후 계약관리까지 인수인계받아 정담당자로 유지보수</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">JPA</span><span class="tag">Spring Batch</span><span class="tag">MySQL</span><span class="tag">SQS</span><span class="tag">ArchUnit</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <p>정산 대상 단위에 상태 플래그 기반 경량 락을 설계해 정산 중 메타데이터 변경을 사전 차단했습니다. 폴링 기반 배치를 Amazon SQS 이벤트 파이프라인으로 전환해 평균 처리 대기 시간을 <span class="metric"><span class="from">3~5분</span><span class="arrow">→</span><span class="to">1분 내외</span></span>로 단축했습니다.</p>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>대용량 배치·Excel 처리 최적화</h3>
+          <div class="meta">2022.9 – 2022.12<span class="org">(주)드림어스컴퍼니(FLO)</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>대용량 Excel 및 배치 처리 과정에서 발생하던 메모리 급증과 장기 트랜잭션 문제를 청크 기반 배치와 스트리밍 처리 구조로 개선하여 OOM을 제거하고 안정적인 배치 처리 환경을 구축</dd>
+          <dt>역할</dt><dd>단독 수행</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Spring Batch</span><span class="tag">JPA</span><span class="tag">MySQL</span><span class="tag">Apache POI (SXSSF)</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <p>Heap Dump·GC 로그·Thread Dump 분석으로 원인을 확인한 뒤 배치 구조를 청크 기반 트랜잭션으로 전환해 메모리 피크를 <span class="metric"><span class="from">3.8GB</span><span class="arrow">→</span><span class="to">1.6GB</span></span>(<strong>58%</strong>)로 줄였습니다. Excel 생성도 SXSSF Streaming으로 전환해 메모리 사용량을 <span class="metric"><span class="from">1.2GB</span><span class="arrow">→</span><span class="to">180MB</span></span>(<strong>85%</strong>)로 줄였습니다.</p>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>지분율 시스템 트랜잭션 안정성 및 동시성 개선</h3>
+          <div class="meta">2022.8 – 2022.11<span class="org">(주)드림어스컴퍼니(FLO)</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>저작권·실연권 지분율을 대량으로 처리하는 정산 시스템에서 동시성 문제와 대량 배치 병목을 개선하여 데이터 정합성과 처리 성능을 향상</dd>
+          <dt>역할</dt><dd>단독 설계 및 구현</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">Redis</span><span class="tag">MySQL</span><span class="tag">AWS</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <p>인덱스 재설계와 청크 기반 트랜잭션 전환으로 대량 삭제 처리 시간을 <span class="metric"><span class="from">2시간</span><span class="arrow">→</span><span class="to">5분</span></span>(<strong>24배</strong>) 단축했습니다. Redis 분산락을 SETNX+Lock Token 기반으로 재설계하고 상태 전이 모델을 도입해 Race Condition을 제거했으며, 병렬 파이프라인 적용으로 대량 등록 처리 시간도 <span class="metric"><span class="from">40분</span><span class="arrow">→</span><span class="to">12분</span></span>으로 줄였습니다.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="personal-projects">
+      <div class="section-head">
+        <p class="eyebrow">Personal Projects</p>
+      </div>
+      <p class="section-note">FLO 퇴사(2025.2) 후 육아를 전담하며 진행한 개인 프로젝트를 최신순으로 정리했습니다. 전부 GitHub에 공개되어 있으며, 표기된 커밋 수·파일 수는 2026-08-31 기준 리포지토리를 직접 확인한 수치입니다(ParityPay는 이후 시작). 이 밖에 redis-lite-java(2025.8) 등 작은 학습용 구현도 GitHub에 있습니다.</p>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>ParityPay — 결제·원장 백엔드</h3>
+          <div class="meta">2026.9 – 진행중<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>소개</dt><dd>미리 충전한 잔액으로 결제하는 선불 지갑의 백엔드입니다. 결제 내역과 돈의 이동 기록인 원장을 함께 관리합니다. 같은 결제가 두 번 들어오거나 은행의 응답이 끊겨도 돈이 중복 차감되지 않도록 만드는 데 집중했습니다. 실제 금융기관 대신 은행과 결제대행사 역할을 하는 테스트 서버를 따로 만들어 장애 상황을 재현했습니다.</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">PostgreSQL</span><span class="tag">Kafka</span><span class="tag">Testcontainers</span><span class="tag">ArchUnit</span></dd>
+        </dl>
+
+<div class="subsec"><h4>동시 결제에도 잔액을 넘겨 쓰지 않도록</h4>
+          <p>여러 결제가 같은 잔액을 읽은 뒤 각각 차감하면 보유 금액보다 많이 결제될 수 있습니다. 잔액이 충분할 때만 차감하는 UPDATE와 DB 잠금 등 세 가지 방식을 비교했습니다. 40건 중 20건만 승인할 수 있는 잔액을 넣고 동시에 요청해, 세 방식 모두 20건 승인과 최종 잔액 0을 확인했습니다.</p><p>처음에는 조건부 UPDATE가 더 느렸습니다. 확인해 보니 한쪽에만 JPA의 추가 처리 비용이 들어가 있었습니다. DB 호출 방식을 JDBC로 맞춰 다시 비교한 뒤 조건부 UPDATE를 선택했습니다.</p></div>
+        <div class="subsec"><h4>돈을 차감하는 순서를 바꿔 대기 시간을 줄임</h4>
+          <p>같은 지갑에 요청이 몰릴 때 DB 대기 표본의 약 84%가 잔액 잠금 때문이었습니다. 잔액을 먼저 차감한 뒤 결제 내역과 원장을 저장하는 동안 다른 요청이 계속 기다리고 있었습니다.</p><p>잔액 차감을 저장 작업의 마지막으로 옮겨 잠금 시간을 줄였습니다. 잔액이 부족하면 앞서 저장한 내용도 모두 취소합니다. 거절될 결제에도 일부 작업을 먼저 하는 비용은 있지만, 잠금을 오래 잡는 문제를 줄일 수 있었습니다.</p><p>개인 실험에서 초당 결제 처리량은 <span class="metric"><span class="from">183.5</span><span class="arrow">→</span><span class="to">320.9</span></span>건으로, 요청의 95%가 완료되는 시간은 <span class="metric"><span class="from">274</span><span class="arrow">→</span><span class="to">144</span></span>ms로 바뀌었습니다. 각 34초씩 3회 측정한 중앙값입니다. 비교용 대조군도 1.30배 변동했으므로, 개선 폭은 이 실험 조건에서의 결과로 봐야 합니다.</p></div>
+        <div class="diagram">
+          <p class="diagram-title">결제 응답이 끊겼을 때의 처리</p>
+          <svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-p1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box" x="10" y="30" width="150" height="60" rx="6"/>
+            <text class="dg-label" x="85" y="56" text-anchor="middle">결제·충전 요청</text>
+            <text class="dg-sublabel" x="85" y="74" text-anchor="middle">요청 식별 번호 포함</text>
+
+            <line class="dg-arrow" x1="160" y1="60" x2="194" y2="60" marker-end="url(#mk-arrow-p1)"/>
+
+            <rect class="dg-box dg-box--accent" x="198" y="30" width="160" height="60" rx="6"/>
+            <text class="dg-label" x="278" y="56" text-anchor="middle">외부기관 호출</text>
+            <text class="dg-sublabel" x="278" y="74" text-anchor="middle">은행·결제대행사 테스트 서버</text>
+
+            <line class="dg-arrow" x1="358" y1="45" x2="392" y2="45" marker-end="url(#mk-arrow-p1)"/>
+            <text class="dg-sublabel" x="375" y="35" text-anchor="middle">정상</text>
+
+            <rect class="dg-box" x="396" y="15" width="150" height="45" rx="6"/>
+            <text class="dg-label" x="471" y="42" text-anchor="middle">즉시 확정</text>
+
+            <line class="dg-arrow" x1="358" y1="75" x2="278" y2="120" marker-end="url(#mk-arrow-p1)"/>
+            <text class="dg-sublabel" x="330" y="105" text-anchor="middle">타임아웃</text>
+
+            <rect class="dg-box dg-box--accent" x="198" y="124" width="160" height="60" rx="6"/>
+            <text class="dg-label" x="278" y="150" text-anchor="middle">결과 미확정으로 보관</text>
+            <text class="dg-sublabel" x="278" y="168" text-anchor="middle">실패로 단정하지 않음</text>
+
+            <line class="dg-arrow" x1="358" y1="154" x2="392" y2="154" marker-end="url(#mk-arrow-p1)"/>
+
+            <rect class="dg-box" x="396" y="124" width="150" height="60" rx="6"/>
+            <text class="dg-label" x="471" y="150" text-anchor="middle">별도 조회 작업</text>
+            <text class="dg-sublabel" x="471" y="168" text-anchor="middle">상태 조회 → 최종 확정</text>
+
+            <text class="dg-caption" x="350" y="200" text-anchor="middle">"응답 유실"과 "진짜 실패"를 구분해 재시도 대신 상태 조회로 확정</text>
+          </svg>
+        </div>
+        <div class="subsec"><h4>응답이 없다고 결제 실패로 처리하지 않기</h4>
+          <p>은행은 승인했는데 응답만 끊긴 경우, 실패로 보고 다시 결제하면 중복 차감될 수 있습니다. 응답이 없으면 결과 미확정 상태로 보관하고, 별도 작업이 은행에 상태를 조회해 결론을 내리도록 했습니다.</p><p>결제와 원장, 후속 처리 요청은 함께 저장합니다. 같은 요청이 다시 전달돼도 한 번만 반영하고, 잘못된 원장 기록은 삭제하는 대신 취소·보정 내역을 추가해 변경 과정을 남깁니다.</p></div>
+        <div class="subsec"><h4>장애를 직접 만들어 확인</h4>
+          <p>프로세스 종료, 외부 응답 유실, 중복·순서가 뒤바뀐 결제 알림 등 11개 장애 상황을 재현했습니다. 잔액과 원장이 맞는지, 같은 거래가 두 번 반영되지 않는지를 확인했습니다. 테스트 서버를 사용하는 개인 개발 환경의 결과입니다.</p></div>
+        <div class="project-link"><span><span class="k">GitHub</span><a href="https://github.com/polynomeer/parity-pay" target="_blank" rel="noopener">parity-pay</a></span><span><a href="https://github.com/polynomeer/parity-pay/blob/main/docs/adr/004-atomic-balance-update.md" target="_blank" rel="noopener">잔액 차감 방식 비교</a></span><span><a href="https://github.com/polynomeer/parity-pay/blob/main/reports/11-performance-failure-report.md" target="_blank" rel="noopener">성능·장애 보고서</a></span></div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>quno — "Living Question" 개발자 Q&amp;A 플랫폼</h3>
+          <div class="meta">2026.8 –<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>소프트웨어 질문을 한 번 올리고 끝나는 게시물이 아니라, 버전이 쌓이고 다른 질문과 연결되며 계속 진화하는 "Living Question"으로 다루는 개발자 지식 플랫폼</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Kotlin</span><span class="tag">Spring Boot</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span><span class="tag">Redis</span><span class="tag">React</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>질문이 "죽지" 않게 만든다는 것</h4>
+          <p>보통 Q&amp;A 사이트에 올린 질문은 한 번 게시되면 그대로 고정됩니다. 나중에 상황이 바뀌거나 질문자가 더 잘 이해하게 돼도 질문 자체는 갱신되지 않고, 결국 비슷한 질문이 새 게시물로 계속 늘어납니다. quno는 반대로 질문 하나를 "버전이 있는 문서"처럼 다룹니다. 질문을 고치면 기존 글을 덮어쓰는 게 아니라 새 버전(QuestionVersion)을 이어 붙이고, 리비전 이력 전체를 남깁니다. 어느 버전에서 무엇이 달라졌는지는 LCS(최장 공통 부분열) 알고리즘으로 줄 단위 diff를 직접 계산해 보여주는데, 이건 git이 파일 변경을 비교할 때 쓰는 것과 같은 방식을 질문 텍스트에 적용한 것입니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">Revision + Outbox Notification Flow</p>
+          <svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-q1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+              <marker id="mk-arrow-q2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box" x="10" y="20" width="150" height="60" rx="6"/>
+            <text class="dg-label" x="85" y="46" text-anchor="middle">리비전 요청</text>
+            <text class="dg-sublabel" x="85" y="64" text-anchor="middle">질문 수정 · 답변 채택</text>
+
+            <line class="dg-arrow" x1="160" y1="50" x2="194" y2="50" marker-end="url(#mk-arrow-q1)"/>
+
+            <rect class="dg-box dg-box--accent" x="198" y="20" width="160" height="60" rx="6"/>
+            <text class="dg-label" x="278" y="42" text-anchor="middle">SELECT FOR UPDATE</text>
+            <text class="dg-sublabel" x="278" y="59" text-anchor="middle">+ unique 제약 이중 방어</text>
+            <text class="dg-sublabel" x="278" y="73" text-anchor="middle" font-family="var(--font-mono)">TextDiffer (LCS diff)</text>
+
+            <line class="dg-arrow" x1="358" y1="50" x2="392" y2="50" marker-end="url(#mk-arrow-q1)"/>
+
+            <rect class="dg-box" x="396" y="20" width="160" height="60" rx="6"/>
+            <text class="dg-label" x="476" y="46" text-anchor="middle">같은 트랜잭션</text>
+            <text class="dg-sublabel" x="476" y="64" text-anchor="middle" font-family="var(--font-mono)">QuestionVersion + outbox_events</text>
+
+            <line class="dg-arrow-dashed" x1="476" y1="80" x2="476" y2="116" marker-end="url(#mk-arrow-q1)"/>
+
+            <rect class="dg-box" x="396" y="120" width="160" height="60" rx="6"/>
+            <text class="dg-label" x="476" y="146" text-anchor="middle">OutboxDispatchScheduler</text>
+            <text class="dg-sublabel" x="476" y="164" text-anchor="middle">2초 주기 폴링·소비</text>
+
+            <line class="dg-arrow--accent" x1="396" y1="150" x2="220" y2="150" marker-end="url(#mk-arrow-q2)"/>
+
+            <rect class="dg-box dg-box--accent" x="10" y="120" width="150" height="60" rx="6"/>
+            <text class="dg-label" x="85" y="146" text-anchor="middle">Watch한 사용자</text>
+            <text class="dg-sublabel" x="85" y="164" text-anchor="middle">Notification 팬아웃</text>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <h4>동시에 수정해도 꼬이지 않게</h4>
+          <p>같은 질문을 여러 사람(혹은 같은 사람이 여러 탭)이 동시에 고치려고 하면 마지막 저장만 남고 나머지가 사라질 수 있습니다. 이를 막기 위해 리비전을 저장할 때 DB에 "지금 이 행은 내가 쓰고 있다"는 잠금(<code>SELECT ... FOR UPDATE</code>)을 걸고, 추가로 중복 저장 자체를 DB 유니크 제약으로 한 번 더 막는 이중 안전장치를 뒀습니다. 답변 채택이나 새 답변 등록처럼 다른 사람에게 알려야 하는 일은, 데이터가 실제로 저장되는 것과 같은 트랜잭션 안에서 "나중에 알림을 보내야 할 일" 목록(<code>outbox_events</code>)에 함께 기록해두고, 별도 스케줄러가 2초마다 그 목록을 확인해 처리하는 방식(Outbox 패턴)으로 알림 유실 없이 안정적으로 전달되게 했습니다. 이벤트 종류에 따라 추가로 알려야 할 대상(예: 새 답변 → 질문 작성자, 답변 채택 → 답변 작성자)과, 자기 자신이 일으킨 이벤트는 스스로에게 알리지 않는 예외 규칙도 함께 반영했습니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>실제로 겪은 버그: 대소문자만 다른 태그</h4>
+          <p>태그를 "Kotlin"과 "kotlin"처럼 대소문자만 다르게 두 번 등록하면 내부적으로는 같은 slug로 취급되어 DB 유니크 제약을 위반합니다. 그런데 이 예외가 스프링의 기본 에러 처리 경로(<code>/error</code>)로 넘어가면서, 보안 설정(SecurityConfig)이 인증 안 된 요청으로 오인해 401(인증 필요) 오류로 위장돼 나타나는 문제를 실제로 만났습니다. 원인을 추적해보니 "새 태그면 만들고 있으면 재사용한다"는 로직이 이름 그대로 비교하고 있었던 것이 문제였고, 이를 slug 기준으로 먼저 조회하도록 고치고 <code>/error</code> 경로를 인증 없이도 통과하도록 설정을 조정해 해결했습니다. 겉으로 보이는 오류 메시지(401)와 실제 원인(유니크 제약 위반)이 다를 수 있다는 걸 직접 부딪혀 확인한 사례입니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/quno" target="_blank" rel="noopener">github.com/polynomeer/quno</a></span>
+          <span class="repo-note">107 commits · Kotlin 317개 파일</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>sys-drill — 백엔드 장애대응 훈련 플랫폼</h3>
+          <div class="meta">2026.8 –<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>백엔드 개발자가 시스템 컴포넌트를 직접 만들고, 트래픽·장애 상황에 워게임처럼 대응하며, 규칙+AI 평가로 피드백을 받는 반복 훈련 플랫폼</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Kotlin</span><span class="tag">Spring Boot</span><span class="tag">Python</span><span class="tag">Redis</span><span class="tag">PostgreSQL</span><span class="tag">Next.js</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>왜 만들었나</h4>
+          <p>"Redis를 캐시로 쓸 줄 안다"와 "캐시 미스율이 치솟거나 특정 키에 요청이 몰릴 때(hot key) 어떻게 판단할지 안다" 사이에는 큰 차이가 있습니다. 이런 실무 감각은 책이나 강의로 채우기 어렵고, 회사에서 일부러 장애를 재현해줄 수도 없습니다. sys-drill은 이 공백을 통제된 시뮬레이션으로 반복 훈련할 수 있게 만든 플랫폼입니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>직접 푸는 실습 챌린지</h4>
+          <p>Circuit Breaker, 분산 락, 이벤트 버스, 큐, Rate Limiter, 재시도/백오프 6가지 주제를 실제로 코드로 구현해보는 챌린지를 만들었습니다. 각 챌린지는 단계별(대부분 4단계, Rate Limiter는 6단계)로 난이도가 올라가는 자동 테스트로 구성돼 있어, 앞 단계를 통과해야 다음 단계로 넘어갈 수 있습니다 — 예를 들어 분산 락 챌린지라면 "단순 락이 걸리는가"부터 시작해 "락 소유자가 죽었을 때 자동 해제되는가", "여러 프로세스가 동시에 요청해도 정확히 하나만 획득하는가"까지 단계적으로 검증합니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">Rule + AI Hybrid Evaluation</p>
+          <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-s1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box" x="270" y="10" width="160" height="50" rx="6"/>
+            <text class="dg-label" x="350" y="32" text-anchor="middle">Submission</text>
+            <text class="dg-sublabel" x="350" y="48" text-anchor="middle">챌린지 제출 · 시나리오 액션</text>
+
+            <line class="dg-arrow" x1="320" y1="60" x2="180" y2="100" marker-end="url(#mk-arrow-s1)"/>
+            <line class="dg-arrow" x1="380" y1="60" x2="520" y2="100" marker-end="url(#mk-arrow-s1)"/>
+
+            <rect class="dg-box dg-box--accent" x="60" y="104" width="230" height="66" rx="6"/>
+            <text class="dg-label" x="175" y="130" text-anchor="middle">Rule Engine</text>
+            <text class="dg-sublabel" x="175" y="148" text-anchor="middle">요구사항 누락 · 임계값 위반</text>
+            <text class="dg-sublabel" x="175" y="162" text-anchor="middle">상태 일관성 — 결정 가능한 사실</text>
+
+            <rect class="dg-box" x="410" y="104" width="230" height="66" rx="6"/>
+            <text class="dg-label" x="525" y="130" text-anchor="middle">AI Evaluation Worker</text>
+            <text class="dg-sublabel" x="525" y="148" text-anchor="middle">트레이드오프 타당성 · 설명 품질</text>
+            <text class="dg-sublabel" x="525" y="162" text-anchor="middle">꼬리질문 생성</text>
+
+            <line class="dg-arrow" x1="175" y1="170" x2="330" y2="196" marker-end="url(#mk-arrow-s1)"/>
+            <line class="dg-arrow" x1="525" y1="170" x2="370" y2="196" marker-end="url(#mk-arrow-s1)"/>
+
+            <rect class="dg-box" x="270" y="198" width="160" height="16" rx="4" fill="none" stroke="none"/>
+            <text class="dg-caption" x="350" y="210" text-anchor="middle">Evaluation 병합 → Decision Log 기록 → Report</text>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <h4>판단 흔적을 전부 남긴다</h4>
+          <p>시뮬레이션은 문제은행처럼 "문제 하나 풀고 끝"이 아니라 <code>Scenario → Session → SimulationState</code>라는 상태 머신으로 동작합니다. 사용자의 액션과 시나리오 이벤트가 다음 상태를 결정하고, 모든 의사결정은 Decision Log(<code>applied_actions</code>)에 기록됩니다. 이렇게 쌓인 기록은 나중에 리플레이(그때 무슨 판단을 했는지 되짚어보기), 포스트모템(장애 대응 훈련 이후 회고), 장기 약점 프로필(어떤 유형의 판단에서 반복적으로 틀리는지)을 만드는 데 그대로 재사용됩니다. Scenario·Rubric(채점 기준)·PromptTemplate에도 전부 버전을 강제해, 같은 세션을 나중에 다시 채점해도 같은 결과가 나오도록 재현성을 보장합니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/sys-drill" target="_blank" rel="noopener">github.com/polynomeer/sys-drill</a></span>
+          <span class="repo-note">80 commits · Kotlin 129개 파일 · 실습 챌린지 6종</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>spring-lab — Spring 내부 구조 딥다이브</h3>
+          <div class="meta">2026.7 –<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>Spring Framework/Boot를 블랙박스로 쓰지 않고, 공식 소스코드와 디버깅으로 "왜 이렇게 동작하는가"를 20주 로드맵을 따라 직접 검증하고 축소 재구현한 학습 저장소</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Kotlin</span><span class="tag">Spring Framework</span><span class="tag">Spring Boot</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>블랙박스로 안 쓰기로 했습니다</h4>
+          <p>"IoC 컨테이너는 정확히 언제 빈을 만드는가", "AOP 프록시는 왜 같은 클래스 안에서 자기 메서드를 호출하면 안 걸리는가" 같은 질문은 Spring을 오래 써도 소스코드 수준으로 답하기 어려운 경우가 많습니다. spring-lab은 매주 하나씩 이런 질문을 골라, 정해둔 절차를 그대로 반복하는 방식으로 20주에 걸쳐 답을 채워나간 기록입니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">주차별 반복 절차</p>
+          <svg viewBox="0 0 700 130" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-l1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+              <marker id="mk-arrow-l2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+              </marker>
+            </defs>
+            <rect class="dg-box" x="6" y="30" width="100" height="56" rx="6"/>
+            <text class="dg-label" x="56" y="54" text-anchor="middle" font-size="11">공식 문서</text>
+            <text class="dg-sublabel" x="56" y="70" text-anchor="middle" font-size="9.5">질문 세우기</text>
+
+            <line class="dg-arrow" x1="106" y1="58" x2="130" y2="58" marker-end="url(#mk-arrow-l1)"/>
+
+            <rect class="dg-box" x="134" y="30" width="100" height="56" rx="6"/>
+            <text class="dg-label" x="184" y="54" text-anchor="middle" font-size="11">최소 예제</text>
+            <text class="dg-sublabel" x="184" y="70" text-anchor="middle" font-size="9.5">인터페이스·구현체</text>
+
+            <line class="dg-arrow" x1="234" y1="58" x2="258" y2="58" marker-end="url(#mk-arrow-l1)"/>
+
+            <rect class="dg-box dg-box--accent" x="262" y="30" width="120" height="56" rx="6"/>
+            <text class="dg-label" x="322" y="54" text-anchor="middle" font-size="11">공식 소스 디버깅</text>
+            <text class="dg-sublabel" x="322" y="70" text-anchor="middle" font-size="9.5">v6.2.19 태그 기준</text>
+
+            <line class="dg-arrow" x1="382" y1="58" x2="406" y2="58" marker-end="url(#mk-arrow-l1)"/>
+
+            <rect class="dg-box" x="410" y="30" width="100" height="56" rx="6"/>
+            <text class="dg-label" x="460" y="54" text-anchor="middle" font-size="11">공식 테스트</text>
+            <text class="dg-sublabel" x="460" y="70" text-anchor="middle" font-size="9.5">가설 검증</text>
+
+            <line class="dg-arrow" x1="510" y1="58" x2="534" y2="58" marker-end="url(#mk-arrow-l1)"/>
+
+            <rect class="dg-box" x="538" y="30" width="130" height="56" rx="6"/>
+            <text class="dg-label" x="603" y="54" text-anchor="middle" font-size="11">축소 재구현</text>
+            <text class="dg-sublabel" x="603" y="70" text-anchor="middle" font-size="9.5">mini-spring · 확장점</text>
+
+            <line class="dg-arrow--accent" x1="603" y1="86" x2="603" y2="106" />
+            <line class="dg-arrow--accent" x1="603" y1="106" x2="56" y2="106" />
+            <line class="dg-arrow--accent" x1="56" y1="106" x2="56" y2="90" marker-end="url(#mk-arrow-l2)"/>
+            <text class="dg-caption" x="330" y="120" text-anchor="middle">설계 의도 정리 → 다음 주차로</text>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <h4>20주에서 멈추지 않았습니다</h4>
+          <p>원래 계획했던 20주(핵심 IoC·AOP·트랜잭션·MVC 16주 + Spring Boot 내부 4주)를 마친 뒤에도, 애플리케이션 이벤트·MVC 예외 처리 우선순위·트랜잭셔널 아웃박스까지 3주 분량을 더 진행하고, 미리 정해둔 32개 구현 과제 카탈로그를 전부 완주했습니다. 배운 걸 모두 모아 하나의 주문 처리 애플리케이션(Mini Order Platform)으로 통합하는 캡스톤까지 완주한 뒤에는, 카탈로그 범위를 완전히 벗어난 확장(상품 도메인 추가)까지 스스로 이어갔습니다. 217개 자동화 테스트가 전부 통과하는 상태를 계속 유지하며 진행했습니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>반복해서 발견한 설계 원칙</h4>
+          <p>20주를 거치며 서로 다른 주제에서 같은 원칙이 계속 다시 나타났습니다. 대표적으로 "정교한 판단"보다 "예측 가능한 순서"를 택하는 경향입니다 — 생성자가 여러 개고 어떤 걸 쓸지 애매하면 Spring은 "가장 그럴듯한" 것을 추측하는 대신 기본 생성자로 물러나고, 여러 처리기(HandlerMapping)가 등록되면 "더 적합한" 것을 고르지 않고 등록된 순서대로 첫 매칭을 채택합니다. 자동 설정끼리 순서를 정할 때도 마찬가지로, 서로 의존 관계가 없어도 선언적 힌트(<code>@AutoConfiguration(before/after)</code>)만으로 순서를 정합니다. 이런 반복을 "왜 매번 같은 방식을 택할까"라는 질문으로 좇다 보면, 코드베이스가 커질수록 "왜 이번엔 다르게 골랐지"라는 디버깅 비용을 줄이는 게 똑똑한 자동 선택보다 더 중요하다는 Spring의 일관된 철학이 보입니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/spring-lab" target="_blank" rel="noopener">github.com/polynomeer/spring-lab</a></span>
+          <span class="repo-note">153 commits · Java/Kotlin 722개 파일 · 자동화 테스트 217개</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>spring-lite — Spring 프레임워크 자체 재구현</h3>
+          <div class="meta">2026.7 –<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>IoC/DI, 빈 생명주기, AOP, `@Transactional`, MVC 디스패처까지 Spring의 핵심 원리를 처음부터 직접 구현한 미니 프레임워크</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Java</span><span class="tag">Kotlin</span><span class="tag">Gradle 멀티모듈</span><span class="tag">H2</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>이해한 것을 직접 동작하게 만들기</h4>
+          <p>spring-lab이 "공식 소스를 읽고 이해를 검증"하는 프로젝트라면, spring-lite는 "이해한 원리로 실제로 동작하는 프레임워크를 완성"하는 프로젝트입니다. 컴포넌트를 자동으로 찾아 등록하는 기능, 프록시를 이용해 메서드 호출 앞뒤에 로직을 끼워 넣는 AOP, 데이터베이스 작업을 하나의 단위로 묶고 실패하면 되돌리는 트랜잭션, HTTP 요청을 알맞은 코드로 연결해주는 MVC 구조까지, 겉으로 쓰는 애노테이션뿐 아니라 그 뒤에서 실제로 동작하는 부분까지 전부 직접 만들었습니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>모듈로 나눠 관심사를 분리</h4>
+          <p>실제 Spring도 그렇듯, 기능 하나를 통째로 만들지 않고 계층별로 모듈을 나눴습니다. 아래 모듈은 서로 의존 방향이 정해져 있어, 위쪽 모듈이 아래쪽 모듈을 가져다 쓰는 구조입니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">모듈 의존 구조 (아래 → 위)</p>
+          <svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-m1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box dg-box--accent" x="270" y="6" width="160" height="34" rx="5"/>
+            <text class="dg-label" x="350" y="27" text-anchor="middle" font-size="11">example-app</text>
+
+            <line class="dg-arrow" x1="350" y1="40" x2="350" y2="58" marker-end="url(#mk-arrow-m1)"/>
+
+            <rect class="dg-box" x="270" y="62" width="160" height="34" rx="5"/>
+            <text class="dg-label" x="350" y="83" text-anchor="middle" font-size="11">spring-lite-boot</text>
+
+            <line class="dg-arrow" x1="350" y1="96" x2="350" y2="114" marker-end="url(#mk-arrow-m1)"/>
+
+            <rect class="dg-box" x="270" y="118" width="160" height="34" rx="5"/>
+            <text class="dg-label" x="350" y="139" text-anchor="middle" font-size="11">spring-lite-web</text>
+
+            <line class="dg-arrow" x1="280" y1="152" x2="130" y2="176" marker-end="url(#mk-arrow-m1)"/>
+            <line class="dg-arrow" x1="350" y1="152" x2="350" y2="176" marker-end="url(#mk-arrow-m1)"/>
+            <line class="dg-arrow" x1="420" y1="152" x2="570" y2="176" marker-end="url(#mk-arrow-m1)"/>
+
+            <rect class="dg-box" x="50" y="180" width="160" height="34" rx="5"/>
+            <text class="dg-label" x="130" y="201" text-anchor="middle" font-size="11">spring-lite-aop</text>
+
+            <rect class="dg-box" x="270" y="180" width="160" height="34" rx="5"/>
+            <text class="dg-label" x="350" y="201" text-anchor="middle" font-size="11">spring-lite-tx / jdbc</text>
+
+            <rect class="dg-box" x="490" y="180" width="160" height="34" rx="5"/>
+            <text class="dg-label" x="570" y="201" text-anchor="middle" font-size="11">spring-lite-test</text>
+
+            <text class="dg-caption" x="350" y="225" text-anchor="middle">전부 spring-lite-core(공통 유틸·리플렉션) + spring-lite-context(BeanDefinition·ApplicationContext) 위에 구축</text>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <h4>실제로 동작하는지 검증한 방법</h4>
+          <p>H2 데이터베이스를 연결해 주문을 처리하는 예제 애플리케이션(<code>example-app</code>)을 만들어 8개 모듈이 실제로 맞물려 동작하는지 확인했고, JDBC/트랜잭션 계층은 H2 기반 통합 테스트로, MVC 계층은 자체 구현한 <code>@SpringLiteTest</code>·MockMvc 스타일 테스트로 검증했습니다. <code>@Transactional</code>이 걸린 테스트는 끝나면 자동으로 롤백되도록 지원해, 테스트가 서로 데이터를 오염시키지 않게 했습니다. 코드와 텍스트 설명만으로는 동작을 이해하기 어렵다고 판단해, 브라우저에서 바로 열어볼 수 있는 시각적 학습 도구(Visual Lab Hub)와 런타임 시퀀스 다이어그램 문서도 별도로 만들어 뒀습니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/spring-lite" target="_blank" rel="noopener">github.com/polynomeer/spring-lite</a></span>
+          <span class="repo-note">141 commits · Java/Kotlin 212개 파일 · 8개 모듈</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>iterview — 이력서 방어(resume-defense) 면접 트레이닝 플랫폼</h3>
+          <div class="meta">2026.3 –<span class="org">개인 프로젝트 · 1인 개발 (모노레포)</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>이력서 한 버전을 질문 트리로 확장해 모든 가지를 끝까지 연습하고 근거를 방어하도록 돕는 면접 준비 플랫폼. 프로필·이력서 등록 → 매일 문제 카드 수신 → 답변 제출·채점 → 낮은 점수는 재시도 큐, 높은 점수는 아카이브로 이동하는 학습 루프 제공</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Kotlin</span><span class="tag">Spring Boot</span><span class="tag">TypeScript</span><span class="tag">Feature-Sliced Design</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>무엇을 만들었나</h4>
+          <p>매일 새로운 면접 질문 카드를 받고, 답을 제출하면 채점되고, 점수가 낮으면 나중에 다시 풀어보도록 대기열에 쌓이고, 점수가 높으면 완료 보관함으로 넘어가는 학습 루프를 만들었습니다. 영단어 암기 앱들이 흔히 쓰는 "아는 건 나중에, 모르는 건 자주 반복해서 보여준다"는 방식(간격 반복 학습)을 면접 준비에 적용한 것입니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>도메인 중심 백엔드 + 계층형 프론트엔드</h4>
+          <p>백엔드는 "질문", "답변", "이력서", "로그인" 같은 기능 영역(도메인)별로 코드를 완전히 나눴습니다. 각 영역은 다른 영역의 내부 구현을 몰라도 되고, 미리 정해둔 창구(인터페이스)로만 소통하도록 규칙을 정했습니다 — 한 영역을 고치다가 다른 영역이 실수로 같이 망가지는 일을 줄이기 위한 구조입니다. 프론트엔드는 FSD(Feature-Sliced Design)라는 방식을 따랐는데, 화면(pages) → 화면을 구성하는 조각(widgets) → 기능 단위(features) → 가장 작은 데이터 단위(entities) 순으로 계층을 나누고, 상위 계층은 하위 계층을 가져다 쓸 수 있지만 반대 방향으로는 의존할 수 없도록 규칙을 정한 구조입니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">Backend Domains + Frontend FSD Layers</p>
+          <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box" x="10" y="10" width="330" height="280" rx="6" fill="none" stroke="var(--line)"/>
+            <text class="dg-sublabel" x="26" y="30" font-family="var(--font-mono)">BACKEND · Kotlin/Spring Boot</text>
+
+            <g font-family="var(--font-mono)">
+              <rect class="dg-pill" x="26" y="42" width="96" height="28" rx="4"/><text class="dg-pill-label" x="74" y="60" text-anchor="middle">user</text>
+              <rect class="dg-pill" x="128" y="42" width="96" height="28" rx="4"/><text class="dg-pill-label" x="176" y="60" text-anchor="middle">auth</text>
+              <rect class="dg-pill" x="230" y="42" width="96" height="28" rx="4"/><text class="dg-pill-label" x="278" y="60" text-anchor="middle">resume</text>
+
+              <rect class="dg-pill" x="26" y="78" width="96" height="28" rx="4"/><text class="dg-pill-label" x="74" y="96" text-anchor="middle">jobposting</text>
+              <rect class="dg-pill" x="128" y="78" width="96" height="28" rx="4"/><text class="dg-pill-label" x="176" y="96" text-anchor="middle">question</text>
+              <rect class="dg-pill" x="230" y="78" width="96" height="28" rx="4"/><text class="dg-pill-label" x="278" y="96" text-anchor="middle">skill</text>
+
+              <rect class="dg-pill" x="26" y="114" width="96" height="28" rx="4"/><text class="dg-pill-label" x="74" y="132" text-anchor="middle">dailycard</text>
+              <rect class="dg-pill" x="128" y="114" width="96" height="28" rx="4"/><text class="dg-pill-label" x="176" y="132" text-anchor="middle">answer</text>
+              <rect class="dg-pill" x="230" y="114" width="96" height="28" rx="4"/><text class="dg-pill-label" x="278" y="132" text-anchor="middle">review</text>
+
+              <rect class="dg-pill" x="26" y="150" width="96" height="28" rx="4"/><text class="dg-pill-label" x="74" y="168" text-anchor="middle">interview</text>
+              <rect class="dg-pill" x="128" y="150" width="96" height="28" rx="4"/><text class="dg-pill-label" x="176" y="168" text-anchor="middle">feed</text>
+            </g>
+            <text class="dg-sublabel" x="26" y="200" font-size="10">도메인 단위 패키지 11개 — 응집도 높은 단위로 분리,</text>
+            <text class="dg-sublabel" x="26" y="216" font-size="10">패키지 간 의존은 공용 인터페이스로만 허용</text>
+
+            <rect class="dg-box" x="360" y="10" width="330" height="280" rx="6" fill="none" stroke="var(--line)"/>
+            <text class="dg-sublabel" x="376" y="30" font-family="var(--font-mono)">FRONTEND · FSD (TypeScript)</text>
+
+            <rect class="dg-box dg-box--accent" x="376" y="46" width="298" height="42" rx="5"/>
+            <text class="dg-label" x="525" y="72" text-anchor="middle">pages</text>
+            <line class="dg-arrow" x1="525" y1="88" x2="525" y2="104" marker-end="url(#mk-arrow-3)"/>
+
+            <rect class="dg-box" x="376" y="108" width="298" height="42" rx="5"/>
+            <text class="dg-label" x="525" y="134" text-anchor="middle">widgets</text>
+            <line class="dg-arrow" x1="525" y1="150" x2="525" y2="166" marker-end="url(#mk-arrow-3)"/>
+
+            <rect class="dg-box" x="376" y="170" width="298" height="42" rx="5"/>
+            <text class="dg-label" x="525" y="196" text-anchor="middle">features</text>
+            <line class="dg-arrow" x1="525" y1="212" x2="525" y2="228" marker-end="url(#mk-arrow-3)"/>
+
+            <rect class="dg-box" x="376" y="232" width="298" height="42" rx="5"/>
+            <text class="dg-label" x="525" y="258" text-anchor="middle">entities</text>
+
+            <text class="dg-sublabel" x="674" y="60" text-anchor="end" font-size="9.5">↓ 상위 계층이</text>
+            <text class="dg-sublabel" x="674" y="74" text-anchor="end" font-size="9.5">하위 계층을 조합</text>
+
+            <line class="dg-arrow-dashed" x1="340" y1="150" x2="360" y2="150" marker-end="url(#mk-arrow-3)"/>
+            <text class="dg-sublabel" x="350" y="142" text-anchor="middle" font-size="9">API</text>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <h4>코드보다 설계 문서를 먼저 썼습니다</h4>
+          <p>기능을 바로 코드로 옮기지 않고, "이 기능이 왜 필요한지" → "전체 구조" → "데이터베이스 설계" → "화면과 서버가 주고받는 약속(API)" → "구현 순서" → "완료 기준"까지 문서로 먼저 정리한 뒤 개발하는 방식으로 진행했습니다. 실제로 홈 화면, 문제 풀이 화면, 문제 상세·목록, 답변 작성기, 결과 분석, 실력 대시보드, 지난 기록 보관함, 이력서 버전 관리 등 MVP(최소 기능 제품) 범위의 화면들이 이 과정을 거쳐 실제로 동작하는 코드로 구현돼 있습니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>채점을 규칙과 AI, 두 단계로 나눴습니다</h4>
+          <p>답변이 합격선(PASS)인지 아닌지는 AI에 묻지 않고, 단어 수·문장 구조·기술/역할/회사 키워드 매칭 같은 규칙으로 직접 계산해 점수를 냅니다 — 같은 답변을 넣으면 항상 같은 점수가 나오도록 하기 위해서입니다. 반면 "어디가 강점이고 어디를 더 구체적으로 말해야 하는지" 같은 정성적인 설명은 정답이 하나로 정해져 있지 않기 때문에 AI(OpenAI)에게 맡겨 자연어 피드백을 생성하도록 역할을 나눴습니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/iterview" target="_blank" rel="noopener">github.com/polynomeer/iterview</a></span>
+          <span class="repo-note">223 commits · Kotlin 436개·TS/TSX 363개 파일</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>monticker — 이벤트 중심 주식 관찰 앱</h3>
+          <div class="meta">2026.1 – 진행중<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>가격·거래량 이상을 자동 감지해 이벤트 타임라인으로 보여주는 주식 관찰 앱. 대부분의 주식 앱이 "현재가"를 나열하는 데 그치는 것과 달리, "지금 무슨 일이 일어나고 있는가"를 자동으로 설명하는 것을 핵심 가치로 설계</dd>
+          <dt>개발</dt><dd>Claude Code를 페어로 활용한 1인 개발 — 주차별 vertical slice로 백엔드·Worker·웹 UI를 8주 만에 프로덕션 수준까지 구현</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Kotlin</span><span class="tag">Spring Boot</span><span class="tag">Next.js</span><span class="tag">Expo</span><span class="tag">TimescaleDB</span><span class="tag">Redis</span><span class="tag">Kafka</span><span class="tag">WebSocket</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>왜 만들었나</h4>
+          <p>대부분의 주식 앱은 "지금 가격이 얼마"라는 숫자와 차트만 보여줍니다. 왜 그 가격이 됐는지는 사용자가 직접 뉴스를 찾아봐야 합니다. monticker는 반대로 접근했습니다 — 가격이나 거래량이 평소와 다르게 움직이는 순간을 시스템이 먼저 알아채고, "지금 이 종목에 무슨 일이 일어나고 있다"는 걸 타임라인 형태로 보여주는 것을 목표로 삼았습니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>평소와 다른 움직임을 어떻게 알아채나</h4>
+          <p>여기서 쓴 방법은 EMA(지수이동평균)라는 통계 기법입니다. 쉽게 말하면 "최근 흐름의 평균"을 계속 갱신하면서, 지금 값이 그 평균에서 얼마나 벗어났는지를 보는 방식입니다. "가격이 5% 이상 움직이면 알림"처럼 고정된 숫자로 기준을 정하면, 시장 전체가 출렁이는 날엔 알림이 너무 많이 오고 조용한 날엔 진짜 중요한 신호도 놓치기 쉽습니다. 반면 EMA 기반으로 "평소" 자체를 계속 다시 계산하면, 시장 상황에 맞춰 기준이 자동으로 넓어지거나 좁아져서 이런 오차가 줄어듭니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">Event Detection Pipeline</p>
+          <svg viewBox="0 0 700 130" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+            </defs>
+            <rect class="dg-box" x="8" y="30" width="150" height="66" rx="6"/>
+            <text class="dg-label" x="83" y="58" text-anchor="middle">가격·거래량 수집</text>
+            <text class="dg-sublabel" x="83" y="76" text-anchor="middle">Worker · 1초 주기</text>
+
+            <line class="dg-arrow" x1="158" y1="63" x2="192" y2="63" marker-end="url(#mk-arrow-1)"/>
+
+            <rect class="dg-box dg-box--accent" x="196" y="30" width="160" height="66" rx="6"/>
+            <text class="dg-label" x="276" y="58" text-anchor="middle">EMA 기반 이상 탐지</text>
+            <text class="dg-sublabel" x="276" y="76" text-anchor="middle">평소 패턴 대비 이탈 판단</text>
+
+            <line class="dg-arrow" x1="356" y1="63" x2="390" y2="63" marker-end="url(#mk-arrow-1)"/>
+
+            <rect class="dg-box" x="394" y="30" width="160" height="66" rx="6"/>
+            <text class="dg-label" x="474" y="58" text-anchor="middle">이벤트 정규화</text>
+            <text class="dg-sublabel" x="474" y="76" text-anchor="middle" font-family="var(--font-mono)">stock_events</text>
+
+            <line class="dg-arrow" x1="554" y1="63" x2="588" y2="63" marker-end="url(#mk-arrow-1)"/>
+
+            <rect class="dg-box" x="592" y="30" width="100" height="66" rx="6"/>
+            <text class="dg-label" x="642" y="58" text-anchor="middle">타임라인</text>
+            <text class="dg-sublabel" x="642" y="76" text-anchor="middle">웹 UI</text>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <p>흐름은 4단계입니다. 먼저 별도로 동작하는 Worker가 1초마다 가격·거래량을 수집합니다. 그 값을 앞서 설명한 EMA 방식으로 "평소와 얼마나 다른가"를 판단하고, 이상하다고 판단되면 하나의 "이벤트"로 기록을 남깁니다. 마지막으로 이 이벤트들이 웹 화면의 타임라인에 시간 순서대로 표시돼, 사용자가 "이 종목이 언제 왜 움직였는지"를 한눈에 볼 수 있습니다.</p>
+          <p>개발은 Claude Code라는 AI 코딩 도구를 페어 프로그래머처럼 활용했습니다. 무엇을 어떤 순서로 만들지, 어떤 구조로 설계할지는 직접 판단했고, 실제 코드를 작성하는 속도를 높이는 데 AI의 도움을 받았습니다. 이 방식으로 백엔드(API·Worker)와 웹 화면 전체를 8주 만에 실제로 동작하는 수준까지 완성했습니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/monticker" target="_blank" rel="noopener">github.com/polynomeer/monticker</a></span>
+          <span class="repo-note">247 commits · 약 7개월 진행중</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h3>starkraft — 결정론적 RTS 시뮬레이션 엔진</h3>
+          <div class="meta">2025.9 –<span class="org">개인 프로젝트 · 1인 개발</span></div>
+        </div>
+        <dl class="facts">
+          <dt>요약</dt><dd>fixed-tick 결정론적 시뮬레이션 루프 위에 이동·전투·안개·건설·생산·연구·자원 채집까지 구현한 RTS(실시간 전략) 게임 코어. sim(규칙 엔진)/tools는 Kotlin, server/client는 Go로 재작성해 5개 모듈을 폴리글랏으로 분리 설계</dd>
+          <dt>기술</dt><dd class="tags"><span class="tag">Kotlin</span><span class="tag">Go</span><span class="tag">Gradle</span><span class="tag">libGDX</span><span class="tag">GitHub Actions</span></dd>
+        </dl>
+
+        <div class="subsec">
+          <h4>"결정론적"이 왜 중요한가</h4>
+          <p>스타크래프트 같은 실시간 전략 게임을 여러 명이 함께 플레이하려면, 모든 사람의 화면에서 게임이 정확히 똑같이 진행돼야 합니다. 이걸 구현하는 대표적인 방법이 "결정론적 시뮬레이션"입니다 — 쉽게 말해 "똑같은 입력이 들어오면 언제 어디서 계산하든 항상 똑같은 결과가 나오도록" 게임 로직을 만드는 것입니다. 이렇게 만들어두면, 서버가 매 순간 전체 게임 상태를 모든 플레이어에게 전송할 필요 없이 "누가 언제 무슨 명령을 내렸는지"만 전달해도 모든 화면이 알아서 똑같은 결과를 계산해낼 수 있습니다. 이 프로젝트는 그 원리를 이동·전투·시야(안개)·건설·생산·연구·자원 채집 같은 실시간 전략 게임의 핵심 로직에 직접 적용해본 게임 코어입니다.</p>
+        </div>
+
+        <div class="diagram">
+          <p class="diagram-title">5-Module Architecture</p>
+          <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="mk-arrow-2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-faint)"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box" x="30" y="16" width="170" height="60" rx="6"/>
+            <text class="dg-label" x="115" y="42" text-anchor="middle">client</text>
+            <text class="dg-sublabel" x="115" y="60" text-anchor="middle">입력 · 렌더링(libGDX)</text>
+
+            <rect class="dg-box" x="500" y="16" width="170" height="60" rx="6"/>
+            <text class="dg-label" x="585" y="42" text-anchor="middle">server</text>
+            <text class="dg-sublabel" x="585" y="60" text-anchor="middle">권위적 상태 동기화</text>
+
+            <line class="dg-arrow" x1="200" y1="46" x2="496" y2="46" marker-end="url(#mk-arrow-2)"/>
+            <line class="dg-arrow" x1="496" y1="58" x2="200" y2="58" marker-end="url(#mk-arrow-2)"/>
+            <text class="dg-sublabel" x="350" y="38" text-anchor="middle">입력 →</text>
+            <text class="dg-sublabel" x="350" y="72" text-anchor="middle">← 상태 동기화</text>
+
+            <line class="dg-arrow" x1="585" y1="76" x2="585" y2="122" marker-end="url(#mk-arrow-2)"/>
+
+            <rect class="dg-box dg-box--accent" x="500" y="126" width="170" height="60" rx="6"/>
+            <text class="dg-label" x="585" y="152" text-anchor="middle">sim — 규칙 엔진</text>
+            <text class="dg-sublabel" x="585" y="170" text-anchor="middle">fixed-tick 결정론 루프</text>
+
+            <rect class="dg-box" x="30" y="126" width="170" height="60" rx="6"/>
+            <text class="dg-label" x="115" y="152" text-anchor="middle">tools</text>
+            <text class="dg-sublabel" x="115" y="170" text-anchor="middle">리플레이·벤치마크·스냅샷</text>
+
+            <line class="dg-arrow-dashed" x1="200" y1="156" x2="496" y2="156" marker-end="url(#mk-arrow-2)"/>
+
+            <rect class="dg-box" x="150" y="236" width="400" height="50" rx="6"/>
+            <text class="dg-label" x="350" y="257" text-anchor="middle">shared-protocol</text>
+            <text class="dg-sublabel" x="350" y="274" text-anchor="middle" font-family="var(--font-mono)">rts-protocol-v1.schema.json</text>
+
+            <line class="dg-arrow-dashed" x1="115" y1="186" x2="115" y2="210" />
+            <line class="dg-arrow-dashed" x1="115" y1="210" x2="230" y2="236" marker-end="url(#mk-arrow-2)"/>
+            <line class="dg-arrow-dashed" x1="585" y1="186" x2="585" y2="210" />
+            <line class="dg-arrow-dashed" x1="585" y1="210" x2="470" y2="236" marker-end="url(#mk-arrow-2)"/>
+          </svg>
+        </div>
+
+        <div class="subsec">
+          <h4>5개 모듈로 나눈 이유</h4>
+          <p>게임의 핵심 규칙(sim)과, 그 규칙을 실제로 돌리는 서버(server), 플레이어가 보고 조작하는 화면(client)을 서로 분리했습니다. 서버와 화면이 데이터를 주고받을 때 쓰는 "공통 언어"는 shared-protocol이라는 별도 모듈로 빼서 문서(<code>rts-protocol-v1.schema.json</code>)로 버전 관리했습니다 — 서버와 클라이언트를 각각 따로 업데이트해도 서로 대화가 어긋나지 않도록 하기 위해서입니다. 리플레이(지난 경기 재생), 벤치마크(성능 측정), 스냅샷(특정 시점 저장) 같은 개발 지원 도구는 tools 모듈로 따로 뒀습니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>게임 코드만 짜고 끝내지 않았습니다</h4>
+          <p>결정론이 실제로 깨지지 않는지 확인하는 자동 검증(같은 리플레이를 다시 돌렸을 때 결과가 정확히 같은지 매번 체크), 코드가 바뀔 때마다 자동으로 빌드·테스트하는 파이프라인(CI), 배포 파일이 중간에 손상되거나 변조되지 않았는지 확인하는 체크섬, 운영자가 문제 상황에서 참고할 수 있는 매뉴얼(런북)까지 실제 서비스에 준하는 과정을 함께 만들었습니다. 대신 그래픽·사운드 리소스, 스토리 모드, 완전한 온라인 대전 기능은 처음부터 범위 밖으로 정해뒀습니다 — 게임 엔진의 핵심 로직과 운영 프로세스를 제대로 만드는 데 집중하기 위해서입니다.</p>
+        </div>
+
+        <div class="subsec">
+          <h4>네트워크 계층을 Go로 다시 쓴 이유</h4>
+          <p>처음엔 server·client를 포함한 5개 모듈 전부를 Kotlin으로 만들었지만, 이후 게임 규칙을 계산하는 sim은 Kotlin/JVM에 그대로 두고 네트워크를 주고받는 server·client만 Go로 다시 작성했습니다. "게임의 규칙을 판정하는 부분"과 "여러 플레이어의 연결을 관리하는 부분"이 서로 다른 종류의 작업이라는 점에 착안해, 각각에 더 맞는 언어로 나눈 것입니다.</p>
+        </div>
+
+        <div class="project-link">
+          <span><span class="k">GitHub</span><a href="https://github.com/polynomeer/starkraft" target="_blank" rel="noopener">github.com/polynomeer/starkraft</a></span>
+          <span class="repo-note">1,075 commits · Kotlin 110개·Go 28개 파일 · 5개 모듈</span>
+        </div>
+      </article>
+    </section>
+
+  </div>
+
+  <footer class="endnote">
+    <span>함승훈 — Backend Engineer</span>
+    <span>polynomeer@gmail.com</span>
+  </footer>
+</div>
+
+</body>
+</html>

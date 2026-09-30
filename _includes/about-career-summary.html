@@ -78,21 +78,6 @@
         <i class="fas fa-envelope" aria-hidden="true"></i> {{ career.contact.email }}
       </a>
       {%- endif -%}
-      {%- comment -%}
-        이력서 버튼은 파일이 실제로 빌드 결과에 있을 때만 나옵니다. 데이터 파일의 경로는 의도이고,
-        site.static_files 가 사실입니다. 경로만 보고 링크를 걸면 scripts/sync-resume.sh 를 아직
-        안 돌린 상태에서 검토자가 처음 누르는 것이 404 가 됩니다.
-      {%- endcomment -%}
-      {%- assign resume_file = nil -%}
-      {%- if career.contact.resume and career.contact.resume != empty -%}
-        {%- assign resume_file = site.static_files | where: 'path', career.contact.resume | first -%}
-      {%- endif -%}
-      {%- if resume_file -%}
-      <a class="about-career-contact-link" href="{{ career.contact.resume | relative_url }}">
-        <i class="fas fa-file-pdf" aria-hidden="true"></i>
-        <span data-i18n="about.career_resume">{{ loc.career_resume }}</span>
-      </a>
-      {%- endif -%}
       {%- if career.contact.github and career.contact.github != empty -%}
       <a class="about-career-contact-link" href="{{ career.contact.github }}" target="_blank" rel="noopener noreferrer">
         <i class="fab fa-github" aria-hidden="true"></i> GitHub

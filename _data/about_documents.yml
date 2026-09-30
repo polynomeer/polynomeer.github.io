@@ -1,0 +1,33 @@
+# About 에서 이력서·포트폴리오로 보내는 카드.
+#
+# 두 문서는 career-hub 에서 통째로 가져온 HTML 이고(scripts/sync-career-docs.sh), 각자의 디자인을
+# 그대로 씁니다. About 에 같은 내용을 카드로 다시 그리지 않는 이유가 이것입니다 - 원본이 더 낫고,
+# 두 벌을 두면 한쪽만 갱신됩니다.
+enabled: true
+
+items:
+  - id: resume
+    url: /resume/
+    icon: fas fa-file-lines
+    title:
+      ko-KR: 이력서
+      en: Résumé
+    summary:
+      ko-KR: 경력과 학력, 프로젝트별 성과를 3쪽 분량으로 정리한 문서입니다.
+      en: Career, education, and per-project results in about three pages.
+    meta:
+      ko-KR: 3쪽 · 브라우저에서 PDF로 저장 가능
+      en: 3 pages · printable to PDF from the browser
+
+  - id: portfolio
+    url: /portfolio/
+    icon: fas fa-folder-open
+    title:
+      ko-KR: 포트폴리오
+      en: Portfolio
+    summary:
+      ko-KR: 실무·개인 프로젝트마다 무엇이 문제였고 어떻게 풀었는지, 아키텍처 다이어그램과 수치를 함께 담았습니다.
+      en: What the problem was and how it was solved in each project, with architecture diagrams and numbers.
+    meta:
+      ko-KR: 실무 4건 · 개인 4건 · 저장소 링크 포함
+      en: 4 professional, 4 personal, with repository links

@@ -4,11 +4,6 @@ enabled: true
 # ones already published on the resume; do not add figures that facts/ does not have.
 
 career:
-  # 이 섹션을 무엇으로 보아야 하는지 한 줄로 밝힙니다. 실무와 개인 프로젝트가 같은 카드 모양이라
-  # 같은 기준으로 읽히는데, 그러면 혼자 만든 쪽이 팀 성과 기준에서 늘 불리하게 읽힙니다.
-  criteria:
-    ko-KR: 팀 규모와 기간, 맡은 역할, 그리고 바뀐 수치로 보아 주십시오.
-    en: Read these by team size, duration, the role I held, and the numbers that moved.
   note:
     ko-KR: (주)드림어스컴퍼니(FLO) 재직 중(2021.12 – 2025.2) 수행한 프로젝트입니다. 각 항목의 상세 과정은 연결된 글에서 다룹니다.
     en: Projects delivered at Dreamus Company (FLO), 2021.12 – 2025.2. Each entry links to the posts that walk through the work in detail.
@@ -119,9 +114,6 @@ career:
         - /posts/batch-heap-dump-to-chunk/
 
 personal:
-  criteria:
-    ko-KR: 전부 1인 개발이라 팀 성과가 아닙니다. 어떤 설계 판단을 했고 그 근거를 어떻게 재서 확인했는지로 보아 주십시오.
-    en: All solo work, so there is no team outcome to read. Read these by the design decisions made and how each one was measured.
   note:
     ko-KR: 주식 관찰 앱, 개발자 Q&A, 백엔드 실습 서비스, 결제 시스템을 만들었습니다. 모두 1인 개발이고 코드와 테스트는 GitHub에 공개되어 있습니다.
     en: A stock monitoring app, a developer Q&A, a backend practice service, and a payment system. All solo projects; code and tests are public on GitHub.
