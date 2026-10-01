@@ -60,6 +60,24 @@
     <i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn
   </a>
   {%- endif -%}
+  {%- comment -%}
+    이력서·포트폴리오도 연락처와 같은 줄의 버튼입니다. 카드로 따로 떼면 설명을 두 벌 쓰게 되고,
+    설명은 문서 자체가 더 잘 합니다.
+  {%- endcomment -%}
+  {%- assign docs = site.data.about_documents -%}
+  {%- if docs and docs.enabled -%}
+    {%- for d in docs.items -%}
+    {%- capture doc_title %}{% include localized-value.html value=d.title lang=lang %}{% endcapture -%}
+    {%- comment -%}
+      data-l10n-* 는 아이콘 바깥의 span 에 답니다. lang-switch.js 가 textContent 를 통째로
+      갈아끼우기 때문에 a 에 달면 안의 <i> 가 지워집니다.
+    {%- endcomment -%}
+    <a class="about-contact-link is-doc" href="{{ d.url | relative_url }}">
+      <i class="{{ d.icon }}" aria-hidden="true"></i>
+      <span data-l10n-ko="{{ d.title['ko-KR'] | escape }}" data-l10n-en="{{ d.title.en | escape }}">{{ doc_title | strip }}</span>
+    </a>
+    {%- endfor -%}
+  {%- endif -%}
 </div>
 {%- endif -%}
 

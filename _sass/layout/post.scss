@@ -1756,6 +1756,13 @@ html[data-mode='dark'] .about-terminal {
     border-color: transparent;
     background: rgba(98, 114, 164, 0.22);
   }
+
+  /* 이력서·포트폴리오. 연락처와 같은 줄이되 주 동선이라 테두리를 한 단계 세게 둡니다 */
+  &.is-doc {
+    border-color: var(--link-color);
+    color: var(--link-color);
+    font-weight: 600;
+  }
 }
 
 @media all and (max-width: 576px) {
@@ -1917,66 +1924,6 @@ html[data-mode='dark'] .about-terminal {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-
-/* 이력서·포트폴리오 카드 — About 의 주 동선 */
-.about-documents {
-  margin-top: 2.2rem;
-}
-
-.about-documents-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-}
-
-.about-document {
-  display: grid;
-  gap: 0.3rem;
-  padding: 1.15rem 1.25rem;
-  border-radius: 0.7rem;
-  border: 1px solid rgba(98, 114, 164, 0.3);
-  text-decoration: none;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--link-color);
-    transform: translateY(-1px);
-  }
-}
-
-.about-document-icon {
-  font-size: 1.05rem;
-  color: var(--link-color);
-}
-
-.about-document-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.about-document-summary {
-  font-size: 0.88rem;
-  line-height: 1.65;
-  color: var(--text-muted-color);
-}
-
-.about-document-meta {
-  margin-top: 0.15rem;
-  font-size: 0.78rem;
-  color: var(--text-muted-color);
-  opacity: 0.85;
-}
-
-@media all and (max-width: 576px) {
-  .about-documents-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-
-
 
 .about-portfolio-links {
   display: flex;

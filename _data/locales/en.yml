@@ -409,8 +409,6 @@ about:
   activity_ai_sessions: sessions
   activity_ai_produced: tokens produced
   activity_ai_note: Only tokens the model generated. Cache reads are the same context read again, not work done, so they are left out.
-  documents_eyebrow: Documents
-  documents_title: Résumé and portfolio
   technical_focus: Technical Focus
   profile_hub_eyebrow: Profile Hub
   profile_hub_title: Where to go next

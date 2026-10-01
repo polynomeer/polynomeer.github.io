@@ -404,8 +404,6 @@ about:
   activity_ai_sessions: 세션
   activity_ai_produced: 생성 토큰
   activity_ai_note: 모델이 생성한 토큰만입니다. 캐시 재읽기는 같은 맥락을 다시 읽은 양이라 작업량이 아니어서 뺐습니다.
-  documents_eyebrow: 문서
-  documents_title: 이력서와 포트폴리오
   technical_focus: 기술 집중 분야
   profile_hub_eyebrow: 프로필 허브
   profile_hub_title: 더 볼 곳
