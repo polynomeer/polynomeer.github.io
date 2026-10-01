@@ -42,17 +42,22 @@ ResultSet rs = ps.executeQuery();
 
 같은 입력이 그대로 SQL에 포함되면 의도하지 않은 조회가 가능해질 수 있다.
 
-`PreparedStatement`는 SQL과 값을 분리해서 전달하므로, 값이 쿼리 문법으로 해석되지 않고 데이터로만 처리된다. 그래서 사용자 입력이 포함되는 SQL이라면 사실상 기본 선택지라고 봐야 한다.
+`PreparedStatement`는 SQL과 값을 분리해서 전달한다. 그래서 값이 쿼리 문법으로 해석되지 않고 데이터로만 처리된다. OWASP의 SQL Injection 방어 가이드도 같은 이유를 든다.
+
+> "prepared statements ensure that an attacker cannot change the intent of a query, even if SQL commands are inserted by an attacker."
+> ([OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html))
+
+공격자가 SQL 명령을 끼워 넣어도 쿼리의 의도는 바뀌지 않는다는 뜻이다. 사용자 입력이 포함되는 SQL이라면 사실상 기본 선택지라고 봐야 한다.
 
 ## 성능에서도 차이가 날 수 있다
 
-`PreparedStatement`는 이름 때문에 "미리 컴파일된 SQL" 정도로 설명되곤 한다. 실제 세부 동작은 DB와 드라이버에 따라 다르지만, 일반적으로 다음 이점이 있다.
+`PreparedStatement`는 "미리 컴파일된 SQL"로 설명되곤 하고, Javadoc도 "precompiled SQL statement"를 여러 번 효율적으로 실행하는 객체라고 적는다([PreparedStatement Javadoc](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html)). 다만 실제로 언제 어디서 준비되는지는 DB와 드라이버에 따라 다르다. 일반적으로는 다음 이점이 있다.
 
 - 같은 SQL 템플릿을 반복 실행하기 쉽다
 - 파라미터만 바꿔 재사용할 수 있다
-- DB가 실행 계획을 재활용하기 더 유리한 경우가 있다
+- DB가 [실행 계획](/posts/reading-execution-plans/)을 재활용하기 더 유리한 경우가 있다
 
-특히 같은 형태의 쿼리를 여러 번 수행하는 배치나 반복 조회에서는 `PreparedStatement`가 더 자연스럽다.
+특히 같은 형태의 쿼리를 여러 번 수행하는 배치나 반복 조회에서는 `PreparedStatement`가 더 자연스럽다. 반대로 바인딩 값의 타입이 들쭉날쭉하면 같은 SQL이 DB에서 다른 쿼리로 취급될 수 있다. Oracle에서 그 일이 벌어진 사례는 [네이버 D2 child cursor 리뷰](/posts/naver-oracle-child-cursor-explosion/)에서 다룬다.
 
 ## 가독성과 유지보수 관점에서도 유리하다
 
@@ -116,23 +121,15 @@ ps.executeBatch();
 
 ### 동적 컬럼명이나 정렬 조건을 그대로 받는 경우
 
-파라미터 바인딩은 값에만 적용된다. 컬럼명, 테이블명, 정렬 방향 같은 식별자는 `?`로 바인딩할 수 없다. 이런 값은 화이트리스트 기반으로 직접 제한해야 한다.
+파라미터 바인딩은 값에만 적용된다. 컬럼명, 테이블명, 정렬 방향 같은 식별자는 `?`로 바인딩할 수 없다. 이런 값은 화이트리스트 기반으로 직접 제한해야 한다. OWASP 가이드도 바인딩할 수 없는 자리에는 입력 검증이나 쿼리 재설계를 방어책으로 권하고, 테이블·컬럼 이름은 사용자 파라미터가 아니라 코드에서 오는 것이 이상적이라고 적는다.
 
 ## 정리
 
-`Statement`와 `PreparedStatement`의 차이는 단순한 문법 차이가 아니다.
+`Statement`와 `PreparedStatement`의 차이는 SQL 구조와 값을 분리하느냐에 있다. 보안, 반복 실행, 가독성의 차이가 모두 이 분리에서 나온다.
 
-- `Statement`는 SQL 문자열을 직접 실행하고
-- `PreparedStatement`는 SQL 구조와 값을 분리해 실행한다
+JDBC를 직접 다룬다면 사용자 입력이나 반복 실행이 조금이라도 있을 때 기본값을 `PreparedStatement`로 둔다. 바인딩할 수 없는 식별자만 화이트리스트로 따로 막으면 된다.
 
-그래서 `PreparedStatement`는 다음 장점이 있다.
+## 참고
 
-- SQL Injection 방지에 유리하다
-- 반복 실행 구조에 적합하다
-- 코드 가독성과 유지보수성이 좋다
-
-JDBC를 직접 다룬다면 기준은 단순하다.
-
-> 사용자 입력이나 반복 실행이 조금이라도 있다면, 기본값은 `PreparedStatement`다.
-
-이 기준만 지켜도 보안과 코드 품질의 상당 부분을 안정적으로 가져갈 수 있다.
+- [Java SE 21: PreparedStatement](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html)
+- [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
