@@ -96,12 +96,16 @@
         </div>
       </div>
 
-      <details class="capability-map-detail" id="capability-map-detail" data-capability-details>
-        <summary class="capability-map-detail-heading">
+      {% comment %}
+        The detail panel is always open. It used to be a <details>, which meant
+        the evidence - the reason the page exists - was one click away from
+        every visitor who did not think to open it.
+      {% endcomment %}
+      <div class="capability-map-detail" id="capability-map-detail">
+        <div class="capability-map-detail-heading">
           <span class="capability-map-detail-label">{{ site.data.locales[lang].capability_map.detail_title }}</span>
           <span class="capability-map-detail-current" data-capability-current></span>
-          <i class="fas fa-chevron-down capability-map-detail-chevron" aria-hidden="true"></i>
-        </summary>
+        </div>
         <div class="capability-map-detail-body" aria-live="polite">
 
         {% for capability in capability_nodes %}
@@ -202,7 +206,7 @@
           </section>
         {% endfor %}
         </div>
-      </details>
+      </div>
     </div>
   </section>
 {% endif %}
@@ -220,7 +224,6 @@
     const edgeElements = Array.from(root.querySelectorAll('[data-capability-edge]'));
     const focusButtons = Array.from(root.querySelectorAll('[data-capability-focus]'));
     const nodeMap = new Map(nodeButtons.map((button) => [button.dataset.capabilityNode, button]));
-    const details = root.querySelector('[data-capability-details]');
     const currentLabel = root.querySelector('[data-capability-current]');
 
     const applySelection = (capabilityId) => {
@@ -272,23 +275,15 @@
       }
     };
 
-    const openDetails = () => {
-      if (details && !details.open) {
-        details.open = true;
-      }
-    };
-
     nodeButtons.forEach((button) => {
       button.addEventListener('click', () => {
         applySelection(button.dataset.capabilityNode);
-        openDetails();
       });
     });
 
     focusButtons.forEach((button) => {
       button.addEventListener('click', () => {
         applySelection(button.dataset.capabilityFocus);
-        openDetails();
       });
     });
 

@@ -1222,10 +1222,6 @@ header {
 
 .capability-map-detail {
   padding: 0;
-
-  &[open] .capability-map-detail-chevron {
-    transform: rotate(180deg);
-  }
 }
 
 .capability-map-detail-heading {
@@ -1238,16 +1234,6 @@ header {
   color: var(--text-muted-color);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  cursor: pointer;
-  list-style: none;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-
-  &:hover {
-    color: var(--text-color);
-  }
 }
 
 .capability-map-detail-current {
@@ -1261,11 +1247,6 @@ header {
   letter-spacing: 0;
   text-transform: none;
   color: var(--heading-color);
-}
-
-.capability-map-detail-chevron {
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
 }
 
 .capability-map-detail-body {
