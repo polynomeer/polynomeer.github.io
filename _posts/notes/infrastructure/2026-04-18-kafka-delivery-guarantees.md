@@ -5,11 +5,11 @@ categories: [Notes, Infrastructure]
 tags: [Kafka, Idempotent Consumer, Transactional Outbox, Messaging, Consistency, Event Driven]
 ---
 
-"Kafka는 exactly-once를 지원한다"는 문장이 오해를 만든다. 지원하는 것은 맞고, 그 보장의 범위가 생각보다 좁은 것도 맞다. 세 가지 보장이 각각 **어디서 어디까지**를 약속하는지 경계를 그어 두면, 언제 트랜잭션을 켜고 언제 멱등 소비자를 만들지가 정해진다.
+"Kafka는 exactly-once를 지원한다"는 문장이 오해를 만든다. 지원하는 것은 맞고, 그 보장의 범위가 생각보다 좁은 것도 맞다. 세 가지 보장이 각각 어디서 어디까지를 약속하는지 경계를 그어 두면, 언제 트랜잭션을 켜고 언제 멱등 소비자를 만들지가 정해진다.
 
 ## 세 가지가 나뉘는 지점은 재시도다
 
-메시지 하나가 프로듀서에서 컨슈머까지 가는 동안 실패할 수 있는 곳이 여럿이다. 실패했을 때 **다시 보내는가 아닌가**가 세 보장을 가른다.
+메시지 하나가 프로듀서에서 컨슈머까지 가는 동안 실패할 수 있는 곳이 여럿이다. 실패했을 때 다시 보내는가 아닌가가 세 보장을 가른다.
 
 | 보장 | 재시도 | 결과 |
 | --- | --- | --- |
@@ -19,33 +19,33 @@ tags: [Kafka, Idempotent Consumer, Transactional Outbox, Messaging, Consistency,
 
 at-most-once는 로그나 지표처럼 일부 유실을 감당할 수 있는 곳에 쓴다. 금액이 움직이는 경로에서는 선택지가 아니다.
 
-**실무의 기본값은 at-least-once다.** 유실을 막으려면 재시도해야 하고, 재시도하면 중복이 생긴다. 중복은 소비자가 흡수한다.
+실무의 기본값은 at-least-once다. 유실을 막으려면 재시도해야 하고, 재시도하면 중복이 생긴다. 그래서 중복은 소비자가 흡수해야 한다.
 
 ## 중복이 생기는 두 곳
 
-**프로듀서 쪽.** 브로커가 기록했는데 응답만 유실되면 프로듀서는 실패로 보고 다시 보낸다. 같은 메시지가 두 번 기록된다. Kafka의 **멱등 프로듀서**(`enable.idempotence=true`)가 이것을 막는다. 프로듀서 ID와 시퀀스 번호를 붙여 브로커가 중복을 걸러낸다. 지금은 기본값이다.
+**프로듀서 쪽.** 브로커가 기록했는데 응답만 유실되면 프로듀서는 실패로 보고 다시 보낸다. 같은 메시지가 두 번 기록된다. Kafka의 멱등 프로듀서(`enable.idempotence=true`)가 이것을 막는다. 브로커가 프로듀서마다 ID를 주고, 프로듀서가 메시지마다 붙여 보내는 시퀀스 번호로 중복을 걸러낸다([Kafka Design: Message Delivery Semantics](https://kafka.apache.org/43/design/design/)). 충돌하는 설정(`acks`가 `all`이 아닌 경우 등)이 없으면 기본으로 켜진다([Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/)).
 
-**컨슈머 쪽.** 메시지를 처리하고 오프셋을 커밋하기 전에 죽으면, 재시작 후 같은 메시지를 다시 받는다. 처리와 커밋이 원자적이지 않은 한 이 창은 항상 열려 있다.
+**컨슈머 쪽.** 메시지를 처리하고 오프셋을 커밋하기 전에 죽으면, 재시작 후 같은 메시지를 다시 받는다. 설계 문서는 이 순서(읽고, 처리하고, 위치를 저장)를 at-least-once로, 반대 순서(위치를 먼저 저장)를 at-most-once로 구분한다. 처리와 커밋이 원자적이지 않은 한 이 창은 항상 열려 있다.
 
-[ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 이것을 직접 재현했다. 소비자를 종료시켜 중복 30~1,909건이 도착했고, 커밋 방식(자동/수동)을 바꿔도 **중복의 양만 달라지고 발생 자체는 사라지지 않았다.** 결과가 정확히 1회였던 것은 멱등 소비자(`consumed_event` 테이블 + 업무 유니크 키) 덕이다.
+[ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 이것을 직접 재현했다. 소비자를 종료시켜 중복 30~1,909건이 도착했고, 커밋 방식(자동/수동)을 바꿔도 중복의 양만 달라지고 발생 자체는 사라지지 않았다. 결과가 정확히 1회였던 것은 멱등 소비자(`consumed_event` 테이블 + 업무 유니크 키) 덕이다.
 
 ## Kafka의 exactly-once가 덮는 범위
 
-Kafka 트랜잭션은 "읽고-처리하고-쓰기"가 **Kafka 안에서 일어날 때** 원자성을 준다. 컨슈머가 토픽 A에서 읽고 토픽 B에 쓰고 오프셋을 커밋하는 것을 하나의 트랜잭션으로 묶는다. 스트림 처리(Kafka Streams의 `processing.guarantee=exactly_once_v2`)가 이 위에 있다.
+Kafka 트랜잭션은 "읽고-처리하고-쓰기"가 **Kafka 안에서 일어날 때** 원자성을 준다. 컨슈머가 토픽 A에서 읽고 토픽 B에 쓰고 오프셋을 커밋하는 것을 하나의 트랜잭션으로 묶는다. 이것이 가능한 이유는 컨슈머의 위치도 내부 토픽에 메시지로 저장되므로, 출력 토픽과 같은 트랜잭션에 오프셋을 쓸 수 있기 때문이다. 스트림 처리(Kafka Streams의 `processing.guarantee=exactly_once_v2`)가 이 위에 있다.
 
 덮지 못하는 것이 분명하다.
 
-- **외부 시스템에 쓰는 순간 깨진다.** 메시지를 읽고 **DB에 쓰고** 오프셋을 커밋하는 것은 Kafka 트랜잭션에 들어가지 않는다. 두 시스템에 걸친 원자성은 2PC 없이는 없다.
-- **외부 부작용은 되돌릴 수 없다.** 메일 발송, 외부 결제 승인, 파일 업로드. 트랜잭션이 롤백돼도 그것들은 이미 일어났다.
-- **컨슈머가 `read_committed`여야 한다.** 기본값은 `read_uncommitted`라 중단된 트랜잭션의 메시지도 읽는다.
+- **외부 시스템에 쓰는 순간 깨진다.** 메시지를 읽고 DB에 쓰고 오프셋을 커밋하는 것은 Kafka 트랜잭션에 들어가지 않는다. 설계 문서는 두 가지 길을 든다. 오프셋 저장과 출력 저장 사이에 [2PC](/posts/two-phase-commit-and-saga/)를 두거나, 오프셋을 출력과 같은 저장소에 함께 저장하는 것이다. 많은 출력 시스템이 2PC를 지원하지 않으므로 문서는 후자를 더 낫다고 본다.
+- 외부 부작용은 되돌릴 수 없다. 메일 발송, 외부 결제 승인, 파일 업로드. 트랜잭션이 롤백돼도 그것들은 이미 일어났다.
+- 컨슈머가 `read_committed`여야 한다. `isolation.level` 기본값은 `read_uncommitted`라 중단된 트랜잭션의 메시지도 읽는다([Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/)).
 
-그래서 현실적인 구성은 이렇게 된다. **전송은 at-least-once로 두고, 효과를 멱등하게 만든다.**
+그래서 현실적인 구성은 이렇게 된다. **전송은 at-least-once로 두고, 효과를 [멱등](/posts/idempotency-key-design/)하게 만든다.**
 
 ## 멱등 소비자를 만드는 방법
 
 세 가지가 쓰인다.
 
-**메시지 ID 기록.** 처리한 메시지의 ID를 테이블에 남기고, 이미 있으면 건너뛴다. 기록과 업무 처리가 **같은 트랜잭션**이어야 한다. 아니면 기록 후 죽었을 때 처리가 빠진다.
+**메시지 ID 기록.** 처리한 메시지의 ID를 테이블에 남기고, 이미 있으면 건너뛴다. 기록과 업무 처리가 같은 트랜잭션이어야 한다. 아니면 기록 후 죽었을 때 처리가 빠진다.
 
 **업무 유니크 키.** "결제 1234의 승인 원장은 하나"처럼 도메인 제약을 DB에 둔다. 중복 메시지가 와도 제약 위반으로 막힌다. 별도 테이블이 필요 없고 도메인 규칙과 일치한다는 점에서 더 견고하다.
 
@@ -57,16 +57,16 @@ Kafka 트랜잭션은 "읽고-처리하고-쓰기"가 **Kafka 안에서 일어�
 
 애플리케이션이 DB에 쓰고 Kafka에 발행하는 경우, 두 작업 사이에 죽으면 둘이 어긋난다. DB만 커밋되고 발행이 안 되거나, 발행만 되고 DB가 롤백된다.
 
-**Transactional Outbox**가 이것을 푼다. 발행할 이벤트를 **같은 트랜잭션으로** outbox 테이블에 쓰고, 별도 프로세스가 그 테이블을 읽어 발행한다. DB 커밋이 곧 발행 의도의 커밋이다.
+Transactional Outbox가 이것을 푼다. 발행할 이벤트를 같은 트랜잭션으로 outbox 테이블에 쓰고, 별도 프로세스가 그 테이블을 읽어 발행한다. DB 커밋이 곧 발행 의도의 커밋이다.
 
 이것도 exactly-once는 아니다. 발행 후 상태 갱신 전에 죽으면 다시 발행한다. **outbox가 보장하는 것은 "커밋된 발행 의도를 잃지 않는 것"까지이고, 중복은 여전히 소비자가 흡수한다.**
 
 ## 이 설명이 깨지는 곳
 
 - **`acks` 설정이 유실을 정한다.** outbox가 있어도 `acks=1`이면 리더 교체 중 유실이 가능하다. ParityPay 8편에서 `acks=all`은 0건, `acks=1`과 `0`은 배치 단위로 잃었다. **Outbox는 이 유실을 막지 못한다.**
-- **exactly-once는 성능 비용이 있다.** 트랜잭션 코디네이터 왕복과 `read_committed`의 지연이 붙는다.
-- **순서와 중복은 다른 문제다.** 멱등 소비자는 중복을 흡수하지만 순서를 고치지 않는다. 순서는 파티션 키가 맡는다.
-- **"정확히 한 번"이라는 말이 가리키는 것은 전달이 아니라 효과여야 한다.** 메시지가 두 번 와도 결과가 한 번이면 목적은 달성된다.
+- exactly-once는 성능 비용이 있다. 트랜잭션 코디네이터 왕복과 `read_committed`의 지연이 붙는다.
+- 순서와 중복은 다른 문제다. 멱등 소비자는 중복을 흡수하지만 순서를 고치지 않는다. 순서는 파티션 키가 맡는다.
+- "정확히 한 번"이라는 말이 가리키는 것은 전달이 아니라 효과여야 한다. 메시지가 두 번 와도 결과가 한 번이면 목적은 달성된다.
 
 ## 무엇을 재면 확인되는가
 
@@ -78,16 +78,14 @@ Kafka 트랜잭션은 "읽고-처리하고-쓰기"가 **Kafka 안에서 일어�
 
 ## 정리
 
-- 세 보장을 가르는 것은 재시도 여부다. 유실을 막으면 중복이 생긴다.
-- 실무의 기본값은 at-least-once이고, 중복은 소비자가 흡수한다.
-- 중복은 프로듀서 쪽(응답 유실)과 컨슈머 쪽(커밋 전 종료) 두 곳에서 생긴다.
-- Kafka의 exactly-once는 Kafka 안의 읽고-처리하고-쓰기에 한정된다. 외부 DB나 부작용에는 미치지 않는다.
-- 멱등 소비자는 메시지 ID 기록, 업무 유니크 키, 조건부 상태 전이 중 하나로 만든다.
+- 처리 결과가 Kafka 밖(DB, 외부 API)에 남는다면 Kafka 트랜잭션을 켜도 중복은 소비자가 흡수해야 한다.
 - Outbox는 발행 의도를 잃지 않게 할 뿐이고, 브로커 유실은 `acks`가 막는다.
-- 목표는 "정확히 한 번 전달"이 아니라 "정확히 한 번의 효과"다.
 
 ## 참고
 
 - [Kafka: Message Delivery Semantics](https://kafka.apache.org/documentation/#semantics)
+- [Kafka 4.3 Design](https://kafka.apache.org/43/design/design/)
+- [Kafka 4.3 Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/)
+- [Kafka 4.3 Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/)
 - [KIP-98: Exactly Once Delivery and Transactional Messaging](https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging)
 - [Transactional Outbox 패턴](https://microservices.io/patterns/data/transactional-outbox.html)
