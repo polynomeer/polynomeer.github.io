@@ -13,7 +13,7 @@ source_url: https://tech.kakao.com/posts/665
 
 ## 한 줄 요약
 
-서버마다 camelCase와 snake_case가 섞인 DTO 900개를 camelCase로 통일해야 했다. 무중단으로 하려면 v2 API 추가 → 호출자 전환 → v1 제거의 배포 순서를 서버마다 지켜야 하는데, 서로 참조하는 서버가 많으면 순서를 맞추기 어려워 결국 점검을 걸게 된다. 케이스 변경 때문에 점검을 여러 번 하는 것은 배보다 배꼽이다. 해법은 **받는 쪽(Callee)이 보내는 쪽의 케이스와 무관하게 자기 DTO에 선언된 케이스로 알아서 변환해 읽는 모듈**을 모든 서버에 먼저 붙이는 것이다. 그러면 어느 서버부터 바꿔도 되고, 다 바꾼 뒤 모듈을 떼면 된다.
+서버마다 camelCase와 snake_case가 섞인 DTO(서버 간에 주고받는 데이터 객체) 900개를 camelCase로 통일해야 했다. 무중단으로 하려면 v2 API 추가 → 호출자 전환 → v1 제거의 배포 순서를 서버마다 지켜야 하는데, 서로 참조하는 서버가 많으면 순서를 맞추기 어려워 결국 점검을 걸게 된다. 케이스 변경 때문에 점검을 여러 번 하는 것은 배보다 배꼽이다. 원문의 해법은 받는 쪽(Callee)이 보내는 쪽의 케이스와 무관하게 자기 DTO에 선언된 케이스로 알아서 변환해 읽는 모듈을 모든 서버에 먼저 붙이는 것이다. 그러면 어느 서버부터 바꿔도 되고, 다 바꾼 뒤 모듈을 떼면 된다.
 
 ## 배경: 케이스가 섞이는 이유와 그 비용
 
@@ -21,19 +21,19 @@ source_url: https://tech.kakao.com/posts/665
 
 - 게이트웨이(camel)가 받은 DTO를 비즈니스 서버(snake)로 그대로 넘기려면 같은 값의 DTO가 두 벌 필요하고, 필드가 바뀌면 둘 다 고쳐야 한다.
 - DTO 안에 다른 DTO가 들어갈 때 바깥은 camel, 안쪽은 snake면 받는 쪽이 어느 케이스로 파싱할지 몰라 오류가 난다.
-- Jackson이 없는 필드를 null로 채우는 설정이라, 필드명을 못 알아봐도 **컴파일 때도 파싱 때도 안 잡히고** 그 필드를 쓰는 순간에야 터진다.
+- Jackson이 없는 필드를 null로 채우는 설정이라, 필드명을 못 알아봐도 컴파일 때도 파싱 때도 안 잡히고 그 필드를 쓰는 순간에야 터진다.
 
-MSA에서는 서버 간 통신이 REST라 DTO가 많아 더 자주 생기고, 무중단 서비스에서는 DTO를 바꾸는 배포 자체가 어렵다.
+[MSA](/posts/microservice-architecture/)에서는 서버 간 통신이 REST라 DTO가 많아 더 자주 생기고, 무중단 서비스에서는 DTO를 바꾸는 배포 자체가 어렵다.
 
 ## 핵심 아이디어
 
-Caller가 무엇을 보내든 Callee가 파싱 직전에 **자기 타깃 클래스의 케이스로 바꿔서** 읽는다. 모든 서버에 이 모듈을 붙인 뒤 서버별로 케이스를 일원화하고, 끝나면 모듈을 제거한다. 배포 순서 의존이 사라진다.
+Caller가 무엇을 보내든 Callee가 파싱 직전에 자기 타깃 클래스의 케이스로 바꿔서 읽는다. 모든 서버에 이 모듈을 붙인 뒤 서버별로 케이스를 일원화하고, 끝나면 모듈을 제거한다. 배포 순서 의존이 사라진다.
 
 ## 자세히 보기
 
 ### Request: RequestBodyAdvice
 
-Filter는 타깃 클래스를 알 수 없고, Interceptor는 원본 body를 바꾸기 어렵다. `RequestBodyAdvice`는 `@RequestBody`에 값이 매핑되기 직전에 동작하고 `beforeBodyRead`에서 타깃 클래스를 알 수 있다. 타깃이 snake인지는 팀 규약대로 붙어 있던 `@JsonNamingStrategy`·`@JsonProperty`의 존재를 리플렉션으로 확인해 판단한다.
+[Filter와 Interceptor](/posts/filter-interceptor-aop/)는 쓸 수 없었다. Filter는 타깃 클래스를 알 수 없고, Interceptor는 원본 body를 바꾸기 어렵다. `RequestBodyAdvice`는 `@RequestBody`에 값이 매핑되기 직전에 동작하고 `beforeBodyRead`에서 타깃 클래스를 알 수 있다. `beforeBodyRead`는 `targetType` 파라미터로 타깃 타입을 받는다([RequestBodyAdvice Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/RequestBodyAdvice.html)). 타깃이 snake인지는 팀 규약대로 붙어 있던 `@JsonNamingStrategy`·`@JsonProperty`의 존재를 리플렉션으로 확인해 판단한다.
 
 제네릭이 까다로웠다. 기준은 **가장 안쪽 클래스**의 케이스다. 안쪽 클래스들의 케이스가 다르면 오류 상황으로 보고 먼저 전환했다. 타입 인자가 둘 이상인 제네릭은 재귀 탐색이 너무 복잡해져 제외했고(Map 말고는 거의 없음), Map은 키가 실제 변수명인 경우가 있어 제외했다(팀이 원래 REST 응답에 Map을 지양해서 문제 없었다).
 
@@ -41,13 +41,13 @@ Filter는 타깃 클래스를 알 수 없고, Interceptor는 원본 body를 바�
 
 `ResponseBodyAdvice`는 받은 데이터가 아니라 내보내기 직전에 동작하므로 쓸 수 없다. 대신 팀의 응답이 항상 `ApiResponse` 래퍼로 감싸져 있다는 점을 이용해 Jackson `JsonDeserializer`를 그 클래스에 붙였다. 래퍼가 제네릭이라 `ContextualDeserializer`도 구현해야 한다. `createContextual`에서 제네릭 안의 타깃 타입을 알아내 멤버 변수로 들고 있다가 `deserialize`에서 Request와 같은 변환 로직을 적용한다.
 
-여기서 잡은 버그가 이 글의 핵심 교훈이다. Jackson은 캐시되지 않은 deserializer를 `createContextual`로 가져오는데, **여기서 새 인스턴스를 반환하지 않으면** 여러 요청이 최초 인스턴스 하나를 공유한다. 멤버 변수인 타깃 타입이 요청들 사이에 섞여 파싱 오류가 난다. 로컬 단건 테스트에서는 멀쩡했고, 스테이지에서 여러 요청을 동시에 보내다 발견해 배포 전에 고쳤다.
+원문이 유의할 점으로 짚은 버그가 있다. Jackson은 캐시되지 않은 deserializer를 `createContextual`로 가져온다. 그래서 **여기서 새 인스턴스를 반환하지 않으면 여러 요청이 최초 인스턴스 하나를 공유한다.** 그 결과 멤버 변수인 타깃 타입이 요청들 사이에 섞여 파싱 오류가 난다. Jackson의 Javadoc도 같은 계약을 적어 둔다. "Note that instance that this method is called on is typically shared one and as a result method should NOT modify this instance but rather construct and return a new instance."(호출 대상 인스턴스는 보통 공유되므로 고치지 말고 새로 만들어 반환하라.) ([ContextualDeserializer, jackson-databind 2.12](https://fasterxml.github.io/jackson-databind/javadoc/2.12/com/fasterxml/jackson/databind/deser/ContextualDeserializer.html)) 로컬 단건 테스트에서는 멀쩡했고, 스테이지에서 여러 요청을 동시에 보내다 발견해 배포 전에 고쳤다.
 
 모듈을 붙이고 케이스를 바꾼 뒤 일정 기간 의도치 않은 케이스가 들어오는지 확인하고, 이상이 없음을 확인한 뒤 900개 DTO를 서버 중단 없이 바꿨다.
 
 ## 왜 가능했나
 
-원문이 마지막에 짚는다. 변수 네이밍 규칙, `ApiResponse` 래퍼 사용 규칙, snake 표시에 쓰는 애너테이션 규칙처럼 **팀에 공유된 규약**이 있었기에 "애너테이션을 보고 케이스를 판단", "래퍼에 deserializer를 붙임"이 가능했다. 규약이 없었다면 모듈이 무엇을 기준으로 변환할지 정할 수 없었을 것이다.
+원문이 마지막에 짚는다. 변수 네이밍 규칙, Wrapper class 사용 규칙처럼 팀에 공유된 규약이 있었기에 이 방식을 적용할 수 있었다는 것이다. 본문의 snake 애너테이션 규약과 `ApiResponse` 래퍼가 그 예다. 내가 보기에 규약이 없었다면 모듈이 무엇을 기준으로 변환할지 정할 수 없었을 것이다.
 
 ## 읽고 남는 질문
 
@@ -58,3 +58,9 @@ Filter는 타깃 클래스를 알 수 없고, Interceptor는 원본 body를 바�
 ## 한 줄로 가져가기
 
 호환성 문제의 배포 순서 지옥은 "보내는 쪽을 맞추는" 대신 "받는 쪽이 관대하게 읽게" 만들면 풀린다. 단, 그 관대함이 무엇을 기준으로 삼을지는 팀 규약이 먼저 정해 줘야 한다.
+
+## 참고
+
+- [추가배포 없이 API의 case 통일시키기](https://tech.kakao.com/posts/665) — kakao tech, 2024-11-19
+- [RequestBodyAdvice](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/RequestBodyAdvice.html) — Spring Framework Javadoc
+- [ContextualDeserializer](https://fasterxml.github.io/jackson-databind/javadoc/2.12/com/fasterxml/jackson/databind/deser/ContextualDeserializer.html) — jackson-databind 2.12 Javadoc
