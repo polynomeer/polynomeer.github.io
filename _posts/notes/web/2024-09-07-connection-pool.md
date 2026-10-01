@@ -7,7 +7,7 @@ tags: [Database, Connection Pool, JDBC]
 
 ## Connection Pool이 필요한 이유
 
-애플리케이션이 요청마다 새 DB 연결을 만들고 닫으면 비용이 크다. TCP 연결, 인증, 세션 초기화가 반복되기 때문이다. 요청 수가 많아지면 연결 생성 비용만으로도 응답 시간이 흔들린다.
+애플리케이션이 요청마다 새 DB 연결을 만들고 닫으면 비용이 크다. TCP 연결, 인증, [세션 초기화](/posts/connections-and-sessions/)가 반복되기 때문이다. 요청 수가 많아지면 연결 생성 비용만으로도 응답 시간이 흔들린다.
 
 Connection Pool은 미리 만들어 둔 연결을 재사용해서 이 비용을 줄인다.
 
@@ -24,13 +24,15 @@ Connection Pool은 미리 만들어 둔 연결을 재사용해서 이 비용을 
 
 ## 주요 설정
 
-- `maximumPoolSize`: 동시에 유지할 최대 연결 수
+아래는 [HikariCP](/posts/hikaricp/)의 설정 키이고, 정의는 [README](https://github.com/brettwooldridge/HikariCP)를 따른다.
+
+- `maximumPoolSize`: 유휴 연결과 사용 중인 연결을 합친 최대 연결 수
 - `minimumIdle`: 최소 유휴 연결 수
-- `connectionTimeout`: 연결 획득 대기 시간
+- `connectionTimeout`: 풀에서 연결을 얻기까지 클라이언트가 기다리는 최대 시간
 - `idleTimeout`: 오랫동안 사용하지 않은 연결 정리 시간
 - `maxLifetime`: 너무 오래된 연결 교체 시간
 
-이 값들은 DB 서버의 최대 연결 수와 함께 봐야 한다. 애플리케이션 풀 크기만 늘리면 오히려 DB를 압박할 수 있다.
+이 값들은 DB 서버의 최대 연결 수와 함께 봐야 한다. 애플리케이션 풀 크기만 늘리면 오히려 DB를 압박할 수 있다. HikariCP 위키([About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing))도 CPU 코어 수를 넘는 스레드는 처리를 오히려 느리게 만든다고 설명한다.
 
 ## 자주 하는 오해
 
@@ -38,7 +40,7 @@ Connection Pool은 미리 만들어 둔 연결을 재사용해서 이 비용을 
 - 연결 부족은 풀 크기만 늘리면 해결된다.
 - SQL이 느린데도 연결 풀 문제라고 생각한다.
 
-실제로는 느린 쿼리, 락 경합, 장시간 트랜잭션 때문에 연결이 오래 점유되는 경우가 더 많다. 이때는 풀 크기보다 **점유 시간**을 줄여야 한다.
+실제로는 느린 쿼리, [락 경합](/posts/lock-types-and-waits/), 장시간 트랜잭션 때문에 연결이 오래 점유되는 경우가 더 많다. 이때는 풀 크기보다 **점유 시간**을 줄여야 한다.
 
 ## 실무에서 봐야 할 지표
 
@@ -52,4 +54,9 @@ Connection Pool은 미리 만들어 둔 연결을 재사용해서 이 비용을 
 
 ## 정리
 
-Connection Pool은 단순 캐시가 아니라 **DB 연결을 제한된 자원으로 관리하는 장치**다. 설정값 자체보다, 연결이 오래 점유되는 원인을 함께 봐야 제대로 튜닝할 수 있다.
+Connection Pool은 단순 캐시가 아니라 DB 연결을 제한된 자원으로 관리하는 장치다. 설정값 자체보다, 연결이 오래 점유되는 원인을 함께 봐야 제대로 튜닝할 수 있다.
+
+## 참고
+
+- [HikariCP README](https://github.com/brettwooldridge/HikariCP) — Configuration
+- [About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing) — HikariCP Wiki
