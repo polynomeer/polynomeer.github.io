@@ -5,7 +5,7 @@ categories: [Notes, Common]
 tags: [Legacy, Refactoring]
 ---
 
-API 명세가 없는 레거시 시스템을 새로운 시스템으로 이관하는 것은 많은 기업에서 실제로 겪는 어려운 과제입니다. 이 경우 **소스코드 분석**, **트래픽 리버스 엔지니어링**, **실시간 미러링 테스트**, 그리고 **점진적 이관 전략**을 병행하여야 안정적으로 마이그레이션할 수 있습니다. 아래는 이를 **계획, 분석, 구현, 전환, 운영** 단계로 나눠 상세히 설명한 전략입니다.
+API 명세가 없는 레거시 시스템을 이관할 때는 무엇을 옮겨야 하는지부터 알 수 없습니다. 그래서 기능 정의를 소스코드와 실제 트래픽에서 거꾸로 읽어 내고, 그 정의가 맞는지는 미러링 테스트와 점진적 전환으로 확인합니다. 아래는 이 과정을 계획, 분석, 구현, 전환, 운영 단계로 나눈 것입니다. 비슷한 상황은 [외주 시스템 리빌딩 여정](/posts/rebuilding-outsourced-system-1/)에서도 다룹니다.
 
 ## API 명세 없는 레거시 시스템의 신규 시스템 이관 전략
 
@@ -13,9 +13,9 @@ API 명세가 없는 레거시 시스템을 새로운 시스템으로 이관하�
 
 ### 목표 설정
 
-* 기존 시스템을 유지하면서 신규 시스템으로 **점진적 전환**
-* **데이터/비즈니스 로직 정합성 보장**
-* 다운타임 없이 **제로 다운타임 이관** 지향
+* 기존 시스템을 유지하면서 신규 시스템으로 점진적 전환
+* 데이터/비즈니스 로직 정합성 보장
+* 다운타임 없는 이관 지향
 
 ### 주요 리스크
 
@@ -31,7 +31,7 @@ API 명세가 없는 레거시 시스템을 새로운 시스템으로 이관하�
 
 #### 방법
 
-* **브라우저 개발자 도구** 또는 **Proxy툴(Fiddler, mitmproxy)** 활용
+* 브라우저 개발자 도구 또는 Proxy 툴(Fiddler, mitmproxy) 활용
 * HTTP 요청/응답을 캡처하여:
 
   * URL, Method, 파라미터
@@ -45,7 +45,7 @@ GET /api/user?id=123
 
 #### 자동화 도구
 
-* **OpenReplay / Requestly** 등 트래픽 리플레이 툴
+* OpenReplay / Requestly 등 트래픽 리플레이 툴
 * API Gateway 로그 or WAS Access 로그 활용
 
 ---
@@ -59,8 +59,8 @@ GET /api/user?id=123
 
 #### 자동화 도구 활용
 
-* IDE의 **Call Hierarchy / Find Usage**
-* **ArchUnit**, **JDepend**, **JArchitect** 등으로 패키지 의존 분석
+* IDE의 Call Hierarchy / Find Usage
+* [ArchUnit](/posts/archunit-guardrails-on-legacy/), JDepend, JArchitect 등으로 패키지 의존 분석
 
 ---
 
@@ -68,12 +68,12 @@ GET /api/user?id=123
 
 ### DTO / Entity 설계
 
-* 기존 응답/요청 데이터 포맷을 기준으로 **DTO 정의**
-* DB 구조를 재사용하면서도 도메인 중심으로 **JPA Entity 설계**
+* 기존 응답/요청 데이터 포맷을 기준으로 DTO 정의
+* DB 구조를 재사용하면서도 도메인 중심으로 [JPA](/posts/jpa-architecture/) Entity 설계
 
 ### Enum / 코드값 전략 수립
 
-* 정합성 안 맞는 enum 대응: `UNKNOWN`, `SafeEnumConverter` 활용
+* 정합성 안 맞는 enum 대응: `UNKNOWN`, `SafeEnumConverter` 활용([MyBatis와 JPA 공존 환경의 데이터 정합성 전략](/posts/legacy-jsp-system-refactoring-3/) 참고)
 * `code → label` 방식이면 코드테이블 설계 고려
 
 ---
@@ -82,8 +82,8 @@ GET /api/user?id=123
 
 ### 4.1 Shadow/Mirroring 테스트
 
-* 실제 유저 요청을 **레거시 시스템에 먼저 전달**, 동시에 **신규 시스템에도 미러링**
-* 결과 비교 후 차이점 분석
+* 실제 유저 요청을 레거시 시스템에 먼저 전달하고, 같은 요청을 신규 시스템에도 미러링
+* 두 응답을 비교해 차이점 분석 ([Shadow Release](/posts/shadow-release-query-migration/) 사례 참고)
 
 ```text
 Client → Legacy API → Response  
@@ -96,12 +96,16 @@ Client → Legacy API → Response
 * NGINX dual proxy 설정
 * Java/Spring Interceptor 내 미러링 로직 삽입
 
+다만 NGINX만으로는 비교까지 되지 않습니다. `ngx_http_mirror_module` 문서는 "Responses to mirror subrequests are ignored."라고 적습니다(미러 요청의 응답은 버려진다, [문서](https://nginx.org/en/docs/http/ngx_http_mirror_module.html)). 그래서 신규 시스템의 응답을 기록해 레거시 응답과 맞대어 보는 비교 로직을 따로 두어야 합니다.
+
 ---
 
 ### 4.2 Canary/Blue-Green 전환 전략
 
 * 특정 트래픽(10%)만 신규 시스템으로 분기
 * 점진적으로 전체 전환
+
+두 방식은 옮기는 단위가 다릅니다. Canary는 일부 사용자에게 먼저 내보낸 뒤 전체로 넓히고([Fowler](https://martinfowler.com/bliki/CanaryRelease.html)), Blue-Green은 라우터를 바꿔 요청 전체를 한 번에 넘깁니다([Fowler](https://martinfowler.com/bliki/BlueGreenDeployment.html)). 위의 10% 분기는 Canary에 해당합니다.
 
 ```text
 - 사용자 IP 해시 기반으로 라우팅
@@ -119,9 +123,11 @@ Client → Legacy API → Response
 
 ### 문서화 자동화
 
-* 수집한 API 패턴 기반으로 **자동 Swagger 문서화**
+* 수집한 API 패턴 기반으로 자동 Swagger 문서화
 
   * 예: Spring REST Docs, Swagger/OpenAPI Generator
+
+단, Spring REST Docs는 트래픽이 아니라 테스트가 만든 스니펫으로 문서를 만듭니다([공식 문서](https://docs.spring.io/spring-restdocs/docs/current/reference/htmlsingle/)). 수집한 패턴을 먼저 테스트 케이스로 옮겨야 이 도구를 쓸 수 있습니다.
 
 ---
 
@@ -142,11 +148,17 @@ Client → Legacy API → Response
 * `@RequestBody` → DTO 검증 (@Valid, enum 매핑)
 * MyBatis SQL → JPQL로 이관 시 조건절 해석 주의
 * XML 응답 → Jackson XML Module 활용
-* 동작 로직이 쿼리 내부에 있는 경우 → `@QueryProjection`, `nativeQuery`로 이관
+* 동작 로직이 쿼리 내부에 있는 경우 → `@QueryProjection`([Querydsl](/posts/querydsl/)), `nativeQuery`로 이관
 
 ---
 
 ## 마무리
 
-명세 없는 레거시 시스템은 “**살아있는 문서**인 트래픽”을 분석하는 것이 핵심입니다.
-정확한 분석 → 안전한 구조 설계 → 점진적 검증 → 안정적 전환 순으로 진행하면, 예기치 못한 오류 없이 새로운 시스템으로 성공적인 이관이 가능합니다.
+명세가 없는 레거시 시스템에서는 실제 트래픽이 가장 믿을 만한 명세입니다. 분석, 구조 설계, 미러링과 Canary 검증, 전환 순으로 진행하면 이관 중 생기는 오류를 사용자에게 닿기 전에 잡을 기회가 늘어납니다.
+
+## 참고
+
+- [NGINX — ngx_http_mirror_module](https://nginx.org/en/docs/http/ngx_http_mirror_module.html)
+- [Martin Fowler — CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
+- [Martin Fowler — BlueGreenDeployment](https://martinfowler.com/bliki/BlueGreenDeployment.html)
+- [Spring REST Docs Reference](https://docs.spring.io/spring-restdocs/docs/current/reference/htmlsingle/)
