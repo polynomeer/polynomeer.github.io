@@ -13,7 +13,7 @@ source_url: https://tech.kakao.com/posts/778
 
 ## 한 줄 요약
 
-DATETIME은 연월일시분초를 5바이트 정수로 묶어 부호 오프셋을 더해 저장하고(정렬 순서가 시간 순서와 같게), TIMESTAMP는 세션 타임존으로 UTC로 바꿔 **32비트** 정수로 저장한다. 소수 초는 선언 자릿수에 따라 0~3바이트가 붙는다. 이 32비트 때문에 TIMESTAMP는 2038-01-19 03:14:07 UTC를 넘는 값을 넣으면 오버플로로 초기화되고, 원문은 8.4.5에서 이를 재현했다. `unix_timestamp()` 반환은 8.0.28에서 64비트로 고쳐졌지만 **컬럼 타입은 9.4 코드까지도 안 고쳐졌고** Oracle의 대응 계획은 미정이다. 선택 기준은 둘: 타임존 변환이 필요한가, 저장 범위가 문제인가.
+DATETIME은 연월일시분초를 5바이트 정수로 묶어 부호 오프셋을 더해 저장하고(정렬 순서가 시간 순서와 같게), TIMESTAMP는 세션 타임존으로 UTC로 바꿔 32비트 정수로 저장한다. 소수 초는 선언 자릿수에 따라 0~3바이트가 붙는다. 이 32비트 때문에 TIMESTAMP는 2038-01-19 03:14:07 UTC를 넘는 값을 넣으면 오버플로로 초기화되고, 원문은 8.4.5에서 이를 재현했다. `unix_timestamp()` 반환은 8.0.28에서 64비트로 고쳐졌지만, 원문이 9.4 코드까지 확인한 바로는 컬럼 타입은 고쳐지지 않았고 Oracle의 대응 계획은 미정이다. 원문의 선택 기준은 두 가지다. 타임존 변환이 필요한가, 저장 범위가 문제인가.
 
 ## DATETIME 저장 구조
 
@@ -32,29 +32,29 @@ DATETIME은 연월일시분초를 5바이트 정수로 묶어 부호 오프셋�
 
 `123456`은 `0x01e240`. 그래서 `2023-07-01 12:34:56.123456`은 `99 b7 02 c8 b8 01 e2 40` 8바이트다. DATETIME(n)은 5~8바이트.
 
-**오프셋이 왜 필요한가.** 정수부는 원래 부호 있는 40비트인데 디스크에는 부호 없는 5바이트로 저장된다. 오프셋을 더하면 부호 있는 범위(−2³⁹ ~ 2³⁹−1)가 부호 없는 범위(0 ~ 2⁴⁰−1)로 매핑되어 **바이너리 정렬 순서가 시간 순서와 일치**한다. 인덱스, 정렬, 비교 연산이 바이트 비교만으로 정확해지는 이유다.
+**오프셋이 왜 필요한가.** 정수부는 원래 부호 있는 40비트인데 디스크에는 부호 없는 5바이트로 저장된다. 오프셋을 더하면 부호 있는 범위(−2³⁹ ~ 2³⁹−1)가 부호 없는 범위(0 ~ 2⁴⁰−1)로 매핑되어 바이너리 정렬 순서가 시간 순서와 일치한다. MySQL은 정렬과 비교를 바이너리 값 기준으로 처리하므로, 그 결과 인덱스, 정렬, 비교 연산이 시간 순서대로 정확해진다.
 
 ## TIMESTAMP 저장 구조
 
-타임존 정보를 반영하는 타입이다. 세션 타임존 기준으로 입력값을 UTC로 바꿔 저장하고, 읽을 때 다시 세션 타임존으로 바꾼다. 입력 문자열은 `str_to_datetime()`으로 `MYSQL_TIME` 구조체에, 소수 초는 `my_timeval` 구조체(Windows처럼 tv_sec이 32비트인 플랫폼에서도 64비트를 담기 위한 MySQL 자체 구조체)에 넣는다.
+타임존 정보를 반영하는 타입이다. 세션 타임존 기준으로 입력값을 UTC로 바꿔 저장하고, 읽을 때 다시 세션 타임존으로 바꾼다. 공식 문서도 같은 동작을 적는다. "MySQL converts TIMESTAMP values from the current time zone to UTC for storage, and back from UTC to the current time zone for retrieval."(저장 시 현재 타임존에서 UTC로, 조회 시 다시 현재 타임존으로 변환한다.) DATETIME에는 이 변환이 없다([The DATE, DATETIME, and TIMESTAMP Types](https://dev.mysql.com/doc/refman/8.4/en/datetime.html)). 입력 문자열은 `str_to_datetime()`으로 `MYSQL_TIME` 구조체에, 소수 초는 `my_timeval` 구조체(Windows처럼 tv_sec이 32비트인 플랫폼에서도 64비트를 담기 위한 MySQL 자체 구조체)에 넣는다.
 
-UTC+9에서 `2023-07-01 12:34:56.123456`을 넣으면 `MYSQL_TIME`을 UTC로 변환해 **4바이트**로, 소수부 3바이트로, 총 7바이트다. TIMESTAMP(n)은 4~7바이트.
+UTC+9에서 `2023-07-01 12:34:56.123456`을 넣으면 `MYSQL_TIME`을 UTC로 변환해 **4바이트**로, 소수부 3바이트로, 총 7바이트다. TIMESTAMP(n)은 4~7바이트. 공식 문서도 DATETIME을 5바이트, TIMESTAMP를 4바이트에 소수 초 저장분을 더한 크기로 적는다([Data Type Storage Requirements](https://dev.mysql.com/doc/refman/8.4/en/storage-requirements.html)).
 
 ## 기능 비교
 
 - **자동 초기화·갱신**: 둘 다 `DEFAULT CURRENT_TIMESTAMP [ON UPDATE CURRENT_TIMESTAMP]`. 소수 초를 쓰려면 `CURRENT_TIMESTAMP(6)`처럼 자릿수를 맞춰야 한다.
-- **`explicit_defaults_for_timestamp`**: TIMESTAMP에만 적용되고 "기본값을 안 적었을 때"의 동작을 정한다. OFF면 NULL 여부 미지정 시 NOT NULL이 되고, 첫 TIMESTAMP 컬럼에는 `DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`가 자동으로 붙으며, 나머지는 `'0000-00-00 00:00:00'`이 된다(STRICT 모드나 NO_ZERO_DATE와 충돌 가능). ON이면 NULL 허용이 기본이고 자동 속성이 안 붙는다. 오래전부터 deprecated 예정이고 되면 ON으로 고정되니, 영향받지 않게 **컬럼 선언에 기본값과 NULL 여부를 명시하는 습관**을 권한다.
+- **`explicit_defaults_for_timestamp`**: TIMESTAMP에만 적용되고 "기본값을 안 적었을 때"의 동작을 정한다. OFF면 NULL 여부 미지정 시 NOT NULL이 되고, 첫 TIMESTAMP 컬럼에는 `DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`가 자동으로 붙으며, 나머지는 `'0000-00-00 00:00:00'`이 된다(STRICT 모드나 NO_ZERO_DATE와 충돌 가능). ON이면 NULL 허용이 기본이고 자동 속성이 안 붙는다. 오래전부터 deprecated 예정이고 되면 ON으로 고정되니, 영향받지 않게 컬럼 선언에 기본값과 NULL 여부를 명시하는 습관을 권한다.
 - **비표준 날짜**: `ALLOW_INVALID_DATES`(월 1~12, 일 1~31만 검사, DATETIME만), `NO_ZERO_IN_DATE`(월/일 0 불허, `0000-00-00`으로 변환 후 경고), `NO_ZERO_DATE`(`0000-00-00`에 경고). 뒤의 둘은 deprecated 예정.
 
 ## Y2K38: 재현
 
-2038-01-19 03:14:07 UTC를 넘으면 32비트 timestamp가 넘친다. OS는 64비트로 갔지만 소프트웨어는 아직이다. MySQL은 8.0.28에서 `unix_timestamp()`류 함수의 반환을 64비트로 고쳤다. 실제로 8.4.5에서 `unix_timestamp('2038-01-19 03:14:08')`은 정상 값을 준다.
+2038-01-19 03:14:07 UTC를 넘으면 32비트 timestamp가 넘친다. 공식 문서도 TIMESTAMP의 범위를 '1970-01-01 00:00:01' UTC부터 '2038-01-19 03:14:07' UTC까지로 적는다([The DATE, DATETIME, and TIMESTAMP Types](https://dev.mysql.com/doc/refman/8.4/en/datetime.html)). OS는 64비트로 갔지만 소프트웨어는 아직이다. MySQL은 8.0.28에서 `unix_timestamp()`류 함수의 반환을 64비트로 고쳤다. 실제로 8.4.5에서 `unix_timestamp('2038-01-19 03:14:08')`은 정상 값을 준다.
 
-그런데 테이블에 `datetime` 컬럼과 `timestamp` 컬럼을 두고 그 시각을 넘는 값을 INSERT하면, **TIMESTAMP 컬럼만 오버플로로 초기화**된다. 함수는 고쳤지만 컬럼은 여전히 32비트로 최대 2,147,483,647까지만 저장한다. 원문은 9.4 코드까지 확인해 미수정임을 확인했고, Oracle에 문의했으나 "미정"이었다.
+그런데 테이블에 `datetime` 컬럼과 `timestamp` 컬럼을 두고 그 시각을 넘는 값을 INSERT하면, TIMESTAMP 컬럼만 오버플로로 초기화된다. 함수는 고쳤지만 컬럼은 여전히 32비트로 최대 2,147,483,647까지만 저장한다. 원문은 9.4 코드까지 확인해 미수정임을 확인했고, Oracle에 문의했으나 "미정"이었다.
 
 ## 선택 가이드
 
-두 타입의 차이는 범위와 타임존 반영 여부다. 그래서 질문은 둘이다. 타임존 정보를 같이 다뤄야 하는 정보인가(그러면 TIMESTAMP), 저장 범위(2038)가 영향을 주는가(그러면 DATETIME). 예전에는 기본값 동작까지 차이가 컸지만 이제 사용성 차이는 작고, Y2K38이 해결되면 저장 크기 차이도 줄 것이라고 본다.
+두 타입의 차이는 범위와 타임존 반영 여부다. 그래서 질문은 둘이다. 타임존 정보를 같이 다뤄야 하는 정보인가(그러면 TIMESTAMP), 저장 범위(2038)가 영향을 주는가(그러면 DATETIME). 원문은 예전에는 기본값 동작까지 차이가 컸지만 이제 사용성 차이는 작고, Y2K38이 해결되면 저장 영역 차이도 크지 않을 가능성이 높다고 본다.
 
 ## 읽고 남는 질문
 
@@ -65,3 +65,9 @@ UTC+9에서 `2023-07-01 12:34:56.123456`을 넣으면 `MYSQL_TIME`을 UTC로 변
 ## 한 줄로 가져가기
 
 TIMESTAMP는 "타임존을 대신 계산해 주는 4바이트 정수"이고 그 4바이트가 2038년에 끝난다. 함수는 고쳐졌지만 컬럼은 아니므로, 미래 날짜를 담는 컬럼은 지금 DATETIME인지 확인할 때다.
+
+## 참고
+
+- [MySQL DATETIME, TIMESTAMP 데이터 타입에 대한 분석](https://tech.kakao.com/posts/778) — kakao tech, 2025-10-17
+- [The DATE, DATETIME, and TIMESTAMP Types](https://dev.mysql.com/doc/refman/8.4/en/datetime.html) — MySQL 8.4 Reference Manual
+- [Data Type Storage Requirements](https://dev.mysql.com/doc/refman/8.4/en/storage-requirements.html) — MySQL 8.4 Reference Manual
