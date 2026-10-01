@@ -13,27 +13,27 @@ source_url: https://d2.naver.com/helloworld/7823344
 
 ## 한 줄 요약
 
-네이버페이 주문 DB를 Oracle에서 사내 분산 DB(nBase-T)로 옮기고 Oracle을 복제본으로 돌리자, 복제용 UPDATE가 느려져 커넥션 풀이 말랐다. 원인은 Oracle이 **같은 SQL 문장이라도 바인딩 값의 타입·길이가 다르면 별도의 child cursor를 만든다**는 점이었다. 150개 컬럼짜리 UPDATE에 문자열 길이, NULL, 타임스탬프 자릿수가 제각각 들어오니 한 쿼리에 child cursor가 22,000개 넘게 생겼고, 응답이 0.003초에서 0.308초로 100배 느려졌다. 여덟 가지를 시도해 넷을 채택했고 child cursor가 99.8% 줄었다.
+네이버페이 주문 DB를 Oracle에서 사내 분산 DB(nBase-T)로 옮기고 Oracle을 복제본으로 돌리자, 복제용 UPDATE가 느려져 커넥션 풀이 말랐다. 원인은 Oracle이 **같은 SQL 문장이라도 바인딩 값의 타입·길이가 다르면 별도의 child cursor를 만든다**는 점이었다. 150개 컬럼짜리 UPDATE에 문자열 길이, NULL, 타임스탬프 자릿수가 제각각 들어오니 한 쿼리에 child cursor가 22,000개 넘게 생겼고, 응답이 0.003초에서 0.308초로 100배 넘게 느려졌다. 여덟 가지를 시도해 넷을 채택했고 child cursor가 99.8% 줄었다.
 
 ## 배경
 
-Plasma 프로젝트로 주문 메인 DB가 nBase-T로 바뀌었고, 옛 Oracle은 CDC로 비동기 복제를 받는 쪽이 됐다. 호출량이 늘자 nBase-T → Oracle 동기화가 밀렸다. Pinpoint로 보니 Oracle의 UPDATE가 slow query가 되어 복제 서비스의 커넥션 풀을 고갈시키고 타임아웃을 냈다.
+Plasma 프로젝트로 주문 메인 DB가 nBase-T로 바뀌었고, 옛 Oracle은 [CDC](/posts/cdc-principles-and-limits/)로 비동기 복제를 받는 쪽이 됐다. 그런데 호출량이 늘자 nBase-T → Oracle 동기화가 밀렸다. Pinpoint로 보니 Oracle의 UPDATE가 slow query가 되어 복제 서비스의 [커넥션 풀](/posts/connection-pool/)을 고갈시키고 타임아웃을 냈다.
 
-DBA와 로그를 보니 특정 Query ID 하나에 child cursor가 22,000개 이상이었다. 정상은 100개 이하다. 라이브러리 캐시 잠금, 뮤텍스, 커서 대기가 늘어 성능이 떨어졌다.
+DBA와 로그를 보니 특정 Query ID 하나에 child cursor가 22,000개 이상이었다. 정상은 100개 이하다. 그 결과 라이브러리 캐시 잠금, 뮤텍스, 커서 대기가 늘어 성능이 떨어졌다.
 
 ## Oracle은 쿼리를 어떻게 실행하나
 
-이 문제를 이해하려면 parent cursor와 child cursor를 알아야 한다.
+이 문제를 이해하려면 parent cursor와 child cursor를 알아야 한다. 하드 파싱과 소프트 파싱의 정의는 [Oracle SQL Tuning Guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/sql-processing.html)에 있다.
 
 1. SQL이 오면 라이브러리 캐시에서 같은 문장이 있는지 찾는다.
-2. 같은 문장(parent cursor)이 있으면 그 밑의 child cursor를 본다. 없으면 하드 파싱(실행 계획을 처음부터 만드는 비싼 작업).
-3. 바인딩 값의 타입이 맞는 child cursor가 있으면 재사용(소프트 파싱). 없으면 **새 child cursor를 만든다**(부분 하드 파싱).
+2. 같은 문장(parent cursor)이 있으면 그 밑의 child cursor를 본다. 없으면 하드 파싱(실행 계획을 처음부터 만드는 비싼 작업)을 한다.
+3. 바인딩 값의 타입이 맞는 child cursor가 있으면 재사용(소프트 파싱). 없으면 새 child cursor를 만든다(부분 하드 파싱).
 
-child cursor를 만드는 것 자체는 정상이다. 문제는 각 cursor에 동시성 제어용 뮤텍스가 있고, 새 child cursor를 만들 때 잠금이 걸린다는 것이다. 같은 쿼리가 동시에 많이 들어오면 잠금 경쟁으로 대기가 길어진다. 22,000개면 찾는 것도, 만드는 것도 느리다.
+child cursor를 만드는 것 자체는 정상이다. 문제는 각 cursor에 동시성 제어용 뮤텍스가 있고, 새 child cursor를 만들 때 잠금이 걸린다는 것이다. 그래서 같은 쿼리가 동시에 많이 들어오면 잠금 경쟁으로 대기가 길어진다. 내가 보기에 22,000개면 찾는 것도, 만드는 것도 느릴 수밖에 없다.
 
 ## 왜 child cursor를 재사용 못 했나
 
-문장은 같은데 바인딩 타입이 안 맞는 세 가지 경우다.
+문장은 같은데 바인딩 타입이 안 맞는 세 가지 경우다. Oracle은 child cursor를 공유하지 못한 이유를 `V$SQL_SHARED_CURSOR` 뷰에 남기고, 이 경우의 `BIND_MISMATCH` 컬럼은 "The bind metadata does not match the existing child cursor"(바인드 메타데이터가 기존 child cursor와 맞지 않음)를 뜻한다([Oracle Database Reference](https://docs.oracle.com/en/database/oracle/oracle-database/19/refrn/V-SQL_SHARED_CURSOR.html)).
 
 **케이스 1. 가변 길이 VARCHAR.** Oracle은 바인딩된 문자열 길이에 따라 타입을 VARCHAR(32) → 128 → 2000 → 4000 단계로 자동 조정한다. 짧은 값이 오면 VARCHAR(32) child cursor, 긴 값이 오면 VARCHAR(2000) child cursor다. 컬럼 4개에 각각 다른 길이가 오면 최대 4⁴ = 256개 조합이다. 게다가 한 글자를 최대 4바이트(유니코드)로 계산하므로 테이블 정의가 VARCHAR(20)이라도 바인딩은 VARCHAR(128)로 잡힐 수 있다.
 
@@ -56,19 +56,19 @@ child cursor를 만드는 것 자체는 정상이다. 문제는 각 cursor에 �
 | 7 | 큰 UPDATE를 둘로 분리(256 → 32 조합) | 줄었지만 DBA 비권장이라 미채택 |
 | 8 | TIMESTAMP를 밀리초로 truncate 후 바인딩 | 확연한 개선 |
 
-8번이 흥미롭다. nBase-T는 타임스탬프를 밀리초로 만드는데 옛 Oracle은 초 단위(DATE)였다. 복제 과정에서 자릿수가 섞인 것이다. 원래 Oracle 저장 방식대로 잘라서 넣으니 케이스 3이 사라졌다.
+8번이 흥미롭다. 원문에 따르면 nBase-T는 TIMESTAMP를 밀리초 단위로 만들기 때문에 복제 과정에서 자릿수 차이가 생겼다. 그래서 복제 시 DATE 타입 필드를 기존 Oracle 저장 방식과 같게 truncate해서 넣었고, 확연한 개선이 있었다. 케이스 3의 원인을 복제 쪽에서 없앤 셈이다.
 
 ## 최종 선택과 결과
 
-채택은 1, 3, 4, 8이다. 기준은 명확하다. 5·6·7은 뮤텍스 경쟁을 완화할 뿐 **BIND_MISMATCH의 원인을 없애지 못한다.** child cursor가 계속 생기면 장기적으로 DB 부하가 된다. 그래서 cursor가 계속 생기는 케이스 2(NULL)와 케이스 3(자릿수)을 없애는 데 집중했다. 케이스 1(VARCHAR 길이)은 완전히 못 잡았지만, 2·3이 잡히면 재사용이 어느 정도 되므로 알려진 이슈로 남겼다.
+채택은 1, 3, 4, 8이다. 원문이 밝힌 기준은 이렇다. 5·6·7은 뮤텍스 경쟁을 완화할 뿐 **BIND_MISMATCH의 원인을 없애지 못한다.** child cursor가 계속 생기면 장기적으로 DB 부하가 된다. 그래서 cursor가 계속 생기는 케이스 2(NULL, 1번으로 대응)와 케이스 3(자릿수, 3번과 8번으로 대응)을 없애는 데 집중했다. 3번은 원문도 효과가 확실하지 않다고 적었다. 케이스 1(VARCHAR 길이)은 완전히 못 잡았지만, 2·3이 잡히면 재사용이 어느 정도 되므로 알려진 이슈로 남겼다.
 
-결과는 쿼리 성능이 안정되면서 child cursor 99.8% 감소.
+결과는 쿼리 성능이 안정되면서 child cursor가 99.8% 줄었다는 것이다.
 
 ## 왜 어려웠나
 
-원문이 스스로 짚은 점 두 가지가 정확하다. 애플리케이션에서는 평소 감지가 안 되고 DB 수준 분석이 필요하다. 그리고 쿼리 튜닝만으로는 안 되고 서비스 코드(드라이버 바인딩, 복제 로직)를 같이 고쳐야 한다. 상품 주문 테이블은 컬럼이 많아 문제가 드러났지만, 이미 전환된 작은 테이블들에서도 같은 일이 조용히 있었을 것이고 이번 조치로 같이 해결됐을 것이라고 본다.
+원문은 어려웠던 이유를 두 가지로 짚는다. 애플리케이션에서는 평소 감지가 안 되고 DB 수준 분석이 필요하다. 그리고 쿼리 튜닝만으로는 안 되고 서비스 단계(이 글에서는 드라이버 바인딩과 복제 로직)의 개선이 같이 필요하다. 나는 둘 다 정확하다고 읽는다. 원문은 또 상품 주문 테이블은 컬럼이 많아 문제가 드러났을 뿐, 이미 전환된 다른 테이블에서도 비슷한 현상이 있었을 가능성이 높고 이번 최적화로 같이 해결되었을 것이라고 적는다.
 
-또 하나. 점진적 전환의 **10% 트래픽 단계**에서 발견했다. 100%였으면 장애였다.
+또 하나. 원문은 점진적 전환의 10% 트래픽 단계에서 문제를 일찍 발견해 큰 장애로 이어지지 않았다고 적는다. 내가 보기에 100% 단계였다면 장애였을 것이다.
 
 ## 읽고 남는 질문
 
@@ -79,3 +79,9 @@ child cursor를 만드는 것 자체는 정상이다. 문제는 각 cursor에 �
 ## 한 줄로 가져가기
 
 Oracle에 바인드 변수를 쓴다고 실행 계획이 재사용되는 것이 아니다. 값의 타입·길이·자릿수까지 같아야 하고, NULL과 타임스탬프 정밀도는 그것을 조용히 깨뜨린다.
+
+## 참고
+
+- [CDC 복제 이후 오라클이 느려졌다? child cursor 폭증이 만든 예상치 못한 문제](https://d2.naver.com/helloworld/7823344) — NAVER D2 원문
+- [SQL Processing](https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/sql-processing.html) — Oracle Database 19c SQL Tuning Guide
+- [V$SQL_SHARED_CURSOR](https://docs.oracle.com/en/database/oracle/oracle-database/19/refrn/V-SQL_SHARED_CURSOR.html) — Oracle Database 19c Reference
