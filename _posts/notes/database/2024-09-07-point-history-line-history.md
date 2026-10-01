@@ -26,7 +26,7 @@ tags: [Database, History, Data Modeling]
 
 - 기록이 단순하다.
 - 이벤트 발생 시점 중심으로 관리하기 쉽다.
-- append-only 구조와 잘 맞는다.
+- append-only(덧붙이기만 하고 고치지 않는) 구조와 잘 맞는다.
 
 단점:
 
@@ -50,7 +50,7 @@ tags: [Database, History, Data Modeling]
 단점:
 
 - 상태 변경 시 이전 구간 종료 처리를 잘해야 한다.
-- 겹치는 구간이나 비는 구간을 막는 제약 설계가 필요하다.
+- 겹치는 구간이나 비는 구간을 막는 제약 설계가 필요하다. PostgreSQL은 범위 타입과 exclusion constraint로 겹치는 구간을 DB 수준에서 막을 수 있다([PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html)).
 
 ## 언제 무엇을 쓰는가
 
@@ -76,3 +76,7 @@ tags: [Database, History, Data Modeling]
 ## 정리
 
 점 이력은 "변경 이벤트 기록", 선분 이력은 "유효 기간 관리"에 가깝다. 둘 중 무엇이 맞는지는 결국 조회 패턴이 결정한다. 과거를 남기고 싶다는 이유만으로 무조건 한쪽을 고르기보다, 어떤 질문에 답해야 하는 데이터를 만들 것인지부터 정하는 것이 중요하다.
+
+## 참고
+
+- [PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html)
