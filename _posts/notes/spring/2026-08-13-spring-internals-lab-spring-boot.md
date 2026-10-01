@@ -45,7 +45,7 @@ SpringApplication.run(App.class, args);
 | `ApplicationStartedEvent` | `refresh()` 완료 |
 | `ApplicationReadyEvent` | runner까지 완료 |
 
-즉 Boot는 `ApplicationContext`가 생기기도 전에 이미 별도 이벤트 파이프라인을 돌린다.
+즉 Boot는 `ApplicationContext`가 생기기도 전에 이미 별도 이벤트 파이프라인을 돌린다. [Spring Boot 문서의 Application Events and Listeners](https://docs.spring.io/spring-boot/reference/features/spring-application.html)도 같은 순서로 이벤트를 나열한다.
 
 ```mermaid
 flowchart TD
@@ -57,7 +57,7 @@ flowchart TD
     F --> G["ready"]
 ```
 
-이 구조를 보면 왜 일부 리스너는 `@Component`로 등록하면 너무 늦는지도 이해된다. 컨텍스트가 아직 없는데, 그 컨텍스트가 만들어 줄 Bean 리스너가 초기 이벤트를 받을 방법은 없다.
+이 구조를 보면 왜 일부 리스너는 `@Component`로 등록하면 너무 늦는지도 이해된다. 컨텍스트가 아직 없으면, 그 컨텍스트가 만들어 줄 Bean 리스너도 아직 없다. 그래서 초기 이벤트를 받을 방법이 없다. 같은 문서도 일부 이벤트는 `ApplicationContext`가 만들어지기 전에 발행되므로 그 이벤트의 리스너는 `@Bean`으로 등록할 수 없다고 적는다.
 
 ## Boot의 첫 번째 핵심은 `SpringApplication`
 
@@ -68,10 +68,10 @@ flowchart TD
 3. 적절한 `ApplicationContext` 선택
 4. 초기화기 적용
 5. source 등록
-6. `refresh()`
+6. [`refresh()`](/posts/spring-internals-lab-refresh/)
 7. started / ready 이벤트 발행
 
-즉 Boot는 컨테이너를 대체하지 않는다. 오히려 **컨테이너가 만들어지기 전과 후를 감싸는 상위 조율 계층**에 가깝다.
+즉 Boot는 컨테이너를 대체하지 않는다. 오히려 컨테이너가 만들어지기 전과 후를 감싸는 상위 조율 계층에 가깝다.
 
 ## 두 번째 핵심은 자동 설정 후보 탐색이다
 
@@ -81,9 +81,9 @@ flowchart TD
 META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
 ```
 
-이 파일은 놀랄 만큼 단순하다. 클래스 이름을 한 줄씩 적어 둔 텍스트 목록이다.
+이 파일은 놀랄 만큼 단순하다. 클래스 이름을 한 줄씩 적어 둔 텍스트 목록이다. [Spring Boot 문서의 Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)도 배포한 jar 안에서 이 파일을 확인하며, 설정 클래스를 "one class name per line"(한 줄에 클래스 이름 하나)으로 적으라고 안내한다.
 
-즉 Boot의 자동 설정 후보 탐색은 "클래스패스를 마구 뒤져서 찾아낸다"가 아니라, **모듈이 스스로 자신을 등록해 둔 목록을 읽는다**에 가깝다.
+즉 Boot의 자동 설정 후보 탐색은 "클래스패스를 마구 뒤져서 찾아낸다"가 아니라, 모듈이 스스로 자신을 등록해 둔 목록을 읽는 쪽에 가깝다.
 
 이 설계는 일관적이다.
 
@@ -97,7 +97,7 @@ META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
 
 자동 설정이 단순 `@Import`와 다른 가장 중요한 지점은 타이밍이다.
 
-`@EnableAutoConfiguration`은 내부적으로 `DeferredImportSelector`를 사용한다. 이 말은 곧:
+`@EnableAutoConfiguration`은 내부적으로 `DeferredImportSelector`를 사용한다. [`DeferredImportSelector` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/DeferredImportSelector.html)은 이 타입을 이렇게 정의한다. "A variation of ImportSelector that runs after all @Configuration beans have been processed."(모든 `@Configuration` Bean을 처리한 뒤에 실행되는 `ImportSelector`의 변형이다.) 이 말은 곧:
 
 - 사용자 `@Configuration` 파싱을 먼저 끝내고
 - 그다음 자동 설정 후보를 늦게 가져와
@@ -114,9 +114,9 @@ flowchart LR
     E --> F["매칭된 자동 설정만 등록"]
 ```
 
-이게 중요한 이유는 `@ConditionalOnMissingBean` 때문이다. 사용자가 이미 등록한 Bean이 있는지 정확히 판단하려면, 사용자 설정이 먼저 끝나 있어야 한다.
+이 순서가 필요한 이유는 `@ConditionalOnMissingBean`이다. 사용자가 이미 등록한 Bean이 있는지 정확히 판단하려면, 사용자 설정이 먼저 끝나 있어야 한다. Boot 문서도 이 조건은 지금까지 처리된 Bean 정의를 기준으로 평가되므로, 사용자 정의 Bean 정의가 추가된 뒤에 로드되는 자동 설정 클래스에서만 `@ConditionalOnBean`과 `@ConditionalOnMissingBean`을 쓰라고 권한다.
 
-즉 Boot 자동 설정은 단순 "나중에 추가 등록"이 아니라, **타이밍을 의도적으로 늦춘 import**다.
+즉 Boot 자동 설정은 단순 "나중에 추가 등록"이 아니라, 타이밍을 의도적으로 늦춘 import다.
 
 ## 조건부 설정은 결국 `Condition` 인터페이스 하나로 수렴한다
 
@@ -134,7 +134,7 @@ flowchart LR
 
 ## `@ConditionalOnClass`는 클래스를 함부로 초기화하지 않는다
 
-19주차 실험에서 특히 의미 있었던 포인트다. 클래스 존재 여부를 확인한다고 해서 그 클래스를 바로 초기화해 버리면 부작용이 커진다.
+19주차 실험에서 특히 의미 있었던 포인트다. 클래스 존재 여부를 확인한다고 해서 그 클래스를 바로 초기화해 버리면 부작용이 커진다. Boot 문서는 애노테이션 메타데이터를 ASM(바이트코드를 직접 읽는 라이브러리)으로 파싱하기 때문에, 실행 중 클래스패스에 없는 클래스도 `value` 속성에 실제 클래스로 적을 수 있다고 설명한다. 클래스를 로딩하지 않고 클래스 파일만 읽는다는 뜻이다.
 
 즉 Boot는 다음을 피하려 한다.
 
@@ -142,7 +142,7 @@ flowchart LR
 - 불필요한 부수효과
 - 선택적 의존성 부재 시 조기 실패
 
-이건 7주차 컴포넌트 스캔에서 봤던 "Spring은 필요 이상으로 클래스를 건드리지 않는다"는 감각과 정확히 이어진다.
+이건 7주차 컴포넌트 스캔에서 봤던 "Spring은 필요 이상으로 클래스를 건드리지 않는다"는 감각과 이어진다. 클래스 로딩과 초기화가 기동 시간에 주는 비용은 [클래스 로딩과 기동 시간](/posts/class-loading-and-startup/)에서 다뤘다.
 
 ## `@ConditionalOnProperty`의 `matchIfMissing`은 기본값 정책을 만든다
 
@@ -153,7 +153,7 @@ flowchart LR
 
 이 조합은 "명시적으로 끄지 않는 한 기본적으로 켜져 있다"는 정책을 만든다.
 
-즉 Boot의 자동 설정은 단순 기술 메커니즘만이 아니라, **사용자 경험 기본값 정책**까지 함께 설계한다.
+즉 Boot의 자동 설정은 기술 메커니즘과 함께 사용자가 아무것도 설정하지 않았을 때의 기본값 정책까지 정한다.
 
 ## 웹 서버 시작도 결국 기존 lifecycle 위에 올라탄다
 
@@ -164,16 +164,16 @@ flowchart LR
 
 즉 Boot가 특별한 별도 서버 기동 엔진을 만드는 게 아니라, Spring의 기존 lifecycle 메커니즘 위에 서버 시작을 자연스럽게 얹는다.
 
-이 점은 Boot를 이해할 때 중요하다. Boot는 새 원리보다 **기존 Spring 확장점을 조합하는 방식**에 가깝다.
+Boot는 새 원리를 만들기보다 기존 Spring 확장점을 조합한다.
 
 ## 왜 Boot가 얇다고 말할 수 있는가
 
 지금까지 본 걸 다시 정리하면:
 
 - 컨테이너는 여전히 `refresh()`가 만든다.
-- AOP도 여전히 BeanPostProcessor와 프록시가 만든다.
-- MVC도 여전히 `DispatcherServlet`이 처리한다.
-- 트랜잭션도 여전히 인터셉터가 처리한다.
+- AOP도 여전히 [BeanPostProcessor와 프록시](/posts/spring-internals-lab-proxy-aop/)가 만든다.
+- MVC도 여전히 [`DispatcherServlet`](/posts/spring-internals-lab-dispatcher-servlet/)이 처리한다.
+- 트랜잭션도 여전히 [인터셉터](/posts/spring-internals-lab-transactional/)가 처리한다.
 
 Boot가 더하는 것은 주로 다음이다.
 
@@ -182,16 +182,14 @@ Boot가 더하는 것은 주로 다음이다.
 - 기본값 제공
 - 조건부 등록
 
-즉 Boot는 Framework를 대체하지 않는다. **Framework를 조립하고 기본값으로 채워 주는 얇은 레이어**라고 보는 편이 정확하다.
+즉 Boot는 Framework를 대체하지 않는다. Framework를 조립하고 기본값으로 채워 주는 얇은 레이어라고 보는 편이 정확하다.
 
 ## 정리
 
-이번 글의 핵심은 다섯 가지다.
+Boot의 편리함은 순서에서 나온다. 초기 이벤트는 컨텍스트보다 먼저 돌고, 자동 설정 후보는 사용자 설정이 끝난 뒤에 평가되며, 조건은 클래스를 로딩하지 않고 판정된다. 그래서 사용자가 같은 타입의 Bean을 직접 등록하면 자동 설정이 물러나고, 아무것도 하지 않으면 `matchIfMissing` 같은 기본값이 채워진다. 그 아래에서 일하는 것은 여전히 기존 컨테이너, lifecycle, import, condition, event 시스템이다.
 
-1. `SpringApplication`은 컨텍스트 바깥과 안쪽을 잇는 상위 조율 계층이다.
-2. 자동 설정 후보는 `.imports` 파일처럼 매우 단순한 등록 메커니즘에서 온다.
-3. `DeferredImportSelector`가 사용자 설정 이후라는 타이밍을 보장한다.
-4. `@ConditionalOnXxx`는 결국 `Condition` 평가로 수렴한다.
-5. Boot는 새 프레임워크보다 기존 Spring 메커니즘을 조립하는 얇은 기본값 계층에 가깝다.
+## 참고
 
-이걸 기준으로 보면 Boot의 편리함도 덜 마법처럼 느껴진다. 새로운 원리를 추가하는 대신, 이미 있는 컨테이너, lifecycle, import, condition, event 시스템을 **사용자가 직접 wiring하지 않아도 되게 정교하게 배선해 둔 것**이 Boot의 핵심이다.
+- [Spring Boot Reference: SpringApplication](https://docs.spring.io/spring-boot/reference/features/spring-application.html) — Application Events and Listeners
+- [Spring Boot Reference: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)
+- [DeferredImportSelector Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/DeferredImportSelector.html)
