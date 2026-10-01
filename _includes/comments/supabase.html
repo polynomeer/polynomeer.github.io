@@ -166,7 +166,9 @@
       countNode.textContent = formatCount(comments.length);
 
       if (comments.length === 0) {
-        listNode.innerHTML = `<li class="comment-empty text-muted">${escapeHtml(texts.empty)}</li>`;
+        // 머리글의 개수가 이미 "아직 댓글이 없습니다" 라고 말합니다. 목록에 같은 말을 한 번 더
+        // 적으면 빈 글에서 두 문장이 겹쳐 보였습니다. 쓰라는 신호는 아래 입력란과 버튼입니다.
+        listNode.innerHTML = '';
         return;
       }
 

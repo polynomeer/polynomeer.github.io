@@ -499,8 +499,8 @@ header {
 }
 
 .comment-thread {
-  margin-top: 2.4rem;
-  padding: 1rem 1rem 0.8rem;
+  margin-top: 2rem;
+  padding: 0.85rem 0.9rem 0.7rem;
   border: 1px solid rgba(98, 114, 164, 0.18);
   border-radius: 0.7rem;
   background: rgba(40, 42, 54, 0.5);
@@ -517,16 +517,18 @@ header {
   }
 
   .comment-thread-header {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
   }
 
+  /* 본문 아래의 다른 머리들과 같은 크기입니다. 1.15rem 일 때는 '관련된 글'(0.95rem)보다 커서
+     댓글이 가장 중요한 묶음처럼 보였습니다. */
   .comment-thread-title {
     margin-bottom: 0;
-    font-size: 1.15rem;
+    font-size: 0.95rem;
   }
 
   .comment-count {
-    white-space: nowrap;
+    font-size: 0.8rem;
   }
 
   .comment-auth-bar {
@@ -534,7 +536,7 @@ header {
   }
 
   .comment-form {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0;
   }
 
   .comment-submit-button.btn-primary {
@@ -559,8 +561,15 @@ header {
   }
 
   .comment-body-field {
-    min-height: 6rem;
-    margin-bottom: 0.55rem;
+    /* 로그인 전에는 입력란이 쓸 수 없는 상태로 110px 을 차지했습니다. 글을 남길 수 있다는
+       말은 바로 아래 로그인 버튼이 하므로, 쓸 수 있을 때만 자리를 내줍니다.
+       (스크립트가 textarea.disabled = !signedIn 로 이 상태를 정합니다.) */
+    &:disabled {
+      display: none;
+    }
+
+    min-height: 4.5rem;
+    margin-bottom: 0.5rem;
     border-color: rgba(98, 114, 164, 0.35);
     background: rgba(68, 71, 90, 0.28);
     color: var(--text-color);
@@ -577,12 +586,8 @@ header {
     margin-bottom: 0.75rem;
   }
 
-  .comment-empty {
-    padding: 0.8rem 0 0.25rem;
-  }
-
   .comment-item {
-    padding: 0.85rem 0;
+    padding: 0.75rem 0;
     border-top: 1px solid rgba(98, 114, 164, 0.16);
   }
 
