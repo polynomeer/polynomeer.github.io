@@ -3,6 +3,7 @@ title: "TLS 핸드셰이크의 비용 - 세션 재개와 0-RTT의 대가"
 date: 2026-09-13
 categories: [Notes, Network]
 tags: [Network, TLS, SSL, Security, Latency, Performance, Handshake]
+mermaid: true
 ---
 
 HTTPS를 켜면 느려진다는 말은 절반만 맞다. 암호화 연산 자체는 현대 CPU에서 거의 공짜에 가깝고, 비용의 대부분은 연결을 맺을 때의 왕복에 있다. 그래서 대책도 암호화를 줄이는 쪽이 아니라 왕복을 줄이는 쪽이다.
@@ -23,7 +24,43 @@ TLS의 비용은 셋으로 나뉜다.
 
 TLS 1.2의 전체 핸드셰이크는 2-RTT다. ClientHello/ServerHello로 한 번, 키 교환과 Finished로 한 번 오간다([RFC 5246, 7.3절](https://datatracker.ietf.org/doc/html/rfc5246#section-7.3)). TCP 핸드셰이크 1-RTT까지 더하면 데이터가 나가기까지 3-RTT다.
 
+첫 요청 데이터가 나가기 전에 오가는 메시지를 왕복 단위로 세면 이렇다.
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant S as 서버
+    Note over C,S: TCP 핸드셰이크 (1-RTT)
+    C->>S: SYN
+    S->>C: SYN-ACK
+    Note over C,S: TLS 1.2 전체 핸드셰이크 (2-RTT)
+    C->>S: ClientHello
+    S->>C: ServerHello, 인증서
+    C->>S: 키 교환, Finished
+    S->>C: Finished
+    C->>S: 애플리케이션 데이터 (3-RTT 뒤)
+```
+
 TLS 1.3은 이것을 1-RTT로 줄였다. 클라이언트가 ClientHello에 키 공유 추정값을 미리 실어 보내고, 서버가 ServerHello에서 바로 확정한다. 추정이 틀리면 HelloRetryRequest로 왕복이 하나 늘어난다([RFC 8446, 2.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.1)). 암호 스위트 협상도 단순해졌다(정적 RSA와 정적 DH 스위트를 제거했다, [1.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-1.2)).
+
+같은 구간을 TLS 1.3으로 그리면 TLS 쪽 왕복이 하나 줄고, 추정이 틀린 경우에만 왕복이 다시 하나 붙는다.
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant S as 서버
+    Note over C,S: TCP 핸드셰이크 (1-RTT)
+    C->>S: SYN
+    S->>C: SYN-ACK
+    Note over C,S: TLS 1.3 핸드셰이크 (1-RTT)
+    C->>S: ClientHello + 키 공유 추정값
+    opt 추정이 틀린 경우 (+1 RTT)
+        S->>C: HelloRetryRequest
+        C->>S: ClientHello 재전송
+    end
+    S->>C: ServerHello (키 공유 확정), 인증서, Finished
+    C->>S: Finished, 애플리케이션 데이터 (2-RTT 뒤)
+```
 
 그래서 성능 측면에서 가장 확실한 조치는 TLS 1.3으로 올리는 것이다. 보안과 지연이 같은 방향으로 개선되는 드문 경우다.
 
@@ -48,6 +85,23 @@ TLS 1.3의 0-RTT는 재개 시 핸드셰이크 완료 전에 애플리케이션 
 > "There are no guarantees of non-replay between connections."
 
 연결 사이의 재전송을 막는다는 보장이 없다는 뜻이다. 1-RTT 데이터는 서버의 Random 값이 재전송을 막지만, 0-RTT 데이터는 ServerHello보다 먼저 나가므로 그 보호를 받지 못한다. 공격자가 이 데이터를 가로채 다시 보내면 서버가 같은 요청을 두 번 처리할 수 있다. 서버 측 완화책은 [8절](https://datatracker.ietf.org/doc/html/rfc8446#section-8)에 있지만 완전하지 않다.
+
+재개 연결의 0-RTT 데이터와, 그것을 가로챈 공격자가 다시 보내는 경우를 한 흐름에 놓으면 차이가 보인다.
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant A as 공격자
+    participant S as 서버
+    Note over C,S: 이전 연결에서 서버가 준 티켓(PSK)을 보관
+    C->>S: ClientHello (PSK) + 0-RTT 데이터
+    Note over S: 핸드셰이크 완료 전에 0-RTT 데이터 수신
+    S->>C: ServerHello, Finished
+    C->>S: Finished
+    Note over A: 첫 메시지를 가로채 보관
+    A->>S: 같은 ClientHello (PSK) + 0-RTT 데이터
+    Note over S: 같은 요청을 두 번 처리할 수 있다
+```
 
 **그래서 0-RTT는 멱등한 요청에만 쓴다.** `GET` 같은 안전한 요청은 괜찮고, 결제나 주문 생성은 안 된다([멱등한 API 설계](/posts/idempotent-api-design/)). HTTP에서는 [RFC 8470](https://datatracker.ietf.org/doc/html/rfc8470)이 클라이언트가 안전하지 않은 메서드를 early data로 보내지 못하게 하고, 서버가 `425 Too Early`로 거절할 수 있게 했다. 실무에서는 CDN이나 엣지에서 0-RTT를 켜되 안전한 메서드로 제한하는 구성이 쓰인다. Cloudflare는 쿼리 파라미터가 없는 `GET`만 0-RTT로 응답했다([Cloudflare](https://blog.cloudflare.com/introducing-0-rtt/)).
 
