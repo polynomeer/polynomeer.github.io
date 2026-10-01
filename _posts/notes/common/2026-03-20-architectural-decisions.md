@@ -6,11 +6,12 @@ tags: [Sequence, Performance, Database, Lock]
 series: sequence-bottleneck
 series_title: 키 생성 병목을 추적해 구조를 바꾼 기록
 series_order: 2
+mermaid: true
 ---
 
 # Part 2. SELECT 안에서 UPDATE가 일어나고 있었다
 
-1편에서는 INSERT가 병목처럼 보였지만, 실제로는 그 이전 단계에 더 근본적인 지연이 숨어 있을 가능성을 확인했다. 이번 글에서는 그 의심을 따라가며 **왜 읽기처럼 보이는 구간에서 쓰기 비용과 락 경합이 발생했는지**를 정리한다.
+[1편](/posts/sequence-part1/)에서는 INSERT가 병목처럼 보였지만, 실제로는 그 이전 단계에 더 근본적인 지연이 숨어 있을 가능성을 확인했다. 이번 글에서는 그 의심을 따라가며 왜 읽기처럼 보이는 구간에서 쓰기 비용과 락 경합이 발생했는지를 정리한다.
 
 ## 문제는 INSERT 직전에 숨어 있었다
 
@@ -29,7 +30,7 @@ insert end
 - 실제 다건 INSERT 직전, 특정 키를 생성하는 구간에서 지연이 몰린다.
 - 데이터 건수가 늘어날수록 이 지연도 거의 선형적으로 증가한다.
 
-즉, INSERT가 느리다기보다 **INSERT 전에 수행되는 준비 작업이 병목을 만들고 있었다.**
+그래서 INSERT 자체보다 INSERT 전에 수행되는 준비 작업을 의심하게 됐다.
 
 ## 시퀀스 함수가 하는 일을 열어보니
 
@@ -56,14 +57,14 @@ WHERE sequence_name = 'PRICE_RATE';
 1. 시퀀스 테이블의 특정 행을 갱신한다.
 2. 갱신된 값을 다시 읽어 온다.
 
-즉, 함수 이름은 `next_value`였지만 실제 동작은 **읽기 안에 쓰기를 감춘 구조**였다.
+함수 이름은 `next_value`였지만 실제 동작은 읽기 안에 쓰기를 감춘 구조였다.
 
 ## 왜 이 구조가 병목이 되나
 
 문제는 모든 요청이 같은 시퀀스 이름을 바라본다는 점이다.
 
 - 모든 INSERT 준비 과정이 같은 행 하나를 갱신한다.
-- 같은 행을 갱신하려면 직렬화가 발생한다.
+- UPDATE는 그 행에 배타적 [row lock](/posts/lock-types-and-waits/)을 잡고, 이 락은 트랜잭션이 끝날 때까지 유지된다. 그래서 같은 행을 갱신하려는 다음 요청은 앞 요청의 커밋을 기다린다. 이 시스템이 쓰는 MySQL InnoDB 문서도 한 트랜잭션이 행에 X 락을 쥐고 있으면 다른 트랜잭션의 락 요청은 바로 승인되지 않고([InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html)), 락은 커밋이나 롤백 때 풀린다고 적는다([Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html)).
 - 요청 수가 늘어날수록 해당 행은 전역 병목이 된다.
 
 특히 배치처럼 한 번에 수만, 수십만 건을 밀어 넣는 작업에서는 이 비용이 더 크게 드러난다.
@@ -71,18 +72,34 @@ WHERE sequence_name = 'PRICE_RATE';
 - 애플리케이션은 병렬로 움직여도
 - 키 생성은 결국 한 줄로 줄을 선다.
 
-결과적으로 INSERT가 느린 것이 아니라, **INSERT에 필요한 키를 받기 위해 모두가 대기하고 있었던 것**이다.
+결과적으로 INSERT가 느린 것이 아니라, INSERT에 필요한 키를 받기 위해 모두가 대기하고 있었다.
+
+두 요청이 같은 시퀀스 행을 두고 만나면 순서는 아래와 같다.
+
+```mermaid
+sequenceDiagram
+    participant A as 요청 A
+    participant DB as sequence_table (PRICE_RATE 행)
+    participant B as 요청 B
+    A->>DB: UPDATE value = value + 1
+    Note over DB: A가 row lock 보유
+    B->>DB: UPDATE value = value + 1
+    Note over B: A의 커밋까지 대기
+    A->>DB: SELECT value 후 커밋
+    Note over DB: lock 해제
+    DB-->>B: B의 UPDATE 진행
+```
 
 ## DB 관점에서 보면 무슨 일이 일어나나
 
 시퀀스 테이블 기반 키 생성은 다음 부작용을 만든다.
 
 - 같은 행에 대한 지속적인 row lock 경합
-- 빈번한 update로 인한 undo / redo 로그 증가
+- 빈번한 update로 인한 [undo / redo 로그](/posts/redo-undo-log/) 증가
 - 커밋 지연 시 대기 시간 누적
 - 애플리케이션 병렬성의 상실
 
-이 구조는 데이터 양이 많아질수록 더 나빠진다. 이유는 단순하다. 실제 저장 대상 테이블은 여러 건을 병렬로 넣을 수 있어도, 키 생성은 한 지점에 모이기 때문이다.
+이 구조는 데이터 양이 많아질수록 더 나빠진다. 실제 저장 대상 테이블은 여러 건을 병렬로 넣을 수 있어도, 키 생성은 한 지점에 모이기 때문이다.
 
 ## 왜 처음에는 잘 안 보였을까
 
@@ -92,7 +109,7 @@ WHERE sequence_name = 'PRICE_RATE';
 2. SQL 로그 상으로는 INSERT 직전의 짧은 호출처럼 보인다.
 3. 데이터가 적을 때는 체감 지연이 거의 없다.
 
-즉, 초기에는 구조적 문제가 아니라 단순한 "느린 구간"처럼 관찰된다. 하지만 규모가 커지면 그 숨은 비용이 전체 실행 시간을 지배하게 된다.
+그래서 초기에는 구조적 문제가 아니라 단순한 "느린 구간"처럼 관찰된다. 하지만 규모가 커지면 그 숨은 비용이 전체 실행 시간을 지배하게 된다.
 
 ## 병목을 의심할 때 확인해야 할 질문
 
@@ -121,9 +138,9 @@ WHERE sequence_name = 'PRICE_RATE';
 
 ## 정리
 
-이번에 확인한 핵심은 하나다.
+INSERT 구간에 지연이 몰려 보였지만, 실제 대기는 그 직전의 `next_value` 호출 안에서 같은 행을 갱신하려는 UPDATE끼리 일어나고 있었다. 시퀀스 테이블 방식은 단순하고 이해하기 쉽지만, 규모가 커지면 단일 행 경쟁으로 인해 시스템 전체 병목이 될 수 있다. [다음 글](/posts/sequence-part3/)에서는 이 구조를 실제로 어떻게 바꾸기 시작했는지, 그리고 어떤 기준으로 새로운 키 생성 전략을 선택했는지 정리한다.
 
-> 병목은 종종 가장 눈에 띄는 SQL이 아니라,
-> 그 SQL 직전에 호출되는 "당연해 보이는 함수" 안에 숨어 있다.
+## 참고
 
-시퀀스 테이블 방식은 단순하고 이해하기 쉽지만, 규모가 커지면 단일 행 경쟁으로 인해 시스템 전체 병목이 될 수 있다. 다음 글에서는 이 구조를 실제로 어떻게 바꾸기 시작했는지, 그리고 어떤 기준으로 새로운 키 생성 전략을 선택했는지 정리한다.
+- [MySQL 8.0 Reference Manual — InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html)
+- [MySQL 8.0 Reference Manual — Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html)
