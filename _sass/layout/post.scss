@@ -3700,17 +3700,18 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-/* posts that link to this one (see _plugins/post-backlinks.rb) */
+/* 본문 아래의 두 묶음 - 인용한 글(_plugins/post-backlinks.rb)과 관련된 글
+   (_plugins/related-posts.rb) - 은 같은 표를 씁니다. 제목 왼쪽, 작은 라벨 오른쪽. */
 #post-backlinks {
   margin-bottom: 2rem;
 }
 
-.post-backlink-list {
+.post-tail-list {
   margin: 0;
   border-top: 1px solid rgba(98, 114, 164, 0.16);
 }
 
-.post-backlink-item {
+.post-tail-item {
   border-bottom: 1px solid rgba(98, 114, 164, 0.16);
 
   /* 접힌 행. display:none 이라 접힌 동안에는 탭 순서에도 들어가지 않습니다. */
@@ -3719,18 +3720,18 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-.post-backlink-link {
+.post-tail-link {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.15rem 1.1rem;
   align-items: baseline;
-  padding: 0.55rem 0;
+  padding: 0.5rem 0;
   color: var(--text-color);
 
   &:hover {
     text-decoration: none;
 
-    .post-backlink-title {
+    .post-tail-title {
       color: var(--link-color);
     }
   }
@@ -3740,19 +3741,26 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-.post-backlink-date {
+.post-tail-meta {
   color: var(--text-muted-color);
-  font-size: 0.74rem;
+  font-size: 0.73rem;
   white-space: nowrap;
   opacity: 0.85;
 }
 
-.post-backlink-title {
+.post-tail-title {
+  display: -webkit-box;
   min-width: 0;
-  font-size: 0.93rem;
+  overflow: hidden;
+  font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.5;
   overflow-wrap: anywhere;
+
+  /* 제목 하나가 네 줄을 먹으면 목록을 훑을 수가 없습니다. 행 높이를 두 줄로 묶습니다 -
+     카드로 그릴 때도 제목은 이미 잘려 있었습니다. */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .post-backlink-more {
@@ -3761,7 +3769,7 @@ html[data-mode='dark'] .about-terminal {
   font-size: 0.78rem;
 }
 
-/* 본문 아래 두 묶음(인용한 글, 관련된 글)이 같은 머리와 같은 펼침 버튼을 씁니다. */
+/* 두 묶음이 같은 머리와 같은 펼침 버튼을 씁니다. */
 .post-tail-heading {
   margin: 0 0 0.75rem;
   font-size: 0.95rem;
@@ -3790,25 +3798,6 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-
-.related-posts-grid {
-  --bs-gutter-x: 0.8rem;
-  --bs-gutter-y: 0.8rem;
-
-  margin-bottom: 1.5rem;
-}
-
-.related-post-description p {
-  display: -webkit-box;
-  overflow: hidden;
-  margin-bottom: 0;
-  font-size: 0.82rem;
-  line-height: 1.6;
-
-  /* 설명 길이가 제각각이라 카드 높이가 들쭉날쭉했습니다. 두 줄로 맞춥니다. */
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
 
 /* Series directory: one heading per kind of series (/series/) */
 .series-group-title {

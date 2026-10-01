@@ -1,6 +1,12 @@
 <!--
   Renders the recommendations precomputed by _plugins/related-posts.rb
-  (`page.related_entries`: post, same_series, same_project).
+  (`page.related_entries`: post, same_series, same_project). At most three.
+
+  Titles only. The cards used to carry a two-line excerpt of each post, which
+  is a description of a page the reader has not decided to open yet - the
+  title and the reason it is being suggested are what makes that decision.
+  The rows are the same shape as the citation list above so the tail of a post
+  reads as one thing.
 -->
 
 {% assign relate_entries = page.related_entries %}
@@ -10,33 +16,25 @@
     <h3 class="post-tail-heading" id="related-label">
       {{- site.data.locales[include.lang].post.relate_posts -}}
     </h3>
-    <nav class="related-posts-grid row row-cols-1 row-cols-md-2 row-cols-xl-3">
+    <ul class="post-tail-list list-unstyled">
       {% for entry in relate_entries %}
         {% assign post = entry.post %}
-        <article class="col">
-          <a href="{{ post.url | relative_url }}" class="post-preview card h-100">
-            <div class="card-body">
-              {% include datetime.html date=post.date lang=include.lang %}
-              <h4 class="pt-0 my-2">{{ post.title }}</h4>
-              {% if entry.same_series or entry.same_project %}
-                <div class="recommendation-badges mb-2">
-                  {% if entry.same_series %}
-                    <span class="recommendation-badge">
-                      {{- site.data.locales[include.lang].post.recommendation_series -}}
-                      {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
-                    </span>
-                  {% elsif entry.same_project %}
-                    <span class="recommendation-badge">{{ site.data.locales[include.lang].post.recommendation_project }}</span>
-                  {% endif %}
-                </div>
-              {% endif %}
-              <div class="text-muted related-post-description">
-                <p>{% include post-description.html %}</p>
-              </div>
-            </div>
+        <li class="post-tail-item">
+          <a href="{{ post.url | relative_url }}" class="post-tail-link">
+            <span class="post-tail-title">{{ post.title }}</span>
+            <span class="post-tail-meta">
+              {%- if entry.same_series -%}
+                {{- site.data.locales[include.lang].post.recommendation_series -}}
+                {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
+              {%- elsif entry.same_project -%}
+                {{- site.data.locales[include.lang].post.recommendation_project -}}
+              {%- else -%}
+                {%- include datetime.html date=post.date lang=include.lang -%}
+              {%- endif -%}
+            </span>
           </a>
-        </article>
+        </li>
       {% endfor %}
-    </nav>
+    </ul>
   </aside>
 {% endif %}

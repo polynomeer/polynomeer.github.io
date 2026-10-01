@@ -19,12 +19,12 @@
 {% if backlinks.size > 0 %}
   <aside id="post-backlinks" aria-labelledby="backlinks-label" data-backlinks data-visible="{{ visible }}">
     <h3 class="post-tail-heading" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }}</h3>
-    <ul class="post-backlink-list list-unstyled">
+    <ul class="post-tail-list list-unstyled">
       {% for cited in backlinks %}
-        <li class="post-backlink-item">
-          <a href="{{ cited.url | relative_url }}" class="post-backlink-link">
-            <span class="post-backlink-title">{{ cited.title }}</span>
-            <span class="post-backlink-date">{% include datetime.html date=cited.date lang=include.lang %}</span>
+        <li class="post-tail-item">
+          <a href="{{ cited.url | relative_url }}" class="post-tail-link">
+            <span class="post-tail-title">{{ cited.title }}</span>
+            <span class="post-tail-meta">{% include datetime.html date=cited.date lang=include.lang %}</span>
           </a>
         </li>
       {% endfor %}
@@ -47,7 +47,7 @@
         }
 
         const visible = Number(root.dataset.visible);
-        const items = Array.from(root.querySelectorAll('.post-backlink-item'));
+        const items = Array.from(root.querySelectorAll('.post-tail-item'));
         const hidden = items.slice(visible);
 
         if (hidden.length === 0) {
@@ -77,7 +77,7 @@
           apply(toggle.getAttribute('aria-expanded') === 'false');
         });
 
-        root.querySelector('.post-backlink-list').after(toggle);
+        root.querySelector('.post-tail-list').after(toggle);
       })();
     </script>
   {% endif %}
