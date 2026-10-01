@@ -9,7 +9,7 @@ tags: [S3, Presigned URL, Upload]
 
 파일 업로드를 API 서버가 직접 중계하면 파일 크기가 커질수록 서버가 불필요한 병목이 된다. 네트워크 대역폭, 메모리, 타임아웃 관리 비용이 모두 서버 쪽으로 몰리기 때문이다.
 
-Presigned URL은 이 문제를 해결하기 위해, 서버가 스토리지 접근 권한만 짧게 위임하고 실제 파일 전송은 클라이언트가 스토리지로 직접 보내도록 만든 방식이다.
+Presigned URL은 서버가 스토리지 접근 권한만 짧게 위임하고, 실제 파일은 클라이언트가 스토리지로 직접 보내게 하는 방식이다. URL이 쓰는 권한은 URL을 만든 IAM 주체의 권한이다([S3 문서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)).
 
 구조는 보통 다음과 같다.
 
@@ -36,24 +36,24 @@ S3 업로드가 성공했다고 해서 비즈니스적으로 "파일 등록 완�
 
 ### 2. 키를 클라이언트가 임의로 정하지 않게 하기
 
-업로드 대상 키를 사용자가 자유롭게 정하게 두면 덮어쓰기, 경로 추측, 다중 테넌트 충돌 문제가 생길 수 있다. 보통은 서버가 키 규칙을 정하고 발급한다.
+업로드 대상 키를 사용자가 자유롭게 정하게 두면 덮어쓰기, 경로 추측, 다중 테넌트 충돌 문제가 생길 수 있다. S3는 같은 키의 객체가 있으면 새 업로드로 교체하므로, 키가 겹치면 기존 파일이 사라진다. 보통은 서버가 키 규칙을 정하고 발급한다.
 
 ### 3. 만료 시간을 짧게 유지
 
-URL은 짧게 발급할수록 안전하다. 특히 업로드 권한은 오래 열어둘 이유가 없다.
+S3 문서는 presigned URL을 "bearer tokens that grant access to those who possess them"이라고 설명한다(가진 사람이면 누구나 쓸 수 있다는 뜻). 만료 전까지는 여러 번 쓸 수도 있다. 그래서 URL은 짧게 발급할수록 안전하고, 업로드 권한은 오래 열어 둘 이유가 없다.
 
 ### 4. 대용량이면 multipart를 고려
 
-파일이 커질수록 단일 PUT보다 multipart upload가 더 안정적이다. 실패 구간만 재시도할 수 있고, 네트워크 불안정 상황에도 유리하다.
+파일이 커질수록 단일 PUT보다 multipart upload(파일을 파트로 나눠 올리고 S3가 합치는 방식)가 더 안정적이다. 실패한 파트만 다시 보내면 되므로 네트워크가 불안정할 때도 유리하다. S3 문서는 100MB 이상 객체에 이 방식을 권장한다([S3 문서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html)).
 
 ## 자주 하는 실수
 
 - 업로드 URL만 발급하고 이후 검증 절차가 없다.
-- 파일 크기 제한, MIME 제한, 확장자 정책이 없다.
+- 파일 크기 제한, [MIME](/posts/mime/) 타입 제한, 확장자 정책이 없다.
 - 클라이언트가 원하는 경로로 아무 키나 업로드할 수 있다.
 - 서버가 실제 업로드 여부를 추적하지 않는다.
 
-Presigned URL은 스토리지 접근을 우회시키는 것이지, 업로드 정책 자체를 없애는 것이 아니다.
+Presigned URL은 전송 경로를 서버 밖으로 옮길 뿐, 업로드 정책은 여전히 서버의 몫이다.
 
 ## Presigned URL과 STS의 차이
 
@@ -63,4 +63,9 @@ Presigned URL은 특정 객체 요청 하나에 가까운 제한된 권한을 �
 
 ## 정리
 
-Presigned URL의 핵심은 "파일은 스토리지로 직행시키고, 서버는 권한과 상태만 관리한다"는 데 있다. 대용량 업로드 아키텍처에서 서버 병목을 줄이는 가장 실용적인 패턴 중 하나다.
+서버는 파일 바이트를 다루지 않는 대신 두 가지를 챙긴다. URL이 bearer token이므로 키와 만료를 서버가 정하고, 업로드 성공이 도메인 완료가 아니므로 이후 상태를 서버가 추적한다.
+
+## 참고
+
+- [Amazon S3 User Guide, Download and upload objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)
+- [Amazon S3 User Guide, Uploading and copying objects using multipart upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html)
