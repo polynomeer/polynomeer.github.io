@@ -15,7 +15,7 @@ mermaid: true
 | 연사 | 박동호 (토스페이먼츠 Server Developer) |
 | 자료 | [발표 영상](https://www.youtube.com/watch?v=w4fWgLgop5U) · [SLASH 22](https://toss.im/slash-22) |
 
-Slack에 OOM Killer 메시지가 뜬 것에서 시작해 JVM 힙 바깥의 정체 모를 2GB를 추적한 짧은 트러블슈팅 발표다. 의심 대상을 하나씩 지워가다가 jemalloc 프로파일로 C2 JIT 컴파일러를 지목하고, C1로 바꾸면 해결되지만 CPU가 오르는 딜레마를 Graal JIT로 푼다. 내용은 발표 영상과 자동 생성 자막을 근거로 했고, 표현은 내 말로 바꿨다.
+Slack에 OOM(Out Of Memory) Killer 메시지가 뜬 것에서 시작해 JVM 힙 바깥의 정체 모를 2GB를 추적한 짧은 트러블슈팅 발표다. 의심 대상을 하나씩 지워가다가 jemalloc 프로파일로 C2 [JIT 컴파일러](/posts/jit-compilation/)를 지목하고, C1로 바꾸면 해결되지만 CPU가 오르는 딜레마를 Graal JIT로 푼다. 내용은 발표 영상과 자동 생성 자막을 근거로 했고, 표현은 내 말로 바꿨다.
 
 ## 시작: OOM Killer
 
@@ -25,7 +25,7 @@ Slack에 OOM Killer 메시지가 뜬 것에서 시작해 JVM 힙 바깥의 정�
 
 ## RSS − NMT = 2GB
 
-`-XX:NativeMemoryTracking` 옵션을 주고 `jcmd`로 JVM의 실제 메모리 사용량을 측정했다. 힙 1.5GB, 클래스 190MB, 스레드·코드·GC 등을 합쳐 **JVM 전체 2GB 정도**였다. 반면 `top`의 RSS는 3.1GB였다. 이미 1.1GB 차이가 있고, OOM 시점에는 4GB까지 올라갔을 테니 실제로는 **2GB 차이**가 났을 가능성이 있다. RSS 4GB에서 JVM 통계 2GB를 빼면 남는 2GB, 이것이 네이티브 메모리 누수일 가능성이 높다.
+`-XX:NativeMemoryTracking` 옵션을 주고 `jcmd`로 JVM의 실제 메모리 사용량을 측정했다. 힙 1.5GB, 클래스 190MB, 스레드·코드·GC 등을 합쳐 JVM 전체 2GB 정도였다. 반면 `top`의 RSS(Resident Set Size, 프로세스가 실제로 물리 메모리에 올려 둔 크기)는 3.1GB였다. 이미 1.1GB 차이가 있고, OOM 시점에는 4GB까지 올라갔을 테니 실제로는 2GB 차이가 났을 가능성이 있다. RSS 4GB에서 JVM 통계 2GB를 빼면 남는 2GB, 이것이 네이티브 메모리 누수일 가능성이 높다. NMT(Native Memory Tracking)가 모든 네이티브 메모리를 세지는 않기 때문이다. Oracle 문서는 "NMT tracks only the memory that the JVM or HotSpot VM uses, not the user's native memory."라고 쓴다([Native Memory Tracking](https://docs.oracle.com/en/java/javase/17/vm/native-memory-tracking.html), NMT는 JVM이 쓰는 메모리만 추적하고 사용자 코드의 네이티브 메모리는 추적하지 않는다). 그래서 RSS와 NMT의 차이는 JVM 통계 바깥에서 할당된 메모리를 가리킨다.
 
 ## 지워나간 의심 대상
 
@@ -41,24 +41,24 @@ flowchart TB
 
 JVM에서 네이티브 누수가 쉽게 나타나는 곳부터 확인했다.
 
-1. **JNI/JNA.** C로 구현한 모듈을 Java에서 호출하는 기능이라 C 쪽에서 누수가 나면 JVM은 인지할 수 없다. 문제 서버에는 쓰는 곳이 없었다.
-2. **Direct Buffer.** JDK 1.4부터의 기능으로 GC가 관리하지 않는 네이티브 메모리를 할당한다. NMT 결과에서 할당량을 볼 수 있는데 매우 적었다.
-3. **APM 툴.** 보통 Java 에이전트로 붙어 인스트루먼트를 바꾸므로 혹시 네이티브를 쓰는 부분이 있을까 봤다. Pinpoint를 쓰고 있었고 특별한 문제는 없었다.
+1. JNI/JNA: C로 구현한 모듈을 Java에서 호출하는 기능이라 C 쪽에서 누수가 나면 JVM은 인지할 수 없다. 문제 서버에는 쓰는 곳이 없었다.
+2. [Direct Buffer](/posts/direct-memory-and-cleaner/): JDK 1.4부터의 기능으로 GC가 관리하지 않는 네이티브 메모리를 할당한다. NMT 결과에서 할당량을 볼 수 있는데 매우 적었다.
+3. APM 툴: 보통 Java 에이전트로 붙어 인스트루먼트를 바꾸므로 혹시 네이티브를 쓰는 부분이 있을까 봤다. Pinpoint를 쓰고 있었고 특별한 문제는 없었다.
 
 예상 범위 안에서는 원인이 보이지 않아 리눅스 프로세스 레벨로 범위를 넓혔다. 해볼 수 있는 건 다 해보기로 했다.
 
-4. **프로세스 메모리 덤프.** `/proc/<pid>/maps`와 `smaps`, gdb로 덤프를 뜨고 `strings`로 문자열을 뽑아 힌트를 얻으려 했다. 힌트가 될 만한 것은 없었다.
-5. **메모리 프로파일 툴.** 리눅스의 기본 할당자 malloc을 **jemalloc**으로 바꾸면 jemalloc의 프로파일 툴로 어떤 모듈이 얼마나 메모리를 쓰는지 볼 수 있다. 적용하고 문제 상황을 재현하니 다이어그램에 **C2 컴파일러가 프로세스 메모리의 90% 이상인 1.9GB**를 쓰고 있었다.
+4. 프로세스 메모리 덤프: `/proc/<pid>/maps`와 `smaps`, gdb로 덤프를 뜨고 `strings`로 문자열을 뽑아 힌트를 얻으려 했다. 힌트가 될 만한 것은 없었다.
+5. 메모리 프로파일 툴: 리눅스의 기본 할당자 malloc을 jemalloc으로 바꾸면 jemalloc의 프로파일 툴로 어떤 모듈이 얼마나 메모리를 쓰는지 볼 수 있다. 적용하고 문제 상황을 재현하니 다이어그램에 C2 컴파일러가 프로세스 메모리의 90% 이상인 1.9GB를 쓰고 있었다.
 
 ## C2 컴파일러
 
 JIT 컴파일러가 메모리를 누수한다는 것이 애매해서 찾아보니 OpenJDK 버그 트래커에 C2 컴파일러 메모리 누수 이슈가 리포트된 것이 보였다. Java 파일을 컴파일하면 클래스 파일이 생기고, JVM이 구동하려면 기계어로 컴파일해야 하는데 이것을 JIT가 한다. JIT는 레벨 0부터 4까지 다섯 단계이고 마지막 레벨 4가 C2다. C1은 최적화를 줄이되 빠르게 컴파일하는 컴파일러로 앱을 빨리 띄우는 것이 중요한 클라이언트에 맞고, C2는 구동은 느리지만 최적화를 많이 해 연산이 빠르므로 보통 서버가 쓴다. `-XX:TieredStopAtLevel`로 레벨을 선택할 수 있다.
 
-진짜 원인인지 확인은 간단하다. C2 대신 C1을 적용했더니 **문제가 발생하지 않았다.** 대신 예상대로 CPU 사용률이 40%대에서 70%대로 올랐다. 최적화가 약하기 때문이다.
+진짜 원인인지 확인은 간단하다. C2 대신 C1을 적용했더니 문제가 발생하지 않았다. 대신 예상대로 CPU 사용률이 40%대에서 70%대로 올랐다. 최적화가 약하기 때문이다.
 
 ## Graal JIT
 
-문제는 없애고 CPU도 낮추고 싶다. CPU를 낮추려면 C2를 써야 한다. JDK 11 최신, JDK 17 최신으로 바꿔봤지만 해결되지 않았다. 그러던 중 OpenJDK 안에서 **Graal 컴파일러**를 쓸 수 있다는 것을 알았다. `-XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler`를 주면 Graal JIT가 적용된다. 실험적 기능이지만 토스페이먼츠는 이미 쿠버네티스 기반이고 카나리와 블루그린 배포가 갖춰져 있어 문제가 나도 영향을 최소화하고 빠르게 롤백할 수 있으므로 적용해 보기로 했다. 결과 **CPU 사용률이 70%대에서 40%대로** 떨어졌다. 문제 서버는 지금도 이 옵션으로 서비스 중이고, 실마리가 보일 만한 JDK 릴리스 노트가 나올 때마다 테스트하지만 아직 이 옵션 그대로다.
+문제는 없애고 CPU도 낮추고 싶다. CPU를 낮추려면 C2를 써야 한다. JDK 11 최신, JDK 17 최신으로 바꿔봤지만 해결되지 않았다. 그러던 중 OpenJDK 안에서 Graal 컴파일러를 쓸 수 있다는 것을 알았다. `-XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler`를 주면 Graal JIT가 적용된다. 이 옵션 조합은 JDK 10에 들어간 [JEP 317](https://openjdk.org/jeps/317)이 Graal을 Linux/x64에서 실험적 JIT 컴파일러로 켜는 방법으로 적어 둔 것이다. 실험적 기능이지만 토스페이먼츠는 이미 쿠버네티스 기반이고 카나리와 블루그린 배포가 갖춰져 있어 문제가 나도 영향을 최소화하고 빠르게 롤백할 수 있으므로 적용해 보기로 했다. 결과 CPU 사용률이 70%대에서 40%대로 떨어졌다. 문제 서버는 지금도 이 옵션으로 서비스 중이고, 실마리가 보일 만한 JDK 릴리스 노트가 나올 때마다 테스트하지만 아직 이 옵션 그대로다.
 
 ## 발표자의 정리
 
@@ -66,11 +66,11 @@ JIT 컴파일러가 메모리를 누수한다는 것이 애매해서 찾아보�
 
 ## 리뷰
 
-**"RSS − NMT"라는 한 줄의 산수가 이 발표의 출발점이자 가장 재사용 가치가 높은 부분이다.** JVM 메모리 문제를 힙 덤프로만 보는 습관에서 벗어나, JVM이 스스로 아는 메모리(NMT)와 OS가 아는 메모리(RSS)의 차이를 먼저 계산하면 힙 밖의 문제인지 즉시 갈린다.
+내가 보기에 "RSS − NMT"라는 한 줄의 산수가 이 발표의 출발점이자 가장 재사용 가치가 높은 부분이다. JVM 메모리 문제를 힙 덤프로만 보는 습관에서 벗어나, JVM이 스스로 아는 메모리(NMT)와 OS가 아는 메모리(RSS)의 차이를 먼저 계산하면 힙 밖의 문제인지 즉시 갈린다.
 
-**의심 대상을 지워가는 순서가 교과서적이다.** JNI → Direct Buffer → 에이전트 → 덤프 → 할당자 교체. 앞의 셋은 "JVM이 아는 네이티브", 뒤의 둘은 "JVM도 모르는 네이티브"다. jemalloc 프로파일은 glibc malloc으로는 볼 수 없는 호출자별 할당을 보여주므로 네이티브 누수 추적의 마지막 카드로 기억해 둘 만하다.
+의심 대상을 지워가는 순서도 교과서적이다. JNI, Direct Buffer, 에이전트, 덤프, 할당자 교체 순이다. 나는 앞의 셋을 "JVM이 아는 네이티브", 뒤의 둘을 "JVM도 모르는 네이티브"로 나눠 읽었다. jemalloc 프로파일은 어떤 모듈이 얼마나 할당했는지 보여주므로 네이티브 누수 추적의 마지막 카드로 기억해 둘 만하다.
 
-**해결책이 "우회"라는 점을 발표자가 숨기지 않는다.** C2의 누수 자체를 고친 것이 아니라 컴파일러를 바꿨고, 실험적 옵션을 프로덕션에 넣을 수 있었던 근거는 카나리와 빠른 롤백이라는 배포 인프라였다. 같은 SLASH 21의 [SRE 사례](/posts/slash21-sre-cases/)와 나란히 놓으면, 토스 계열의 트러블슈팅 발표는 대체로 "가설 → 재현 → 기각 → 라이브러리·런타임 레벨 원인"의 구조를 갖는다.
+발표자는 해결책이 우회라는 점을 숨기지 않는다. C2의 누수 자체를 고친 것이 아니라 컴파일러를 바꿨고, 실험적 옵션을 프로덕션에 넣을 수 있었던 근거는 카나리와 빠른 롤백이라는 배포 인프라였다. SLASH 21의 [SRE 사례](/posts/slash21-sre-cases/)와 나란히 놓으면, 토스 계열의 트러블슈팅 발표는 대체로 "가설 → 재현 → 기각 → 라이브러리·런타임 레벨 원인"의 구조를 갖는다고 본다.
 
 ## 남는 질문
 
@@ -85,3 +85,4 @@ JIT 컴파일러가 메모리를 누수한다는 것이 애매해서 찾아보�
 - [SLASH 22](https://toss.im/slash-22)
 - [JVM Native Memory Tracking](https://docs.oracle.com/en/java/javase/17/vm/native-memory-tracking.html)
 - [jemalloc heap profiling](https://github.com/jemalloc/jemalloc/wiki/Use-Case%3A-Heap-Profiling)
+- [JEP 317: Experimental Java-Based JIT Compiler](https://openjdk.org/jeps/317)
