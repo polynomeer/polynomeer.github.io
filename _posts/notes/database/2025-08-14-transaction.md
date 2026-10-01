@@ -27,11 +27,11 @@ tags: [Database, Transaction]
 - 성공 시 commit
 - 실패 시 rollback
 
-이 단순한 흐름 뒤에 실제로는 MVCC, undo log, redo log, lock manager 같은 메커니즘이 붙어 있다.
+이 단순한 흐름 뒤에 실제로는 [MVCC](/posts/mvcc/), [undo log, redo log](/posts/redo-undo-log/), lock manager 같은 메커니즘이 붙어 있다.
 
 ## autocommit을 주의해야 한다
 
-MySQL 기본 설정처럼 autocommit이 켜져 있으면 SQL 한 문장마다 자동 커밋된다. 그래서 애플리케이션에서 "여러 문장이 하나의 작업"이라면 명시적 트랜잭션 경계를 반드시 잡아야 한다.
+MySQL은 새 커넥션의 세션을 autocommit이 켜진 상태로 시작하고, 이때 SQL 한 문장이 하나의 트랜잭션이 되어 오류가 없으면 바로 커밋된다. [MySQL: autocommit, Commit, and Rollback](https://dev.mysql.com/doc/refman/8.0/en/innodb-autocommit-commit-rollback.html) 그래서 애플리케이션에서 "여러 문장이 하나의 작업"이라면 `START TRANSACTION`처럼 명시적 트랜잭션 경계를 반드시 잡아야 한다.
 
 ## 트랜잭션에서 자주 발생하는 문제
 
@@ -40,7 +40,7 @@ MySQL 기본 설정처럼 autocommit이 켜져 있으면 SQL 한 문장마다 �
 - phantom read
 - deadlock
 
-이 문제들은 결국 격리 수준과 락 전략 선택으로 이어진다.
+이 문제들은 [격리 수준](/posts/isolation-levels-and-anomalies/)과 [락 전략](/posts/lock-types-and-waits/) 선택으로 이어진다.
 
 ## 좋은 트랜잭션의 조건
 
@@ -49,7 +49,7 @@ MySQL 기본 설정처럼 autocommit이 켜져 있으면 SQL 한 문장마다 �
 - 필요한 자원만 잠근다
 - 경계가 명확하다
 
-특히 트랜잭션 안에서 네트워크 호출을 오래 잡고 있으면 락 대기와 데드락 가능성이 크게 올라간다.
+트랜잭션 안에서 네트워크 호출을 오래 잡고 있으면 락 대기와 데드락 가능성이 크게 올라간다. 네트워크 호출과 DB 트랜잭션을 분리한 사례는 [Airbnb 결제 시스템 리뷰](/posts/airbnb-orpheus-idempotency/)에서 다뤘다.
 
 ## 실무 체크포인트
 
@@ -60,4 +60,8 @@ MySQL 기본 설정처럼 autocommit이 켜져 있으면 SQL 한 문장마다 �
 
 ## 정리
 
-트랜잭션은 DB 기능이면서 동시에 애플리케이션 경계 설계다. 중요한 것은 SQL 문법보다 "어디까지를 함께 성공해야 하는 작업으로 볼 것인가"를 정확히 정하는 것이다.
+트랜잭션은 DB 기능이면서 동시에 애플리케이션 경계 설계다. 경계를 넓게 잡으면 락을 오래 쥐고, 좁게 잡으면 중간 실패 때 반쯤 반영된 데이터가 남는다. 위 체크포인트는 그 사이의 경계를 정하기 위한 질문이다.
+
+## 참고
+
+- [MySQL 8.0 Reference Manual: autocommit, Commit, and Rollback](https://dev.mysql.com/doc/refman/8.0/en/innodb-autocommit-commit-rollback.html)
