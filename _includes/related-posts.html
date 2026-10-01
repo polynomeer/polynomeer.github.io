@@ -7,10 +7,10 @@
 
 {% if relate_entries.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
-    <h3 class="mb-4" id="related-label">
+    <h3 class="post-tail-heading" id="related-label">
       {{- site.data.locales[include.lang].post.relate_posts -}}
     </h3>
-    <nav class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
+    <nav class="related-posts-grid row row-cols-1 row-cols-md-2 row-cols-xl-3">
       {% for entry in relate_entries %}
         {% assign post = entry.post %}
         <article class="col">
@@ -30,7 +30,7 @@
                   {% endif %}
                 </div>
               {% endif %}
-              <div class="text-muted">
+              <div class="text-muted related-post-description">
                 <p>{% include post-description.html %}</p>
               </div>
             </div>

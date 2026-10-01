@@ -6,7 +6,15 @@
   {% assign has_result = pdr.result and pdr.result != empty %}
 
   {% if has_problem or has_decision or has_result %}
-    <section class="problem-decision-result" aria-labelledby="problem-decision-result-title">
+    {%- comment -%}
+      이 블록은 본문 첫 줄 앞에 섭니다. 세 칸이 다 길면 글을 한 글자도 읽기 전에 700px 을 지나야
+      합니다. 기본은 몇 줄로 자르고, 넘치는 칸이 있을 때만 아래 스크립트가 펼침 버튼을 답니다.
+
+      자르는 일을 Liquid 의 truncate 가 아니라 CSS 로 하는 이유: 글자는 문서에 그대로 두어야
+      Ctrl+F 로 찾히고, 스크린 리더가 읽고, 검색 엔진이 봅니다. 마우스 오버로만 보여 주는 방법을
+      쓰지 않은 것도 같은 이유입니다 - 터치에는 hover 가 없고 키보드로도 닿지 않습니다.
+    {%- endcomment -%}
+    <section class="problem-decision-result" aria-labelledby="problem-decision-result-title" data-pdr>
       <h2 id="problem-decision-result-title" class="problem-decision-result-eyebrow" data-toc-skip>
         {{ site.data.locales[include.lang].pdr.eyebrow }}
       </h2>
@@ -34,5 +42,47 @@
         {% endif %}
       </div>
     </section>
+
+    <script>
+      (() => {
+        const pdr = document.querySelector('[data-pdr]');
+
+        if (!pdr) {
+          return;
+        }
+
+        const paragraphs = Array.from(pdr.querySelectorAll('.problem-decision-result-card p'));
+        const labels = {
+          expand: {{ site.data.locales[include.lang].pdr.expand | jsonify }},
+          collapse: {{ site.data.locales[include.lang].pdr.collapse | jsonify }}
+        };
+
+        // 자르기는 여기서 켭니다. 스크립트가 안 돌면 글이 통째로 보이는 쪽이 맞습니다 -
+        // CSS 로 미리 잘라 두면 펼칠 방법이 없는 사람이 생깁니다.
+        pdr.classList.add('is-clamped');
+
+        const overflows = () =>
+          paragraphs.some((p) => p.scrollHeight - p.clientHeight > 2);
+
+        if (!overflows()) {
+          pdr.classList.remove('is-clamped');
+          return;
+        }
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'problem-decision-result-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = labels.expand;
+
+        toggle.addEventListener('click', () => {
+          const clamped = pdr.classList.toggle('is-clamped');
+          toggle.setAttribute('aria-expanded', String(!clamped));
+          toggle.textContent = clamped ? labels.expand : labels.collapse;
+        });
+
+        pdr.append(toggle);
+      })();
+    </script>
   {% endif %}
 {% endif %}

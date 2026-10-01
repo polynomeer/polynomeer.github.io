@@ -147,6 +147,8 @@ post:
   relate_posts: Further Reading
   backlinks: Posts that cite this one
   backlinks_more: "and :COUNT more"
+  backlinks_expand: "+:COUNT more"
+  backlinks_collapse: Show fewer
   revisions: Revision history
   revisions_count: ":COUNT revisions"
   revisions_more: ":COUNT earlier revisions not shown"
@@ -336,6 +338,8 @@ pdr:
   problem: Problem
   decision: Decision
   result: Result
+  expand: Show the full summary
+  collapse: Collapse the summary
 
 capability_map:
   eyebrow: Capability map
