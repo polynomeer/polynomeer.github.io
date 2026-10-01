@@ -5,24 +5,24 @@ categories: [Notes, Common]
 tags: [Observability, Monitoring, Metrics, Logging, Tracing, Prometheus, OpenTelemetry]
 ---
 
-관측성의 세 기둥을 "메트릭, 로그, 트레이스"로 외우는 것은 쉽고, 어느 것에 무엇을 남길지 정하는 것은 어렵다. 세 가지는 취향이 아니라 **비용 구조가 다른 저장소**다. 그 차이를 알면 "이 값을 메트릭 라벨로 넣을까 로그 필드로 넣을까"에 답할 수 있다.
+관측성의 세 기둥을 "메트릭, 로그, 트레이스"로 외우는 것은 쉽고, 어느 것에 무엇을 남길지 정하는 것은 어렵다. 세 가지는 취향의 문제가 아니라 비용 구조가 다른 저장소다. 그 차이를 알면 "이 값을 메트릭 라벨로 넣을까 로그 필드로 넣을까"에 답할 수 있다.
 
 ## 셋을 가르는 축은 카디널리티다
 
 | | 답하는 질문 | 비용이 커지는 축 | 적합한 값 |
 | --- | --- | --- | --- |
-| 메트릭 | "얼마나 자주, 얼마나 오래" | **고유 시계열 수** | 유한하고 작은 집합 |
+| 메트릭 | "얼마나 자주, 얼마나 오래" | 고유 시계열 수 | 유한하고 작은 집합 |
 | 로그 | "그때 정확히 무슨 일이" | 이벤트 수 × 크기 | 임의의 값 |
 | 트레이스 | "이 요청이 어디서 시간을 썼나" | 스팬 수 (샘플링으로 조절) | 요청 단위 식별자 |
 
-메트릭의 비용은 **고유 라벨 조합의 수**에 비례한다. Prometheus는 라벨 조합 하나를 시계열 하나로 만들고, 각 시계열은 값이 변하지 않아도 메모리와 인덱스를 차지한다.
+메트릭의 비용은 **고유 라벨 조합의 수**에 비례한다. Prometheus는 라벨 조합 하나를 시계열 하나로 만들고, 각 시계열은 값이 변하지 않아도 메모리와 인덱스를 차지한다. Prometheus 문서도 "Each labelset is an additional time series that has RAM, CPU, disk, and network costs."라고 적는다(라벨 조합 하나하나가 RAM, CPU, 디스크, 네트워크 비용을 가진 시계열이다. [Instrumentation: Do not overuse labels](https://prometheus.io/docs/practices/instrumentation/#do-not-overuse-labels)).
 
 ```text
 http_requests_total{method="GET", path="/api/orders", status="200"}   → 시계열 1개
 http_requests_total{method="GET", path="/api/orders/12345"}           → 주문마다 1개
 ```
 
-두 번째를 넣으면 주문 수만큼 시계열이 생긴다. 이것이 **카디널리티 폭발**이고, 관측 시스템이 죽는 가장 흔한 원인이다. 사용자 ID, 주문 번호, 이메일, 전체 URL 경로, 요청 본문은 메트릭 라벨에 넣지 않는다. 경로는 `/api/orders/{id}` 형태로 템플릿화해야 하고, Spring의 `http_server_requests`가 `uri` 라벨에 패턴을 쓰는 이유가 이것이다.
+두 번째를 넣으면 주문 수만큼 시계열이 생긴다. 이것이 카디널리티 폭발(라벨 값의 종류가 끝없이 늘어 시계열 수가 함께 늘어나는 현상)이고, 관측 시스템이 죽는 가장 흔한 원인이다. 그래서 사용자 ID, 주문 번호, 이메일, 전체 URL 경로, 요청 본문은 메트릭 라벨에 넣지 않는다. [Naming 문서](https://prometheus.io/docs/practices/naming/)도 사용자 ID와 이메일 주소처럼 값이 끝없이 늘어나는 차원을 라벨에 쓰지 말라고 적는다. 경로는 `/api/orders/{id}` 형태로 템플릿화해야 하고, Spring의 `http_server_requests`가 `uri` 라벨에 패턴을 쓰는 이유가 이것이다.
 
 거꾸로, 임의의 값을 남겨야 한다면 그 자리는 로그나 트레이스 속성이다. 로그는 이벤트 하나에 필드를 몇 개 붙이든 시계열을 만들지 않는다.
 
@@ -30,47 +30,46 @@ http_requests_total{method="GET", path="/api/orders/12345"}           → 주문
 
 따로 있으면 세 번 검색해야 하고, 연결되어 있으면 한 번에 좁혀진다.
 
-- **메트릭 → 트레이스**: 에러율이 튄 시점의 예시 트레이스로 바로 간다. Prometheus의 exemplar가 이 연결이다.
-- **트레이스 → 로그**: 스팬의 `trace_id`를 로그에도 남기면 그 요청의 로그만 모을 수 있다. MDC에 `trace_id`를 넣는 작업이 이것이다.
-- **로그 → 메트릭**: 로그를 세어 메트릭을 만드는 것은 가능하지만 비싸다. 자주 세는 값이면 처음부터 메트릭으로 남긴다.
+- 메트릭 → 트레이스: 에러율이 튄 시점의 예시 트레이스로 바로 간다. Prometheus의 exemplar가 이 연결이다. Prometheus 문서는 exemplar를 메트릭 바깥 데이터에 대한 참조로 설명하고, 대표적인 예로 트레이스 ID를 든다([Feature flags: Exemplars storage](https://prometheus.io/docs/prometheus/latest/feature_flags/)).
+- 트레이스 → 로그: 스팬의 `trace_id`를 로그에도 남기면 그 요청의 로그만 모을 수 있다. MDC(로그 프레임워크가 스레드별로 들고 있는 문맥 값)에 `trace_id`를 넣는 작업이 이것이다.
+- 로그 → 메트릭: 로그를 세어 메트릭을 만드는 것은 가능하지만 비싸다. 자주 세는 값이면 처음부터 메트릭으로 남긴다.
 
 구조화 로그(JSON)가 전제다. 문자열을 정규식으로 파싱하는 파이프라인은 포맷이 바뀌는 날 조용히 멈춘다.
 
 ## 무엇을 남기지 않을 것인가
 
-- **개인정보와 비밀값.** 로그와 트레이스 속성은 보존 기간이 길고 여러 시스템을 거친다. 전체 계좌번호, 토큰, 비밀번호는 남기지 않는다.
-- **성공 경로의 DEBUG.** 부하가 오르면 로그가 디스크와 CPU를 먹는다. 동기 로깅이면 요청 지연에 직접 들어간다.
-- **같은 사실의 세 번 기록.** 요청 하나에 메트릭, 로그, 트레이스가 모두 "성공했다"만 말하면 비용만 세 배다. 로그는 **분기와 판단**을 남기는 자리다.
+- 개인정보와 비밀값. 로그와 트레이스 속성은 보존 기간이 길고 여러 시스템을 거친다. 전체 계좌번호, 토큰, 비밀번호는 남기지 않는다.
+- 성공 경로의 DEBUG. 부하가 오르면 로그가 디스크와 CPU를 먹는다. 동기 로깅이면 요청 지연에 직접 들어간다.
+- 같은 사실의 세 번 기록. 요청 하나에 메트릭, 로그, 트레이스가 모두 "성공했다"만 말하면 비용만 세 배다. 로그는 분기와 판단을 남기는 자리다.
 
 ## 이 설명이 깨지는 곳
 
-- **카디널리티 한계는 시스템마다 다르다.** Prometheus는 라벨 조합에 민감하고, 로그 기반 시스템(Loki)은 라벨은 적게 내용은 자유롭게 두는 구조다. "높은 카디널리티를 지원한다"는 제품도 비용이 사라지는 것이 아니라 청구서로 옮겨간다.
-- **트레이스는 샘플링된다.** 1%만 남긴다면 "이 요청"이 없을 가능성이 99%다. 드문 오류를 트레이스로 조사하려면 테일 샘플링이 필요하다.
-- **메트릭은 분포를 잃는다.** 백분위를 사후에 재집계할 수 없다는 문제는 별도로 다룬다([백분위 통계](/posts/percentile-statistics/)).
-- **기술 지표만으로는 업무 실패를 못 본다.** RED가 전부 정상인데 결제만 실패하는 상황이 있고, 그것은 업무 지표를 따로 세워야 보인다.
+- 카디널리티 한계는 시스템마다 다르다. Prometheus는 라벨 조합에 민감하고, 로그 기반 시스템(Loki)은 라벨은 적게 내용은 자유롭게 두는 구조다. "높은 카디널리티를 지원한다"는 제품도 비용이 사라지는 것이 아니라 청구서로 옮겨간다.
+- 트레이스는 샘플링된다. 1%만 남긴다면 "이 요청"이 없을 가능성이 99%다. 드문 오류를 트레이스로 조사하려면 [테일 샘플링](/posts/trace-sampling/)(요청이 끝난 뒤 결과를 보고 남길지 정하는 방식)이 필요하다.
+- 메트릭은 분포를 잃는다. 백분위를 사후에 재집계할 수 없다는 문제는 별도로 다룬다([백분위 통계](/posts/percentile-statistics/)).
+- 기술 지표만으로는 업무 실패를 못 본다. [RED](/posts/red-and-use-method/)(요청 수, 에러, 지연)가 전부 정상인데 결제만 실패하는 상황이 있고, 그것은 업무 지표를 따로 세워야 보인다.
 
 ## 무엇을 재면 확인되는가
 
 1. `prometheus_tsdb_head_series`로 시계열 수를 보고, 라벨 하나를 추가하기 전후를 비교한다. 추정이 아니라 실제 증가분이 나온다.
-2. 동기 로깅으로 요청당 N줄을 남기며 부하를 걸고 p99를 본다. 로깅이 지연에 들어가는 지점이 있다.
+2. 동기 로깅으로 요청당 N줄을 남기며 부하를 걸고 p99(요청의 99%가 그 안에 끝나는 지연)를 본다. 로깅이 지연에 들어가는 지점이 있다.
 3. 샘플링 비율을 바꿔 가며 "특정 오류의 트레이스를 찾을 확률"을 센다.
 
-2번은 [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab)의 S3 보조 엔드포인트(`/api/slow-log`)가 다룰 자리다. S1에서 배운 것도 같은 계열이다. `server.tomcat.mbeanregistry.enabled`가 꺼져 있으면 `tomcat_threads_*` 시계열이 **아예 없고**, 빈 그래프는 "문제 없음"처럼 보인다. **없는 지표는 0으로 보이지 않고 정상으로 보인다.**
+2번은 [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab)의 S3 보조 엔드포인트(`/api/slow-log`)가 다룰 자리다. S1에서 배운 것도 같은 계열이다. `server.tomcat.mbeanregistry.enabled`가 꺼져 있으면 `tomcat_threads_*` 시계열이 아예 없고, 빈 그래프는 "문제 없음"처럼 보인다. **없는 지표는 0으로 보이지 않고 정상으로 보인다.**
 
 ## 실무와의 접점
 
-[Datadog로 병목을 추적한 경험](/posts/batch-heap-dump-to-chunk/)에서 지표가 가리킨 곳과 원인이 있던 곳이 달랐다. 메트릭은 "어디가 이상한가"까지 좁히고, 그 다음은 heap dump처럼 다른 도구가 필요했다. 세 기둥을 다 세워도 답이 나오지 않는 층이 있고, 그 층에는 dump와 프로파일러가 있다.
+[Datadog로 병목을 추적한 경험](/posts/batch-heap-dump-to-chunk/)에서 지표가 가리킨 곳과 원인이 있던 곳이 달랐다. 메트릭은 "어디가 이상한가"까지 좁히고, 그 다음은 heap dump처럼 다른 도구가 필요했다. 세 기둥을 다 세워도 답이 나오지 않는 층이 있고, 그때는 dump와 프로파일러로 내려가야 한다.
 
 ## 정리
 
-- 셋을 가르는 것은 카디널리티다. 메트릭은 고유 시계열 수에, 로그는 이벤트 수에 비용이 붙는다.
 - 사용자 ID, 주문 번호, 전체 경로는 메트릭 라벨이 아니라 로그 필드나 트레이스 속성이다.
-- 값은 연결에서 나온다. exemplar, MDC의 `trace_id`, 구조화 로그가 그 연결이다.
-- 로그는 분기와 판단을 남기는 자리다. 성공을 세 번 기록하면 비용만 세 배다.
+- 세 신호의 값은 연결에서 나온다. exemplar, MDC의 `trace_id`, 구조화 로그가 그 연결이다.
 - 없는 지표는 0이 아니라 정상으로 보인다. 지표의 존재 자체를 점검 항목에 넣어야 한다.
 
 ## 참고
 
 - [Prometheus: Naming and labels](https://prometheus.io/docs/practices/naming/), [Cardinality](https://prometheus.io/docs/practices/instrumentation/#do-not-overuse-labels)
+- [Prometheus: Exemplars storage](https://prometheus.io/docs/prometheus/latest/feature_flags/)
 - [OpenTelemetry: Signals](https://opentelemetry.io/docs/concepts/signals/)
 - Cindy Sridharan, [Distributed Systems Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/)
