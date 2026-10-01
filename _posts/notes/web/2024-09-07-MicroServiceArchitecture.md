@@ -7,7 +7,12 @@ tags: [MSA, Microservice, Architecture]
 
 ## 왜 마이크로서비스를 선택하는가
 
-마이크로서비스 아키텍처는 하나의 큰 애플리케이션을 여러 개의 작은 서비스로 나누는 방식이다. 각 서비스는 독립적으로 배포되고, 자신의 데이터와 책임을 가진다.
+마이크로서비스 아키텍처는 하나의 큰 애플리케이션을 여러 개의 작은 서비스로 나누는 방식이다. 각 서비스는 독립적으로 배포되고, 자신의 데이터와 책임을 가진다. Lewis와 Fowler의 정의는 다음과 같다.
+
+> "In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API."
+> ([Microservices](https://martinfowler.com/articles/microservices.html), 2014)
+
+애플리케이션을 각자 프로세스로 도는 작은 서비스의 묶음으로 만들고, HTTP API 같은 가벼운 방식으로 통신한다는 뜻이다.
 
 이 구조를 쓰는 이유는 보통 다음과 같다.
 
@@ -25,7 +30,7 @@ tags: [MSA, Microservice, Architecture]
 - `API Gateway`: 외부 요청의 진입점
 - `Service Discovery`: 서비스 위치 관리
 - `Message Broker`: 비동기 이벤트 전달
-- `Observability`: 로그, 메트릭, 트레이싱
+- `Observability`: [로그, 메트릭, 트레이싱](/posts/metrics-logs-traces/)
 - `Per-service Database`: 서비스별 데이터 소유권
 
 핵심은 기능을 나누는 것보다 **경계와 소유권을 명확히 나누는 것**이다.
@@ -35,7 +40,7 @@ tags: [MSA, Microservice, Architecture]
 마이크로서비스에서 가장 자주 부딪히는 문제는 데이터 분리다.
 
 - 서비스마다 DB를 따로 가지면 결합도는 낮아진다.
-- 하지만 조인, 트랜잭션, 일관성 처리가 어려워진다.
+- 하지만 조인, 트랜잭션, 일관성 처리가 어려워진다. 여러 DB에 걸친 쓰기에는 [Saga](/posts/two-phase-commit-and-saga/) 같은 설계가 필요하다.
 - 반대로 공유 DB를 쓰면 서비스 경계가 무너지기 쉽다.
 
 실무에서는 다음 질문이 중요하다.
@@ -66,8 +71,12 @@ tags: [MSA, Microservice, Architecture]
 - 배포 주기와 장애 허용 범위가 서로 다르다.
 - 특정 기능만 독립적으로 빠르게 진화해야 한다.
 
-반대로 작은 팀, 단일 제품, 강한 데이터 결합 구조라면 모놀리식이 더 좋은 선택일 수 있다.
+반대로 작은 팀, 단일 제품, 강한 데이터 결합 구조라면 모놀리식이 더 좋은 선택일 수 있다. 중간 단계로 [모듈러 모놀리스](/posts/modular-monolith-boundaries/)도 있다.
 
 ## 정리
 
-마이크로서비스 아키텍처의 핵심은 "작게 나눈다"가 아니라 **경계를 잘 나누고, 그 경계를 운영 가능한 수준으로 유지하는 것**이다. 서비스 분해 자체보다 데이터 소유권, 호출 방식, 장애 격리, 운영 도구가 더 중요하다.
+마이크로서비스 아키텍처에서 어려운 부분은 "작게 나누기"가 아니라, 경계를 잘 나누고 그 경계를 운영 가능한 수준으로 유지하는 일이다. 서비스 분해 자체보다 데이터 소유권, 호출 방식, 장애 격리, 운영 도구가 더 중요하다.
+
+## 참고
+
+- James Lewis, Martin Fowler, [Microservices](https://martinfowler.com/articles/microservices.html) (2014-03-25)
