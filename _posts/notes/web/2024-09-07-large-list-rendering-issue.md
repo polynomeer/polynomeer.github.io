@@ -29,7 +29,7 @@ tags: [Frontend, Rendering, Performance]
 
 ### 1. Virtualization
 
-가장 효과적인 방법은 화면에 보이는 구간만 렌더링하는 것이다.
+가장 효과적인 방법은 화면에 보이는 구간만 렌더링하는 것이다. web.dev는 이를 "List virtualization, or "windowing", is the concept of only rendering what is visible to the user."라고 정의한다([Virtualize large lists with react-window](https://web.dev/articles/virtualize-long-lists-react-window)). 사용자에게 보이는 부분만 렌더링한다는 뜻이고, 스크롤하면 이 창이 옮겨 가며 창을 벗어난 DOM 노드는 재사용된다.
 
 - `react-window`
 - `react-virtualized`
@@ -55,4 +55,8 @@ tags: [Frontend, Rendering, Performance]
 
 ## 정리
 
-대규모 리스트 렌더링 문제는 브라우저가 느린 것이 아니라 **화면에 동시에 올린 작업량이 너무 큰 것**이다. 가장 먼저 DOM 개수를 줄이고, 그 다음 재렌더링 범위와 항목별 비용을 줄이는 방향으로 접근하는 것이 좋다.
+대규모 리스트 렌더링 문제는 브라우저가 느려서가 아니라 화면에 동시에 올린 작업량이 너무 커서 생긴다. 가장 먼저 DOM 개수를 줄이고, 그 다음 재렌더링 범위와 항목별 비용을 줄이는 방향으로 접근하는 것이 좋다.
+
+## 참고
+
+- [Virtualize large lists with react-window](https://web.dev/articles/virtualize-long-lists-react-window) — web.dev
