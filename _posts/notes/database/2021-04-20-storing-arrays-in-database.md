@@ -7,7 +7,7 @@ tags: [Database, Modeling, Array, Normalization]
 
 애플리케이션에서는 배열이나 리스트를 자주 다루지만, 관계형 데이터베이스는 기본적으로 행과 열 중심의 구조를 가진다. 그래서 애플리케이션의 배열을 DB에 그대로 저장하려고 하면 설계 선택지가 여러 갈래로 나뉜다.
 
-핵심은 "배열을 저장할 수 있느냐"보다 **그 배열을 나중에 어떻게 조회하고 수정할 것인가**를 먼저 보는 것이다.
+그래서 "배열을 저장할 수 있느냐"보다 그 배열을 나중에 어떻게 조회하고 수정할 것인가를 먼저 봐야 한다.
 
 ## 가장 먼저 볼 질문
 
@@ -34,7 +34,7 @@ tags: [Database, Modeling, Array, Normalization]
 이 방식의 장점:
 
 - 조건 검색이 쉽다
-- 인덱스를 걸기 쉽다
+- [인덱스](/posts/db-index/)를 걸기 쉽다
 - 원소 단위 수정과 확장이 쉽다
 
 단점:
@@ -65,13 +65,17 @@ tags: [Database, Modeling, Array, Normalization]
 - 인덱스 활용이 제한적이다
 - 데이터 정합성을 DB 레벨에서 보장하기 어렵다
 
-즉, 보여주기용 속성이나 단순 캐시성 데이터가 아니라면 장기적으로는 불리한 경우가 많다.
+그래서 보여주기용 속성이나 단순 캐시성 데이터가 아니라면 장기적으로는 불리한 경우가 많다. MySQL의 JSON과 TEXT 비교는 [이 리뷰](/posts/kakao-mysql-json-vs-text/)에 있다.
 
 ## 3. DB가 배열 타입을 지원하는 경우
 
 일부 데이터베이스는 배열 타입이나 JSON 타입을 더 적극적으로 지원한다. 예를 들어 PostgreSQL은 배열과 JSONB를 다룰 수 있다.
 
-이 경우 선택지는 더 넓어지지만, 여전히 중요한 것은 질의 패턴이다.
+이 경우 선택지는 더 넓어지지만, 여전히 먼저 볼 것은 질의 패턴이다. PostgreSQL 문서도 배열 타입 설명 끝에 이렇게 적는다.
+
+> Arrays are not sets; searching for specific array elements can be a sign of database misdesign.
+
+배열은 집합이 아니며, 특정 원소를 찾는 검색이 필요하다면 설계가 잘못됐다는 신호일 수 있다는 뜻이다. 문서는 원소마다 한 행을 두는 별도 테이블을 대안으로 제시한다([PostgreSQL: Arrays](https://www.postgresql.org/docs/current/arrays.html)).
 
 지원된다고 해서 무조건 좋은 것이 아니라:
 
@@ -117,7 +121,7 @@ tags: [Database, Modeling, Array, Normalization]
 
 ## ORM 관점에서 생기는 문제
 
-JPA 같은 ORM에서는 컬렉션 매핑을 쉽게 느낄 수 있지만, 실제 저장 구조와 쿼리 비용은 여전히 DB 모델링의 문제다.
+[JPA](/posts/jpa-architecture/) 같은 ORM에서는 컬렉션 매핑을 쉽게 느낄 수 있지만, 실제 저장 구조와 쿼리 비용은 여전히 DB 모델링의 문제다.
 
 즉:
 
@@ -134,4 +138,8 @@ JPA 같은 ORM에서는 컬렉션 매핑을 쉽게 느낄 수 있지만, 실제 
 - 통째로만 쓰는 작은 속성이면 컬럼 저장 가능
 - DB 지원 타입을 쓰더라도 질의 패턴을 먼저 본다
 
-결국 배열을 어떻게 저장할지는 문법 문제가 아니라, **데이터가 이후에 어떤 방식으로 사용될 것인지**를 먼저 정의하는 모델링 문제다.
+저장 형식을 고르기 전에 그 데이터가 이후에 어떤 방식으로 조회되고 수정될지를 먼저 정해야 한다.
+
+## 참고
+
+- [PostgreSQL: Arrays](https://www.postgresql.org/docs/current/arrays.html)
