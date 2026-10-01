@@ -47,7 +47,7 @@ README에 적힌 학습 루프가 이 프로젝트의 핵심이다.
 | 축소 구현 | 메커니즘을 직접 재구성 | 내부 구조를 이해했다고 착각하는 일 |
 | 설계 의도 정리 | 왜 그렇게 나뉘는지 언어로 설명 | 동작은 봤지만 이유를 설명 못하는 상태 |
 
-즉 이 프로젝트를 통해 "스프링 소스코드를 읽는다"보다 한 단계 더 나아가는 것이 목표이다. 읽은 내용을 반드시 실행 결과와 구현 결과로 마무리한다.
+이 프로젝트의 목표는 "스프링 소스코드를 읽는다"에서 한 단계 더 나아가는 것이다. 읽은 내용은 실행 결과와 구현 결과로 마무리한다.
 
 ## 저장소 전체 구조
 
@@ -87,7 +87,7 @@ flowchart LR
     E --> F["retrospective<br/>반복 패턴 정리"]
 ```
 
-여기서 중요한 점은 `mini-spring`이 출발점이 아니라는 것이다. 먼저 실제 Spring을 보고, 그 뒤에 최소 구조를 다시 만든다. 이 순서가 뒤집히면 "내가 만든 단순 프레임워크"를 Spring에 억지로 투영하게 된다.
+`mini-spring`은 출발점이 아니다. 먼저 실제 Spring을 보고, 그 뒤에 최소 구조를 다시 만든다. 이 순서가 뒤집히면 "내가 만든 단순 프레임워크"를 Spring에 억지로 투영하게 된다.
 
 ## `experiments`는 관찰 도구다
 
@@ -115,7 +115,7 @@ flowchart LR
 | `dispatcher-servlet-trace` | 요청이 HandlerMapping, Adapter, Resolver를 어떻게 통과하는가? |
 | `spring-application-lifecycle` | Boot 이벤트와 웹 서버 시작 시점은 언제인가? |
 
-이런 실험 모듈의 강점은 "실제 스프링이 진짜 그렇게 동작하는가"를 먼저 통제변인으로 고정할 수 있다는 데 있다.
+실험 모듈은 "실제 스프링이 진짜 그렇게 동작하는가"를 먼저 사실로 고정해 둔다. 축소 구현은 그 사실 위에서 시작한다.
 
 ## `mini-spring`은 설명 가능한 크기로 줄여 놓은 구현이다
 
@@ -134,7 +134,7 @@ flowchart LR
 
 이 모듈들의 공통점은 "Spring과 비슷해 보이는 프레임워크를 만든다"가 목표가 아니라는 점이다. 목표는 특정 메커니즘을 설명 가능한 크기로 줄이는 것이다.
 
-예를 들어 트랜잭션을 이해할 때 이 프로젝트는 바로 `@Transactional` 구현 전체를 복제하지 않는다. 먼저 `mini-aop`에서 인터셉터 체인을 만들고, 그 위에 `mini-transaction`을 올린다. 이 구조는 트랜잭션이 독립 기능이 아니라 AOP 위에 얹힌 어드바이스라는 사실을 코드 구조 자체로 드러낸다.
+예를 들어 트랜잭션을 이해할 때 이 프로젝트는 바로 `@Transactional` 구현 전체를 복제하지 않는다. 먼저 `mini-aop`에서 인터셉터 체인을 만들고, 그 위에 `mini-transaction`을 올린다. 이 구조는 트랜잭션이 독립 기능이 아니라 AOP 위에 얹힌 어드바이스(advice, 메서드 호출 앞뒤에 끼워 넣는 부가 로직)라는 사실을 코드 구조 자체로 드러낸다. 실제 Spring도 같은 구성이다. 레퍼런스는 선언적 트랜잭션이 AOP 프록시로 활성화되고, 이 프록시가 `TransactionInterceptor`와 `TransactionManager`로 메서드 호출 전후의 트랜잭션을 처리한다고 설명한다([Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html)).
 
 ## 이 저장소는 주차별로 범위를 닫아 간다
 
@@ -164,11 +164,11 @@ timeline
                   : Custom Starter
 ```
 
-이 구조를 보면 왜 시리즈를 추상 개념별이 아니라 주차별 핵심 메커니즘 기준으로 나누는 게 좋은지도 알 수 있다. 각 문서가 하나의 질문을 닫기 때문이다.
+각 문서가 하나의 질문을 닫는다. 그래서 이 시리즈도 추상 개념별이 아니라 주차별 핵심 메커니즘 기준으로 나눈다.
 
 ## 어떤 질문을 어떤 모듈로 검증하는가
 
-이 저장소의 강점은 질문과 근거 코드가 비교적 명확하게 대응된다는 데 있다.
+이 저장소에서는 질문과 근거 코드가 비교적 명확하게 대응된다.
 
 | 질문 | 실제 Spring에서 확인하는 모듈 | 축소 구현 모듈 |
 | --- | --- | --- |
@@ -180,7 +180,7 @@ timeline
 | MVC 요청은 어떤 계층으로 분해되는가 | `experiments/dispatcher-servlet-trace` | `mini-spring/mini-webmvc` |
 | Boot는 언제 이벤트를 발행하고 서버를 띄우는가 | `experiments/spring-application-lifecycle` | 축소 구현 대신 실제 소스/실험 중심 |
 
-이 표가 중요한 이유는 시리즈 글을 쓸 때도 같은 방식으로 구조를 잡을 수 있기 때문이다. 하나의 글은 하나의 질문을 기준으로 쓰고, 그 질문에 대응하는 `experiments`와 `mini-spring`을 같이 읽으면 된다.
+시리즈 글도 같은 방식으로 구조를 잡는다. 하나의 글은 하나의 질문을 기준으로 쓰고, 그 질문에 대응하는 `experiments`와 `mini-spring`을 같이 읽으면 된다.
 
 ## 이 저장소를 읽는 가장 좋은 순서
 
@@ -192,7 +192,7 @@ timeline
 4. 같은 주제의 `experiments/` 테스트를 본다.
 5. 마지막에 `mini-spring/` 구현을 본다.
 
-이 순서가 좋은 이유는 아래와 같다.
+이 순서를 그림으로 보면 아래와 같다.
 
 ```mermaid
 flowchart TD
@@ -203,7 +203,7 @@ flowchart TD
     E --> F["sample-app / extensions"]
 ```
 
-정리하면, 문서가 질문을 제시하고, 실험이 사실을 고정하고, 축소 구현이 메커니즘을 설명한다.
+문서가 질문을 제시하고, 실험이 사실을 고정하고, 축소 구현이 메커니즘을 설명한다.
 
 ## 코드 구조로 보면 이 프로젝트의 의도가 더 선명하다
 
@@ -221,7 +221,7 @@ flowchart TD
 - 주제별 모듈을 독립적으로 테스트할 수 있다.
 - `experiments`와 `mini-spring`이 같은 수준의 1급 학습 산출물이다.
 
-즉, 이 레포는 "문서를 쓰기 위해 코드가 있는" 구조가 아니라, "코드 실험과 구현이 있고 문서는 그것을 설명하는" 구조에 가깝다.
+이 레포는 "문서를 쓰기 위해 코드가 있는" 구조가 아니라, "코드 실험과 구현이 있고 문서는 그것을 설명하는" 구조에 가깝다.
 
 ## 왜 이런 방식이 Spring 학습에 특히 잘 맞는가
 
@@ -237,7 +237,7 @@ Spring은 기능이 많은 프레임워크이기도 하지만, 그보다 먼저 
 
 문제가 생길 때도 대부분 "어느 계층에서 판단이 바뀌었는가"를 찾아야 한다. `spring-internals-lab`은 바로 그 계층을 억지로 드러내게 만든다.
 
-예를 들어 `@Transactional` 하나를 이해하겠다고 해도 실제로는 다음 흐름을 따라가야 한다.
+예를 들어 `@Transactional` 하나를 이해하려 해도 실제로는 다음 흐름을 따라가야 한다. 레퍼런스에 따르면 Spring AOP 인프라 클래스 일부는 프록시로 감싸는 로직을 제공하려고 `BeanPostProcessor`로 구현되어 있다([Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)). 그리고 프록시 모드에서는 프록시를 거쳐 들어온 외부 호출만 가로채므로, 같은 객체 안의 self-invocation(자기 메서드 직접 호출)에는 트랜잭션이 걸리지 않는다([Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)). 이 한계는 [프록시의 한계](/posts/proxy-limits/)에서 따로 정리했다.
 
 ```mermaid
 flowchart LR
@@ -247,7 +247,7 @@ flowchart LR
     D --> E["JDBC Connection 바인딩"]
 ```
 
-이걸 한 번이라도 실험과 축소 구현으로 보면, 트랜잭션을 더 이상 애노테이션 문법으로만 보지 않게 된다.
+이 흐름을 실험과 축소 구현으로 한 번 따라가면, 트랜잭션을 애노테이션 문법이 아니라 프록시와 인터셉터의 동작으로 읽게 된다.
 
 ## 이 시리즈 1편이 맡는 역할
 
@@ -255,21 +255,21 @@ flowchart LR
 
 다음 편부터는 아래 순서로 내려갈 예정이다.
 
-1. BeanDefinition과 등록 단계
-2. `refresh()`와 Bean 생성 파이프라인
-3. 의존성 주입과 `@Qualifier`
-4. Bean lifecycle과 후처리기
-5. 프록시와 AOP
-6. `@Transactional`과 Connection 관리
-7. `DispatcherServlet`과 MVC 요청 흐름
-8. `SpringApplication`, 자동 설정, 조건부 설정
+1. [BeanDefinition과 등록 단계](/posts/spring-internals-lab-bean-definition/)
+2. [`refresh()`와 Bean 생성 파이프라인](/posts/spring-internals-lab-refresh/)
+3. [의존성 주입과 `@Qualifier`](/posts/spring-internals-lab-dependency-resolution/)
+4. [Bean lifecycle과 후처리기](/posts/spring-internals-lab-bean-lifecycle/)
+5. [프록시와 AOP](/posts/spring-internals-lab-proxy-aop/)
+6. [`@Transactional`과 Connection 관리](/posts/spring-internals-lab-transactional/)
+7. [`DispatcherServlet`과 MVC 요청 흐름](/posts/spring-internals-lab-dispatcher-servlet/)
+8. [`SpringApplication`, 자동 설정, 조건부 설정](/posts/spring-internals-lab-spring-boot/)
 
 ## 정리
 
-`spring-internals-lab`의 가치는 "Spring 비슷한 걸 구현했다"는 데 있지 않다. 더 정확히는 다음 세 가지를 한 저장소에서 모두 수행한다는 데 있다.
+`spring-internals-lab`은 "Spring 비슷한 걸 구현한" 저장소가 아니다. 관찰, 재구현, 설계 의도 정리를 한 저장소에서 같은 질문 단위로 묶어 둔 저장소다. 이후 편에서 다루는 질문은 모두 "어떤 계층이 어떤 타이밍에 어떤 객체를 바꾸는가"의 형태이고, 저장소는 그 답을 재현 가능한 코드와 문서로 남긴다.
 
-- 실제 Spring에서 관찰한다.
-- 핵심 구조만 남겨 다시 구현한다.
-- 그 둘 사이의 설계 의도를 문서로 정리한다.
+## 참고
 
-Spring을 깊게 이해하려면 결국 "이 애노테이션이 무슨 뜻인가"보다 "어떤 계층이 어떤 타이밍에 어떤 객체를 바꾸는가"를 봐야 한다. 이 저장소는 그 질문을 추상 설명이 아니라 재현 가능한 코드와 문서로 바꿔 둔 프로젝트다.
+- [Spring Framework Reference — Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)
+- [Spring Framework Reference — Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html)
+- [Spring Framework Reference — Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
