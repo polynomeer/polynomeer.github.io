@@ -112,6 +112,41 @@ When a post explains a real incident or design choice, prefer this flow:
 3. the chosen design or interpretation
 4. tradeoffs, constraints, or results
 
+## Lightweight Verification
+
+Full experiment posts (a scenario repository, repeated runs, controls) are not the only way to back a claim. Many questions in concept posts are about semantics, not performance — "is this lock taken", "is this row visible", "is this header sent" — and one sitting with a console answers them. Use the formats below so that items under `무엇을 재면 확인되는가` get verified instead of accumulating.
+
+### Step-log experiments
+
+Interleave two or more sessions as numbered steps and show the raw evidence at each step.
+
+- number every step and name the session that runs it (`세션 A`, `세션 B`)
+- show the exact statement or command per step
+- paste the raw output (console result, `data_locks`, `pg_locks`, response headers) instead of paraphrasing it
+- state the environment once: product, version, relevant settings such as isolation level or autocommit
+- give a one-line rerun command or a `docker run` line when feasible
+- end with the observed answer to the question, not a general lesson
+
+Good fits: locks and isolation, visibility, protocol headers, class loading order, framework proxy behavior.
+
+### Verifying with source code
+
+When the claim is about how something is implemented, back it with the implementation, not only the documentation.
+
+- link source pinned to a tag or commit, never to a moving branch
+- quote only the lines that carry the claim and explain them line by line
+- say which version the reading applies to
+
+### Questions that lead to the next step
+
+Keep headings claim-first. Inside a section, let each observation open the next question (`그렇다면 shared lock이면?`) so the reader sees why the next step exists. Stop when the original question is answered; do not chain for its own sake.
+
+### Appending results to the original post
+
+When a lightweight verification answers an item listed under `무엇을 재면 확인되는가`, append the result to that same post as `## 직접 확인한 것` instead of opening a new post. Keep the original list intact and mark which items were checked, so the post shows what was hypothesized and what was measured.
+
+Do not import the habits that weaken experiment notes: unedited typos, emotional conclusions, and posts that only transcribe official examples.
+
 ## Series and Naming Consistency
 
 When a post belongs to a series:
