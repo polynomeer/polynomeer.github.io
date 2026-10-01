@@ -41,7 +41,7 @@ sequenceDiagram
     C->>S: 애플리케이션 데이터 (3-RTT 뒤)
 ```
 
-TLS 1.3은 이것을 1-RTT로 줄였다. 클라이언트가 ClientHello에 키 공유 추정값을 미리 실어 보내고, 서버가 ServerHello에서 바로 확정한다. 추정이 틀리면 HelloRetryRequest로 왕복이 하나 늘어난다([RFC 8446, 2.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.1)). 암호 스위트 협상도 단순해졌다(정적 RSA와 정적 DH 스위트를 제거했다, [1.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-1.2)).
+TLS 1.3은 이것을 1-RTT로 줄였다. 클라이언트는 서버가 받아들일 키 교환 방식을 미리 짐작하고, 그 방식의 [키 공유](/posts/tls-key-exchange-and-cipher-suites/) 값을 ClientHello에 실어 보낸다. 짐작이 맞으면 서버가 ServerHello에서 바로 확정한다. 짐작이 틀리면 서버가 HelloRetryRequest로 다른 값을 요청하고, 왕복이 하나 늘어난다([RFC 8446, 2.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.1)). [암호 스위트](/posts/tls-key-exchange-and-cipher-suites/)(함께 쓸 암호 알고리즘의 조합) 협상도 단순해졌다. 정적 RSA와 정적 DH 스위트가 제거됐다([1.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-1.2)).
 
 같은 구간을 TLS 1.3으로 그리면 TLS 쪽 왕복이 하나 줄고, 추정이 틀린 경우에만 왕복이 다시 하나 붙는다.
 
@@ -72,7 +72,7 @@ sequenceDiagram
 
 **세션 티켓.** 서버가 상태를 암호화해 클라이언트에게 주고, 자신은 저장하지 않는다([RFC 5077](https://datatracker.ietf.org/doc/html/rfc5077)). 서버가 여러 대여도 티켓 키만 공유하면 되므로 운영이 단순하다.
 
-TLS 1.3은 두 방식을 폐기하고 하나의 PSK 교환으로 대체했다([2.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.2)). 다만 티켓은 데이터베이스 조회 키일 수도, 자체 암호화된 값일 수도 있어([4.6.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.1)) 서버가 상태를 보관하는지는 구현이 정한다.
+TLS 1.3은 두 방식을 폐기하고 하나의 [PSK](/posts/tls-key-exchange-and-cipher-suites/)(미리 공유한 키) 교환으로 대체했다([2.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.2)). 이전 연결에서 서버가 준 티켓을 다음 연결에서 PSK로 제시하는 방식이다. 다만 티켓의 내용은 정해져 있지 않다. 서버 데이터베이스를 찾는 조회 키일 수도 있고, 상태를 서버가 직접 암호화한 값일 수도 있다([4.6.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-4.6.1)). 그래서 서버가 상태를 보관하는지는 구현이 정한다.
 
 재개하면 1-RTT이고, 0-RTT까지 갈 수 있다.
 
@@ -84,7 +84,7 @@ TLS 1.3의 0-RTT는 재개 시 핸드셰이크 완료 전에 애플리케이션 
 
 > "There are no guarantees of non-replay between connections."
 
-연결 사이의 재전송을 막는다는 보장이 없다는 뜻이다. 1-RTT 데이터는 서버의 Random 값이 재전송을 막지만, 0-RTT 데이터는 ServerHello보다 먼저 나가므로 그 보호를 받지 못한다. 공격자가 이 데이터를 가로채 다시 보내면 서버가 같은 요청을 두 번 처리할 수 있다. 서버 측 완화책은 [8절](https://datatracker.ietf.org/doc/html/rfc8446#section-8)에 있지만 완전하지 않다.
+연결 사이의 재전송을 막는다는 보장이 없다는 뜻이다. 1-RTT 데이터는 서버가 연결마다 새로 만드는 Random 값이 키 계산에 들어가므로, 예전 메시지를 그대로 다시 보내도 통하지 않는다. 0-RTT 데이터는 ServerHello보다 먼저 나가므로 이 보호를 받지 못한다. 공격자가 이 데이터를 가로채 다시 보내면 서버가 같은 요청을 두 번 처리할 수 있다. 서버 측 완화책은 [8절](https://datatracker.ietf.org/doc/html/rfc8446#section-8)에 있지만 완전하지 않다.
 
 재개 연결의 0-RTT 데이터와, 그것을 가로챈 공격자가 다시 보내는 경우를 한 흐름에 놓으면 차이가 보인다.
 
@@ -103,7 +103,7 @@ sequenceDiagram
     Note over S: 같은 요청을 두 번 처리할 수 있다
 ```
 
-**그래서 0-RTT는 멱등한 요청에만 쓴다.** `GET` 같은 안전한 요청은 괜찮고, 결제나 주문 생성은 안 된다([멱등한 API 설계](/posts/idempotent-api-design/)). HTTP에서는 [RFC 8470](https://datatracker.ietf.org/doc/html/rfc8470)이 클라이언트가 안전하지 않은 메서드를 early data로 보내지 못하게 하고, 서버가 `425 Too Early`로 거절할 수 있게 했다. 실무에서는 CDN이나 엣지에서 0-RTT를 켜되 안전한 메서드로 제한하는 구성이 쓰인다. Cloudflare는 쿼리 파라미터가 없는 `GET`만 0-RTT로 응답했다([Cloudflare](https://blog.cloudflare.com/introducing-0-rtt/)).
+**그래서 0-RTT는 멱등한 요청에만 쓴다.** `GET` 같은 안전한 요청은 괜찮고, 결제나 주문 생성은 안 된다([멱등한 API 설계](/posts/idempotent-api-design/)). HTTP에서는 [RFC 8470](https://datatracker.ietf.org/doc/html/rfc8470)이 두 가지를 정했다. 클라이언트는 안전하지 않은 메서드를 early data(0-RTT로 보내는 데이터)로 보내지 못하고, 서버는 그런 요청을 `425 Too Early`로 거절할 수 있다. 실무에서는 [CDN이나 엣지](/posts/cache-across-layers/)(사용자 가까이 있는 서버)에서 0-RTT를 켜되, 안전한 메서드로만 제한하는 구성이 쓰인다. Cloudflare는 쿼리 파라미터가 없는 `GET`만 0-RTT로 응답했다([Cloudflare](https://blog.cloudflare.com/introducing-0-rtt/)).
 
 QUIC(HTTP/3)의 0-RTT도 같은 제약을 갖는다([RFC 9001, 9.2절](https://datatracker.ietf.org/doc/html/rfc9001#section-9.2), [HTTP/1.1, 2, 3](/posts/http-versions/)).
 
@@ -122,14 +122,14 @@ QUIC(HTTP/3)의 0-RTT도 같은 제약을 갖는다([RFC 9001, 9.2절](https://d
 
 ## 이 설명이 깨지는 곳
 
-- **내부 서비스 간 mTLS는 계산이 다르다.** 양쪽이 인증서를 검증하므로 비용이 늘고, 대신 RTT가 작아 왕복 비용은 작다. 사이드카 프록시가 연결을 재사용하면 대부분 상쇄된다.
-- **zero-copy가 깨진다.** 사용자 공간 TLS 라이브러리로 암호화하면 데이터가 사용자 공간을 지나야 하므로 `sendfile()` 최적화를 쓸 수 없다([Kafka의 저장 구조](/posts/kafka-storage-internals/)). 대용량 전송이 많은 시스템에서는 이 비용이 보인다. 예외는 리눅스 kTLS로, 핸드셰이크 뒤 레코드 암호화를 커널에 넘기면 `sendfile()`을 쓸 수 있다([Kernel TLS](https://docs.kernel.org/networking/tls.html)).
+- **내부 서비스 간 mTLS는 계산이 다르다.** mTLS는 서버뿐 아니라 클라이언트도 인증서로 자신을 증명하는 TLS다. 양쪽이 인증서를 검증하므로 비용이 늘고, 대신 RTT가 작아 왕복 비용은 작다. 사이드카(애플리케이션 옆에 붙어 네트워크 처리를 대신하는 프록시)가 연결을 재사용하면 대부분 상쇄된다.
+- **zero-copy가 깨진다.** `sendfile()`은 파일 데이터를 커널 안에서 바로 소켓으로 보내, 애플리케이션 메모리로 복사하지 않는 최적화다. 그런데 [사용자 공간](/posts/user-space-and-kernel-space/)의 TLS 라이브러리로 암호화하려면 데이터가 사용자 공간을 지나야 하므로 이 최적화를 쓸 수 없다([Kafka의 저장 구조](/posts/kafka-storage-internals/)). 대용량 전송이 많은 시스템에서는 이 비용이 보인다. 예외는 리눅스 [kTLS](/posts/user-space-and-kernel-space/)다. 핸드셰이크가 끝난 뒤 레코드 암호화를 커널에 넘기면 `sendfile()`을 다시 쓸 수 있다([Kernel TLS](https://docs.kernel.org/networking/tls.html)).
 - **인증서 갱신이 운영 부담이다.** 만료로 인한 장애는 흔하고, 자동 갱신과 만료 경보가 실질적인 대책이다.
 - **암호 스위트를 임의로 조정하지 않는다.** 성능을 이유로 약한 옵션을 켜면 보안이 깎인다. TLS 1.3은 선택지를 줄여 이 실수를 막았다.
 
 ## 무엇을 재면 확인되는가
 
-1. 연결을 매번 새로 여는 클라이언트와 keep-alive를 쓰는 클라이언트의 p50·p99를 비교한다. 차이가 곧 핸드셰이크 비용이다.
+1. 연결을 매번 새로 여는 클라이언트와 keep-alive를 쓰는 클라이언트의 [p50·p99](/posts/percentile-statistics/)를 비교한다. 차이가 곧 핸드셰이크 비용이다.
 2. TLS 1.2와 1.3에서 첫 바이트까지의 시간(TTFB)을 비교한다. RTT가 큰 경로일수록 차이가 크다.
 3. 세션 재개율을 지표로 본다. 낮으면 티켓 키가 서버 간에 공유되지 않고 있을 수 있다.
 4. `openssl s_client -connect ... -tls1_3`로 핸드셰이크 왕복과 재개 여부를 직접 확인한다.
