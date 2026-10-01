@@ -19,7 +19,10 @@
   gap: 0.6rem;
   padding-bottom: 1.4rem;
   margin-bottom: 1.85rem;
-  border-bottom: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.25));
+
+  /* --main-border-color 는 밝은 테마에서 #f3f3f3 이라 히어로 아래 선이 사실상 안 보였습니다.
+     두 테마 모두에서 같은 굵기로 읽히는 값을 직접 씁니다. */
+  border-bottom: 1px solid rgba(98, 114, 164, 0.24);
 
   .page-hero-title {
     margin: 0;
