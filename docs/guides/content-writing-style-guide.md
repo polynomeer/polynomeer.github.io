@@ -112,6 +112,8 @@ When a post explains a real incident or design choice, prefer this flow:
 3. the chosen design or interpretation
 4. tradeoffs, constraints, or results
 
+When a post draws conclusions from experience rather than measurement (retrospectives, design decisions, incident write-ups), state the conditions they came from before the conclusions: team size, traffic or data volume, stack, and constraints, as numbers where possible. This plays the role that `한계` plays in experiment posts — it tells the reader whether the conclusion transfers to their situation.
+
 ## Lightweight Verification
 
 Full experiment posts (a scenario repository, repeated runs, controls) are not the only way to back a claim. Many questions in concept posts are about semantics, not performance — "is this lock taken", "is this row visible", "is this header sent" — and one sitting with a console answers them. Use the formats below so that items under `무엇을 재면 확인되는가` get verified instead of accumulating.
@@ -123,6 +125,8 @@ Interleave two or more sessions as numbered steps and show the raw evidence at e
 - number every step and name the session that runs it (`세션 A`, `세션 B`)
 - show the exact statement or command per step
 - paste the raw output (console result, `data_locks`, `pg_locks`, response headers) instead of paraphrasing it
+- after a long output such as an execution plan or profile, quote again the one line that carries the claim (`loops=184852`) and say what it shows
+- explain a difference only with what the output shows; if two variants produce the same plan, do not give them different reasons
 - state the environment once: product, version, relevant settings such as isolation level or autocommit
 - give a one-line rerun command or a `docker run` line when feasible
 - end with the observed answer to the question, not a general lesson
