@@ -7,6 +7,7 @@ series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
 series_order: 69
 source_url: https://tech.kakaobank.com/posts/2609-new-notification-platform-1/
+mermaid: true
 
 problem_decision_result:
   problem: "카카오뱅크의 레거시 발송기는 요청마다 스레드를 만들었고 단일 큐라 느린 작업 하나가 뒤의 빠른 작업을 막았다. 프로파일링 결과 P99 지연의 80%가 대기 시간이었다. 인증번호 SMS가 몇 초 늦는 것은 사용자 이탈이다."
@@ -33,6 +34,38 @@ problem_decision_result:
 > "Work-Stealing이 노는 일꾼(Worker)이 없게 만드는 자원 중심 알고리즘이라면, 메시징 시스템은 오래 기다리는 메시지가 없게 만드는 데이터 중심 알고리즘이어야 하기 때문입니다."
 
 구체적으로는 중앙 관리자가 100ms마다 모든 큐를 스캔해 Age(큐 생성 시각 기준)가 500ms를 넘은 큐를 반으로 나눠 유휴 워커에 준다. 구현은 CAS로 분할 시점을 원자적으로 잡고 Barrier로 경계를 표시하는 Lock-Free, 배열 복사 없이 인덱스만 조정하는 Zero-Copy, 고정 크기 배열로 GC 압박을 줄이는 방식이다. 원문은 초당 200번의 steal이 일어나도 새 배열을 만들지 않는다고 적었다.
+
+Service Layer의 계약은 원문에 Kotlin 인터페이스로 실려 있고, `handle`은 요청 하나가 아니라 Core Layer가 넘겨주는 `WorkQueue`를 받는다. 원문 코드에서 두 인터페이스만 옮긴다.
+
+```kotlin
+interface RequestHandler<T> {
+    suspend fun availableHandle(req: T): Boolean  // 내가 처리할 수 있는 요청인가?
+    suspend fun handle(queue: WorkQueue<T>)       // 요청 처리하기
+    fun alias(): String                           // 핸들러 식별자
+}
+
+interface Sender<Request, Response> {
+    suspend fun send(request: Request): Response
+}
+```
+
+원문이 든 Age 기반 steal 예시를 시각 순으로 옮기면 다음과 같다. 원문의 설계를 그린 것이고 내 실험이 아니다.
+
+```mermaid
+sequenceDiagram
+    participant M as 중앙 관리자
+    participant W1 as Worker 1
+    participant W2 as Worker 2
+    Note over W1: 0ms 큐 생성<br/>느린 작업 2000ms, 빠른 작업 100ms, 빠른 작업 100ms
+    loop 100ms마다
+        M->>W1: 큐 Age 스캔
+    end
+    Note over M: 500ms Worker 1 큐 Age 500ms 도달, Worker 2 유휴
+    M->>W1: 큐를 반으로 분할 (원래 생성 시각 유지)
+    M->>W2: 뒤쪽 절반 할당, 빠른 작업 100ms
+    Note over W2: 600ms 완료
+    Note over W1: 2100ms 완료
+```
 
 ## 같은 곳: 느린 것 하나가 뒤를 막는다
 
