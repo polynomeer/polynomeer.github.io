@@ -2,8 +2,7 @@
 {%- assign lang = include.lang | default: site.lang -%}
 {%- if representative and representative.enabled and representative.items -%}
 <section class="about-representative" id="representative-posts">
-<p class="about-portfolio-eyebrow" data-i18n="panel.representative_posts">{{ site.data.locales[lang].panel.representative_posts }}</p>
-<h2 data-i18n="representative_posts.title">{{ site.data.locales[lang].representative_posts.title }}</h2>
+<h2 class="about-portfolio-eyebrow" data-i18n="panel.representative_posts">{{ site.data.locales[lang].panel.representative_posts }}</h2>
 <ul class="about-representative-list">
 {%- for item in representative.items limit: 6 -%}
 {%- assign matched = site.posts | where: 'path', item.path | first -%}

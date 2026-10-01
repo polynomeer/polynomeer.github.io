@@ -1434,11 +1434,12 @@ header {
 }
 
 .about-portfolio-eyebrow {
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.95rem;
   color: var(--label-color);
-  font-size: 0.72rem;
+  font-size: 0.98rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -1766,10 +1767,9 @@ html[data-mode='dark'] .about-terminal {
 }
 
 /* 소개 페이지의 섹션 리듬.
-   고치기 전에는 eyebrow 와 그 h2 사이가 40px 이었습니다. h2 의 기본 margin-top 입니다. 눈에는
-   eyebrow 가 앞 섹션 끝에 붙은 것으로 보여서, 섹션 머리가 어디서 시작하는지 읽히지 않았습니다.
-   둘을 한 덩어리로 묶고, 섹션 경계는 여백 대신 가는 선으로 긋습니다. 제목은 페이지 h1(1.6rem)
-   과 경쟁하지 않을 크기로 내립니다. */
+   섹션 머리는 라벨 하나입니다. 라벨과 소제목을 둘 다 두면 같은 말을 두 번 하게 되고, 그 사이가
+   h2 의 기본 margin-top 40px 만큼 벌어져서 라벨이 앞 섹션 꼬리처럼 보였습니다. 섹션 경계는
+   여백이 아니라 가는 선으로 긋습니다. */
 .about-capabilities,
 .about-questions,
 .about-activity,
@@ -1777,13 +1777,6 @@ html[data-mode='dark'] .about-terminal {
   margin-top: 1.6rem;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(98, 114, 164, 0.24);
-
-  > h2 {
-    margin: 0 0 0.95rem;
-    font-size: 1.14rem;
-    font-weight: 700;
-    line-height: 1.4;
-  }
 }
 
 /* 히어로가 이미 아래쪽에 선을 긋고 끝나므로 첫 섹션은 선을 한 번 더 긋지 않습니다. */

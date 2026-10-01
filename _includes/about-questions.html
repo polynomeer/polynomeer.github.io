@@ -36,8 +36,7 @@
 {%- assign rows = rows | strip -%}
 {%- if rows != '' -%}
 <section class="about-questions" aria-labelledby="about-questions-title">
-  <p class="about-portfolio-eyebrow" data-i18n="about.questions_eyebrow">{{ loc.questions_eyebrow }}</p>
-  <h2 id="about-questions-title" data-i18n="about.questions_title">{{ loc.questions_title }}</h2>
+  <h2 class="about-portfolio-eyebrow" id="about-questions-title" data-i18n="about.questions_eyebrow">{{ loc.questions_eyebrow }}</h2>
 
   <ul class="about-question-list">{{ rows }}</ul>
 

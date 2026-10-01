@@ -399,13 +399,10 @@ about:
   intro_summary_2: In large-scale data processing environments, I analyze bottlenecks with measurement-first methods and improve both code and data structures to raise performance and stability continuously. Payment and settlement flows, where failure is unacceptable, are the kind of systems I care about most.
   intro_summary_3: This blog records the engineering judgment and experiments that came out of that work. I write mostly about database internals, Spring backend behavior, architectural decisions, performance improvement, concurrency control, and operating batch or settlement systems with higher reliability.
   capabilities_eyebrow: Capabilities
-  capabilities_title: What I can do
   capabilities_note: Each axis opens the matching entry in the capability map, where the reasoning and the evidence behind it are written out.
   questions_eyebrow: Measured
-  questions_title: Questions answered by measurement
   questions_more: See every measured record
   activity_eyebrow: Activity
-  activity_title: The work in numbers
   activity_repos: Commits in public repositories
   activity_experiments: Measured experiments per lab
   activity_experiments_note: Counts only what was reproduced, measured, fixed, and measured again.
