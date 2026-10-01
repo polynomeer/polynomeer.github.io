@@ -8,6 +8,7 @@ series_title: 무너지는 Spring 서버를 재현하고 고치기
 series_order: 1
 series_description: spring-ops-lab 저장소에서 Spring Boot 서버가 스레드 고갈, 커넥션 풀 고갈, 꼬리 지연, 무중단 배포 중 요청 유실로 무너지는 순간을 재현하고, thread dump와 풀 지표와 백분위로 읽고, 고친 뒤 같은 조건에서 다시 잰 기록.
 status: published
+mermaid: true
 
 problem_decision_result:
   problem: "업스트림 하나가 느려지면 그것을 호출하는 엔드포인트만 느려질 것 같지만, 실제로는 그 업스트림을 건드리지도 않는 엔드포인트가 같이 죽는다. CPU는 놀고 있어서 지표만 보면 서버는 한가해 보인다. 이 현상을 재현하고, 무엇이 자원을 쥐고 있는지를 추측이 아니라 thread dump로 확인하고 싶었다."
@@ -31,6 +32,23 @@ problem_decision_result:
 업스트림이 느려진다. 상식적으로는 `/api/upstream`만 느려져야 한다. `/api/fast`는 그 업스트림을 호출하지 않으므로 영향이 없어야 한다.
 
 그런데 둘은 같은 것을 공유한다. **Tomcat의 요청 스레드 풀**이다. Tomcat 문서는 커넥터의 `maxThreads`가 동시에 처리할 수 있는 요청 수의 상한을 정하고, 지정하지 않으면 200이라고 적는다([Tomcat HTTP Connector](https://tomcat.apache.org/tomcat-10.1-doc/config/http.html)). 서블릿 스택에서 요청 하나는 처리가 끝날 때까지 스레드 하나를 쥐고, 업스트림을 기다리는 동안에도 놓지 않는다. 스레드는 하는 일 없이 묶여 있으니 CPU 사용률은 낮게 나오고, 새 요청은 스레드를 얻지 못해 느려진다.
+
+두 엔드포인트의 요청이 같은 풀에서 스레드를 꺼내는 순서로 놓으면 다음과 같다.
+
+```mermaid
+sequenceDiagram
+    participant K as k6
+    participant T as Tomcat 요청 스레드 200개
+    participant P as toxiproxy
+    participant DB as PostgreSQL
+    loop 요청 스레드 200개가 다 묶일 때까지
+        K->>T: GET /api/upstream
+        T->>P: 업스트림 호출
+        Note over T,P: latency toxic +30,000ms 동안 스레드는 소켓 읽기에서 대기
+    end
+    K->>T: GET /api/fast
+    Note over K,T: 남은 스레드가 없어 PostgreSQL까지 가지 못한다
+```
 
 ## 실험 조건
 
@@ -92,6 +110,18 @@ dump가 보여준 것은 스레드가 업스트림 읽기에 묶인다는 것, �
 
 - 읽기 타임아웃 2초. 업스트림이 2초 안에 답하지 않으면 포기한다. 이것이 없으면 스레드 하나가 묶이는 시간에 상한이 없다.
 - 벌크헤드 permit 20. 업스트림 호출 안에 동시에 들어갈 수 있는 요청 스레드 수를 세마포어로 제한한다. permit을 100ms 안에 못 얻으면 즉시 503으로 거절한다.
+
+`/api/upstream` 요청 하나가 두 상한을 지나는 갈래는 셋이고, 각 자리는 dump의 최상위 프레임과 대응한다.
+
+```mermaid
+flowchart TD
+    A["GET /api/upstream"] --> W["세마포어 앞에서 permit 대기<br/>(Unsafe.park)"]
+    W --> B{"100ms 안에 permit 20개 중<br/>하나를 얻었나"}
+    B -->|아니오| R["503 거절"]
+    B -->|예| C["업스트림 읽기<br/>(Net.poll, 최대 2초)"]
+    C -->|2초 안에 응답| OK["permit 반납, 결과 반환"]
+    C -->|2초 초과| TO["permit 반납, 504"]
+```
 
 타임아웃 하나로는 부족하다. 시간은 제한되지만 개수는 제한되지 않는다. 2초 × 20 rps면 평균 40개가 항상 안에 있고, 업스트림이 더 느려지거나 부하가 더 오면 그 수는 계속 는다. 그래서 둘을 같이 둔다.
 
