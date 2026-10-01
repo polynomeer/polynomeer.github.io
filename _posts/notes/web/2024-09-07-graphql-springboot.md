@@ -7,7 +7,7 @@ tags: [GraphQL, Spring Boot, API]
 
 ## Spring Boot에서 GraphQL을 붙인다는 것
 
-Spring Boot에서 GraphQL을 도입한다는 것은 REST 컨트롤러를 하나 더 만드는 일이 아니라, 스키마와 리졸버 중심으로 API 레이어를 다시 구성하는 일에 가깝다.
+Spring Boot에서 [GraphQL](/posts/graphql/)을 도입한다는 것은 REST 컨트롤러를 하나 더 만드는 일이 아니라, 스키마와 리졸버 중심으로 API 레이어를 다시 구성하는 일에 가깝다.
 
 중심 요소는 다음과 같다.
 
@@ -23,7 +23,9 @@ Spring for GraphQL에서는 보통 다음 흐름으로 개발한다.
 1. 스키마 파일을 정의한다.
 2. `@QueryMapping`, `@MutationMapping`으로 진입점을 만든다.
 3. 복합 필드는 `@SchemaMapping`으로 해결한다.
-4. 필요하면 DataLoader로 N+1 문제를 완화한다.
+4. 필요하면 DataLoader로 N+1 문제(목록 조회 1번 뒤에 항목마다 추가 조회가 1번씩 붙는 문제)를 완화한다.
+
+[Spring for GraphQL 문서](https://docs.spring.io/spring-graphql/reference/controllers.html)에 따르면 `@SchemaMapping`은 메서드를 스키마 필드 하나의 `DataFetcher`로 선언하고, `@QueryMapping`과 `@MutationMapping`은 그 단축형이다.
 
 예를 들어 게시글 목록을 조회하는 Query와 작성자 정보를 붙이는 구조라면, 게시글 조회와 작성자 조회를 별도 리졸버로 나누는 식이다.
 
@@ -46,7 +48,7 @@ GraphQL은 클라이언트가 요청한 필드만 계산한다. 그래서 복합
 
 ### 2. N+1 문제를 경계해야 한다
 
-게시글 100개를 반환하면서 각 게시글마다 작성자를 개별 조회하면 GraphQL은 금방 비효율적이 된다. DataLoader나 배치 조회 전략이 중요하다.
+게시글 100개를 반환하면서 각 게시글마다 작성자를 개별 조회하면 GraphQL은 금방 비효율적이 된다. 그래서 개별 조회를 미뤘다가 한 번에 모아 읽는 DataLoader나 배치 조회 전략이 필요하다. Spring for GraphQL에서는 `@BatchMapping`이 그 단축형이다.
 
 ### 3. 조회와 변경을 과하게 섞지 않기
 
@@ -55,11 +57,15 @@ GraphQL은 유연하지만, 도메인 경계를 무시하고 스키마를 비대
 ## 언제 잘 맞나
 
 - 조회 조합이 자주 바뀌는 화면
-- BFF 성격의 API 레이어
+- BFF(Backend for Frontend) 성격의 API 레이어
 - 프런트엔드가 필요한 데이터 구조를 빠르게 바꿔야 하는 환경
 
-반대로 단순 CRUD 위주의 내부 관리 시스템이라면 REST가 더 단순할 수 있다.
+반대로 단순 CRUD 위주의 내부 관리 시스템이라면 [REST가 더 단순할 수 있다](/posts/rest-grpc-graphql/).
 
 ## 정리
 
-Spring Boot에서 GraphQL을 잘 쓰려면 "쿼리를 받는 기술"보다 **스키마 설계와 데이터 로딩 전략**을 먼저 봐야 한다. 생산성은 높지만, 리졸버 구조를 잘못 잡으면 복잡도도 빠르게 커진다.
+Spring Boot에서 GraphQL을 잘 쓰려면 "쿼리를 받는 기술"보다 스키마 설계와 데이터 로딩 전략을 먼저 봐야 한다. 생산성은 높지만, 리졸버 구조를 잘못 잡으면 복잡도도 빠르게 커진다.
+
+## 참고
+
+- [Annotated Controllers](https://docs.spring.io/spring-graphql/reference/controllers.html) — Spring for GraphQL Reference
