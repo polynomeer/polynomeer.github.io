@@ -16,15 +16,15 @@ tags: [Message Queue, RabbitMQ]
 ```sh
 brew update
 ```
-brew를 통해 RabbitMQ 서버를 설치한다.
+brew를 통해 [RabbitMQ](/posts/rabbitmq/) 서버를 설치한다.
 ```sh
 brew install rabbitmq
 ```
-RabbitMQ의 서버 스크립트나 CLI tools가 `/usr/local/opt/rabbitmq/sbin`에서 접근 가능한 경로상에 설치되어있을 것이다. 바이너리에 대한 링크파일이 `/usr/local/sbin`에 생성되어 있을텐데, 어떤 경로에서도 실행할 수 있게 환경변수를 추가해준다.
+RabbitMQ의 서버 스크립트와 CLI 도구는 `/usr/local/opt/rabbitmq/sbin`에 설치되고, 바이너리에 대한 링크 파일은 `/usr/local/sbin`에 생성된다(Intel Mac 기준. Apple Silicon은 `/opt/homebrew` 아래다, [Homebrew 설치](https://www.rabbitmq.com/docs/install-homebrew)). 어떤 경로에서도 실행할 수 있게 `PATH`에 추가한다.
 ```sh
 export PATH=$PATH:/usr/local/sbin
 ```
-위의 설정을 사용하는 쉘의 설정파일에 추가해준다. (bash의 경우 `~/.bashrc`, zsh의 경우 `~/.zsh`)
+위의 설정을 사용하는 쉘의 설정파일에 추가해준다. (bash의 경우 `~/.bashrc`, zsh의 경우 `~/.zshrc`)
 
 이제 `rabbitmq-server`명령어로 서버를 실행할 수 있다.
 ```sh
@@ -55,7 +55,7 @@ export PATH=$PATH:/usr/local/sbin
 ```
 
 ## RabbitMQ 실행
-`rabbitmq-server`명령어로 서버를 실행했다면 `http://localhost:15672`로 접속하면 모니터링 페이지를 볼 수 있다. 기본 계정과 비밀번호는 `guest/guest`이다.
+`rabbitmq-server` 명령어로 서버를 실행했다면 `http://localhost:15672`로 접속해 관리 UI를 볼 수 있다. 관리 UI는 관리 플러그인이 켜져 있어야 뜨고, `rabbitmq-plugins enable rabbitmq_management`로 켠다([Management Plugin](https://www.rabbitmq.com/docs/management)). 기본 계정과 비밀번호는 `guest/guest`이다. 이 기본 계정은 원격 호스트에서는 접속할 수 없고 `localhost`로만 접속된다([RabbitMQ: Access Control](https://www.rabbitmq.com/docs/access-control)).
 
 ![rabbitmq1](../../../images/rabbitmq1.png)
 
@@ -66,3 +66,5 @@ Admin 탭에서 새로운 계정을 생성할 수 있다.
 ## References
 - https://www.rabbitmq.com/install-homebrew.html
 - https://www.rabbitmq.com/tutorials/tutorial-one-java.html
+- https://www.rabbitmq.com/docs/management
+- https://www.rabbitmq.com/docs/access-control
