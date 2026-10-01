@@ -104,6 +104,11 @@ Avoid:
 - repeated restatements
 - unexplained superlatives
 - overly dramatic phrasing
+- bold used for rhythm; keep at most one bold phrase per section, for the claim the section exists to make
+- slogan endings that restate the previous sentence as a maxim (`정확히 같은 긴장이다`, `~의 정체다`, `~가 전부다`)
+- signposting instead of content (`여기서 중요한 성질이 나온다`, `여기가 핵심이다`)
+- em dashes (—) in body prose; use a sentence break, comma, or parentheses (reference lists keep the existing ` — ` convention)
+- a `정리` section that repeats each section's first sentence; keep only conclusions the reader cannot get from the headings
 
 When a post explains a real incident or design choice, prefer this flow:
 
@@ -111,6 +116,8 @@ When a post explains a real incident or design choice, prefer this flow:
 2. why the previous approach failed or was limited
 3. the chosen design or interpretation
 4. tradeoffs, constraints, or results
+
+Make the chain visible with transitions that carry logic (`그래서`, `그런데`, `그 결과로는 ~를 구분할 수 없었다`). Reorder sentences when the order hides the chain. Never fill a missing step with an invented motivation or thought process; if the post does not say why an alternative was rejected, leave it out and note it as a gap.
 
 When a post draws conclusions from experience rather than measurement (retrospectives, design decisions, incident write-ups), state the conditions they came from before the conclusions: team size, traffic or data volume, stack, and constraints, as numbers where possible. This plays the role that `한계` plays in experiment posts — it tells the reader whether the conclusion transfers to their situation.
 
@@ -150,6 +157,47 @@ Keep headings claim-first. Inside a section, let each observation open the next 
 When a lightweight verification answers an item listed under `무엇을 재면 확인되는가`, append the result to that same post as `## 직접 확인한 것` instead of opening a new post. Keep the original list intact and mark which items were checked, so the post shows what was hypothesized and what was measured.
 
 Do not import the habits that weaken experiment notes: unedited typos, emotional conclusions, and posts that only transcribe official examples.
+
+## Sources and Citations
+
+Concept posts should rest on primary sources: official documentation, RFCs and specs, man pages, JDK Javadoc and JEPs, original papers, the designers' own writing, or a standard book with chapter.
+
+- cite inline at the sentence the source supports, and also list it under `## 참고`
+- cite only what you have opened and read; never add a URL from memory
+- when a source narrows or contradicts a claim, fix the claim instead of keeping both
+- quote at most one or two sentences per post, in the original language and in quotation marks, followed by a Korean gloss when the source is not Korean
+- dates and numbers taken from a source must match the source as rendered (for example the date Medium displays, not a reader proxy's timestamp)
+
+## Reviews of External Articles
+
+Tech blog reviews (`_posts/techblog/`) must keep the original and the author's reading apart.
+
+- the section that summarizes the original carries only the original's claims; mark the author's reading (`나는 ~로 읽는다`, `내가 보기에`)
+- quote the original's sentences as written; never stitch two sentences into one quotation
+- check every claim attributed to the original against the original, including what it says about results, follow-up posts, and future work
+- front matter summaries (`problem_decision_result`) follow the same rule
+
+## Diagrams and Code
+
+Add a diagram or code only where a reader would otherwise hold a sequence, structure, state machine, or interleaving in their head from prose alone.
+
+- use Mermaid and add `mermaid: true` to the front matter
+- prefer `sequenceDiagram`, `stateDiagram-v2`, or `flowchart TD`; keep diagrams narrow because wide ones scroll sideways
+- labels use the post's own terms, identifiers, and numbers; a diagram adds no new facts
+- in a review, say in the lead-in whether the diagram shows the original's design or the author's experiment
+- code examples stay short and use APIs that exist; when copying the original's code, keep it short and attribute it
+- lead into each visual with one sentence in the post's voice
+
+## Terms for Newer Readers
+
+Write so a junior developer can follow without leaving the post confused.
+
+- link a term at its first use in the body to the post that explains it; link once per term per post, not inside headings, code, or diagrams
+- link only to posts that are published; `draft` and `archived` posts return 404 to readers
+- for a term that needs only a phrase (TPS, OOM, MVP, TTFB), add a short gloss in parentheses at first use instead of a new post
+- when no post explains a term that deserves one, write a short concept post (50–90 lines) that opens with the situation where the reader meets the term, explains it from zero, and links back
+- split long sentences into cause then effect, replace dense phrasing with plain words, and keep the calm `~다` voice; easier does not mean chatty
+- a number that appears without context (`26.6건/초`) needs its source in the same sentence
 
 ## Series and Naming Consistency
 
@@ -253,6 +301,14 @@ Before finishing a content task, check the edited files for:
 - no accidental mixed category system such as `Archive` inside notes posts
 - consistent series metadata
 - titles that match the actual content
+
+When editing an existing post for style, also confirm mechanically against the previous version:
+
+- no number, measurement, or table value disappeared or changed
+- front matter, code blocks, and Mermaid blocks are unchanged unless the task was to change them
+- every internal `/posts/...` link points to an existing, published post
+- `ruby scripts/check-post-consistency.rb` reports no new errors
+- Mermaid blocks render without a syntax error in the built site
 
 ## Scope Guidance for Agents
 
