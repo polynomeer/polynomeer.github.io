@@ -14,32 +14,32 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 ## 이번 글의 질문
 
-Spring AOP를 이해할 때 가장 먼저 잡아야 하는 건 `@Aspect` 문법이 아니다. 그보다 더 아래 질문이 있다.
+[Spring AOP](/posts/aop/)를 이해할 때 가장 먼저 잡아야 하는 건 `@Aspect` 문법이 아니다. 그보다 더 아래 질문이 있다.
 
 - 언제 JDK 프록시를 쓰고 언제 CGLIB을 쓰는가
 - 인터셉터 체인은 어떻게 진행되는가
-- `final`, `private`, self-invocation은 왜 AOP를 우회하는가
+- `final`, `private`, [self-invocation](/posts/proxy-limits/)은 왜 AOP를 우회하는가
 - 수동 `ProxyFactory`와 자동 프록시 생성기는 어떻게 연결되는가
 
-이번 글은 `proxy-playground`, `method-timing-post-processor`, `mini-aop`, `mini-auto-proxy`를 묶어서 **AOP의 실체는 프록시 + 인터셉터 체인**이라는 점을 정리한다.
+이번 글은 `proxy-playground`, `method-timing-post-processor`, `mini-aop`, `mini-auto-proxy`를 묶어서 **AOP의 실체는 프록시 + 인터셉터 체인**이라는 점을 확인한다.
 
 ## 프록시 선택 규칙은 생각보다 단순하다
 
-기본 원칙은 이렇다.
+기본 원칙은 대상이 인터페이스를 구현하는가로 갈린다.
 
 | 대상 | 기본 선택 |
 | --- | --- |
 | 인터페이스 구현 | JDK 동적 프록시 |
 | 인터페이스 없음 | CGLIB 계열 서브클래스 프록시 |
 
-`ProxyFactory` 실험에서도 이 규칙이 그대로 재현된다.
+공식 문서도 같은 규칙을 적는다([Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)). `ProxyFactory` 실험에서도 이 규칙이 그대로 재현된다.
 
 ```java
 ProxyFactory pf = new ProxyFactory(new GreetableImpl());  // 인터페이스 있음
 ProxyFactory pf2 = new ProxyFactory(new PlainGreeter());  // 인터페이스 없음
 ```
 
-이 규칙이 중요한 이유는 이후 제약도 같이 따라오기 때문이다.
+어떤 프록시가 선택되느냐에 따라 다음 제약이 따라온다.
 
 - JDK 프록시는 원본 클래스로 캐스팅할 수 없다.
 - CGLIB 프록시는 서브클래스이므로 원본 타입처럼 보일 수 있다.
@@ -58,7 +58,7 @@ public Object proceed() throws Throwable {
 }
 ```
 
-즉 구조는 이렇다.
+`proceed()`가 호출될 때마다 다음 인터셉터로 한 칸 들어가고, 마지막에 target 메서드를 호출한 뒤 역순으로 빠져나온다.
 
 ```mermaid
 flowchart LR
@@ -72,11 +72,11 @@ flowchart LR
 
 실험에서도 `Logging -> Authorization -> Timing` 순서가 정확히 이런 양파 구조로 실행된다.
 
-이 그림 하나로 AOP의 절반은 설명된다. 트랜잭션도, 측정도, 예외 변환도 결국은 **target invocation 앞뒤를 감싸는 인터셉터**다.
+트랜잭션도, 측정도, 예외 변환도 이 구조 위에서 target 호출 앞뒤를 감싸는 인터셉터로 구현된다.
 
 ## `final`과 `private`는 왜 우회되는가
 
-실험 결과는 명확하다.
+실험 결과는 다음과 같다.
 
 - `final` 메서드: 인터셉터를 거치지 않는다.
 - `private` 메서드: 애초에 프록시 대상이 아니다.
@@ -87,7 +87,7 @@ flowchart LR
 - `final`은 오버라이드가 불가능하다.
 - `private`는 서브클래스 입장에서 보이지도 않는다.
 
-즉 이건 Spring의 정책이 아니라, **프록시 방식이 택한 구현 전략의 결과**다.
+공식 문서도 `final` 메서드와 `private` 메서드를 같은 이유로 묶는다. 둘 다 "cannot be advised, because they cannot be overridden"(오버라이드할 수 없으므로 어드바이스를 적용할 수 없다)([Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)). 그래서 이 제약은 Spring의 정책이라기보다 서브클래스 기반 프록시라는 구현 방식에서 나온다.
 
 ## self-invocation이 안 되는 이유도 결국 객체가 둘이기 때문이다
 
@@ -105,7 +105,7 @@ sequenceDiagram
     Note right of Target: 프록시로 되돌아가지 않음
 ```
 
-즉 프록시는 바깥 호출만 볼 수 있다. target 내부의 `this.innerMethod()`는 다시 프록시를 통과하지 않는다.
+프록시는 바깥에서 들어오는 호출만 가로챈다. target 안의 `this.innerMethod()`는 target 자신에게 가므로 프록시를 다시 통과하지 않는다.
 
 이건 프록시를 누가 만들었는지와 무관하다.
 
@@ -113,11 +113,11 @@ sequenceDiagram
 - 수동 `BeanPostProcessor`
 - 자동 프록시 생성기
 
-마지막에 만들어지는 게 "프록시 객체와 원본 객체의 분리"라면 self-invocation 문제는 그대로 남는다.
+어느 쪽이든 결과가 프록시 객체와 원본 객체 두 개로 나뉜다면 self-invocation 문제는 그대로 남는다.
 
 ## 자동 프록시 생성기는 새 알고리즘이 아니라 타이밍 자동화다
 
-`MethodTimingBeanPostProcessor`와 `DefaultAdvisorAutoProxyCreator`를 비교해 보면 이 점이 분명하다.
+`MethodTimingBeanPostProcessor`와 `DefaultAdvisorAutoProxyCreator`를 비교해 보면 둘이 같은 일을 한다는 것이 보인다.
 
 수동 버전은 대략 이렇다.
 
@@ -133,11 +133,11 @@ return proxyFactory.getProxy();
 - 이 Bean에 Advisor를 적용할 수 있는가
 - 적용 가능하면 프록시를 만들 것인가
 
-즉 자동 프록시 생성기가 하는 일은 새로운 AOP 원리를 추가하는 게 아니다. **같은 판정과 같은 프록시 생성을 컨테이너 파이프라인의 올바른 시점에서 대신 수행하는 것**에 가깝다.
+자동 프록시 생성기는 새로운 AOP 원리를 추가하지 않는다. 같은 판정과 같은 프록시 생성을 컨테이너 파이프라인의 정해진 시점에서 대신 수행한다.
 
 ## `BeanPostProcessor`로 만든 AOP와 자동 프록시의 공통점
 
-공통점을 표로 정리하면 이렇다.
+두 방식을 나란히 놓으면 다음과 같다.
 
 | 구분 | 수동 BPP | 자동 프록시 생성기 |
 | --- | --- | --- |
@@ -146,23 +146,25 @@ return proxyFactory.getProxy();
 | 최종 산출물 | 프록시 | 프록시 |
 | self-invocation 한계 | 있음 | 있음 |
 
-즉 차이는 결과보다 **누가 wiring을 담당하느냐**다.
+결과는 같고, 차이는 누가 wiring(프록시를 만들어 Bean 자리에 끼워 넣는 일)을 담당하느냐에 있다.
 
 ## `BeanPostProcessor`를 `@Bean`으로 만들 때 `static`이 안전한 이유
 
-실험에서 실제로 걸린 함정도 있다. `BeanPostProcessor`를 `@Configuration` 안의 instance `@Bean` 메서드로 선언하면, Spring이 경고를 남긴다.
+실험에서 실제로 걸린 함정도 있다. [`BeanPostProcessor`](/posts/spring-internals-lab-bean-lifecycle/)를 `@Configuration` 안의 instance `@Bean` 메서드로 선언하면, Spring이 경고를 남긴다.
 
-이유는 간단하다.
+원인은 생성 순서다.
 
 - `BeanPostProcessor`는 다른 Bean들이 생성되기 전에 먼저 등록돼야 한다.
 - instance `@Bean` 메서드는 설정 클래스 인스턴스가 먼저 필요하다.
-- 그러면 후처리기 등록 타이밍이 늦어질 수 있다.
+- 그래서 후처리기를 만들려고 설정 클래스가 일찍 생성되고, 그 안의 다른 Bean은 후처리를 다 받지 못할 수 있다.
 
-즉 `static @Bean`은 단순 스타일 차이가 아니라, **후처리기 등록 시점을 앞당기기 위한 구조적 선택**이다.
+`@Bean` Javadoc에 따르면 non-static 메서드가 `BeanPostProcessor`를 반환하면 `@Configuration` 클래스가 일찍 초기화되고, `static`으로 두면 설정 클래스를 인스턴스화하지 않고 호출할 수 있다([Bean Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Bean.html)).
+
+그래서 `static @Bean`은 스타일 차이가 아니라, 후처리기를 만들 때 설정 클래스를 끌어오지 않기 위한 선택이다.
 
 ## mini-spring은 AOP의 핵심만 남긴다
 
-`mini-aop`와 `mini-auto-proxy`는 이 구조를 아주 직접적으로 보여준다.
+`mini-aop`와 `mini-auto-proxy`는 이 구조를 최소한의 타입으로 다시 만든다.
 
 - `MethodInterceptor`
 - `MethodInvocation`
@@ -171,7 +173,7 @@ return proxyFactory.getProxy();
 
 특히 `MiniAutoProxyCreator`는 "후처리기와 프록시 생성이 만나는 지점"을 코드 구조로 드러낸다.
 
-즉 Spring AOP를 이해할 때 핵심은 `@Aspect` 문법보다 먼저 다음 연결이다.
+그래서 Spring AOP를 이해할 때는 `@Aspect` 문법보다 다음 연결을 먼저 보면 된다.
 
 ```text
 Bean 생성 완료
@@ -182,12 +184,11 @@ Bean 생성 완료
 
 ## 정리
 
-이번 글에서 확인한 핵심은 다섯 가지다.
+이 글의 주제들은 `BeanPostProcessor`가 Bean을 프록시로 바꾸는 한 지점에서 만난다. 수동이든 자동이든 그 지점이 같으므로 한계도 같다.
 
-1. Spring AOP의 기본 실체는 프록시와 인터셉터 체인이다.
-2. JDK 프록시와 CGLIB 선택은 대상 구조에 따라 갈린다.
-3. `final`, `private`, self-invocation은 프록시 방식의 구조적 한계다.
-4. 자동 프록시 생성기는 새로운 원리보다 컨테이너 타이밍 자동화에 가깝다.
-5. `BeanPostProcessor`는 AOP가 컨테이너에 올라타는 핵심 연결점이다.
+이제 [다음 글](/posts/spring-internals-lab-transactional/)에서 이 구조 위에 `@Transactional`이 어떻게 올라가는지 본다. 결국 트랜잭션도 별도 마법이 아니라, 인터셉터 체인 위에 얹힌 하나의 어드바이스다.
 
-이제 다음 글에서 이 구조 위에 `@Transactional`이 어떻게 올라가는지 본다. 결국 트랜잭션도 별도 마법이 아니라, 인터셉터 체인 위에 얹힌 하나의 어드바이스다.
+## 참고
+
+- [Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html) — Spring Framework Reference, JDK·CGLIB 선택과 self-invocation
+- [Bean](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Bean.html) — Spring Framework Javadoc, BeanPostProcessor-returning `@Bean` methods
