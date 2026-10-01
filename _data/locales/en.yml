@@ -398,6 +398,17 @@ about:
   intro_summary_1: I am a backend engineer who has designed and implemented service flows that remain operable under real-world complexity. I have spent most of my time on systems where state transitions, concurrency, and transactional consistency matter, and I focus on building platforms that remain reliable across change and failure conditions.
   intro_summary_2: In large-scale data processing environments, I analyze bottlenecks with measurement-first methods and improve both code and data structures to raise performance and stability continuously. Payment and settlement flows, where failure is unacceptable, are the kind of systems I care about most.
   intro_summary_3: This blog records the engineering judgment and experiments that came out of that work. I write mostly about database internals, Spring backend behavior, architectural decisions, performance improvement, concurrency control, and operating batch or settlement systems with higher reliability.
+  activity_eyebrow: Activity
+  activity_title: The work in numbers
+  activity_repos: Commits in public repositories
+  activity_experiments: Measured experiments per lab
+  activity_experiments_note: Counts only what was reproduced, measured, fixed, and measured again.
+  activity_stack: Used in two or more projects
+  activity_stack_note: The number is how many projects used it.
+  activity_ai: AI tooling
+  activity_ai_sessions: sessions
+  activity_ai_produced: tokens produced
+  activity_ai_note: Only tokens the model generated. Cache reads are the same context read again, not work done, so they are left out.
   documents_eyebrow: Documents
   documents_title: Résumé and portfolio
   technical_focus: Technical Focus

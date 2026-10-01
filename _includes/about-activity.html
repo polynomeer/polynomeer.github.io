@@ -1,0 +1,101 @@
+{%- comment -%}
+  소개 페이지의 활동 지표. 통계 페이지(/stats/)는 글쓰기를 다루므로 여기서는 코드와 도구만 봅니다.
+
+  저장소·AI 수치는 scripts/collect-activity.py 가 만든 _data/about_activity.yml 에서 옵니다.
+  실험과 기술 스택은 이미 저장소 안에 있는 데이터(_data/experiments.yml, portfolio.yml)에서
+  세므로 수집기가 필요 없습니다.
+{%- endcomment -%}
+{%- assign act = site.data.about_activity -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- if act and act.repos and act.repos.size > 0 -%}
+
+<section class="about-activity" aria-labelledby="about-activity-title">
+  <p class="about-portfolio-eyebrow" data-i18n="about.activity_eyebrow">{{ loc.activity_eyebrow }}</p>
+  <h2 id="about-activity-title" data-i18n="about.activity_title">{{ loc.activity_title }}</h2>
+
+  <div class="about-activity-grid">
+
+    {%- comment -%} 1. 저장소별 커밋. 막대 길이는 가장 큰 저장소 기준입니다. {%- endcomment -%}
+    {%- assign top = act.repos | sort: 'commits' | reverse | first -%}
+    <article class="about-panel">
+      <h3 class="about-panel-title" data-i18n="about.activity_repos">{{ loc.activity_repos }}</h3>
+      <ul class="about-bars">
+        {%- for r in act.repos limit: 6 -%}
+        {%- assign pct = r.commits | times: 100 | divided_by: top.commits -%}
+        <li>
+          <span class="about-bar-name">{{ r.name }}</span>
+          <span class="about-bar-track"><span class="about-bar-fill" style="width: {{ pct }}%"></span></span>
+          <span class="about-bar-value">{{ r.commits }}</span>
+        </li>
+        {%- endfor -%}
+      </ul>
+      <p class="about-panel-note">
+        <span data-l10n-ko="저장소 {{ act.totals.repos }}개 · 커밋 {{ act.totals.commits }} · 테스트 파일 {{ act.totals.tests }}"
+          data-l10n-en="{{ act.totals.repos }} repositories · {{ act.totals.commits }} commits · {{ act.totals.tests }} test files">
+          {%- if lang == 'en' -%}{{ act.totals.repos }} repositories · {{ act.totals.commits }} commits · {{ act.totals.tests }} test files
+          {%- else -%}저장소 {{ act.totals.repos }}개 · 커밋 {{ act.totals.commits }} · 테스트 파일 {{ act.totals.tests }}{%- endif -%}
+        </span>
+      </p>
+    </article>
+
+    {%- comment -%} 2. 랩별 실측 기록. experiments.yml 에서 셉니다. {%- endcomment -%}
+    {%- assign labs = site.data.experiments.labs -%}
+    {%- assign lab_top = 0 -%}
+    {%- for l in labs -%}{%- if l.items.size > lab_top -%}{%- assign lab_top = l.items.size -%}{%- endif -%}{%- endfor -%}
+    {%- assign exp_total = 0 -%}
+    {%- for l in labs -%}{%- assign exp_total = exp_total | plus: l.items.size -%}{%- endfor -%}
+    <article class="about-panel">
+      <h3 class="about-panel-title" data-i18n="about.activity_experiments">{{ loc.activity_experiments }}</h3>
+      <ul class="about-bars">
+        {%- for l in labs -%}
+        {%- assign pct = l.items.size | times: 100 | divided_by: lab_top -%}
+        <li>
+          <span class="about-bar-name">{{ l.id }}</span>
+          <span class="about-bar-track"><span class="about-bar-fill is-alt" style="width: {{ pct }}%"></span></span>
+          <span class="about-bar-value">{{ l.items.size }}</span>
+        </li>
+        {%- endfor -%}
+      </ul>
+      <p class="about-panel-note" data-i18n="about.activity_experiments_note">{{ loc.activity_experiments_note }}</p>
+    </article>
+
+    {%- comment -%} 3. 기술 스택. 빈도는 수집기가 세어 둔 것을 씁니다. {%- endcomment -%}
+    {%- if act.stack and act.stack.size > 0 -%}
+    <article class="about-panel">
+      <h3 class="about-panel-title" data-i18n="about.activity_stack">{{ loc.activity_stack }}</h3>
+      <div class="about-stack">
+        {%- for t in act.stack -%}
+        <span class="about-stack-chip">{{ t.name }}<span class="about-stack-count">{{ t.projects }}</span></span>
+        {%- endfor -%}
+      </div>
+      <p class="about-panel-note" data-i18n="about.activity_stack_note">{{ loc.activity_stack_note }}</p>
+    </article>
+    {%- endif -%}
+
+    {%- comment -%} 4. AI 도구. 세션 수와 모델이 생성한 토큰만입니다. {%- endcomment -%}
+    {%- if act.ai and act.ai.size > 0 -%}
+    <article class="about-panel">
+      <h3 class="about-panel-title" data-i18n="about.activity_ai">{{ loc.activity_ai }}</h3>
+      <ul class="about-ai">
+        {%- for a in act.ai -%}
+        <li>
+          <span class="about-ai-tool">{{ a.tool }}</span>
+          <span class="about-ai-figure">
+            <strong>{{ a.sessions }}</strong>
+            <span data-i18n="about.activity_ai_sessions">{{ loc.activity_ai_sessions }}</span>
+          </span>
+          <span class="about-ai-figure">
+            <strong>{{ a.produced | divided_by: 1000000 }}M</strong>
+            <span data-i18n="about.activity_ai_produced">{{ loc.activity_ai_produced }}</span>
+          </span>
+        </li>
+        {%- endfor -%}
+      </ul>
+      <p class="about-panel-note" data-i18n="about.activity_ai_note">{{ loc.activity_ai_note }}</p>
+    </article>
+    {%- endif -%}
+
+  </div>
+</section>
+{%- endif -%}

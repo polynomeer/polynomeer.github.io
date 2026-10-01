@@ -1,0 +1,61 @@
+# 생성 파일입니다. 손으로 고치지 마십시오 - scripts/collect-activity.py 가 덮어씁니다.
+#
+# 글쓰기 지표는 여기 없습니다. /stats/ 가 이미 다룹니다.
+# 마지막 수집: 2026-10-01
+
+repos:
+  - name: monticker
+    commits: 754
+    tests: 12
+    span: "2026.01 – 2026.09"
+  - name: sys-drill
+    commits: 316
+    tests: 26
+    span: "2026.08 – 2026.10"
+  - name: quno
+    commits: 255
+    tests: 64
+    span: "2026.08 – 2026.09"
+  - name: parity-pay
+    commits: 156
+    tests: 75
+    span: "2026.09 – 2026.09"
+  - name: spring-ops-lab
+    commits: 8
+    tests: 0
+    span: "2026.09 – 2026.07"
+  - name: data-ops-lab
+    commits: 6
+    tests: 0
+    span: "2026.01 – 2026.08"
+  - name: jvm-bench-lab
+    commits: 1
+    tests: 0
+    span: "2026.09 – 2026.09"
+
+totals:
+  commits: 1496
+  tests: 177
+  repos: 7
+
+# 두 개 이상의 프로젝트에 쓴 기술만. 숫자는 그 기술을 쓴 프로젝트 수입니다.
+stack:
+  - { name: "Spring Boot", projects: 7 }
+  - { name: "Java", projects: 5 }
+  - { name: "MySQL", projects: 4 }
+  - { name: "Redis", projects: 4 }
+  - { name: "PostgreSQL", projects: 4 }
+  - { name: "JPA", projects: 3 }
+  - { name: "ArchUnit", projects: 3 }
+  - { name: "Kotlin", projects: 3 }
+  - { name: "Spring Batch", projects: 2 }
+  - { name: "Next.js", projects: 2 }
+
+# 세션 수와 모델이 생성한 토큰만입니다. 캐시 재읽기는 작업량이 아니라 뺐습니다.
+ai:
+  - tool: claude-code
+    sessions: 242
+    produced: 115559785
+  - tool: codex
+    sessions: 192
+    produced: 19239424

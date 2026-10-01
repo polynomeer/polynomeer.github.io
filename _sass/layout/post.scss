@@ -1768,6 +1768,156 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
+/* 활동 지표 패널 — 통계 페이지와 달리 코드·도구 쪽만 봅니다 */
+.about-activity {
+  margin-top: 2.2rem;
+}
+
+.about-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.about-panel {
+  padding: 1.1rem 1.2rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(98, 114, 164, 0.28);
+}
+
+.about-panel-title {
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted-color);
+
+  &::before {
+    content: none;
+  }
+}
+
+.about-panel-note {
+  margin: 0.8rem 0 0;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--text-muted-color);
+  opacity: 0.85;
+}
+
+.about-bars {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr 2.6rem;
+    align-items: center;
+    gap: 0.6rem;
+  }
+}
+
+.about-bar-name {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-muted-color);
+}
+
+.about-bar-track {
+  height: 0.55rem;
+  border-radius: 999px;
+  background: rgba(98, 114, 164, 0.18);
+  overflow: hidden;
+}
+
+.about-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--link-color);
+
+  /* 0 은 막대가 아예 안 보이므로 최소 너비를 둡니다 - 있는 값과 없는 값이 구별돼야 합니다. */
+  min-width: 2px;
+
+  &.is-alt {
+    background: #46d17f;
+  }
+}
+
+.about-bar-value {
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.about-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.about-stack-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.28);
+  font-size: 0.78rem;
+}
+
+.about-stack-count {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted-color);
+}
+
+.about-ai {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: baseline;
+    gap: 0.9rem;
+  }
+}
+
+.about-ai-tool {
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.8rem;
+  color: var(--text-muted-color);
+}
+
+.about-ai-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 0.28rem;
+  font-size: 0.74rem;
+  color: var(--text-muted-color);
+
+  strong {
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color);
+  }
+}
+
+@media all and (max-width: 768px) {
+  .about-activity-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* 이력서·포트폴리오 카드 — About 의 주 동선 */
 .about-documents {
   margin-top: 2.2rem;
