@@ -7,13 +7,14 @@ series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
 series_order: 54
 source_url: https://d2.naver.com/helloworld/7610642
+mermaid: true
 ---
 
 원문: [@RequestCache: HTTP 요청 범위 캐싱을 위한 커스텀 애너테이션 개발기](https://d2.naver.com/helloworld/7610642) — NAVER D2, 이상혁, 2025-11-26
 
 ## 한 줄 요약
 
-한 HTTP 요청을 처리하는 동안 같은 외부 API를 여러 번 부르는 일이 흔하다. 원문은 "캐시의 수명을 요청 하나와 똑같이" 맞추는 애너테이션 `@RequestCache`를 만들었다. TTL을 정할 필요가 없고, 요청이 끝나면 Spring이 알아서 치운다. 흥미로운 부분은 첫 시도(`@RequestScope`)가 왜 실패했는지와, 그 실패에서 배운 것으로 두 번째 설계를 어떻게 했는지다.
+한 HTTP 요청을 처리하는 동안 같은 외부 API를 여러 번 부르는 일이 흔하다. 원문은 "캐시의 수명을 요청 하나와 똑같이" 맞추는 애너테이션 `@RequestCache`를 만들었다. TTL(time to live, 캐시 만료 시간)을 정할 필요가 없고, 요청이 끝나면 Spring이 알아서 치운다. 내가 흥미롭게 읽은 부분은 첫 시도(`@RequestScope`)가 왜 실패했는지와, 그 실패에서 배운 것으로 두 번째 설계를 어떻게 했는지다.
 
 ## 무엇이 문제인가
 
@@ -24,19 +25,34 @@ source_url: https://d2.naver.com/helloworld/7610642
 - **응답 객체를 파라미터로 넘기기.** 처음 조회한 프로필을 아래로 계속 넘긴다. 그런데 실제로 프로필을 쓰는 곳이 호출 깊이 3단계 아래 하나뿐이면, 중간 두 단계는 안 쓰는 값을 받아서 넘기기만 해야 한다. 전략 패턴(인터페이스로 여러 구현을 바꿔 끼우는 구조)에서는 더 나쁘다. 한 구현이 프로필을 쓰면 인터페이스에 파라미터를 넣어야 하고, 안 쓰는 구현도 그것을 받아야 한다.
 - **Redis나 로컬 캐시에 TTL.** TTL이 짧으면(요청이 5초 걸리는데 TTL 3초) 같은 요청 안에서 두 번째 조회가 만료돼 다시 부른다. 길면(TTL 10초) 다른 요청 B가 요청 A의 캐시를 쓴다. 이 애너테이션의 목적은 "같은 요청 안의 중복 방지"이지 요청 사이의 공유가 아니므로, 어느 TTL도 맞지 않는다.
 
-결론: 수명이 요청과 정확히 같은 캐시가 필요하다.
+그래서 원문은 수명이 요청과 정확히 같은 캐시가 필요하다는 결론에 이른다.
 
 ## 첫 시도: @RequestScope는 왜 안 됐나
 
-Spring에는 빈의 수명을 HTTP 요청으로 맞추는 `@RequestScope`가 있다. CacheManager에 붙이면 끝날 것 같았다.
+Spring에는 [빈의 수명](/posts/spring-lifecycle/)을 HTTP 요청으로 맞추는 `@RequestScope`가 있다. Spring 문서는 request 스코프를 "When the request completes processing, the bean that is scoped to the request is discarded."(요청 처리가 끝나면 그 요청 범위의 빈은 버려진다)라고 설명한다([Spring Framework Reference, Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)). CacheManager에 붙이면 끝날 것 같았다.
 
-원문은 이것이 어떻게 동작하는지부터 확인한다. `@RequestScope` 빈은 실제로는 프록시(대리인)로 등록된다. 프록시는 싱글턴이지만 메서드가 호출될 때마다 "지금 요청"에 해당하는 실제 인스턴스를 찾아 위임한다. 실제 인스턴스는 RequestAttribute라는 요청별 보관함에 들어 있고, 요청이 끝나면 `FrameworkServlet`이 `finally`에서 반드시 치운다. 예외가 나도 치운다. 그래서 메모리 누수가 없다.
+원문은 이것이 어떻게 동작하는지부터 확인한다. `@RequestScope` 빈은 실제로는 [프록시](/posts/aop/)(대리인)로 등록된다. 프록시는 싱글턴이지만 메서드가 호출될 때마다 "지금 요청"에 해당하는 실제 인스턴스를 찾아 위임한다. 실제 인스턴스는 RequestAttribute라는 요청별 보관함에 들어 있고, 요청이 끝나면 `FrameworkServlet`이 `finally`에서 반드시 치운다. 예외가 나도 치운다. 그래서 메모리 누수가 없다.
 
-그런데 애플리케이션이 뜨지 않았다. `Scope 'request' is not active`. 원인은 Spring Actuator다. Actuator의 캐시 메트릭 자동 설정이 **애플리케이션 시작 시점**에 CacheManager를 건드리는데, 그때는 HTTP 요청이 없으니 요청 스코프가 활성화돼 있지 않다. 프록시가 실제 인스턴스를 찾으려다 예외를 던진다. 그 자동 설정을 빼면 뜨긴 하지만 캐시 적중·미스 메트릭을 잃는다. 근본 해법이 아니다.
+그런데 `ScopeNotActiveException`이 나며 애플리케이션이 뜨지 않았다. 원인은 Spring Actuator다. Actuator의 캐시 메트릭 자동 설정(`CacheMetricsAutoConfiguration`)이 애플리케이션 시작 시점에 CacheManager를 건드리는데, 그때는 HTTP 요청이 없으니 요청 스코프가 활성화돼 있지 않다. 그래서 프록시가 실제 인스턴스를 찾으려다 예외를 던진다. 원문이 설명한 호출 흐름을 그리면 다음과 같다.
+
+```mermaid
+sequenceDiagram
+    participant A as CacheMetricsAutoConfiguration
+    participant P as CacheManager 프록시
+    participant S as AbstractRequestAttributesScope
+    participant H as RequestContextHolder
+    A->>P: 시작 시점에 CacheManager 사용
+    P->>S: get()으로 실제 인스턴스 resolve
+    S->>H: currentRequestAttributes()
+    H-->>S: IllegalStateException (요청 없음)
+    S-->>A: AbstractBeanFactory가 ScopeNotActiveException으로 변환
+```
+
+그 자동 설정을 빼면 뜨긴 하지만 캐시 적중·미스 메트릭을 잃는다. 원문도 이것을 근본 해법이 아니라고 본다.
 
 ## 두 번째 설계: 매니저는 싱글턴, 캐시만 요청별로
 
-실패에서 얻은 통찰이 설계가 됐다. 문제는 **CacheManager 자체를** 요청 보관함에 넣었다는 것이다. 그러니 시작 시점에 매니저를 찾다가 깨졌다. 그러면 매니저는 싱글턴으로 두고, 그 안에서 **Cache 객체만** 요청 보관함에 넣으면 된다.
+첫 시도의 문제는 CacheManager 자체를 요청 보관함에 넣었다는 것이다. 그러니 시작 시점에 매니저를 찾다가 깨졌다. 그래서 원문은 매니저는 싱글턴으로 두고, 그 안에서 **Cache 객체만** 요청 보관함에 넣는 쪽으로 바꿨다.
 
 `CacheManager` 인터페이스를 직접 구현한 `RequestScopedCacheManager`의 `getCache()`가 핵심이다.
 
@@ -44,7 +60,7 @@ Spring에는 빈의 수명을 HTTP 요청으로 맞추는 `@RequestScope`가 있
 2. 활성이면 RequestAttribute에서 캐시를 찾고, 없으면 만들어 넣는다.
 3. 비활성이거나 예상 못 한 오류면 `NoOpCache`를 돌려준다.
 
-3번에 작은 함정이 있다. `CacheManager.getCache()`의 명세는 "캐시가 없으면 null을 반환"인데, 실제로 null을 돌려주면 `@Cacheable`이 쓰는 `AbstractCacheResolver`가 `IllegalArgumentException`을 던진다. 그래서 아무것도 안 하는 더미 캐시 `NoOpCache`를 돌려준다. 캐싱은 안 되지만 오류도 없이 매번 실제 메서드가 실행된다.
+3번에 작은 함정이 있다. `CacheManager.getCache()`의 명세는 캐시가 없거나 만들 수 없으면 null을 반환한다고 적혀 있는데([Spring Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/CacheManager.html)), 실제로 null을 돌려주면 `@Cacheable`이 쓰는 `AbstractCacheResolver`가 `IllegalArgumentException`을 던진다. 그래서 아무것도 안 하는 더미 캐시 `NoOpCache`를 돌려준다. 캐싱은 안 되지만 오류도 없이 매번 실제 메서드가 실행된다.
 
 애너테이션은 `@Cacheable`을 메타 애너테이션으로 감싸 이 매니저를 지정한 것이다. Spring의 기존 캐싱 기능을 그대로 쓰면서 저장소만 바꾼 셈이다. 같은 요청에서 4번 호출하는 테스트로 첫 호출만 실제로 나가고 나머지는 캐시에서 오는 것을 확인했다.
 
@@ -53,14 +69,20 @@ Spring에는 빈의 수명을 HTTP 요청으로 맞추는 `@RequestScope`가 있
 - **`@Async` 메서드에서는 안 된다.** 비동기 메서드는 다른 스레드에서 도는데, 요청 컨텍스트는 자식 스레드로 전파되지 않는다(`FrameworkServlet`이 inheritable을 false로 둔다). 오류는 안 나지만 매번 실제 호출된다.
 - **Kafka Consumer에서도 안 된다.** HTTP 요청 컨텍스트가 없기 때문이다.
 
-이 둘을 풀려고 ThreadLocal 방식도 검토했지만 버렸다. ThreadLocal은 자동으로 정리되지 않아 HTTP·Kafka·Async 각 실행 경로마다 `clear()`를 직접 넣어야 하고, 하나라도 빠뜨리면 스레드 풀에서 스레드가 재사용될 때 이전 작업의 캐시가 남는다. 안 되는 곳이 있더라도 자동으로 정리되는 요청 컨텍스트 방식이 안전하다는 판단이다.
+이 둘을 풀려고 ThreadLocal 방식도 검토했지만 버렸다. 이유는 정리 책임이다. ThreadLocal은 자동으로 정리되지 않아 HTTP·Kafka·Async 각 실행 경로마다 `clear()`를 직접 넣어야 하고, 하나라도 빠뜨리면 스레드 풀에서 스레드가 재사용될 때 이전 작업의 캐시가 남는다. 그래서 원문은 `@Async`와 Kafka Consumer에서 캐싱이 안 되더라도, 비교적 간단하고 안전한 요청 컨텍스트 방식을 택했다.
 
 ## 읽고 남는 질문
 
 - 원문의 첫 예시(주문 검증·결제·알림이 각각 프로필 조회)는 세 서비스가 같은 요청 스레드에서 순차 호출될 때만 캐시가 맞는다. 셋을 병렬로 부르는 구조였다면 `@Async` 한계에 바로 걸린다. 그 경우 원문이 버린 "파라미터로 넘기기"가 오히려 답일 수 있다.
-- 캐시 키가 메서드 인자(`userId`)로 정해지는데, 같은 요청 안에서 프로필이 **바뀌는** 경우(조회 → 수정 → 다시 조회)는 낡은 값을 돌려준다. 요청 범위 캐시라 짧지만, `@CacheEvict`를 같이 쓰는 규약이 있는지 궁금하다.
-- 캐시 적중률 같은 수치가 없다. 도입 전후로 외부 API 호출 수가 얼마나 줄었는지가 있으면 "정말 필요한가"라는 원문 서두의 질문에 대한 답이 됐을 것이다.
+- 캐시 키가 메서드 인자(`userId`)로 정해지는데, 같은 요청 안에서 프로필이 바뀌는 경우(조회 → 수정 → 다시 조회)는 낡은 값을 돌려준다. 요청 범위 캐시라 짧지만, `@CacheEvict`를 같이 쓰는 규약이 있는지 궁금하다.
+- 캐시 적중률 같은 수치가 없다. 도입 전후로 외부 API 호출 수가 얼마나 줄었는지가 있으면 "정말 필요한가"라는 원문 대안 검토 서두의 질문에 대한 답이 됐을 것이다.
 
 ## 한 줄로 가져가기
 
 캐시의 어려움은 대부분 "언제 버리나"에 있다. 수명을 요청 하나에 묶으면 그 질문이 사라지고, 대신 "요청 밖(비동기, 메시지 소비자)에서는 안 된다"는 경계가 생긴다. 그 경계를 먼저 적어 둔 것이 이 글의 좋은 점이다.
+
+## 참고
+
+- [@RequestCache: HTTP 요청 범위 캐싱을 위한 커스텀 애너테이션 개발기](https://d2.naver.com/helloworld/7610642) — NAVER D2 원문
+- [Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html) — Spring Framework Reference
+- [CacheManager](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/CacheManager.html) — Spring Framework Javadoc
