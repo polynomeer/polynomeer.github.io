@@ -22,11 +22,11 @@ public static void main(String[] args) {
 }
 ```
 
-그래서 어느 순간부터는 Boot를 별도 거대한 기술처럼 느끼게 된다. 그런데 `spring-lite`의 마지막 모듈을 구현하고 흐름을 따라가 보니 오히려 반대로 보였다. Boot의 본질은 생각보다 단순했다. **컨테이너, 웹, 트랜잭션, JDBC 같은 인프라를 적절한 순서로 등록하고 실행하는 조립 계층**에 더 가까웠다.
+그래서 어느 순간부터는 Boot를 별도 거대한 기술처럼 느끼게 된다. 그런데 `spring-lite`의 마지막 모듈을 구현하고 흐름을 따라가 보니 오히려 반대로 보였다. Boot는 컨테이너, 웹, 트랜잭션, JDBC 같은 인프라를 적절한 순서로 등록하고 실행하는 조립 계층에 더 가까웠다.
 
 ## `MiniSpringApplication.run()`이 정말 짧다
 
-이 구현의 좋은 점은 실행 시작점이 과하게 크지 않다는 것이다.
+실행 시작점은 다섯 단계뿐이다.
 
 1. `AnnotationConfigApplicationContext` 생성
 2. 애플리케이션 클래스 등록
@@ -39,7 +39,7 @@ public static void main(String[] args) {
 - Boot가 별도 컨테이너를 만드는 건 아니다.
 - 결국 모든 것은 컨테이너 위에 Bean으로 등록된다.
 
-즉 Boot는 Spring의 대체물이 아니라, **컨테이너를 언제 무엇으로 채울지 결정하는 초기화 레이어**다.
+그래서 Boot는 Spring의 대체물이 아니라, **컨테이너를 언제 무엇으로 채울지 결정하는 초기화 레이어**다. 실제 Spring Boot에서 `@SpringBootApplication`이 무엇을 켜는지는 [별도 글](/posts/spring-boot-application-annotation/)에서 다뤘다.
 
 ## `BootInfrastructureRegistrar`가 의외로 많은 걸 말해 준다
 
@@ -50,36 +50,34 @@ public static void main(String[] args) {
 - `JdbcAutoConfiguration`
 - `WebAutoConfiguration`
 
-이 구조를 보고 좋았던 건, Boot의 핵심이 결국 "자동 설정 클래스 목록을 컨테이너에 넣는다"는 사실이 아주 직접적으로 드러난다는 점이었다.
+이 구조에서는 Boot의 핵심이 "자동 설정 클래스 목록을 컨테이너에 넣는다"는 것이 직접 드러난다. 실제 Spring Boot는 이 목록을 코드에 고정하지 않고 jar 안의 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 파일에서 찾는다([Spring Boot: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)).
 
 실제 Spring Boot가 복잡해지는 것도 결국 여기서 시작한다. 스타터와 자동 설정이 늘어날수록 "어떤 조건에서 어떤 Bean을 만들지" 조합이 커진다.
 
 ## 자동 설정도 결국 컨테이너 규칙의 확장이다
 
-앞 글에서 본 것처럼 `spring-lite-context`에는 이미 조건부 등록 애노테이션이 있다.
+[2편](/posts/spring-lite-context/)에서 본 것처럼 `spring-lite-context`에는 이미 조건부 등록 애노테이션이 있다.
 
 - `ConditionalOnBean`
 - `ConditionalOnClass`
 - `ConditionalOnMissingBean`
 - `ConditionalOnProperty`
 
-이걸 보고 나니 Boot 자동 설정을 "새로운 마법"으로 보기보다, **컨테이너가 후보 BeanDefinition을 등록할 때 평가하는 규칙을 더 적극적으로 활용하는 방식**으로 보는 편이 더 맞다고 느꼈다.
+그래서 Boot 자동 설정은 "새로운 마법"이라기보다, **컨테이너가 후보 [BeanDefinition](/posts/spring-internals-lab-bean-definition/)을 등록할 때 평가하는 규칙을 더 적극적으로 활용하는 방식**으로 보는 편이 맞다고 느꼈다. 실제 Spring Boot 문서도 자동 설정 클래스를 표준 `@Configuration` 클래스로 두고, 언제 적용할지는 추가 `@Conditional` 애노테이션으로 제한한다고 설명한다([Spring Boot: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)).
 
-실제 Boot를 공부할 때도 이 감각이 꽤 중요하다. 어떤 화려한 기능처럼 보기보다 "어떤 Bean들이 어떤 조건으로 조립되는가"를 보는 편이 훨씬 덜 헷갈린다.
+실제 Boot를 공부할 때도 기능 목록보다 "어떤 Bean들이 어떤 조건으로 조립되는가"를 보는 편이 덜 헷갈린다.
 
 ## 웹 서버도 결국 Bean이라는 점이 좋았다
 
 `spring-lite-boot`는 `WebServer`, `WebServerFactory`, `JdkWebServer` 같은 타입을 둔다.
 
-이게 좋았던 이유는, 서버조차 별도 전역 자원처럼 다루지 않고 **컨테이너가 관리하는 Bean**으로 본다는 점 때문이다.
-
-이 구조 덕분에:
+서버조차 별도 전역 자원처럼 다루지 않고 컨테이너가 관리하는 Bean으로 본다는 뜻이다. 그 결과로 다음이 쉬워진다.
 
 - 서버 구현체를 바꾸기 쉽고
 - 테스트에서 다른 factory를 넣기 쉽고
 - 시작과 종료 책임을 컨테이너 lifecycle과 연결하기 쉽다
 
-즉 Boot는 서버를 "밖에서 띄운다"보다 "애플리케이션 내부 조립 요소로 끌고 들어온다"에 더 가깝다.
+Boot는 서버를 "밖에서 띄운다"보다 "애플리케이션 내부 조립 요소로 끌고 들어온다"에 더 가깝다.
 
 ## `example-app`이 있어서 마지막까지 감이 끊기지 않았다
 
@@ -94,7 +92,7 @@ public static void main(String[] args) {
 - HTTP 요청 처리
 - 서비스 계층 트랜잭션 적용
 
-즉 Boot 계층이 잘 설계됐는지는 자동 설정 클래스만 보면 안 되고, **실제 사용자 애플리케이션이 얼마나 적은 코드로 인프라를 끌어올 수 있는지**로 봐야 한다는 걸 여기서 다시 확인하게 된다.
+그래서 Boot 계층이 잘 설계됐는지는 자동 설정 클래스만으로는 판단할 수 없다. 실제 사용자 애플리케이션이 얼마나 적은 코드로 인프라를 끌어올 수 있는지로 봐야 한다.
 
 ## 결국 Boot의 가치는 세 가지였다
 
@@ -121,17 +119,21 @@ Boot가 편한 이유는 컨테이너 원리를 없애서가 아니라, 그 원�
 - 내장 서버 선택 폭이 좁다.
 - starter 생태계처럼 모듈 조합이 풍부하지 않다.
 
-그런데 오히려 이 단순함 때문에 본질이 잘 보였다. "자동 설정이 결국 컨테이너 조립을 얼마나 대신해 주는가"라는 질문만 또렷하게 남기 때문이다.
+그런데 이 단순함 덕분에 "자동 설정이 컨테이너 조립을 얼마나 대신해 주는가"라는 질문만 또렷하게 남았다. 실제 Spring Boot가 같은 일을 어떻게 하는지는 [spring-internals-lab 9편](/posts/spring-internals-lab-spring-boot/)에서 비교할 수 있다.
 
 ## 시리즈를 마치며
 
 `spring-lite`를 처음 만들기 시작할 때는 "Spring 비슷한 걸 작게 만든 프로젝트" 정도로 생각했는데, 끝까지 구현 흐름을 따라가고 나니 인상이 조금 달라졌다.
 
 - 컨테이너는 객체 그래프를 조립하고
-- 후처리기는 프록시 같은 부가기능을 붙이고
+- 후처리기는 [프록시](/posts/proxy-limits/) 같은 부가기능을 붙이고
 - 웹 계층은 요청을 메서드 호출로 번역하고
 - Boot는 이 전체를 실행 가능한 애플리케이션으로 묶는다
 
-그래서 이 프로젝트를 가장 좋게 보는 방법은 "Spring을 흉내 냈다"보다, **Spring이 왜 지금 같은 모듈 구조와 실행 모델을 갖게 되었는지 비교 학습하는 작은 실험실**처럼 보는 쪽에 더 가깝다고 느꼈다.
+그래서 이 프로젝트는 "Spring을 흉내 냈다"보다, Spring이 왜 지금 같은 모듈 구조와 실행 모델을 갖게 되었는지 비교 학습하는 작은 실험실로 보는 쪽이 더 맞다고 느꼈다.
 
 이 시리즈도 그런 감각을 남기는 데 초점을 맞췄다. 강의 노트처럼 깔끔하게 정리하는 것도 중요하지만, 직접 구현을 따라가며 "어디서 감이 잡혔는가"를 기록하는 편이 개인적으로는 훨씬 오래 남았다.
+
+## 참고
+
+- [Spring Boot Reference: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)
