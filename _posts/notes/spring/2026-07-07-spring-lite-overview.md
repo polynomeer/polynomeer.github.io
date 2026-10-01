@@ -29,7 +29,7 @@ Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@C
 - `@Transactional`과 JDBC 템플릿
 - `MiniSpringApplication.run()` 형태의 부트스트랩
 
-즉 "Spring을 완전히 다시 만든다"보다, **실무에서 자주 만지는 축을 직접 구현하면서 비교 학습한다**는 쪽에 가깝다.
+그래서 목표는 "Spring을 완전히 다시 만든다"보다, 실무에서 자주 만지는 축을 직접 구현하면서 비교 학습하는 쪽에 가깝다.
 
 ## 처음 봤을 때 좋았던 건 모듈 경계였다
 
@@ -45,7 +45,7 @@ Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@C
 - `spring-lite-test`
 - `example-app`
 
-이 구성이 좋았던 이유는 Spring을 "하나의 큰 프레임워크"가 아니라 **층층이 쌓인 조합물**로 보게 만들기 때문이다.
+이 구성이 좋았던 이유는 Spring을 "하나의 큰 프레임워크"가 아니라 층층이 쌓인 조합물로 보게 만들기 때문이다.
 
 ### `core`는 아직 컨테이너가 아니다
 
@@ -57,11 +57,11 @@ Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@C
 - `ConditionalOnBean`, `ConditionalOnClass`, `ConditionalOnMissingBean`, `ConditionalOnProperty`
 - `ReflectionUtils`, `PropertyResolver`
 
-처음엔 이 모듈이 약간 심심해 보였는데, 오히려 이게 중요했다. 여기에는 아직 컨테이너가 없다. 대신 컨테이너가 읽어야 할 **메타데이터와 공통 도구**만 먼저 있다. Spring도 결국 이런 순서로 쌓인다.
+처음엔 이 모듈이 약간 심심해 보였다. 그런데 여기에는 아직 컨테이너가 없다. 컨테이너가 읽어야 할 메타데이터와 공통 도구만 먼저 있다. Spring도 결국 이런 순서로 쌓인다.
 
 ### `context`에서 비로소 "Spring 같다"는 느낌이 난다
 
-실제 IoC 컨테이너의 중심은 `spring-lite-context`다.
+실제 [IoC 컨테이너](/posts/ioc-di/)의 중심은 `spring-lite-context`다.
 
 - `ApplicationContext`
 - `BeanDefinition`
@@ -79,7 +79,7 @@ Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@C
 - `spring-lite-tx`: `@Transactional`과 트랜잭션 경계
 - `spring-lite-jdbc`: `JdbcTemplate`, `RowMapper`, `DataSource`
 
-이 구조를 보고 좋았던 건, 트랜잭션을 별도 DB 기능처럼 두지 않고 **AOP 위에 얹힌 JDBC 사용 경험**으로 풀어냈다는 점이다. `@Transactional`을 이해할 때 프록시를 먼저 봐야 하는 이유가 이 모듈 경계만으로도 꽤 잘 드러난다.
+이 구조를 보고 좋았던 건, 트랜잭션을 별도 DB 기능처럼 두지 않고 AOP 위에 얹힌 JDBC 사용 경험으로 풀어냈다는 점이다. `@Transactional`을 이해할 때 프록시를 먼저 봐야 하는 이유가 이 모듈 경계만으로도 드러난다. 실제 Spring도 같다. 레퍼런스는 선언적 트랜잭션이 AOP 프록시로 활성화되고, 그 프록시가 `TransactionInterceptor`로 메서드 호출 전후의 트랜잭션을 처리한다고 설명한다([Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html)).
 
 ### `web`과 `boot`는 결국 "조립의 마지막 단계"처럼 보인다
 
@@ -92,7 +92,7 @@ Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@C
 
 이 프로젝트는 프레임워크 코드만 모아 둔 저장소가 아니다. `example-app`이 같이 있다.
 
-처음엔 그냥 데모 정도로 생각했는데, 흐름을 따라가다 보니 오히려 이게 중요한 축이었다.
+처음엔 그냥 데모 정도로 생각했는데, 흐름을 따라가다 보니 프레임워크 코드를 읽는 기준점 역할을 했다.
 
 - `@MiniSpringBootApplication`으로 실행
 - 컨테이너 초기화
@@ -100,7 +100,7 @@ Spring을 오래 쓰다 보면 익숙해지는 애노테이션들이 있다. `@C
 - `DispatcherServlet`으로 HTTP 요청 처리
 - 서비스 계층에 `@Transactional` 적용
 
-즉 프레임워크 내부만 따로 보는 게 아니라, **사용자 코드가 그 위에 올라가면 실제로 어떤 흐름이 되는지**를 바로 확인할 수 있다. 개인적으로는 이 연결이 있어야 "아, 이 구현이 여기서 쓰이겠구나"라는 감각이 생겼다.
+프레임워크 내부만 따로 보는 게 아니라, 사용자 코드가 그 위에 올라가면 실제로 어떤 흐름이 되는지를 바로 확인할 수 있다. 개인적으로는 이 연결이 있어야 "아, 이 구현이 여기서 쓰이겠구나"라는 감각이 생겼다.
 
 ## 내가 읽은 순서는 이랬다
 
@@ -130,9 +130,13 @@ README에도 정리돼 있지만, 실제로는 다음 순서가 제일 자연스
 
 이후 글에서는 이 구조를 하나씩 조금 더 가까이에서 본다.
 
-1. `AnnotationConfigApplicationContext`로 보는 IoC/DI와 Bean lifecycle
-2. `ProxyFactory`, `TransactionalBeanPostProcessor`, `JdbcTemplate`로 보는 AOP와 트랜잭션
-3. `DispatcherServlet`, `HandlerMapping`, argument resolver로 보는 MVC 요청 처리
-4. `MiniSpringApplication`과 자동 설정으로 보는 부트스트랩 조립 방식
+1. [`AnnotationConfigApplicationContext`로 보는 IoC/DI와 Bean lifecycle](/posts/spring-lite-context/)
+2. [`ProxyFactory`, `TransactionalBeanPostProcessor`, `JdbcTemplate`로 보는 AOP와 트랜잭션](/posts/spring-lite-aop-tx/)
+3. [`DispatcherServlet`, `HandlerMapping`, argument resolver로 보는 MVC 요청 처리](/posts/spring-lite-web/)
+4. [`MiniSpringApplication`과 자동 설정으로 보는 부트스트랩 조립 방식](/posts/spring-lite-boot/)
 
-내가 `spring-lite`를 좋게 본 이유는 "작아서 보기 쉽다"보다, **Spring의 핵심을 딱 비교 학습하기 좋은 크기로 쪼개 놨다**는 데 있다. 그래서 이 시리즈도 강의 노트처럼 정리하기보다, 직접 구현해 보면서 어떤 감각이 남았는지에 더 가깝게 풀어보려고 한다.
+내가 `spring-lite`를 좋게 본 이유는 "작아서 보기 쉽다"보다, Spring의 핵심을 비교 학습하기 좋은 크기로 쪼개 놨다는 데 있다. 그래서 이 시리즈도 강의 노트처럼 정리하기보다, 직접 구현해 보면서 어떤 감각이 남았는지에 더 가깝게 풀어보려고 한다.
+
+## 참고
+
+- [Spring Framework Reference — Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html)
