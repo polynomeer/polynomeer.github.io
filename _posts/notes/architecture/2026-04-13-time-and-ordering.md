@@ -11,29 +11,29 @@ tags: [Distributed System, Clock, Ordering, Lamport Clock, Concurrency, Distribu
 
 서버의 시계는 두 종류다.
 
-**벽시계(wall clock).** `System.currentTimeMillis()`, `gettimeofday()`. 실제 시각을 가리키지만 **불연속으로 점프한다.** NTP가 보정하면 뒤로 갈 수 있고, 운영자가 바꿀 수도 있으며, 가상 머신이 멈췄다 재개되면 크게 뛴다.
+벽시계(wall clock). `System.currentTimeMillis()`, `gettimeofday()`. 실제 시각을 가리키지만 불연속으로 점프한다. NTP(네트워크 시각 동기화 프로토콜)가 보정하면 뒤로 갈 수 있고, 운영자가 바꿀 수도 있으며, 가상 머신이 멈췄다 재개되면 크게 뛴다.
 
-**단조 시계(monotonic clock).** `System.nanoTime()`. 어떤 기준점부터 단조 증가만 한다. 시각을 말해 주지 않지만 **경과 시간을 재는 데는 이쪽이 맞다.** 타임아웃과 지연 측정에 벽시계를 쓰면 NTP 보정 한 번에 음수 지연이 나온다.
+단조 시계(monotonic clock). `System.nanoTime()`. 어떤 기준점부터 단조 증가만 한다. 시각을 말해 주지 않지만 경과 시간을 재는 데는 이쪽이 맞다. [`System.nanoTime()` Javadoc](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.html#nanoTime())도 용도를 이렇게 한정한다. "This method can only be used to measure elapsed time and is not related to any other notion of system or wall-clock time."(경과 시간 측정에만 쓸 수 있고, 시스템 시각이나 벽시계 시각과는 관계가 없다.) 타임아웃과 지연 측정에 벽시계를 쓰면 NTP 보정 한 번에 음수 지연이 나온다.
 
-NTP를 맞춰도 서버 간 오차는 남는다. 일반적인 데이터센터에서 수 밀리초, 나쁘면 그 이상이다. 그래서 **"A의 타임스탬프가 B보다 작으니 A가 먼저다"는 성립하지 않는다.** 두 사건이 같은 서버에서 일어난 것이 아니라면.
+NTP를 맞춰도 서버 간 오차는 남는다. 일반적인 데이터센터에서 수 밀리초, 나쁘면 그 이상이다. 그래서 두 사건이 같은 서버에서 일어난 것이 아니라면 "A의 타임스탬프가 B보다 작으니 A가 먼저다"는 성립하지 않는다.
 
-[분산락 글](/posts/kleppmann-distributed-locking/)에서 Kleppmann이 Redlock을 비판한 근거의 하나가 이것이었고, [ParityPay 10편](/posts/parity-pay-lock-lease/)에서 "lease의 시계는 락 서버의 것"이라는 형태로 같은 문제를 만났다. 홀드 시각은 클라이언트가 응답을 받은 뒤 찍히고 lease는 락 서버가 `SET`을 실행한 순간부터 흐르므로, 클라이언트는 자기 lease가 이미 절반 넘게 탔다는 것을 알 수 없다.
+[분산락 글](/posts/kleppmann-distributed-locking/)에서 Kleppmann이 Redlock을 비판한 근거의 하나가 이것이었다. [ParityPay 10편](/posts/parity-pay-lock-lease/)에서는 "lease의 시계는 락 서버의 것"이라는 형태로 같은 문제를 만났다. 홀드 시각은 클라이언트가 응답을 받은 뒤 찍히고 lease는 락 서버가 `SET`을 실행한 순간부터 흐르므로, 클라이언트는 자기 lease가 이미 절반 넘게 탔다는 것을 알 수 없다.
 
 ## 논리 시계: 시각을 포기하고 순서를 얻는다
 
-**Lamport 시계**는 각 노드가 카운터를 하나 갖고 다음 규칙을 따른다.
+Lamport 시계는 각 노드가 카운터를 하나 갖고 다음 규칙을 따른다.
 
 1. 이벤트가 일어나면 카운터를 1 올린다.
 2. 메시지를 보낼 때 카운터를 함께 보낸다.
 3. 메시지를 받으면 `max(내 카운터, 받은 값) + 1`로 갱신한다.
 
-이 값으로 얻는 보장은 한 방향이다. **A가 B의 원인이면 `L(A) < L(B)`다.** 역은 성립하지 않는다. `L(A) < L(B)`라고 A가 B의 원인인 것은 아니고, 둘이 무관(concurrent)할 수도 있다.
+이 값으로 얻는 보장은 한 방향이다. A가 B의 원인이면 `L(A) < L(B)`다. [Lamport의 논문](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)은 이것을 Clock Condition이라 부른다. 역은 성립하지 않는다. `L(A) < L(B)`라고 A가 B의 원인인 것은 아니고, 둘이 무관(concurrent)할 수도 있다.
 
-**벡터 시계**는 노드마다 하나씩 카운터를 두어 이 약점을 메운다. 두 벡터를 비교해 "A가 먼저", "B가 먼저", "동시 발생" 셋을 구분할 수 있다. 대가는 크기다. 노드 수에 비례해 자라므로 노드가 많으면 부담이 된다.
+벡터 시계는 노드마다 하나씩 카운터를 두어 이 약점을 메운다. 두 벡터를 비교해 "A가 먼저", "B가 먼저", "동시 발생" 셋을 구분할 수 있다. 대가는 크기다. 노드 수에 비례해 자라므로 노드가 많으면 부담이 된다.
 
-**하이브리드 논리 시계(HLC)** 는 물리 시각과 논리 카운터를 합친다. 사람이 읽을 수 있는 시각에 가까우면서 인과 순서도 지킨다. CockroachDB 등이 쓴다.
+하이브리드 논리 시계(HLC)는 물리 시각과 논리 카운터를 합친다. 사람이 읽을 수 있는 시각에 가까우면서 인과 순서도 지킨다. CockroachDB 등이 쓴다.
 
-**TrueTime**은 다른 접근이다. Spanner는 GPS와 원자시계로 시각 오차의 **상한**을 알고, 커밋 시 그 불확실 구간만큼 기다려 순서를 보장한다. 정확한 시계를 만든 것이 아니라 **오차의 크기를 알고 그만큼 기다리는** 것이고, 그래서 특수한 하드웨어가 필요하다.
+TrueTime은 다른 접근이다. Spanner는 GPS와 원자시계로 시각 오차의 상한을 알고, 커밋 시 그 불확실 구간만큼 기다려 순서를 보장한다. [Spanner 논문](https://static.googleusercontent.com/media/research.google.com/en//archive/spanner-osdi2012.pdf)에 따르면 그 구간은 대개 10ms 아래다. 정확한 시계를 만든 것이 아니라 오차의 크기를 알고 그만큼 기다리는 것이고, 그래서 특수한 하드웨어가 필요하다.
 
 ## 실무에서 고르는 기준
 
@@ -45,16 +45,16 @@ NTP를 맞춰도 서버 간 오차는 남는다. 일반적인 데이터센터에
 | 여러 노드의 인과 관계 | 논리 시계 또는 상관 ID |
 | 충돌 해소 | 버전 벡터 또는 명시적 규칙 |
 
-세 번째 줄이 핵심이다. 순서가 필요하면 **순서를 매기는 주체를 하나로 정한다.** Kafka의 파티션 오프셋, DB의 시퀀스와 행 버전, 단일 리더의 로그가 전부 그 방법이다. "타임스탬프로 정렬"은 그 주체가 없을 때 쓰는 마지막 수단이고, 오차만큼 틀린다.
+이벤트 순서가 필요하면 **순서를 매기는 주체를 하나로 정한다.** [Kafka의 파티션 오프셋](/posts/kafka-storage-internals/), DB의 시퀀스와 행 버전, 단일 리더의 로그가 전부 그 방법이다. "타임스탬프로 정렬"은 그 주체가 없을 때 쓰는 마지막 수단이고, 오차만큼 틀린다.
 
-**Last-Write-Wins**가 위험한 이유도 여기 있다. 타임스탬프가 큰 쪽을 채택하면, 시계가 앞선 노드의 쓰기가 항상 이긴다. 시계가 뒤로 점프하는 순간 최신 쓰기가 조용히 버려진다.
+Last-Write-Wins(타임스탬프가 큰 쓰기를 채택하는 충돌 해소)가 위험한 이유도 여기 있다. 이 규칙에서는 시계가 앞선 노드의 쓰기가 항상 이긴다. 시계가 뒤로 점프하는 순간 최신 쓰기가 조용히 버려진다.
 
 ## 이 설명이 깨지는 곳
 
-- **단일 노드 안에서는 벽시계로 충분한 경우가 많다.** 같은 프로세스에서 발생한 사건의 순서라면 굳이 논리 시계가 필요 없다.
-- **논리 시계는 "언제"를 말하지 않는다.** 사용자에게 보여줄 값이 아니고, 사람이 로그를 읽을 때도 쓸 수 없다. 대개 둘을 함께 남긴다.
-- **상관 ID(trace ID)는 시계가 아니지만 실무에서 더 자주 쓰인다.** 한 요청의 흐름을 묶는 것만으로 대부분의 "어느 것이 먼저인가"가 해결된다.
-- **윤초와 시간대는 별개의 함정이다.** 저장은 UTC, 표시만 지역 시간이 기본이고, 윤초 처리(smearing)는 인프라가 정한다.
+- 단일 노드 안에서는 벽시계로 충분한 경우가 많다. 같은 프로세스에서 발생한 사건의 순서라면 굳이 논리 시계가 필요 없다.
+- 논리 시계는 "언제"를 말하지 않는다. 사용자에게 보여줄 값이 아니고, 사람이 로그를 읽을 때도 쓸 수 없다. 대개 둘을 함께 남긴다.
+- [상관 ID(trace ID)](/posts/metrics-logs-traces/)는 시계가 아니지만 실무에서 더 자주 쓰인다. 한 요청의 흐름을 묶는 것만으로 대부분의 "어느 것이 먼저인가"가 해결된다.
+- 윤초와 시간대는 별개의 함정이다. 저장은 UTC, 표시만 지역 시간이 기본이고, 윤초 처리(smearing)는 인프라가 정한다.
 
 ## 무엇을 재면 확인되는가
 
@@ -66,19 +66,18 @@ NTP를 맞춰도 서버 간 오차는 남는다. 일반적인 데이터센터에
 
 ## 실무와의 접점
 
-[SQS 파이프라인](/posts/polling-to-sqs-pipeline/)에서 순서 역전을 상태 전이로 풀었다. 메시지의 도착 순서나 타임스탬프를 믿지 않고, "이 상태에서 이 전이가 가능한가"로 판정했다. 지금 이 글의 언어로 다시 쓰면, **순서를 시계에서 얻지 않고 상태에서 얻은 것**이다. 시계를 쓸 수 없는 환경에서 그것이 가장 견고한 방법이었다.
+[SQS 파이프라인](/posts/polling-to-sqs-pipeline/)에서 순서 역전을 상태 전이로 풀었다. 메시지의 도착 순서나 타임스탬프를 믿지 않고, "이 상태에서 이 전이가 가능한가"로 판정했다. 이 글의 언어로 다시 쓰면 순서를 시계에서 얻지 않고 상태에서 얻은 것이다. 시계를 쓸 수 없는 환경에서 그것이 가장 견고한 방법이었다.
 
 ## 정리
 
-- 벽시계는 점프하고 단조 시계는 시각을 모른다. 경과 시간은 단조 시계, 표시는 벽시계다.
 - 서버가 다르면 타임스탬프 비교로 순서를 정할 수 없다. NTP는 오차를 줄일 뿐 없애지 않는다.
-- Lamport 시계는 "원인이면 작다"만 보장한다. 역은 성립하지 않는다.
-- 벡터 시계는 동시 발생을 구분하지만 크기가 노드 수에 비례한다.
-- 순서가 필요하면 순서를 매기는 주체를 하나 정한다. 오프셋, 시퀀스, 버전이 그 주체다.
-- Last-Write-Wins는 시계가 앞선 노드를 항상 이기게 만든다.
+- 순서가 필요하면 오프셋, 시퀀스, 버전처럼 순서를 매기는 주체를 하나 정한다. 타임스탬프 정렬은 그 주체가 없을 때의 마지막 수단이다.
+- 시계로 순서를 매기는 규칙(Last-Write-Wins)은 시계가 뒤로 점프할 때 최신 쓰기를 조용히 버린다.
 
 ## 참고
 
 - Lamport, [Time, Clocks, and the Ordering of Events in a Distributed System](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) (1978)
+- [Java SE 21: `System.nanoTime()`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.html#nanoTime())
+- Corbett et al., [Spanner: Google's Globally-Distributed Database](https://static.googleusercontent.com/media/research.google.com/en//archive/spanner-osdi2012.pdf) (OSDI 2012)
 - Kulkarni et al., [Logical Physical Clocks (HLC)](https://cse.buffalo.edu/tech-reports/2014-04.pdf)
 - [Spanner: TrueTime and external consistency](https://cloud.google.com/spanner/docs/true-time-external-consistency)
