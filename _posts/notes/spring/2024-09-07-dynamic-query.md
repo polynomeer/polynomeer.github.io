@@ -23,7 +23,7 @@ tags: [Spring, JPA, Dynamic Query, Querydsl]
 - `Specification`
 - Querydsl
 
-간단한 조회는 앞의 방법으로도 충분하지만, 조건 조합이 많아질수록 Querydsl 쪽이 읽기와 리팩터링에 유리하다.
+`Specification`은 조건(predicate)을 하나씩 정의해 두고 조합하는 방식이다. Spring Data JPA 문서는 이 방식이 필요한 조합마다 쿼리 메서드를 선언하는 일을 없앤다고 설명한다([Specifications](https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html)). 간단한 조회는 앞의 방법으로도 충분하지만, 조건 조합이 많아질수록 [Querydsl](/posts/querydsl/) 쪽이 읽기와 리팩터링에 유리하다.
 
 ## 가장 흔한 안티패턴
 
@@ -37,7 +37,7 @@ tags: [Spring, JPA, Dynamic Query, Querydsl]
 - `findByStatusAndKeyword`
 - `findByStatusAndKeywordAndCreatedAtBetween`
 
-이 구조는 결국 조건이 조금만 늘어나도 감당이 안 된다.
+선택 조건이 하나 늘 때마다 그 조건이 있는 경우와 없는 경우의 조합이 모두 메서드가 되므로, 메서드 수가 조건 수보다 훨씬 빠르게 늘어난다.
 
 ## Querydsl이 좋은 이유
 
@@ -66,11 +66,15 @@ private BooleanExpression eqStatus(Status status) {
 
 - 카운트 쿼리가 비싼가
 - 조인이 많아서 중복 row가 발생하는가
-- offset 기반 페이지네이션이 성능 병목인가
-- 조건이 늘어날수록 인덱스 전략이 맞는가
+- offset 기반 페이지네이션이 성능 병목인가 ([페이징 성능](/posts/pagination-performance/))
+- 조건이 늘어날수록 인덱스 전략이 맞는가 ([인덱스](/posts/db-index/))
 
-동적 쿼리는 문법보다도 결국 성능과 유지보수의 균형 문제다.
+조건 조합이 늘면 실행되는 SQL의 모양도 늘어난다. 그래서 문법을 정리한 뒤에도 조합별로 카운트 비용과 인덱스 사용 여부를 따로 확인해야 한다.
 
 ## 정리
 
-동적 쿼리는 "조건이 유동적인 조회를 어떻게 일관되게 표현할 것인가"의 문제다. 단순한 검색은 간단하게 가고, 조건 조합이 늘어나는 시점부터는 Querydsl 같은 구조화된 도구를 도입하는 편이 장기적으로 안전하다.
+단순한 검색은 메서드 이름 쿼리로 두고, 조건 조합이 늘어나 메서드가 불어나기 시작하는 시점부터 `Specification`이나 Querydsl 같은 구조화된 도구를 도입한다. 도구를 바꾼 뒤에도 조건 해석(Service)과 쿼리 작성(Query Repository)은 분리해 둔다.
+
+## 참고
+
+- [Spring Data JPA Reference — Specifications](https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html)
