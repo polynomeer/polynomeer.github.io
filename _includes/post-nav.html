@@ -1,5 +1,11 @@
-<!-- Navigation buttons at the bottom of the post. -->
+<!-- Navigation at the bottom of the post. -->
 <!-- Series posts step through the series in series_order; everything else walks the timeline. -->
+<!--
+  There is no placeholder for a missing neighbour. A post at either end of its
+  series used to get a full-size box containing a dash, which spends the same
+  height as a real link to say nothing. When neither neighbour exists - a
+  series of one, say - the whole block is left out.
+-->
 
 {% assign previous = site.data.locales[include.lang].post.button.previous %}
 {% assign next = site.data.locales[include.lang].post.button.next %}
@@ -28,32 +34,20 @@
   {% endfor %}
 {% endif %}
 
-<nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation">
-  {% if previous_post.url %}
-    <a
-      href="{{ previous_post.url | relative_url }}"
-      class="btn btn-outline-primary"
-      aria-label="{{ previous }}"
-    >
-      <p>{{ previous_post.title }}</p>
-    </a>
-  {% else %}
-    <div class="btn btn-outline-primary disabled" aria-label="{{ previous }}">
-      <p>-</p>
-    </div>
-  {% endif %}
+{% if previous_post.url or next_post.url %}
+  <nav class="post-navigation" aria-label="Post Navigation">
+    {% if previous_post.url %}
+      <a class="post-nav-link is-previous" href="{{ previous_post.url | relative_url }}">
+        <span class="post-nav-label">{{ previous }}</span>
+        <span class="post-nav-title">{{ previous_post.title }}</span>
+      </a>
+    {% endif %}
 
-  {% if next_post.url %}
-    <a
-      href="{{ next_post.url | relative_url }}"
-      class="btn btn-outline-primary"
-      aria-label="{{ next }}"
-    >
-      <p>{{ next_post.title }}</p>
-    </a>
-  {% else %}
-    <div class="btn btn-outline-primary disabled" aria-label="{{ next }}">
-      <p>-</p>
-    </div>
-  {% endif %}
-</nav>
+    {% if next_post.url %}
+      <a class="post-nav-link is-next" href="{{ next_post.url | relative_url }}">
+        <span class="post-nav-label">{{ next }}</span>
+        <span class="post-nav-title">{{ next_post.title }}</span>
+      </a>
+    {% endif %}
+  </nav>
+{% endif %}
