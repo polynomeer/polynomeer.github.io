@@ -7,7 +7,7 @@ tags: [Redis, Cache, Caching Strategy]
 
 ## Redis를 붙였다고 캐시 전략이 끝나는 것은 아니다
 
-Redis는 빠르지만, 캐시 설계가 잘못되면 장애를 더 빠르게 전파할 수도 있다. 중요한 것은 Redis 자체보다 **무엇을, 얼마나 오래, 어떤 방식으로 캐시할지**를 정하는 일이다.
+Redis는 빠르지만, 캐시 설계가 잘못되면 장애를 더 빠르게 전파할 수도 있다. 중요한 것은 Redis 자체보다 무엇을, 얼마나 오래, 어떤 방식으로 캐시할지를 정하는 일이다.
 
 ## 기본 원칙
 
@@ -39,15 +39,21 @@ TTL이 너무 짧으면 미스가 잦아지고, 너무 길면 오래된 데이�
 
 ## 운영 지표
 
-- hit ratio
-- eviction 발생량
+- hit ratio (`INFO stats`의 `keyspace_hits`, `keyspace_misses`)
+- eviction 발생량 (`evicted_keys`)
 - key/value 크기
 - TTL 분포
 - hot key 존재 여부
 - 네트워크 왕복 지연
 
-Redis는 메모리 기반이라 빠르지만, 여전히 원격 네트워크 호출이다. 로컬 캐시와 함께 2계층으로 설계하는 이유도 여기에 있다.
+앞의 두 지표를 읽는 법은 [Redis Key eviction 문서](https://redis.io/docs/latest/develop/reference/eviction/)에 있다.
+
+Redis는 메모리 기반이라 빠르지만, 여전히 원격 네트워크 호출이다. [로컬 캐시와 함께 2계층으로](/posts/cache-write-under-high-concurrency/) 설계하는 이유도 여기에 있다.
 
 ## 정리
 
-Redis 캐시 운영의 핵심은 "무조건 넣는다"가 아니라, **비용이 큰 읽기를 어디까지 흡수하고 stale 데이터를 어디까지 허용할지**를 명확히 정하는 데 있다.
+Redis 캐시 운영의 핵심은 "무조건 넣는다"가 아니라, 비용이 큰 읽기를 어디까지 흡수하고 stale 데이터를 어디까지 허용할지를 명확히 정하는 데 있다.
+
+## 참고
+
+- [Key eviction](https://redis.io/docs/latest/develop/reference/eviction/) — Redis Docs
