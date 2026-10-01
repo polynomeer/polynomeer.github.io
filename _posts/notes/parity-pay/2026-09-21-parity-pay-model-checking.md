@@ -6,6 +6,7 @@ tags: [Payment, TLA+, Model Checking, Formal Verification, Consistency, Testing,
 series: parity-pay
 series_title: ParityPay로 검증하는 결제 정합성
 series_order: 12
+mermaid: true
 
 problem_decision_result:
   problem: "부하·장애 실험 41종과 통합 시험 328개를 돌리고 결함 14건을 고쳤다. 그런데 그 실험들은 시각이 맞아떨어지는 순간에만 드러나는 경로를 우연에 기대서 밟는다. 밟지 못한 경로가 있는지, 있다면 무엇인지 알 방법이 없었다."
@@ -26,6 +27,18 @@ problem_decision_result:
 ## 무엇을 명세로 옮겼나
 
 `PaymentRecoveryService.resolveOne`의 분기다. 조회 결과가 승인이면 확정하고, 거절이면 실패로 확정하고, 없음이면 연속 횟수를 세다 임계치에서 실패로 확정하고, 조회 자체가 안 되면 재시도하다 사람에게 넘긴다.
+
+UNKNOWN에서 출발하는 전이로 그리면 갈래는 다섯이다.
+
+```mermaid
+stateDiagram-v2
+    [*] --> UNKNOWN
+    UNKNOWN --> APPROVED: 조회 결과 승인
+    UNKNOWN --> FAILED: 조회 결과 거절
+    UNKNOWN --> UNKNOWN: 없음, 연속 횟수가 임계치 미만
+    UNKNOWN --> FAILED: 없음, 연속 횟수가 임계치 도달
+    UNKNOWN --> MANUAL: 조회 불가, 재시도 후 사람에게
+```
 
 상태는 여섯 개다.
 
@@ -61,6 +74,25 @@ State 5: PgSettleApproved      pgState = approved
 **고객은 청구됐는데 결제는 실패로 확정됐다.**
 
 복구가 두 번 조회했고 두 번 다 기관에 기록이 없었다. 기관이 아직 처리 중이었기 때문이다. 연속 2회면 확정이므로 실패로 적었고, 그 다음에 기관이 승인을 기록했다.
+
+복구 쪽과 기관 쪽을 나란히 놓으면 두 번의 "없음"이 모두 `inflight` 창 안에 떨어진다.
+
+```mermaid
+sequenceDiagram
+    participant S as 결제 서버
+    participant R as 복구 resolveOne
+    participant PG as 기관
+    S->>PG: SendApproval
+    Note over S,PG: payStatus = UNKNOWN, pgState = inflight
+    R->>PG: 상태 조회
+    PG-->>R: 없음
+    Note over R: RecoverNotFoundRetry, notFound = 1
+    R->>PG: 상태 조회
+    PG-->>R: 없음
+    Note over R: RecoverNotFoundSettle, payStatus = FAILED, notFound = 2
+    Note over PG: PgSettleApproved, pgState = approved
+    Note over S,PG: 청구됐는데 결제는 FAILED
+```
 
 ## 이건 몰랐던 위험이 아니다
 
