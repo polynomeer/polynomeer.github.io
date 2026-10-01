@@ -146,7 +146,6 @@ post:
     prompt: read
   relate_posts: Further Reading
   backlinks: Posts that cite this one
-  backlinks_more: "and :COUNT more"
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer
   revisions: Revision history

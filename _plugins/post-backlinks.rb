@@ -18,7 +18,6 @@ module Jekyll
   module PostBacklinks
     # `[text](/posts/slug/)` and the occasional raw href.
     LINK_RE = %r{(?:\]\(|href=")(/posts/[a-z0-9\-]+)/?[^)"]*(?:\)|")}i
-    MAX_PER_POST = 8
 
     class << self
       def slug_of(url)
@@ -47,10 +46,13 @@ module Jekyll
         total_cited = cited.size
         total_citations = cited.values.sum(&:size)
 
+        # Every citation is handed over, not a capped slice. The include shows a
+        # few and folds the rest, so a cap here only produced a sentence saying
+        # some posts existed with no way to reach them. The most-cited post has
+        # 28, which is a few kilobytes of markup.
         posts.each do |post|
           citations = cited[slug_of(post.url)]
-          post.data['backlinks'] = citations.sort_by { |citing| -citing.date.to_i }.first(MAX_PER_POST)
-          post.data['backlinks_total'] = citations.size
+          post.data['backlinks'] = citations.sort_by { |citing| -citing.date.to_i }
         end
 
         return unless site.config['profile']
