@@ -14,19 +14,19 @@ DB의 변경을 다른 시스템에 전달하는 방법으로 CDC가 널리 쓰�
 
 트리거 방식은 변경 시 트리거가 별도 테이블에 기록한다. 삭제도 잡히고 중간 상태도 남는다. 대신 모든 쓰기에 트리거 실행 비용이 붙고, 그 실행이 원본 트랜잭션 안에서 돈다.
 
-로그 기반은 DB가 복제를 위해 이미 쓰고 있는 로그를 읽는다. PostgreSQL의 WAL, MySQL의 [binlog](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html)다. Debezium이 이 방식이고, 지금 CDC라고 하면 대개 이것을 뜻한다.
+로그 기반은 DB가 복제를 위해 이미 쓰고 있는 로그를 읽는다. PostgreSQL의 [WAL](/posts/wal-and-checkpoint/), MySQL의 [binlog](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html)다. Debezium이 이 방식이고, 지금 CDC라고 하면 대개 이것을 뜻한다.
 
 로그 기반이 좋은 이유는 **이미 쓰이고 있는 것을 읽기만 하기 때문**이다. 쓰기 경로에 비용이 거의 붙지 않고, 모든 변경이 순서대로 기록되어 있으며, 삭제도 당연히 들어 있다.
 
 ## 커넥터가 스스로를 복제본으로 만든다
 
-Debezium은 DB에게 자기가 복제본인 것처럼 행동한다. MySQL에서는 `database.server.id`로 클러스터에 서버 하나로 참여해 binlog를 읽고([Debezium MySQL 문서](https://debezium.io/documentation/reference/stable/connectors/mysql.html)), PostgreSQL에서는 논리 복제 슬롯을 만들어 WAL을 논리적 변경으로 디코딩해 받는다.
+Debezium은 DB 입장에서 보면 [복제본](/posts/db-replication/)처럼 행동한다. MySQL에서는 `database.server.id`라는 서버 번호를 받아 클러스터에 서버 하나로 참여하고, 다른 복제본처럼 binlog를 읽는다([Debezium MySQL 문서](https://debezium.io/documentation/reference/stable/connectors/mysql.html)). PostgreSQL에서는 [논리 복제 슬롯](/posts/kakao-postgres-es-cdc/)을 만든다. 슬롯은 DB가 이 소비자에게 WAL을 어디까지 넘겼는지 기억하는 장치다. Debezium은 이 슬롯으로 WAL을 "어느 행이 어떻게 바뀌었다"는 논리적 변경으로 디코딩해 받는다.
 
 이때 **복제 슬롯은 커넥터가 읽을 때까지 WAL을 보관한다.** 슬롯은 소비자의 상태를 모른다.
 
 > "They will prevent removal of required resources even when there is no connection using them." ([PostgreSQL 문서](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html))
 
-연결이 없어도 필요한 자원의 삭제를 막는다는 뜻이다. 그래서 커넥터가 멈추면 슬롯의 위치가 진행되지 않고, DB는 그 지점부터의 WAL을 지우지 못해 디스크가 찬다. CDC 운영에서 가장 흔한 장애가 이것이고, 커넥터 중단이 DB 장애로 번지는 경로다. 슬롯의 지연(`pg_replication_slots`의 `restart_lsn`, `confirmed_flush_lsn`과 현재 LSN의 차이)을 반드시 감시해야 한다.
+연결이 없어도 필요한 자원의 삭제를 막는다는 뜻이다. 그래서 커넥터가 멈추면 슬롯의 위치가 앞으로 가지 않고, DB는 그 위치부터의 WAL을 지우지 못한다. WAL이 계속 쌓여 결국 디스크가 찬다. CDC 운영에서 가장 흔한 장애가 이것이고, 커넥터 하나가 멈춘 것이 DB 장애로 번지는 경로다. 그래서 슬롯이 얼마나 뒤처졌는지를 반드시 감시해야 한다. LSN(Log Sequence Number)은 WAL 안의 위치를 나타내는 번호다. `pg_replication_slots`의 `restart_lsn`, `confirmed_flush_lsn`이 현재 LSN에서 얼마나 떨어져 있는지가 슬롯의 지연이다.
 
 정상 경로와 커넥터가 멈춘 뒤의 경로를 PostgreSQL 기준으로 나란히 놓으면 이렇다.
 
@@ -62,7 +62,7 @@ DB 쪽 상한은 [`max_slot_wal_keep_size`](https://www.postgresql.org/docs/curr
 
 전통적인 방식은 테이블을 잠그고 전체를 읽은 뒤 그 지점부터 로그를 따라가는 것이다. 정확하지만 큰 테이블에서는 오래 걸리고 그 동안 잠금이 걸린다. 중간에 실패하면 처음부터 다시 하고, 그 동안 스트리밍도 막힌다([Debezium 블로그](https://debezium.io/blog/2021/10/07/incremental-snapshots/)).
 
-증분 스냅샷(Debezium의 signal 기반)은 Netflix [DBLog](https://arxiv.org/abs/2010.12597)의 워터마크 방식을 가져온 것이다. 테이블을 청크로 나눠 읽으면서 동시에 로그도 처리한다. 잠금이 필요 없고 중간에 재시작할 수 있다. 스냅샷 중에 같은 행이 변경되면 버퍼에 담아 둔 스냅샷 쪽 READ 이벤트를 버리고 로그 쪽 이벤트를 남긴다([Debezium PostgreSQL 문서](https://debezium.io/documentation/reference/stable/connectors/postgresql.html)).
+증분 스냅샷(Debezium의 signal 기반)은 Netflix [DBLog](https://arxiv.org/abs/2010.12597)의 워터마크 방식을 가져온 것이다. 워터마크는 청크를 읽기 직전과 직후에 로그에 남기는 표시로, 그 사이에 들어온 로그 이벤트와 청크 결과를 맞춰 보는 기준이 된다. 테이블을 청크(일정 크기의 행 묶음)로 나눠 읽으면서 동시에 로그도 처리한다. 잠금이 필요 없고 중간에 재시작할 수 있다. 스냅샷 중에 같은 행이 바뀌면 로그 쪽 이벤트가 더 새로운 값이다. 그래서 버퍼에 담아 둔 스냅샷 쪽 READ 이벤트는 버리고 로그 쪽 이벤트를 남긴다([Debezium PostgreSQL 문서](https://debezium.io/documentation/reference/stable/connectors/postgresql.html)).
 
 운영에서 **스냅샷은 일회성 작업이 아니다.** 새 테이블을 추가할 때, 커넥터가 너무 오래 멈춰 WAL이 사라졌을 때, 대상 시스템을 재구축할 때 다시 필요하다. 그 절차가 준비돼 있지 않으면 그때 사고가 난다.
 
@@ -70,7 +70,7 @@ DB 쪽 상한은 [`max_slot_wal_keep_size`](https://www.postgresql.org/docs/curr
 
 로그에는 그 시점의 스키마로 해석해야 하는 바이너리 데이터가 들어 있다. 컬럼이 추가되기 전의 레코드와 후의 레코드가 같은 스트림에 섞여 있다.
 
-Debezium MySQL 커넥터는 DDL과 그 binlog 위치를 스키마 이력 토픽에 보관해 각 레코드를 올바른 스키마로 해석한다. 이 토픽이 유실되면 `snapshot.mode=recovery`로 현재 테이블 구조에서 이력을 다시 만들어야 한다. PostgreSQL은 논리 디코딩이 DDL을 지원하지 않아, 커넥터가 DDL 이벤트를 내지 못하고 메모리의 테이블 스키마를 갱신하며 따라간다.
+Debezium MySQL 커넥터는 [DDL](/posts/kakao-mysql-alter-ddl-algorithms/)(`ALTER TABLE`처럼 테이블 구조를 바꾸는 문장)과 그 DDL이 실행된 binlog 위치를 스키마 이력 토픽에 보관한다. 그래서 각 레코드를 그 시점의 올바른 스키마로 해석할 수 있다. 이 토픽이 유실되면 `snapshot.mode=recovery`로 현재 테이블 구조에서 이력을 다시 만들어야 한다. PostgreSQL은 사정이 다르다. 논리 디코딩이 DDL을 지원하지 않으므로 커넥터는 DDL 이벤트를 내지 못한다. 대신 메모리에 들고 있는 테이블 스키마를 갱신하며 따라간다.
 
 하류 소비자도 준비가 필요하다. 컬럼 추가는 대개 안전하지만, 컬럼 제거나 타입 변경은 소비자를 깨뜨린다([API 버저닝과 호환성](/posts/api-versioning-compatibility/)). **DDL 배포와 CDC 소비자 배포의 순서를 정해 둬야 한다.**
 
@@ -98,7 +98,7 @@ Debezium은 트랜잭션마다 BEGIN과 END 이벤트를 별도 토픽에 내고
 
 내부 모델이나 테이블을 바꿔도 소비자가 깨지지 않는다는 뜻이다.
 
-[ParityPay 5편](/posts/parity-pay-outbox/)이 Outbox를 택한 이유가 이것이었고, 그 글의 한계에 "폴링 지연 500ms"를 적었다. 업무 테이블을 CDC로 내보내면 그 지연은 줄지만 결합의 성격이 바뀐다. 다만 이 교환은 릴레이가 폴링일 때의 이야기다. 릴레이는 로그 테일링으로도 만들 수 있고([microservices.io](https://microservices.io/patterns/data/transactional-outbox.html)), 위 글은 Debezium으로 Outbox 테이블을 읽어 계약은 유지한 채 폴링 지연을 없앤다.
+[ParityPay 5편](/posts/parity-pay-outbox/)이 Outbox를 택한 이유가 이것이었고, 그 글의 한계로 "폴링 지연 500ms"를 적었다. 업무 테이블을 CDC로 내보내면 그 지연은 줄지만, 소비자가 이벤트 계약 대신 테이블 구조에 묶이게 된다. 다만 이 교환은 릴레이(Outbox 테이블을 읽어 메시지로 내보내는 부분)가 폴링일 때의 이야기다. 릴레이는 로그 테일링, 즉 DB 로그를 따라 읽는 방식으로도 만들 수 있다([microservices.io](https://microservices.io/patterns/data/transactional-outbox.html)). 위 Debezium 글이 그렇게 Outbox 테이블을 읽어, 이벤트 계약은 유지하면서 폴링 지연을 없앤다.
 
 세 경로를 놓고 보면, 지연은 릴레이가 정하고 결합은 무엇을 읽느냐가 정한다.
 
@@ -121,7 +121,7 @@ flowchart TD
 
 - CDC는 at-least-once다. 커넥터 재시작이나 DB 크래시 뒤에 중복이 나오고, PostgreSQL 문서도 중복 처리의 책임을 클라이언트에 둔다. 소비자가 멱등해야 한다([전달 보장](/posts/kafka-delivery-guarantees/)).
 - 로그에 없는 변경은 못 잡는다. 복제를 우회하는 작업이나 PostgreSQL의 DDL은 이벤트가 나오지 않는다. `TRUNCATE`는 PostgreSQL 커넥터가 이벤트로 낼 수 있지만 `skipped.operations` 기본값이 `t`라 기본 설정에서는 건너뛴다.
-- 순서는 파티션 안에서만 보장된다. 테이블을 여러 파티션에 뿌리면 행 간 순서가 깨진다. 보통 기본키를 파티션 키로 써서 같은 행의 순서를 보장한다.
+- 순서는 파티션 안에서만 보장된다. 테이블을 여러 파티션에 뿌리면 행 간 순서가 깨진다. 보통 기본키를 [파티션 키](/posts/ordering-versus-isolation/)로 써서 같은 행의 순서를 보장한다.
 - 삭제는 삭제 이벤트 뒤의 툼스톤(같은 키, null 값)으로 표현된다. 컴팩션 토픽과 함께 쓸 때 이 의미를 맞춰야 한다([로그 컴팩션과 보존](/posts/kafka-log-compaction/)).
 - 민감 정보가 그대로 흘러간다. 테이블의 모든 컬럼이 나가므로 마스킹이나 `column.exclude.list`로 컬럼 제외를 명시해야 한다.
 
