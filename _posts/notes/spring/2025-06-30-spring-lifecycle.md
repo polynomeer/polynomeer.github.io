@@ -32,7 +32,7 @@ tags: [Spring, Bean Lifecycle, Bean]
 
 ## 1. 컨테이너 초기화와 BeanDefinition 준비
 
-`ApplicationContext`가 생성되고 설정 정보가 읽힌다. 이 단계에서 어떤 빈들이 존재하는지에 대한 메타정보, 즉 BeanDefinition이 준비된다.
+`ApplicationContext`가 생성되고 설정 정보가 읽힌다. 이 단계에서 어떤 빈들이 존재하는지에 대한 메타정보인 [BeanDefinition](/posts/spring-internals-lab-bean-definition/)이 준비된다.
 
 BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서드, 소멸 메서드 같은 정보가 들어 있다. 아직 실제 객체가 전부 생성된 것은 아니고, 스프링이 "무엇을 어떻게 만들지"를 아는 상태가 먼저 준비된다고 보면 된다.
 
@@ -48,7 +48,7 @@ BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서
 
 ## 3. 의존성 주입
 
-이후 실제 객체가 생성되고 생성자 주입, 필드 주입, 세터 주입이 수행된다. 단일 생성자 주입이 가장 권장되는 이유도 이 단계가 가장 명확하게 드러나기 때문이다.
+생성자 주입은 앞 단계의 생성자 호출과 함께 일어난다. 필드 주입과 세터 주입은 객체가 만들어진 뒤에 수행된다. 단일 생성자 주입이 가장 권장되는 이유도 이 차이에서 나온다. 주입 방식 자체는 [IoC와 DI 글](/posts/ioc-di/)에서 따로 다뤘다.
 
 생성자 주입은 "생성 시점에 필요한 의존성이 모두 준비되어야 한다"는 제약이 있고, 그 제약 덕분에 불완전한 객체를 만들 가능성이 줄어든다. 반대로 필드 주입이나 세터 주입은 라이프사이클 상 더 늦은 주입이 가능하지만, 객체 입장에서 의존성이 언제 완성되는지 덜 명확해진다.
 
@@ -62,22 +62,22 @@ BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서
 - `BeanFactoryAware`
 - `ApplicationContextAware`
 
-이들은 의존성 주입 이후, 초기화 이전에 호출된다. 즉, "내가 스프링 컨테이너 안에 들어와 있구나"라는 사실을 빈이 인지할 수 있게 해주는 구간이다.
+Spring Framework 레퍼런스는 이 콜백이 일반 프로퍼티가 채워진 뒤, `afterPropertiesSet()`이나 커스텀 init 메서드 같은 초기화 콜백 전에 호출된다고 적는다([Customizing the Nature of a Bean](https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html)). 빈은 이 구간에서 자신이 컨테이너 안에 있다는 정보를 받는다.
 
 다만 `ApplicationContextAware` 같은 인터페이스를 남용하면 비즈니스 객체가 컨테이너에 강하게 결합된다. 필요할 때만 쓰고, 일반적인 의존관계 해결 수단으로 쓰는 것은 피하는 편이 좋다.
 
 ## 5. BeanPostProcessor가 개입하는 지점
 
-이 구간이 스프링 생명주기에서 가장 중요하다. 많은 고수준 기능이 여기서 구현되기 때문이다.
+많은 고수준 기능이 이 구간에서 구현된다.
 
-`BeanPostProcessor`는 빈 초기화 전후에 개입할 수 있다. 대표적인 메서드는 다음 두 개다.
+`BeanPostProcessor`는 빈 초기화 전후에 개입할 수 있다. 컨테이너가 빈 인스턴스를 먼저 만들고, 그다음 `BeanPostProcessor`가 그 인스턴스에 작업한다([Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)). 대표적인 메서드는 다음 두 개다.
 
 - `postProcessBeforeInitialization`
 - `postProcessAfterInitialization`
 
-스프링이 제공하는 다양한 기능은 이 확장 포인트를 활용한다. 예를 들어 AOP, `@Transactional`, `@Async`, `@Autowired` 처리 일부, `@PostConstruct` 처리도 모두 넓게 보면 후처리 메커니즘 위에서 돌아간다.
+스프링이 제공하는 다양한 기능은 이 확장 포인트를 활용한다. 같은 문서는 Spring AOP 인프라 클래스 일부가 프록시로 감싸는 로직을 제공하려고 bean post-processor로 구현되어 있다고 설명한다. 예를 들어 [AOP](/posts/aop/), `@Transactional`, `@Async`, `@Autowired` 처리 일부, `@PostConstruct` 처리도 모두 넓게 보면 후처리 메커니즘 위에서 돌아간다.
 
-즉, 우리가 주입받는 객체가 항상 원본 클래스 그 자체는 아닐 수 있다. 후처리 과정에서 프록시 객체로 대체될 수 있다.
+그래서 우리가 주입받는 객체가 항상 원본 클래스 그 자체는 아니다. 후처리 과정에서 프록시 객체로 대체될 수 있다. 후처리기의 호출 순서는 [spring-internals-lab 5편](/posts/spring-internals-lab-bean-lifecycle/)에서 실험으로 확인했다.
 
 ## 6. 초기화 콜백
 
@@ -87,9 +87,9 @@ BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서
 - `InitializingBean#afterPropertiesSet`
 - `@Bean(initMethod = "...")`
 
-실무에서는 프레임워크 의존성이 덜한 `@PostConstruct`를 많이 쓴다. `InitializingBean`은 스프링 인터페이스에 직접 의존하므로 보통 우선순위가 낮다. `initMethod`는 외부 라이브러리 객체를 `@Bean`으로 등록할 때 유용하다.
+실무에서는 프레임워크 의존성이 덜한 `@PostConstruct`를 많이 쓴다. `InitializingBean`은 스프링 인터페이스에 직접 의존하므로 보통 우선순위가 낮다. 레퍼런스도 `InitializingBean`이 코드를 Spring에 불필요하게 결합시키므로 `@PostConstruct`나 POJO 초기화 메서드를 권한다. 세 가지를 함께 쓰면 `@PostConstruct`, `afterPropertiesSet()`, 커스텀 init 메서드 순으로 호출된다. `initMethod`는 외부 라이브러리 객체를 `@Bean`으로 등록할 때 유용하다.
 
-초기화 콜백은 "의존성 주입이 끝나고, 이제 안전하게 준비 작업을 할 수 있는 시점"에 가깝다. 예를 들면:
+초기화 콜백은 의존성 주입이 끝나서 준비 작업을 할 수 있는 시점에 가깝다. 예를 들면 다음과 같은 작업이다.
 
 - 캐시 warm-up
 - 외부 클라이언트 연결 확인
@@ -102,9 +102,13 @@ BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서
 
 `@Transactional`이 왜 어떤 메서드에서는 동작하고 어떤 메서드에서는 안 동작하는지 이해하려면, 프록시가 생명주기의 어느 시점에 적용되는지를 같이 봐야 한다.
 
-스프링은 보통 후처리 단계에서 프록시를 만든다. 즉, 빈 내부 메서드 호출 시점에는 아직 프록시를 거치지 않을 수 있고, 초기화 시점의 자기 자신 호출도 기대와 다르게 동작할 수 있다.
+스프링은 보통 초기화 이후의 후처리 단계(`postProcessAfterInitialization`)에서 프록시를 만든다. 그래서 초기화 콜백이 실행될 때는 아직 프록시가 없다. 레퍼런스는 이 점을 직접 적는다.
 
-대표적인 예가 self-invocation 문제다.
+> "Thus, the initialization callback is called on the raw bean reference, which means that AOP interceptors and so forth are not yet applied to the bean."
+>
+> (초기화 콜백은 원본 빈 참조에서 호출되므로 AOP 인터셉터 등은 아직 적용되지 않은 상태다.)
+
+여기에 [self-invocation](/posts/proxy-limits/) 문제가 겹친다. 프록시 모드에서는 프록시를 거쳐 들어온 외부 호출만 가로채므로, 같은 객체 안에서 다른 메서드를 부르면 `@Transactional`이 붙어 있어도 트랜잭션이 시작되지 않는다. 트랜잭션 레퍼런스도 `@PostConstruct` 같은 초기화 코드에서 이 기능에 기대지 말라고 적는다([Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)).
 
 ```java
 @Service
@@ -134,17 +138,17 @@ public class OrderService {
 
 ### Prototype
 
-요청할 때마다 새 객체를 만든다. 중요한 점은 스프링이 생성과 초기화까지만 관리하고, 이후 소멸은 일반적으로 관리하지 않는다는 것이다. 그래서 prototype 빈에 외부 리소스 정리 책임이 있다면 별도 관리가 필요하다.
+요청할 때마다 새 객체를 만든다. 스프링은 생성과 초기화까지만 관리하고 이후 소멸은 관리하지 않는다. 레퍼런스에 따르면 초기화 콜백은 스코프와 관계없이 호출되지만, prototype 빈에는 설정한 소멸 콜백이 호출되지 않는다([Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)). 그래서 prototype 빈에 외부 리소스 정리 책임이 있다면 별도 관리가 필요하다.
 
 ### Web Scope
 
-`request`, `session`, `application` 같은 웹 스코프는 HTTP 생명주기와 연결된다. 이 경우 빈 생명주기를 스프링 컨테이너만의 시간축으로 보면 오해하기 쉽다. 웹 요청의 시작과 끝이 사실상 생성/소멸 조건이 된다.
+`request`, `session`, `application` 같은 웹 스코프는 HTTP 생명주기와 연결된다. 이 경우 빈 생명주기를 스프링 컨테이너만의 시간축으로 보면 오해하기 쉽다. `request` 빈은 HTTP 요청 하나, `session` 빈은 HTTP 세션 하나의 수명을 따른다.
 
 ## 9. 종료 시점
 
 컨테이너가 내려갈 때는 `@PreDestroy`, `DisposableBean`, `destroyMethod` 등이 사용된다. 커넥션 정리, 외부 리소스 해제, 버퍼 flush 같은 작업이 이 구간에 들어간다.
 
-여기서도 선택지는 초기화 콜백과 비슷하다.
+여기서도 선택지는 초기화 콜백과 비슷하고, 함께 쓰면 아래 순서로 호출된다.
 
 - `@PreDestroy`
 - `DisposableBean#destroy`
@@ -187,7 +191,7 @@ public class OrderService {
 
 ## 전체 순서를 한 번에 다시 보면
 
-정확한 내부 세부 순서는 스프링 버전과 상황에 따라 더 복잡하지만, 실무적으로는 아래 흐름으로 정리해두면 대부분의 문제를 설명할 수 있다.
+`BeanFactory` Javadoc은 표준 초기화 순서를 `BeanNameAware`부터 `ApplicationContextAware`까지의 Aware 콜백, `postProcessBeforeInitialization`, `afterPropertiesSet`, 커스텀 init 메서드, `postProcessAfterInitialization` 순으로 나열한다([BeanFactory Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html)). `@PostConstruct`는 `postProcessBeforeInitialization` 단계에서 처리된다. 실무에서는 아래 흐름으로 잡아두면 대부분의 문제를 설명할 수 있다.
 
 ```text
 BeanDefinition 준비
@@ -205,4 +209,12 @@ BeanDefinition 준비
 
 빈 생명주기를 이해하면 스프링이 "객체를 언제 만들고, 언제 연결하고, 언제 감싸고, 언제 정리하는지"가 보인다. 그 순간 `초기화 시점`, `프록시 적용`, `트랜잭션 미적용`, `종료 훅 누락` 같은 문제가 단순 현상이 아니라 순서 문제로 읽히기 시작한다.
 
-스프링을 사용할 때 중요한 것은 어노테이션 이름을 많이 아는 것이 아니라, 그 어노테이션이 생명주기 어디에 걸리는지를 아는 것이다. 그 감각이 잡히면 디버깅 속도가 확실히 달라진다.
+어노테이션을 볼 때는 이름보다 그 어노테이션이 생명주기 어디에 걸리는지를 먼저 확인한다. `@Transactional`이 `@PostConstruct` 안에서 동작하지 않는 이유도 그 위치에서 나온다.
+
+## 참고
+
+- [Spring Framework Reference — Customizing the Nature of a Bean](https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html)
+- [Spring Framework Reference — Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)
+- [Spring Framework Reference — Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)
+- [Spring Framework Reference — Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
+- [Spring Framework Javadoc — BeanFactory](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html)
