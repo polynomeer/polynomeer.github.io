@@ -16,16 +16,16 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 `ApplicationContext.refresh()`는 Spring 컨테이너 초기화의 중심이다. 그런데 실무에서는 이 메서드를 직접 호출할 일보다 결과만 접할 일이 훨씬 많다. 그래서 다음 질문이 자주 흐릿하게 남는다.
 
-- `BeanFactoryPostProcessor`와 `BeanPostProcessor`는 정확히 어느 순서로 실행되는가
+- `BeanFactoryPostProcessor`와 [`BeanPostProcessor`](/posts/spring-internals-lab-bean-lifecycle/)는 정확히 어느 순서로 실행되는가
 - non-lazy singleton은 언제 실제로 만들어지는가
 - `ContextRefreshedEvent`는 언제 발행되는가
 - `refresh()` 전, 후, 실패 후, `close()` 후에 컨테이너는 어떻게 다른 상태인가
 
-이번 글은 `spring-internals-lab`의 `context-refresh-visualizer` 실험과 소스 확인을 바탕으로, `refresh()`를 "Spring이 시작될 때 뭔가 많이 하는 메서드"가 아니라 **정해진 단계로 컨테이너를 조립하는 파이프라인**으로 본다.
+이번 글은 `spring-internals-lab`의 `context-refresh-visualizer` 실험과 소스 확인을 바탕으로, `refresh()`를 "Spring이 시작될 때 뭔가 많이 하는 메서드"가 아니라 정해진 단계로 컨테이너를 조립하는 파이프라인으로 본다.
 
 ## `refresh()`는 사실상 컨테이너 부팅 시퀀스다
 
-Spring 문서를 읽으면 `refresh()`는 대략 12단계로 설명된다. 이름만 나열하면 다음과 같다.
+[`AbstractApplicationContext.refresh()` 소스](https://github.com/spring-projects/spring-framework/blob/v6.1.14/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java#L585-L654)(Spring Framework 6.1.14 기준)를 열면 메서드 호출 12개가 차례로 나온다. 이름만 나열하면 다음과 같다.
 
 1. `prepareRefresh`
 2. `obtainFreshBeanFactory`
@@ -40,7 +40,7 @@ Spring 문서를 읽으면 `refresh()`는 대략 12단계로 설명된다. 이�
 11. `finishBeanFactoryInitialization`
 12. `finishRefresh`
 
-중요한 건 이 단계들이 단순 정리용 목록이 아니라, 실제 실행 순서를 그대로 반영한다는 점이다.
+이 목록은 설명용으로 묶은 분류가 아니라 소스의 호출 순서 그대로다. 큰 흐름만 남기면 다음과 같다.
 
 ```mermaid
 flowchart TD
@@ -51,7 +51,7 @@ flowchart TD
     E --> F["ContextRefreshedEvent 발행"]
 ```
 
-즉 `refresh()`는 객체를 바로 만들기보다, 먼저 **정의를 다듬고**, 그다음 **후처리기를 등록하고**, 마지막에 **실제 singleton을 만든다**.
+즉 `refresh()`는 객체를 바로 만들지 않는다. 먼저 정의를 다듬고, 그다음 후처리기를 등록하고, 마지막에 실제 singleton을 만든다.
 
 ## 실험 코드는 아주 작다
 
@@ -97,18 +97,18 @@ event:ContextRefreshedEvent
 3. `BeanPostProcessor`는 singleton 생성 전후에 개입한다.
 4. `ContextRefreshedEvent`는 singleton 생성이 끝난 뒤 발행된다.
 
-반대로 `LazySingleton`과 `PrototypeBean`은 이 로그에 아예 나타나지 않는다. 즉 `refresh()`는 "모든 Bean 생성"이 아니라, **non-lazy singleton 선생성**에 가깝다.
+반대로 `LazySingleton`과 `PrototypeBean`은 이 로그에 아예 나타나지 않는다. 그래서 `refresh()`가 하는 일은 "모든 Bean 생성"이 아니라 non-lazy singleton을 미리 만들어 두는 것(선생성)에 가깝다.
 
 ## `BeanFactoryPostProcessor`와 `BeanPostProcessor`는 이름만 비슷할 뿐 단계가 다르다
 
-이 둘은 초보 단계에서 늘 헷갈린다. 하지만 `refresh()`에 끼워 보면 차이가 분명해진다.
+이 둘은 처음 배울 때 늘 헷갈린다. 하지만 `refresh()`에 끼워 보면 차이가 분명해진다. [Spring 문서의 Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)도 `BeanFactoryPostProcessor`는 Bean 설정 메타데이터를, `BeanPostProcessor`는 Bean 인스턴스를 다룬다고 나눠 설명한다.
 
 | 타입 | 개입 대상 | 개입 시점 |
 | --- | --- | --- |
 | `BeanFactoryPostProcessor` | `BeanDefinition` | 빈 생성 전 |
 | `BeanPostProcessor` | 실제 빈 인스턴스 | 빈 생성 전후 |
 
-즉 전자는 메타데이터를 바꾸고, 후자는 객체를 바꾼다.
+즉 전자는 메타데이터([`BeanDefinition`](/posts/spring-internals-lab-bean-definition/))를 바꾸고, 후자는 객체를 바꾼다.
 
 이 차이가 중요한 이유는 이후 주제와 직결되기 때문이다.
 
@@ -121,7 +121,7 @@ event:ContextRefreshedEvent
 
 ## `finishBeanFactoryInitialization()`이 실제 Bean 생성의 중심이다
 
-`refresh()`에서 "객체가 만들어지는" 핵심 구간은 11번째 단계인 `finishBeanFactoryInitialization()`이다.
+`refresh()`에서 "객체가 만들어지는" 핵심 구간은 11번째 단계인 `finishBeanFactoryInitialization()`이다. 소스에서도 이 호출 바로 위의 주석이 `Instantiate all remaining (non-lazy-init) singletons.`이고, 메서드 마지막 줄이 `beanFactory.preInstantiateSingletons()`다.
 
 여기서 Spring은 대략 이런 일을 한다.
 
@@ -131,7 +131,7 @@ event:ContextRefreshedEvent
 
 즉 앞 단계 대부분은 준비 작업이고, 실제 객체 그래프를 한꺼번에 채우는 시점은 거의 마지막이다.
 
-이 구조가 좋은 이유는 명확하다. Bean 생성 전에 알아야 하는 규칙들을 최대한 먼저 확정할 수 있다.
+이렇게 생성을 뒤로 미루면 Bean 생성 전에 알아야 하는 규칙들을 먼저 확정할 수 있다.
 
 - 어떤 BeanDefinition이 추가/삭제/수정됐는가
 - 어떤 후처리기가 등록됐는가
@@ -149,7 +149,9 @@ event:ContextRefreshedEvent
 | lazy singleton | 생성 안 됨 | 첫 `getBean()`까지 지연 |
 | prototype | 생성 안 됨 | 요청할 때마다 새로 만들어야 함 |
 
-즉 컨테이너가 "준비 완료"라고 말할 때, 실제로는 모든 Bean이 있는 게 아니라 **즉시 필요한 singleton만 준비된 상태**다.
+prototype 쪽은 [Spring 문서의 Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)도 같은 설명이다. 주입되거나 `getBean()`으로 요청될 때마다 새 인스턴스를 만든다.
+
+즉 컨테이너가 "준비 완료"라고 말할 때, 실제로는 모든 Bean이 있는 게 아니라 즉시 필요한 singleton만 준비된 상태다.
 
 ## `refresh()` 전후의 컨텍스트 상태는 꽤 다르다
 
@@ -162,7 +164,9 @@ event:ContextRefreshedEvent
 | `close()` 후 | 불가 | `has been closed already` |
 | `refresh()` 실패 후 | 불가 | 다시 "has not been refreshed yet" 계열 메시지 |
 
-특히 실패 후 메시지가 흥미롭다. 직관적으로는 "초기화 실패" 같은 메시지가 나올 것 같지만, 실제로는 Spring이 별도의 "실패 상태"를 세밀하게 들고 있지 않아서 결과적으로 "아직 refresh되지 않았다"에 가깝게 보인다.
+특히 실패 후 메시지가 흥미롭다. 직관적으로는 "초기화 실패" 같은 메시지가 나올 것 같지만, 실제로는 "아직 refresh되지 않았다"에 가깝게 보인다.
+
+소스를 보면 이유가 드러난다. `getBean()` 계열이 호출하는 [`assertBeanFactoryActive()`](https://github.com/spring-projects/spring-framework/blob/v6.1.14/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java#L1224-L1233)는 `active`와 `closed` 두 플래그만 본다. `refresh()`가 예외로 끝나면 `catch` 블록이 `destroyBeans()`로 이미 만든 singleton을 정리하고 `cancelRefresh(ex)`로 `active`만 `false`로 되돌린다. `closed`는 그대로 `false`이므로 결과는 "has not been refreshed yet" 분기다. Spring이 별도의 "실패 상태"를 들고 있지 않다는 뜻이다. [`ConfigurableApplicationContext.refresh()` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ConfigurableApplicationContext.html#refresh())도 시작 메서드가 실패하면 이미 만든 singleton을 파괴해야 하고, 호출 뒤에는 singleton이 전부 있거나 하나도 없어야 한다고 적는다.
 
 즉 상태 머신이 꽤 단순하다.
 
@@ -178,7 +182,7 @@ stateDiagram-v2
 
 ## `GenericApplicationContext`는 왜 refresh를 한 번만 허용하는가
 
-`AnnotationConfigApplicationContext`는 내부적으로 `GenericApplicationContext` 기반이라 `refresh()`를 한 번만 허용한다.
+`AnnotationConfigApplicationContext`는 내부적으로 `GenericApplicationContext` 기반이라 `refresh()`를 한 번만 허용한다. [`GenericApplicationContext` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/GenericApplicationContext.html)에 그대로 적혀 있다. "AbstractApplicationContext.refresh() may only be called once."(`refresh()`는 한 번만 호출할 수 있다.)
 
 이게 중요한 이유는 "Spring 컨텍스트는 언제든 재초기화 가능하다"는 막연한 인상을 깨기 때문이다. 적어도 이 계열 컨텍스트는 그렇지 않다.
 
@@ -188,7 +192,7 @@ stateDiagram-v2
 - XML 기반 refreshable 컨텍스트처럼 "다시 로드"를 주 용도로 두지 않는다.
 - 한 번 활성화된 뒤 상태를 더 단순하게 유지할 수 있다.
 
-즉 `refresh()`는 재계산 가능한 일반 메서드가 아니라, **컨텍스트를 활성 상태로 전환하는 일회성 부팅 단계**에 가깝다.
+즉 `refresh()`는 재계산 가능한 일반 메서드가 아니라, 컨텍스트를 활성 상태로 전환하는 일회성 부팅 단계에 가깝다.
 
 ## 부모-자식 컨텍스트는 이벤트 전파도 계층적이다
 
@@ -218,17 +222,18 @@ stateDiagram-v2
 - non-lazy singleton 선생성
 - 이벤트 발행
 
-이 차이는 중요하다. Spring이 단순 객체 팩토리보다 훨씬 큰 이유는, 객체 생성 전에 **확장 지점을 순서대로 조율하는 컨테이너 레벨 파이프라인**이 있기 때문이다.
+Spring이 단순 객체 팩토리보다 훨씬 큰 이유가 이 차이에 있다. 객체 생성 전에 확장 지점을 순서대로 조율하는 컨테이너 레벨 파이프라인이 있다.
 
 ## 정리
 
-`refresh()`를 이해하면 Spring 컨테이너를 보는 시선이 달라진다.
-
-1. Spring은 등록 즉시 객체를 만드는 시스템이 아니다.
-2. 먼저 정의를 후처리하고, 그다음 후처리기를 등록하고, 마지막에 singleton을 생성한다.
-3. `ContextRefreshedEvent`는 그 모든 초기화가 끝난 뒤에야 발행된다.
-4. lazy/prototype은 `refresh()` 완료 시점에도 아직 생성되지 않았을 수 있다.
-
-결국 `refresh()`는 "시작 버튼"이 아니라, **정의 단계와 인스턴스 단계를 분리해 컨테이너를 완성하는 조율 알고리즘**이다.
+Spring은 등록 즉시 객체를 만들지 않는다. 정의 단계와 인스턴스 단계를 나눠 두었기 때문에, `ContextRefreshedEvent`를 받은 시점에도 lazy와 prototype Bean은 아직 없을 수 있다. 또 `refresh()`가 실패한 컨텍스트는 상태 메시지만으로는 아직 시작하지 않은 컨텍스트와 구분되지 않는다.
 
 다음 글에서는 이 파이프라인 위에서 생성자 주입, `@Primary`, `@Qualifier`, 순환 참조가 어떻게 풀리는지 이어서 본다.
+
+## 참고
+
+- [AbstractApplicationContext.java (v6.1.14)](https://github.com/spring-projects/spring-framework/blob/v6.1.14/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java) — `refresh()` 단계와 `assertBeanFactoryActive()`
+- [ConfigurableApplicationContext Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ConfigurableApplicationContext.html)
+- [GenericApplicationContext Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/GenericApplicationContext.html)
+- [Spring Framework Reference: Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)
+- [Spring Framework Reference: Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)
