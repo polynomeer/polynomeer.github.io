@@ -7,7 +7,7 @@ tags: [Spring, Exception, Design]
 
 ## 예외를 어떻게 봐야 하는가
 
-예외는 "실패" 그 자체라기보다 "정상 흐름에서 벗어난 상황"을 표현하는 장치다. 여기서 중요한 것은 모든 실패를 예외로 취급하지 않는 것이다.
+예외는 "실패" 그 자체라기보다 "정상 흐름에서 벗어난 상황"을 표현하는 장치다. 그래서 모든 실패를 예외로 취급하지 않는다.
 
 예를 들어 사용자가 로그인 화면에서 비밀번호를 틀리는 일은 충분히 예상 가능한 입력 실패다. 반면, 의도하지 않은 상태 값 변조나 시스템 계약을 깨는 요청은 예외에 가깝다.
 
@@ -56,7 +56,7 @@ public class ExternalApiException extends RuntimeException {
 }
 ```
 
-Root cause를 잃어버리면 운영 시 추적이 어려워진다.
+Java는 이를 연쇄 예외(chained exception)로 지원한다. `Throwable(String, Throwable)` 생성자에 넘긴 원인은 `getCause()`로 다시 꺼낼 수 있다([Java Tutorials, Chained Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/chained.html)). 원인(root cause)을 넘기지 않고 새 예외만 던지면 그 연결이 끊겨 운영 시 추적이 어려워진다.
 
 ### 3. 예외 계층은 응답 정책과 연결되어야 한다
 
@@ -73,13 +73,15 @@ Root cause를 잃어버리면 운영 시 추적이 어려워진다.
 - 상태 충돌: 409
 - 서버 오류: 500
 
-핵심은 "상태 코드를 먼저 고르고 예외를 맞추는 것"이 아니라, 도메인 실패를 정의한 뒤 적절한 응답으로 매핑하는 것이다.
+상태 코드의 의미는 [RFC 9110 15절](https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes)이 정의한다. 예를 들어 409는 대상 리소스의 현재 상태와 충돌해 요청을 완료할 수 없을 때 쓴다. 앞의 "현재 상태에서는 주문 취소가 허용되지 않음"이 이 경우다.
+
+순서는 도메인 실패를 먼저 정의하고, 그다음 적절한 응답으로 매핑한다. 상태 코드를 먼저 고르고 예외를 거기에 맞추면 서로 다른 도메인 실패가 같은 예외로 뭉친다.
 
 ## 실무에서 자주 놓치는 부분
 
 - `printStackTrace()`에 의존함
 - 내부 테이블 구조나 SQL 메시지를 외부에 노출함
-- 모든 예외를 한 핸들러에서 뭉개 버림
+- 모든 예외를 한 핸들러에서 뭉개 버림 ([@ControllerAdvice](/posts/controller-advice/)에서 예외별로 나눠 매핑)
 - 예외가 너무 많아져도 기준이 없음
 
 예외 수가 많은 것 자체는 문제는 아니다. 다만 분류 기준이 명확해야 한다.
@@ -93,4 +95,9 @@ Root cause를 잃어버리면 운영 시 추적이 어려워진다.
 
 ## 정리
 
-예외는 "실패를 감추는 도구"가 아니라 "실패를 정교하게 드러내는 도구"다. 스프링 애플리케이션에서는 예외를 잘 설계할수록 컨트롤러, 서비스, 전역 핸들러의 책임이 명확해지고 운영 시점의 추적성도 좋아진다.
+예상 가능한 입력 실패는 반환값으로 다루고, 시스템이 비정상으로 간주하는 실패만 도메인 의미가 드러나는 예외로 던진다. 원인 예외를 보존하고 예외를 응답 정책과 연결해 두면, 컨트롤러와 서비스는 실패를 던지기만 하고 응답 변환은 전역 핸들러가 맡는 식으로 책임이 나뉜다.
+
+## 참고
+
+- [The Java Tutorials — Chained Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/chained.html)
+- [RFC 9110 — HTTP Semantics, 15. Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes)
