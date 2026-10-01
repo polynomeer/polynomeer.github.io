@@ -6,11 +6,11 @@ tags: [Java, NIO, Netty, Event Loop, epoll, Concurrency, Network]
 mermaid: true
 ---
 
-자바에서 소켓을 다루는 방법은 둘이다. `InputStream.read()`로 블로킹하거나, `Selector`로 준비된 채널만 골라 처리하거나. 후자가 NIO이고 Netty가 그 위에 있다. 무엇이 달라지고 무엇을 직접 해야 하는지 보면, 프레임워크가 감춘 것이 드러난다.
+자바에서 소켓을 다루는 방법은 둘이다. `InputStream.read()`로 블로킹하거나, `Selector`로 준비된 채널만 골라 처리하거나. 후자가 NIO이고 [Netty](/posts/netty/)가 그 위에 있다. 무엇이 달라지고 무엇을 직접 해야 하는지 보면, 프레임워크가 감춘 것이 드러난다.
 
 ## 블로킹 IO와 NIO
 
-블로킹 모델은 단순하다. `read()`를 부르면 데이터가 올 때까지 스레드가 멈춘다. 연결마다 스레드가 필요하고, 연결이 많아지면 스레드가 감당이 안 된다. [C10K 문서](http://www.kegel.com/c10k.html)가 구분한 "스레드당 클라이언트 하나, 블로킹 IO"와 "스레드당 여러 클라이언트, 논블로킹 IO"의 차이다.
+블로킹 모델은 단순하다. `read()`를 부르면 데이터가 올 때까지 스레드가 멈춘다. 연결마다 스레드가 필요하고, 연결이 많아지면 스레드가 감당이 안 된다. [C10K(동시 연결 1만 개 문제) 문서](http://www.kegel.com/c10k.html)가 구분한 "스레드당 클라이언트 하나, 블로킹 IO"와 "스레드당 여러 클라이언트, 논블로킹 IO"의 차이다.
 
 두 모델에서 연결과 스레드가 묶이는 방식이 다르다.
 
@@ -50,9 +50,9 @@ while (true) {
 
 ## 다이렉트 버퍼
 
-`ByteBuffer.allocate()`는 힙 안에, `allocateDirect()`는 힙 밖(네이티브 메모리)에 잡는다.
+`ByteBuffer.allocate()`는 힙 안에, `allocateDirect()`는 [힙 밖(네이티브 메모리)](/posts/direct-memory-and-cleaner/)에 잡는다.
 
-차이가 나는 이유는 GC가 힙 객체를 옮기기 때문이다. 커널에 버퍼 주소를 넘겨 IO를 시키는 동안 그 객체가 이동하면 안 되므로, 힙 버퍼를 쓰면 JVM이 내부적으로 다이렉트 버퍼로 복사한 뒤 넘긴다. 다이렉트 버퍼는 그 중간 복사를 피한다([ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html)).
+차이는 GC에서 나온다. GC는 힙을 정리하면서 객체를 다른 주소로 옮길 수 있다. 그런데 IO를 할 때는 버퍼 주소를 [커널](/posts/user-space-and-kernel-space/)에 넘기고, 커널이 그 주소를 읽고 쓰는 동안 버퍼가 움직이면 안 된다. 그래서 힙 버퍼로 IO를 하면 JVM이 내부적으로 내용을 다이렉트 버퍼에 복사한 뒤 그 주소를 넘긴다. 처음부터 다이렉트 버퍼를 쓰면 이 중간 복사가 없다([ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html)).
 
 대가가 있다.
 
@@ -72,15 +72,15 @@ NIO를 그대로 쓰면 프로토콜 처리를 전부 직접 해야 한다.
 
 메시지 경계가 없다. TCP는 바이트 스트림이라 `read()` 한 번이 메시지 하나와 대응하지 않는다. Netty 사용자 가이드의 표현으로는 소켓 수신 버퍼가 "not a queue of packets but a queue of bytes"다([Netty User Guide](https://netty.io/wiki/user-guide-for-4.x.html)). 반만 올 수도(부분 읽기), 두 개가 붙어 올 수도(뭉침) 있다. 길이 접두어나 구분자로 경계를 복원하는 코드가 필요하고, 직접 구현에서 가장 자주 틀리는 곳이 여기다.
 
-쓰기도 부분적이다. 논블로킹 소켓 채널은 소켓 송신 버퍼에 남은 공간보다 많이 쓸 수 없으므로, `write()`가 일부만 쓰거나 아무것도 쓰지 못할 수 있다([WritableByteChannel.write](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/WritableByteChannel.html#write%28java.nio.ByteBuffer%29)). 남은 것을 보관했다가 채널이 쓰기 가능해지면 이어 써야 하고, 그 동안 `OP_WRITE`에 관심을 등록해야 한다. 등록해 둔 채 잊으면 CPU를 태우는 busy loop가 된다.
+쓰기도 부분적이다. 논블로킹 소켓 채널은 소켓 송신 버퍼에 남은 공간보다 많이 쓸 수 없으므로, `write()`가 일부만 쓰거나 아무것도 쓰지 못할 수 있다([WritableByteChannel.write](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/WritableByteChannel.html#write%28java.nio.ByteBuffer%29)). 남은 것을 보관했다가 채널이 쓰기 가능해지면 이어 써야 하고, 그 동안 `OP_WRITE`에 관심을 등록해야 한다. 등록해 둔 채 잊으면 CPU를 태우는 busy loop(쉬지 않고 도는 루프)가 된다.
 
 epoll 버그 우회. 특정 JDK·커널 조합에서 `select()`가 준비된 채널 없이 즉시 반환해 CPU 100%가 되는 문제가 알려져 있다. OpenJDK에는 셀렉터가 선택된 키 0개로 끝없이 깨어나는 버그가 Won't Fix로 닫혀 있다([JDK-6670302](https://bugs.openjdk.org/browse/JDK-6670302)). 셀렉터를 다시 만드는 우회가 필요하다.
 
-Netty는 이 셋을 전부 다룬다. `LengthFieldBasedFrameDecoder` 같은 코덱이 경계를, `ChannelOutboundBuffer`가 부분 쓰기를 맡는다. epoll 버그는 `NioEventLoop`가 `select()`의 조기 반환을 세다가 기본 512번 연속이면 셀렉터를 새로 만드는 식으로 우회한다(`io.netty.selectorAutoRebuildThreshold`, [NioEventLoop, netty-4.1.115.Final](https://github.com/netty/netty/blob/netty-4.1.115.Final/transport/src/main/java/io/netty/channel/nio/NioEventLoop.java)). **Netty를 쓰는 이유는 성능보다 이 정확성에 있다.**
+Netty는 이 셋을 전부 다룬다. `LengthFieldBasedFrameDecoder` 같은 코덱이 경계를, `ChannelOutboundBuffer`가 부분 쓰기를 맡는다. epoll 버그는 셀렉터를 새로 만들어 우회한다. `NioEventLoop`는 `select()`가 준비된 채널 없이 일찍 반환한 횟수를 세고, 이것이 기본 512번 연속 이어지면 셀렉터를 다시 만든다(`io.netty.selectorAutoRebuildThreshold`, [NioEventLoop, netty-4.1.115.Final](https://github.com/netty/netty/blob/netty-4.1.115.Final/transport/src/main/java/io/netty/channel/nio/NioEventLoop.java)). **Netty를 쓰는 이유는 성능보다 이 정확성에 있다.**
 
 ## 이벤트 루프의 규칙
 
-Netty의 `EventLoop`는 스레드 하나에 여러 채널을 묶는다. 등록된 채널의 모든 IO 작업은 그 루프가 처리하므로([EventLoop](https://netty.io/4.1/api/io/netty/channel/EventLoop.html)) 한 채널의 이벤트는 항상 같은 스레드에서 처리되고, 핸들러 안에서는 동기화가 필요 없다. 채널 상태는 그 스레드만 만진다.
+Netty의 `EventLoop`는 스레드 하나에 여러 채널을 묶는다. 채널이 한 루프에 등록되면 그 채널의 모든 IO 작업은 그 루프가 처리한다([EventLoop](https://netty.io/4.1/api/io/netty/channel/EventLoop.html)). 따라서 한 채널의 이벤트는 항상 같은 스레드에서 처리된다. 채널 상태를 만지는 스레드가 그 하나뿐이므로 핸들러 안에서는 동기화가 필요 없다.
 
 대신 규칙이 생긴다. **이벤트 루프 스레드에서 블로킹하면 그 루프의 모든 채널이 멈춘다.** DB 호출, 파일 IO, 동기 외부 호출을 핸들러에 그대로 넣으면 안 되고, 별도 `EventExecutorGroup`으로 빼야 한다. `ChannelPipeline` 문서의 예제가 이 구성이다([ChannelPipeline](https://netty.io/4.1/api/io/netty/channel/ChannelPipeline.html)).
 
@@ -112,13 +112,13 @@ Java 21 이후 "높은 동시성"만이 목적이라면 가상 스레드로 블�
 ## 이 설명이 깨지는 곳
 
 - **NIO가 항상 빠른 것은 아니다.** 연결이 적고 처리량 위주면 블로킹 IO가 단순하고 빠를 수 있다.
-- **파일 IO는 이 모델 밖이다.** 자바의 `FileChannel`은 `SelectableChannel`이 아니어서 셀렉터에 등록할 수 없다([FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html)). OS 수준에서도 POSIX `select()`는 일반 파일을 항상 준비됨으로 보고하고([POSIX pselect](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pselect.html)), 리눅스 `epoll_ctl()`은 일반 파일 등록을 `EPERM`으로 거부한다([epoll_ctl(2)](https://man7.org/linux/man-pages/man2/epoll_ctl.2.html)).
+- **파일 IO는 이 모델 밖이다.** 셀렉터에 등록하려면 `SelectableChannel`이어야 하는데, 자바의 `FileChannel`은 그렇지 않다([FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html)). OS 수준에서도 마찬가지다. POSIX `select()`는 일반 파일을 언제나 '준비됨'으로 보고하므로 기다리는 의미가 없다([POSIX pselect](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pselect.html)). 리눅스 `epoll_ctl()`은 일반 파일 등록을 아예 `EPERM` 오류로 거부한다([epoll_ctl(2)](https://man7.org/linux/man-pages/man2/epoll_ctl.2.html)).
 - **`SelectionKey` 관리가 누수 지점이다.** 채널을 닫거나 키를 취소해도 실제 등록 해제는 다음 선택 연산에서 일어난다([Selector](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/Selector.html)). 그 전까지 키는 셀렉터에 남는다.
-- **Netty의 `ByteBuf`는 참조 카운팅을 쓴다.** 핸들러에 도착한 `ByteBuf`는 그 핸들러가 해제할 책임을 진다([Netty User Guide](https://netty.io/wiki/user-guide-for-4.x.html)). `release()`를 잊으면 다이렉트 메모리가 새고, 이 누수는 힙 덤프에 안 보인다.
+- **Netty의 `ByteBuf`는 [참조 카운팅](/posts/direct-memory-and-cleaner/)을 쓴다.** 핸들러에 도착한 `ByteBuf`는 그 핸들러가 해제할 책임을 진다([Netty User Guide](https://netty.io/wiki/user-guide-for-4.x.html)). `release()`를 잊으면 다이렉트 메모리가 새고, 이 누수는 [힙 덤프](/posts/batch-heap-dump-to-chunk/)에 안 보인다.
 
 ## 무엇을 재면 확인되는가
 
-1. 연결 수를 100 → 10,000으로 늘려 가며 블로킹 모델과 NIO의 메모리·CPU·p99를 비교한다. 연결이 적으면 차이가 없다.
+1. 연결 수를 100 → 10,000으로 늘려 가며 블로킹 모델과 NIO의 메모리·CPU·[p99](/posts/percentile-statistics/)를 비교한다. 연결이 적으면 차이가 없다.
 2. 이벤트 루프 스레드에서 100ms를 블로킹하고 같은 루프의 다른 연결 지연을 본다.
 3. 힙 버퍼와 다이렉트 버퍼로 같은 IO를 반복하고 처리량과 GC 부하를 비교한다.
 4. `-XX:MaxDirectMemorySize`를 작게 두고 `ByteBuf` 해제를 빠뜨려 누수가 어떻게 드러나는지 본다.
@@ -131,7 +131,7 @@ monticker에서 `NioEventLoopGroup`으로 다수 연결에 시세를 뿌렸다. 
 
 ## 정리
 
-- 버퍼 모드 전환, selected-key 집합 비우기, 키 취소의 지연 반영은 모두 호출자 몫이다.
+- NIO를 직접 쓰면 버퍼의 읽기·쓰기 모드 전환, selected-key 집합 비우기, 키 취소가 다음 선택 연산에서야 반영된다는 점을 모두 호출자가 챙겨야 한다.
 - 다이렉트 버퍼는 크고 오래 사는 버퍼를 풀링해서 쓴다.
 - Netty가 대신 해주는 것은 메시지 경계 복원, 부분 쓰기 처리, epoll 조기 반환 우회다.
 - 이벤트 루프 모델은 핸들러 동기화를 없애는 대신, 블로킹 한 번이 그 루프의 모든 연결을 멈춘다.
