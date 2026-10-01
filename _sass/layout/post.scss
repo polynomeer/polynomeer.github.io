@@ -1756,6 +1756,71 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
+/* 역량 칩과 실측 질문 — 각각 /capabilities/ 와 /experiments/ 로 가는 입구 */
+.about-capabilities,
+.about-questions {
+  margin-top: 2.2rem;
+}
+
+.about-capability-chips {
+  margin-top: 0.9rem;
+
+  .feature-chip {
+    font-size: 0.88rem;
+    text-decoration: none;
+
+    i {
+      color: var(--link-color);
+    }
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--link-color);
+    }
+  }
+}
+
+.about-section-note {
+  margin: 0.9rem 0 0;
+  font-size: 0.83rem;
+  line-height: 1.7;
+  color: var(--text-muted-color);
+}
+
+.about-question-list {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.6rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid rgba(98, 114, 164, 0.18);
+
+    &:last-child {
+      border-bottom: 1px solid rgba(98, 114, 164, 0.18);
+    }
+  }
+
+  a {
+    flex: 1 1 18rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--heading-color);
+  }
+}
+
+.about-question-lab {
+  flex-shrink: 0;
+  font-family: var(--mono-font, monospace);
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  color: var(--text-muted-color);
+}
+
 /* 활동 지표 패널 — 통계 페이지와 달리 코드·도구 쪽만 봅니다 */
 .about-activity {
   margin-top: 2.2rem;

@@ -1,6 +1,8 @@
 # /experiments/ 의 데이터. 재현 조건을 만들고, 계측하고, 고친 뒤 같은 조건에서 다시 잰 글만 넣는다.
 # 원문 리뷰나 설계 글은 여기 넣지 않는다. 판단 기준은 "같은 조건에서 두 번 쟀는가"다.
 # `headline`은 글의 problem_decision_result.result에서 가져온 수치이고, 지어내지 않는다.
+# `about_featured: true`는 소개 페이지가 질문 한 줄로 보여줄 항목이다. 랩마다 한 건씩만 단다.
+# 플래그가 없는 랩은 소개 페이지에 안 나올 뿐 /experiments/ 에는 그대로 나온다.
 enabled: true
 intro:
   ko-KR: 재현 조건을 만들고, 무너지는 순간을 계측하고, 고친 뒤 같은 조건에서 다시 잰 기록입니다. 설계 설명이 아니라 표가 결론이고, 각 저장소에 원본 결과와 재실행 명령이 있습니다. 실패한 가설과 측정 도구의 실수도 함께 적습니다.
@@ -33,6 +35,7 @@ labs:
           ko-KR: "경합이 전혀 없는 synchronized 하나가 가상 스레드에서 완료 14,398건을 392건으로 만들었다. 동시 처리는 100에서 1로, 캐리어 수와 같아졌다. 2부에서 세 조건의 성공 처리량은 모두 풀 용량이었고 달라진 것은 실패의 값이다(성공 p50 2,003 → 103ms)"
           en: "One uncontended synchronized block takes 14,398 completions to 392 once requests run on virtual threads, and in-flight from 100 to 1 - the carrier count. In part B all three conditions reach the pool's throughput; only the cost of failure differs"
       - slug: off-cpu-profiling-experiment
+        about_featured: true
         question:
           ko-KR: "CPU를 거의 안 쓰는 요청의 지연은 어디에 있고 CPU 프로파일러는 그것을 찾아 주는가"
           en: "Where is the latency of a request that barely uses the CPU, and does a CPU profiler find it"
@@ -46,6 +49,7 @@ labs:
     repo: https://github.com/polynomeer/data-ops-lab
     items:
       - slug: isolation-anomalies-experiment
+        about_featured: true
         question:
           ko-KR: "어느 이상 현상이 실제로 나고, 엔진은 어떻게 거절하는가"
           en: "Which anomalies actually occur, and how does each engine refuse"
@@ -94,6 +98,7 @@ labs:
     repo: https://github.com/polynomeer/jvm-bench-lab
     items:
       - slug: microbenchmark-faults-experiment
+        about_featured: true
         question:
           ko-KR: "손으로 만든 마이크로벤치마크는 어느 방향으로 몇 배 틀리고 언제는 안 틀리는가"
           en: "How many times wrong is a hand-written microbenchmark, in which direction, and when is it not"
@@ -143,6 +148,7 @@ labs:
           en: "With a synchronized surge, jitter cuts the retry peak from 141 to 38 per 100 ms. Both arms stay at exactly 3.00x total - jitter changes when requests arrive, never how many. At 1 s granularity both read 150, which is the gauge the earlier experiment used"
 
       - slug: parity-pay-model-checking
+        about_featured: true
         question:
           ko-KR: "실험이 못 밟는 경로가 있는가, 있다면 무엇인가"
           en: "Is there a path the experiments cannot walk, and what is it"
@@ -171,6 +177,7 @@ labs:
           ko-KR: "WebSocket은 폴링의 CPU 1/10~1/20. 폴링은 5,300 req/s에서 천장을 쳐 요청의 95%를 버렸다. 느린 연결 25개가 모든 클라이언트를 p99 19초 멈췄고 발행 스레드 풀을 늘려 196ms로"
           en: "WebSocket uses a tenth to a twentieth of polling's CPU. Polling hit a ceiling at 5,300 req/s and dropped 95% of requests"
       - slug: monticker-partition-ordering
+        about_featured: true
         question:
           ko-KR: "키가 같은데도 순서가 깨지는 이유는 무엇인가"
           en: "Why does ordering break even when the key is the same"

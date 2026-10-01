@@ -1,0 +1,52 @@
+{%- comment -%}
+  실측 기록이 답한 질문들. _data/experiments.yml 에서 about_featured 가 달린 항목만 가져옵니다.
+
+  "실측 기록 20건"이라는 숫자보다 질문 다섯 줄이 더 많이 말합니다. 질문 자체가 이미 데이터에
+  있으므로(각 item 의 question) 여기서 다시 쓰지 않습니다 - 두 벌을 두면 한쪽만 갱신됩니다.
+
+  글 매칭은 /experiments/ 와 같은 방식(slug 가 URL 에 들어 있는 글)을 씁니다. 글이 아직 없거나
+  숨김 상태면 그 줄은 통째로 빠집니다.
+{%- endcomment -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- assign labs = site.data.experiments.labs -%}
+{%- if site.data.experiments.enabled and labs and labs.size > 0 -%}
+
+{%- assign total = 0 -%}
+{%- for lab in labs -%}{%- assign total = total | plus: lab.items.size -%}{%- endfor -%}
+
+{%- capture rows -%}
+{%- for lab in labs -%}
+  {%- for item in lab.items -%}
+    {%- if item.about_featured -%}
+      {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+      {%- if post -%}
+      <li>
+        <a href="{{ post.url | relative_url }}"
+          data-l10n-ko="{{ item.question['ko-KR'] | escape }}" data-l10n-en="{{ item.question.en | escape }}"
+        >{% include localized-value.html value=item.question lang=lang %}</a>
+        <span class="about-question-lab">{{ lab.id }}</span>
+      </li>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- endcapture -%}
+
+{%- assign rows = rows | strip -%}
+{%- if rows != '' -%}
+<section class="about-questions" aria-labelledby="about-questions-title">
+  <p class="about-portfolio-eyebrow" data-i18n="about.questions_eyebrow">{{ loc.questions_eyebrow }}</p>
+  <h2 id="about-questions-title" data-i18n="about.questions_title">{{ loc.questions_title }}</h2>
+
+  <ul class="about-question-list">{{ rows }}</ul>
+
+  <p class="about-section-note">
+    <a href="{{ '/experiments/' | relative_url }}">
+      <span data-l10n-ko="{{ loc.questions_more | escape }}" data-l10n-en="{{ site.data.locales.en.about.questions_more | escape }}">{{ loc.questions_more }}</span>
+      <span aria-hidden="true"> ({{ total }})</span>
+    </a>
+  </p>
+</section>
+{%- endif -%}
+{%- endif -%}

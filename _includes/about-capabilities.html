@@ -1,0 +1,30 @@
+{%- comment -%}
+  역량 맵(/capabilities/)으로 보내는 칩 한 줄.
+
+  이 블록이 있는 이유는 단순합니다. about 은 "채용 담당자용"으로 연결되는 페이지인데, 역량을
+  평가하라고 만든 페이지로 가는 링크가 여기 하나도 없었습니다. 사이드바 말고는 길이 없었습니다.
+
+  요약·근거·관련 역량은 전부 역량 맵이 더 잘 합니다. 여기서는 축 이름만 보여주고 넘깁니다.
+{%- endcomment -%}
+{%- assign cmap = site.data.capability_map -%}
+{%- assign nodes = cmap.nodes | default: cmap.items -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- if cmap and cmap.enabled and nodes and nodes.size > 0 -%}
+<section class="about-capabilities" aria-labelledby="about-capabilities-title">
+  <p class="about-portfolio-eyebrow" data-i18n="about.capabilities_eyebrow">{{ loc.capabilities_eyebrow }}</p>
+  <h2 id="about-capabilities-title" data-i18n="about.capabilities_title">{{ loc.capabilities_title }}</h2>
+
+  <div class="feature-chip-list about-capability-chips">
+    {%- for n in nodes -%}
+    {%- capture node_title %}{% include localized-value.html value=n.title lang=lang %}{% endcapture -%}
+    <a class="feature-chip" href="{{ '/capabilities/' | relative_url }}#{{ n.id }}">
+      {%- if n.icon %}<i class="{{ n.icon }}" aria-hidden="true"></i>{% endif -%}
+      <span data-l10n-ko="{{ n.title['ko-KR'] | escape }}" data-l10n-en="{{ n.title.en | escape }}">{{ node_title | strip }}</span>
+    </a>
+    {%- endfor -%}
+  </div>
+
+  <p class="about-section-note" data-i18n="about.capabilities_note">{{ loc.capabilities_note }}</p>
+</section>
+{%- endif -%}
