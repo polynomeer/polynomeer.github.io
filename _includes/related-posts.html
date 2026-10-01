@@ -2,27 +2,32 @@
   Renders the recommendations precomputed by _plugins/related-posts.rb
   (`page.related_entries`: post, same_series, same_project). At most three.
 
-  Titles only. The cards used to carry a two-line excerpt of each post, which
-  is a description of a page the reader has not decided to open yet - the
-  title and the reason it is being suggested are what makes that decision.
-  The rows are the same shape as the citation list above so the tail of a post
-  reads as one thing.
+  Cards, but small ones: title and the reason it is being suggested, no body
+  excerpt. The excerpt described a page the reader has not chosen to open yet,
+  and the title plus the connection is what makes that choice.
+
+  Folded by default, in a <details> rather than a script - it works with no
+  JavaScript, takes keyboard focus on its own, and the browser's own find
+  opens it. The summary carries the count so the fold is not a blind door.
 -->
 
 {% assign relate_entries = page.related_entries %}
 
 {% if relate_entries.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
-    <h3 class="post-tail-heading" id="related-label">
-      {{- site.data.locales[include.lang].post.relate_posts -}}
-    </h3>
-    <ul class="post-tail-list list-unstyled">
-      {% for entry in relate_entries %}
-        {% assign post = entry.post %}
-        <li class="post-tail-item">
-          <a href="{{ post.url | relative_url }}" class="post-tail-link">
-            <span class="post-tail-title">{{ post.title }}</span>
-            <span class="post-tail-meta">
+    <details class="post-tail-details">
+      <summary class="post-tail-summary">
+        <h3 class="post-tail-heading" id="related-label">
+          {{- site.data.locales[include.lang].post.relate_posts -}}
+        </h3>
+        <span class="post-tail-count">{{ relate_entries.size }}</span>
+      </summary>
+
+      <div class="related-card-grid">
+        {% for entry in relate_entries %}
+          {% assign post = entry.post %}
+          <a class="related-card" href="{{ post.url | relative_url }}">
+            <span class="related-card-meta">
               {%- if entry.same_series -%}
                 {{- site.data.locales[include.lang].post.recommendation_series -}}
                 {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
@@ -32,9 +37,10 @@
                 {%- include datetime.html date=post.date lang=include.lang -%}
               {%- endif -%}
             </span>
+            <span class="related-card-title">{{ post.title }}</span>
           </a>
-        </li>
-      {% endfor %}
-    </ul>
+        {% endfor %}
+      </div>
+    </details>
   </aside>
 {% endif %}

@@ -3340,9 +3340,8 @@ html[data-mode='dark'] .about-terminal {
 /* --- Related Posts --- */
 
 #related-posts {
-  /* 머리는 .post-tail-heading 이 정합니다. 본문 아래 두 묶음이 서로 다른 크기와 색으로
+  /* 머리는 .post-tail-heading 이 정합니다. 본문 아래 묶음들이 서로 다른 크기와 색으로
      보이면 어느 쪽이 더 중요한 묶음인지 잘못 읽힙니다. */
-  margin-bottom: 1.5rem;
 
   time {
     @extend %normal-font-style;
@@ -3770,10 +3769,97 @@ html[data-mode='dark'] .about-terminal {
   -webkit-box-orient: vertical;
 }
 
-.post-backlink-more {
-  margin: 0.7rem 0 0;
+/* 접히는 묶음(관련된 글). <details> 라서 스크립트 없이도 열리고 키보드로 닿습니다. */
+.post-tail-details {
+  margin-bottom: 2rem;
+}
+
+.post-tail-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  cursor: pointer;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  .post-tail-heading {
+    margin-bottom: 0;
+  }
+
+  /* 펼침 표시. 열리면 돌아갑니다. */
+  &::after {
+    color: var(--text-muted-color);
+    font-size: 0.7rem;
+    content: '\25b8';
+    transition: transform 0.15s ease;
+  }
+
+  &:hover .post-tail-heading,
+  &:focus-visible .post-tail-heading {
+    color: var(--link-color);
+  }
+}
+
+.post-tail-details[open] .post-tail-summary::after {
+  transform: rotate(90deg);
+}
+
+.post-tail-count {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.3);
   color: var(--text-muted-color);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.related-card-grid {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.related-card {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(98, 114, 164, 0.22);
+  border-radius: 0.55rem;
+  color: var(--text-color);
+  transition: border-color 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--link-color);
+    text-decoration: none;
+
+    .related-card-title {
+      color: var(--link-color);
+    }
+  }
+}
+
+.related-card-meta {
+  color: var(--text-muted-color);
+  font-size: 0.68rem;
+  letter-spacing: 0.01em;
+  opacity: 0.85;
+}
+
+.related-card-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 /* 두 묶음이 같은 머리와 같은 펼침 버튼을 씁니다. */
