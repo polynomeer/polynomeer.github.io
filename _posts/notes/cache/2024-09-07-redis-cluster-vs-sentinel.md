@@ -10,13 +10,13 @@ tags: [Redis, Cluster, Sentinel]
 `Redis Cluster`와 `Redis Sentinel`은 둘 다 Redis를 여러 대 운영할 때 등장하지만, 목적이 다르다.
 
 - `Sentinel`: 장애 감지와 자동 failover 중심
-- `Cluster`: 데이터 샤딩과 수평 확장 중심
+- `Cluster`: 데이터 [샤딩](/posts/partitioning-and-sharding/)과 수평 확장 중심
 
 즉 Sentinel은 같은 데이터를 더 안전하게 운영하는 구조이고, Cluster는 데이터를 여러 노드에 나눠 담아 확장하는 구조에 가깝다.
 
 ## Redis Sentinel
 
-Sentinel 구조에서는 보통 하나의 master와 여러 replica를 둔다. Sentinel 프로세스들이 master 상태를 감시하다가 장애를 감지하면 replica 중 하나를 새 master로 승격한다.
+Sentinel 구조에서는 보통 하나의 master와 여러 [replica](/posts/redis-sentinel-replication/)를 둔다. Sentinel 프로세스들이 master 상태를 감시하다가 장애를 감지하면 replica 중 하나를 새 master로 승격한다. 클라이언트는 Sentinel에 현재 master 주소를 묻는다([Redis Sentinel](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)).
 
 장점:
 
@@ -32,7 +32,7 @@ Sentinel 구조에서는 보통 하나의 master와 여러 replica를 둔다. Se
 
 ## Redis Cluster
 
-Cluster는 데이터를 hash slot 단위로 여러 master에 분산 저장한다. 여러 노드가 하나의 큰 Redis 공간을 나눠 맡는다고 보면 된다.
+Cluster는 데이터를 hash slot 단위로 여러 master에 분산 저장한다. slot은 16384개이고 키의 CRC16 값으로 정해진다([Redis Cluster](https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/)). 여러 노드가 하나의 큰 Redis 공간을 나눠 맡는다고 보면 된다.
 
 장점:
 
@@ -43,7 +43,7 @@ Cluster는 데이터를 hash slot 단위로 여러 master에 분산 저장한다
 한계:
 
 - 운영 복잡도가 더 높다.
-- multi-key 연산은 slot 제약을 받는다.
+- multi-key 연산은 키가 모두 같은 slot에 있어야 한다(hash tag로 묶는다).
 - 클라이언트가 cluster topology를 이해해야 하는 경우가 많다.
 
 ## 무엇을 선택할까
@@ -62,3 +62,8 @@ Cluster가 잘 맞는 경우:
 ## 정리
 
 Sentinel은 고가용성 중심, Cluster는 확장성 중심이다. 둘을 비교할 때는 "어느 쪽이 더 좋은가"보다 **장애 복구가 필요한가, 샤딩이 필요한가**를 먼저 구분해야 한다.
+
+## 참고
+
+- [Redis Sentinel](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
+- [Scale with Redis Cluster](https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/)
