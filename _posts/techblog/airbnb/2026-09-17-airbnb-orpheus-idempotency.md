@@ -7,6 +7,7 @@ series: bigtech-blog-reviews
 series_title: 빅테크 기술 블로그 리뷰
 series_order: 75
 source_url: https://medium.com/airbnb-engineering/avoiding-double-payments-in-a-distributed-payments-system-2981f6b070bb
+mermaid: true
 
 problem_decision_result:
   problem: "Airbnb는 결제를 SOA로 옮기면서 호출 하나가 여러 서비스의 상태를 바꾸는 분산 트랜잭션이 됐고, 응답 유실·타임아웃·중복 클릭 아래에서 게스트에게 두 번 청구하지 않아야 했다. 별도 멱등 서비스는 지연과 '그 서비스가 같은 문제를 겪는다'는 이유로 배제했다."
@@ -38,6 +39,25 @@ Airbnb는 결제를 SOA로 옮기는 중이었다. 서비스 하나를 호출하
 > "We essentially want to avoid mixing network communication with database work." (Jon Chew, Ninad Khisti)
 
 네트워크 통신과 DB 작업을 섞지 않겠다는 것이다. 원문은 Pre·Post 단계의 RPC가 커넥션 풀의 빠른 고갈과 성능 저하를 만든다는 것을 힘들게 배웠다고 적고, 네트워크 호출은 본질적으로 신뢰할 수 없다고 이유를 단다. 그래서 Pre와 Post는 각각 라이브러리가 연 하나의 DB 트랜잭션으로 감싸인다. RPC 단계는 멱등한 계산이나 RPC를 하는 자리이고, 원문은 그 예로 재시도 요청이면 하위 서비스에 거래 상태를 먼저 조회하는 것을 든다.
+
+원문의 세 단계를 요청 하나의 흐름으로 놓으면, DB 트랜잭션 두 개 사이에 네트워크 호출이 트랜잭션 밖에 끼어 있는 모양이다.
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant S as 서비스 (Orpheus)
+    participant DB as 마스터 DB
+    participant X as 외부 (결제 프로세서)
+    C->>S: 요청, 멱등 키
+    Note over S,DB: Pre-RPC, 트랜잭션 하나, 네트워크 호출 없음
+    S->>DB: 요청 내용 기록 후 커밋
+    Note over S: RPC, 트랜잭션 밖, DB 접근 없음
+    S->>X: 호출, 재시도면 거래 상태 조회 먼저
+    X-->>S: 응답
+    Note over S,DB: Post-RPC, 트랜잭션 하나, 네트워크 호출 없음
+    S->>DB: 응답과 재시도 가능 여부 기록 후 커밋
+    S-->>C: 응답
+```
 
 예외 분류에서 원문이 만든 범용 예외 클래스는 기본값이 재시도 불가이고, 특정 경우만 재시도 가능으로 분류한다. 5XX 계열의 네트워크·인프라 예외는 일시적이라 보고 재시도 가능, 4XX 계열의 검증 오류("환불의 환불"은 안 된다)는 재시도 불가. 분류를 틀리면 양쪽으로 사고가 난다. 재시도 가능한 것을 불가로 두면 요청이 영원히 실패로 굳고, 불가한 것을 가능으로 두면 이중 결제가 날 수 있다.
 
@@ -77,6 +97,28 @@ ParityPay가 이쪽을 고른 것은 실측 때문이었다. 9편에서 타임�
 ## 갈리는 곳: 언제 읽었는가를 묻는 설계
 
 원문의 복제본 시나리오는 이렇다. 결제 성공, 응답 유실, 클라이언트 재시도, 복제본에는 아직 응답이 없음, 결제 재실행. 원문의 답은 마스터만 읽는 것이고, 그래서 샤딩이 따라온다.
+
+원문이 그림으로 보인 실패 순서를 옮기면 이렇다. 마스터에서 읽었다면 요청 2는 응답 1을 바로 돌려받는다.
+
+```mermaid
+sequenceDiagram
+    participant C as 클라이언트
+    participant S as 결제 서비스
+    participant M as 마스터 DB
+    participant R as 복제본
+    participant X as 하위 서비스
+    C->>S: 요청 1, 멱등 키
+    S->>X: 결제
+    X-->>S: 성공
+    S->>M: 응답 1 기록
+    S--xC: 응답 유실
+    M-)R: 복제, 몇 초 지연
+    C->>S: 요청 2, 같은 멱등 키로 재시도
+    S->>R: 이 키의 응답 조회
+    R-->>S: 없음, 아직 복제 전
+    S->>X: 결제 재실행
+    Note over X: 이중 결제
+```
 
 내가 보기에 이 시나리오가 성립하는 이유는 원문의 멱등 검사가 **읽고 나서 판단하는** 구조이기 때문이다. "이 키의 응답이 있는가"를 읽고, 없으면 진행한다. 읽은 값이 낡으면 판단이 틀린다. 마스터 읽기는 "읽은 값이 낡지 않게" 하는 답이고, lease의 행 락은 "읽고 판단하는 사이에 남이 끼어들지 않게" 하는 답이다. 둘 다 "언제 읽었는가"를 정확하게 만드는 장치다.
 
