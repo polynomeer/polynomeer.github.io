@@ -15,11 +15,11 @@ Redis를 운영할 때 중요한 것은 단순한 캐시 성능만이 아니라,
 - 여러 개의 replica
 - 여러 개의 sentinel 프로세스
 
-Sentinel은 master와 replica를 감시하고, master 장애 시 replica 중 하나를 새 master로 승격한다.
+Sentinel은 master와 replica를 감시하고, master 장애 시 replica 중 하나를 새 master로 승격한다([Redis Sentinel 문서](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)).
 
 ## 복제 구조
 
-replica는 master의 데이터를 복제해 읽기 부하를 일부 분산하고, 장애 시 승격 후보 역할을 한다. 다만 비동기 복제이기 때문에, 장애 직전의 일부 쓰기가 replica에 완전히 반영되지 않았을 가능성은 항상 염두에 둬야 한다.
+replica는 master의 데이터를 [복제](/posts/db-replication/)해 읽기 부하를 일부 분산하고, 장애 시 승격 후보 역할을 한다. 다만 비동기 복제이기 때문에, 장애 직전의 일부 쓰기가 replica에 완전히 반영되지 않았을 가능성은 항상 염두에 둬야 한다. [Redis 복제 문서](https://redis.io/docs/latest/operate/oss_and_stack/management/replication/)는 `WAIT`로 복제 확인을 받아도 failover 중에 확인된 쓰기를 잃을 수 있다고 적는다.
 
 ## Sentinel의 역할
 
@@ -36,7 +36,7 @@ Sentinel은 단순 모니터링 도구가 아니다. 실제로는 다음 책임�
 
 ### 과반수와 네트워크 분리
 
-Sentinel은 여러 프로세스의 합의로 failover를 진행한다. 그래서 홀수 개 구성과 네트워크 분리 상황을 같이 고려해야 한다.
+Sentinel의 quorum은 장애 판정에만 쓰이고, failover를 실제로 진행하려면 Sentinel 과반수의 승인이 필요하다. 그래서 문서가 권하는 대로 Sentinel을 최소 3개 두고, 홀수 개 구성과 네트워크 분리 상황을 같이 고려해야 한다.
 
 ### 복제 지연
 
@@ -48,4 +48,9 @@ replica 읽기는 최신성이 약해질 수 있다. 강한 최신성이 필요�
 
 ## 정리
 
-Redis Sentinel Replication은 고가용성을 위한 운영 구조다. 샤딩은 필요 없지만 master 장애 대응 자동화가 필요할 때 가장 먼저 검토할 수 있는 선택지다.
+Redis Sentinel Replication은 고가용성을 위한 운영 구조다. [샤딩](/posts/redis-cluster-vs-sentinel/)은 필요 없지만 master 장애 대응 자동화가 필요할 때 가장 먼저 검토할 수 있는 선택지다.
+
+## 참고
+
+- [High availability with Redis Sentinel](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/) — Redis Docs
+- [Redis replication](https://redis.io/docs/latest/operate/oss_and_stack/management/replication/) — Redis Docs
