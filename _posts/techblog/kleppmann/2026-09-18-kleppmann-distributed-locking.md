@@ -8,6 +8,7 @@ series_title: 권위자와 개인 기술 블로그 리뷰
 series_order: 1
 series_description: Martin Kleppmann, Martin Fowler, Vlad Mihalcea, Marc Brooker, Aphyr처럼 자바·스프링·코틀린과 분산 시스템, 소프트웨어 설계 분야에서 오래 읽히는 개인 블로그의 글을 읽고, 그 주장을 내 프로젝트의 실측과 실무 경험이 어디까지 확인하고 어디서 갈리는지를 기준으로 쓴 리뷰.
 source_url: https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html
+mermaid: true
 
 problem_decision_result:
   problem: "Redis 문서의 Redlock은 여러 노드의 과반으로 장애 허용 분산락을 만든다고 주장한다. Kleppmann은 그것이 어떤 용도의 락인지부터 묻고, 락 서비스가 완벽해도 클라이언트의 GC 정지와 네트워크 지연 앞에서 '락을 쥔 채 쓰는 코드'가 깨진다고 말한다."
@@ -39,6 +40,26 @@ lock.release()
 
 그래서 원문이 내놓는 해법이 fencing token이다. 락 서비스가 락을 줄 때마다 단조 증가하는 번호를 붙이고, 저장소는 이미 처리한 번호보다 작은 번호의 쓰기를 거부한다. 클라이언트 1이 33번으로 늦게 쓰면 저장소는 34번을 이미 받았으므로 거부한다. 원문은 이것이 저장소가 토큰을 능동적으로 검사해야 성립한다고 덧붙인다. ZooKeeper라면 `zxid`나 znode 버전을 토큰으로 쓸 수 있다. Redlock에는 이 번호를 만드는 장치가 없다. Redlock이 쓰는 고유한 무작위 값은 단조성을 주지 않고, Redis 노드 하나에 카운터를 두면 그 노드가 죽을 수 있다. 원문은 토큰을 만드는 데만도 합의 알고리즘이 필요할 가능성이 크다고 본다.
 
+원문의 fencing 그림을 시간 순서로 옮기면 이렇다. 저장소의 거부가 없으면 앞 문단의 GC 정지 시나리오와 같은 순서다.
+
+```mermaid
+sequenceDiagram
+    participant C1 as 클라이언트 1
+    participant L as 락 서비스
+    participant C2 as 클라이언트 2
+    participant S as 저장소
+    C1->>L: 락 획득
+    L-->>C1: 토큰 33
+    Note over C1: GC 정지, 그 사이 lease 만료
+    C2->>L: 락 획득
+    L-->>C2: 토큰 34
+    C2->>S: 쓰기, 토큰 34
+    S-->>C2: 수락, 34를 기억
+    Note over C1: 깨어남, 만료를 모름
+    C1->>S: 쓰기, 토큰 33
+    S-->>C1: 거부, 이미 34를 처리함
+```
+
 셋째, Redlock은 시간에 의존한다. Redis는 단조 시계가 아니라 `gettimeofday`를 쓰고, 시스템 시계는 NTP나 운영자에 의해 불연속으로 뛴다. 노드 5개 중 C의 시계가 앞으로 뛰어 락이 조기 만료되면, 클라이언트 1은 A·B·C에서, 클라이언트 2는 C·D·E에서 과반을 얻어 둘 다 락을 쥔다. 시계가 정확해도 클라이언트 1이 5개 노드에 요청을 보낸 뒤 GC에 들어가면, 모든 노드에서 lease가 만료되고 클라이언트 2가 락을 쥔 뒤에야 클라이언트 1이 깨어나 "성공" 응답을 읽는다. 원문은 이것을 동기 시스템 모델의 가정이라 부른다. 네트워크 지연 상한, 프로세스 정지 상한, 시계 오차 상한이 알려져 있어야 Redlock이 안전하다. 잘 관리된 데이터센터는 "대부분의 시간" 그 가정을 만족하지만, 정확성이 락에 달려 있으면 대부분으로는 부족하다. Raft, Viewstamped Replication, Zab, Paxos 같은 합의 알고리즘은 시간 가정 없이 안전성을 지킨다.
 
 원문의 결론은 Redlock이 이도 저도 아니라는 것이다.
@@ -65,7 +86,41 @@ lock.release()
 
 이유는 순서다. lease가 만료된 옛 소유자는 먼저 시작했으므로 먼저 쓴다. 그 시점에 저장된 토큰은 자기 것보다 작아서 통과한다. 새 소유자는 그 전에 읽어 둔 낡은 값으로 뒤에 쓰는데, 토큰이 더 크니 이것도 통과한다. 쓰기 시점 fencing이 막는 것은 "새 소유자가 이미 쓴 뒤에 오는 옛 소유자의 쓰기"뿐이고, 트랜잭션이 lease보다 길어서 만료되는 상황에서는 그 순서가 거의 안 나온다. **원문의 그림은 lease 만료의 한 경우이지 전형이 아니다.**
 
+실험 3의 c-1에서 실제로 나온 순서는 이쪽이다. 토큰 번호는 비교하기 쉽게 원문 그림의 33과 34를 빌렸다.
+
+```mermaid
+sequenceDiagram
+    participant O as 옛 소유자
+    participant N as 새 소유자
+    participant DB as 저장소
+    O->>DB: 잔액 조회
+    Note over O: 멈춤, lease 만료
+    N->>DB: 잔액 조회, 옛 소유자의 쓰기 전 값
+    Note over N: 멈춤
+    O->>DB: UPDATE, 토큰 33
+    DB-->>O: 저장된 토큰이 33보다 작음, 통과
+    N->>DB: 낡은 값으로 UPDATE, 토큰 34
+    DB-->>N: 저장된 토큰이 34보다 작음, 통과
+    Note over DB: 옛 소유자의 갱신 유실
+```
+
 그렇다고 원문이 틀린 것은 아니다. 원문의 저장소 예시는 HDFS나 S3의 파일 하나를 읽고 고쳐 다시 쓰는 것이다. 그리고 원문은 ZooKeeper의 znode 버전을 토큰으로 쓸 수 있다고만 적었지만, znode 버전은 ZooKeeper API에서 [`setData`가 "주어진 버전이 노드의 버전과 같을 때만" 쓰는](https://zookeeper.apache.org/doc/current/apidocs/zookeeper-server/org/apache/zookeeper/ZooKeeper.html) 조건으로 쓰이는 값이다. 나는 그 예시를 비교-후-교체로 읽는다. 쓰기 시점 검사가 아니라 읽은 시점을 쓰기까지 들고 가는 검사다. 실험 3의 c-2가 그것이다. 락을 잡은 직후 별도 트랜잭션에서 토큰을 새기고 잔액을 읽고, 쓰기는 "저장된 토큰 = 내 토큰"일 때만 통과. drift 0, 초과 승인 0, 잃어버린 갱신 0. 원문의 결론이 실측으로 성립하는 형태는 이것 하나였고, 그 형태는 fencing이라기보다 낙관적 잠금에 가깝다. 그래서 원문의 "모든 자원 접근에 fencing을 강제하라"는 이 뜻으로 읽어야 한다고 본다. 원문의 그림만 보고 구현하면 c-1이 나온다.
+
+같은 순서에 c-2를 놓으면 토큰을 새기는 시점이 읽기로 당겨지고, 쓰기 조건이 "작으면 통과"에서 "같으면 통과"로 바뀐다.
+
+```mermaid
+sequenceDiagram
+    participant O as 옛 소유자
+    participant N as 새 소유자
+    participant DB as 저장소
+    O->>DB: 토큰 33을 새기고 잔액 조회
+    Note over O: 멈춤, lease 만료
+    N->>DB: 토큰 34를 새기고 잔액 조회
+    O->>DB: UPDATE, 저장된 토큰이 33일 때만
+    DB-->>O: 저장된 토큰은 34, 거부
+    N->>DB: UPDATE, 저장된 토큰이 34일 때만
+    DB-->>N: 통과
+```
 
 c-2에는 대가가 있었다. lease가 항상 작업보다 짧으면 1,159건 중 승인 4~6건. 모든 소유자가 쓰기 전에 다음 소유자에게 추월당한다. fencing은 안전을 주지 실행 보장을 주지 않고, lease가 작업보다 짧은 시스템에 fencing을 붙이면 "틀리게 승인"에서 "전부 거부"로 바뀐다. 원문은 이 지점을 다루지 않는다. 원문의 관심은 안전성이고 그것은 맞는 우선순위다. 다만 이 경우 고칠 것이 fencing이 아니라 lease라는 사실은 실측을 하고서야 보였다.
 
