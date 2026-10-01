@@ -70,10 +70,10 @@ PostgreSQL에서 커넥션이 프로세스이므로, 수백 개를 열면 메모
 | 모드 | 커넥션 반납 시점 | 제약 |
 | --- | --- | --- |
 | session | 클라이언트가 끊을 때 | 제약 없음, 절약도 적음 |
-| **transaction** | 트랜잭션이 끝날 때 | **준비된 문장, 세션 변수, 어드바이저리 락을 쓸 수 없다** |
+| **transaction** | 트랜잭션이 끝날 때 | **세션 변수, 어드바이저리 락을 쓸 수 없다.** 준비된 문장은 1.21.0부터 `max_prepared_statements`로 지원 |
 | statement | 문장마다 | 트랜잭션을 못 쓴다 |
 
-transaction 모드가 가장 널리 쓰이는데, 그 제약이 애플리케이션 동작을 바꾼다. JDBC 드라이버의 서버 측 준비된 문장을 꺼야 하는 경우가 흔하다. **풀러를 넣는 것은 인프라 변경이 아니라 애플리케이션 계약 변경**이다.
+transaction 모드가 가장 널리 쓰이는데, 그 제약이 애플리케이션 동작을 바꾼다. 1.21.0 이전 버전이거나 `max_prepared_statements`가 0이면 JDBC 드라이버의 서버 측 준비된 문장을 꺼야 한다. 1.21.0부터는 이 설정을 켜면 PgBouncer가 준비된 문장을 서버 커넥션마다 다시 준비해 주고, 1.24.0부터 기본값이 200이다([PgBouncer configuration](https://www.pgbouncer.org/config.html), [changelog](https://www.pgbouncer.org/changelog.html)). **풀러를 넣는 것은 인프라 변경이 아니라 애플리케이션 계약 변경**이다.
 
 ## 이 설명이 깨지는 곳
 
@@ -107,3 +107,4 @@ transaction 모드가 가장 널리 쓰이는데, 그 제약이 애플리케이�
 - [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
 - [PostgreSQL: Connection pooling 고려사항](https://www.postgresql.org/docs/current/runtime-config-connection.html)
 - [PgBouncer: Pooling modes](https://www.pgbouncer.org/features.html)
+- [PgBouncer: Configuration](https://www.pgbouncer.org/config.html), [Changelog](https://www.pgbouncer.org/changelog.html) — `max_prepared_statements`
