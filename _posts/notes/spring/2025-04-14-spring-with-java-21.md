@@ -7,7 +7,7 @@ tags: [Java, Spring, Java 21]
 
 ## 왜 Java 21을 고려해야 하는가
 
-Java 21은 LTS 버전이고, Spring Boot 3.x 계열과 함께 사용할 때 얻는 이점이 분명하다. 중요한 것은 "최신 문법을 얼마나 많이 쓰느냐"보다, 운영과 개발 생산성에 어떤 실질적 이점이 생기느냐다.
+Java 21은 LTS 버전이고, Spring Boot 3.x 계열과 함께 사용할 때 얻는 이점이 분명하다. 판단 기준은 최신 문법을 얼마나 쓰느냐보다 운영과 개발 생산성에 어떤 이점이 생기느냐다.
 
 ## 가장 먼저 볼 것
 
@@ -16,23 +16,23 @@ Java 21은 LTS 버전이고, Spring Boot 3.x 계열과 함께 사용할 때 얻�
 - 운영 환경의 GC, 메모리, 모니터링 도구가 맞춰져 있는가
 - 팀이 Java 21 기능을 어디까지 사용할지 기준이 있는가
 
-즉, 버전만 올린다고 끝나는 작업이 아니라 애플리케이션과 운영 환경의 호환성을 함께 보는 작업이다.
+그래서 이 작업은 버전 숫자를 바꾸는 데서 끝나지 않고, 애플리케이션과 운영 환경의 호환성을 함께 보는 작업이 된다.
 
 ## 실무적으로 체감되는 포인트
 
 ### 1. Virtual Threads
 
-요청 수가 많고 I/O 대기가 긴 애플리케이션에서는 가상 스레드가 매력적이다. 다만 다음을 같이 봐야 한다.
+요청 수가 많고 I/O 대기가 긴 애플리케이션에서는 [가상 스레드](/posts/virtual-threads-internals/)가 매력적이다. Spring Boot에서는 `spring.threads.virtual.enabled=true`로 켠다([Spring Boot 문서](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html)). 다만 다음을 같이 봐야 한다.
 
-- DB 커넥션 풀이 병목이면 효과가 제한적이다.
-- synchronized, ThreadLocal 사용 패턴을 다시 봐야 한다.
+- [DB 커넥션 풀](/posts/connection-pool/)이 병목이면 효과가 제한적이다.
+- synchronized, ThreadLocal 사용 패턴을 다시 봐야 한다. JEP 444에 따르면 `synchronized` 안에서는 가상 스레드가 캐리어에 고정(pinning)되고, ThreadLocal로 비싼 자원을 풀링하면 가상 스레드마다 자원이 하나씩 생길 수 있다([JEP 444](https://openjdk.org/jeps/444), [핀닝 실험](/posts/virtual-thread-pinning-experiment/)).
 - 외부 연동이 느리면 스레드 비용만 줄어들 뿐 전체 처리량은 그대로일 수 있다.
 
-즉, 가상 스레드는 만능 성능 개선책이 아니라 "동시 요청 처리의 비용 구조를 바꾸는 도구"다.
+JEP 444도 "They exist to provide scale (higher throughput), not speed (lower latency)."라고 적는다. 가상 스레드는 코드를 빨리 돌리지 않고, 동시 요청 처리의 비용 구조를 바꾼다.
 
 ### 2. Record
 
-DTO, 응답 모델, 설정 객체에서 record는 꽤 유용하다. 불변성과 간결함 덕분에 코드 양이 줄고 의도가 명확해진다.
+DTO, 응답 모델, 설정 객체에서 record는 꽤 유용하다. 필드가 `final`인 불변성([JEP 395](https://openjdk.org/jeps/395))과 간결함 덕분에 코드 양이 줄고 의도가 명확해진다.
 
 다만 JPA 엔티티처럼 프레임워크 제약이 많은 곳에는 그대로 가져가기 어렵다. record는 주로 "읽기 모델" 쪽에서 생각하는 편이 낫다.
 
@@ -50,4 +50,10 @@ DTO, 응답 모델, 설정 객체에서 record는 꽤 유용하다. 불변성과
 
 ## 정리
 
-Java 21은 Spring 프로젝트에 충분히 도입할 가치가 있다. 다만 핵심은 "새 기능을 얼마나 빨리 쓰느냐"가 아니라 "운영과 팀 생산성에 무리 없이 흡수되느냐"다. 특히 가상 스레드는 매력적이지만, 실제 병목이 어디인지 먼저 확인한 뒤 도입해야 효과를 제대로 볼 수 있다.
+Java 21은 Spring 프로젝트에 도입할 가치가 있다. 다만 가상 스레드는 커넥션 풀이나 외부 연동처럼 실제 병목이 어디인지 먼저 확인한 뒤 켜야 효과를 볼 수 있다.
+
+## 참고
+
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
+- [JEP 395: Records](https://openjdk.org/jeps/395)
+- [Spring Boot: Task Execution and Scheduling](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html)
