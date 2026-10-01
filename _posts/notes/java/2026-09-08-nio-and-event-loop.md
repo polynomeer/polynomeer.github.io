@@ -3,6 +3,7 @@ title: "NIO와 이벤트 루프 - 셀렉터, 다이렉트 버퍼, Netty가 대�
 date: 2026-09-08
 categories: [Notes, Java]
 tags: [Java, NIO, Netty, Event Loop, epoll, Concurrency, Network]
+mermaid: true
 ---
 
 자바에서 소켓을 다루는 방법은 둘이다. `InputStream.read()`로 블로킹하거나, `Selector`로 준비된 채널만 골라 처리하거나. 후자가 NIO이고 Netty가 그 위에 있다. 무엇이 달라지고 무엇을 직접 해야 하는지 보면, 프레임워크가 감춘 것이 드러난다.
@@ -10,6 +11,21 @@ tags: [Java, NIO, Netty, Event Loop, epoll, Concurrency, Network]
 ## 블로킹 IO와 NIO
 
 블로킹 모델은 단순하다. `read()`를 부르면 데이터가 올 때까지 스레드가 멈춘다. 연결마다 스레드가 필요하고, 연결이 많아지면 스레드가 감당이 안 된다. [C10K 문서](http://www.kegel.com/c10k.html)가 구분한 "스레드당 클라이언트 하나, 블로킹 IO"와 "스레드당 여러 클라이언트, 논블로킹 IO"의 차이다.
+
+두 모델에서 연결과 스레드가 묶이는 방식이 다르다.
+
+```mermaid
+flowchart TD
+    subgraph B["블로킹 IO - 스레드당 연결 하나"]
+        C1["연결 1"] --> T1["스레드 1<br/>read() 대기"]
+        CN["연결 N"] --> TN["스레드 N<br/>read() 대기"]
+    end
+    subgraph N["NIO - 스레드 하나가 여러 연결"]
+        D1["채널 1"] --> SEL["Selector (epoll)"]
+        DN["채널 N"] --> SEL
+        SEL -->|"준비된 채널만"| T["스레드 1"]
+    end
+```
 
 NIO는 셋을 바꾼다.
 
@@ -67,6 +83,17 @@ Netty는 이 셋을 전부 다룬다. `LengthFieldBasedFrameDecoder` 같은 코�
 Netty의 `EventLoop`는 스레드 하나에 여러 채널을 묶는다. 등록된 채널의 모든 IO 작업은 그 루프가 처리하므로([EventLoop](https://netty.io/4.1/api/io/netty/channel/EventLoop.html)) 한 채널의 이벤트는 항상 같은 스레드에서 처리되고, 핸들러 안에서는 동기화가 필요 없다. 채널 상태는 그 스레드만 만진다.
 
 대신 규칙이 생긴다. **이벤트 루프 스레드에서 블로킹하면 그 루프의 모든 채널이 멈춘다.** DB 호출, 파일 IO, 동기 외부 호출을 핸들러에 그대로 넣으면 안 되고, 별도 `EventExecutorGroup`으로 빼야 한다. `ChannelPipeline` 문서의 예제가 이 구성이다([ChannelPipeline](https://netty.io/4.1/api/io/netty/channel/ChannelPipeline.html)).
+
+그 예제는 코덱은 IO 스레드에 두고, 오래 걸리는 핸들러만 별도 그룹을 지정해 등록한다.
+
+```java
+static final EventExecutorGroup group = new DefaultEventExecutorGroup(16);
+
+ChannelPipeline pipeline = ch.pipeline();
+pipeline.addLast("decoder", new MyProtocolDecoder());   // 이벤트 루프 스레드
+pipeline.addLast("encoder", new MyProtocolEncoder());   // 이벤트 루프 스레드
+pipeline.addLast(group, "handler", new MyBusinessLogicHandler()); // group의 스레드
+```
 
 이 점에서 [스레드 기반 모델](/posts/tomcat-thread-exhaustion/)과 교환 관계가 갈린다. 스레드 모델에서 느린 호출 하나는 스레드 하나를 묶고, 그런 호출이 쌓여 풀이 마를 때 무너진다. 이벤트 루프에서는 느린 호출 하나가 그 루프의 모든 연결을 즉시 묶는다. 앞쪽은 상한에 닿아야 무너지고, 뒤쪽은 한 번에 무너진다.
 
