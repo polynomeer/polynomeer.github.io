@@ -12,7 +12,7 @@ tags: [Database, Redo Log, Undo Log]
 - undo log: 이전 상태로 되돌리기
 - redo log: 커밋된 변경 다시 반영하기
 
-즉, undo는 rollback과 MVCC 쪽, redo는 crash recovery와 durability 쪽에 가깝다.
+그래서 undo는 rollback과 [MVCC](/posts/mvcc/) 쪽, redo는 crash recovery와 [durability](/posts/acid/) 쪽에 가깝다.
 
 ## Undo Log
 
@@ -23,18 +23,18 @@ tags: [Database, Redo Log, Undo Log]
 - 롤백 시 원복
 - MVCC에서 과거 버전 제공
 
-그래서 undo log는 단순 복구 기록이 아니라 읽기 일관성에도 관여한다.
+[InnoDB 매뉴얼](https://dev.mysql.com/doc/refman/8.0/en/innodb-undo-logs.html)에 따르면 다른 트랜잭션이 consistent read(스냅샷 읽기)로 원래 데이터를 봐야 할 때 undo log record에서 변경 전 값을 가져온다. 그래서 undo log는 단순 복구 기록이 아니라 읽기 일관성에도 관여한다.
 
 ## Redo Log
 
-변경 사실을 다시 적용할 수 있게 남기는 로그다.
+변경 사실을 다시 적용할 수 있게 남기는 로그다. [매뉴얼](https://dev.mysql.com/doc/refman/8.0/en/innodb-redo-log.html)은 redo log를 crash recovery 때 미완료 트랜잭션이 쓴 데이터를 바로잡는 디스크 기반 구조로 정의한다.
 
 역할:
 
 - 커밋된 변경 보존
 - 장애 후 재적용
 
-데이터 파일에 변경이 완전히 반영되기 전에 로그를 먼저 안정적으로 남겨서, 장애가 나더라도 복구 가능하게 한다.
+데이터 파일에 변경이 완전히 반영되기 전에 로그를 먼저 안정적으로 남겨서, 장애가 나더라도 복구 가능하게 한다. 이 순서는 [WAL과 체크포인트](/posts/wal-and-checkpoint/)에서 더 다뤘다.
 
 ## 함께 보면 이해가 쉬운 흐름
 
@@ -53,4 +53,9 @@ tags: [Database, Redo Log, Undo Log]
 
 ## 정리
 
-undo log는 "되돌리기", redo log는 "다시 반영하기"라고 기억하면 시작이 쉽다. 트랜잭션 내부 동작, MVCC, crash recovery를 이해할수록 두 로그의 역할 차이가 더 분명해진다.
+트랜잭션 내부 동작, MVCC, crash recovery를 볼 때마다 두 로그 중 어느 쪽이 관여하는지 먼저 가르면 동작을 따라가기 쉬워진다.
+
+## 참고
+
+- [MySQL 8.0 Reference Manual: Undo Logs](https://dev.mysql.com/doc/refman/8.0/en/innodb-undo-logs.html)
+- [MySQL 8.0 Reference Manual: Redo Log](https://dev.mysql.com/doc/refman/8.0/en/innodb-redo-log.html)
