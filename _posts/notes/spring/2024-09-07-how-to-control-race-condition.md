@@ -1,6 +1,7 @@
 ---
 title: Spring과 JPA에서 Race Condition을 다루는 방법
 date: 2024-09-07
+mermaid: true
 categories: [Notes, Spring]
 tags: [Spring, JPA, Concurrency, Lock]
 ---
@@ -16,11 +17,23 @@ tags: [Spring, JPA, Concurrency, Lock]
 - 쿠폰 선착순 발급
 - 좌석 예약
 
-조회와 갱신이 분리된 흐름에서는 특히 쉽게 발생한다.
+조회와 갱신이 분리된 흐름에서는 특히 쉽게 발생한다. 재고 차감을 예로 들면, 두 요청이 같은 재고를 읽은 뒤 각자 계산한 값을 저장하면 한 번의 차감이 사라진다.
+
+```mermaid
+sequenceDiagram
+    participant A as 요청 A
+    participant DB
+    participant B as 요청 B
+    A->>DB: 재고 조회 (stock = N)
+    B->>DB: 재고 조회 (stock = N)
+    A->>DB: stock = N - 1 저장
+    B->>DB: stock = N - 1 저장
+    Note over DB: 두 번 팔렸지만 재고는 한 번만 줄었다
+```
 
 ## 왜 JPA에서 자주 문제가 되는가
 
-JPA를 쓰면 엔티티 변경이 자연스럽게 보이기 때문에 동시성 문제도 자동으로 해결될 것처럼 착각하기 쉽다. 하지만 JPA는 ORM일 뿐이고, 동시성 제어는 결국 DB 락 전략과 애플리케이션 설계가 결정한다.
+JPA를 쓰면 엔티티 변경이 자연스럽게 보이기 때문에 동시성 문제도 자동으로 해결될 것처럼 착각하기 쉽다. 하지만 JPA는 ORM일 뿐이고, 동시성 제어는 DB 락 전략과 애플리케이션 설계가 결정한다.
 
 ## 해결 전략
 
@@ -31,16 +44,16 @@ JPA를 쓰면 엔티티 변경이 자연스럽게 보이기 때문에 동시성 
 - 장점: 읽기 경쟁이 많은 환경에 유리
 - 단점: 충돌이 나면 재시도 정책이 필요
 
-`@Version` 기반으로 쉽게 적용할 수 있다.
+`@Version` 기반으로 쉽게 적용할 수 있다. Jakarta Persistence는 이 필드를 엔티티의 낙관적 락 값으로 정의한다([Version Javadoc](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/version)). 충돌 처리에 따라 설계가 갈리는 사례는 [뱅크샐러드 낙관적 락 리뷰](/posts/banksalad-optimistic-lock/)에 있다.
 
 ### 2. 비관적 락
 
 조회 시점부터 DB 락을 잡는다.
 
 - 장점: 충돌을 강하게 제어 가능
-- 단점: 대기 시간과 데드락 가능성 증가
+- 단점: 대기 시간과 [데드락](/posts/lock-types-and-waits/) 가능성 증가
 
-재고처럼 "절대 동시에 성공하면 안 되는" 케이스에서 자주 쓴다.
+Spring Data JPA에서는 리포지토리 쿼리 메서드에 `@Lock`을 붙여 `LockModeType`을 지정한다([Locking](https://docs.spring.io/spring-data/jpa/reference/jpa/locking.html)). 재고처럼 "절대 동시에 성공하면 안 되는" 케이스에서 자주 쓴다.
 
 ### 3. 원자적 업데이트
 
@@ -54,7 +67,7 @@ set stock = stock - 1
 where id = ? and stock > 0
 ```
 
-이 방식은 단순하고 강력하다. 가능한 경우 가장 먼저 검토할 만하다.
+읽기, 조건 확인, 쓰기가 SQL 한 문장 안에서 일어나므로 위 그림처럼 두 요청이 같은 값을 읽고 덮어쓰는 틈이 없다. 가능한 경우 가장 먼저 검토할 만하다.
 
 ### 4. 큐잉 또는 직렬화
 
@@ -62,7 +75,7 @@ where id = ? and stock > 0
 
 - 메시지 큐
 - 단일 파티션 소비
-- Redis 분산 락
+- Redis 분산 락 ([분산 락이 있어도 레이스가 남는 경우](/posts/bulk-insert-with-lock-part4/))
 
 ## 실무 판단 기준
 
@@ -76,11 +89,16 @@ where id = ? and stock > 0
 ## 흔한 실수
 
 - `@Transactional`만 붙이면 안전하다고 생각함
-- synchronized로 멀티 인스턴스 환경을 해결하려고 함
+- `synchronized`로 멀티 인스턴스 환경을 해결하려고 함
 - 락은 걸었지만 조회 범위가 넓어 병목이 심해짐
 
-`@Transactional`은 원자성 보장과 동시성 제어를 동일하게 해결해주지 않는다.
+`@Transactional`은 원자성 보장과 동시성 제어를 동일하게 해결해주지 않는다. 위 그림의 경쟁을 어디까지 막는지는 [격리 수준](/posts/isolation-levels-and-anomalies/)과 락이 정한다.
 
 ## 정리
 
-Race Condition 대응은 "락을 쓸까 말까"보다 "어디서 경쟁이 발생하고, 어떤 수준의 정합성을 보장해야 하는가"를 먼저 정하는 문제다. Spring/JPA에서는 낙관적 락, 비관적 락, 조건부 업데이트, 큐 기반 직렬화 중 문제 성격에 맞는 방식을 선택해야 한다.
+Race Condition 대응은 락을 쓸지보다 어디서 경쟁이 발생하고 어떤 수준의 정합성을 보장해야 하는지를 먼저 정하는 문제다. 그다음 Spring/JPA에서는 낙관적 락, 비관적 락, 조건부 업데이트, 큐 기반 직렬화 중 문제 성격에 맞는 방식을 선택해야 한다.
+
+## 참고
+
+- [Jakarta Persistence 3.1 — Version](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/version)
+- [Spring Data JPA Reference — Locking](https://docs.spring.io/spring-data/jpa/reference/jpa/locking.html)
