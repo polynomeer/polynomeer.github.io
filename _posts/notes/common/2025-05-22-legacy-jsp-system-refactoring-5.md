@@ -11,7 +11,7 @@ tags: [Legacy, Refactoring]
 
 > "프론트에 너무 많은 로직이 얽혀 있다."
 
-특히 과거 JavaScript는 단순한 UI 역할을 넘어, **검증부터 비즈니스 로직 판단까지** 상당한 책임을 떠안고 있는 경우가 많습니다. 이번 글에서는 이러한 로직을 어떻게 **백엔드(Spring Boot + JPA)**로 “발라내듯” 정리하고, 역할을 명확히 분리했는지에 대해 공유합니다.
+과거 JavaScript는 UI를 그리는 데 그치지 않고 입력 검증부터 비즈니스 로직 판단까지 떠안고 있는 경우가 많습니다. 이 글은 그 로직을 백엔드(Spring Boot + JPA)로 하나씩 떼어 내고 프론트와 백엔드의 역할을 나눈 과정을 다룹니다.
 
 ------
 
@@ -19,10 +19,12 @@ tags: [Legacy, Refactoring]
 
 JSP 기반의 레거시 시스템은 다음과 같은 특징을 가집니다:
 
-- **JavaScript가 과도한 책임**을 짐: 입력값 검증, 상태 판단, 버튼 노출 여부까지 담당
-- **중복된 검증**: 프론트에서 검증했지만 서버에서도 또 검증 (또는 안 하는 경우도 있음)
-- **보안 위험**: 클라이언트에서 판단한 로직은 조작이 쉬움
-- **유지보수 어려움**: 정책 변경 시 프론트 코드까지 수정해야 함
+- JavaScript가 과도한 책임을 짐: 입력값 검증, 상태 판단, 버튼 노출 여부까지 담당
+- 중복된 검증: 프론트에서 검증했지만 서버에서도 또 검증 (또는 안 하는 경우도 있음)
+- 보안 위험: 클라이언트에서 판단한 로직은 조작이 쉬움
+- 유지보수 어려움: 정책 변경 시 프론트 코드까지 수정해야 함
+
+보안 위험은 OWASP Input Validation Cheat Sheet가 같은 이유로 경고합니다. 클라이언트 측 JavaScript 검증은 공격자가 JavaScript를 끄거나 웹 프록시를 쓰면 우회되므로, 입력 검증은 데이터를 처리하기 전에 서버에서 해야 한다는 것입니다([OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)). 같은 문서는 UX를 위한 클라이언트 검증과 보안을 위한 서버 검증을 함께 두라고 권합니다.
 
 예를 들어, 아래와 같은 JavaScript 코드가 흔했습니다:
 
@@ -36,7 +38,7 @@ if (userRole === 'ADMIN' && orderStatus === 'REQUESTED' && orderAmount > 10000) 
 
 ### 목표: 역할 분리와 서버 중심 검증
 
-프론트는 “표현(UI)”에 집중하고, 백엔드는 “판단(로직)”을 담당하는 구조로 바꾸고자 했습니다.
+그래서 프론트는 표현(UI)에 집중하고, 백엔드는 판단(로직)을 담당하는 구조로 바꾸고자 했습니다.
 
 | 책임                                       | 담당     |
 | ------------------------------------------ | -------- |
@@ -45,7 +47,7 @@ if (userRole === 'ADMIN' && orderStatus === 'REQUESTED' && orderAmount > 10000) 
 
 ------
 
-### 🔄 리팩토링 전략
+### 리팩토링 전략
 
 #### 1. JavaScript 코드 분석 및 분류
 
@@ -67,11 +69,11 @@ if (userRole === 'ADMIN' && orderStatus === 'REQUESTED' && orderAmount > 10000) 
 - 주문 상태가 REQUESTED이고
 - 주문 금액이 10,000원 초과
 
-→ **승인 버튼 표시 가능 여부**
+→ 승인 버튼 표시 가능 여부
 
-##### 📦 구현 흐름
+##### 구현 흐름
 
-**① API 호출 (프론트)**
+① API 호출 (프론트)
 
 ```javascript
 const res = await fetch(`/api/orders/123/can-approve`);
@@ -79,7 +81,7 @@ const { canApprove } = await res.json();
 if (canApprove) showApproveButton();
 ```
 
-**② Controller**
+② Controller
 
 ```java
 @GetMapping("/{id}/can-approve")
@@ -90,7 +92,7 @@ public ResponseEntity<Map<String, Boolean>> canApprove(@PathVariable Long id,
 }
 ```
 
-**③ Service**
+③ Service
 
 ```java
 public boolean canApproveOrder(Long orderId, CustomUserDetails user) {
@@ -127,7 +129,7 @@ public class OrderRequest {
 }
 ```
 
-프론트의 즉각적 UX는 유지하되, **실제 검증과 정책은 백엔드에서 책임**집니다.
+`@AssertTrue`는 "The annotated element must be true."로 정의된 제약입니다(대상 요소가 true여야 한다, [Jakarta Bean Validation Javadoc](https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/asserttrue)). 그래서 `isValidPeriod()`가 false를 돌려주면 날짜 범위 검증이 실패합니다. 프론트의 즉각적 UX는 유지하되, 실제 검증과 정책은 백엔드가 책임집니다.
 
 ------
 
@@ -144,9 +146,13 @@ public class OrderRequest {
 
 ### 마무리하며
 
-프론트에 로직이 얽혀 있다는 건 단순한 코드 문제가 아닙니다. **설계의 분리 실패**입니다.
+프론트에 로직이 얽혀 있던 원인은 개별 코드보다 프론트와 백엔드의 책임이 나뉘지 않은 설계에 있었습니다.
 
-비즈니스 로직과 검증 책임을 서버로 되돌리는 과정은 단지 “백엔드로 옮긴다”는 차원을 넘어, **시스템의 책임과 경계를 재정립하는 작업**이었습니다.
+그래서 비즈니스 로직과 검증 책임을 서버로 되돌리는 작업은 코드를 옮기는 일이면서, 어느 쪽이 무엇을 판단하는지 경계를 다시 정하는 일이었습니다.
 
-> 작은 UI의 상태 판단도, 결국은 도메인 규칙입니다.
->  **도메인 규칙은 서버가 지켜야 할 최소한의 약속**입니다.
+> 승인 버튼 노출 같은 작은 UI 상태 판단도 도메인 규칙이고, 도메인 규칙은 서버가 지켜야 합니다.
+
+## 참고
+
+- [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
+- [Jakarta Bean Validation 3.0 — AssertTrue](https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/asserttrue)
