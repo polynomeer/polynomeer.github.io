@@ -20,7 +20,7 @@ Go Gateway → Kafka → Worker → Redis → API → WebSocket → Client
 
 "응답이 느리다"는 신고를 받았을 때, 어디가 병목인지 찾으려면 각 단계의 시간을 측정해야 한다. 로그를 수동으로 분석하는 방법은 느리고 오류가 많다.
 
-**분산 추적(Distributed Tracing)** 은 하나의 요청이 여러 서비스를 거치는 동안 전체 경로와 각 구간의 시간을 자동으로 기록한다.
+[분산 추적](/posts/metrics-logs-traces/)(Distributed Tracing)은 하나의 요청이 여러 서비스를 거치는 동안 전체 경로와 각 구간의 시간을 자동으로 기록한다.
 
 ---
 
@@ -55,17 +55,17 @@ management:
 
 ## 자동 계측 (Auto-instrumentation)
 
-Spring Boot의 `opentelemetry-spring-boot-starter`를 추가하면 추가 코드 없이 자동으로 계측된다.
+Spring Boot의 `opentelemetry-spring-boot-starter`를 추가하면 추가 코드 없이 자동으로 계측된다. 기본으로 켜지는 계측 목록에 JDBC, Spring Web MVC, Kafka가 있다([Out of the box instrumentation](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/out-of-the-box-instrumentation/)).
 
-- **HTTP 요청**: 모든 `@RestController` 메서드에 span 자동 생성
-- **JDBC**: `JdbcTemplate` 쿼리에 span 자동 생성 (SQL, 실행 시간)
-- **Spring Kafka**: `@KafkaListener` 메서드에 span 자동 생성
+- HTTP 요청: 요청마다 서버 span이 생긴다. 문서에 따르면 starter가 서블릿 `Filter`를 등록하고, 이 필터가 요청 실행을 서버 span으로 감싼다. 그래서 단위는 `@RestController` 메서드가 아니라 HTTP 요청 하나다.
+- JDBC: 쿼리마다 span이 생긴다 (SQL, 실행 시간).
+- Spring Kafka: `@KafkaListener`가 메시지를 소비할 때 span이 생긴다.
 
 ---
 
-## 수동 계측 — 시세 파이프라인 지연 추적
+## 수동 계측: 시세 파이프라인 지연 추적
 
-자동 계측이 안 되는 부분은 수동으로 span을 추가한다.
+자동 계측이 안 되는 부분은 수동으로 span을 추가한다. 아래 클래스에는 성격이 다른 두 도구가 섞여 있다. `recordTickGenerated`는 span이 아니라 Micrometer 타이머로, 틱 생성 시각(`generatedAt`)부터 Kafka 소비 시점까지의 지연을 잰다. `tracedBlock`은 블록 하나를 span 하나로 감싼다.
 
 ```kotlin
 @Service
@@ -98,7 +98,7 @@ class LatencyTracker(
 }
 ```
 
-시세 처리 파이프라인에 span을 추가한다.
+시세 처리 파이프라인에 span을 추가한다. `generatedAt`은 Go Gateway의 시계로, `Instant.now()`는 Worker의 시계로 찍힌다. 그래서 두 서버의 시계 차이가 `tick.pipeline.latency`에 그대로 섞인다.
 
 ```kotlin
 @KafkaListener(topics = ["market.ticks"])
@@ -153,7 +153,7 @@ Jaeger에 저장된 trace를 UI에서 확인한다.
 
 ## 지연 API 엔드포인트
 
-시세 파이프라인의 실시간 지연을 조회하는 API를 제공한다.
+시세 파이프라인의 실시간 지연을 [백분위](/posts/percentile-statistics/)(p50·p95·p99)로 조회하는 API를 제공한다.
 
 ```kotlin
 @RestController
@@ -210,13 +210,15 @@ Spring Boot에서 두 가지가 공존한다.
 - **Micrometer**: 메트릭 수집 (카운터, 타이머, 게이지). Prometheus, Grafana에 쿼리
 - **OpenTelemetry**: 분산 추적. Jaeger에서 시각화
 
-Micrometer Tracing Bridge를 사용하면 Micrometer API로 작성한 코드가 자동으로 OpenTelemetry span을 생성한다.
+[Micrometer](/posts/jmx-mbean-and-micrometer/) Tracing Bridge는 Micrometer의 Observation API를 OpenTelemetry span으로 이어 준다. Micrometer Tracing 문서는 그 범위를 이렇게 적는다. "Whenever an `Observation` is used, a corresponding span is created, started, stopped and reported."([Micrometer Tracing](https://docs.micrometer.io/tracing/reference/)) Observation을 쓰는 곳마다 span이 만들어지고 시작·종료·보고된다는 뜻이다.
 
 ```kotlin
 // Micrometer Timer API
 val timer = meterRegistry.timer("api.request", "endpoint", "/api/orders")
 timer.record { processOrder() }  // 자동으로 OTel span도 생성
 ```
+
+문서 기준으로 span을 만드는 것은 `Observation`이고, `Timer`만으로는 span이 생기지 않는다. 그래서 위 주석은 같은 작업을 `Observation`으로 감쌌을 때에만 맞다. Observation 하나로 타이머와 span을 함께 얻는 것이 Micrometer가 말하는 "instrument code once" 방식이다([Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation.html)).
 
 ---
 
@@ -225,6 +227,12 @@ timer.record { processOrder() }  // 자동으로 OTel span도 생성
 - `opentelemetry-spring-boot-starter`로 HTTP/JDBC/Kafka를 코드 변경 없이 자동 계측한다.
 - 직접 작성한 블록에는 `tracer.spanBuilder()`로 수동 span을 추가한다.
 - Micrometer Timer로 p50/p95/p99 지연 퍼센타일을 측정해 `/api/latency`로 노출한다.
-- `sampling.probability: 1.0`은 개발 환경용. 운영에서는 0.1 이하로 줄여야 한다.
+- `sampling.probability: 1.0`은 개발 환경용. 운영에서는 0.1 이하로 줄여야 한다([트레이스 샘플링](/posts/trace-sampling/)).
 
-마지막 편에서는 KIS·Yahoo Finance 같은 외부 API 장애 시 자동으로 폴백하는 **Circuit Breaker**를 다룬다.
+다음 편에서는 KIS·Yahoo Finance 같은 외부 API 장애 시 자동으로 폴백하는 [Circuit Breaker](/posts/monticker-circuit-breaker/)를 다룬다.
+
+## 참고
+
+- [OpenTelemetry Spring Boot starter: Out of the box instrumentation](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/out-of-the-box-instrumentation/) — OpenTelemetry 문서
+- [Micrometer Tracing](https://docs.micrometer.io/tracing/reference/) — Micrometer 문서
+- [Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation.html) — Micrometer 문서
