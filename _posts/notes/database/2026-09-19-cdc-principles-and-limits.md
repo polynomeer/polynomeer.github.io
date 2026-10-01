@@ -3,6 +3,7 @@ title: "CDC의 원리와 한계 - 로그 기반 변경 포착, 초기 스냅샷,
 date: 2026-09-19
 categories: [Notes, Database]
 tags: [CDC, Debezium, Database, Kafka, Replication, WAL, Event Driven]
+mermaid: true
 ---
 
 DB의 변경을 다른 시스템에 전달하는 방법으로 CDC가 널리 쓰인다. "애플리케이션 코드를 건드리지 않고 변경을 가져온다"는 점이 매력인데, 그 대가가 어디에 있는지는 덜 이야기된다. 원리를 보면 무엇이 공짜이고 무엇이 아닌지가 갈린다.
@@ -26,6 +27,30 @@ Debezium은 DB에게 자기가 복제본인 것처럼 행동한다. MySQL에서�
 > "They will prevent removal of required resources even when there is no connection using them." ([PostgreSQL 문서](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html))
 
 연결이 없어도 필요한 자원의 삭제를 막는다는 뜻이다. 그래서 커넥터가 멈추면 슬롯의 위치가 진행되지 않고, DB는 그 지점부터의 WAL을 지우지 못해 디스크가 찬다. CDC 운영에서 가장 흔한 장애가 이것이고, 커넥터 중단이 DB 장애로 번지는 경로다. 슬롯의 지연(`pg_replication_slots`의 `restart_lsn`, `confirmed_flush_lsn`과 현재 LSN의 차이)을 반드시 감시해야 한다.
+
+정상 경로와 커넥터가 멈춘 뒤의 경로를 PostgreSQL 기준으로 나란히 놓으면 이렇다.
+
+```mermaid
+sequenceDiagram
+    participant App as 애플리케이션
+    participant DB as PostgreSQL WAL
+    participant Slot as 복제 슬롯
+    participant Dbz as Debezium
+    participant K as Kafka 토픽
+    App->>DB: 쓰기 커밋, WAL에 기록
+    Dbz->>Slot: 논리 디코딩으로 변경 수신
+    Dbz->>K: 행 변경 이벤트 발행
+    Dbz->>Slot: 읽은 위치 확인, 슬롯 위치 진행
+    Note over DB,Slot: 슬롯 위치 이전의 WAL만 삭제 가능
+    Note over Dbz: 커넥터 중단
+    App->>DB: 쓰기는 계속된다
+    Note over DB,Slot: 슬롯 위치가 멈춰 WAL이 쌓이고 디스크가 찬다
+    alt max_slot_wal_keep_size = -1 (기본)
+        Note over DB: 디스크가 찰 때까지 WAL 보관
+    else 상한을 넘김
+        Note over DB,Slot: 필요한 WAL이 지워져 재스냅샷 필요
+    end
+```
 
 DB 쪽 상한은 [`max_slot_wal_keep_size`](https://www.postgresql.org/docs/current/runtime-config-replication.html)다. 기본값 `-1`은 무제한이고, 상한을 넘기면 필요한 WAL이 지워져 그 슬롯으로 복제를 이어 가지 못할 수 있다. 디스크를 지키는 대신 다음 절의 재스냅샷을 감수하는 설정이다.
 
@@ -74,6 +99,21 @@ Debezium은 트랜잭션마다 BEGIN과 END 이벤트를 별도 토픽에 내고
 내부 모델이나 테이블을 바꿔도 소비자가 깨지지 않는다는 뜻이다.
 
 [ParityPay 5편](/posts/parity-pay-outbox/)이 Outbox를 택한 이유가 이것이었고, 그 글의 한계에 "폴링 지연 500ms"를 적었다. 업무 테이블을 CDC로 내보내면 그 지연은 줄지만 결합의 성격이 바뀐다. 다만 이 교환은 릴레이가 폴링일 때의 이야기다. 릴레이는 로그 테일링으로도 만들 수 있고([microservices.io](https://microservices.io/patterns/data/transactional-outbox.html)), 위 글은 Debezium으로 Outbox 테이블을 읽어 계약은 유지한 채 폴링 지연을 없앤다.
+
+세 경로를 놓고 보면, 지연은 릴레이가 정하고 결합은 무엇을 읽느냐가 정한다.
+
+```mermaid
+flowchart TD
+    subgraph A["업무 테이블 CDC"]
+        A1["업무 테이블"] --> A2["Debezium"] --> A3["소비자<br/>테이블 스키마에 결합"]
+    end
+    subgraph B["Outbox + 폴링 릴레이"]
+        B1["Outbox 테이블"] --> B2["폴링 릴레이<br/>폴링 지연 500ms"] --> B3["소비자<br/>이벤트 계약에 결합"]
+    end
+    subgraph C["Outbox + CDC 릴레이"]
+        C1["Outbox 테이블"] --> C2["Debezium"] --> C3["소비자<br/>이벤트 계약에 결합"]
+    end
+```
 
 실용적인 기준은 이렇다. 데이터 복제(검색 인덱스, 데이터 웨어하우스, 캐시 갱신)에는 CDC, 도메인 이벤트 발행에는 Outbox.
 
