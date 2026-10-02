@@ -25,6 +25,8 @@ import {
   signSession,
   verifySession
 } from './auth.js';
+import { draftSource } from './sourcedraft.js';
+import { SOURCES_PATH } from './ui/citations.js';
 import {
   ConflictError, DICTIONARY_DIRS, GitHubError, createGitHubClient
 } from './github.js';
@@ -48,11 +50,17 @@ export function json(body, status = 200, headers = {}) {
 const READABLE = ['_posts/', ...DICTIONARY_DIRS];
 const WRITABLE = [...READABLE, 'assets/img/'];
 
+// Single files the editor may read and write, matched exactly. The citation
+// registry is content - a list of books and articles - and the "인용하기"
+// dialog appends to it in the same commit as the post that cites the new
+// source. The rest of _data/ (locales, profile, site settings) stays out.
+const FILES = [SOURCES_PATH];
+
 function within(dirs, path) {
   return typeof path === 'string' &&
     !path.includes('..') &&
     !path.startsWith('/') &&
-    dirs.some((dir) => path.startsWith(dir));
+    (dirs.some((dir) => path.startsWith(dir)) || FILES.includes(path));
 }
 
 /** Content the editor may read: posts and the dictionaries, nothing else. */
@@ -336,6 +344,23 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
         } catch (error) {
           return problem(error.status === 404 ? 404 : 502,
             error.status === 404 ? 'not_found' : 'github_error', 'Could not read the post.');
+        }
+      }
+
+      if (url.pathname === '/api/source-draft' && request.method === 'POST') {
+        let payload;
+        try {
+          payload = await request.json();
+        } catch {
+          return problem(400, 'invalid_json', 'The request body is not JSON.');
+        }
+        try {
+          // The session's token only raises the GitHub API rate limit for
+          // pinning a branch to its commit; no other host ever sees it.
+          return json(await draftSource(payload?.url, { fetch: fetchImpl, token: session.ght }));
+        } catch (error) {
+          if (error.code === 'bad_url') return problem(422, 'bad_url', error.message);
+          throw error;
         }
       }
 

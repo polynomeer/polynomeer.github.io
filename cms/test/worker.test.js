@@ -761,3 +761,70 @@ test('the listing names the dictionary entries, with their titles and ids', asyn
     { path: '_series_pages/one.md' }
   ]);
 });
+
+test('the citation registry is the one file of _data/ the editor may touch', async () => {
+  const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
+
+  for (const path of ['_data/sources.yml.bak', '_data/sources.ymlx', '_data/sources/x.yml',
+    '_data/../_data/sources.yml', '/_data/sources.yml', '_data/locales/en.yml']) {
+    const response = await worker.fetch(request('/api/changes', {
+      method: 'POST',
+      cookie: await sessionCookie(),
+      body: { message: 'm', files: [{ path, content: 'x' }] }
+    }), env);
+    assert.equal(response.status, 422, path);
+  }
+});
+
+test('the registry can be read and committed together with a post', async () => {
+  const github = githubFake();
+  const reads = [];
+  const worker = createWorker({
+    fetch: async (url, init) => {
+      if (url.includes('/contents/_data/sources.yml')) {
+        reads.push(url);
+        const body = JSON.stringify({ sha: 'b1', content: btoa('a:\n  type: web\n') });
+        return { ok: true, status: 200, json: async () => JSON.parse(body), text: async () => body };
+      }
+      return github.fetchImpl(url, init);
+    }
+  });
+
+  const read = await worker.fetch(request('/api/posts/_data%2Fsources.yml', { cookie: await sessionCookie() }), env);
+  assert.equal(read.status, 200);
+  assert.equal((await read.json()).text, 'a:\n  type: web\n');
+  assert.equal(reads.length, 1);
+
+  const write = await worker.fetch(request('/api/changes', {
+    method: 'POST',
+    cookie: await sessionCookie(),
+    body: { message: 'm', files: [
+      { path: '_posts/notes/a.md', content: 'x' },
+      { path: '_data/sources.yml', content: 'a:\n  type: web\n' }
+    ] }
+  }), env);
+  assert.equal(write.status, 200);
+});
+
+test('drafting a source needs a session and a URL', async () => {
+  const worker = createWorker({
+    fetch: async () => ({ ok: true, status: 200, text: async () => '<title>RFC 9110 - HTTP Semantics</title>' })
+  });
+
+  const anonymous = await worker.fetch(request('/api/source-draft', {
+    method: 'POST', body: { url: 'https://datatracker.ietf.org/doc/html/rfc9110' }
+  }), env);
+  assert.equal(anonymous.status, 401);
+
+  const ok = await worker.fetch(request('/api/source-draft', {
+    method: 'POST', cookie: await sessionCookie(), body: { url: 'https://datatracker.ietf.org/doc/html/rfc9110' }
+  }), env);
+  assert.equal(ok.status, 200);
+  assert.equal((await ok.json()).entry.title, 'RFC 9110 HTTP Semantics');
+
+  const bad = await worker.fetch(request('/api/source-draft', {
+    method: 'POST', cookie: await sessionCookie(), body: { url: 'file:///etc/passwd' }
+  }), env);
+  assert.equal(bad.status, 422);
+  assert.equal((await bad.json()).error.code, 'bad_url');
+});

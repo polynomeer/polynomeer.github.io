@@ -50,6 +50,10 @@
     </div>
 
     <div data-panel="write">
+      <div class="toolbar">
+        <button id="cite" type="button" class="button small">인용하기</button>
+        <span id="citestatus" class="muted"></span>
+      </div>
       <textarea id="body" spellcheck="false" placeholder="마크다운"></textarea>
     </div>
 
@@ -97,6 +101,64 @@
     <p id="result" class="muted"></p>
   </section>
 </main>
+
+<dialog id="citedialog" aria-labelledby="citetitle">
+  <form id="citeform" method="dialog">
+    <h2 id="citetitle">인용하기</h2>
+
+    <label class="field">
+      <span>인용문 (마크다운)</span>
+      <textarea id="citequote" rows="4" spellcheck="false"></textarea>
+    </label>
+
+    <fieldset class="citesource">
+      <legend>출처</legend>
+      <p id="citechosen" class="chosen muted">아직 고르지 않았습니다</p>
+      <label class="field">
+        <span>등록된 출처에서 찾기</span>
+        <input id="citesearch" type="search" placeholder="제목, 저자, id" autocomplete="off">
+      </label>
+      <ul id="citesources" class="posts citesources"></ul>
+
+      <details id="citenew">
+        <summary>새 출처 등록</summary>
+        <div class="field">
+          <span>주소 (URL, DOI)</span>
+          <div class="row">
+            <input id="citeurl" type="url" placeholder="https://..." autocomplete="off">
+            <button id="citefetch" type="button" class="button">불러오기</button>
+          </div>
+        </div>
+        <p id="citedraftnote" class="muted"></p>
+        <div class="grid2">
+          <label class="field"><span>id (글에서 쓰는 값)</span><input id="cnid" autocomplete="off"></label>
+          <label class="field"><span>종류</span><select id="cntype"></select></label>
+          <label class="field wide"><span>제목</span><input id="cntitle" autocomplete="off"></label>
+          <label class="field"><span>저자</span><input id="cnauthor" autocomplete="off"></label>
+          <label class="field"><span>발행처</span><input id="cnpublisher" autocomplete="off"></label>
+          <label class="field"><span>발행일</span><input id="cnpublished" placeholder="YYYY-MM-DD" autocomplete="off"></label>
+          <label class="field"><span>원문 주소</span><input id="cnurl" type="url" autocomplete="off"></label>
+        </div>
+        <button id="citeusenew" type="button" class="button">이 출처로 정하기</button>
+      </details>
+    </fieldset>
+
+    <label class="field">
+      <span>위치 (쪽, 장, 절, 시간 - 선택)</span>
+      <input id="citeat" autocomplete="off">
+    </label>
+    <label class="field">
+      <span>작성자 메모 (선택, 인용문과 따로 표시됩니다)</span>
+      <textarea id="citenote" rows="3" spellcheck="false"></textarea>
+    </label>
+
+    <p id="citeerror" class="warn" role="alert"></p>
+    <div class="actions">
+      <button value="cancel" class="button">취소</button>
+      <button id="citeinsert" type="button" class="button primary">본문에 넣기</button>
+    </div>
+  </form>
+</dialog>
 
 <script type="module" src="/app.js"></script>
 </body>

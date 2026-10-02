@@ -142,3 +142,41 @@ select {
   margin-bottom: .35rem;
 }
 .posts .id { display: block; font-size: .72rem; color: var(--accent); font-family: ui-monospace, Menlo, monospace; }
+
+/* --- citations --- */
+.toolbar { display: flex; align-items: center; gap: .5rem; margin-bottom: .4rem; flex-wrap: wrap; }
+.button.small { font-size: .78rem; padding: .22rem .7rem; }
+dialog {
+  width: min(44rem, calc(100vw - 2rem)); max-height: calc(100vh - 2rem);
+  padding: 1rem; border: 1px solid var(--line); border-radius: .7rem;
+  background: var(--panel); color: var(--text);
+}
+dialog::backdrop { background: rgb(0 0 0 / .45); }
+dialog h2 { margin: 0 0 .7rem; font-size: 1.05rem; }
+dialog textarea { min-height: 0; }
+dialog input:not([type]), dialog input[type="url"] {
+  width: 100%; padding: .45rem .55rem; border: 1px solid var(--line); border-radius: .4rem;
+  background: var(--bg); color: var(--text); font: inherit; font-size: .88rem;
+}
+.citesource { border: 1px solid var(--line); border-radius: .5rem; margin: 0 0 .7rem; padding: .5rem .7rem .7rem; }
+.citesource legend { font-size: .8rem; color: var(--muted); padding: 0 .3rem; }
+.citesource .chosen { margin: 0 0 .5rem; }
+.citesource .chosen.set { color: var(--accent); }
+.citesources { max-height: 12rem; margin-bottom: .5rem; }
+.citesource summary { cursor: pointer; font-size: .88rem; margin: .3rem 0 .5rem; }
+.row { display: flex; gap: .4rem; align-items: center; }
+.row .button { white-space: nowrap; flex: none; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 .6rem; }
+.grid2 .wide { grid-column: 1 / -1; }
+@media (max-width: 560px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.cite {
+  margin: 1rem 0; padding: .8rem .9rem; border: 1px solid var(--line);
+  border-left: 3px solid var(--accent); border-radius: .5rem;
+}
+.cite blockquote { margin: 0; }
+.cite blockquote p:last-child { margin-bottom: 0; }
+.cite figcaption { margin-top: .5rem; font-size: .8rem; color: var(--muted); }
+.cite figcaption cite { font-style: normal; font-weight: 600; }
+.cite .cite-type { border: 1px solid var(--line); border-radius: .3rem; padding: 0 .35rem; margin-right: .4rem; }
+.cite-note { margin-top: .6rem; padding-top: .5rem; border-top: 1px dashed var(--line); font-size: .9rem; }
+.cite-note > span { display: block; font-size: .75rem; color: var(--muted); font-weight: 700; }

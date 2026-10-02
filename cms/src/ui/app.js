@@ -9,6 +9,10 @@ import {
   formatSize, imageFileName, isSupported, markdownFor, publicUrl, sizeLevel, uniqueImagePath
 } from './images.js';
 import { collapse, diffLines, diffStat } from './diff.js';
+import {
+  SOURCES_PATH, SOURCE_TYPES, TYPE_LABELS, appendSources, citationBlock, isSourceId,
+  parseSources, renderWithCitations, suggestSourceId, unknownSources, withoutCitations
+} from './citations.js';
 
 const $ = (id) => document.getElementById(id);
 const DRAFT_PREFIX = 'cms:draft:';
@@ -30,6 +34,12 @@ let saving = false;
 let staged = [];
 let siteUrl = null;
 let revisions = null;
+
+// The citation registry (_data/sources.yml) as last read, and sources added
+// from the "인용하기" dialog that ride along with the next save, like images.
+let sources = {};
+let sourcesLoaded = false;
+let stagedSources = [];
 
 const say = (text, cls = 'muted') => {
   $('state').textContent = text;
@@ -415,6 +425,10 @@ function clearStaged() {
   staged = [];
   $('imagenote').textContent = '';
   renderStaged();
+  // A new source belongs to the post that cites it, like a staged image.
+  for (const { id } of stagedSources) delete sources[id];
+  stagedSources = [];
+  renderCiteStatus();
 }
 
 // --- list -----------------------------------------------------------------
@@ -490,17 +504,224 @@ function setTab(name) {
 }
 
 function refreshPreview() {
-  $('preview').innerHTML = renderMarkdown($('body').value, {
+  const body = $('body').value;
+  // Citation blocks are drawn as cards from the registry; the rest of the
+  // Liquid is still only reported.
+  $('preview').innerHTML = renderWithCitations(body, sources, {
     images: stagedUrls(), siteBase: siteUrl
   });
 
-  const liquid = findLiquid($('body').value);
-  $('liquid').hidden = liquid.length === 0;
+  const notes = [];
+  const liquid = findLiquid(withoutCitations(body));
   if (liquid.length) {
-    $('liquid').textContent =
-      `Liquid ${liquid.length}곳은 미리보기에서 실행되지 않습니다 (${liquid
-        .slice(0, 3).map((l) => `${l.line}행`).join(', ')}${liquid.length > 3 ? ' 외' : ''}).`;
+    notes.push(`Liquid ${liquid.length}곳은 미리보기에서 실행되지 않습니다 (${liquid
+      .slice(0, 3).map((l) => `${l.line}행`).join(', ')}${liquid.length > 3 ? ' 외' : ''}).`);
   }
+  const missing = sourcesLoaded ? unknownSources(body, sources) : [];
+  if (missing.length) {
+    notes.push(`등록되지 않은 출처: ${missing.join(', ')} - 빌드 검사에서 막힙니다.`);
+  }
+  $('liquid').hidden = notes.length === 0;
+  $('liquid').textContent = notes.join(' ');
+}
+
+// --- citations ------------------------------------------------------------
+
+async function loadSources() {
+  try {
+    const file = await api(`/api/posts/${encodeURIComponent(SOURCES_PATH)}`);
+    const read = parseSources(file.text);
+    // Keep sources staged in this session; the server has not seen them yet.
+    for (const { id, entry } of stagedSources) read[id] = entry;
+    sources = read;
+    sourcesLoaded = true;
+  } catch {
+    // No registry yet, or it could not be read: the dialog still works, it
+    // just has nothing to pick from.
+    sourcesLoaded = false;
+  }
+}
+
+function renderCiteStatus() {
+  $('citestatus').textContent = stagedSources.length
+    ? `새 출처 ${stagedSources.length}개가 다음 저장에 함께 올라갑니다 (${stagedSources.map((s) => s.id).join(', ')})`
+    : '';
+}
+
+let citeChoice = null;
+let citeRange = null;
+
+function sourceLabel(id, entry) {
+  return [TYPE_LABELS[entry.type] ?? entry.type, entry.author || entry.publisher]
+    .filter(Boolean).join(' · ') || id;
+}
+
+function chooseSource(id, entry, isNew = false) {
+  citeChoice = { id, entry, isNew };
+  $('citechosen').textContent = `${entry.title || id} (${id})${isNew ? ' - 새로 등록' : ''}`;
+  $('citechosen').classList.add('set');
+  renderSourceList();
+}
+
+function renderSourceList() {
+  const query = $('citesearch').value.trim().toLowerCase();
+  const rows = Object.entries(sources)
+    .filter(([id, entry]) => !query || [id, entry.title, entry.author, entry.publisher]
+      .some((value) => String(value ?? '').toLowerCase().includes(query)))
+    .slice(0, 50);
+
+  $('citesources').replaceChildren(...rows.map(([id, entry]) => {
+    const li = document.createElement('li');
+    if (citeChoice?.id === id) li.setAttribute('aria-current', 'true');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = entry.title || id;
+    const meta = document.createElement('span');
+    meta.className = 'meta';
+    meta.textContent = `${id} · ${sourceLabel(id, entry)}`;
+    button.append(meta);
+    button.addEventListener('click', () => chooseSource(id, entry));
+    li.append(button);
+    return li;
+  }));
+  if (!rows.length) {
+    const li = document.createElement('li');
+    li.className = 'muted';
+    li.textContent = sourcesLoaded ? '맞는 출처가 없습니다. 아래에서 새로 등록하세요.' : '등록된 출처를 읽지 못했습니다.';
+    $('citesources').replaceChildren(li);
+  }
+}
+
+const NEW_FIELDS = ['type', 'title', 'author', 'publisher', 'published', 'url'];
+let draftExtra = {};
+
+function fillNewSource(entry) {
+  draftExtra = {};
+  for (const [key, value] of Object.entries(entry)) {
+    if (key === 'at') continue;
+    if (NEW_FIELDS.includes(key)) $(`cn${key}`).value = value ?? '';
+    else draftExtra[key] = value;
+  }
+  $('cnid').value = suggestSourceId(entry, sources);
+  if (entry.at && !$('citeat').value) $('citeat').value = entry.at;
+}
+
+async function fetchDraft() {
+  const url = $('citeurl').value.trim();
+  if (!url) return;
+  $('citedraftnote').textContent = '불러오는 중…';
+  try {
+    const { entry, warnings } = await api('/api/source-draft', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
+    fillNewSource(entry);
+    $('citedraftnote').textContent = warnings.length
+      ? warnings.join(' / ')
+      : '불러왔습니다. 제목과 저자를 확인하세요.';
+  } catch (error) {
+    $('citedraftnote').textContent = `불러오지 못했습니다: ${error.message}. 직접 채워도 됩니다.`;
+  }
+}
+
+function useNewSource() {
+  const id = $('cnid').value.trim();
+  const entry = { ...draftExtra };
+  for (const key of NEW_FIELDS) {
+    const value = $(`cn${key}`).value.trim();
+    if (value) entry[key] = value;
+  }
+
+  if (!isSourceId(id)) return citeError('id는 소문자, 숫자, 하이픈만 씁니다 (예: kleppmann-ddia).');
+  if (id in sources && !stagedSources.some((s) => s.id === id)) return citeError(`'${id}' 는 이미 등록되어 있습니다. 목록에서 고르세요.`);
+  if (!entry.title) return citeError('제목이 필요합니다.');
+  if (entry.published && !/^\d{4}-\d{2}-\d{2}$/.test(entry.published)) return citeError('발행일은 YYYY-MM-DD 입니다.');
+  citeError('');
+  chooseSource(id, entry, true);
+}
+
+function citeError(text) {
+  $('citeerror').textContent = text;
+  return false;
+}
+
+async function openCiteDialog() {
+  if (!current) {
+    say('먼저 글을 여세요', 'warn');
+    return;
+  }
+  const body = $('body');
+  citeRange = [body.selectionStart, body.selectionEnd];
+  const selected = body.value.slice(...citeRange);
+  // A selected `> quote` loses its markers: the card is the quote now.
+  $('citequote').value = selected.replace(/^>\s?/gm, '').trim();
+  $('citeat').value = '';
+  $('citenote').value = '';
+  $('citesearch').value = '';
+  $('citeurl').value = '';
+  $('citedraftnote').textContent = '';
+  for (const key of ['id', ...NEW_FIELDS]) $(`cn${key}`).value = '';
+  $('cntype').value = 'article';
+  $('citenew').open = false;
+  citeError('');
+  citeChoice = null;
+  $('citechosen').textContent = '아직 고르지 않았습니다';
+  $('citechosen').classList.remove('set');
+
+  $('citedialog').showModal();
+  if (!sourcesLoaded) await loadSources();
+  renderSourceList();
+  $(selected ? 'citesearch' : 'citequote').focus();
+}
+
+function insertCitation() {
+  const quote = $('citequote').value.trim();
+  if (!quote) return citeError('인용문이 비어 있습니다.');
+  if (!citeChoice) return citeError('출처를 고르거나 새로 등록하세요.');
+
+  if (citeChoice.isNew && !stagedSources.some((s) => s.id === citeChoice.id)) {
+    stagedSources.push({ id: citeChoice.id, entry: citeChoice.entry });
+    sources[citeChoice.id] = citeChoice.entry;
+  }
+
+  const block = citationBlock({
+    id: citeChoice.id, at: $('citeat').value, quote, note: $('citenote').value
+  });
+  const body = $('body');
+  const [start, end] = citeRange ?? [body.value.length, body.value.length];
+  const before = body.value.slice(0, start);
+  const after = body.value.slice(end);
+  // The plugin's block sits on its own lines, with a blank line around it so
+  // the paragraphs next to it stay paragraphs.
+  const lead = !before || before.endsWith('\n\n') ? '' : before.endsWith('\n') ? '\n' : '\n\n';
+  const tail = !after || after.startsWith('\n\n') ? '' : after.startsWith('\n') ? '\n' : '\n\n';
+  body.value = `${before}${lead}${block}${tail}${after}`;
+  const caret = (before + lead + block).length;
+  body.setSelectionRange(caret, caret);
+
+  saveLocal();
+  renderCiteStatus();
+  $('citedialog').close();
+  body.focus();
+  say(citeChoice.isNew ? `인용을 넣었습니다. 새 출처 '${citeChoice.id}' 는 저장할 때 함께 올라갑니다` : '인용을 넣었습니다');
+  return true;
+}
+
+/** The registry file for this save: the server's current copy plus what is staged. */
+async function sourcesFileForSave() {
+  if (!stagedSources.length) return null;
+  let text = '';
+  try {
+    text = (await api(`/api/posts/${encodeURIComponent(SOURCES_PATH)}`)).text;
+  } catch (error) {
+    // Only "there is no registry yet" may start one from nothing; anything
+    // else would overwrite the file blind.
+    if (!/404|not found/i.test(error.message) && error.body?.error?.code !== 'not_found') throw error;
+  }
+  const onServer = parseSources(text);
+  const fresh = stagedSources.filter(({ id }) => !(id in onServer));
+  return fresh.length ? { path: SOURCES_PATH, content: appendSources(text, fresh) } : null;
 }
 
 async function open(path) {
@@ -600,6 +821,9 @@ async function save() {
   current.changeId ||= `cms-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   try {
+    // Read right before the commit and only appended to, so a source added
+    // elsewhere since the editor loaded is kept rather than overwritten.
+    const sourcesFile = await sourcesFileForSave();
     const result = await api('/api/changes', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -612,7 +836,8 @@ async function save() {
           // has not landed.
           ...staged.map((item) => ({
             path: item.path, content: item.base64, encoding: 'base64'
-          }))
+          })),
+          ...(sourcesFile ? [sourcesFile] : [])
         ],
         ...(usePr ? { branch: `cms/${slugify(current.path)}`, pullRequest: {} } : {})
       })
@@ -620,6 +845,9 @@ async function save() {
 
     clearLocal(current.path);
     images = [...images, ...staged.map((item) => item.path)];
+    // Committed now: they stay in `sources` but are no longer pending.
+    const committedSources = stagedSources;
+    stagedSources = [];
     // A new entry exists from now on, so the list and the id collision check
     // both know about it without a reload.
     const where = Object.values(COLLECTIONS)
@@ -629,6 +857,7 @@ async function save() {
       renderList();
     }
     clearStaged();
+    for (const { id, entry } of committedSources) sources[id] = entry;
     clearRevisions();
     current.serverText = text;
     current.changeId = null;
@@ -693,6 +922,28 @@ $('body').addEventListener('paste', (event) => {
     setTab('images');
   }
 });
+$('cite').addEventListener('click', openCiteDialog);
+// Enter in a field would submit the dialog's form and close it; only the
+// cancel button may do that.
+$('citeform').addEventListener('submit', (event) => {
+  if (event.submitter?.value !== 'cancel') event.preventDefault();
+});
+$('citesearch').addEventListener('input', renderSourceList);
+$('citefetch').addEventListener('click', fetchDraft);
+$('citeurl').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    fetchDraft();
+  }
+});
+$('citeusenew').addEventListener('click', useNewSource);
+$('citeinsert').addEventListener('click', insertCitation);
+$('cntype').replaceChildren(...SOURCE_TYPES.map((type) => {
+  const option = document.createElement('option');
+  option.value = type;
+  option.textContent = `${TYPE_LABELS[type]} (${type})`;
+  return option;
+}));
 $('new').addEventListener('click', startNew);
 $('save').addEventListener('click', save);
 for (const id of ['meta', 'body']) {
@@ -717,6 +968,8 @@ document.addEventListener('keydown', (event) => {
     dictionary = listing.dictionary ?? [];
     renderList();
     say('');
+    // For the preview's cards; the dialog loads it again if this failed.
+    loadSources();
   } catch {
     show('signin');
   }
