@@ -8,7 +8,6 @@ tail_includes:
   - post-backlinks
   - post-nav
   - comments
-  - post-revisions
 ---
 
 {% include lang.html %}
@@ -40,6 +39,13 @@ tail_includes:
           {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
         </span>
       {% endif %}
+
+      {%- comment -%}
+        고쳐 쓴 기록은 날짜 옆의 작은 알약입니다. 글에 대한 메타데이터라 게시일·수정일과 같은
+        줄에 있는 편이 맞고, 본문 아래에서는 이어 읽을 글들보다 앞자리를 차지했습니다.
+        닫혀 있을 때만 줄 안에 들어가고, 펼치면 한 줄을 통째로 씁니다.
+      {%- endcomment -%}
+      {% include post-revisions.html lang=lang %}
 
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
