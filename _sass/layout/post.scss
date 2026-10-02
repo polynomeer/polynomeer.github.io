@@ -3828,9 +3828,8 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-/* substantive edits after publication (see _plugins/post-revisions.rb).
-   머리말의 날짜 줄 오른쪽 끝에 앉습니다. 닫혀 있으면 알약 하나이고, 펼치면 목록이 좁은
-   칸에 갇히지 않도록 줄 하나를 통째로 받습니다. */
+/* Post metadata and revision history (see _plugins/post-revisions.rb).
+   Revisions sit left of engagement metrics and use a full row when expanded. */
 .post-date-row {
   display: flex;
   flex-wrap: wrap;
@@ -3840,7 +3839,7 @@ html[data-mode='dark'] .about-terminal {
 
 .post-revisions {
   display: inline-block;
-  margin: 0 0 0 auto;
+  margin: 0;
   font-size: 0.78rem;
   vertical-align: baseline;
 

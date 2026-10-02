@@ -27,12 +27,7 @@ tail_includes:
       </div>
 
       {%- comment -%}
-        날짜와 고쳐 쓴 기록이 한 줄을 나눠 씁니다. 날짜는 왼쪽, 기록은 오른쪽 끝입니다.
-        글에 대한 메타데이터라 게시일·수정일과 같은 줄에 있는 편이 맞고, 본문 아래에서는
-        이어 읽을 글들보다 앞자리를 차지했습니다. 닫혀 있을 때만 줄 안에 들어가고, 펼치면
-        한 줄을 통째로 씁니다.
-
-        날짜와 작성자를 span으로 묶어 가운뎃점으로 구분하고, 수정 기록과 함께 배치합니다.
+        날짜와 작성자를 span으로 묶어 가운뎃점으로 구분합니다.
       {%- endcomment -%}
       <div class="post-date-row">
         <span class="post-date-group">
@@ -76,7 +71,6 @@ tail_includes:
           </span>
         </span>
 
-        {% include post-revisions.html lang=lang %}
       </div>
 
       {% if page.image %}
@@ -96,8 +90,9 @@ tail_includes:
         </div>
       {% endif %}
 
-      <div class="d-flex justify-content-end mt-3">
-        <div>
+      <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-2 mt-2">
+        {% include post-revisions.html lang=lang %}
+        <div class="ms-auto">
           {% if site.likes.provider == 'supabase'
             and site.likes.supabase.url
             and site.likes.supabase.url != empty
