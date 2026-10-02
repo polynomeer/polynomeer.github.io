@@ -1,4 +1,4 @@
-<!-- Navigation at the bottom of the post. -->
+<!-- Always-visible navigation inside the series panel. -->
 <!-- Only series posts have previous/next navigation. -->
 <!--
   There is no placeholder for a missing neighbour. A post at either end of its
@@ -35,19 +35,18 @@
 {% endif %}
 
 {% if previous_post.url or next_post.url %}
-  <h3 class="post-tail-heading" id="post-navigation-label">{{ site.data.locales[include.lang].post.continue_reading | default: 'Continue reading' }}</h3>
-  <nav class="post-navigation" aria-labelledby="post-navigation-label">
+  <nav class="post-navigation" aria-label="{{ site.data.locales[include.lang].post.series }}">
     {% if previous_post.url %}
-      <a class="post-nav-link is-previous" href="{{ previous_post.url | relative_url }}">
-        <span class="post-nav-label">{{ previous }}</span>
-        <span class="post-nav-title">{{ previous_post.title }}</span>
+      <a class="post-nav-link is-previous" href="{{ previous_post.url | relative_url }}" title="{{ previous_post.title | escape }}" aria-label="{{ previous }}: {{ previous_post.title | escape }}">
+        <i class="fas fa-angle-left" aria-hidden="true"></i>
+        {{ previous }}
       </a>
     {% endif %}
 
     {% if next_post.url %}
-      <a class="post-nav-link is-next" href="{{ next_post.url | relative_url }}">
-        <span class="post-nav-label">{{ next }}</span>
-        <span class="post-nav-title">{{ next_post.title }}</span>
+      <a class="post-nav-link is-next" href="{{ next_post.url | relative_url }}" title="{{ next_post.title | escape }}" aria-label="{{ next }}: {{ next_post.title | escape }}">
+        {{ next }}
+        <i class="fas fa-angle-right" aria-hidden="true"></i>
       </a>
     {% endif %}
   </nav>
