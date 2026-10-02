@@ -37,6 +37,52 @@
     }
   }
 
+  {%- comment -%}
+    Mermaid's own "dark" theme is grey and olive and ignores the site's
+    Dracula palette. The dark mode uses the "base" theme fed with Dracula
+    colours instead; the light mode keeps "neutral".
+  {%- endcomment -%}
+  const DRACULA = {
+    darkMode: true,
+    background: '#282a36',
+    primaryColor: '#44475a',
+    primaryTextColor: '#f8f8f2',
+    primaryBorderColor: '#bd93f9',
+    secondaryColor: '#343746',
+    secondaryTextColor: '#f8f8f2',
+    secondaryBorderColor: '#8be9fd',
+    tertiaryColor: '#2b2d39',
+    tertiaryTextColor: '#f8f8f2',
+    tertiaryBorderColor: '#59617c',
+    lineColor: '#8e95b1',
+    textColor: '#f8f8f2',
+    titleColor: '#f8f8f2',
+    nodeTextColor: '#f8f8f2',
+    clusterBkg: '#2b2d39',
+    clusterBorder: '#59617c',
+    edgeLabelBackground: '#282a36',
+    noteBkgColor: '#44475a',
+    noteTextColor: '#f8f8f2',
+    noteBorderColor: '#ffb86c',
+    actorBkg: '#44475a',
+    actorBorder: '#bd93f9',
+    actorTextColor: '#f8f8f2',
+    actorLineColor: '#8e95b1',
+    signalColor: '#f8f8f2',
+    signalTextColor: '#f8f8f2',
+    labelBoxBkgColor: '#44475a',
+    labelBoxBorderColor: '#bd93f9',
+    labelTextColor: '#f8f8f2',
+    loopTextColor: '#f8f8f2',
+    activationBkgColor: '#343746',
+    activationBorderColor: '#bd93f9',
+    sequenceNumberColor: '#282a36'
+  };
+
+  function mermaidTheme(dark) {
+    return dark ? { theme: 'base', themeVariables: DRACULA } : { theme: 'neutral' };
+  }
+
   function renderMermaid() {
     return mermaid.run({ querySelector: '.mermaid' }).then(fitMermaid);
   }
@@ -49,8 +95,7 @@
         return;
       }
 
-      let expectedTheme = mode === ModeToggle.DARK_MODE ? 'dark' : 'neutral';
-      let config = { theme: expectedTheme };
+      let config = mermaidTheme(mode === ModeToggle.DARK_MODE);
 
       {%- comment -%}
         Re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344>
@@ -70,20 +115,13 @@
   }
 
   (function () {
-    let initTheme = 'neutral';
     const html = document.documentElement;
-
-    if (
+    const dark =
       (html.hasAttribute('data-mode') && html.getAttribute('data-mode') === 'dark') ||
-      (!html.hasAttribute('data-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      initTheme = 'dark';
-    }
+      (!html.hasAttribute('data-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    let mermaidConf = {
-      startOnLoad: false,
-      theme: initTheme {%- comment -%}  <default | dark | forest | neutral>; neutral matches the light palette better than default's yellow and lavender {%- endcomment -%}
-    };
+    {%- comment -%} neutral matches the light palette better than default's yellow and lavender {%- endcomment -%}
+    let mermaidConf = { startOnLoad: false, ...mermaidTheme(dark) };
 
     {%- comment -%} Create mermaid tag {%- endcomment -%}
     const basicList = document.getElementsByClassName('language-mermaid');
