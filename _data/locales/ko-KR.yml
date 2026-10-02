@@ -484,6 +484,10 @@ tech_blogs:
   kind_talk: 발표
 
 citation:
+  eyebrow: 근거
+  index_title: 출처
+  post_sources: 이 글의 출처
+  implicit: 원문 전체를 읽고 쓴 리뷰
   note: 작성자 메모
   more_from_source: 이 출처의 인용 모아 보기
   view_original: 원문 보기

@@ -15,3 +15,9 @@ antirez-is-redlock-safe:
   author: Salvatore Sanfilippo (antirez)
   publisher: antirez.com
   url: http://antirez.com/news/101
+
+airbnb-avoiding-double-payments:
+  type: article
+  title: Avoiding Double Payments in a Distributed Payments System
+  publisher: The Airbnb Tech Blog
+  url: https://medium.com/airbnb-engineering/avoiding-double-payments-in-a-distributed-payments-system-2981f6b070bb

@@ -28,6 +28,10 @@
   <section class="source-group">
     <h2 class="source-group-title"><a href="{{ group.post.url | relative_url }}">{{ group.post.title }}</a></h2>
     {% for item in group.items %}
+      {% if item.implicit %}
+        <p class="source-passage-review">{{ l.implicit }}</p>
+        {% continue %}
+      {% endif %}
       <a class="source-passage" href="{{ group.post.url | relative_url }}#{{ item.anchor }}">
         <span class="source-passage-quote">{{ item.quote | markdownify | strip_html | strip }}</span>
         {% if item.at %}<span class="source-passage-at">{{ item.at }}</span>{% endif %}

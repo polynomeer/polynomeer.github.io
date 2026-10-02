@@ -1,0 +1,30 @@
+<!--
+  Sources this post quotes, from `page.cited_sources` (_plugins/citations.rb).
+  Only registry sources are listed: quotes of other posts already show up as
+  links and backlinks. Each row opens the source page, where the other posts
+  that quote the same source are listed.
+-->
+
+{% assign l = site.data.locales[include.lang].citation %}
+{% assign listed = 0 %}
+{% capture rows %}
+  {% for id in page.cited_sources %}
+    {% assign s = site.data.sources[id] %}
+    {% if s %}
+      {% assign listed = listed | plus: 1 %}
+      <li class="post-tail-item">
+        <a href="{{ '/sources/' | append: id | append: '/' | relative_url }}" class="post-tail-link">
+          <span class="post-tail-title">{{ s.title }}</span>
+          <span class="post-tail-meta">{{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}</span>
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% if listed > 0 %}
+  <aside id="post-sources" aria-labelledby="post-sources-label">
+    <h3 class="post-tail-heading" id="post-sources-label">{{ l.post_sources }}</h3>
+    <ul class="post-tail-list list-unstyled">{{ rows }}</ul>
+  </aside>
+{% endif %}

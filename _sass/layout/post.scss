@@ -4366,7 +4366,6 @@ html[data-mode='dark'] {
 }
 
 /* /sources/ 와 /sources/<id>/ */
-.sources-lead,
 .source-note {
   color: var(--text-muted-color);
 }
@@ -4406,6 +4405,14 @@ html[data-mode='dark'] {
     border-left-color: var(--link-color);
     text-decoration: none;
   }
+}
+
+.source-passage-review {
+  margin-bottom: 0.6rem;
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--btn-border-color);
+  color: var(--text-muted-color);
+  font-size: 0.88rem;
 }
 
 .source-passage-at {

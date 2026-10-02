@@ -88,8 +88,17 @@ module Jekyll
         source
       end
 
+      def normalize_url(url)
+        url.to_s.strip.downcase.sub(%r{\Ahttps?://}, '').sub(/\Awww\./, '').sub(/[#?].*\z/, '').chomp('/')
+      end
+
       def build(site)
         index = Hash.new { |h, k| h[k] = [] }
+        by_url = {}
+        (site.data['sources'] || {}).each_key do |id|
+          url = normalize_url(resolve(site, id)&.dig('url'))
+          by_url[url] = id unless url.empty?
+        end
 
         site.posts.docs.each do |post|
           cited = []
@@ -109,6 +118,16 @@ module Jekyll
             }
             cited << id unless cited.include?(id)
           end
+
+          # A review's `source_url` is the original it reads as a whole. When
+          # that original is registered and not already quoted in the post,
+          # the review counts as one citation of it.
+          implicit = by_url[normalize_url(post.data['source_url'])]
+          if implicit && !cited.include?(implicit)
+            index[implicit] << { 'post' => post, 'implicit' => true }
+            cited << implicit
+          end
+
           post.data['cited_sources'] = cited
         end
 
@@ -116,7 +135,8 @@ module Jekyll
       end
     end
 
-    # /sources/ and one page per registry source that is cited at least once.
+    # One page per registry source that is cited at least once, plus the rows
+    # the /sources/ tab (_tabs/sources.md) lists.
     class Generator < Jekyll::Generator
       safe true
       priority :low
@@ -146,12 +166,7 @@ module Jekyll
         end
 
         rows.sort_by! { |r| [-r['count'], r['title'].to_s.downcase] }
-        site.pages << page(site, 'sources', {
-          'layout' => 'page',
-          'title' => 'Sources',
-          'title_key' => 'sources',
-          'sources' => rows
-        }, '{% include sources-index.html %}')
+        site.data['citation_sources'] = rows
       end
 
       private

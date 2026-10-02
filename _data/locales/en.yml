@@ -489,6 +489,10 @@ tech_blogs:
   kind_talk: Talk
 
 citation:
+  eyebrow: Evidence
+  index_title: Sources
+  post_sources: Sources quoted in this post
+  implicit: A review of the whole original
   note: Author's note
   more_from_source: More quotes from this source
   view_original: Read the original
