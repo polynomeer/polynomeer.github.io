@@ -9,21 +9,11 @@
   {% endif %}
 
   {% assign current_index = -1 %}
-  {% assign previous_post = nil %}
-  {% assign next_post = nil %}
   {% assign series_page = site.series_pages | where: 'series_id', page.series | first %}
 
   {% for post in series_posts %}
     {% if post.url == page.url %}
       {% assign current_index = forloop.index0 %}
-      {% unless forloop.first %}
-        {% assign previous_index = forloop.index0 | minus: 1 %}
-        {% assign previous_post = series_posts[previous_index] %}
-      {% endunless %}
-      {% unless forloop.last %}
-        {% assign next_index = forloop.index0 | plus: 1 %}
-        {% assign next_post = series_posts[next_index] %}
-      {% endunless %}
     {% endif %}
   {% endfor %}
 
@@ -36,33 +26,6 @@
       data-post-url="{{ page.url | relative_url }}"
       data-read-tracker
     >
-      {% if previous_post or next_post %}
-        <div class="series-navigation-links">
-          {% if previous_post %}
-            <a
-              class="series-link series-link-prev"
-              href="{{ previous_post.url | relative_url }}"
-              data-title="{{ previous_post.title | escape }}"
-              aria-label="{{ site.data.locales[include.lang].post.series_previous }}: {{ previous_post.title | escape }}"
-            >
-              <span class="series-link-label">{{ site.data.locales[include.lang].post.series_previous }}</span>
-              <strong>{{ previous_post.title }}</strong>
-            </a>
-          {% endif %}
-          {% if next_post %}
-            <a
-              class="series-link series-link-next"
-              href="{{ next_post.url | relative_url }}"
-              data-title="{{ next_post.title | escape }}"
-              aria-label="{{ site.data.locales[include.lang].post.series_next }}: {{ next_post.title | escape }}"
-            >
-              <span class="series-link-label">{{ site.data.locales[include.lang].post.series_next }}</span>
-              <strong>{{ next_post.title }}</strong>
-            </a>
-          {% endif %}
-        </div>
-      {% endif %}
-
       <div class="feature-panel-header">
         <span class="feature-panel-label">{{ site.data.locales[include.lang].post.series }}</span>
         <h3 id="series-navigation-title" class="feature-panel-title mb-1">
