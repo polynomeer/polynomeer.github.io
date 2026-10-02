@@ -27,19 +27,34 @@ Two exclusions:
 
 ## Rendering
 
-The series panel above post content has a collapsed-by-default list. There are
-no previous/next post buttons and no separate "Continue reading" section.
-`_includes/related-posts.html` starts the tail with up to three recommendation cards.
-Recommendations retain the plugin ranking, including series neighbours.
+The tail of a post runs, top to bottom:
 
-`_includes/post-backlinks.html` follows this section, before comments. Its heading
-and first three citation rows are visible. A button expands any remaining rows;
-without JavaScript all rows are visible. The label means
-"posts that cite this one", not sources cited by the current post.
+1. `post-adjacent-nav.html` - chronological previous / next boxes
+2. `post-connections.html` - the links the author wrote, both directions:
+   - "이 글의 출처" (`post-sources.html`): registry sources this post quotes
+     (see citation-design.md)
+   - "이 글을 언급한 글" (`post-backlinks.html`): posts whose body links here
+   When both exist they share a row on screens 768px and wider.
+3. `related-posts.html` - up to three similarity recommendations
+4. comments
 
-Recommendations use cards; navigation and citations use compact title rows.
-Styles live in `_sass/layout/post.scss`; heading strings are `post.relate_posts`
-and `post.backlinks` in the locale files.
+Backlinks used to sit below the recommendations, which contradicted the reason
+they exist: a backlink is a connection the author wrote, so it cannot be a
+false match, while a recommendation can. Editorial links now come first.
+
+The heading was "이 글을 인용한 글". Once citation blocks arrived, "인용" meant a
+quoted passage with a source, while a backlink is mostly a "see this post"
+mention. The label became "이 글을 언급한 글" ("Posts that mention this one"),
+and the stats page fact `fact_cited` followed. A post that quotes another
+with `{% citation post:<slug> %}` still lands in this list; a separate
+"이 글을 인용한 글" group showing the quoted passage is left for when such
+quotes exist (none at the time of writing).
+
+The first three rows are visible and a button expands the rest; without
+JavaScript all rows are visible. Recommendations use cards; navigation and
+connections use compact title rows. Styles live in `_sass/layout/post.scss`;
+heading strings are `post.relate_posts`, `post.backlinks`, `post.connections`
+and `citation.post_sources` in the locale files.
 
 ## Current shape
 
