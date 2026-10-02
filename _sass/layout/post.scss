@@ -777,6 +777,32 @@ header {
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.2rem 0.55rem;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--link-color);
+      outline-offset: 4px;
+    }
+  }
+
+  .series-toggle-icon {
+    color: var(--text-muted-color);
+    font-size: 0.7rem;
+  }
+
+  &[open] .series-toggle-icon {
+    transform: rotate(90deg);
+  }
+
+  > .series-navigation-title-link {
+    display: inline-block;
+    margin-top: 0.65rem;
+    font-size: 0.8rem;
   }
 
   .feature-panel-label {
