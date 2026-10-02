@@ -337,8 +337,6 @@ pdr:
   problem: Problem
   decision: Decision
   result: Result
-  expand: Show the full summary
-  collapse: Collapse the summary
 
 capability_map:
   eyebrow: Capability map

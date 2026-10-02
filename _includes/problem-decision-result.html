@@ -7,35 +7,50 @@
 
   {% if has_problem or has_decision or has_result %}
     {%- comment -%}
-      이 블록은 본문 첫 줄 앞에 섭니다. 세 칸이 다 길면 글을 한 글자도 읽기 전에 700px 을 지나야
-      합니다. 기본은 몇 줄로 자르고, 넘치는 칸이 있을 때만 아래 스크립트가 펼침 버튼을 답니다.
+      이 블록은 본문 첫 줄 앞에 섭니다. 세 칸을 한 번에 보여주면 글을 한 글자도 읽기 전에
+      700px 을 지나야 하고, 줄여서 보여주면 긴 칸은 4분의 1만 읽힙니다.
 
-      자르는 일을 Liquid 의 truncate 가 아니라 CSS 로 하는 이유: 글자는 문서에 그대로 두어야
-      Ctrl+F 로 찾히고, 스크린 리더가 읽고, 검색 엔진이 봅니다. 마우스 오버로만 보여 주는 방법을
-      쓰지 않은 것도 같은 이유입니다 - 터치에는 hover 가 없고 키보드로도 닿지 않습니다.
+      그래서 한 번에 한 칸씩 전부 보여줍니다. 높이가 세 칸의 합이 아니라 가장 긴 한 칸으로
+      묶이고, 잘리는 글자가 없습니다. 이 글(가장 긴 요약)에서 654px 폭 기준 한 칸은
+      184~299px, 셋을 줄여 담던 방식은 323px 이었고 전부 펴면 699px 였습니다.
+
+      칸마다 길이가 다르니 탭을 옮기면 높이가 바뀝니다. 가장 긴 칸에 높이를 묶어 두는 쪽도
+      해봤지만, 짧은 칸에서 빈 상자가 100px 넘게 남아 그만뒀습니다.
+
+      스크립트가 꺼져 있으면 탭 줄이 보이지 않고 세 칸이 그대로 쌓입니다. 읽는 데 지장이
+      없는 쪽이 기본이어야 합니다.
+
+      숨긴 칸은 hidden="until-found" 라서 브라우저 찾기가 그 안의 글자도 찾아내고, 찾으면
+      beforematch 로 해당 탭이 열립니다. 지원하지 않는 브라우저는 보통 hidden 으로 읽습니다.
     {%- endcomment -%}
     <section class="problem-decision-result" aria-labelledby="problem-decision-result-title" data-pdr>
       <h2 id="problem-decision-result-title" class="problem-decision-result-eyebrow" data-toc-skip>
         {{ site.data.locales[include.lang].pdr.eyebrow }}
       </h2>
 
+      <div class="problem-decision-result-tabs" role="tablist" data-pdr-tabs hidden>
+        {% if has_problem %}<button type="button" role="tab" data-pdr-tab="problem" aria-controls="pdr-panel-problem" id="pdr-tab-problem">{{ site.data.locales[include.lang].pdr.problem }}</button>{% endif %}
+        {% if has_decision %}<button type="button" role="tab" data-pdr-tab="decision" aria-controls="pdr-panel-decision" id="pdr-tab-decision">{{ site.data.locales[include.lang].pdr.decision }}</button>{% endif %}
+        {% if has_result %}<button type="button" role="tab" data-pdr-tab="result" aria-controls="pdr-panel-result" id="pdr-tab-result">{{ site.data.locales[include.lang].pdr.result }}</button>{% endif %}
+      </div>
+
       <div class="problem-decision-result-grid">
         {% if has_problem %}
-          <article class="problem-decision-result-card">
+          <article class="problem-decision-result-card" id="pdr-panel-problem" data-pdr-panel="problem" aria-labelledby="pdr-tab-problem">
             <h3>{{ site.data.locales[include.lang].pdr.problem }}</h3>
             <p>{{ pdr.problem }}</p>
           </article>
         {% endif %}
 
         {% if has_decision %}
-          <article class="problem-decision-result-card">
+          <article class="problem-decision-result-card" id="pdr-panel-decision" data-pdr-panel="decision" aria-labelledby="pdr-tab-decision">
             <h3>{{ site.data.locales[include.lang].pdr.decision }}</h3>
             <p>{{ pdr.decision }}</p>
           </article>
         {% endif %}
 
         {% if has_result %}
-          <article class="problem-decision-result-card">
+          <article class="problem-decision-result-card" id="pdr-panel-result" data-pdr-panel="result" aria-labelledby="pdr-tab-result">
             <h3>{{ site.data.locales[include.lang].pdr.result }}</h3>
             <p>{{ pdr.result }}</p>
           </article>
@@ -45,43 +60,68 @@
 
     <script>
       (() => {
-        const pdr = document.querySelector('[data-pdr]');
+        const root = document.querySelector('[data-pdr]');
 
-        if (!pdr) {
+        if (!root) {
           return;
         }
 
-        const paragraphs = Array.from(pdr.querySelectorAll('.problem-decision-result-card p'));
-        const labels = {
-          expand: {{ site.data.locales[include.lang].pdr.expand | jsonify }},
-          collapse: {{ site.data.locales[include.lang].pdr.collapse | jsonify }}
+        const tablist = root.querySelector('[data-pdr-tabs]');
+        const tabs = Array.from(root.querySelectorAll('[data-pdr-tab]'));
+        const panels = Array.from(root.querySelectorAll('[data-pdr-panel]'));
+
+        if (tabs.length < 2) {
+          return;
+        }
+
+        root.classList.add('is-tabbed');
+        tablist.hidden = false;
+        tablist.setAttribute('aria-label', root.querySelector('.problem-decision-result-eyebrow').textContent.trim());
+
+        const select = (key, { focus = false } = {}) => {
+          tabs.forEach((tab) => {
+            const on = tab.dataset.pdrTab === key;
+            tab.setAttribute('aria-selected', String(on));
+            tab.tabIndex = on ? 0 : -1;
+            if (on && focus) {
+              tab.focus();
+            }
+          });
+
+          panels.forEach((panel) => {
+            const on = panel.dataset.pdrPanel === key;
+            panel.setAttribute('role', 'tabpanel');
+            if (on) {
+              panel.removeAttribute('hidden');
+            } else {
+              // 찾기로는 걸리게 두고, 걸리면 그 탭을 엽니다.
+              panel.setAttribute('hidden', 'until-found');
+            }
+          });
         };
 
-        // 자르기는 여기서 켭니다. 스크립트가 안 돌면 글이 통째로 보이는 쪽이 맞습니다 -
-        // CSS 로 미리 잘라 두면 펼칠 방법이 없는 사람이 생깁니다.
-        pdr.classList.add('is-clamped');
-
-        const overflows = () =>
-          paragraphs.some((p) => p.scrollHeight - p.clientHeight > 2);
-
-        if (!overflows()) {
-          pdr.classList.remove('is-clamped');
-          return;
-        }
-
-        const toggle = document.createElement('button');
-        toggle.type = 'button';
-        toggle.className = 'problem-decision-result-toggle';
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.textContent = labels.expand;
-
-        toggle.addEventListener('click', () => {
-          const clamped = pdr.classList.toggle('is-clamped');
-          toggle.setAttribute('aria-expanded', String(!clamped));
-          toggle.textContent = clamped ? labels.expand : labels.collapse;
+        tabs.forEach((tab) => {
+          tab.addEventListener('click', () => select(tab.dataset.pdrTab));
         });
 
-        pdr.append(toggle);
+        tablist.addEventListener('keydown', (event) => {
+          const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+
+          if (!step) {
+            return;
+          }
+
+          event.preventDefault();
+          const current = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+          const next = (current + step + tabs.length) % tabs.length;
+          select(tabs[next].dataset.pdrTab, { focus: true });
+        });
+
+        panels.forEach((panel) => {
+          panel.addEventListener('beforematch', () => select(panel.dataset.pdrPanel));
+        });
+
+        select(tabs[0].dataset.pdrTab);
       })();
     </script>
   {% endif %}

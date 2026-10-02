@@ -332,8 +332,6 @@ pdr:
   problem: Problem
   decision: Decision
   result: Result
-  expand: 요약 전체 보기
-  collapse: 요약 접기
 
 capability_map:
   eyebrow: 역량 맵

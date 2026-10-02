@@ -425,15 +425,58 @@ header {
     }
   }
 
-  /* 자르기는 스크립트가 켭니다. 켜지지 않으면 전문이 그대로 보입니다.
+  /* 탭이 켜지면 한 번에 한 칸만 보이므로 칸마다 두른 테두리는 뜻이 없어집니다.
+     바깥 테두리와 탭 줄이 이미 경계를 긋습니다. */
+  &.is-tabbed .problem-decision-result-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-     여섯 줄인 이유: 이 글의 요약에서 3열 + 6줄은 323px 이고 전문은 705px 입니다. 한 열로
-     세우면 줄이 길어져 자를 것이 없어지고 653px 이 됩니다. 3열이 더 짧습니다. */
-  &.is-clamped .problem-decision-result-card p {
-    display: -webkit-box;
+  &.is-tabbed .problem-decision-result-card {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  &.is-tabbed .problem-decision-result-card h3 {
+    /* 어느 칸인지는 눌려 있는 탭이 말합니다. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
     overflow: hidden;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.problem-decision-result-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.7rem;
+
+  button {
+    padding: 0.22rem 0.7rem;
+    border: 1px solid rgba(98, 114, 164, 0.28);
+    border-radius: 999px;
+    background: none;
+    color: var(--text-muted-color);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: border-color 0.15s ease, color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--link-color);
+      color: var(--link-color);
+    }
+
+    &[aria-selected='true'] {
+      border-color: transparent;
+      background: rgba(98, 114, 164, 0.26);
+      color: var(--heading-color);
+    }
   }
 }
 
@@ -443,9 +486,8 @@ header {
   }
 }
 
-/* 한 열로 설 때는 줄이 길어져 여섯 줄이 사실상 전문이 됩니다. 더 짧게 자릅니다.
-   세로로 쌓이면 칸마다 두른 테두리와 배경이 세 번 반복되는데, 위아래로 놓인 것만으로 이미
-   나뉘어 보이므로 그 장식을 걷어 90px 가까이 줄입니다. */
+/* 스크립트가 꺼진 경우의 배치입니다. 탭이 없으니 세 칸이 그대로 쌓이고, 쌓일 때는 칸마다
+   두른 테두리가 세 번 반복되므로 걷어 냅니다. */
 @media all and (max-width: 767.98px) {
   .problem-decision-result .problem-decision-result-card {
     padding: 0;
@@ -456,21 +498,12 @@ header {
   .problem-decision-result .problem-decision-result-grid {
     gap: 0.9rem;
   }
-
-  .problem-decision-result.is-clamped .problem-decision-result-card p {
-    -webkit-line-clamp: 3;
-  }
 }
 
-/* 뷰포트가 768px 을 넘어도 사이드바 둘을 빼고 나면 이 블록이 쓰는 폭은 그만큼이 아닙니다.
-   그 폭이 좁으면 3열은 한 칸이 150px 이 되어 오히려 세로로 길어지므로 한 열로 세웁니다. */
+/* 뷰포트가 768px 을 넘어도 사이드바 둘을 빼고 나면 이 블록이 쓰는 폭은 그만큼이 아닙니다. */
 @container (max-width: 30rem) {
-  .problem-decision-result-grid {
+  .problem-decision-result:not(.is-tabbed) .problem-decision-result-grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .problem-decision-result.is-clamped .problem-decision-result-card p {
-    -webkit-line-clamp: 3;
   }
 }
 
@@ -3875,8 +3908,7 @@ html[data-mode='dark'] .about-terminal {
   color: var(--heading-color);
 }
 
-.post-tail-toggle,
-.problem-decision-result-toggle {
+.post-tail-toggle {
   display: inline-flex;
   align-items: center;
   margin-top: 0.7rem;
