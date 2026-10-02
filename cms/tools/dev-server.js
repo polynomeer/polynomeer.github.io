@@ -22,17 +22,20 @@ const SECRET = 'dev-secret-not-used-anywhere-else-0000';
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8' };
 
-async function walk(dir, out = []) {
+async function walk(dir, match, out = []) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) await walk(full, out);
-    else if (/\.(md|markdown)$/.test(entry.name)) out.push(path.relative(ROOT, full));
+    if (entry.isDirectory()) await walk(full, match, out);
+    else if (match.test(entry.name)) out.push(path.relative(ROOT, full));
   }
   return out;
 }
 
-const posts = await walk(path.join(ROOT, '_posts'));
-console.log(`fake GitHub serving ${posts.length} posts from _posts`);
+const posts = await walk(path.join(ROOT, '_posts'), /\.(md|markdown)$/);
+// The real tree read returns these too, and without them nothing local can
+// show what happens when an upload collides with an image already committed.
+const assets = await walk(path.join(ROOT, 'assets/img'), /\.(png|jpe?g|gif|webp|avif|svg)$/i);
+console.log(`fake GitHub serving ${posts.length} posts and ${assets.length} images`);
 
 // Stands in for api.github.com. Reads are real files; writes are logged.
 const fakeGitHub = async (url, init = {}) => {
@@ -45,7 +48,9 @@ const fakeGitHub = async (url, init = {}) => {
   if (url.includes('/git/ref/heads/')) return reply({ object: { sha: 'devhead' } });
   if (url.includes('/git/commits/devhead')) return reply({ sha: 'devhead', message: 'dev', tree: { sha: 'devtree' } });
   if (url.includes('/git/trees/devtree')) {
-    return reply({ tree: posts.map((p) => ({ type: 'blob', path: p, sha: 'blob' })) });
+    return reply({
+      tree: [...posts, ...assets].map((p) => ({ type: 'blob', path: p, sha: 'blob' }))
+    });
   }
   if (url.includes('/contents/')) {
     const rel = decodeURIComponent(new URL(url).pathname.split('/contents/')[1]);
@@ -65,7 +70,7 @@ const fakeGitHub = async (url, init = {}) => {
   throw new Error(`unexpected: ${url}`);
 };
 
-const assets = {
+const ui = {
   async fetch(request) {
     const name = new URL(request.url).pathname;
     const file = path.join(UI, name === '/' ? 'index.html' : name.slice(1));
@@ -85,7 +90,7 @@ const worker = createWorker({ fetch: fakeGitHub });
 const env = {
   SESSION_SECRET: SECRET, ADMIN_GITHUB_IDS: String(ADMIN_ID),
   GITHUB_OWNER: 'polynomeer', GITHUB_REPO: 'polynomeer.github.io',
-  DEFAULT_BRANCH: 'main', ASSETS: assets
+  DEFAULT_BRANCH: 'main', SITE_URL: 'https://polynomeer.github.io', ASSETS: ui
 };
 
 // Signed in as the administrator, because OAuth is the one part that cannot

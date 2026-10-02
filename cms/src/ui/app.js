@@ -1,17 +1,32 @@
 // The editor. No framework and no build step: the Worker serves this file as
 // written, so what runs in the browser is what is in the repository.
 
-import { findLiquid, renderMarkdown } from '/markdown.js';
+import { findLiquid, renderMarkdown } from './markdown.js';
 import {
   joinFrontMatter, postPath, slugify, splitFrontMatter
-} from '/frontmatter.js';
+} from './frontmatter.js';
+import {
+  formatSize, imageFileName, isSupported, markdownFor, publicUrl, sizeLevel, uniqueImagePath
+} from './images.js';
 
 const $ = (id) => document.getElementById(id);
 const DRAFT_PREFIX = 'cms:draft:';
 
 let posts = [];
+let images = [];
 let current = null;
 let saving = false;
+
+// Images picked but not committed. They ride along with the next save so a
+// post and the files it references land in one commit, which is the whole
+// reason the change API takes a list of files.
+//
+// Deliberately not mirrored into localStorage like the text is: one
+// screenshot in base64 is most of the quota, and evicting the text draft to
+// hold an image would trade the copy that cannot be recovered for one that
+// can be picked again.
+let staged = [];
+let siteUrl = null;
 
 const say = (text, cls = 'muted') => {
   $('state').textContent = text;
@@ -64,6 +79,138 @@ function pendingLocal(path, serverText) {
   } catch {
     return null;
   }
+}
+
+// --- images ---------------------------------------------------------------
+
+function stagedUrls() {
+  return new Map(staged.map((item) => [publicUrl(item.path), item.url]));
+}
+
+function takenImagePaths() {
+  return [...images, ...staged.map((item) => item.path)];
+}
+
+function readAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    // readAsDataURL rather than ArrayBuffer: the tail of the data URL is
+    // already the base64 the API wants, with no re-encoding in between.
+    reader.onload = () => resolve(String(reader.result).split(',')[1] ?? '');
+    reader.readAsDataURL(file);
+  });
+}
+
+async function stageFiles(fileList) {
+  const files = [...fileList];
+  const refused = files.filter((file) => !isSupported(file.type));
+
+  for (const file of files.filter((f) => isSupported(f.type))) {
+    const name = imageFileName(file.name || 'image', file.type);
+    staged.push({
+      path: uniqueImagePath(name, takenImagePaths()),
+      bytes: file.size,
+      base64: await readAsBase64(file),
+      url: URL.createObjectURL(file)
+    });
+  }
+
+  $('imagenote').textContent = refused.length
+    ? `${refused.length}개는 지원하지 않는 형식이라 뺐습니다 (png, jpg, gif, webp, avif, svg)`
+    : '';
+  $('imagenote').className = refused.length ? 'warn' : 'muted';
+  renderStaged();
+}
+
+function renameStaged(item, value) {
+  const name = imageFileName(value, 'image/png') && value.trim();
+  if (!name) return;
+  // Its own current path must not count as taken, or every edit suffixes it.
+  const others = takenImagePaths().filter((path) => path !== item.path);
+  item.path = uniqueImagePath(name, others);
+  renderStaged();
+}
+
+function renderStaged() {
+  $('imagecount').textContent = staged.length ? ` ${staged.length}` : '';
+
+  $('staged').replaceChildren(...staged.map((item) => {
+    const li = document.createElement('li');
+
+    const thumb = document.createElement('img');
+    thumb.src = item.url;
+    thumb.alt = '';
+
+    const middle = document.createElement('div');
+    const name = document.createElement('input');
+    name.className = 'name';
+    name.value = item.path.split('/').pop();
+    name.spellcheck = false;
+    name.addEventListener('change', () => renameStaged(item, name.value));
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    const size = document.createElement('span');
+    const level = sizeLevel(item.bytes);
+    size.className = `size ${level}`;
+    size.textContent = level === 'ok'
+      ? formatSize(item.bytes)
+      // The thresholds scripts/audit-post-images.sh uses, said before the
+      // file is committed rather than after.
+      : `${formatSize(item.bytes)} — ${level === 'critical' ? '너무 큽니다' : '큽니다'}`;
+    row.append(size);
+    middle.append(name, row);
+
+    const tools = document.createElement('div');
+    tools.className = 'tools';
+
+    const insert = document.createElement('button');
+    insert.type = 'button';
+    insert.className = 'button';
+    insert.textContent = '본문에 넣기';
+    insert.addEventListener('click', () => insertImage(item));
+
+    const drop = document.createElement('button');
+    drop.type = 'button';
+    drop.className = 'button';
+    drop.textContent = '빼기';
+    drop.addEventListener('click', () => {
+      URL.revokeObjectURL(item.url);
+      staged = staged.filter((other) => other !== item);
+      renderStaged();
+    });
+
+    tools.append(insert, drop);
+    li.append(thumb, middle, tools);
+    return li;
+  }));
+}
+
+function insertImage(item) {
+  const body = $('body');
+  const markdown = markdownFor(item.path, item.path.split('/').pop().replace(/\.[^.]*$/, ''));
+  const at = body.selectionStart ?? body.value.length;
+  const before = body.value.slice(0, at);
+  const after = body.value.slice(body.selectionEnd ?? at);
+  // An image needs a blank line on each side or it is pulled into the
+  // paragraph next to it.
+  const lead = !before || before.endsWith('\n\n') ? '' : before.endsWith('\n') ? '\n' : '\n\n';
+  const trail = !after || after.startsWith('\n\n') ? '' : after.startsWith('\n') ? '\n' : '\n\n';
+
+  body.value = `${before}${lead}${markdown}${trail}${after}`;
+  saveLocal();
+  setTab('write');
+  const caret = (before + lead + markdown).length;
+  body.focus();
+  body.setSelectionRange(caret, caret);
+}
+
+function clearStaged() {
+  staged.forEach((item) => URL.revokeObjectURL(item.url));
+  staged = [];
+  $('imagenote').textContent = '';
+  renderStaged();
 }
 
 // --- list -----------------------------------------------------------------
@@ -120,7 +267,9 @@ function setTab(name) {
 }
 
 function refreshPreview() {
-  $('preview').innerHTML = renderMarkdown($('body').value);
+  $('preview').innerHTML = renderMarkdown($('body').value, {
+    images: stagedUrls(), siteBase: siteUrl
+  });
 
   const liquid = findLiquid($('body').value);
   $('liquid').hidden = liquid.length === 0;
@@ -135,6 +284,10 @@ async function open(path) {
   say('여는 중…');
   const file = await api(`/api/posts/${encodeURIComponent(path)}`);
   const parts = splitFrontMatter(file.text);
+
+  // Staged images belong to the post they were picked for; carrying them to
+  // the next one would commit a file that post never references.
+  clearStaged();
 
   current = { path, sha: file.sha, serverText: file.text };
   $('path').textContent = path;
@@ -166,6 +319,7 @@ function startNew() {
   const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
   const path = postPath('notes', today, slugify(title) || 'untitled');
 
+  clearStaged();
   current = { path, sha: null, serverText: '' };
   $('path').textContent = path;
   $('meta').value = [
@@ -200,12 +354,21 @@ async function save() {
       body: JSON.stringify({
         message: `post: update ${current.path.split('/').pop()}`,
         changeId: current.changeId,
-        files: [{ path: current.path, content: text }],
+        files: [
+          { path: current.path, content: text },
+          // One commit, so the site is never built from a post whose image
+          // has not landed.
+          ...staged.map((item) => ({
+            path: item.path, content: item.base64, encoding: 'base64'
+          }))
+        ],
         ...(usePr ? { branch: `cms/${slugify(current.path)}`, pullRequest: {} } : {})
       })
     });
 
     clearLocal(current.path);
+    images = [...images, ...staged.map((item) => item.path)];
+    clearStaged();
     current.serverText = text;
     current.changeId = null;
     $('restore').hidden = true;
@@ -241,6 +404,30 @@ for (const tab of document.querySelectorAll('[data-tab]')) {
   tab.addEventListener('click', () => setTab(tab.dataset.tab));
 }
 $('search').addEventListener('input', renderList);
+
+$('pick').addEventListener('change', (event) => {
+  stageFiles(event.target.files);
+  // So picking the same file twice in a row still fires a change.
+  event.target.value = '';
+});
+
+for (const [type, over] of [['dragenter', true], ['dragover', true], ['dragleave', false], ['drop', false]]) {
+  $('drop').addEventListener(type, (event) => {
+    event.preventDefault();
+    $('drop').classList.toggle('over', over);
+    if (type === 'drop') stageFiles(event.dataTransfer.files);
+  });
+}
+
+// A screenshot is pasted far more often than it is saved to disk and picked.
+$('body').addEventListener('paste', (event) => {
+  const files = [...(event.clipboardData?.files ?? [])];
+  if (files.length) {
+    event.preventDefault();
+    stageFiles(files);
+    setTab('images');
+  }
+});
 $('new').addEventListener('click', startNew);
 $('save').addEventListener('click', save);
 for (const id of ['meta', 'body']) {
@@ -257,8 +444,11 @@ document.addEventListener('keydown', (event) => {
   try {
     const me = await api('/api/me');
     $('who').textContent = `@${me.login}`;
+    siteUrl = me.siteUrl;
     show('app');
-    posts = (await api('/api/posts')).posts;
+    const listing = await api('/api/posts');
+    posts = listing.posts;
+    images = listing.images ?? [];
     renderList();
     say('');
   } catch {

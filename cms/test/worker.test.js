@@ -58,6 +58,8 @@ function githubFake({ headMessage = 'previous', patch = { status: 200 }, pulls =
         return reply({ tree: [
           { type: 'blob', path: '_posts/notes/a.md', sha: 'blob-a' },
           { type: 'blob', path: '_posts/notes/image.png', sha: 'blob-i' },
+          { type: 'blob', path: 'assets/img/posts/one.png', sha: 'blob-1' },
+          { type: 'blob', path: 'assets/css/style.css', sha: 'blob-c' },
           { type: 'tree', path: '_posts/notes', sha: 'tree-n' }
         ] });
       }
@@ -195,7 +197,7 @@ test('the github token never appears in a response body', async () => {
     .fetch(request('/api/me', { cookie: await sessionCookie() }), env);
   const body = await me.text();
   assert.ok(!body.includes('ghs_TOKEN'), 'the session carries the token but /api/me must not echo it');
-  assert.deepEqual(JSON.parse(body), { uid: ADMIN_ID, login: 'polynomeer' });
+  assert.deepEqual(JSON.parse(body), { uid: ADMIN_ID, login: 'polynomeer', siteUrl: null });
 });
 
 test('a change outside _posts and assets/img is refused before any call', async () => {
@@ -510,4 +512,19 @@ test('the index path is not reachable through the post read route', async () => 
     request('/api/posts/cms%2Fcontent-index.json', { cookie: await sessionCookie() }), env
   );
   assert.equal(response.status, 422);
+});
+
+test('the listing names the images already in the repository', async () => {
+  // The editor needs these to pick a filename that overwrites nothing, and
+  // they ride on the tree read it was already making.
+  const github = githubFake();
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const body = await (await worker.fetch(
+    request('/api/posts', { cookie: await sessionCookie() }), env
+  )).json();
+
+  assert.deepEqual(body.images, ['assets/img/posts/one.png']);
+  // Still one tree read for both.
+  assert.equal(github.calls.filter((c) => c.url.includes('recursive=1')).length, 1);
 });

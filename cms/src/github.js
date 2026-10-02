@@ -179,16 +179,27 @@ export function createGitHubClient({
       return { commitSha: commit.sha, alreadyApplied: false };
     },
 
-    /** Every markdown file under _posts, from one recursive tree read. */
-    async listPosts(branch) {
+    /**
+     * Posts and image paths, from one recursive tree read.
+     *
+     * The images come back from the same call because the editor has to know
+     * what names are already taken before it can promise not to overwrite one,
+     * and a second tree read for that would be the same bytes twice.
+     */
+    async listContent(branch) {
       const ref = await api.getRef(branch);
       const head = await api.getCommit(ref.object.sha);
       const tree = await request('GET', `/git/trees/${head.tree.sha}?recursive=1`);
+      const blobs = (tree.tree ?? []).filter((entry) => entry.type === 'blob');
 
-      return (tree.tree ?? [])
-        .filter((entry) => entry.type === 'blob' &&
-          entry.path.startsWith('_posts/') && /\.(md|markdown)$/.test(entry.path))
-        .map((entry) => ({ path: entry.path, sha: entry.sha }));
+      return {
+        posts: blobs
+          .filter((entry) => entry.path.startsWith('_posts/') && /\.(md|markdown)$/.test(entry.path))
+          .map((entry) => ({ path: entry.path, sha: entry.sha })),
+        images: blobs
+          .filter((entry) => entry.path.startsWith('assets/img/'))
+          .map((entry) => entry.path)
+      };
     },
 
     /**

@@ -250,7 +250,7 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
       }
 
       if (url.pathname === '/api/me') {
-        return json({ uid: session.uid, login: session.login });
+        return json({ uid: session.uid, login: session.login, siteUrl: env.SITE_URL ?? null });
       }
 
       const branch = env.DEFAULT_BRANCH || 'main';
@@ -264,15 +264,17 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
           // The tree read is the authority on what exists; the index only adds
           // names to it. A post committed since the index was generated is
           // listed either way, under its filename.
-          const [tree, titles] = await Promise.all([
-            api.listPosts(branch),
+          const [content, titles] = await Promise.all([
+            api.listContent(branch),
             api.readTitleIndex(branch)
           ]);
 
           return json({
             branch,
             indexed: Object.keys(titles).length,
-            posts: tree.map((entry) => ({ ...entry, ...(titles[entry.path] ?? {}) }))
+            posts: content.posts.map((entry) => ({ ...entry, ...(titles[entry.path] ?? {}) })),
+            // So the editor can name an upload without overwriting one.
+            images: content.images
           });
         } catch (error) {
           return problem(502, 'github_error', 'Could not list posts.', { status: error.status });
