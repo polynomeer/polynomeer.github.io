@@ -44,7 +44,16 @@ test('a tampered payload is rejected', async () => {
 test('a tampered signature is rejected', async () => {
   const token = await signSession({ uid: 62940574, exp: future() }, SECRET);
   const [body, signature] = token.split('.');
-  const flipped = signature.slice(0, -1) + (signature.at(-1) === 'A' ? 'B' : 'A');
+
+  // Flip a character in the middle, not at the end: base64's final character
+  // carries only part of a byte, so several values decode identically and the
+  // "tampered" signature would still verify.
+  const at = Math.floor(signature.length / 2);
+  const flipped = signature.slice(0, at) +
+    (signature[at] === 'A' ? 'B' : 'A') +
+    signature.slice(at + 1);
+
+  assert.notEqual(flipped, signature);
   assert.equal(await verifySession(`${body}.${flipped}`, SECRET), null);
 });
 

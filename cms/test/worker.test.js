@@ -54,6 +54,13 @@ function githubFake({ headMessage = 'previous', patch = { status: 200 }, pulls =
 
       if (url.includes('/git/ref/heads/')) return reply({ object: { sha: 'head1' } });
       if (url.includes('/git/commits/')) return reply({ sha: 'head1', message: headMessage, tree: { sha: 'tree1' } });
+      if (url.includes('/git/trees/') && url.includes('recursive=1')) {
+        return reply({ tree: [
+          { type: 'blob', path: '_posts/notes/a.md', sha: 'blob-a' },
+          { type: 'blob', path: '_posts/notes/image.png', sha: 'blob-i' },
+          { type: 'tree', path: '_posts/notes', sha: 'tree-n' }
+        ] });
+      }
       if (url.endsWith('/git/blobs')) return reply({ sha: 'blob1' });
       if (url.endsWith('/git/trees')) return reply({ sha: 'tree2' });
       if (url.endsWith('/git/commits')) return reply({ sha: 'commit2' });
@@ -276,3 +283,48 @@ test('api responses are not cacheable', async () => {
   const response = await worker.fetch(request('/api/me', { cookie: await sessionCookie() }), env);
   assert.equal(response.headers.get('cache-control'), 'no-store');
 });
+
+test('the read routes need a session too', async () => {
+  const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
+  for (const path of ['/api/posts', '/api/posts/_posts%2Fnotes%2Fa.md']) {
+    assert.equal((await worker.fetch(request(path), env)).status, 401, path);
+  }
+});
+
+test('reading is confined to _posts', async () => {
+  const github = githubFake();
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  for (const path of ['_config.yml', '_posts/../_config.yml', '.github/workflows/jekyll.yml']) {
+    const response = await worker.fetch(
+      request(`/api/posts/${encodeURIComponent(path)}`, { cookie: await sessionCookie() }), env
+    );
+    assert.equal(response.status, 422, path);
+  }
+  assert.equal(github.calls.length, 0);
+});
+
+test('the post list comes from one recursive tree read', async () => {
+  const github = githubFake();
+  const worker = createWorker({ fetch: github.fetchImpl });
+  const response = await worker.fetch(request('/api/posts', { cookie: await sessionCookie() }), env);
+
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).posts, [{ path: '_posts/notes/a.md', sha: 'blob-a' }]);
+  assert.equal(github.calls.filter((c) => c.url.includes('recursive=1')).length, 1);
+});
+
+test('the editor shell is served without a session, api and auth are not', async () => {
+  const served = [];
+  const assets = { fetch: async (req) => { served.push(new URL(req.url).pathname); return new Response('ui'); } };
+  const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
+
+  assert.equal((await worker.fetch(request('/'), { ...env, ASSETS: assets })).status, 200);
+  assert.equal((await worker.fetch(request('/ui/app.js'), { ...env, ASSETS: assets })).status, 200);
+  assert.deepEqual(served, ['/', '/ui/app.js']);
+
+  // The shell is a shell; the data behind it still needs a session.
+  assert.equal((await worker.fetch(request('/api/posts'), { ...env, ASSETS: assets })).status, 401);
+  assert.equal(served.length, 2, 'assets never answer an api path');
+});
+

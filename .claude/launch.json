@@ -61,6 +61,14 @@
         "/private/tmp/claude-501/-Users-hammac-Study-polynomeer-github-io/f0f7fdd9-eec2-4743-afb0-662c0caae85e/scratchpad/nav_site"
       ],
       "port": 4004
+    },
+    {
+      "name": "cms-dev",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "cms/tools/dev-server.js"
+      ],
+      "port": 4010
     }
   ]
 }

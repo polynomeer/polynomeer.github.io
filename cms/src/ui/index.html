@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Polynomeer CMS</title>
+<link rel="stylesheet" href="/ui/app.css">
+</head>
+<body>
+<header class="bar">
+  <strong>Polynomeer CMS</strong>
+  <span id="who" class="muted"></span>
+  <span class="grow"></span>
+  <span id="state" class="muted" role="status" aria-live="polite"></span>
+</header>
+
+<main id="signin" hidden>
+  <p>이 저장소의 관리자만 쓸 수 있습니다.</p>
+  <p><a class="button" href="/auth/login">GitHub로 로그인</a></p>
+</main>
+
+<main id="app" hidden>
+  <section class="pane list">
+    <label class="field">
+      <span>글 찾기</span>
+      <input id="search" type="search" placeholder="경로나 제목 일부" autocomplete="off">
+    </label>
+    <p class="muted" id="count"></p>
+    <ul id="posts" class="posts"></ul>
+    <button id="new" type="button" class="button">새 글</button>
+  </section>
+
+  <section class="pane edit">
+    <p class="path"><code id="path">선택된 글이 없습니다</code></p>
+
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="write" aria-selected="true">본문</button>
+      <button type="button" role="tab" data-tab="meta" aria-selected="false">Front matter</button>
+      <button type="button" role="tab" data-tab="preview" aria-selected="false">미리보기</button>
+    </div>
+
+    <div data-panel="write">
+      <textarea id="body" spellcheck="false" placeholder="마크다운"></textarea>
+    </div>
+
+    <div data-panel="meta" hidden>
+      <p class="muted">원문을 그대로 고칩니다. 주석과 순서와 모르는 필드는 건드리지 않습니다.</p>
+      <textarea id="meta" spellcheck="false" placeholder="title: ..."></textarea>
+    </div>
+
+    <div data-panel="preview" hidden>
+      <p id="liquid" class="warn" hidden></p>
+      <div id="preview" class="preview"></div>
+    </div>
+
+    <div class="actions">
+      <label class="field inline">
+        <input id="pr" type="checkbox" checked>
+        <span>PR로 올리기</span>
+      </label>
+      <button id="save" type="button" class="button primary">저장</button>
+      <button id="restore" type="button" class="button" hidden>복구본 불러오기</button>
+    </div>
+    <p id="result" class="muted"></p>
+  </section>
+</main>
+
+<script type="module" src="/ui/app.js"></script>
+</body>
+</html>

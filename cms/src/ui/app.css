@@ -1,0 +1,68 @@
+:root {
+  --bg: #1b1d27; --panel: #22252f; --line: #39405a; --text: #e6e6ef;
+  --muted: #a0a6bd; --accent: #8be9fd; --warn: #ffb86c; --ok: #50fa7b;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #fbfbfd; --panel: #fff; --line: #d9dde8; --text: #1f2330;
+    --muted: #5b6275; --accent: #0b6e8a; --warn: #9a5b00; --ok: #0a7a3d;
+    color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+/* An explicit `display` beats the hidden attribute's UA rule, so every
+   element that sets one would ignore `hidden`. Say it once, here. */
+[hidden] { display: none !important; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+.bar {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .9rem; border-bottom: 1px solid var(--line);
+}
+.grow { flex: 1; }
+.muted { color: var(--muted); font-size: .85rem; }
+.warn { color: var(--warn); font-size: .85rem; }
+main { padding: .9rem; }
+#app { display: grid; gap: .9rem; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); }
+@media (max-width: 800px) { #app { grid-template-columns: minmax(0, 1fr); } }
+.pane { background: var(--panel); border: 1px solid var(--line); border-radius: .6rem; padding: .8rem; }
+.field { display: grid; gap: .25rem; margin-bottom: .6rem; }
+.field.inline { display: flex; align-items: center; gap: .4rem; margin: 0; }
+.field > span { font-size: .8rem; color: var(--muted); }
+input[type="search"], textarea {
+  width: 100%; padding: .5rem .6rem; border: 1px solid var(--line); border-radius: .4rem;
+  background: var(--bg); color: var(--text); font: inherit;
+}
+textarea { min-height: 50vh; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .86rem; }
+#meta { min-height: 14rem; }
+.posts { list-style: none; margin: 0 0 .7rem; padding: 0; max-height: 50vh; overflow: auto; }
+.posts li { border-bottom: 1px solid var(--line); }
+.posts button {
+  display: block; width: 100%; padding: .45rem .3rem; border: 0; background: none;
+  color: var(--text); font: inherit; text-align: left; cursor: pointer;
+}
+.posts button:hover, .posts button:focus-visible { color: var(--accent); }
+.posts .meta { display: block; font-size: .72rem; color: var(--muted); }
+.posts li[aria-current="true"] button { color: var(--accent); font-weight: 700; }
+.button {
+  display: inline-block; padding: .4rem .8rem; border: 1px solid var(--line);
+  border-radius: 999px; background: none; color: var(--text);
+  font: inherit; cursor: pointer; text-decoration: none;
+}
+.button.primary { border-color: var(--accent); color: var(--accent); }
+.button:disabled { opacity: .5; cursor: not-allowed; }
+.tabs { display: flex; gap: .3rem; margin: .3rem 0 .6rem; }
+.tabs button {
+  padding: .22rem .7rem; border: 1px solid var(--line); border-radius: 999px;
+  background: none; color: var(--muted); font: inherit; font-size: .78rem; cursor: pointer;
+}
+.tabs button[aria-selected="true"] { border-color: transparent; background: var(--line); color: var(--text); }
+.actions { display: flex; align-items: center; gap: .6rem; margin-top: .7rem; flex-wrap: wrap; }
+.path code { font-size: .78rem; color: var(--muted); overflow-wrap: anywhere; }
+.preview { border: 1px solid var(--line); border-radius: .4rem; padding: .8rem; min-height: 50vh; }
+.preview img { max-width: 100%; }
+.preview pre { overflow: auto; background: var(--bg); padding: .6rem; border-radius: .4rem; }
+.ok { color: var(--ok); }

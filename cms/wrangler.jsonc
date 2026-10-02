@@ -19,5 +19,14 @@
     "DEFAULT_BRANCH": "main"
   },
 
+  // The editor's files. Served by the platform straight from src/ui, which
+  // is why app.js can import markdown.js and frontmatter.js as modules: the
+  // browser runs the same source the tests do.
+  "assets": {
+    "directory": "./src/ui",
+    "binding": "ASSETS",
+    "not_found_handling": "none"
+  },
+
   "observability": { "enabled": true }
 }

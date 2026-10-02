@@ -163,6 +163,30 @@ export function createGitHubClient({
       return { commitSha: commit.sha, alreadyApplied: false };
     },
 
+    /** Every markdown file under _posts, from one recursive tree read. */
+    async listPosts(branch) {
+      const ref = await api.getRef(branch);
+      const head = await api.getCommit(ref.object.sha);
+      const tree = await request('GET', `/git/trees/${head.tree.sha}?recursive=1`);
+
+      return (tree.tree ?? [])
+        .filter((entry) => entry.type === 'blob' &&
+          entry.path.startsWith('_posts/') && /\.(md|markdown)$/.test(entry.path))
+        .map((entry) => ({ path: entry.path, sha: entry.sha }));
+    },
+
+    /** Contents API, base64 in and out; `sha` is the blob the edit is based on. */
+    async readFile(path, branch) {
+      const found = await request(
+        'GET',
+        `/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(branch)}`
+      );
+      const text = new TextDecoder().decode(
+        Uint8Array.from(atob(String(found.content ?? '').replace(/\n/g, '')), (c) => c.charCodeAt(0))
+      );
+      return { path, sha: found.sha, text };
+    },
+
     /**
      * Returns the open pull request for `head` if there already is one, so a
      * retry reuses it instead of opening a second.

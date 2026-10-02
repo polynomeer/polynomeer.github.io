@@ -218,6 +218,17 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
     async fetch(request, env) {
       const url = new URL(request.url);
 
+      // The editor is a handful of static files served by the platform from
+      // src/ui, not imported into this module - so the browser runs exactly
+      // the markdown.js and frontmatter.js the tests cover, with no build
+      // step in between. It is an empty shell: it calls /api/me and shows
+      // either the sign-in link or the editor. Every byte of content behind
+      // it still needs a session.
+      if (env.ASSETS && request.method === 'GET' &&
+          !url.pathname.startsWith('/api/') && !url.pathname.startsWith('/auth/')) {
+        return env.ASSETS.fetch(request);
+      }
+
       if (url.pathname === '/auth/login') {
         return loginRedirect(env, url);
       }
@@ -237,6 +248,32 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
 
       if (url.pathname === '/api/me') {
         return json({ uid: session.uid, login: session.login });
+      }
+
+      const branch = env.DEFAULT_BRANCH || 'main';
+      const client = () => createGitHubClient({
+        fetch: fetchImpl, token: session.ght, owner: env.GITHUB_OWNER, repo: env.GITHUB_REPO
+      });
+
+      if (url.pathname === '/api/posts' && request.method === 'GET') {
+        try {
+          return json({ branch, posts: await client().listPosts(branch) });
+        } catch (error) {
+          return problem(502, 'github_error', 'Could not list posts.', { status: error.status });
+        }
+      }
+
+      if (url.pathname.startsWith('/api/posts/') && request.method === 'GET') {
+        const path = decodeURIComponent(url.pathname.slice('/api/posts/'.length));
+        if (!path.startsWith('_posts/') || path.includes('..')) {
+          return problem(422, 'path_not_allowed', `Cannot read ${path}.`, { path });
+        }
+        try {
+          return json(await client().readFile(path, branch));
+        } catch (error) {
+          return problem(error.status === 404 ? 404 : 502,
+            error.status === 404 ? 'not_found' : 'github_error', 'Could not read the post.');
+        }
       }
 
       if (url.pathname === '/api/changes' && request.method === 'POST') {
