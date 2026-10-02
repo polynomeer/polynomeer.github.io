@@ -4501,6 +4501,7 @@ html[data-mode='dark'] {
 
 .source-passage-review {
   margin-bottom: 0.6rem;
+  overflow-wrap: anywhere;
   padding-left: 0.9rem;
   border-left: 3px solid var(--btn-border-color);
   color: var(--text-muted-color);
@@ -4517,6 +4518,39 @@ html[data-mode='dark'] {
 .source-back {
   margin-top: 2rem;
   font-size: 0.9rem;
+}
+
+.sources-single {
+  margin-top: 1.6rem;
+
+  > summary {
+    color: var(--text-muted-color);
+    cursor: pointer;
+  }
+}
+
+.sources-single-list {
+  margin-top: 0.8rem;
+
+  > li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.6rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--btn-border-color);
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+.sources-single-post {
+  flex-basis: 100%;
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+
+  a {
+    color: inherit;
+  }
 }
 
 /* --- /connections/ (_includes/connection-map.html) --- */

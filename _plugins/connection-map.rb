@@ -81,17 +81,17 @@ module Jekyll
 
         edges = links.map { |source, target| [index[source], index[target], 'link'] }
 
-        (site.data['citation_index'] || {}).each do |id, citations|
-          next if id.start_with?('post:')
+        # Only sources with a page (see citations.rb): a source node links there,
+        # and the links one post alone lists would crowd the map.
+        (site.data['source_entries'] || {}).each do |id, source|
+          next unless source['page_url']
 
-          raw = (site.data['sources'] || {})[id]
-          next unless raw.is_a?(Hash)
-
+          citations = (site.data['citation_index'] || {})[id] || []
           citations.map { |c| c['post'] }.uniq.each do |post|
             from = add.call(post, { 'id' => slug_of.call(post), 't' => post.data['title'].to_s,
                                     'u' => post.url, 'k' => type_of.call(post) })
-            to = add.call("source:#{id}", { 'id' => "source:#{id}", 't' => raw['title'].to_s,
-                                            'u' => "/sources/#{id}/", 'k' => 'source' })
+            to = add.call("source:#{id}", { 'id' => "source:#{id}", 't' => source['title'].to_s,
+                                            'u' => source['page_url'], 'k' => 'source' })
             edges << [from, to, 'cite']
           end
         end

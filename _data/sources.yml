@@ -117,6 +117,7 @@ google-sre-book:
   title: Site Reliability Engineering
   publisher: Google, O'Reilly
   url: https://sre.google/sre-book/table-of-contents/
+  url_prefix: https://sre.google/sre-book/
 
 lamport-tla-home:
   type: web

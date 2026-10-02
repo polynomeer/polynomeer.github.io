@@ -494,9 +494,13 @@ citation:
   more_from_source: 이 출처의 인용 모아 보기
   view_original: 원문 보기
   all_sources: 모든 출처
-  index_description: 글에서 인용한 책, 글, 문서, 코드를 출처별로 모았습니다. 출처를 누르면 어느 글에서 어떤 대목을 가져왔는지 볼 수 있습니다.
+  index_description: 글에서 인용하거나 참고로 단 책, 글, 문서, 코드를 출처별로 모았습니다. 출처를 누르면 어느 글이 그 출처에 기댔고 어떤 대목을 가져왔는지 볼 수 있습니다.
   empty: 아직 등록된 인용이 없습니다.
   count: ":COUNT회 인용"
+  post_count: ":COUNT편"
+  quote_count: "인용 :COUNT"
+  reference: 참고 링크
+  single_title: "한 글에서만 참고한 출처 :COUNT개"
   types:
     book: 책
     article: 글

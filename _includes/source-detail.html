@@ -1,21 +1,22 @@
 <!--
-  /sources/<id>/: one source and every passage the blog quoted from it,
-  grouped by post. Each passage links to its card inside the post.
+  /sources/<id>/: one source and every post that relies on it. A post shows
+  the passages it quotes (each linking to its card), or the review label, or
+  the links it lists under its reference heading.
   Built by the generator in _plugins/citations.rb.
 -->
 
 {% include lang.html %}
 {% assign l = site.data.locales[lang].citation %}
 {% assign s = page.source %}
-{% assign total = 0 %}
-{% for group in page.citation_groups %}{% assign total = total | plus: group.items.size %}{% endfor %}
+{% assign quotes = 0 %}
+{% for group in page.citation_groups %}{% for item in group.items %}{% if item.quote %}{% assign quotes = quotes | plus: 1 %}{% endif %}{% endfor %}{% endfor %}
 
 <div class="source-meta">
   <span class="citation-type">{{ l.types[s.type] | default: s.type }}</span>
   {% if s.author %}<span>{{ s.author }}</span>{% endif %}
   {% if s.publisher %}<span>{{ s.publisher }}</span>{% endif %}
   {% if s.published %}<span>{{ s.published | date: '%Y-%m-%d' }}</span>{% endif %}
-  <span>{{ l.count | replace: ':COUNT', total }}</span>
+  <span>{{ l.post_count | replace: ':COUNT', page.citation_groups.size }}{% if quotes > 0 %} · {{ l.quote_count | replace: ':COUNT', quotes }}{% endif %}</span>
 </div>
 
 {% if s.note %}<p class="source-note">{{ s.note }}</p>{% endif %}
@@ -30,6 +31,10 @@
     {% for item in group.items %}
       {% if item.implicit %}
         <p class="source-passage-review">{{ l.implicit }}</p>
+        {% continue %}
+      {% endif %}
+      {% if item.reference %}
+        <p class="source-passage-review">{{ l.reference }}: <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">{{ item.text | default: item.link }}</a></p>
         {% continue %}
       {% endif %}
       <a class="source-passage" href="{{ group.post.url | relative_url }}#{{ item.anchor }}">

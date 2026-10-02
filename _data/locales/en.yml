@@ -499,9 +499,13 @@ citation:
   more_from_source: More quotes from this source
   view_original: Read the original
   all_sources: All sources
-  index_description: Books, articles, documents and code quoted in the posts, grouped by source. Open a source to see which passage each post took from it.
+  index_description: Books, articles, documents and code the posts quote or list as references, grouped by source. Open a source to see which posts rely on it and which passages they took.
   empty: No citations yet.
   count: ":COUNT citations"
+  post_count: ":COUNT posts"
+  quote_count: ":COUNT quotes"
+  reference: Reference link
+  single_title: ":COUNT sources listed by one post"
   types:
     book: Book
     article: Article

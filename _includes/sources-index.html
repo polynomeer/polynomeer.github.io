@@ -1,19 +1,21 @@
 <!--
-  Rows of the /sources/ tab: every registry source that a post cites, most
-  cited first. The rows come from the generator in _plugins/citations.rb
-  (`site.data.citation_sources`).
+  Rows of the /sources/ tab: every source that has a page, most relied on
+  first (posts that list or quote it), then the sources only one post lists,
+  folded. The rows come from the generator in _plugins/citations.rb
+  (`site.data.citation_sources`, `site.data.single_post_sources`).
 -->
 
 {% assign l = site.data.locales[include.lang].citation %}
 {% assign rows = site.data.citation_sources %}
+{% assign single = site.data.single_post_sources %}
 
-{% if rows.size > 0 %}
+{% if rows.size > 0 or single.size > 0 %}
   <ul class="post-tail-list list-unstyled sources-list">
     {% for s in rows %}
       <li class="post-tail-item">
         <a href="{{ s.page_url | relative_url }}" class="post-tail-link">
           <span class="post-tail-title">{{ s.title }}</span>
-          <span class="post-tail-meta">{{ l.count | replace: ':COUNT', s.count }}</span>
+          <span class="post-tail-meta">{{ l.post_count | replace: ':COUNT', s.post_count }}{% if s.count > 0 %} · {{ l.quote_count | replace: ':COUNT', s.count }}{% endif %}</span>
           <span class="sources-row-meta">
             {{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}
           </span>
@@ -21,6 +23,17 @@
       </li>
     {% endfor %}
   </ul>
+
+{%- if single.size > 0 -%}
+<details class="sources-single">
+<summary>{{ l.single_title | replace: ':COUNT', single.size }}</summary>
+<ul class="list-unstyled sources-single-list">
+{%- for s in single -%}
+<li><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.title }}</a><span class="sources-row-meta">{{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}</span><span class="sources-single-post"><a href="{{ s.post.url | relative_url }}">{{ s.post.title }}</a></span></li>
+{%- endfor -%}
+</ul>
+</details>
+{%- endif %}
 {% else %}
   <p>{{ l.empty }}</p>
 {% endif %}
