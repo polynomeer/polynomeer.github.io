@@ -16,8 +16,19 @@ tail_includes:
   <header class="post-header">
     {% capture eyebrow_type %}{% include content-type-id.html post=page %}{% endcapture %}
     {% assign eyebrow_type = eyebrow_type | strip %}
-    {% if page.categories.size > 0 %}
-      <p class="post-eyebrow" style="--type-color: var(--type-{{ eyebrow_type }})">{{ page.categories | join: ' · ' }}</p>
+    {%- comment -%}
+      Categories over the title, minus the one that only repeats the content
+      type (Notes on a note, TIL on a TIL): the badge below already says it.
+    {%- endcomment -%}
+    {% assign eyebrow_parts = '' | split: '' %}
+    {% for category in page.categories %}
+      {% assign category_key = category | downcase | remove: ' ' | remove: '-' %}
+      {% unless category_key == eyebrow_type %}
+        {% assign eyebrow_parts = eyebrow_parts | push: category %}
+      {% endunless %}
+    {% endfor %}
+    {% if eyebrow_parts.size > 0 %}
+      <p class="post-eyebrow" style="--type-color: var(--type-{{ eyebrow_type }})">{{ eyebrow_parts | join: ' · ' }}</p>
     {% endif %}
     <h1 data-toc-skip>{{ page.title }}</h1>
     {% if page.description %}
