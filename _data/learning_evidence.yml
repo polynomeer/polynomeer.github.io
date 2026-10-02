@@ -16,10 +16,20 @@ groups:
         status: completed
         period: "2024"
         summary:
-          ko-KR: 41/41강 완강. HTTP 요청·응답 흐름, 메서드의 안전성과 멱등성, 재시도와 캐시의 점검 기준을 정리했습니다.
-          en: Completed 41/41 lessons; reviewed HTTP semantics, safety, idempotency, retries, and caching considerations.
+          ko-KR: 41/41강 완강. 네트워크부터 헤더와 캐시까지 10개 섹션을 별도 글로 복습하고, 다이어그램과 독립적인 API 설계 예시를 연결했습니다.
+          en: Completed 41/41 lessons; organized ten section-based reviews with diagrams and independent API design examples, from networking to headers and caching.
         source_posts:
           - _posts/lecture/kim-young-han/2026-10-02-inflearn-http-basics-review.md
+          - _posts/lecture/http/2026-10-02-http-basics-01-introduction.md
+          - _posts/lecture/http/2026-10-02-http-basics-02-network.md
+          - _posts/lecture/http/2026-10-02-http-basics-03-uri.md
+          - _posts/lecture/http/2026-10-02-http-basics-04-http.md
+          - _posts/lecture/http/2026-10-02-http-basics-05-methods.md
+          - _posts/lecture/http/2026-10-02-http-basics-06-api-design.md
+          - _posts/lecture/http/2026-10-02-http-basics-07-status-codes.md
+          - _posts/lecture/http/2026-10-02-http-basics-08-headers.md
+          - _posts/lecture/http/2026-10-02-http-basics-09-cache.md
+          - _posts/lecture/http/2026-10-02-http-basics-10-next-steps.md
         related_posts:
           - _posts/notes/web/2026-02-13-presigned-url.md
           - _posts/notes/web/2026-02-25-netty.md
