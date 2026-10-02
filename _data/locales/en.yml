@@ -150,6 +150,7 @@ post:
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer
   revisions: Revision history
+  revisions_close: Close revision history
   revisions_count: ":COUNT revisions"
   revisions_more: ":COUNT earlier revisions not shown"
   share: Share

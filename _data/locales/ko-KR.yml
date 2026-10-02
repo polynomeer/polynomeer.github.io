@@ -117,9 +117,9 @@ post:
   portfolio_context_career: "이 글은 실무 프로젝트의 사례입니다:"
   portfolio_context_personal: "이 글은 개인 프로젝트의 기록입니다:"
   portfolio_context_siblings: 같은 프로젝트의 글
-  written_by: By
+  written_by: 작성자
   posted: 게시
-  updated: 업데이트
+  updated: 수정
   words: 단어
   pageview_measure: 조회
   like_idle: 좋아요
@@ -150,6 +150,7 @@ post:
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
   revisions: 변경이력
+  revisions_close: 변경이력 닫기
   revisions_count: ":COUNT번 수정"
   revisions_more: "이전 수정 :COUNT건은 생략했습니다"
   share: 공유하기

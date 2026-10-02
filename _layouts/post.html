@@ -42,7 +42,10 @@ tail_includes:
             <span>
               {{ site.data.locales[lang].post.updated }}
               {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
+              {% include post-revisions-trigger.html lang=lang %}
             </span>
+          {% else %}
+            {% include post-revisions-trigger.html lang=lang %}
           {% endif %}
           <!-- author(s) -->
           <span>
@@ -194,8 +197,6 @@ tail_includes:
       </div>
     {% endif %}
 
-    {% include post-revisions.html lang=lang %}
-
     <div
       class="
         post-tail-bottom
@@ -220,3 +221,5 @@ tail_includes:
   </div>
   <!-- div.post-tail-wrapper -->
 </article>
+
+{% include post-revisions.html lang=lang %}

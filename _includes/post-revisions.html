@@ -10,13 +10,16 @@
 {% if revisions.size > 0 %}
   {% assign repo = site.revisions.repo %}
 
-  <details class="post-revisions">
-    <summary class="post-revisions-summary">
-      <span class="post-revisions-label">{{ site.data.locales[include.lang].post.revisions }}</span>
-      <span class="post-revisions-state">
+  <dialog id="post-revisions-dialog" class="post-revisions-dialog" aria-labelledby="post-revisions-title">
+    <div class="post-revisions-heading">
+      <h2 id="post-revisions-title">{{ site.data.locales[include.lang].post.revisions }}</h2>
+      <form method="dialog">
+        <button class="post-revisions-close" aria-label="{{ site.data.locales[include.lang].post.revisions_close | default: 'Close revision history' }}" autofocus>&times;</button>
+      </form>
+    </div>
+      <p class="post-revisions-state">
         {{ site.data.locales[include.lang].post.revisions_count | replace: ':COUNT', page.revisions_total }}
-      </span>
-    </summary>
+      </p>
 
     <ol class="post-revision-list">
       {% for revision in revisions %}
@@ -47,5 +50,22 @@
         {{ site.data.locales[include.lang].post.revisions_more | replace: ':COUNT', rest }}
       </p>
     {% endif %}
-  </details>
+  </dialog>
+  <script>
+    (() => {
+      const dialog = document.getElementById('post-revisions-dialog');
+      const trigger = document.querySelector('.post-revisions-trigger');
+      if (!dialog || !trigger || typeof dialog.showModal !== 'function') return;
+
+      trigger.hidden = false;
+      trigger.addEventListener('click', () => dialog.showModal());
+      dialog.addEventListener('click', (event) => {
+        if (event.target !== dialog) return;
+        const rect = dialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right ||
+            event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+      });
+      dialog.addEventListener('close', () => trigger.focus());
+    })();
+  </script>
 {% endif %}
