@@ -135,3 +135,10 @@ kbd {
 .diff .del::before { content: "- "; opacity: .6; }
 .diff .same::before { content: "  "; opacity: .6; }
 .diff .gap { background: var(--bg); color: var(--muted); font-size: .72rem; text-align: center; }
+
+select {
+  width: 100%; padding: .4rem .5rem; border: 1px solid var(--line); border-radius: .4rem;
+  background: var(--bg); color: var(--text); font: inherit; font-size: .85rem;
+  margin-bottom: .35rem;
+}
+.posts .id { display: block; font-size: .72rem; color: var(--accent); font-family: ui-monospace, Menlo, monospace; }

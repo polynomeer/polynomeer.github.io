@@ -69,6 +69,11 @@ if ARGV.include?('--index')
   # whole file.
   body = entries.map { |path, info| "    #{path.to_json}: #{JSON.generate(info)}" }
 
+  dictionary = CMS::ContentContract.dictionary_entries.map do |entry|
+    "    #{entry['path'].to_json}: " \
+      "#{JSON.generate(entry.slice('collection', 'id', 'title'))}"
+  end
+
   out = File.expand_path('../../cms/content-index.json', __dir__)
   File.write(out, <<~JSON)
     {
@@ -76,11 +81,15 @@ if ARGV.include?('--index')
       "total": #{entries.size},
       "titles": {
     #{body.join(",\n")}
+      },
+      "dictionary": {
+    #{dictionary.join(",\n")}
       }
     }
   JSON
 
-  puts "wrote #{out} (#{entries.size} titles, #{File.size(out) / 1024} KB)"
+  puts "wrote #{out} (#{entries.size} titles, #{dictionary.size} dictionary entries, " \
+       "#{File.size(out) / 1024} KB)"
   exit 0
 end
 

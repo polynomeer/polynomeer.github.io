@@ -25,7 +25,9 @@ import {
   signSession,
   verifySession
 } from './auth.js';
-import { ConflictError, GitHubError, createGitHubClient } from './github.js';
+import {
+  ConflictError, DICTIONARY_DIRS, GitHubError, createGitHubClient
+} from './github.js';
 
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
 const STATE_TTL_SECONDS = 10 * 60;
@@ -43,9 +45,28 @@ export function json(body, status = 200, headers = {}) {
   });
 }
 
-/** Reads are confined to posts, whichever route asks. */
-function readablePost(path) {
-  return path.startsWith('_posts/') && !path.includes('..');
+const READABLE = ['_posts/', ...DICTIONARY_DIRS];
+const WRITABLE = [...READABLE, 'assets/img/'];
+
+function within(dirs, path) {
+  return typeof path === 'string' &&
+    !path.includes('..') &&
+    !path.startsWith('/') &&
+    dirs.some((dir) => path.startsWith(dir));
+}
+
+/** Content the editor may read: posts and the dictionaries, nothing else. */
+function readable(path) {
+  return within(READABLE, path);
+}
+
+/**
+ * Content the editor may write. Everything else - _config.yml, a workflow, a
+ * plugin, a layout, its own source - is not an editing operation, whatever
+ * the token is allowed to do.
+ */
+function writable(path) {
+  return within(WRITABLE, path);
 }
 
 function problem(status, code, message, extra = {}) {
@@ -165,15 +186,9 @@ async function handleChange(request, env, session, fetchImpl) {
   }
 
   for (const file of files) {
-    const path = file?.path;
-    // Everything this CMS writes belongs in one of two places. Anything else
-    // - a workflow, a plugin, _config.yml - is not an editing operation.
-    if (typeof path !== 'string' ||
-        !(path.startsWith('_posts/') || path.startsWith('assets/img/'))) {
-      return problem(422, 'path_not_allowed', `Cannot write ${String(path)}.`, { path });
-    }
-    if (path.includes('..') || path.startsWith('/')) {
-      return problem(422, 'path_not_allowed', 'Paths must be relative and cannot escape.', { path });
+    if (!writable(file?.path)) {
+      return problem(422, 'path_not_allowed', `Cannot write ${String(file?.path)}.`,
+        { path: file?.path });
     }
   }
 
@@ -269,17 +284,22 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
           // The tree read is the authority on what exists; the index only adds
           // names to it. A post committed since the index was generated is
           // listed either way, under its filename.
-          const [content, titles] = await Promise.all([
+          const [content, index] = await Promise.all([
             api.listContent(branch),
-            api.readTitleIndex(branch)
+            api.readIndex(branch)
           ]);
+          const titles = index.titles;
+          const dictionary = index.dictionary;
 
           return json({
             branch,
             indexed: Object.keys(titles).length,
             posts: content.posts.map((entry) => ({ ...entry, ...(titles[entry.path] ?? {}) })),
             // So the editor can name an upload without overwriting one.
-            images: content.images
+            images: content.images,
+            dictionary: content.dictionary.map((entry) => ({
+              path: entry.path, ...(dictionary[entry.path] ?? {})
+            }))
           });
         } catch (error) {
           return problem(502, 'github_error', 'Could not list posts.', { status: error.status });
@@ -288,7 +308,7 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
 
       if (url.pathname.startsWith('/api/revisions/') && request.method === 'GET') {
         const path = decodeURIComponent(url.pathname.slice('/api/revisions/'.length));
-        if (!readablePost(path)) {
+        if (!readable(path)) {
           return problem(422, 'path_not_allowed', `Cannot read ${path}.`, { path });
         }
         try {
@@ -300,7 +320,7 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
 
       if (url.pathname.startsWith('/api/posts/') && request.method === 'GET') {
         const path = decodeURIComponent(url.pathname.slice('/api/posts/'.length));
-        if (!readablePost(path)) {
+        if (!readable(path)) {
           return problem(422, 'path_not_allowed', `Cannot read ${path}.`, { path });
         }
 

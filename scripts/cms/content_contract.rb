@@ -11,6 +11,7 @@
 
 require 'yaml'
 require 'date'
+require 'pathname'
 
 module CMS
   module ContentContract
@@ -33,6 +34,13 @@ module CMS
     )
 
     class << self
+      DICTIONARIES = {
+        '_topics' => 'topic_id',
+        '_series_pages' => 'series_id',
+        '_content_types' => 'content_type_id',
+        '_post_statuses' => 'post_status_id'
+      }.freeze
+
       def load
         {
           records: records,
@@ -48,6 +56,24 @@ module CMS
       def records
         Dir.glob(File.join(POSTS_DIR, '**', '*.{md,markdown}')).sort.map do |path|
           build_record(path)
+        end
+      end
+
+      # The four collections the contract validates posts against. The editor
+      # lists and edits them from the same definition, so there is one place
+      # that says what a dictionary is.
+      def dictionary_entries
+        DICTIONARIES.flat_map do |dir, key|
+          collection_files(dir).filter_map do |path, front_matter|
+            next unless front_matter[key]
+
+            {
+              'path' => path,
+              'collection' => dir.delete_prefix('_'),
+              'id' => front_matter[key].to_s,
+              'title' => front_matter['title'].to_s
+            }
+          end
         end
       end
 
@@ -125,18 +151,25 @@ module CMS
         value.nil? || value.to_s.strip.empty?
       end
 
-      def collection_front_matter(dir)
+      def collection_files(dir)
         Dir.glob(File.join(ROOT, dir, '*.md')).sort.filter_map do |path|
           text = File.read(path, encoding: 'UTF-8')
           next unless text.start_with?('---')
 
-          begin
+          front_matter = begin
             YAML.safe_load(text.split(/\n---\s*\n/, 2).first.sub(/\A---\s*\n/, ''),
                            permitted_classes: [Date, Time], aliases: false)
           rescue StandardError
             nil
           end
+          next unless front_matter
+
+          [Pathname.new(path).relative_path_from(Pathname.new(ROOT)).to_s, front_matter]
         end
+      end
+
+      def collection_front_matter(dir)
+        collection_files(dir).map(&:last)
       end
 
       def ids_in(dir, key)

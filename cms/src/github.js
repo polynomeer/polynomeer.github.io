@@ -20,6 +20,12 @@
 export const BLOB_MODE = '100644';
 export const IDEMPOTENCY_TRAILER = 'X-CMS-Change-Id';
 export const TITLE_INDEX_PATH = 'cms/content-index.json';
+// The dictionaries scripts/cms/content_contract.rb validates posts against.
+// A post naming a series that has no page is an error the validator fails on,
+// so the editor has to be able to add one.
+export const DICTIONARY_DIRS = [
+  '_topics/', '_series_pages/', '_content_types/', '_post_statuses/'
+];
 
 export class GitHubError extends Error {
   constructor(message, { status, body } = {}) {
@@ -198,7 +204,11 @@ export function createGitHubClient({
           .map((entry) => ({ path: entry.path, sha: entry.sha })),
         images: blobs
           .filter((entry) => entry.path.startsWith('assets/img/'))
-          .map((entry) => entry.path)
+          .map((entry) => entry.path),
+        dictionary: blobs
+          .filter((entry) => DICTIONARY_DIRS.some((dir) => entry.path.startsWith(dir)) &&
+            /\.(md|markdown)$/.test(entry.path))
+          .map((entry) => ({ path: entry.path }))
       };
     },
 
@@ -211,12 +221,13 @@ export function createGitHubClient({
      * Contents API's 1 MB limit, or a half-written one all mean the list falls
      * back to filenames - which is what it showed before the file existed.
      */
-    async readTitleIndex(branch, path = TITLE_INDEX_PATH) {
+    async readIndex(branch, path = TITLE_INDEX_PATH) {
+      const shape = (value) => (value && typeof value === 'object' && !Array.isArray(value) ? value : {});
       try {
         const parsed = JSON.parse((await api.readFile(path, branch)).text);
-        return parsed?.titles && typeof parsed.titles === 'object' ? parsed.titles : {};
+        return { titles: shape(parsed?.titles), dictionary: shape(parsed?.dictionary) };
       } catch {
-        return {};
+        return { titles: {}, dictionary: {} };
       }
     },
 

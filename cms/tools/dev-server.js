@@ -15,6 +15,7 @@ import { promisify } from 'node:util';
 const run = promisify(execFile);
 
 import { SESSION_COOKIE, signSession } from '../src/auth.js';
+import { DICTIONARY_DIRS } from '../src/github.js';
 import { createWorker } from '../src/worker.js';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
@@ -39,7 +40,13 @@ const posts = await walk(path.join(ROOT, '_posts'), /\.(md|markdown)$/);
 // The real tree read returns these too, and without them nothing local can
 // show what happens when an upload collides with an image already committed.
 const assets = await walk(path.join(ROOT, 'assets/img'), /\.(png|jpe?g|gif|webp|avif|svg)$/i);
-console.log(`fake GitHub serving ${posts.length} posts and ${assets.length} images`);
+const dictionary = (await Promise.all(
+  DICTIONARY_DIRS.map((dir) => walk(path.join(ROOT, dir), /\.md$/))
+)).flat();
+console.log(
+  `fake GitHub serving ${posts.length} posts, ${assets.length} images, ` +
+  `${dictionary.length} dictionary entries`
+);
 
 // Stands in for api.github.com. Reads are real files; writes are logged.
 const fakeGitHub = async (url, init = {}) => {
@@ -53,7 +60,7 @@ const fakeGitHub = async (url, init = {}) => {
   if (url.includes('/git/commits/devhead')) return reply({ sha: 'devhead', message: 'dev', tree: { sha: 'devtree' } });
   if (url.includes('/git/trees/devtree')) {
     return reply({
-      tree: [...posts, ...assets].map((p) => ({ type: 'blob', path: p, sha: 'blob' }))
+      tree: [...posts, ...assets, ...dictionary].map((p) => ({ type: 'blob', path: p, sha: 'blob' }))
     });
   }
   // Real git history, so the revision view can be used locally rather than

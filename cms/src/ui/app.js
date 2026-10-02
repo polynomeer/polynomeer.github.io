@@ -14,6 +14,7 @@ const $ = (id) => document.getElementById(id);
 const DRAFT_PREFIX = 'cms:draft:';
 
 let posts = [];
+let dictionary = [];
 let images = [];
 let current = null;
 let saving = false;
@@ -82,6 +83,74 @@ function pendingLocal(path, serverText) {
     return null;
   }
 }
+
+// --- what each collection is ----------------------------------------------
+//
+// The dictionaries the content contract validates posts against. A post can
+// name a series, topic, type or status that does not exist yet, and that is
+// an error the validator fails on - so the editor has to be able to add one
+// rather than send the author to the repository.
+//
+// The fields are the ones every existing entry in that collection already
+// carries. A new entry starts looking like its neighbours.
+
+const COLLECTIONS = {
+  topics: {
+    dir: '_topics',
+    scope: 'topics',
+    label: '토픽',
+    scaffold: (id, title) => [
+      `title: "${title}"`,
+      `topic_id: ${id}`,
+      `permalink: /topics/${id}/`,
+      'order: 99',
+      'question: ""',
+      'description: ""',
+      'tags: []',
+      'featured: []',
+      'posts: []',
+      'exclude: []'
+    ]
+  },
+  series_pages: {
+    dir: '_series_pages',
+    scope: 'series',
+    label: '시리즈',
+    scaffold: (id, title) => [
+      `title: "${title}"`,
+      `series_id: ${id}`,
+      'group: study',
+      `permalink: /series/${id}/`,
+      'description: ""',
+      'hero_note: ""'
+    ]
+  },
+  content_types: {
+    dir: '_content_types',
+    scope: 'content-types',
+    label: '유형',
+    scaffold: (id, title) => [
+      `title: "${title}"`,
+      `content_type_id: ${id}`,
+      `permalink: /types/${id}/`,
+      'order: 99'
+    ]
+  },
+  post_statuses: {
+    dir: '_post_statuses',
+    scope: 'post-statuses',
+    label: '상태',
+    scaffold: (id, title) => [
+      `title: "${title}"`,
+      `post_status_id: ${id}`,
+      `permalink: /statuses/${id}/`,
+      'order: 99'
+    ]
+  }
+};
+
+const scope = () => $('scope').value;
+const collection = () => COLLECTIONS[scope()] ?? null;
 
 // --- revisions ------------------------------------------------------------
 //
@@ -317,6 +386,23 @@ function insertImage(item) {
   body.setSelectionRange(caret, caret);
 }
 
+/**
+ * `docs(<scope>): update <slug>`.
+ *
+ * Conventional Commits, because that is what the repository enforces -
+ * @commitlint/config-conventional has no `post` type, and these commits
+ * reach the repository through the API where the hook cannot catch one.
+ * For a post the scope is its content type, which is what the scopes in
+ * this history already are: notes, lecture, til, recruit, book.
+ */
+function commitMessageFor(path) {
+  const name = path.split('/').pop().replace(/\.(md|markdown)$/, '');
+  const here = Object.values(COLLECTIONS).find((entry) => path.startsWith(`${entry.dir}/`));
+  const scope = here ? here.scope : path.split('/')[1]?.toLowerCase() || 'post';
+
+  return `docs(${scope}): update ${name}`;
+}
+
 function clearRevisions() {
   revisions = null;
   $('revisions').replaceChildren();
@@ -333,14 +419,23 @@ function clearStaged() {
 
 // --- list -----------------------------------------------------------------
 
+function listed() {
+  const here = collection();
+  return here
+    ? dictionary.filter((entry) => entry.path.startsWith(`${here.dir}/`))
+    : posts;
+}
+
 function renderList() {
+  const all = listed();
   const needle = $('search').value.trim().toLowerCase();
-  const shown = posts
+  const shown = all
     .filter((p) => !needle || p.path.toLowerCase().includes(needle) ||
-      (p.title || '').toLowerCase().includes(needle))
+      (p.title || '').toLowerCase().includes(needle) ||
+      (p.id || '').toLowerCase().includes(needle))
     .slice(0, 200);
 
-  $('count').textContent = `${shown.length} / ${posts.length}`;
+  $('count').textContent = `${shown.length} / ${all.length}`;
 
   $('posts').replaceChildren(...shown.map((post) => {
     const li = document.createElement('li');
@@ -351,6 +446,15 @@ function renderList() {
     // textContent, not innerHTML: a title is author input and this list is
     // the one place it would otherwise be injected as markup.
     button.textContent = post.title || post.path.split('/').pop();
+
+    // For a dictionary entry the id is what posts actually write, so it is
+    // worth more than the path.
+    if (post.id) {
+      const id = document.createElement('span');
+      id.className = 'id';
+      id.textContent = post.id;
+      button.append(id);
+    }
 
     // Only the states that mean "not on the site". Saying "published" on a
     // thousand rows says nothing.
@@ -433,8 +537,14 @@ async function open(path) {
 }
 
 function startNew() {
-  const title = prompt('제목');
+  const here = collection();
+  const title = prompt(here ? `${here.label} 제목` : '제목');
   if (!title) return;
+
+  if (here) {
+    startNewDictionaryEntry(here, title);
+    return;
+  }
 
   const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
   const path = postPath('notes', today, slugify(title) || 'untitled');
@@ -456,6 +566,27 @@ function startNew() {
   setTab('meta');
 }
 
+function startNewDictionaryEntry(here, title) {
+  const id = prompt(`${here.label} id (글에서 이 값을 씁니다)`, slugify(title) || '');
+  if (!id) return;
+
+  const path = `${here.dir}/${id}.md`;
+  if (dictionary.some((entry) => entry.path === path)) {
+    say(`${path} 는 이미 있습니다`, 'warn');
+    return;
+  }
+
+  clearStaged();
+  clearRevisions();
+  current = { path, sha: null, serverText: '' };
+  $('path').textContent = path;
+  $('meta').value = here.scaffold(id, title.replace(/"/g, '\\"')).join('\n');
+  $('body').value = '';
+  $('restore').hidden = true;
+  say(`새 ${here.label}`);
+  setTab('meta');
+}
+
 async function save() {
   if (!current || saving) return;
   saving = true;
@@ -473,7 +604,7 @@ async function save() {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        message: `post: update ${current.path.split('/').pop()}`,
+        message: commitMessageFor(current.path),
         changeId: current.changeId,
         files: [
           { path: current.path, content: text },
@@ -489,6 +620,14 @@ async function save() {
 
     clearLocal(current.path);
     images = [...images, ...staged.map((item) => item.path)];
+    // A new entry exists from now on, so the list and the id collision check
+    // both know about it without a reload.
+    const where = Object.values(COLLECTIONS)
+      .find((entry) => current.path.startsWith(`${entry.dir}/`));
+    if (where && !dictionary.some((entry) => entry.path === current.path)) {
+      dictionary = [...dictionary, { path: current.path }];
+      renderList();
+    }
     clearStaged();
     clearRevisions();
     current.serverText = text;
@@ -526,6 +665,10 @@ for (const tab of document.querySelectorAll('[data-tab]')) {
   tab.addEventListener('click', () => setTab(tab.dataset.tab));
 }
 $('search').addEventListener('input', renderList);
+$('scope').addEventListener('change', () => {
+  $('search').value = '';
+  renderList();
+});
 
 $('pick').addEventListener('change', (event) => {
   stageFiles(event.target.files);
@@ -571,6 +714,7 @@ document.addEventListener('keydown', (event) => {
     const listing = await api('/api/posts');
     posts = listing.posts;
     images = listing.images ?? [];
+    dictionary = listing.dictionary ?? [];
     renderList();
     say('');
   } catch {

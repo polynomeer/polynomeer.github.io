@@ -59,6 +59,8 @@ function githubFake({ headMessage = 'previous', patch = { status: 200 }, pulls =
           { type: 'blob', path: '_posts/notes/a.md', sha: 'blob-a' },
           { type: 'blob', path: '_posts/notes/image.png', sha: 'blob-i' },
           { type: 'blob', path: 'assets/img/posts/one.png', sha: 'blob-1' },
+          { type: 'blob', path: '_topics/database-internals.md', sha: 'blob-t' },
+          { type: 'blob', path: '_series_pages/one.md', sha: 'blob-s' },
           { type: 'blob', path: 'assets/css/style.css', sha: 'blob-c' },
           { type: 'tree', path: '_posts/notes', sha: 'tree-n' }
         ] });
@@ -651,4 +653,111 @@ test('revisions need a session', async () => {
   const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
   const response = await worker.fetch(request('/api/revisions/_posts%2Fa.md'), env);
   assert.equal(response.status, 401);
+});
+
+// --- dictionaries ---------------------------------------------------------
+//
+// A post may name a series, topic, type or status that does not exist, and
+// scripts/cms/validate-content.rb fails on exactly that. The editor can add
+// one, so these four directories are readable and writable - and nothing
+// else became writable with them.
+
+test('a dictionary entry can be read', async () => {
+  const github = githubRevisionsFake({ contents: { main: 'series_id: x' } });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  for (const path of ['_topics%2Fa.md', '_series_pages%2Fa.md',
+    '_content_types%2Fa.md', '_post_statuses%2Fa.md']) {
+    const response = await worker.fetch(
+      request(`/api/posts/${path}`, { cookie: await sessionCookie() }), env
+    );
+    assert.equal(response.status, 200, path);
+  }
+});
+
+test('a dictionary entry can be committed', async () => {
+  const github = githubFake();
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(request('/api/changes', {
+    method: 'POST',
+    cookie: await sessionCookie(),
+    body: {
+      message: 'docs(series_pages): update http-web-basics',
+      files: [{ path: '_series_pages/http-web-basics.md', content: 'series_id: http-web-basics' }]
+    }
+  }), env);
+
+  assert.equal(response.status, 200);
+});
+
+test('widening the write surface did not widen it past the dictionaries', async () => {
+  const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
+
+  const refused = [
+    '_config.yml',
+    '_layouts/post.html',
+    '_includes/post-backlinks.html',
+    '_data/locales/ko-KR.yml',
+    '_plugins/post-revisions.rb',
+    '.github/workflows/deploy.yml',
+    'cms/src/worker.js',
+    'cms/content-index.json',
+    'scripts/cms/validate-content.rb',
+    '_topics/../_config.yml',
+    '/_topics/a.md',
+    '_topicsy/a.md'
+  ];
+
+  for (const path of refused) {
+    const response = await worker.fetch(request('/api/changes', {
+      method: 'POST',
+      cookie: await sessionCookie(),
+      body: { message: 'm', files: [{ path, content: 'x' }] }
+    }), env);
+    assert.equal(response.status, 422, path);
+    assert.equal((await response.json()).error.code, 'path_not_allowed', path);
+  }
+});
+
+test('reads did not widen either', async () => {
+  const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
+
+  for (const path of ['_config.yml', 'cms%2Fcontent-index.json', '_data%2Fcontact.yml',
+    'assets%2Fimg%2Fposts%2Fa.png']) {
+    for (const route of ['/api/posts/', '/api/revisions/']) {
+      const response = await worker.fetch(
+        request(`${route}${path}`, { cookie: await sessionCookie() }), env
+      );
+      assert.equal(response.status, 422, `${route}${path}`);
+    }
+  }
+});
+
+test('the listing names the dictionary entries, with their titles and ids', async () => {
+  const github = githubFake({
+    index: {
+      titles: {},
+      dictionary: {
+        '_topics/database-internals.md': {
+          collection: 'topics', id: 'database-internals', title: '데이터베이스 내부와 트랜잭션'
+        }
+      }
+    }
+  });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const body = await (await worker.fetch(
+    request('/api/posts', { cookie: await sessionCookie() }), env
+  )).json();
+
+  assert.deepEqual(body.dictionary, [
+    {
+      path: '_topics/database-internals.md',
+      collection: 'topics',
+      id: 'database-internals',
+      title: '데이터베이스 내부와 트랜잭션'
+    },
+    { path: '_series_pages/one.md' }
+  ]);
 });

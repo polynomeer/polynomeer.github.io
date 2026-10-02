@@ -23,12 +23,19 @@
 <main id="app" hidden>
   <section class="pane list">
     <label class="field">
-      <span>글 찾기</span>
+      <span>찾기</span>
+      <select id="scope">
+        <option value="posts">글</option>
+        <option value="topics">토픽</option>
+        <option value="series_pages">시리즈</option>
+        <option value="content_types">유형</option>
+        <option value="post_statuses">상태</option>
+      </select>
       <input id="search" type="search" placeholder="제목이나 경로 일부" autocomplete="off">
     </label>
     <p class="muted" id="count"></p>
     <ul id="posts" class="posts"></ul>
-    <button id="new" type="button" class="button">새 글</button>
+    <button id="new" type="button" class="button">새로 만들기</button>
   </section>
 
   <section class="pane edit">
