@@ -114,13 +114,9 @@ the registry, so the pre-commit hook catches typos before the build.
 - `/sources/` (`_tabs/sources.md` + `_includes/sources-index.html`): sources
   sorted by citation count, each row showing type, title, author (or
   publisher) and count.
-- "이 글의 출처" (`_includes/post-sources.html`): the registry sources a post
-  cites, each linking to its source page, inside the "연결" block
-  (`post-connections.html`) next to "이 글을 언급한 글". Quotes of other posts
-  are left out; they already appear in that list.
-- `/sources/<id>/` (`_includes/source-detail.html`): source metadata with the
-  original link, then every citation grouped by post, each linking to the
-  card's anchor.
+- No per-post source list in the post tail. One existed ("이 글의 출처") and
+  was removed: the cards in the body already name each source and link to
+  its page, so the list only repeated them.
 - Strings live under `citation:` in `_data/locales/ko-KR.yml` and `en.yml`.
 
 ## Plan

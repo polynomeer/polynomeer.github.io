@@ -30,16 +30,19 @@ Two exclusions:
 The tail of a post runs, top to bottom:
 
 1. `post-adjacent-nav.html` - chronological previous / next boxes
-2. `post-connections.html` - the links the author wrote, both directions:
-   - "이 글의 출처" (`post-sources.html`): registry sources this post quotes
-     (see citation-design.md)
-   - "이 글을 언급한 글" (`post-backlinks.html`): posts whose body links here
-   Drawn as a flow: sources (out) -> a "이 글" marker -> mentions (in), each
-   list in a card with a count, joined by arrows. A post with only one side
-   keeps that side and the marker. Below 768px the flow runs top to bottom
-   and the arrows turn downward.
+2. `post-backlinks.html` - "이 글을 언급한 글": posts whose body links here,
+   in one bordered card. The head carries the count and a link to the
+   connection map centred on this post; each row is one line (title cut with
+   an ellipsis, full title on hover) with the date in a right-hand column, and
+   wraps to two lines on phones.
 3. `related-posts.html` - up to three similarity recommendations
 4. comments
+
+For a while this block also listed the sources the post quotes ("이 글의
+출처") and drew both lists as a flow (sources -> this post -> mentions). The
+sources were dropped from the tail: they already appear on the citation cards
+in the body and on /sources/, and repeating them made the tail heavier than the
+connection it was meant to show.
 
 Backlinks used to sit below the recommendations, which contradicted the reason
 they exist: a backlink is a connection the author wrote, so it cannot be a
@@ -56,8 +59,8 @@ quotes exist (none at the time of writing).
 The first three rows are visible and a button expands the rest; without
 JavaScript all rows are visible. Recommendations use cards; navigation and
 connections use compact title rows. Styles live in `_sass/layout/post.scss`;
-heading strings are `post.relate_posts`, `post.backlinks`, `post.connections`
-and `citation.post_sources` in the locale files.
+heading strings are `post.relate_posts`, `post.backlinks` and
+`post.connection_map_link` in the locale files.
 
 ## Current shape
 
