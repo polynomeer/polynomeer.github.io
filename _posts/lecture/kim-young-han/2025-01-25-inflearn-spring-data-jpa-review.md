@@ -1,6 +1,6 @@
 ---
 title: "스프링 데이터 JPA 복습: 반복 코드를 줄인 뒤에도 남는 조회 설계"
-date: 2026-10-02 09:50:00 +0900
+date: 2025-01-25 17:51:00 +0900
 status: published
 categories: [Lecture, Spring]
 tags: [Spring Data JPA, JPA, Repository]

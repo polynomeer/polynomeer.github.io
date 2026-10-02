@@ -1,6 +1,6 @@
 ---
 title: "동기·비동기 강의 정리: 기다림과 실행 순서를 따로 보기"
-date: 2026-10-02 00:00:00 +0900
+date: 2020-07-18 21:26:00 +0900
 status: published
 categories: [Lecture, Concurrency]
 tags: [Concurrency, Asynchronous, Thread]

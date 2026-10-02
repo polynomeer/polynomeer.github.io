@@ -1,6 +1,6 @@
 ---
 title: "스프링 핵심 원리 기본편 복습: 객체를 사용하는 일과 조립하는 일"
-date: 2026-10-02 09:00:00 +0900
+date: 2021-07-10 16:42:00 +0900
 status: published
 categories: [Lecture, Spring]
 tags: [Spring, DI, OOP]

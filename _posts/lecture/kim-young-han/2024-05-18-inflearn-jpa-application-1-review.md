@@ -1,6 +1,6 @@
 ---
 title: "JPA 활용 1편 복습: 계층을 나누고 변경의 경계를 정하기"
-date: 2026-10-02 09:30:00 +0900
+date: 2024-05-18 15:37:00 +0900
 status: published
 categories: [Lecture, Spring]
 tags: [Spring Boot, JPA, Transaction]

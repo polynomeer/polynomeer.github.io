@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 복습: 섹션별 학습 시리즈"
-date: 2026-10-02 10:00:00 +0900
+date: 2022-10-28 21:12:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, REST, Cache]

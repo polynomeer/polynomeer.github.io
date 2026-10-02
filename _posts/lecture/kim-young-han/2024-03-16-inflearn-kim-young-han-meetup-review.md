@@ -1,6 +1,6 @@
 ---
 title: "김영한 온라인 밋업 복습: 함께 성장하는 동료와 학습 기록"
-date: 2026-10-02 10:10:00 +0900
+date: 2024-03-16 23:04:00 +0900
 status: published
 categories: [Lecture, Career]
 tags: [Career, Learning, Collaboration]

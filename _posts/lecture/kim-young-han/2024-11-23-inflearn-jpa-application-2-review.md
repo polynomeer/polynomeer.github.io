@@ -1,6 +1,6 @@
 ---
 title: "JPA 활용 2편 복습: API 응답과 조회 전략을 분리하기"
-date: 2026-10-02 09:40:00 +0900
+date: 2024-11-23 20:19:00 +0900
 status: published
 categories: [Lecture, Spring]
 tags: [JPA, Hibernate, Performance, API]

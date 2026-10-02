@@ -1,6 +1,6 @@
 ---
 title: "실전 데이터베이스 입문 복습: SQL을 적는 순서와 해석하는 순서"
-date: 2026-10-02 09:20:00 +0900
+date: 2025-09-20 21:45:00 +0900
 status: published
 categories: [Lecture, Database]
 tags: [SQL, MySQL, Database]

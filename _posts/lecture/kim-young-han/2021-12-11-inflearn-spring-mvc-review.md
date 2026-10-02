@@ -1,6 +1,6 @@
 ---
 title: "스프링 MVC 1편 복습: 요청이 컨트롤러에 도착하기까지"
-date: 2026-10-02 09:10:00 +0900
+date: 2021-12-11 22:08:00 +0900
 status: published
 categories: [Lecture, Spring]
 tags: [Spring MVC, Servlet, HTTP]
