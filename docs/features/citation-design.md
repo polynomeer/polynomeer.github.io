@@ -60,8 +60,50 @@ Type-specific optional fields:
   is built as `https://github.com/<repo>/blob/<commit>/<path>#L142-L157`, so the
   citation stays pinned to that commit
 
+Optional on any type: `url_prefix` (string or list). A reference link whose URL
+starts with it resolves to this source, so the chapters of a book or the pages
+of one guide gather under one entry (`google-sre-book` takes every
+`sre.google/sre-book/...` link). The specific URL stays on the entry.
+
 Internal posts are not registered. A citation can use `post:<slug>` and the
 source resolves to that post (type `post`).
+
+### Reference links — the post's reference section
+
+A post relies on every source it lists, not only on the ones it quotes. The
+links under a reference heading count as entries for their source:
+
+- headings at level 2 to 4 named `참고`, `참고 자료`, `참고 링크`, `참고 문헌`,
+  `참고 서적` (with or without the space), `출처`, `References`, `Sources`;
+  `참고사항` is a note, not a list, and is left out
+- the section runs until the next heading of the same or a higher level; code
+  fences inside it are skipped
+- markdown links, `<url>` and bare `http(s)` URLs; internal `/posts/` links are
+  left to the backlinks
+
+A link resolves to a source in this order: an exact registry URL, the longest
+`url_prefix`, an RFC registered as `rfc-<n>`, otherwise an **automatic
+source**. Automatic sources are not written anywhere; the build derives them
+from the URL:
+
+- key: the URL without scheme, `www.`, fragment and tracking parameters. The
+  rest of the query stays, because some sites name the page in it
+  (`?courseId=..&unitId=..`). Every RFC mirror folds into `rfc:<n>` and a
+  YouTube link into its video id.
+- id: `rfc-<n>`, `youtube-<id>`, or host and last path segment plus six hex
+  digits of the key's SHA-1, so it stays the same while the URL does
+- title: the link text used most often for it (markdown emphasis removed),
+  else the URL
+- type: `rfc`, `video` for YouTube, `code` for GitHub blob URLs, `doc` for
+  `docs.` hosts or `/docs/`-like paths, else `web`; publisher is the host
+
+There is one relation, "this post relies on this source". Quoting is not a
+second category; it is detail on the same relation. The style guide already
+asks for every quoted source to be listed under `## 참고`, and in the registry
+at the time of writing 20 of 23 quoted sources were also in that list (the
+other three were a book cited by chapter URLs and two reviews whose original is
+in `source_url`). Per post and source, the entry shown is, in order: the
+quotes, else the review label, else the listed links.
 
 ### Citation — in the post body
 
@@ -87,13 +129,20 @@ can link straight to the passage.
 
 1. `site, :post_read` (low priority, after the status filter): read the
    registry, scan the markdown of every published post for citation blocks and
-   build `site.data['citation_index']` — per source id, the list of
-   `{post, quote, at, anchor}` — plus `post.data['cited_sources']`. Unknown
-   source ids are logged as build warnings.
-2. `Generator`: one page at `/sources/<id>/` for every source with at least
-   one citation, and the rows for the `/sources/` tab (`_tabs/sources.md`) in
-   `site.data['citation_sources']`. The index is a tab rather than a generated
-   page so it joins the sidebar's "근거" group like the other evidence pages.
+   reference links and build `site.data['citation_index']` — per source id,
+   the list of `{post, quote, at, anchor}`, `{post, implicit}` or
+   `{post, reference, text, link}` — plus `site.data['auto_sources']`,
+   `site.data['source_entries']` (every source some post relies on, resolved,
+   with `page_url` only when it gets a page) and `post.data['cited_sources']`.
+   Unknown source ids are logged as build warnings.
+2. `Generator`: one page at `/sources/<id>/` for every registry source a post
+   relies on and every automatic source that at least two posts list
+   (`AUTO_PAGE_MIN_POSTS`), the rows for the `/sources/` tab
+   (`_tabs/sources.md`) in `site.data['citation_sources']`, and the rest in
+   `site.data['single_post_sources']`. The index is a tab rather than a
+   generated page so it joins the sidebar's "근거" group like the other
+   evidence pages. The connection map (`connection-map.rb`) draws only the
+   sources with a page.
 3. `Liquid::Block` `citation`: renders the card through
    `_includes/citation-card.html`, converting quote and commentary from
    markdown. An unknown id still renders the quote, with the raw id as caption,
@@ -112,8 +161,14 @@ the registry, so the pre-commit hook catches typos before the build.
   to the original, a type label, and a link to the source page. The commentary
   sits below a divider with its label, visually separate from the quote.
 - `/sources/` (`_tabs/sources.md` + `_includes/sources-index.html`): sources
-  sorted by citation count, each row showing type, title, author (or
-  publisher) and count.
+  with a page, sorted by the number of posts that rely on them, then by
+  quotes; each row shows title, type, author (or publisher), `n편` and, when
+  quoted, `인용 n`. Below, folded in a `<details>`, the sources only one post
+  lists, each linking to the original and to that post.
+- `/sources/<id>/` (`_includes/source-detail.html`): source metadata with the
+  original link, then every post that relies on it, newest first, showing its
+  quotes (linking to the cards), the review label, or the links it lists
+  ("참고 링크: <link text>" to the exact URL).
 - No per-post source list in the post tail. One existed ("이 글의 출처") and
   was removed: the cards in the body already name each source and link to
   its page, so the list only repeated them.
@@ -168,6 +223,24 @@ Phase 3
    `_data/`; the match is exact, so locales and profile data stay out of the
    editor's reach. The session's GitHub token goes only to `api.github.com`,
    to pin a branch URL to its commit.
+
+Phase 4 (done)
+
+1. Reference links count as entries of their source, quoted or not, through
+   one relation (see "Reference links" above). Decided against a separate
+   "referenced" category: quoted sources are a subset of listed ones, so two
+   categories would double-count one source per post and need rules for which
+   count wins.
+2. Automatic sources for unregistered links, and `url_prefix` on registry
+   entries for sources split over many URLs.
+3. `/sources/` ranks by posts; single-post sources fold below. At the time of
+   writing: 296 published posts have a reference section, which gave 137
+   source pages and 820 single-post sources; the index page is about 500 KB
+   (85 KB gzipped).
+
+Not counted: links in the body outside a reference section, since many of them
+point at tools or homepages rather than at evidence. A post that wants such a
+link counted lists it under `## 참고`.
 
 ## Migration
 
