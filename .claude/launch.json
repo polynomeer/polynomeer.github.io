@@ -4,14 +4,63 @@
     {
       "name": "jekyll-serve",
       "runtimeExecutable": "bundle",
-      "runtimeArgs": ["exec", "jekyll", "serve", "--incremental", "--port", "4000"],
+      "runtimeArgs": [
+        "exec",
+        "jekyll",
+        "serve",
+        "--incremental",
+        "--port",
+        "4000"
+      ],
       "port": 4000
     },
     {
       "name": "site-static",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4001", "--directory", "_site"],
+      "runtimeArgs": [
+        "tools/serve-site.py",
+        "--port",
+        "4001",
+        "--directory",
+        "_site"
+      ],
       "port": 4001
+    },
+    {
+      "name": "site-static-alt",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "tools/serve-site.py",
+        "--port",
+        "4002",
+        "--directory",
+        "_site"
+      ],
+      "port": 4002
+    },
+    {
+      "name": "scratch-site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "tools/serve-site.py",
+        "--port",
+        "4003",
+        "--directory",
+        "/private/tmp/claude-501/-Users-hammac-Study-polynomeer-github-io/f0f7fdd9-eec2-4743-afb0-662c0caae85e/scratchpad/bl_site"
+      ],
+      "port": 4003
+    },
+    {
+      "name": "scratch-site-2",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "tools/serve-site.py",
+        "--port",
+        "4004",
+        "--directory",
+        "/private/tmp/claude-501/-Users-hammac-Study-polynomeer-github-io/f0f7fdd9-eec2-4743-afb0-662c0caae85e/scratchpad/nav_site"
+      ],
+      "port": 4004
     }
   ]
 }

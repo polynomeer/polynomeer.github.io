@@ -162,7 +162,7 @@ layout: compress
     <script id="ui-locales" type="application/json">
       {{ ui_locales_json | strip }}
     </script>
-    <script defer src="{{ '/assets/js/lang-switch.js' | relative_url }}"></script>
+    <script defer src="{{ '/assets/js/lang-switch.js' | relative_url }}{% include asset-version.html %}"></script>
 
     <!-- JavaScripts -->
     {% include js-selector.html lang=lang %}

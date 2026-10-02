@@ -1,0 +1,14 @@
+{%- comment -%}
+  개발 빌드에서만 자산 URL 뒤에 붙는 질의 문자열입니다. 운영에서는 빈 문자열입니다.
+
+  왜 필요한가: Jekyll 이 내보내는 자산 이름에는 버전이 없습니다(assets/js/dist/post.min.js,
+  assets/css/jekyll-theme-chirpy.css). 로컬 정적 서버는 Cache-Control 을 보내지 않았고,
+  브라우저는 그런 응답을 임의로 캐시해도 되므로 같은 URL 을 다시 받아오지 않습니다. 사이트를
+  다시 빌드해도 페이지는 이전 번들을 계속 실행합니다 - 시리즈 페이저가 들어 있지 않던 51KB
+  짜리 post.min.js 가 디스크의 57KB 짜리 대신 돌아, 콘솔 오류 하나 없이 "배포에서는 되는데
+  로컬에서만 안 되는" 기능이 생깁니다.
+
+  운영은 GitHub Pages 가 ETag 로 재검증하므로 손대지 않습니다. CI 는 JEKYLL_ENV=production
+  으로 빌드합니다(.github/workflows/jekyll.yml).
+{%- endcomment -%}
+{%- unless jekyll.environment == 'production' -%}?v={{ site.time | date: '%s' }}{%- endunless -%}

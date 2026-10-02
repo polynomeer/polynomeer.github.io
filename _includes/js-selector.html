@@ -64,7 +64,7 @@
 
 {% capture script %}/assets/js/dist/{{ js }}.min.js{% endcapture %}
 
-<script src="{{ script | relative_url }}"></script>
+<script src="{{ script | relative_url }}{% include asset-version.html %}"></script>
 
 {% if page.math %}
   <!-- MathJax -->
