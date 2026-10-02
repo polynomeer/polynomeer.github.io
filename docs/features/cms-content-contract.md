@@ -58,6 +58,8 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
    유효성 등급을 가진 레코드로 만든다. 원문 YAML 의 주석·순서·따옴표는 건드리지 않는다
    (Stage 0 은 **읽기 전용**이다).
 2. **색인** — 위 레코드를 JSON 으로 낸다. 이후 단계의 목록·검색 API 가 이 모양을 그대로 쓴다.
+   `--index` 는 그중 제목과 상태만 뽑아 `cms/content-index.json` 에 쓰고, 편집기 목록이 이것을
+   읽는다. 트리 읽기는 경로와 sha 만 주므로 제목은 달리 올 데가 없다.
 3. **검증** — 계약 위반을 오류로 내고 exit 1 한다.
 
 구현하지 않는 것: 쓰기, 인증, Worker, 이미지, PR 생성. 설계서 1단계부터의 일이다.
@@ -191,12 +193,12 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
 | --- | --- | --- |
 | `cms/src/auth.js` | 세션 서명·검증, OAuth state, 허용 목록, 쿠키 | 14 |
 | `cms/src/github.js` | 원자적 commit, CAS ref, 브랜치 생성, 멱등 재시도, 멱등 PR | 10 |
-| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 오류 매핑 | 21 |
+| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 제목 색인 병합, 오류 매핑 | 27 |
 | `cms/src/ui/markdown.js` | 미리보기가 작성자 입력을 실행하지 않음 | 10 |
 | `cms/src/ui/frontmatter.js` | 원문 보존 분리·결합 | 10 |
 
 ```bash
-cd cms && npm test   # 65 tests, 의존성 0
+cd cms && npm test   # 71 tests, 의존성 0
 ```
 
 설정하고 쓰는 방법은 [`docs/guides/cms-usage-guide.md`](../guides/cms-usage-guide.md)에 따로 적었다.
@@ -253,5 +255,5 @@ dev 서버도 접두사를 떼지 않는다.
 ### 아직 없는 것
 
 이미지 업로드 화면(API 는 base64 로 받을 수 있다), 수정 이력 보기, 메타데이터 사전 편집,
-새 글의 유형·경로 직접 지정, 제목 검색(목록 API 가 경로만 읽는다).
+새 글의 유형·경로 직접 지정.
 
