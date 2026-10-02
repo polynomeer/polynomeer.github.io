@@ -27,20 +27,19 @@ Two exclusions:
 
 ## Rendering
 
-`_includes/continue-reading.html` is the first tail include. It groups series
-previous/next links and up to three recommendations under one heading. Ordinary
-posts have no chronological navigation. Recommendations already shown as a
-series neighbour are omitted; the remaining list is not padded with unrelated
-posts. Empty reading sections are not rendered.
+`_includes/post-nav.html` is the first tail include. It shows previous/next
+cards in series order for series posts, or chronological order for other posts.
+`_includes/related-posts.html` follows with up to three recommendation cards.
+Recommendations retain the plugin ranking, including series neighbours.
 
 `_includes/post-backlinks.html` follows this section, before comments. It uses a
 native `details` element, collapsed by default, with the citation count in its
 summary. Expanding it shows every citation without JavaScript. The label means
 "posts that cite this one", not sources cited by the current post.
 
-Both sections use compact title rows instead of cards. Styles live in
-`_sass/layout/post.scss`; heading strings are `post.continue_reading` and
-`post.backlinks` in the locale files.
+Navigation and recommendations use cards; citations use compact title rows.
+Styles live in `_sass/layout/post.scss`; heading strings are `post.relate_posts`
+and `post.backlinks` in the locale files.
 
 ## Current shape
 

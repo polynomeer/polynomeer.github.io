@@ -145,7 +145,6 @@ post:
     unit: 분
     prompt: 읽는 시간
   relate_posts: 관련된 글
-  continue_reading: 이어서 읽기
   backlinks: 이 글을 인용한 글
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
