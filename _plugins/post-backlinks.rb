@@ -18,6 +18,8 @@ module Jekyll
   module PostBacklinks
     # `[text](/posts/slug/)` and the occasional raw href.
     LINK_RE = %r{(?:\]\(|href=")(/posts/[a-z0-9\-]+)/?[^)"]*(?:\)|")}i
+    # `{% citation post:<slug> %}` quotes another post (see citations.rb).
+    CITATION_RE = /\{%-?\s*citation\s+post:([a-z0-9\-]+)/i
 
     class << self
       def slug_of(url)
@@ -31,7 +33,9 @@ module Jekyll
 
         posts.each do |post|
           seen = {}
-          post.content.to_s.scan(LINK_RE) do |(path)|
+          content = post.content.to_s
+          paths = content.scan(LINK_RE).flatten + content.scan(CITATION_RE).flatten.map { |slug| "/posts/#{slug}/" }
+          paths.each do |path|
             slug = slug_of(path)
             target = by_slug[slug]
             next if target.nil? || target.equal?(post) || seen[slug]
