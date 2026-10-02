@@ -145,6 +145,7 @@ post:
     unit: min
     prompt: read
   relate_posts: Further Reading
+  continue_reading: Continue reading
   backlinks: Posts that cite this one
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer

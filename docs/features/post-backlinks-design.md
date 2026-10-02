@@ -27,17 +27,19 @@ Two exclusions:
 
 ## Rendering
 
-`_includes/post-nav.html` is the first tail include. It shows previous/next
-cards in series order for series posts, or chronological order for other posts.
+`_includes/post-nav.html` is the first tail include. It shows compact previous/next
+rows under "Continue reading" for series posts only. Ordinary posts have no
+chronological navigation.
 `_includes/related-posts.html` follows with up to three recommendation cards.
-Recommendations retain the plugin ranking, including series neighbours.
+Recommendations retain the plugin ranking after excluding the series neighbours
+already shown in navigation, with up to three remaining candidates.
 
-`_includes/post-backlinks.html` follows this section, before comments. It uses a
-native `details` element, collapsed by default, with the citation count in its
-summary. Expanding it shows every citation without JavaScript. The label means
+`_includes/post-backlinks.html` follows this section, before comments. Its heading
+and first three citation rows are visible. A button expands any remaining rows;
+without JavaScript all rows are visible. The label means
 "posts that cite this one", not sources cited by the current post.
 
-Navigation and recommendations use cards; citations use compact title rows.
+Recommendations use cards; navigation and citations use compact title rows.
 Styles live in `_sass/layout/post.scss`; heading strings are `post.relate_posts`
 and `post.backlinks` in the locale files.
 

@@ -1,7 +1,29 @@
+<!--
+  Posts that link to this one, collected by _plugins/post-backlinks.rb.
+  A backlink is an editorial connection the author wrote, so it sits above the
+  similarity-based recommendations.
+
+  The list is a plain table of rows rather than a stack of cards. Eight cards
+  with their own border, radius and background ran to 559px; the same eight
+  rows are about a third of that, and the dates line up so the list can be
+  skimmed down one column.
+
+  Only the first VISIBLE rows are shown. The rest stay in the document and are
+  hidden with a class, so they are still found by Ctrl+F and read by a screen
+  reader once expanded - and if the script never runs, every row is visible.
+
+  Every citation is listed. The plugin used to hand over only the newest eight
+  and the template printed "그 밖에 N편이 더 있습니다" under them, which was true
+  and useless: there was no page to open and no way to expand to those posts.
+  The toggle now reaches all of them.
+-->
+
 {% assign backlinks = page.backlinks %}
+{% assign visible = 3 %}
+
 {% if backlinks.size > 0 %}
-  <details id="post-backlinks" class="post-citations">
-    <summary>{{ site.data.locales[include.lang].post.backlinks }} <span class="post-tail-meta">({{ backlinks.size }})</span></summary>
+  <aside id="post-backlinks" aria-labelledby="backlinks-label" data-backlinks data-visible="{{ visible }}">
+    <h3 class="post-tail-heading" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }}</h3>
     <ul class="post-tail-list list-unstyled">
       {% for cited in backlinks %}
         <li class="post-tail-item">
@@ -12,5 +34,50 @@
         </li>
       {% endfor %}
     </ul>
-  </details>
+  </aside>
+
+  {% if backlinks.size > visible %}
+    <script>
+      (() => {
+        const root = document.querySelector('[data-backlinks]');
+
+        if (!root) {
+          return;
+        }
+
+        const visible = Number(root.dataset.visible);
+        const items = Array.from(root.querySelectorAll('.post-tail-item'));
+        const hidden = items.slice(visible);
+
+        if (hidden.length === 0) {
+          return;
+        }
+
+        const labels = {
+          expand: {{ site.data.locales[include.lang].post.backlinks_expand | jsonify }},
+          collapse: {{ site.data.locales[include.lang].post.backlinks_collapse | jsonify }}
+        };
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'post-tail-toggle';
+        toggle.setAttribute('aria-controls', 'post-backlinks');
+
+        const apply = (open) => {
+          hidden.forEach((item) => item.classList.toggle('is-folded', !open));
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open
+            ? labels.collapse
+            : labels.expand.replace(':COUNT', hidden.length);
+        };
+
+        apply(false);
+        toggle.addEventListener('click', () => {
+          apply(toggle.getAttribute('aria-expanded') === 'false');
+        });
+
+        root.querySelector('.post-tail-list').after(toggle);
+      })();
+    </script>
+  {% endif %}
 {% endif %}
