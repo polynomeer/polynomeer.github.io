@@ -8,7 +8,7 @@ mermaid: true
 description: "30만 수강생 기념 밋업의 주제와 좋은 동료에 관한 답변을 정리하고, 학습 기록을 협업 자료로 남기는 방법을 제안한다."
 ---
 
-> 강의: [30만 수강생 기념, 1/31 김영한님 온라인 밋업 Live](https://www.inflearn.com/course/30만-김영한-라이브세션/dashboard?cid=332034)
+> 이 글은 [30만 수강생 기념, 1/31 김영한님 온라인 밋업 Live](https://www.inflearn.com/course/30만-김영한-라이브세션/dashboard?cid=332034)를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-kim-young-han-meetup/)
 

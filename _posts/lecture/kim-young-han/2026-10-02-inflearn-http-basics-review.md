@@ -8,7 +8,7 @@ mermaid: true
 description: "HTTP의 요청과 응답을 메서드 의미, 안전성, 멱등성, 캐시의 관점에서 연결해 정리한다."
 ---
 
-> 강의: [김영한, 모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-웹-네트워크/dashboard?cid=326277)
+> 이 글은 김영한님의 [모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-웹-네트워크/dashboard?cid=326277) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-http-basics/)
 

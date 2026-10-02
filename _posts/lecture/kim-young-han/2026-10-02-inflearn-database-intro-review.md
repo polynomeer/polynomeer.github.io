@@ -8,7 +8,7 @@ mermaid: true
 description: "데이터 모델과 기본 SQL을 연결하고 WHERE, GROUP BY, HAVING의 역할을 논리적 처리 순서로 정리한다."
 ---
 
-> 강의: [김영한의 실전 데이터베이스 입문 - 모든 IT인을 위한 SQL 첫걸음(SQL부터 차근차근)](https://www.inflearn.com/course/김영한-실전-데이터베이스-입문/dashboard?cid=338210)
+> 이 글은 [김영한의 실전 데이터베이스 입문 - 모든 IT인을 위한 SQL 첫걸음(SQL부터 차근차근)](https://www.inflearn.com/course/김영한-실전-데이터베이스-입문/dashboard?cid=338210) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-database-intro/)
 

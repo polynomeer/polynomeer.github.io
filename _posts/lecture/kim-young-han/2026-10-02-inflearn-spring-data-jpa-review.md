@@ -8,7 +8,7 @@ mermaid: true
 description: "공통 리포지토리, 쿼리 메서드, @Query의 역할을 나누고 추상화 뒤에서 확인해야 할 조회 계약을 정리한다."
 ---
 
-> 강의: [김영한, 실전! 스프링 데이터 JPA](https://www.inflearn.com/course/스프링-데이터-JPA-실전/dashboard?cid=324474)
+> 이 글은 김영한님의 [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/스프링-데이터-JPA-실전/dashboard?cid=324474) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-spring-data-jpa/)
 

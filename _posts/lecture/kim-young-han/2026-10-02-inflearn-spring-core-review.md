@@ -8,7 +8,7 @@ mermaid: true
 description: "순수 자바에서 시작해 DI 컨테이너로 이어지는 흐름을 객체의 역할, 조립 책임, 생명주기 관점에서 정리한다."
 ---
 
-> 강의: [김영한, 스프링 핵심 원리 - 기본편](https://www.inflearn.com/course/스프링-핵심-원리-기본편/dashboard?cid=325969)
+> 이 글은 김영한님의 [스프링 핵심 원리 - 기본편](https://www.inflearn.com/course/스프링-핵심-원리-기본편/dashboard?cid=325969) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-spring-core/)
 

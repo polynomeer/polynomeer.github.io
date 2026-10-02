@@ -8,7 +8,7 @@ mermaid: true
 description: "웹 애플리케이션 개발 과정을 컨트롤러, 서비스, 저장소의 책임과 도메인 변경의 경계로 정리한다."
 ---
 
-> 강의: [김영한, 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발](https://www.inflearn.com/course/스프링부트-JPA-활용-1/dashboard?cid=324119)
+> 이 글은 김영한님의 [실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발](https://www.inflearn.com/course/스프링부트-JPA-활용-1/dashboard?cid=324119) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-jpa-application-1/)
 

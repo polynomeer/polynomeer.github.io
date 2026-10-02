@@ -8,7 +8,7 @@ mermaid: true
 description: "엔티티 조회와 DTO 조회를 구분하고 연관관계, 컬렉션 페치 조인, 페이징의 제약을 함께 정리한다."
 ---
 
-> 강의: [김영한, 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/스프링부트-JPA-API개발-성능최적화/dashboard?cid=324214)
+> 이 글은 김영한님의 [실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/스프링부트-JPA-API개발-성능최적화/dashboard?cid=324214) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-jpa-application-2/)
 

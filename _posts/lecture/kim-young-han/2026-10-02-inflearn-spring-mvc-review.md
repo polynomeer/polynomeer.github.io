@@ -8,7 +8,7 @@ mermaid: true
 description: "직접 만드는 MVC와 DispatcherServlet을 연결하고, 요청 매핑과 인자 변환, 응답 생성의 책임을 구분한다."
 ---
 
-> 강의: [김영한, 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술](https://www.inflearn.com/course/스프링-mvc-1/dashboard?cid=326674)
+> 이 글은 김영한님의 [스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술](https://www.inflearn.com/course/스프링-mvc-1/dashboard?cid=326674) 강의를 학습한 내용을 정리한 글입니다.
 >
 > [학습성과](/learning-evidence/inflearn-spring-mvc/)
 
