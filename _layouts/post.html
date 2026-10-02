@@ -150,6 +150,8 @@ tail_includes:
     </div>
   </header>
 
+  {% include series-navigation.html lang=lang %}
+
   {% include portfolio-context.html lang=lang %}
 
   {% include problem-decision-result.html lang=lang %}
@@ -157,8 +159,6 @@ tail_includes:
   <div class="content">
     {{ content }}
   </div>
-
-  {% include series-navigation.html lang=lang %}
 
   <div class="post-tail-wrapper text-muted">
     <!-- categories -->
