@@ -12,17 +12,89 @@ groups:
       - id: inflearn-http-basics
         type: course
         title: 모든 개발자를 위한 HTTP 웹 기본 지식
-        provider: Inflearn
+        provider: Inflearn · 김영한
         status: completed
         period: "2024"
         summary:
-          ko-KR: HTTP 의미 체계, 요청-응답 흐름, 백엔드 웹 통신의 기본 사고 모델을 강화했습니다.
-          en: Strengthened HTTP semantics, request-response flow understanding, and the mental model behind backend web communication.
+          ko-KR: 41/41강 완강. HTTP 요청·응답 흐름, 메서드의 안전성과 멱등성, 재시도와 캐시의 점검 기준을 정리했습니다.
+          en: Completed 41/41 lessons; reviewed HTTP semantics, safety, idempotency, retries, and caching considerations.
         source_posts:
-          - _posts/lecture/http/모든_개발자를_위한_HTTP_웹_기본_지식.md
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-http-basics-review.md
         related_posts:
           - _posts/notes/web/2026-02-13-presigned-url.md
           - _posts/notes/web/2026-02-25-netty.md
+
+      - id: inflearn-spring-core
+        type: course
+        title: 스프링 핵심 원리 - 기본편
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 65/65강 완강. 객체의 역할과 조립 책임, DI 컨테이너, 생명주기와 스코프를 복습했습니다.
+          en: Completed 65/65 lessons; reviewed object composition, dependency injection, lifecycle, and scopes.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-spring-core-review.md
+
+      - id: inflearn-spring-mvc
+        type: course
+        title: 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 72/72강 완강. 서블릿에서 DispatcherServlet으로 이어지는 구조와 요청·응답 처리의 경계를 정리했습니다.
+          en: Completed 72/72 lessons; reviewed MVC structure and request-response processing boundaries.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-spring-mvc-review.md
+
+      - id: inflearn-database-intro
+        type: course
+        title: 김영한의 실전 데이터베이스 입문 - 모든 IT인을 위한 SQL 첫걸음(SQL부터 차근차근)
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 53/53강 완강. 테이블과 기본 SQL, 행 필터와 집계 조건의 차이를 논리적 처리 순서로 정리했습니다.
+          en: Completed 53/53 lessons; reviewed SQL fundamentals, row filtering, grouping, and logical query processing.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-database-intro-review.md
+
+      - id: inflearn-jpa-application-1
+        type: course
+        title: 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 36/36강 완강. 웹 계층, 서비스, 저장소의 책임과 도메인 변경의 경계를 복습했습니다.
+          en: Completed 36/36 lessons; reviewed application layers, domain changes, and transaction boundaries.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-jpa-application-1-review.md
+
+      - id: inflearn-jpa-application-2
+        type: course
+        title: 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 24/24강 완강. 응답 DTO와 조회 전략, 컬렉션 페치 조인과 페이징의 제약을 정리했습니다.
+          en: Completed 24/24 lessons; reviewed API DTOs, query strategies, collection fetch joins, and pagination.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-jpa-application-2-review.md
+
+      - id: inflearn-spring-data-jpa
+        type: course
+        title: 실전! 스프링 데이터 JPA
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 32/32강 완강. 공통 리포지토리와 쿼리 메서드, 명시적 쿼리의 역할과 조회 계약을 복습했습니다.
+          en: Completed 32/32 lessons; reviewed repository abstractions, query methods, and query contracts.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-spring-data-jpa-review.md
 
       - id: spring-in-action
         type: book
@@ -86,6 +158,18 @@ groups:
       ko-KR: 플랫폼 확장, 포트폴리오 작업, 채용 준비와 연결된 강의와 작성 결과입니다.
       en: Courses and written outputs related to platform growth, portfolio work, and hiring readiness.
     items:
+      - id: inflearn-kim-young-han-meetup
+        type: course
+        title: "[30만 수강생 기념] 1/31 김영한님 온라인 밋업 Live"
+        provider: Inflearn · 김영한
+        status: completed
+        period: "2026-10-02 완강 확인"
+        summary:
+          ko-KR: 18/18강 완강. 좋은 동료에 관한 답변을 복습하고 학습 이력과 검증 가능한 역량 증거를 구분했습니다.
+          en: Completed 18/18 sessions; reflected on collaboration and the distinction between learning history and verified skills.
+        source_posts:
+          - _posts/lecture/kim-young-han/2026-10-02-inflearn-kim-young-han-meetup-review.md
+
       - id: kubernetes-backend-course
         type: course
         title: Kubernetes for Backend Developer
