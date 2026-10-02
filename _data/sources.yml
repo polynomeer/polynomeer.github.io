@@ -1,0 +1,17 @@
+# Sources that posts quote with the `citation` block tag.
+# Key = source id used in posts. Fields and types: docs/features/citation-design.md
+
+kleppmann-distributed-locking:
+  type: article
+  title: How to do distributed locking
+  author: Martin Kleppmann
+  publisher: martin.kleppmann.com
+  published: 2016-02-08
+  url: https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html
+
+antirez-is-redlock-safe:
+  type: article
+  title: Is Redlock safe?
+  author: Salvatore Sanfilippo (antirez)
+  publisher: antirez.com
+  url: http://antirez.com/news/101

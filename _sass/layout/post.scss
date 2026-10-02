@@ -4286,3 +4286,136 @@ html[data-mode='dark'] {
   font-size: 0.92rem;
   line-height: 1.6;
 }
+
+/* --- Citations (_plugins/citations.rb) --- */
+
+/* 인용 카드. 인용문, 출처 줄, 작성자 메모를 한 카드 안에서 칸을 나눠, 원저자의 말과
+   내 해석이 섞여 읽히지 않게 합니다. */
+.citation-card {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem 0.85rem;
+  border: 1px solid var(--btn-border-color);
+  border-left: 3px solid var(--link-color);
+  border-radius: 0.6rem;
+
+  /* 어두운 테마의 blockquote 배경과 둥근 모서리가 카드 안에서 한 겹 더 생기지 않게
+     테마 규칙(html[data-mode] blockquote:not(...))보다 구체적인 선택자로 덮습니다. */
+  blockquote.citation-quote.citation-quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.7;
+
+    > p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.citation-source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin-top: 0.7rem;
+  color: var(--text-muted-color);
+  font-size: 0.82rem;
+
+  cite {
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .citation-more {
+    margin-left: auto;
+    font-size: 0.78rem;
+  }
+}
+
+.citation-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.35rem;
+  font-size: 0.72rem;
+}
+
+.citation-note {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--btn-border-color);
+  font-size: 0.92rem;
+
+  > p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.citation-note-label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--label-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* /sources/ 와 /sources/<id>/ */
+.sources-lead,
+.source-note {
+  color: var(--text-muted-color);
+}
+
+.sources-row-meta {
+  color: var(--text-muted-color);
+  font-size: 0.75rem;
+}
+
+.source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.8rem;
+  margin-bottom: 0.8rem;
+  color: var(--text-muted-color);
+  font-size: 0.85rem;
+}
+
+.source-group {
+  margin-top: 1.6rem;
+}
+
+.source-group-title {
+  margin-bottom: 0.6rem;
+  font-size: 1.05rem;
+}
+
+.source-passage {
+  display: block;
+  margin-bottom: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  border-left: 3px solid var(--btn-border-color);
+  color: var(--text-color);
+
+  &:hover {
+    border-left-color: var(--link-color);
+    text-decoration: none;
+  }
+}
+
+.source-passage-at {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--text-muted-color);
+  font-size: 0.78rem;
+}
+
+.source-back {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}

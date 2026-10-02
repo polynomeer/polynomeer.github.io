@@ -1,0 +1,54 @@
+{% comment %}
+  One citation inside a post, rendered by the `citation` block tag
+  (_plugins/citations.rb). The quote and the author's commentary are kept in
+  separate parts of the card so a reader never mistakes one for the other.
+  The caption names the source and links to the original; registry sources
+  also link to their /sources/<id>/ page, which lists every other passage the
+  blog took from them.
+  A Liquid comment, not an HTML one: the card repeats on the page.
+{% endcomment %}
+
+{% include lang.html %}
+{% assign c = citation %}
+{% assign s = citation.source %}
+{% assign l = site.data.locales[lang].citation %}
+
+{% case s.type %}
+  {% when 'book' %}{% assign icon = 'fa-book' %}
+  {% when 'paper' %}{% assign icon = 'fa-file-lines' %}
+  {% when 'video' %}{% assign icon = 'fa-video' %}
+  {% when 'talk' %}{% assign icon = 'fa-microphone' %}
+  {% when 'doc' %}{% assign icon = 'fa-book-open' %}
+  {% when 'rfc' %}{% assign icon = 'fa-file-contract' %}
+  {% when 'code' %}{% assign icon = 'fa-code' %}
+  {% when 'post' %}{% assign icon = 'fa-pen-nib' %}
+  {% when 'web' %}{% assign icon = 'fa-globe' %}
+  {% else %}{% assign icon = 'fa-newspaper' %}
+{% endcase %}
+
+<figure class="citation-card" id="{{ c.anchor }}"{% if s.type %} data-source-type="{{ s.type }}"{% endif %}>
+  <blockquote class="citation-quote">{{ c.quote_html }}</blockquote>
+  <figcaption class="citation-source">
+    {% if s.type %}
+      <span class="citation-type"><i class="fas {{ icon }}" aria-hidden="true"></i>{{ l.types[s.type] | default: s.type }}</span>
+    {% endif %}
+    <span class="citation-origin">
+      {% if s.author %}<span class="citation-author">{{ s.author }}</span>, {% endif %}
+      {% if s.url %}
+        <cite><a href="{% if s.internal %}{{ s.url | relative_url }}{% else %}{{ s.url }}{% endif %}"{% unless s.internal %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ s.title }}</a></cite>
+      {% else %}
+        <cite>{{ s.title }}</cite>
+      {% endif %}
+      {% if c.at %}<span class="citation-at">· {{ c.at }}</span>{% endif %}
+    </span>
+    {% if s.page_url %}
+      <a class="citation-more" href="{{ s.page_url | relative_url }}">{{ l.more_from_source }}</a>
+    {% endif %}
+  </figcaption>
+  {% if c.note_html %}
+    <div class="citation-note">
+      <span class="citation-note-label">{{ l.note }}</span>
+      {{ c.note_html }}
+    </div>
+  {% endif %}
+</figure>

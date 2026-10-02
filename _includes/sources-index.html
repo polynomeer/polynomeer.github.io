@@ -1,0 +1,27 @@
+<!--
+  /sources/: every registry source that a post cites, most cited first.
+  Built by the generator in _plugins/citations.rb.
+-->
+
+{% include lang.html %}
+{% assign l = site.data.locales[lang].citation %}
+
+<p class="sources-lead">{{ l.index_description }}</p>
+
+{% if page.sources.size > 0 %}
+  <ul class="post-tail-list list-unstyled sources-list">
+    {% for s in page.sources %}
+      <li class="post-tail-item">
+        <a href="{{ s.page_url | relative_url }}" class="post-tail-link">
+          <span class="post-tail-title">{{ s.title }}</span>
+          <span class="post-tail-meta">{{ l.count | replace: ':COUNT', s.count }}</span>
+          <span class="sources-row-meta">
+            {{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% endif %}
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>{{ l.empty }}</p>
+{% endif %}

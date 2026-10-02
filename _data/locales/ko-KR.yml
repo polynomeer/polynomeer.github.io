@@ -377,6 +377,8 @@ sidebar:
   evidence: 근거
 
 pages:
+  sources:
+    title: 출처
   recruit:
     title: 채용
   capabilities:
@@ -480,3 +482,23 @@ tech_blogs:
   source: 원문
   kind_blog: 글
   kind_talk: 발표
+
+citation:
+  note: 작성자 메모
+  more_from_source: 이 출처의 인용 모아 보기
+  view_original: 원문 보기
+  all_sources: 모든 출처
+  index_description: 글에서 인용한 책, 글, 문서, 코드를 출처별로 모았습니다. 출처를 누르면 어느 글에서 어떤 대목을 가져왔는지 볼 수 있습니다.
+  empty: 아직 등록된 인용이 없습니다.
+  count: ":COUNT회 인용"
+  types:
+    book: 책
+    article: 글
+    web: 웹
+    paper: 논문
+    video: 영상
+    talk: 발표
+    doc: 문서
+    rfc: RFC
+    code: 코드
+    post: 이 블로그의 글

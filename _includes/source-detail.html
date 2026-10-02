@@ -1,0 +1,39 @@
+<!--
+  /sources/<id>/: one source and every passage the blog quoted from it,
+  grouped by post. Each passage links to its card inside the post.
+  Built by the generator in _plugins/citations.rb.
+-->
+
+{% include lang.html %}
+{% assign l = site.data.locales[lang].citation %}
+{% assign s = page.source %}
+{% assign total = 0 %}
+{% for group in page.citation_groups %}{% assign total = total | plus: group.items.size %}{% endfor %}
+
+<div class="source-meta">
+  <span class="citation-type">{{ l.types[s.type] | default: s.type }}</span>
+  {% if s.author %}<span>{{ s.author }}</span>{% endif %}
+  {% if s.publisher %}<span>{{ s.publisher }}</span>{% endif %}
+  {% if s.published %}<span>{{ s.published | date: '%Y-%m-%d' }}</span>{% endif %}
+  <span>{{ l.count | replace: ':COUNT', total }}</span>
+</div>
+
+{% if s.note %}<p class="source-note">{{ s.note }}</p>{% endif %}
+
+{% if s.url %}
+  <p><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ l.view_original }} <i class="fas fa-arrow-up-right-from-square fa-xs" aria-hidden="true"></i></a></p>
+{% endif %}
+
+{% for group in page.citation_groups %}
+  <section class="source-group">
+    <h2 class="source-group-title"><a href="{{ group.post.url | relative_url }}">{{ group.post.title }}</a></h2>
+    {% for item in group.items %}
+      <a class="source-passage" href="{{ group.post.url | relative_url }}#{{ item.anchor }}">
+        <span class="source-passage-quote">{{ item.quote | markdownify | strip_html | strip }}</span>
+        {% if item.at %}<span class="source-passage-at">{{ item.at }}</span>{% endif %}
+      </a>
+    {% endfor %}
+  </section>
+{% endfor %}
+
+<p class="source-back"><a href="{{ '/sources/' | relative_url }}"><i class="fas fa-angle-left" aria-hidden="true"></i> {{ l.all_sources }}</a></p>
