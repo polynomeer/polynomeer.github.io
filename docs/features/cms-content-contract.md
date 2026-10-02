@@ -133,9 +133,54 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
 `_site/scripts/` 로 복사돼 사이트에 그대로 올라가고 있었고(링크하는 곳은 없다), fixture 에는
 일부러 깨뜨린 글이 들어 있다.
 
-## 이후 단계에 넘기는 질문
+## 결정 사항 (2026-10-02)
 
-- Worker 를 둘 도메인과 계정. 설계서는 `workers.dev` 로 시작하자고 한다.
-- 관리자 허용 목록에 넣을 GitHub 숫자 ID.
-- 비공개 초안을 공개 저장소 밖(DO/R2)에 두는 비용과 백업 책임.
-- `_posts` 밖의 171개 날짜 없는 파일을 자료로 남길지, 글로 승격할지, 옮길지.
+| 질문 | 결정 | 근거 |
+| --- | --- | --- |
+| 관리자 GitHub ID | `62940574` | `api.github.com/users/polynomeer` 조회값 |
+| Worker 도메인 | `workers.dev` 기본값 | 커스텀 도메인은 코드 변경 없이 나중에 붙인다 |
+| 비공개 초안 저장소 | **쓰지 않는다.** 초안은 지금처럼 `status: draft` 로 저장소에 둔다 | 아래 |
+| 날짜 없는 171개 | 그대로 둔다 | 아래 |
+
+### DO 와 R2 를 버린 이유
+
+설계서에서 Durable Object 와 비공개 R2 가 필요한 근거는 수용 기준 7번
+"비공개 초안은 공개 Git에 남지 않습니다" 하나다. 그런데 이 블로그는 이미 반대로 돌아간다.
+
+- `status: draft` 80편, `status: archived` 18편이 **전부 공개 저장소에 커밋되어 있다**
+- 그중 하나를 `raw.githubusercontent.com` 에서 받아 보면 **HTTP 200** 이다. 누구나 읽는다
+- `_data/post_statuses.yml` 이 draft 를 정의하는 말은 "Still in progress and not ready for
+  **normal publication**" 이다. 기밀이 아니라 사이트에 아직 안 내보냄이다
+
+즉 설계서는 "사이트에서 숨김" 을 "비밀" 로 읽고 그 위에 저장 계층을 하나 더 세웠다.
+이 블로그의 실제 운영과 맞지 않으므로 버린다. 숨김은 `published-status-filter.rb` 가 이미
+하고 있고, 백업은 git 이 한다.
+
+이 결정으로 설계서 12장(저장 레이어) 전체와 월 비용, 백업 의무, 두 저장소 동기화가 사라진다.
+1단계에 남는 것은 "GitHub OAuth 로 본인 확인 → 저장소에 commit 또는 PR" 뿐이다.
+
+반대로 초안을 정말 비공개로 돌리고 싶다면 그것은 CMS 과제가 아니라 이미 공개된 98편을
+어떻게 할지의 콘텐츠 과제이고, 지운다고 git 이력과 색인에서 사라지지도 않는다.
+
+### 171개를 그대로 두는 이유
+
+`lecture/refactoring` 26, `recruit/Interview` 21, `problemsolving/Programmers` 17 … 오래된
+수강·독서·문제풀이 노트다. 171개 중 167개가 front matter 조차 없는 평범한 마크다운이고,
+파일명에 공백이 있는 것도 있다. Jekyll 이 무시하므로 서버에 올라가지 않고 비용도 없다.
+검증기가 `not-a-post` 로 분류해 세고 있으니 사고가 날 일도 없다. 글로 승격하려면 171개에
+날짜·제목·상태·분류를 붙여야 하고 사이트가 그만큼 불어난다. 거슬릴 때 `_posts` 밖으로
+옮긴다.
+
+## Stage 1 범위 (결정 반영 후)
+
+| | 설계서 1단계 | 실제로 만들 것 |
+| --- | --- | --- |
+| Worker origin + GitHub OAuth + 관리자 1인 제한 | 필요 | 필요 |
+| Durable Object | 필요 | 버림 |
+| 비공개 R2 | 필요 | 버림 |
+| 서버 임시저장, 두 저장소 동기화 | 필요 | 버림 |
+| 초안 저장 | DO | 기존 `status: draft` commit |
+
+의존성을 두지 않는다. 세션 서명, OAuth state, 허용 목록, GitHub 요청 구성은 전부 순수
+함수라 Web Crypto 만으로 쓰고 `node --test` 로 검사한다. Cloudflare 에 묶이는 부분은
+`fetch` 핸들러 하나뿐이고, 배포할 때 wrangler 를 더하면 된다.

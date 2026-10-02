@@ -270,6 +270,7 @@ exclude:
   # that are broken on purpose.
   - scripts
   - tests
+  - cms
   - README.md
   - LICENSE
   - "*.config.js"
