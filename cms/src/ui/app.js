@@ -1,10 +1,10 @@
 // The editor. No framework and no build step: the Worker serves this file as
 // written, so what runs in the browser is what is in the repository.
 
-import { findLiquid, renderMarkdown } from '/ui/markdown.js';
+import { findLiquid, renderMarkdown } from '/markdown.js';
 import {
   joinFrontMatter, postPath, slugify, splitFrontMatter
-} from '/ui/frontmatter.js';
+} from '/frontmatter.js';
 
 const $ = (id) => document.getElementById(id);
 const DRAFT_PREFIX = 'cms:draft:';

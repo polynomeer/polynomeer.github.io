@@ -68,7 +68,7 @@ const fakeGitHub = async (url, init = {}) => {
 const assets = {
   async fetch(request) {
     const name = new URL(request.url).pathname;
-    const file = path.join(UI, name === '/' ? 'index.html' : name.replace(/^\/ui\//, ''));
+    const file = path.join(UI, name === '/' ? 'index.html' : name.slice(1));
     if (!file.startsWith(UI)) return new Response('no', { status: 403 });
     try {
       await stat(file);
