@@ -77,6 +77,12 @@ External link check (scheduled weekly in CI; `--sources-only` for just the revie
 ruby scripts/check-external-links.rb
 ```
 
+Draft a citation source entry from a URL (prints it; `--write` appends to `_data/sources.yml`; see `docs/features/citation-design.md`):
+
+```bash
+ruby scripts/add-source.rb <url>
+```
+
 Generate social preview cards (`assets/img/og/`, git-ignored; the deploy workflow does this automatically):
 
 ```bash

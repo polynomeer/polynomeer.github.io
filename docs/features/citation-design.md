@@ -147,8 +147,15 @@ Phase 2 (done)
 
 Phase 3
 
-1. `scripts/add-source.rb <url>`: draft a registry entry from a URL (RFC number,
-   GitHub blob URL with commit and lines, DOI, otherwise page `<title>`)
+1. (done) `scripts/add-source.rb <url> [--id] [--type] [--write] [--offline]`
+   drafts a registry entry from a URL and prints it, or appends it with
+   `--write`. RFCs read the datatracker title; GitHub blob URLs become `code`
+   entries and a branch or tag ref is resolved to its commit through the GitHub
+   API so the quote stays pinned; DOIs use CSL JSON content negotiation;
+   YouTube uses oEmbed and drops the `t=` timestamp (it belongs on the citation
+   as `at=`); other pages use `og:`/`meta` tags. Pages under `docs.`/`/docs/`
+   become `doc` and lose `published`, since docs sites stamp it with the last
+   build. A URL already in the registry prints its existing id.
 2. CMS: "인용하기" on a selection, source picker, URL paste to source
 
 ## Migration
