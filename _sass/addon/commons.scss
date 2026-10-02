@@ -616,6 +616,11 @@ sup {
     background-color: var(--card-hovor-bg);
     opacity: 0;
     transition: opacity 0.35s ease-in-out;
+
+    /* 호버 틴트일 뿐인데 카드 전체를 덮고 있어서 클릭을 전부 먹었습니다. upstream Chirpy 는
+       카드 자체가 <a> 라 그 위를 눌러도 링크가 열리지만, 이 저장소의 홈 카드는 div 안에
+       제목·요약·이미지 링크가 따로 있는 구조(_layouts/home.html)라 덮이면 열 수가 없습니다. */
+    pointer-events: none;
   }
 
   &:hover {
