@@ -190,12 +190,16 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
 | 파일 | 하는 일 | 검사 |
 | --- | --- | --- |
 | `cms/src/auth.js` | 세션 서명·검증, OAuth state, 허용 목록, 쿠키 | 14 |
-| `cms/src/github.js` | 원자적 commit, CAS ref, 멱등 재시도, 멱등 PR | 10 |
-| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 오류 매핑 | 14 |
+| `cms/src/github.js` | 원자적 commit, CAS ref, 브랜치 생성, 멱등 재시도, 멱등 PR | 10 |
+| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 오류 매핑 | 21 |
+| `cms/src/ui/markdown.js` | 미리보기가 작성자 입력을 실행하지 않음 | 10 |
+| `cms/src/ui/frontmatter.js` | 원문 보존 분리·결합 | 10 |
 
 ```bash
-cd cms && npm test   # 38 tests, 의존성 0
+cd cms && npm test   # 65 tests, 의존성 0
 ```
+
+설정하고 쓰는 방법은 [`docs/guides/cms-usage-guide.md`](../guides/cms-usage-guide.md)에 따로 적었다.
 
 ### 배포할 때 필요한 것
 
@@ -240,11 +244,14 @@ GitHub 를 가짜로 세우고 진짜 Worker 를 돌린다. 읽기는 실제 `_p
 않고 로그만 찍는다. OAuth 만은 흉내 낼 수 없어(실제 앱과 왕복이 필요하다) 관리자로 로그인된
 상태로 시작한다.
 
-확인한 것: 글 1,254개 목록과 검색, 실제 글 열기, 미리보기(제목 10개·링크 27개·script 0개),
-저장 → tree·commit·PR #1, 성공 시 로컬 사본 삭제, 강제 종료 후 복구본 감지, 375px 1열·가로
-넘침 0.
+확인한 것: 글 1,272개 목록과 검색, 실제 글 열기, 미리보기 렌더링, 저장 → tree·commit·PR,
+성공 시 로컬 사본 삭제, 강제 종료 후 복구본 감지, 375px 1열·가로 넘침 0.
+
+정적 파일 주소는 배포본과 같다(`/app.js`, `/app.css`). 한쪽에서만 되는 주소가 남지 않도록
+dev 서버도 접두사를 떼지 않는다.
 
 ### 아직 없는 것
 
-이미지 업로드 화면(API 는 base64 로 받을 수 있다), 수정 이력 보기, 메타데이터 사전 편집.
+이미지 업로드 화면(API 는 base64 로 받을 수 있다), 수정 이력 보기, 메타데이터 사전 편집,
+새 글의 유형·경로 직접 지정, 제목 검색(목록 API 가 경로만 읽는다).
 
