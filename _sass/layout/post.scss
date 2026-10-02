@@ -3394,6 +3394,71 @@ html[data-mode='dark'] {
   }
 }
 
+/* 라이선스 아래의 이전 글 / 다음 글. 두 칸을 나란히 두고, 한쪽이 없으면 빈 칸으로 자리를 지켜
+   남은 박스가 원래 쪽에 머물게 합니다. */
+.post-adjacent-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 1.25rem;
+
+  @media (max-width: 575.98px) {
+    grid-template-columns: minmax(0, 1fr);
+
+    .post-adjacent-empty {
+      display: none;
+    }
+  }
+}
+
+.post-adjacent-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.6rem;
+  color: var(--text-color);
+
+  /* 제목까지 오른쪽 정렬하면 두 줄로 자를 때 말줄임표가 사라져, 방향 표시만 오른쪽으로 보냅니다. */
+  &.is-next .post-adjacent-label {
+    align-self: flex-end;
+  }
+
+  &:hover {
+    border-color: var(--link-color);
+    text-decoration: none;
+
+    .post-adjacent-title {
+      color: var(--link-color);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 3px;
+  }
+}
+
+.post-adjacent-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-muted-color);
+  font-size: 0.75rem;
+}
+
+.post-adjacent-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.45;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 /* --- Related Posts --- */
 
 #related-posts {

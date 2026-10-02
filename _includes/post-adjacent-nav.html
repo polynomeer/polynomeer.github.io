@@ -1,0 +1,38 @@
+<!-- Chronological previous/next posts, shown under the license line. -->
+<!--
+  page.previous is the older post and page.next the newer one. Hidden posts are
+  already dropped from the collection (see published-status-filter.rb), so the
+  neighbours are always readable posts. A missing neighbour leaves an empty
+  cell so the other box keeps its side.
+-->
+
+{% assign previous_post = page.previous %}
+{% assign next_post = page.next %}
+
+{% if previous_post.url or next_post.url %}
+  <nav class="post-adjacent-nav" aria-label="{{ site.data.locales[include.lang].post.button.previous }} / {{ site.data.locales[include.lang].post.button.next }}">
+    {% if previous_post.url %}
+      <a class="post-adjacent-link is-previous" href="{{ previous_post.url | relative_url }}">
+        <span class="post-adjacent-label">
+          <i class="fas fa-angle-left" aria-hidden="true"></i>
+          {{ site.data.locales[include.lang].post.button.previous }}
+        </span>
+        <span class="post-adjacent-title">{{ previous_post.title }}</span>
+      </a>
+    {% else %}
+      <span class="post-adjacent-empty" aria-hidden="true"></span>
+    {% endif %}
+
+    {% if next_post.url %}
+      <a class="post-adjacent-link is-next" href="{{ next_post.url | relative_url }}">
+        <span class="post-adjacent-label">
+          {{ site.data.locales[include.lang].post.button.next }}
+          <i class="fas fa-angle-right" aria-hidden="true"></i>
+        </span>
+        <span class="post-adjacent-title">{{ next_post.title }}</span>
+      </a>
+    {% else %}
+      <span class="post-adjacent-empty" aria-hidden="true"></span>
+    {% endif %}
+  </nav>
+{% endif %}
