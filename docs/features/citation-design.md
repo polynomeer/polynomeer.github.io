@@ -90,8 +90,10 @@ can link straight to the passage.
    build `site.data['citation_index']` — per source id, the list of
    `{post, quote, at, anchor}` — plus `post.data['cited_sources']`. Unknown
    source ids are logged as build warnings.
-2. `Generator`: one page at `/sources/` and one at `/sources/<id>/` for every
-   source with at least one citation.
+2. `Generator`: one page at `/sources/<id>/` for every source with at least
+   one citation, and the rows for the `/sources/` tab (`_tabs/sources.md`) in
+   `site.data['citation_sources']`. The index is a tab rather than a generated
+   page so it joins the sidebar's "근거" group like the other evidence pages.
 3. `Liquid::Block` `citation`: renders the card through
    `_includes/citation-card.html`, converting quote and commentary from
    markdown. An unknown id still renders the quote, with the raw id as caption,
@@ -109,8 +111,12 @@ the registry, so the pre-commit hook catches typos before the build.
   quote, then a caption line `— author, title · locator` with the title linking
   to the original, a type label, and a link to the source page. The commentary
   sits below a divider with its label, visually separate from the quote.
-- `/sources/` (`_includes/sources-index.html`): sources sorted by citation
-  count, each row showing type, title, author and count.
+- `/sources/` (`_tabs/sources.md` + `_includes/sources-index.html`): sources
+  sorted by citation count, each row showing type, title, author (or
+  publisher) and count.
+- "이 글의 출처" (`_includes/post-sources.html`): the first tail include of a
+  post, listing the registry sources it cites, each linking to its source page.
+  Quotes of other posts are left out; they already appear as backlinks.
 - `/sources/<id>/` (`_includes/source-detail.html`): source metadata with the
   original link, then every citation grouped by post, each linking to the
   card's anchor.
@@ -118,7 +124,7 @@ the registry, so the pre-commit hook catches typos before the build.
 
 ## Plan
 
-Phase 1 (this change)
+Phase 1 (done)
 
 1. Registry `_data/sources.yml` and the plugin (index, generator, block tag)
 2. Card include and styles
@@ -128,12 +134,16 @@ Phase 1 (this change)
    without changing their text; verify the card, `/sources/` and the detail page
    in a local build
 
-Phase 2
+Phase 2 (done)
 
 1. "이 글의 출처" list at the end of posts that cite sources
 2. `post:<slug>` citations feed `post-backlinks`
-3. Match review posts' `source_url` to registry entries as implicit citations
-4. Link `/sources/` from the sidebar "근거" group
+3. Review posts whose `source_url` matches a registry url (scheme, `www.`,
+   query and trailing slash ignored) count as one implicit citation, unless the
+   post already quotes that source. The source page shows them as "원문 전체를
+   읽고 쓴 리뷰". Review sources are registered one by one, not generated from
+   all 76 `source_url`s, so the ranking keeps meaning "quoted", not "exists".
+4. `/sources/` is a tab in the sidebar "근거" group
 
 Phase 3
 
