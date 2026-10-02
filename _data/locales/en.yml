@@ -444,10 +444,14 @@ learning_evidence:
   eyebrow: Learning evidence
   directory_title: Browse learning inputs through a compact overview
   directory_description: Scan books and courses quickly, then open each item to see study notes and the posts that grew out of that learning.
+  count_items: items
+  count_linked: linked posts
+  count_linked_short: ":COUNT posts"
+  group_label: Group
   source_posts: Source study posts
   related_posts: Related output posts
   back_to_directory: Back to learning overview
-  same_type: More in this format
+  same_group: Others in this group
   nav_aria: Previous or next item in the same format
   previous_item: Previous
   next_item: Next

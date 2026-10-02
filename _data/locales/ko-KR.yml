@@ -439,10 +439,14 @@ learning_evidence:
   eyebrow: 학습 성과
   directory_title: 학습 입력을 개요 중심으로 빠르게 살펴보기
   directory_description: 책과 강의를 먼저 가볍게 훑고, 각 항목 상세 페이지에서 학습 기록 글과 결과 글을 이어서 볼 수 있습니다.
+  count_items: 항목
+  count_linked: 이어진 글
+  count_linked_short: "글 :COUNT편"
+  group_label: 묶음
   source_posts: 학습 기록 글
   related_posts: 연결된 결과 글
   back_to_directory: 학습 성과 개요로 돌아가기
-  same_type: 같은 형식의 다른 학습 항목
+  same_group: 같은 묶음의 다른 학습 항목
   nav_aria: 같은 형식의 이전 또는 다음 항목
   previous_item: 이전 학습
   next_item: 다음 학습

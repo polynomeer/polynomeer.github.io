@@ -2185,147 +2185,175 @@ html[data-mode='dark'] .about-terminal {
   color: var(--text-muted-color);
 }
 
+/* 학습 성과 개요.
+   타일은 제목과 배지만 담고 summary 를 버렸는데, 13개 항목 전부에 적혀 있는 그 문장이
+   이 페이지에서 가장 읽을 값어치가 있다. 카드를 읽을 수 있는 폭으로 넓히고 요약을 넣는다.
+   회전 호버와 장식 원은 걷었다 - 13장이 나란히 놓이면 장식이 내용을 이긴다. */
 .learning-evidence-directory {
   margin-top: 1rem;
 }
 
-.learning-evidence-group + .learning-evidence-group {
-  margin-top: 2rem;
-}
+.learning-evidence-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.8rem;
+  margin: 0 0 1.8rem;
+  padding: 0;
+  list-style: none;
 
-.learning-evidence-group-header {
-  margin-bottom: 1rem;
-
-  p {
-    margin-bottom: 0;
+  li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-size: 0.8rem;
     color: var(--text-muted-color);
   }
 }
 
-.learning-evidence-overview {
+.learning-evidence-count-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+}
+
+.learning-evidence-group + .learning-evidence-group {
+  margin-top: 1.8rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(98, 114, 164, 0.24);
+}
+
+.learning-evidence-group-title {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.3rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.learning-evidence-group-count {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(98, 114, 164, 0.3);
+  color: var(--text-muted-color);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.learning-evidence-group-note {
+  margin: 0 0 0.9rem;
+  font-size: 0.83rem;
+  line-height: 1.7;
+  color: var(--text-muted-color);
+}
+
+.learning-evidence-grid {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 }
 
 .learning-evidence-type-badge,
 .learning-evidence-status-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.24rem 0.6rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.18);
-  background: rgba(40, 42, 54, 0.38);
-  color: var(--text-muted-highlight-color);
-  font-size: 0.74rem;
+  border: 1px solid rgba(98, 114, 164, 0.24);
+  color: var(--text-muted-color);
+  font-size: 0.68rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.learning-evidence-tile {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.38rem;
-  min-width: 10.75rem;
-  max-width: 15.25rem;
-  min-height: 7.35rem;
-  padding: 0.68rem 0.72rem 0.64rem 0.82rem;
-  overflow: hidden;
-  border: 1px solid rgba(98, 114, 164, 0.2);
-  border-radius: 0.88rem;
-  background:
-    radial-gradient(circle at top right, rgba(139, 233, 253, 0.12), transparent 32%),
-    linear-gradient(150deg, rgba(68, 71, 90, 0.16), rgba(40, 42, 54, 0.72));
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+.learning-evidence-card {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(98, 114, 164, 0.22);
+  border-radius: 0.6rem;
+  color: var(--text-color);
+  transition: border-color 0.15s ease;
 
-  &:hover {
-    border-color: rgba(139, 233, 253, 0.42);
-    transform: translateY(-3px) rotate(-0.2deg);
-    box-shadow: 0 18px 32px rgba(16, 18, 28, 0.18);
+  &:hover,
+  &:focus-visible {
+    border-color: var(--link-color);
     text-decoration: none;
-  }
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: auto -1.55rem -1.8rem auto;
-    width: 4.6rem;
-    height: 4.6rem;
-    border-radius: 999px;
-    background: rgba(189, 147, 249, 0.08);
-    pointer-events: none;
+    .learning-evidence-card-title {
+      color: var(--link-color);
+    }
   }
 }
 
-.learning-evidence-tile[data-learning-type='course'] {
-  border-color: rgba(80, 250, 123, 0.24);
+/* 형식은 배지 색으로만 구분한다. 카드 테두리까지 형식마다 다르면 묶음 경계가 흐려진다. */
+.learning-evidence-card[data-learning-type='course'] .learning-evidence-type-badge {
+  border-color: rgba(80, 250, 123, 0.4);
+  color: #4caf6d;
+}
 
-  .learning-evidence-tile-spine {
-    background: linear-gradient(180deg, rgba(80, 250, 123, 0.92), rgba(139, 233, 253, 0.75));
+.learning-evidence-card[data-learning-type='book'] .learning-evidence-type-badge {
+  border-color: rgba(255, 184, 108, 0.45);
+  color: #a2691a;
+}
+
+html[data-mode='dark'] {
+  .learning-evidence-card[data-learning-type='course'] .learning-evidence-type-badge {
+    color: #7df59a;
+  }
+
+  .learning-evidence-card[data-learning-type='book'] .learning-evidence-type-badge {
+    color: #ffc77a;
   }
 }
 
-.learning-evidence-tile[data-learning-type='book'] {
-  border-color: rgba(255, 184, 108, 0.26);
-
-  .learning-evidence-tile-spine {
-    background: linear-gradient(180deg, rgba(255, 184, 108, 0.92), rgba(255, 121, 198, 0.7));
-  }
+.learning-evidence-card[data-learning-status='in_progress'] .learning-evidence-status-badge {
+  border-color: rgba(139, 233, 253, 0.42);
+  color: var(--link-color);
 }
 
-.learning-evidence-tile-spine {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0.3rem;
-  border-radius: 0.88rem 0 0 0.88rem;
-  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.1);
-}
-
-.learning-evidence-tile-title {
-  position: relative;
-  z-index: 1;
-  color: var(--heading-color);
-  font-size: 0.98rem;
-  font-weight: 800;
-  line-height: 1.24;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.learning-evidence-tile-meta {
-  position: relative;
-  z-index: 1;
+.learning-evidence-card-badges {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 0.32rem 0.38rem;
-  margin-top: 0.05rem;
+  gap: 0.25rem;
 }
 
-.learning-evidence-period,
-.learning-evidence-provider {
+.learning-evidence-card-title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--heading-color);
+  font-size: 0.93rem;
+  font-weight: 700;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.learning-evidence-card-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.8rem;
+  line-height: 1.65;
   color: var(--text-muted-color);
-  font-size: 0.76rem;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
-.learning-evidence-tile .learning-evidence-type-badge,
-.learning-evidence-tile .learning-evidence-status-badge {
-  background: rgba(40, 42, 54, 0.5);
-  backdrop-filter: blur(6px);
+.learning-evidence-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  color: var(--text-muted-color);
+  opacity: 0.85;
 }
 
-.learning-evidence-tile[data-learning-type='course'] .learning-evidence-type-badge {
-  color: #7df59a;
-}
-
-.learning-evidence-tile[data-learning-type='book'] .learning-evidence-type-badge {
-  color: #ffc77a;
+.learning-evidence-card-posts {
+  color: var(--link-color);
+  opacity: 0.9;
 }
 
 .learning-evidence-detail {
@@ -2339,10 +2367,16 @@ html[data-mode='dark'] .about-terminal {
 }
 
 .learning-evidence-detail-hero {
-  padding: 1.45rem 1.5rem;
-  border: 1px solid rgba(98, 114, 164, 0.16);
-  border-radius: 1.05rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(98, 114, 164, 0.2);
+  border-radius: 0.65rem;
   background: rgba(68, 71, 90, 0.12);
+
+  h1 {
+    margin: 0.5rem 0 0;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
 }
 
 .learning-evidence-detail-meta,
@@ -2355,7 +2389,8 @@ html[data-mode='dark'] .about-terminal {
 }
 
 .learning-evidence-detail-facts {
-  margin-top: 0.9rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
   color: var(--text-muted-color);
 }
 
@@ -2365,10 +2400,10 @@ html[data-mode='dark'] .about-terminal {
 }
 
 .learning-evidence-detail-summary {
-  margin-top: 1rem;
-  margin-bottom: 0;
-  color: var(--text-muted-color);
+  margin: 0.7rem 0 0;
+  font-size: 0.9rem;
   line-height: 1.75;
+  color: var(--text-muted-color);
 }
 
 .learning-evidence-detail-nav {
@@ -2383,10 +2418,11 @@ html[data-mode='dark'] .about-terminal {
   flex-direction: column;
   gap: 0.4rem;
   min-height: 100%;
-  padding: 0.95rem 1rem;
-  border: 1px solid rgba(98, 114, 164, 0.14);
-  border-radius: 1rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(98, 114, 164, 0.2);
+  border-radius: 0.5rem;
   background: rgba(68, 71, 90, 0.08);
+  font-size: 0.84rem;
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
@@ -2425,50 +2461,84 @@ html[data-mode='dark'] .about-terminal {
   text-transform: uppercase;
 }
 
+/* 글 한두 편을 담으려고 큰 카드를 세 장 쌓고 있었다. 글 목록이 내용이므로
+   본문 아래 목록들과 같은 행 모양으로 맞춘다. */
 .learning-evidence-detail-sections {
-  margin-top: 1.6rem;
+  margin-top: 1.5rem;
 }
 
 .learning-evidence-detail-section + .learning-evidence-detail-section {
   margin-top: 1.4rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid rgba(98, 114, 164, 0.24);
 }
 
-.learning-evidence-detail-section {
-  padding: 1.2rem 1.25rem;
-  border: 1px solid rgba(98, 114, 164, 0.14);
-  border-radius: 0.95rem;
-  background: rgba(68, 71, 90, 0.08);
+.learning-evidence-detail-section h2 {
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
 .learning-evidence-post-list {
-  margin-bottom: 0;
+  margin: 0;
   padding-left: 0;
   list-style: none;
+  border-top: 1px solid rgba(98, 114, 164, 0.16);
 }
 
-.learning-evidence-post-item + .learning-evidence-post-item {
-  margin-top: 0.95rem;
-  padding-top: 0.95rem;
-  border-top: 1px solid rgba(98, 114, 164, 0.12);
+.learning-evidence-post-item {
+  border-bottom: 1px solid rgba(98, 114, 164, 0.16);
+
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.15rem 1.1rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    color: var(--text-color);
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: none;
+
+      .learning-evidence-post-title {
+        color: var(--link-color);
+      }
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    a { grid-template-columns: minmax(0, 1fr); }
+  }
 }
 
-.learning-evidence-post-item a {
+.learning-evidence-post-title {
+  font-size: 0.9rem;
   font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
-.learning-evidence-post-item p {
-  margin: 0.35rem 0 0;
+.learning-evidence-post-date {
+  font-size: 0.72rem;
+  white-space: nowrap;
   color: var(--text-muted-color);
-  line-height: 1.7;
+  opacity: 0.85;
 }
 
 .learning-evidence-sibling-link {
   display: inline-flex;
   align-items: center;
-  padding: 0.45rem 0.75rem;
-  border: 1px solid rgba(98, 114, 164, 0.16);
+  padding: 0.22rem 0.6rem;
+  border: 1px solid rgba(98, 114, 164, 0.24);
   border-radius: 999px;
-  background: rgba(40, 42, 54, 0.35);
+  font-size: 0.78rem;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--link-color);
+    text-decoration: none;
+  }
 }
 
 @media (max-width: 767px) {

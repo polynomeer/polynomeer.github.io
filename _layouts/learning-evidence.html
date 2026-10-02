@@ -4,76 +4,122 @@ layout: page
 
 {% include lang.html %}
 
-{% assign learning_evidence = site.data.learning_evidence %}
+{%- comment -%}
+  _data/learning_evidence.yml 의 groups 를 그대로 씁니다.
 
-{% if learning_evidence and learning_evidence.enabled and learning_evidence.groups and learning_evidence.groups.size > 0 %}
+  고치기 전에는 groups 를 무시하고 type(book/course)으로 다시 묶었습니다. 그래서 저자가 적어
+  둔 세 묶음의 제목과 설명이 한 번도 화면에 나오지 않았고, 대신 "책이냐 강의냐" 라는 덜
+  중요한 축으로 갈렸습니다. 무엇을 배웠는지는 묶음 이름이 말하지 형식이 말하지 않습니다.
+
+  summary 도 13개 항목 전부에 적혀 있는데 목록에서는 버려지고 있었습니다. 이 페이지에서
+  가장 읽을 값어치가 있는 문장입니다.
+{%- endcomment -%}
+
+{% assign evidence = site.data.learning_evidence %}
+
+{% if evidence and evidence.enabled and evidence.groups and evidence.groups.size > 0 %}
+  {% assign le_ko = site.data.locales['ko-KR'].learning_evidence %}
+  {% assign le_en = site.data.locales.en.learning_evidence %}
+  {% assign loc = site.data.locales[lang].learning_evidence %}
+  {% assign meta = site.data.locales[lang].learning_evidence_meta %}
+
+  {%- assign total = 0 -%}
+  {%- assign completed = 0 -%}
+  {%- assign in_progress = 0 -%}
+  {%- assign linked = 0 -%}
+  {%- for group in evidence.groups -%}
+    {%- for item in group.items -%}
+      {%- assign total = total | plus: 1 -%}
+      {%- if item.status == 'completed' -%}{%- assign completed = completed | plus: 1 -%}{%- endif -%}
+      {%- if item.status == 'in_progress' -%}{%- assign in_progress = in_progress | plus: 1 -%}{%- endif -%}
+      {%- assign linked = linked | plus: item.source_posts.size | plus: item.related_posts.size -%}
+    {%- endfor -%}
+  {%- endfor -%}
+
   <section class="learning-evidence-directory">
-    {% assign le_ko = site.data.locales['ko-KR'].learning_evidence %}
-    {% assign le_en = site.data.locales.en.learning_evidence %}
     {% include page-hero.html
       lang=lang
       eyebrow_ko=le_ko.eyebrow eyebrow_en=le_en.eyebrow
       title_ko=le_ko.directory_title title_en=le_en.directory_title
       summary_ko=le_ko.directory_description summary_en=le_en.directory_description %}
 
-    {% assign learning_types = 'book,course' | split: ',' %}
-    {% for learning_type in learning_types %}
-      {% assign type_item_count = 0 %}
-      {% for group in learning_evidence.groups %}
-        {% for item in group.items %}
-          {% if item.type == learning_type %}
-            {% assign type_item_count = type_item_count | plus: 1 %}
+    <ul class="learning-evidence-counts">
+      <li><span class="learning-evidence-count-value">{{ total }}</span>
+        <span data-i18n="learning_evidence.count_items">{{ loc.count_items }}</span></li>
+      <li><span class="learning-evidence-count-value">{{ completed }}</span>
+        <span data-i18n="learning_evidence_meta.completed">{{ meta.completed }}</span></li>
+      {% if in_progress > 0 %}
+        <li><span class="learning-evidence-count-value">{{ in_progress }}</span>
+          <span data-i18n="learning_evidence_meta.in_progress">{{ meta.in_progress }}</span></li>
+      {% endif %}
+      <li><span class="learning-evidence-count-value">{{ linked }}</span>
+        <span data-i18n="learning_evidence.count_linked">{{ loc.count_linked }}</span></li>
+    </ul>
+
+    {% for group in evidence.groups %}
+      {% if group.items and group.items.size > 0 %}
+        <section class="learning-evidence-group">
+          {%- comment -%}
+            data-l10n-* 는 개수 칩 바깥의 span 에 답니다. lang-switch.js 가 textContent 를
+            통째로 갈아끼우므로 h2 에 달면 안의 칩이 지워집니다.
+          {%- endcomment -%}
+          <h2 class="learning-evidence-group-title" id="{{ group.id }}">
+            <span
+              data-l10n-ko="{{ group.title['ko-KR'] | escape }}"
+              data-l10n-en="{{ group.title.en | escape }}"
+            >{% include localized-value.html value=group.title lang=lang %}</span>
+            <span class="learning-evidence-group-count">{{ group.items.size }}</span>
+          </h2>
+          {% if group.description %}
+            <p class="learning-evidence-group-note"
+              data-l10n-ko="{{ group.description['ko-KR'] | escape }}"
+              data-l10n-en="{{ group.description.en | escape }}">
+              {% include localized-value.html value=group.description lang=lang %}
+            </p>
           {% endif %}
-        {% endfor %}
-      {% endfor %}
 
-      {% if type_item_count > 0 %}
-      <section class="learning-evidence-group">
-        <div class="learning-evidence-group-header">
-          <h3 data-i18n="learning_evidence_meta.{{ learning_type }}">
-            {{ site.data.locales[lang].learning_evidence_meta[learning_type] | default: learning_type }}
-          </h3>
-        </div>
-
-        <div class="learning-evidence-overview">
-          {% for group in learning_evidence.groups %}
+          <div class="learning-evidence-grid">
             {% for item in group.items %}
-              {% if item.type == learning_type %}
-                {% assign detail_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
-                {% if detail_page %}
-                  <a
-                    class="learning-evidence-tile"
-                    href="{{ detail_page.url | relative_url }}"
-                    data-learning-type="{{ item.type }}"
-                    data-learning-status="{{ item.status }}"
-                  >
-                    <span class="learning-evidence-tile-spine" aria-hidden="true"></span>
-                    <span class="learning-evidence-tile-title">
-                      {% include localized-value.html value=item.title lang=lang %}
+              {% assign detail_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
+              {% if detail_page %}
+                {% assign post_count = item.source_posts.size | plus: item.related_posts.size %}
+                <a class="learning-evidence-card" href="{{ detail_page.url | relative_url }}"
+                  data-learning-type="{{ item.type }}" data-learning-status="{{ item.status }}">
+                  <span class="learning-evidence-card-badges">
+                    <span class="learning-evidence-type-badge"
+                      data-i18n="learning_evidence_meta.{{ item.type }}">{{ meta[item.type] | default: item.type }}</span>
+                    {% if item.status %}
+                      <span class="learning-evidence-status-badge"
+                        data-i18n="learning_evidence_meta.{{ item.status }}">{{ meta[item.status] | default: item.status }}</span>
+                    {% endif %}
+                  </span>
+
+                  <span class="learning-evidence-card-title">
+                    {% include localized-value.html value=item.title lang=lang %}
+                  </span>
+
+                  {% if item.summary %}
+                    <span class="learning-evidence-card-summary"
+                      data-l10n-ko="{{ item.summary['ko-KR'] | escape }}"
+                      data-l10n-en="{{ item.summary.en | escape }}">
+                      {% include localized-value.html value=item.summary lang=lang %}
                     </span>
-                    <span class="learning-evidence-tile-meta">
-                      <span class="learning-evidence-type-badge" data-i18n="learning_evidence_meta.{{ item.type }}">
-                        {{ site.data.locales[lang].learning_evidence_meta[item.type] | default: item.type }}
+                  {% endif %}
+
+                  <span class="learning-evidence-card-foot">
+                    {% if item.provider %}<span>{{ item.provider }}</span>{% endif %}
+                    {% if item.period %}<span>{{ item.period }}</span>{% endif %}
+                    {% if post_count > 0 %}
+                      <span class="learning-evidence-card-posts">
+                        {{ loc.count_linked_short | replace: ':COUNT', post_count }}
                       </span>
-                      {% if item.status %}
-                        <span class="learning-evidence-status-badge" data-i18n="learning_evidence_meta.{{ item.status }}">
-                          {{ site.data.locales[lang].learning_evidence_meta[item.status] | default: item.status }}
-                        </span>
-                      {% endif %}
-                      {% if item.provider %}
-                        <span class="learning-evidence-provider">{{ item.provider }}</span>
-                      {% endif %}
-                      {% if item.period %}
-                        <span class="learning-evidence-period">{{ item.period }}</span>
-                      {% endif %}
-                    </span>
-                  </a>
-                {% endif %}
+                    {% endif %}
+                  </span>
+                </a>
               {% endif %}
             {% endfor %}
-          {% endfor %}
-        </div>
-      </section>
+          </div>
+        </section>
       {% endif %}
     {% endfor %}
   </section>

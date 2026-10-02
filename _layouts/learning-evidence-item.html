@@ -6,10 +6,13 @@ layout: page
 
 {% assign current_item = nil %}
 
+{% assign current_group = nil %}
+
 {% for group in site.data.learning_evidence.groups %}
   {% for item in group.items %}
     {% if item.id == page.item_id %}
       {% assign current_item = item %}
+      {% assign current_group = group %}
       {% break %}
     {% endif %}
   {% endfor %}
@@ -19,27 +22,22 @@ layout: page
 {% endfor %}
 
 {% if current_item %}
+  {%- comment -%}
+    이전·다음은 같은 묶음 안에서 걷습니다. 전에는 type(강의/책)으로 걸었는데, 목록 페이지가
+    묶음으로 나뉘어 있으므로 상세에서 다른 축으로 넘기면 읽는 사람이 어디에 있는지 잃습니다.
+  {%- endcomment -%}
+  {% assign siblings = current_group.items %}
   {% assign previous_item = nil %}
-  {% assign previous_candidate = nil %}
   {% assign next_item = nil %}
   {% assign found_current = false %}
 
-  {% for group in site.data.learning_evidence.groups %}
-    {% for item in group.items %}
-      {% if item.type == current_item.type %}
-        {% if item.id == current_item.id %}
-          {% assign previous_item = previous_candidate %}
-          {% assign found_current = true %}
-        {% elsif found_current and next_item == nil %}
-          {% assign next_item = item %}
-          {% break %}
-        {% else %}
-          {% assign previous_candidate = item %}
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-    {% if next_item %}
-      {% break %}
+  {% for item in siblings %}
+    {% if item.id == current_item.id %}
+      {% assign found_current = true %}
+    {% elsif found_current and next_item == nil %}
+      {% assign next_item = item %}
+    {% elsif found_current == false %}
+      {% assign previous_item = item %}
     {% endif %}
   {% endfor %}
 
@@ -83,6 +81,11 @@ layout: page
         {% endif %}
         {% if current_item.period %}
           <span>{{ current_item.period }}</span>
+        {% endif %}
+        {% if current_group %}
+          <a href="{{ '/learning-evidence/' | relative_url }}#{{ current_group.id }}">
+            {% include localized-value.html value=current_group.title lang=lang %}
+          </a>
         {% endif %}
       </div>
 
@@ -131,10 +134,12 @@ layout: page
               {% assign matched_post = site.posts | where: 'path', post_path | first %}
               {% if matched_post %}
                 <li class="learning-evidence-post-item">
-                  <a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a>
-                  {% if matched_post.excerpt %}
-                    <p>{{ matched_post.excerpt | strip_html | truncate: 140 }}</p>
-                  {% endif %}
+                  <a href="{{ matched_post.url | relative_url }}">
+                    <span class="learning-evidence-post-title">{{ matched_post.title }}</span>
+                    <span class="learning-evidence-post-date">
+                      {% include datetime.html date=matched_post.date lang=lang %}
+                    </span>
+                  </a>
                 </li>
               {% endif %}
             {% endfor %}
@@ -151,10 +156,12 @@ layout: page
               {% assign matched_post = site.posts | where: 'path', post_path | first %}
               {% if matched_post %}
                 <li class="learning-evidence-post-item">
-                  <a href="{{ matched_post.url | relative_url }}">{{ matched_post.title }}</a>
-                  {% if matched_post.excerpt %}
-                    <p>{{ matched_post.excerpt | strip_html | truncate: 140 }}</p>
-                  {% endif %}
+                  <a href="{{ matched_post.url | relative_url }}">
+                    <span class="learning-evidence-post-title">{{ matched_post.title }}</span>
+                    <span class="learning-evidence-post-date">
+                      {% include datetime.html date=matched_post.date lang=lang %}
+                    </span>
+                  </a>
                 </li>
               {% endif %}
             {% endfor %}
@@ -162,30 +169,20 @@ layout: page
         </section>
       {% endif %}
 
-      {% assign sibling_count = 0 %}
-      {% for group in site.data.learning_evidence.groups %}
-        {% for item in group.items %}
-          {% if item.type == current_item.type and item.id != current_item.id %}
-            {% assign sibling_count = sibling_count | plus: 1 %}
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
-
+      {% assign sibling_count = siblings.size | minus: 1 %}
       {% if sibling_count > 0 %}
         <section class="learning-evidence-detail-section">
-          <h2 data-i18n="learning_evidence.same_type">{{ site.data.locales[lang].learning_evidence.same_type }}</h2>
+          <h2 data-i18n="learning_evidence.same_group">{{ site.data.locales[lang].learning_evidence.same_group }}</h2>
           <div class="learning-evidence-sibling-list">
-            {% for group in site.data.learning_evidence.groups %}
-              {% for item in group.items %}
-                {% if item.type == current_item.type and item.id != current_item.id %}
-                  {% assign sibling_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
-                  {% if sibling_page %}
-                    <a class="learning-evidence-sibling-link" href="{{ sibling_page.url | relative_url }}">
-                      {% include localized-value.html value=item.title lang=lang %}
-                    </a>
-                  {% endif %}
+            {% for item in siblings %}
+              {% if item.id != current_item.id %}
+                {% assign sibling_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
+                {% if sibling_page %}
+                  <a class="learning-evidence-sibling-link" href="{{ sibling_page.url | relative_url }}">
+                    {% include localized-value.html value=item.title lang=lang %}
+                  </a>
                 {% endif %}
-              {% endfor %}
+              {% endif %}
             {% endfor %}
           </div>
         </section>
