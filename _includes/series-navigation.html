@@ -100,7 +100,7 @@
                 <strong>{{ post.title }}</strong>
               </span>
             {% else %}
-              <a href="{{ post.url | relative_url }}">
+              <a href="{{ post.url | relative_url }}" title="{{ post.title | escape }}">
                 <span class="series-step">{{ forloop.index }}</span>
                 <span>{{ post.title }}</span>
               </a>

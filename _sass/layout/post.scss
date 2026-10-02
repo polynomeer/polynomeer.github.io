@@ -748,6 +748,47 @@ header {
   }
 }
 
+/* 시리즈 패널 머리. 라벨·제목·진행률·막대가 각자 한 줄씩 네 줄을 쓰고 있었습니다. 라벨과
+   제목은 한 줄에 두고 진행률을 그 줄 오른쪽 끝으로 보내, 막대까지 두 줄로 접습니다. */
+.series-navigation {
+  padding: 0.9rem 1rem 0.85rem;
+
+  .feature-panel-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.55rem;
+  }
+
+  .feature-panel-label {
+    margin-bottom: 0;
+    font-size: 0.66rem;
+  }
+
+  .feature-panel-title {
+    flex: 1 1 12rem;
+    min-width: 0;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .feature-panel-copy {
+    margin-left: auto;
+    font-size: 0.74rem;
+    white-space: nowrap;
+  }
+
+  .series-progress {
+    flex: 1 0 100%;
+    margin-top: 0.1rem;
+  }
+
+  .series-progress-label {
+    font-size: 0.7rem;
+  }
+}
+
 .series-navigation-title-link {
   color: var(--heading-color);
 
@@ -770,8 +811,8 @@ header {
 .series-navigation-links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
-  margin-top: 1rem;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
 
   @media (max-width: 575.98px) {
     grid-template-columns: minmax(0, 1fr);
@@ -784,8 +825,8 @@ header {
   flex-direction: column;
   gap: 0.15rem;
   min-width: 0;
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.8rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
   border: 1px solid rgba(98, 114, 164, 0.18);
   background: rgba(68, 71, 90, 0.22);
   transition: border-color 0.2s ease;
@@ -797,7 +838,7 @@ header {
 
   .series-link-label {
     color: var(--text-muted-color);
-    font-size: 0.78rem;
+    font-size: 0.64rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
@@ -807,6 +848,7 @@ header {
     min-width: 0;
     overflow: hidden;
     color: var(--text-color);
+    font-size: 0.82rem;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -857,11 +899,15 @@ header {
 
 .series-navigation-list {
   display: grid;
-  gap: 0.55rem;
-  margin-top: 1rem;
+  gap: 0.2rem;
+  margin-top: 0.75rem;
+
+  /* 암묵 열은 auto(=max-content)라서 한 줄로 만든 제목이 패널 밖으로 흘러나갑니다.
+     말줄임이 걸리려면 열이 컨테이너 폭에 묶여 있어야 합니다. */
+  grid-template-columns: minmax(0, 1fr);
 
   li {
-    border-radius: 0.8rem;
+    border-radius: 0.45rem;
     border: 1px solid rgba(98, 114, 164, 0.16);
     background: rgba(68, 71, 90, 0.12);
 
@@ -875,10 +921,11 @@ header {
   > li > span {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     width: 100%;
     min-width: 0;
-    padding: 0.75rem 0.9rem;
+    padding: 0.32rem 0.5rem;
+    font-size: 0.82rem;
   }
 
   > li > span strong,
@@ -886,11 +933,14 @@ header {
     color: var(--text-color);
   }
 
+  /* 한 편이 한 줄입니다. 두세 줄로 접히면 열 편이 950px 이 되어 목록을 훑을 수가 없습니다.
+     잘린 제목은 a 의 title 속성으로 볼 수 있습니다(_includes/series-navigation.html). */
   > li > a > span:last-child,
   > li > span > strong {
     min-width: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
@@ -898,13 +948,13 @@ header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.35rem;
+  height: 1.35rem;
   border-radius: 999px;
   flex-shrink: 0;
   color: var(--text-color);
   background: rgba(189, 147, 249, 0.22);
-  font-size: 0.88rem;
+  font-size: 0.7rem;
   font-weight: 700;
 }
 

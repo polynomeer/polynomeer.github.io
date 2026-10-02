@@ -6,16 +6,16 @@
   excerpt. The excerpt described a page the reader has not chosen to open yet,
   and the title plus the connection is what makes that choice.
 
-  Folded by default, in a <details> rather than a script - it works with no
-  JavaScript, takes keyboard focus on its own, and the browser's own find
-  opens it. The summary carries the count so the fold is not a blind door.
+  Open by default - three small cards are cheap - but foldable, in a <details>
+  rather than a script: it works with no JavaScript, takes keyboard focus on
+  its own, and the browser's own find opens it. The summary carries the count.
 -->
 
 {% assign relate_entries = page.related_entries %}
 
 {% if relate_entries.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
-    <details class="post-tail-details">
+    <details class="post-tail-details" open>
       <summary class="post-tail-summary">
         <h3 class="post-tail-heading" id="related-label">
           {{- site.data.locales[include.lang].post.relate_posts -}}
