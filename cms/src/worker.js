@@ -43,6 +43,11 @@ export function json(body, status = 200, headers = {}) {
   });
 }
 
+/** Reads are confined to posts, whichever route asks. */
+function readablePost(path) {
+  return path.startsWith('_posts/') && !path.includes('..');
+}
+
 function problem(status, code, message, extra = {}) {
   return json({ error: { code, message, ...extra } }, status);
 }
@@ -281,13 +286,33 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
         }
       }
 
-      if (url.pathname.startsWith('/api/posts/') && request.method === 'GET') {
-        const path = decodeURIComponent(url.pathname.slice('/api/posts/'.length));
-        if (!path.startsWith('_posts/') || path.includes('..')) {
+      if (url.pathname.startsWith('/api/revisions/') && request.method === 'GET') {
+        const path = decodeURIComponent(url.pathname.slice('/api/revisions/'.length));
+        if (!readablePost(path)) {
           return problem(422, 'path_not_allowed', `Cannot read ${path}.`, { path });
         }
         try {
-          return json(await client().readFile(path, branch));
+          return json({ path, revisions: await client().listRevisions(path, branch) });
+        } catch (error) {
+          return problem(502, 'github_error', 'Could not list revisions.', { status: error.status });
+        }
+      }
+
+      if (url.pathname.startsWith('/api/posts/') && request.method === 'GET') {
+        const path = decodeURIComponent(url.pathname.slice('/api/posts/'.length));
+        if (!readablePost(path)) {
+          return problem(422, 'path_not_allowed', `Cannot read ${path}.`, { path });
+        }
+
+        // A past version is addressed by its commit, and only by a commit:
+        // anything else would make this route a way to read an arbitrary ref.
+        const ref = url.searchParams.get('ref');
+        if (ref !== null && !/^[0-9a-f]{7,40}$/.test(ref)) {
+          return problem(422, 'bad_ref', 'A revision is addressed by its commit sha.');
+        }
+
+        try {
+          return json(await client().readFile(path, ref ?? branch));
         } catch (error) {
           return problem(error.status === 404 ? 404 : 502,
             error.status === 404 ? 'not_found' : 'github_error', 'Could not read the post.');

@@ -528,3 +528,127 @@ test('the listing names the images already in the repository', async () => {
   // Still one tree read for both.
   assert.equal(github.calls.filter((c) => c.url.includes('recursive=1')).length, 1);
 });
+
+// --- revisions ------------------------------------------------------------
+
+function githubRevisionsFake({ commits = [], contents = {} } = {}) {
+  const calls = [];
+  const reply = (body, status = 200) => ({
+    ok: status < 400, status,
+    text: async () => JSON.stringify(body),
+    json: async () => body
+  });
+
+  return {
+    calls,
+    fetchImpl: async (url, init = {}) => {
+      calls.push({ url, method: init.method ?? 'GET' });
+
+      if (url.includes('/commits?')) return reply(commits);
+      if (url.includes('/contents/')) {
+        const ref = new URL(url).searchParams.get('ref');
+        const text = contents[ref];
+        if (text === undefined) return reply({ message: 'Not Found' }, 404);
+        return reply({
+          sha: `blob-${ref}`,
+          content: btoa(String.fromCharCode(...new TextEncoder().encode(text)))
+        });
+      }
+      throw new Error(`unexpected ${url}`);
+    }
+  };
+}
+
+const COMMITS = [
+  {
+    sha: 'a'.repeat(40),
+    commit: { message: 'post: rewrite the opening\n\nbody', author: { date: '2026-09-01T10:00:00Z', name: 'polynomeer' } }
+  },
+  {
+    sha: 'b'.repeat(40),
+    commit: { message: 'chore(tags): merge tag spellings', author: { date: '2026-08-01T10:00:00Z', name: 'polynomeer' } }
+  }
+];
+
+test('a post lists the commits that touched it, newest first', async () => {
+  const github = githubRevisionsFake({ commits: COMMITS });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(request(
+    '/api/revisions/_posts%2Fnotes%2Fa.md', { cookie: await sessionCookie() }
+  ), env);
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.revisions.length, 2);
+  // Only the subject, not the whole message.
+  assert.equal(body.revisions[0].message, 'post: rewrite the opening');
+  assert.equal(body.revisions[0].date, '2026-09-01T10:00:00Z');
+  // Site-wide maintenance is listed too, and says what it was.
+  assert.equal(body.revisions[1].message, 'chore(tags): merge tag spellings');
+});
+
+test('revisions are scoped to the path and the branch', async () => {
+  const github = githubRevisionsFake({ commits: COMMITS });
+  const worker = createWorker({ fetch: github.fetchImpl });
+  await worker.fetch(request(
+    '/api/revisions/_posts%2Fnotes%2Fa.md', { cookie: await sessionCookie() }
+  ), env);
+
+  const [{ url }] = github.calls;
+  assert.ok(url.includes('path=_posts%2Fnotes%2Fa.md'), url);
+  assert.ok(url.includes('sha=main'), url);
+});
+
+test('revisions are confined to _posts, like every other read', async () => {
+  const worker = createWorker({ fetch: githubRevisionsFake().fetchImpl });
+
+  for (const path of ['cms%2Fcontent-index.json', '_posts%2F..%2F_config.yml']) {
+    const response = await worker.fetch(
+      request(`/api/revisions/${path}`, { cookie: await sessionCookie() }), env
+    );
+    assert.equal(response.status, 422, path);
+  }
+});
+
+test('a past version is read by its commit sha', async () => {
+  const github = githubRevisionsFake({ contents: { ['a'.repeat(40)]: 'the old text' } });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(request(
+    `/api/posts/_posts%2Fnotes%2Fa.md?ref=${'a'.repeat(40)}`, { cookie: await sessionCookie() }
+  ), env);
+
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).text, 'the old text');
+});
+
+test('ref takes a commit sha and nothing else', async () => {
+  const worker = createWorker({ fetch: githubRevisionsFake().fetchImpl });
+
+  // A branch name, a tag, a traversal: all refused before any call goes out.
+  for (const ref of ['main', 'refs/heads/main', '../../etc', 'HEAD', '']) {
+    const response = await worker.fetch(request(
+      `/api/posts/_posts%2Fnotes%2Fa.md?ref=${encodeURIComponent(ref)}`,
+      { cookie: await sessionCookie() }
+    ), env);
+    assert.equal(response.status, 422, ref);
+    assert.equal((await response.json()).error.code, 'bad_ref');
+  }
+});
+
+test('without ref the post is still read from the branch', async () => {
+  const github = githubRevisionsFake({ contents: { main: 'the current text' } });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(request(
+    '/api/posts/_posts%2Fnotes%2Fa.md', { cookie: await sessionCookie() }
+  ), env);
+  assert.equal((await response.json()).text, 'the current text');
+});
+
+test('revisions need a session', async () => {
+  const worker = createWorker({ fetch: async () => { throw new Error('must not call out'); } });
+  const response = await worker.fetch(request('/api/revisions/_posts%2Fa.md'), env);
+  assert.equal(response.status, 401);
+});

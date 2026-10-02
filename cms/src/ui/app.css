@@ -111,3 +111,27 @@ kbd {
 .staged .size.critical { color: var(--warn); font-weight: 700; }
 .staged .tools { display: flex; flex-direction: column; gap: .3rem; }
 .staged .tools button { font-size: .74rem; padding: .2rem .55rem; }
+
+/* --- revisions --- */
+.revisions { list-style: none; margin: .4rem 0 0; padding: 0; max-height: 17rem; overflow: auto; }
+.revisions li { border-bottom: 1px solid var(--line); }
+.revisions button {
+  display: block; width: 100%; padding: .45rem .3rem; border: 0; background: none;
+  color: var(--text); font: inherit; text-align: left; cursor: pointer;
+}
+.revisions button:hover, .revisions button:focus-visible { color: var(--accent); }
+.revisions li[aria-current="true"] button { color: var(--accent); font-weight: 700; }
+.revisions .when { display: block; font-size: .72rem; color: var(--muted); }
+.revisions .current { font-size: .7rem; border: 1px solid currentColor; border-radius: 3px; padding: 0 .3rem; margin-left: .35rem; }
+.diffhead { display: flex; align-items: center; gap: .5rem; margin: .9rem 0 .4rem; flex-wrap: wrap; }
+.diff {
+  border: 1px solid var(--line); border-radius: .4rem; overflow: auto; max-height: 50vh;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem;
+}
+.diff div { padding: .05rem .5rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.diff .add { background: color-mix(in srgb, var(--ok) 16%, transparent); }
+.diff .del { background: color-mix(in srgb, var(--warn) 18%, transparent); }
+.diff .add::before { content: "+ "; opacity: .6; }
+.diff .del::before { content: "- "; opacity: .6; }
+.diff .same::before { content: "  "; opacity: .6; }
+.diff .gap { background: var(--bg); color: var(--muted); font-size: .72rem; text-align: center; }

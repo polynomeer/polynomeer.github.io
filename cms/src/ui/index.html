@@ -38,6 +38,7 @@
       <button type="button" role="tab" data-tab="write" aria-selected="true">본문</button>
       <button type="button" role="tab" data-tab="meta" aria-selected="false">Front matter</button>
       <button type="button" role="tab" data-tab="images" aria-selected="false">이미지<span id="imagecount"></span></button>
+      <button type="button" role="tab" data-tab="history" aria-selected="false">이력</button>
       <button type="button" role="tab" data-tab="preview" aria-selected="false">미리보기</button>
     </div>
 
@@ -57,6 +58,20 @@
       </div>
       <p id="imagenote" class="muted"></p>
       <ul id="staged" class="staged"></ul>
+    </div>
+
+    <div data-panel="history" hidden>
+      <p id="historynote" class="muted"></p>
+      <ul id="revisions" class="revisions"></ul>
+      <div id="diffbox" hidden>
+        <div class="diffhead">
+          <strong id="diffwhat"></strong>
+          <span id="diffstat" class="muted"></span>
+          <span class="grow"></span>
+          <button id="restorerev" type="button" class="button">이 버전 불러오기</button>
+        </div>
+        <div id="diff" class="diff"></div>
+      </div>
     </div>
 
     <div data-panel="preview" hidden>

@@ -233,6 +233,28 @@ export function createGitHubClient({
     },
 
     /**
+     * The commits that touched one file, newest first.
+     *
+     * Every one of them, unlike the site's own "고쳐 쓴 기록", which counts a
+     * commit only when it changed six lines or more of the post - a rule that
+     * hides site-wide maintenance from readers but would hide versions from
+     * the person trying to recover one. The subject line is carried so a
+     * sweeping rename is still recognisable as what it was.
+     */
+    async listRevisions(path, branch, limit = 30) {
+      const query = `?path=${encodeURIComponent(path)}` +
+        `&sha=${encodeURIComponent(branch)}&per_page=${Math.min(limit, 100)}`;
+      const commits = await request('GET', `/commits${query}`);
+
+      return (commits ?? []).map((entry) => ({
+        sha: entry.sha,
+        message: String(entry.commit?.message ?? '').split('\n')[0],
+        date: entry.commit?.author?.date ?? entry.commit?.committer?.date ?? null,
+        author: entry.commit?.author?.name ?? null
+      }));
+    },
+
+    /**
      * Returns the open pull request for `head` if there already is one, so a
      * retry reuses it instead of opening a second.
      */

@@ -8,6 +8,7 @@ import {
 import {
   formatSize, imageFileName, isSupported, markdownFor, publicUrl, sizeLevel, uniqueImagePath
 } from './images.js';
+import { collapse, diffLines, diffStat } from './diff.js';
 
 const $ = (id) => document.getElementById(id);
 const DRAFT_PREFIX = 'cms:draft:';
@@ -27,6 +28,7 @@ let saving = false;
 // can be picked again.
 let staged = [];
 let siteUrl = null;
+let revisions = null;
 
 const say = (text, cls = 'muted') => {
   $('state').textContent = text;
@@ -79,6 +81,115 @@ function pendingLocal(path, serverText) {
   } catch {
     return null;
   }
+}
+
+// --- revisions ------------------------------------------------------------
+//
+// Read-only. "이 버전 불러오기" puts the old text in the editor and nothing
+// else: the save button stays the only thing that writes, so recovering a
+// version goes through the same commit, the same conflict check and the same
+// pull request as any other edit.
+
+function currentText() {
+  return joinFrontMatter($('meta').value, $('body').value);
+}
+
+async function loadRevisions() {
+  if (!current || revisions) return;
+
+  $('historynote').textContent = '불러오는 중…';
+  $('historynote').className = 'muted';
+  try {
+    revisions = (await api(`/api/revisions/${encodeURIComponent(current.path)}`)).revisions;
+  } catch (error) {
+    $('historynote').textContent = `이력을 불러오지 못했습니다: ${error.message}`;
+    $('historynote').className = 'warn';
+    return;
+  }
+  renderRevisions();
+}
+
+function renderRevisions() {
+  if (!revisions) return;
+
+  $('historynote').textContent = revisions.length
+    ? `${revisions.length}개 (이 파일을 건드린 커밋 전부 — 블로그의 '고쳐 쓴 기록'은 6줄 이상 바뀐 것만 셉니다)`
+    : '이 글을 건드린 커밋이 아직 없습니다';
+  $('historynote').className = 'muted';
+
+  $('revisions').replaceChildren(...revisions.map((revision, index) => {
+    const li = document.createElement('li');
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = revision.message || revision.sha.slice(0, 7);
+
+    if (index === 0) {
+      const now = document.createElement('span');
+      now.className = 'current';
+      now.textContent = '현재';
+      button.append(now);
+    }
+
+    const when = document.createElement('span');
+    when.className = 'when';
+    when.textContent = [
+      revision.date ? new Date(revision.date).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) : null,
+      revision.author,
+      revision.sha.slice(0, 7)
+    ].filter(Boolean).join(' · ');
+    button.append(when);
+
+    button.addEventListener('click', () => showRevision(revision, li));
+    li.append(button);
+    return li;
+  }));
+}
+
+async function showRevision(revision, li) {
+  for (const other of $('revisions').children) {
+    other.removeAttribute('aria-current');
+  }
+  li.setAttribute('aria-current', 'true');
+
+  $('diffbox').hidden = false;
+  $('diffwhat').textContent = `${revision.sha.slice(0, 7)} → 지금 편집 중인 내용`;
+  $('diffstat').textContent = '불러오는 중…';
+  $('diff').replaceChildren();
+
+  let text;
+  try {
+    text = (await api(
+      `/api/posts/${encodeURIComponent(current.path)}?ref=${encodeURIComponent(revision.sha)}`
+    )).text;
+  } catch (error) {
+    $('diffstat').textContent = `불러오지 못했습니다: ${error.message}`;
+    return;
+  }
+
+  const lines = diffLines(text, currentText());
+  const stat = diffStat(lines);
+  $('diffstat').textContent = stat.added || stat.removed
+    ? `+${stat.added} −${stat.removed}`
+    : '지금 내용과 같습니다';
+
+  $('diff').replaceChildren(...collapse(lines).map((line) => {
+    const row = document.createElement('div');
+    row.className = line.type;
+    // textContent: this is file content, and the one place a past version
+    // would otherwise reach the page as markup.
+    row.textContent = line.type === 'gap' ? `⋯ ${line.count}줄` : line.text;
+    return row;
+  }));
+
+  $('restorerev').onclick = () => {
+    const parts = splitFrontMatter(text);
+    $('meta').value = parts.raw;
+    $('body').value = parts.body;
+    saveLocal();
+    setTab('write');
+    say(`${revision.sha.slice(0, 7)} 을 불러왔습니다. 저장해야 반영됩니다`, 'warn');
+  };
 }
 
 // --- images ---------------------------------------------------------------
@@ -206,6 +317,13 @@ function insertImage(item) {
   body.setSelectionRange(caret, caret);
 }
 
+function clearRevisions() {
+  revisions = null;
+  $('revisions').replaceChildren();
+  $('historynote').textContent = '';
+  $('diffbox').hidden = true;
+}
+
 function clearStaged() {
   staged.forEach((item) => URL.revokeObjectURL(item.url));
   staged = [];
@@ -264,6 +382,7 @@ function setTab(name) {
     panel.hidden = panel.dataset.panel !== name;
   }
   if (name === 'preview') refreshPreview();
+  if (name === 'history') loadRevisions();
 }
 
 function refreshPreview() {
@@ -288,6 +407,7 @@ async function open(path) {
   // Staged images belong to the post they were picked for; carrying them to
   // the next one would commit a file that post never references.
   clearStaged();
+  clearRevisions();
 
   current = { path, sha: file.sha, serverText: file.text };
   $('path').textContent = path;
@@ -320,6 +440,7 @@ function startNew() {
   const path = postPath('notes', today, slugify(title) || 'untitled');
 
   clearStaged();
+  clearRevisions();
   current = { path, sha: null, serverText: '' };
   $('path').textContent = path;
   $('meta').value = [
@@ -369,6 +490,7 @@ async function save() {
     clearLocal(current.path);
     images = [...images, ...staged.map((item) => item.path)];
     clearStaged();
+    clearRevisions();
     current.serverText = text;
     current.changeId = null;
     $('restore').hidden = true;

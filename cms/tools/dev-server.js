@@ -7,8 +7,12 @@
 //   node cms/tools/dev-server.js   ->  http://127.0.0.1:4010
 
 import { createServer } from 'node:http';
+import { execFile } from 'node:child_process';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { promisify } from 'node:util';
+
+const run = promisify(execFile);
 
 import { SESSION_COOKIE, signSession } from '../src/auth.js';
 import { createWorker } from '../src/worker.js';
@@ -52,9 +56,29 @@ const fakeGitHub = async (url, init = {}) => {
       tree: [...posts, ...assets].map((p) => ({ type: 'blob', path: p, sha: 'blob' }))
     });
   }
+  // Real git history, so the revision view can be used locally rather than
+  // just rendered. Reads only; nothing here writes to the repository.
+  if (url.includes('/commits?')) {
+    const file = new URL(url).searchParams.get('path');
+    const { stdout } = await run('git', [
+      'log', '--max-count=30', '--format=%H%x1f%s%x1f%aI%x1f%an', '--', file
+    ], { cwd: ROOT, maxBuffer: 4 << 20 });
+
+    return reply(stdout.split('\n').filter(Boolean).map((line) => {
+      const [sha, message, date, name] = line.split('\x1f');
+      return { sha, commit: { message, author: { date, name } } };
+    }));
+  }
+
   if (url.includes('/contents/')) {
-    const rel = decodeURIComponent(new URL(url).pathname.split('/contents/')[1]);
-    const text = await readFile(path.join(ROOT, rel), 'utf8');
+    const parsed = new URL(url);
+    const rel = decodeURIComponent(parsed.pathname.split('/contents/')[1]);
+    const ref = parsed.searchParams.get('ref');
+
+    const text = ref && ref !== 'main'
+      ? (await run('git', ['show', `${ref}:${rel}`], { cwd: ROOT, maxBuffer: 16 << 20 })).stdout
+      : await readFile(path.join(ROOT, rel), 'utf8');
+
     return reply({ sha: 'blob', content: Buffer.from(text, 'utf8').toString('base64') });
   }
   if (url.endsWith('/git/trees') || url.endsWith('/git/blobs') || url.endsWith('/git/commits')) {
