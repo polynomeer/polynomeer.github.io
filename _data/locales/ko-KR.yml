@@ -148,6 +148,7 @@ post:
   continue_reading: 이어서 읽기
   backlinks: 이 글을 언급한 글
   connections: 이 글과 연결된 글
+  connection_self: 이 글
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
   revisions: 변경이력

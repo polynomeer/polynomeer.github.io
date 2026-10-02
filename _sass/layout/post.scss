@@ -3822,26 +3822,117 @@ html[data-mode='dark'] {
 /* 본문 아래의 목록들 - 이 글의 출처, 이 글을 언급한 글(_plugins/post-backlinks.rb),
    관련된 글(_plugins/related-posts.rb) - 은 같은 표를 씁니다. 제목 왼쪽, 작은 라벨 오른쪽. */
 
-/* 작성자가 직접 만든 연결(나가는 출처, 들어오는 언급)을 한 묶음으로 둡니다. 둘 다 있으면
-   넓은 화면에서 좌우 두 칸으로 놓아 세로 길이를 줄입니다. */
+/* 작성자가 직접 만든 연결을 흐름으로 그립니다: 가져온 출처 -> 이 글 -> 이 글을 언급한 글.
+   양옆 목록은 카드, 가운데는 "이 글" 표지, 사이는 화살표입니다. 한쪽만 있으면 그쪽과 표지만
+   남고, 좁은 화면에서는 위에서 아래로 흐르며 화살표도 아래를 가리킵니다. */
 .post-connections {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 0.5rem;
   margin-bottom: 2rem;
 
-  > aside + aside {
-    margin-top: 1.5rem;
+  @media (min-width: 768px) {
+    align-items: center;
+    gap: 0 0.6rem;
+
+    &[data-sides='both'] {
+      grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr);
+    }
+
+    &[data-sides='out'] {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
+    &[data-sides='in'] {
+      grid-template-columns: auto auto minmax(0, 1fr);
+    }
+  }
+}
+
+.connection-side {
+  justify-self: stretch;
+  min-width: 0;
+  padding: 0.85rem 0.95rem 0.6rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.75rem;
+
+  > aside {
+    margin: 0;
   }
 
-  @media (min-width: 768px) {
-    &.is-split {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 2rem;
-      align-items: start;
+  .post-tail-list {
+    border-top: 0;
+  }
 
-      > aside + aside {
-        margin-top: 0;
-      }
-    }
+  .post-tail-item:last-child {
+    border-bottom: 0;
+  }
+
+  /* 칸이 좁으니 제목 아래에 정보를 둡니다. */
+  .post-tail-link {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+
+  .post-tail-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: normal;
+  }
+
+  .post-tail-toggle {
+    margin-bottom: 0.25rem;
+  }
+}
+
+.connection-side.is-out {
+  border-top: 3px solid var(--link-color);
+}
+
+.connection-side.is-in {
+  border-top: 3px solid var(--btn-border-color);
+}
+
+.connection-count {
+  margin-left: 0.3rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: rgba(98, 114, 164, 0.2);
+  color: var(--text-muted-color);
+  font-size: 0.72rem;
+  font-weight: 600;
+  vertical-align: 0.1em;
+}
+
+.connection-chip {
+  padding: 0 0.35rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.3rem;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.connection-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--link-color);
+  border-radius: 999px;
+  color: var(--link-color);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.connection-arrow {
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+
+  @media (max-width: 767.98px) {
+    transform: rotate(90deg);
   }
 }
 

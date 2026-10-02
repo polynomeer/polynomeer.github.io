@@ -23,7 +23,7 @@
 
 {% if backlinks.size > 0 %}
   <aside id="post-backlinks" aria-labelledby="backlinks-label" data-backlinks data-visible="{{ visible }}">
-    <h3 class="post-tail-heading" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }}</h3>
+    <h3 class="post-tail-heading" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }} <span class="connection-count">{{ backlinks.size }}</span></h3>
     <ul class="post-tail-list list-unstyled">
       {% for cited in backlinks %}
         <li class="post-tail-item">

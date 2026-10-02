@@ -34,7 +34,10 @@ The tail of a post runs, top to bottom:
    - "이 글의 출처" (`post-sources.html`): registry sources this post quotes
      (see citation-design.md)
    - "이 글을 언급한 글" (`post-backlinks.html`): posts whose body links here
-   When both exist they share a row on screens 768px and wider.
+   Drawn as a flow: sources (out) -> a "이 글" marker -> mentions (in), each
+   list in a card with a count, joined by arrows. A post with only one side
+   keeps that side and the marker. Below 768px the flow runs top to bottom
+   and the arrows turn downward.
 3. `related-posts.html` - up to three similarity recommendations
 4. comments
 

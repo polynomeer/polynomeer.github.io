@@ -15,7 +15,7 @@
       <li class="post-tail-item">
         <a href="{{ '/sources/' | append: id | append: '/' | relative_url }}" class="post-tail-link">
           <span class="post-tail-title">{{ s.title }}</span>
-          <span class="post-tail-meta">{{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}</span>
+          <span class="post-tail-meta"><span class="connection-chip">{{ l.types[s.type] | default: s.type }}</span>{% if s.author %}{{ s.author }}{% elsif s.publisher %}{{ s.publisher }}{% endif %}</span>
         </a>
       </li>
     {% endif %}
@@ -24,7 +24,7 @@
 
 {% if listed > 0 %}
   <aside id="post-sources" aria-labelledby="post-sources-label">
-    <h3 class="post-tail-heading" id="post-sources-label">{{ l.post_sources }}</h3>
+    <h3 class="post-tail-heading" id="post-sources-label">{{ l.post_sources }} <span class="connection-count">{{ listed }}</span></h3>
     <ul class="post-tail-list list-unstyled">{{ rows }}</ul>
   </aside>
 {% endif %}

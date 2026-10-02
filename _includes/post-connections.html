@@ -4,7 +4,9 @@
     - out: registry sources this post quotes   (post-sources.html)
     - in:  posts whose body links to this one  (post-backlinks.html)
   Both are editorial, so neither can be a false match; that is why they sit
-  above "관련된 글". When both are present they share a row on wide screens.
+  above "관련된 글". It is drawn as a flow - sources -> this post -> posts
+  that mention it - so the direction of each list is visible at a glance; on
+  narrow screens the flow runs top to bottom.
   See docs/features/post-backlinks-design.md.
 -->
 
@@ -15,11 +17,22 @@
 {% assign in_count = page.backlinks.size | default: 0 %}
 
 {% if out_count > 0 or in_count > 0 %}
+  {% if out_count > 0 and in_count > 0 %}{% assign sides = 'both' %}{% elsif out_count > 0 %}{% assign sides = 'out' %}{% else %}{% assign sides = 'in' %}{% endif %}
   <section
-    class="post-connections{% if out_count > 0 and in_count > 0 %} is-split{% endif %}"
+    class="post-connections"
+    data-sides="{{ sides }}"
     aria-label="{{ site.data.locales[include.lang].post.connections }}"
   >
-    {% if out_count > 0 %}{% include post-sources.html lang=include.lang %}{% endif %}
-    {% if in_count > 0 %}{% include post-backlinks.html lang=include.lang %}{% endif %}
+    {% if out_count > 0 %}
+      <div class="connection-side is-out">{% include post-sources.html lang=include.lang %}</div>
+      <span class="connection-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
+    {% endif %}
+    <span class="connection-node" aria-hidden="true">
+      <i class="fas fa-file-lines"></i>{{ site.data.locales[include.lang].post.connection_self }}
+    </span>
+    {% if in_count > 0 %}
+      <span class="connection-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
+      <div class="connection-side is-in">{% include post-backlinks.html lang=include.lang %}</div>
+    {% endif %}
   </section>
 {% endif %}
