@@ -147,8 +147,6 @@ post:
   relate_posts: Further Reading
   continue_reading: Continue reading
   backlinks: Posts that mention this one
-  connections: Posts connected to this one
-  connection_self: This post
   connection_map_link: See it on the connection map
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer
@@ -496,7 +494,6 @@ tech_blogs:
 citation:
   eyebrow: Evidence
   index_title: Sources
-  post_sources: Sources quoted in this post
   implicit: A review of the whole original
   note: Author's note
   more_from_source: More quotes from this source

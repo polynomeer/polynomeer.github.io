@@ -147,8 +147,6 @@ post:
   relate_posts: 관련된 글
   continue_reading: 이어서 읽기
   backlinks: 이 글을 언급한 글
-  connections: 이 글과 연결된 글
-  connection_self: 이 글
   connection_map_link: 연결 지도에서 보기
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
@@ -491,7 +489,6 @@ tech_blogs:
 citation:
   eyebrow: 근거
   index_title: 출처
-  post_sources: 이 글의 출처
   implicit: 원문 전체를 읽고 쓴 리뷰
   note: 작성자 메모
   more_from_source: 이 출처의 인용 모아 보기

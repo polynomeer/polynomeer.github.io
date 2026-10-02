@@ -1,7 +1,10 @@
 <!--
   Posts that link to this one, collected by _plugins/post-backlinks.rb.
   A backlink is an editorial connection the author wrote, so it sits above the
-  similarity-based recommendations.
+  similarity-based recommendations. It is the only connection list in the post
+  tail: sources quoted in the post already show on their citation cards and
+  on /sources/, so listing them again here was dropped. The head links to the
+  connection map centred on this post.
 
   The list is a plain table of rows rather than a stack of cards. Eight cards
   with their own border, radius and background ran to 559px; the same eight
@@ -22,13 +25,18 @@
 {% assign visible = 3 %}
 
 {% if backlinks.size > 0 %}
-  <aside id="post-backlinks" aria-labelledby="backlinks-label" data-backlinks data-visible="{{ visible }}">
-    <h3 class="post-tail-heading" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }} <span class="connection-count">{{ backlinks.size }}</span></h3>
+  <aside id="post-backlinks" class="post-mentions" aria-labelledby="backlinks-label" data-backlinks data-visible="{{ visible }}">
+    <div class="post-mentions-head">
+      <h3 class="post-tail-heading" id="backlinks-label">{{ site.data.locales[include.lang].post.backlinks }} <span class="connection-count">{{ backlinks.size }}</span></h3>
+      <a class="post-mentions-map" href="{{ '/connections/' | relative_url }}#{{ page.url | split: '/' | last }}">
+        <i class="fas fa-circle-nodes" aria-hidden="true"></i>{{ site.data.locales[include.lang].post.connection_map_link }}
+      </a>
+    </div>
     <ul class="post-tail-list list-unstyled">
       {% for cited in backlinks %}
         <li class="post-tail-item">
           <a href="{{ cited.url | relative_url }}" class="post-tail-link">
-            <span class="post-tail-title">{{ cited.title }}</span>
+            <span class="post-tail-title" title="{{ cited.title | escape }}">{{ cited.title }}</span>
             <span class="post-tail-meta">{% include datetime.html date=cited.date lang=include.lang %}</span>
           </a>
         </li>
