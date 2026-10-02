@@ -7,8 +7,10 @@
 #   - two posts that resolve to the same /posts/<slug>/ URL
 #   - posts without front matter
 #   - internal /posts/<slug>/ links whose target does not exist
+#   - `{% citation <id> %}` blocks whose source is not in _data/sources.yml
+#     (or, for `post:<slug>`, whose post does not exist)
 #
-# Exit status is 1 when a collision is found (the first two checks); the other
+# Exit status is 1 when a collision or an unknown citation source is found; the other
 # findings are printed as warnings only. `--quiet` prints errors only, which is
 # what the pre-commit hook uses. Run from the repository root:
 #   ruby scripts/check-post-consistency.rb [--quiet]
@@ -55,7 +57,8 @@ Dir.glob(File.join(POSTS_DIR, '**', '*.{md,markdown}')).sort.each do |path|
     tags: Array(data['tags']).map(&:to_s),
     categories: Array(data['categories']).map(&:to_s),
     links: body.to_s.scan(%r{\(/posts/([a-z0-9\-]+)/?[)#?]}).flatten +
-           body.to_s.scan(%r{href="/posts/([a-z0-9\-]+)/?["#?]}).flatten
+           body.to_s.scan(%r{href="/posts/([a-z0-9\-]+)/?["#?]}).flatten,
+    citations: body.to_s.scan(/\{%-?\s*citation\s+(\S+)/).flatten
   }
 end
 
@@ -98,6 +101,16 @@ posts.each do |post|
     elsif hidden.include?(target) && post[:status] == 'published'
       warnings << "link to hidden post /posts/#{target}/ in #{post[:path]}"
     end
+  end
+end
+
+# 5. citations that point at an unknown source
+sources_path = File.expand_path('../_data/sources.yml', __dir__)
+sources = File.exist?(sources_path) ? (YAML.safe_load(File.read(sources_path), permitted_classes: [Date]) || {}) : {}
+posts.each do |post|
+  post[:citations].uniq.each do |id|
+    found = id.start_with?('post:') ? known.include?(id.delete_prefix('post:')) : sources.key?(id)
+    errors << "unknown citation source '#{id}' in #{post[:path]}" unless found
   end
 end
 
