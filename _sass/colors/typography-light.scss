@@ -21,6 +21,17 @@
 
   /* Dracula green hover is for the dark theme; on white it was ~1.4:1. */
   --link-hover-color: #003d80;
+
+  /* Content types: darker cousins of the Dracula accents, readable on white. */
+  --type-til: #1a7f37;
+  --type-notes: #0969a8;
+  --type-techblog: #7a4fd6;
+  --type-conference: #b35900;
+  --type-book: #7d6e00;
+  --type-lecture: #c2347f;
+  --type-recruit: #c2347f;
+  --type-problemsolving: #c62828;
+  --type-reference: #5b6275;
   --link-underline-color: #dee2e6;
   --button-bg: #ffffff;
   --btn-border-color: #e9ecef;

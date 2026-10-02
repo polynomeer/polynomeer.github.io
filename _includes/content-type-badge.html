@@ -6,14 +6,14 @@
 {% if content_type %}
   {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
   {% if include.link == false %}
-    <span class="content-type-badge">
+    <span class="content-type-badge" data-type="{{ content_type_id }}" style="--type-color: var(--type-{{ content_type_id }})">
       {% if content_type.icon %}
         <i class="{{ content_type.icon }}"></i>
       {% endif %}
       <span>{{ content_type_label }}</span>
     </span>
   {% else %}
-    <a class="content-type-badge" href="{{ '/types/' | append: content_type_id | append: '/' | relative_url }}">
+    <a class="content-type-badge" data-type="{{ content_type_id }}" style="--type-color: var(--type-{{ content_type_id }})" href="{{ '/types/' | append: content_type_id | append: '/' | relative_url }}">
       {% if content_type.icon %}
         <i class="{{ content_type.icon }}"></i>
       {% endif %}

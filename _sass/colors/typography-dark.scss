@@ -23,6 +23,17 @@
   --link-color: #bd93f9;
   --link-underline-color: rgba(189, 147, 249, 0.52);
   --link-hover-color: #50fa7b;
+
+  /* Content types: one Dracula accent each (badges, the eyebrow over a post title). */
+  --type-til: #50fa7b;
+  --type-notes: #8be9fd;
+  --type-techblog: #bd93f9;
+  --type-conference: #ffb86c;
+  --type-book: #f1fa8c;
+  --type-lecture: #ff79c6;
+  --type-recruit: #ff79c6;
+  --type-problemsolving: #ff5555;
+  --type-reference: #8e95b1;
   --button-bg: #343746;
   --btn-border-color: #59617c;
   --btn-outline-primary: #bd93f9;
@@ -248,5 +259,31 @@
       border-color: var(--btn-outline-primary);
       color: #282a36;
     }
+  }
+
+  /* Post header accents: dates in cyan, counts in the metric orange, reading
+     time in green, and a purple-pink-cyan rule closing the header. Dark only;
+     the light theme keeps its plain header. */
+  .post-header .post-date-row time {
+    color: #8be9fd;
+  }
+
+  .post-header .post-like-count,
+  .post-header #pageviews {
+    color: var(--metric-color);
+  }
+
+  .post-header .readtime em {
+    color: #50fa7b;
+  }
+
+  .post-header::after {
+    content: '';
+    display: block;
+    height: 2px;
+    margin-top: 1.1rem;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, #bd93f9 12%, #ff79c6 50%, #8be9fd 88%, transparent);
+    opacity: 0.75;
   }
 } /* dark-scheme */

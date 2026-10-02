@@ -599,8 +599,8 @@ body.tag-filter-open {
         .content-type-badge {
           flex-shrink: 0;
           align-self: flex-start;
-          border-color: rgba(139, 233, 253, 0.24);
-        background: rgba(139, 233, 253, 0.1);
+          border-color: color-mix(in srgb, var(--type-color, #8be9fd) 32%, transparent);
+        background: color-mix(in srgb, var(--type-color, #8be9fd) 10%, transparent);
         transition:
           color 0.2s ease,
           border-color 0.2s ease,
@@ -609,11 +609,11 @@ body.tag-filter-open {
           box-shadow 0.2s ease;
 
         &:hover {
-          color: var(--text-color);
+          color: var(--type-color, var(--text-color));
           text-decoration: none;
-          border-color: rgba(139, 233, 253, 0.46);
-          background: rgba(139, 233, 253, 0.2);
-          box-shadow: 0 0 0 0.15rem rgba(139, 233, 253, 0.1);
+          border-color: color-mix(in srgb, var(--type-color, #8be9fd) 60%, transparent);
+          background: color-mix(in srgb, var(--type-color, #8be9fd) 20%, transparent);
+          box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--type-color, #8be9fd) 12%, transparent);
           transform: translateY(-1px);
         }
         }

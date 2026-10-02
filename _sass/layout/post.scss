@@ -3051,23 +3051,34 @@ html[data-mode='dark'] {
   gap: 0.5rem;
 }
 
+/* Each content type carries its own accent (`--type-<id>` in the palettes),
+   handed to the badge as `--type-color`. Without one the badge stays grey. */
 .content-type-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   padding: 0.24rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.18);
-  background: rgba(68, 71, 90, 0.2);
-  color: var(--text-muted-highlight-color);
+  border: 1px solid color-mix(in srgb, var(--type-color, #6272a4) 42%, transparent);
+  background: color-mix(in srgb, var(--type-color, #44475a) 12%, transparent);
+  color: var(--type-color, var(--text-muted-highlight-color));
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.02em;
 
   i {
     font-size: 0.76rem;
-    color: var(--label-color);
+    color: var(--type-color, var(--label-color));
   }
+}
+
+.post-eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--type-color, var(--label-color));
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .post-status-badge {
