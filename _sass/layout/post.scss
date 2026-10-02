@@ -721,7 +721,7 @@ header {
 }
 
 .feature-panel {
-  margin-top: 2rem;
+  margin-top: 1.1rem;
   padding: 1.25rem 1.25rem 1rem;
   border: 1px solid var(--btn-border-color);
   border-radius: 1rem;
@@ -751,7 +751,8 @@ header {
 /* 시리즈 패널 머리. 라벨·제목·진행률·막대가 각자 한 줄씩 네 줄을 쓰고 있었습니다. 라벨과
    제목은 한 줄에 두고 진행률을 그 줄 오른쪽 끝으로 보내, 막대까지 두 줄로 접습니다. */
 .series-navigation {
-  padding: 0.9rem 1rem 0.85rem;
+  margin-bottom: 1.2rem;
+  padding: 0.75rem 0.9rem 0.7rem;
 
   .feature-panel-header {
     display: flex;
@@ -812,7 +813,7 @@ header {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.5rem;
-  margin-top: 0.8rem;
+  margin-bottom: 0.7rem;
 
   @media (max-width: 575.98px) {
     grid-template-columns: minmax(0, 1fr);
@@ -963,8 +964,8 @@ header {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  margin-top: 1rem;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
   font-family: Lato, sans-serif;
 }
 
@@ -972,14 +973,14 @@ header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.1rem;
-  height: 2.1rem;
-  padding: 0 0.6rem;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.35rem;
   border: 0;
-  border-radius: 0.5rem;
+  border-radius: 0.35rem;
   background: transparent;
   color: var(--btn-patinator-text-color);
-  font-size: 0.9rem;
+  font-size: 0.76rem;
   line-height: 1;
 
   &:hover:not(:disabled):not([aria-current]) {
@@ -998,7 +999,7 @@ header {
 }
 
 .series-pager-arrow {
-  font-size: 1.15rem;
+  font-size: 0.95rem;
 }
 
 .series-pager-gap {
@@ -3819,57 +3820,10 @@ html[data-mode='dark'] .about-terminal {
   -webkit-box-orient: vertical;
 }
 
-/* 접히는 묶음(관련된 글). <details> 라서 스크립트 없이도 열리고 키보드로 닿습니다. */
-.post-tail-details {
-  margin-bottom: 2rem;
-}
-
-.post-tail-summary {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  list-style: none;
-  cursor: pointer;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-
-  .post-tail-heading {
-    margin-bottom: 0;
-  }
-
-  /* 펼침 표시. 열리면 돌아갑니다. */
-  &::after {
-    color: var(--text-muted-color);
-    font-size: 0.7rem;
-    content: '\25b8';
-    transition: transform 0.15s ease;
-  }
-
-  &:hover .post-tail-heading,
-  &:focus-visible .post-tail-heading {
-    color: var(--link-color);
-  }
-}
-
-.post-tail-details[open] .post-tail-summary::after {
-  transform: rotate(90deg);
-}
-
-.post-tail-count {
-  padding: 0.05rem 0.4rem;
-  border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.3);
-  color: var(--text-muted-color);
-  font-size: 0.7rem;
-  font-variant-numeric: tabular-nums;
-}
-
 .related-card-grid {
   display: grid;
   gap: 0.55rem;
-  margin-top: 0.75rem;
+  margin-bottom: 1.6rem;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
 }
 

@@ -1,46 +1,41 @@
 <!--
   Renders the recommendations precomputed by _plugins/related-posts.rb
-  (`page.related_entries`: post, same_series, same_project). At most three.
+  (`page.related_entries`: post, same_series, same_project).
 
-  Cards, but small ones: title and the reason it is being suggested, no body
-  excerpt. The excerpt described a page the reader has not chosen to open yet,
-  and the title plus the connection is what makes that choice.
+  Always three or none - the plugin takes the top TOTAL_SIZE = 3 by score, and
+  across 984 built posts the count is 3 on 968 and 0 on 16, never 1 or 2. That
+  is why there is no fold and no count beside the heading: a disclosure that
+  always hides exactly three small cards is a click that tells you nothing.
 
-  Open by default - three small cards are cheap - but foldable, in a <details>
-  rather than a script: it works with no JavaScript, takes keyboard focus on
-  its own, and the browser's own find opens it. The summary carries the count.
+  Cards carry what picks a link - the connection and the title - and no body
+  excerpt, which described a page the reader has not chosen to open yet.
 -->
 
 {% assign relate_entries = page.related_entries %}
 
 {% if relate_entries.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
-    <details class="post-tail-details" open>
-      <summary class="post-tail-summary">
-        <h3 class="post-tail-heading" id="related-label">
-          {{- site.data.locales[include.lang].post.relate_posts -}}
-        </h3>
-        <span class="post-tail-count">{{ relate_entries.size }}</span>
-      </summary>
+    <h3 class="post-tail-heading" id="related-label">
+      {{- site.data.locales[include.lang].post.relate_posts -}}
+    </h3>
 
-      <div class="related-card-grid">
-        {% for entry in relate_entries %}
-          {% assign post = entry.post %}
-          <a class="related-card" href="{{ post.url | relative_url }}">
-            <span class="related-card-meta">
-              {%- if entry.same_series -%}
-                {{- site.data.locales[include.lang].post.recommendation_series -}}
-                {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
-              {%- elsif entry.same_project -%}
-                {{- site.data.locales[include.lang].post.recommendation_project -}}
-              {%- else -%}
-                {%- include datetime.html date=post.date lang=include.lang -%}
-              {%- endif -%}
-            </span>
-            <span class="related-card-title">{{ post.title }}</span>
-          </a>
-        {% endfor %}
-      </div>
-    </details>
+    <div class="related-card-grid">
+      {% for entry in relate_entries %}
+        {% assign post = entry.post %}
+        <a class="related-card" href="{{ post.url | relative_url }}">
+          <span class="related-card-meta">
+            {%- if entry.same_series -%}
+              {{- site.data.locales[include.lang].post.recommendation_series -}}
+              {%- if post.series_order %} · {{ site.data.locales[include.lang].home.series_part | replace: ':N', post.series_order }}{% endif -%}
+            {%- elsif entry.same_project -%}
+              {{- site.data.locales[include.lang].post.recommendation_project -}}
+            {%- else -%}
+              {%- include datetime.html date=post.date lang=include.lang -%}
+            {%- endif -%}
+          </span>
+          <span class="related-card-title">{{ post.title }}</span>
+        </a>
+      {% endfor %}
+    </div>
   </aside>
 {% endif %}
