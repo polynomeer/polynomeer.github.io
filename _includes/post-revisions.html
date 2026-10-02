@@ -9,15 +9,12 @@
 
 {% if revisions.size > 0 %}
   {% assign repo = site.revisions.repo %}
-  {% assign latest = revisions | first %}
 
   <details class="post-revisions">
     <summary class="post-revisions-summary">
       <span class="post-revisions-label">{{ site.data.locales[include.lang].post.revisions }}</span>
       <span class="post-revisions-state">
         {{ site.data.locales[include.lang].post.revisions_count | replace: ':COUNT', page.revisions_total }}
-        <span class="post-revisions-sep">&middot;</span>
-        {% include datetime.html date=latest.date lang=include.lang %}
       </span>
     </summary>
 

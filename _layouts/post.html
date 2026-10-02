@@ -127,8 +127,6 @@ tail_includes:
         </div>
       </div>
 
-      {% include post-revisions.html lang=lang %}
-
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
         {% capture class %}class="preview-img{% if page.image.no_bg %}{{ ' no-bg' }}{% endif %}"{% endcapture %}
@@ -195,6 +193,8 @@ tail_includes:
         {% endfor %}
       </div>
     {% endif %}
+
+    {% include post-revisions.html lang=lang %}
 
     <div
       class="

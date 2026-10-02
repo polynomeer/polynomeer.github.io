@@ -3899,7 +3899,7 @@ html[data-mode='dark'] {
 }
 
 /* Post metadata and revision history (see _plugins/post-revisions.rb).
-   Revisions have their own row below dates, authors and engagement metrics. */
+   Revisions are disclosed below the post taxonomy, above license and sharing. */
 .post-date-row {
   display: flex;
   flex-wrap: wrap;
@@ -3909,7 +3909,7 @@ html[data-mode='dark'] {
 
 .post-revisions {
   display: block;
-  margin: 0;
+  margin: 0.75rem 0 0;
   font-size: 0.78rem;
   vertical-align: baseline;
 }
@@ -3918,9 +3918,7 @@ html[data-mode='dark'] {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.1rem 0.55rem;
-  border: 1px solid rgba(98, 114, 164, 0.24);
-  border-radius: 999px;
+  padding: 0.35rem 0;
   color: var(--text-muted-color);
   cursor: pointer;
   list-style: none;
@@ -3930,7 +3928,7 @@ html[data-mode='dark'] {
     display: none;
   }
 
-  &::before {
+  &::after {
     content: '\203A';
     display: inline-block;
     font-size: 1rem;
@@ -3939,12 +3937,16 @@ html[data-mode='dark'] {
   }
 
   &:hover {
-    border-color: rgba(139, 233, 253, 0.42);
     color: var(--text-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 3px;
   }
 }
 
-.post-revisions[open] .post-revisions-summary::before {
+.post-revisions[open] .post-revisions-summary::after {
   transform: rotate(90deg);
 }
 
