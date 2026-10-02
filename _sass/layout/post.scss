@@ -3899,7 +3899,7 @@ html[data-mode='dark'] {
 }
 
 /* Post metadata and revision history (see _plugins/post-revisions.rb).
-   Revisions sit left of engagement metrics and use a full row when expanded. */
+   Revisions have their own row below dates, authors and engagement metrics. */
 .post-date-row {
   display: flex;
   flex-wrap: wrap;
@@ -3908,16 +3908,10 @@ html[data-mode='dark'] {
 }
 
 .post-revisions {
-  display: inline-block;
+  display: block;
   margin: 0;
   font-size: 0.78rem;
   vertical-align: baseline;
-
-  &[open] {
-    flex: 1 0 100%;
-    display: block;
-    margin: 0.5rem 0 0;
-  }
 }
 
 .post-revisions-summary {
