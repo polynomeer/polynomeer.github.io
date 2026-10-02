@@ -49,7 +49,12 @@ console.log(
 );
 
 // Stands in for api.github.com. Reads are real files; writes are logged.
+// Anything that is not this repository's API - the pages the citation dialog
+// drafts a source from - goes out for real.
 const fakeGitHub = async (url, init = {}) => {
+  if (!url.startsWith('https://api.github.com/repos/polynomeer/polynomeer.github.io/')) {
+    return fetch(url, init);
+  }
   const reply = (body, status = 200) => ({
     ok: status < 400, status,
     text: async () => JSON.stringify(body),
@@ -90,6 +95,15 @@ const fakeGitHub = async (url, init = {}) => {
   }
   if (url.endsWith('/git/trees') || url.endsWith('/git/blobs') || url.endsWith('/git/commits')) {
     console.log(`  would write: ${init.method} ${url.split('/').pop()}`);
+    if (url.endsWith('/git/trees') && init.body) {
+      for (const entry of JSON.parse(init.body).tree ?? []) {
+        console.log(`    ${entry.path}`);
+        // CMS_DEV_SHOW_CONTENT=1 prints what a text file would become.
+        if (process.env.CMS_DEV_SHOW_CONTENT && typeof entry.content === 'string') {
+          console.log(entry.content.replace(/^/gm, '    | '));
+        }
+      }
+    }
     return reply({ sha: 'devnew' });
   }
   if (url.includes('/git/refs/')) return reply({});
