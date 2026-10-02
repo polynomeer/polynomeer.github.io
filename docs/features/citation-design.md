@@ -156,7 +156,21 @@ Phase 3
    as `at=`); other pages use `og:`/`meta` tags. Pages under `docs.`/`/docs/`
    become `doc` and lose `published`, since docs sites stamp it with the last
    build. A URL already in the registry prints its existing id.
-2. CMS: "인용하기" on a selection, source picker, URL paste to source
+2. (done) CMS "인용하기". The write tab has a button that opens a dialog with
+   the selected text as the quote (a selected `> ` quote loses its markers).
+   The source is picked from the registry, or registered on the spot: a URL
+   or DOI goes to `POST /api/source-draft` (`cms/src/sourcedraft.js`, the
+   same rules as the script, run in the Worker) and fills the fields, which
+   stay editable. Locator and commentary are optional. The block is inserted
+   on its own lines. A new source is staged like an image: on save the
+   editor re-reads `_data/sources.yml`, appends only entries not already
+   there, and commits it with the post in one commit. The preview draws
+   citation blocks as cards and names ids missing from the registry.
+
+   The Worker may read and write `_data/sources.yml` and no other file under
+   `_data/`; the match is exact, so locales and profile data stay out of the
+   editor's reach. The session's GitHub token goes only to `api.github.com`,
+   to pin a branch URL to its commit.
 
 ## Migration
 
