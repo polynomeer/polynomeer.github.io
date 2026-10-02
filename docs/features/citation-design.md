@@ -1,0 +1,148 @@
+# Citations and Sources
+
+## Goal
+
+Quotes in posts are currently plain blockquotes with the source written next to
+them by hand (`> "..." (Kleppmann)`). The quote, who said it, and where it came
+from are not data, so the blog cannot answer "which posts quote DDIA?" or "what
+did I take from RFC 9110?".
+
+This feature turns a quote into a **Citation** that points at a shared
+**Source**. One source can be cited many times across posts; each citation keeps
+its own quote, locator and the author's commentary. From that, the site renders
+a citation card in the post and a `/sources/` section that lets a reader go from
+a source back to every passage the blog took from it.
+
+Source: the idea note `quote-features.md` (Citation vs Source split, citation
+card, source pages, back citation, commentary, URL-to-metadata, code citations).
+
+## Scope
+
+| Idea from the note | Decision | Why |
+| --- | --- | --- |
+| Citation / Source split | Phase 1 | Core of everything else; fits Jekyll data files |
+| Citation card in posts | Phase 1 | Liquid block tag, no JS |
+| Commentary separated from the quote | Phase 1 | Same block, a marker splits quote and note |
+| Source index and per-source pages (`/sources/`) | Phase 1 | Generated at build like the topic hubs |
+| Code citation pinned to a commit | Phase 1 (`code` type) | Only a URL rule over `repo/commit/path/lines` |
+| Sources cited in this post (bibliography at the end) | Phase 2 | Cheap once the index exists |
+| Back citation | Already exists | `post-backlinks.rb` lists posts linking to a post. Phase 2 makes `post:<slug>` citations count too |
+| Review posts' `source_url` as an implicit citation | Phase 2 | 76 posts carry it; needs a URL match to the registry |
+| "Select text → cite" editor action, URL paste → metadata | Phase 3 (CMS) | Belongs to the CMS editor, which is being worked on in parallel. A local `scripts/` helper can come first |
+| Hover popover with source details | Dropped for now | The card caption already shows the source; a popover adds JS for little gain |
+
+Static-hosting constraint: everything is computed at build time by plugins. No
+runtime fetch.
+
+## Data model
+
+### Source — `_data/sources.yml`
+
+Keyed by a stable id (kebab-case). The id is what posts reference.
+
+```yaml
+kleppmann-distributed-locking:
+  type: article          # book | article | web | paper | video | doc | rfc | code | talk
+  title: How to do distributed locking
+  author: Martin Kleppmann
+  publisher: martin.kleppmann.com   # optional: publisher, journal, site, conference
+  published: 2016-02-08             # optional
+  url: https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html
+  note: optional one-line description shown on the source page
+```
+
+Type-specific optional fields:
+
+- `book`: `isbn`
+- `paper`: `doi` (url falls back to `https://doi.org/<doi>`)
+- `rfc`: `number` (url falls back to the IETF datatracker page)
+- `code`: `repo` (`owner/name`), `commit`, `path`, `lines` (`142-157`); the url
+  is built as `https://github.com/<repo>/blob/<commit>/<path>#L142-L157`, so the
+  citation stays pinned to that commit
+
+Internal posts are not registered. A citation can use `post:<slug>` and the
+source resolves to that post (type `post`).
+
+### Citation — in the post body
+
+```liquid
+{% citation kleppmann-distributed-locking at="Conclusion" %}
+"it is unnecessarily heavyweight and expensive for efficiency-optimization locks, ..."
+<!-- commentary -->
+효율 락으로 쓰기에는 불필요하게 무겁고, ...
+{% endcitation %}
+```
+
+- First argument: source id (or `post:<slug>`).
+- `at="..."`: optional locator (page, chapter, section, timestamp).
+- Body: the quote in markdown. Everything after a `<!-- commentary -->` line is
+  the author's note, rendered apart from the quote under a "작성자 메모" label.
+
+The card gets an anchor `cite-<n>` (n = order in the post) so the source page
+can link straight to the passage.
+
+## Build
+
+`_plugins/citations.rb`:
+
+1. `site, :post_read` (low priority, after the status filter): read the
+   registry, scan the markdown of every published post for citation blocks and
+   build `site.data['citation_index']` — per source id, the list of
+   `{post, quote, at, anchor}` — plus `post.data['cited_sources']`. Unknown
+   source ids are logged as build warnings.
+2. `Generator`: one page at `/sources/` and one at `/sources/<id>/` for every
+   source with at least one citation.
+3. `Liquid::Block` `citation`: renders the card through
+   `_includes/citation-card.html`, converting quote and commentary from
+   markdown. An unknown id still renders the quote, with the raw id as caption,
+   so a typo never drops content.
+
+Scanning the source rather than the rendered output keeps the index independent
+of render order (same reasoning as `post-backlinks.rb`).
+
+`scripts/check-post-consistency.rb` reports citations whose source id is not in
+the registry, so the pre-commit hook catches typos before the build.
+
+## Rendering
+
+- Card (`_includes/citation-card.html`, styles in `_sass/layout/post.scss`):
+  quote, then a caption line `— author, title · locator` with the title linking
+  to the original, a type label, and a link to the source page. The commentary
+  sits below a divider with its label, visually separate from the quote.
+- `/sources/` (`_includes/sources-index.html`): sources sorted by citation
+  count, each row showing type, title, author and count.
+- `/sources/<id>/` (`_includes/source-detail.html`): source metadata with the
+  original link, then every citation grouped by post, each linking to the
+  card's anchor.
+- Strings live under `citation:` in `_data/locales/ko-KR.yml` and `en.yml`.
+
+## Plan
+
+Phase 1 (this change)
+
+1. Registry `_data/sources.yml` and the plugin (index, generator, block tag)
+2. Card include and styles
+3. Source index and detail includes, locale strings
+4. Consistency check for unknown source ids
+5. Pilot: convert the two quotes in the Kleppmann review to citation blocks
+   without changing their text; verify the card, `/sources/` and the detail page
+   in a local build
+
+Phase 2
+
+1. "이 글의 출처" list at the end of posts that cite sources
+2. `post:<slug>` citations feed `post-backlinks`
+3. Match review posts' `source_url` to registry entries as implicit citations
+4. Link `/sources/` from the sidebar "근거" group
+
+Phase 3
+
+1. `scripts/add-source.rb <url>`: draft a registry entry from a URL (RFC number,
+   GitHub blob URL with commit and lines, DOI, otherwise page `<title>`)
+2. CMS: "인용하기" on a selection, source picker, URL paste to source
+
+## Migration
+
+Existing posts are not rewritten in bulk. 25 posts have `> "..."` style quotes;
+they move to citation blocks only when the post is edited for another reason or
+when asked, starting with the pilot.
