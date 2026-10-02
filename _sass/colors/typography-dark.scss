@@ -10,7 +10,10 @@
 
   /* Common color */
   --text-color: #f8f8f2;
-  --text-muted-color: #7f86a3;
+
+  /* #7f86a3 was 3.8-4.0:1 on the page and card backgrounds, under the 4.5:1 that
+     small meta text (dates, counts) needs; this keeps the Dracula blue-grey hue. */
+  --text-muted-color: #8e95b1;
   --text-muted-highlight-color: #c8cbdd;
   --heading-color: #f8f8f2;
   --label-color: #8be9fd;
@@ -19,6 +22,7 @@
   --blockquote-text-color: #c0c5dd;
   --link-color: #bd93f9;
   --link-underline-color: rgba(189, 147, 249, 0.52);
+  --link-hover-color: #50fa7b;
   --button-bg: #343746;
   --btn-border-color: #59617c;
   --btn-outline-primary: #bd93f9;
@@ -38,10 +42,10 @@
 
   /* Sidebar */
   --site-title-color: #ff79c6;
-  --site-subtitle-color: #7f86a3;
+  --site-subtitle-color: #8e95b1;
   --sidebar-bg: #242631;
   --sidebar-border-color: #3b3f51;
-  --sidebar-muted-color: #7f86a3;
+  --sidebar-muted-color: #8e95b1;
   --sidebar-active-color: #f8f8f2;
   --sidebar-hover-bg: #343746;
   --sidebar-btn-bg: #343746;
