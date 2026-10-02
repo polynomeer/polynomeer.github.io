@@ -1,0 +1,89 @@
+{% comment %}
+  The /connections/ page body (_tabs/connections.md). Hubs and flows come
+  from _plugins/connection-map.rb and read without JavaScript; the
+  neighbourhood view is drawn by assets/js/connection-map.js from
+  /assets/js/data/connection-map.json. See docs/features/connection-map-design.md.
+{% endcomment %}
+
+{% assign l = site.data.locales[include.lang].connection_map %}
+{% assign m = site.data.connection_map %}
+{% assign types = site.data.content_types %}
+{% assign tlang = include.lang %}
+
+<p class="connection-map-totals">
+  {{ l.totals | replace: ':POSTS', m.post_count | replace: ':ALL', m.published_count | replace: ':LINKS', m.link_count }}
+</p>
+
+<section class="connection-map-section" id="neighbourhood" aria-labelledby="cm-explore">
+  <h2 id="cm-explore">{{ l.explore_title }}</h2>
+  <p class="connection-map-lead">{{ l.explore_lead }}</p>
+  <div
+    class="cm-explorer"
+    data-connection-map
+    data-src="{{ '/assets/js/data/connection-map.json' | relative_url }}"
+    data-base="{{ '/' | relative_url }}"
+    data-default="{{ m.hubs.first.post.url | split: '/' | last }}"
+    data-l10n='{{ l.js | jsonify | escape }}'
+  >
+    <label class="cm-search">
+      <span class="visually-hidden">{{ l.search_label }}</span>
+      <input type="search" list="cm-titles" placeholder="{{ l.search_placeholder }}" autocomplete="off">
+      <datalist id="cm-titles"></datalist>
+    </label>
+    <div class="cm-canvas" aria-hidden="true"></div>
+    <div class="cm-lists" aria-live="polite"></div>
+    <noscript><p>{{ l.noscript }}</p></noscript>
+  </div>
+</section>
+
+<section class="connection-map-section" aria-labelledby="cm-hubs">
+  <h2 id="cm-hubs">{{ l.hubs_title }}</h2>
+  <p class="connection-map-lead">{{ l.hubs_lead }}</p>
+  <ol class="cm-hubs list-unstyled">
+    {% for hub in m.hubs %}
+      {% assign slug = hub.post.url | split: '/' | last %}
+      <li class="cm-hub">
+        <span class="cm-hub-rank">{{ forloop.index }}</span>
+        <div class="cm-hub-body">
+          <a class="cm-hub-title" href="{{ hub.post.url | relative_url }}">{{ hub.post.title }}</a>
+          <span class="cm-hub-from">
+            {% for f in hub.from %}
+              <span class="connection-chip">{{ types[f.type].title[tlang] | default: f.type }} {{ f.count }}</span>
+            {% endfor %}
+            <a class="cm-hub-explore" href="#{{ slug }}" data-center="{{ slug }}">{{ l.explore_link }}</a>
+          </span>
+        </div>
+        <span class="cm-hub-count">{{ l.mentions | replace: ':COUNT', hub.count }}</span>
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="connection-map-section" aria-labelledby="cm-flows">
+  <h2 id="cm-flows">{{ l.flows_title }}</h2>
+  <p class="connection-map-lead">{{ l.flows_lead }}</p>
+  <ul class="cm-flows list-unstyled">
+    {% for f in m.flows_across %}
+      {% assign width = f.count | times: 100.0 | divided_by: m.max_across %}
+      <li class="cm-flow">
+        <span class="cm-flow-label">
+          {{ types[f.from].title[tlang] | default: f.from }}
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          {{ types[f.to].title[tlang] | default: f.to }}
+        </span>
+        <span class="cm-flow-bar"><span style="width: {{ width | round: 1 }}%"></span></span>
+        <span class="cm-flow-count">{{ f.count }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+  {% if m.flows_within.size > 0 %}
+    <p class="cm-within">
+      {{ l.within }}
+      {% for f in m.flows_within %}
+        <span class="connection-chip">{{ types[f.from].title[tlang] | default: f.from }} {{ f.count }}</span>
+      {% endfor %}
+    </p>
+  {% endif %}
+</section>
+
+<script defer src="{{ '/assets/js/connection-map.js' | relative_url }}{% include asset-version.html %}"></script>

@@ -149,6 +149,7 @@ post:
   backlinks: 이 글을 언급한 글
   connections: 이 글과 연결된 글
   connection_self: 이 글
+  connection_map_link: 연결 지도에서 보기
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
   revisions: 변경이력
@@ -379,6 +380,8 @@ sidebar:
   evidence: 근거
 
 pages:
+  connections:
+    title: 연결 지도
   sources:
     title: 출처
   recruit:
@@ -508,3 +511,28 @@ citation:
     rfc: RFC
     code: 코드
     post: 이 블로그의 글
+
+connection_map:
+  eyebrow: 근거
+  title: 연결 지도
+  summary: 글 본문의 링크로 이어진 글들을 세 가지로 봅니다. 한 글을 골라 그 주변을 보고, 다른 글이 가장 많이 기대는 글과, 어떤 성격의 글이 어디로 이어지는지 확인할 수 있습니다.
+  totals: "공개 글 :ALL편 중 :POSTS편이 서로 링크로 이어져 있고, 연결은 :LINKS개입니다 (같은 시리즈 안의 링크 제외)."
+  explore_title: 글 하나를 중심으로 보기
+  explore_lead: 왼쪽은 가운데 글이 언급하거나 인용한 글과 출처, 오른쪽은 가운데 글을 언급한 글입니다. 점이 클수록 연결이 많은 글이고, 점을 누르면 그 글이 가운데로 옵니다.
+  search_label: 가운데에 둘 글 찾기
+  search_placeholder: 글 제목으로 찾기
+  noscript: 이 지도는 자바스크립트로 그립니다. 아래의 허브 글과 흐름은 그대로 볼 수 있습니다.
+  explore_link: 주변 보기
+  hubs_title: 많이 언급된 글
+  hubs_lead: 다른 글이 본문에서 가장 많이 링크한 글입니다. 칩은 그 언급이 어떤 성격의 글에서 왔는지를 셉니다.
+  mentions: ":COUNT회 언급"
+  flows_title: 어떤 글이 어디로 이어지나
+  flows_lead: 언급을 글 성격별로 모았습니다. 예를 들어 "기술 블로그 리뷰 → 노트"는 리뷰가 개념 노트를 링크한 횟수입니다.
+  within: "같은 성격 안의 연결:"
+  js:
+    in: 이 글을 언급한 글
+    out: 이 글이 언급·인용한 것
+    open: 글 열기
+    none: 없음
+    not_found: 연결된 글 중에서 찾지 못했습니다.
+    source: 출처

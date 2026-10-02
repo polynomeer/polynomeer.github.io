@@ -34,5 +34,8 @@
       <span class="connection-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
       <div class="connection-side is-in">{% include post-backlinks.html lang=include.lang %}</div>
     {% endif %}
+    <a class="connection-map-link" href="{{ '/connections/' | relative_url }}#{{ page.url | split: '/' | last }}">
+      <i class="fas fa-circle-nodes" aria-hidden="true"></i>{{ site.data.locales[include.lang].post.connection_map_link }}
+    </a>
   </section>
 {% endif %}

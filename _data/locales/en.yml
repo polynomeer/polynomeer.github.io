@@ -149,6 +149,7 @@ post:
   backlinks: Posts that mention this one
   connections: Posts connected to this one
   connection_self: This post
+  connection_map_link: See it on the connection map
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer
   revisions: Revision history
@@ -384,6 +385,8 @@ sidebar:
   evidence: Evidence
 
 pages:
+  connections:
+    title: Connection map
   sources:
     title: Sources
   recruit:
@@ -513,3 +516,28 @@ citation:
     rfc: RFC
     code: Code
     post: Post on this blog
+
+connection_map:
+  eyebrow: Evidence
+  title: Connection map
+  summary: Posts linked from one another's body text, seen three ways. Pick a post to see what surrounds it, find the posts the rest of the blog leans on, and see which kinds of posts lead where.
+  totals: ":POSTS of :ALL published posts are linked to one another, through :LINKS links (links inside a series excluded)."
+  explore_title: Around one post
+  explore_lead: On the left, the posts and sources the centre post mentions or quotes; on the right, the posts that mention it. Bigger nodes are more connected; click one to move it to the centre.
+  search_label: Find a post to centre
+  search_placeholder: Search by title
+  noscript: The map is drawn with JavaScript. The hubs and flows below read without it.
+  explore_link: Explore
+  hubs_title: Most mentioned posts
+  hubs_lead: The posts other posts link to most. Chips count which kind of post each mention comes from.
+  mentions: ":COUNT mentions"
+  flows_title: Which posts lead where
+  flows_lead: Mentions grouped by kind of post. "Tech Blog Review → Notes", for example, counts how often reviews link to notes.
+  within: "Within one kind:"
+  js:
+    in: Posts that mention this one
+    out: What this post mentions or quotes
+    open: Open post
+    none: None
+    not_found: Not found among the linked posts.
+    source: Source
