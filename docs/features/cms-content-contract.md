@@ -1,0 +1,141 @@
+# CMS 콘텐츠 계약 (Stage 0)
+
+출처: `polynomeer-cms-detailed-design.docx` (설계 기준일 2026-10-02, 분석 기준 commit `2c8afcce`).
+이 문서는 그 설계서를 이 저장소의 실제 상태에 맞춰 고친 작업 계획이고, Stage 0의 구현 명세다.
+
+## 왜 Stage 0 부터인가
+
+설계서의 최종 형태는 Cloudflare Worker + Durable Object + 비공개 R2 + GitHub OAuth 로
+돌아가는 관리자 CMS다. 계정과 secret과 배포 환경이 필요하고, 이 저장소 안에서 끝나지 않는다.
+
+설계서 자신이 20장에서 1단계 앞에 **0단계 "저장소 계약 고정"** 을 둔다. 현재 commit 의
+fixture, 공개 필터, 분류와 토픽 규칙을 확정하고 전체 콘텐츠를 읽기 전용으로 색인하는 일이다.
+이 단계는 클라우드가 없어도 되고, 저장소 안에서 완결되며, CMS 를 만들지 않더라도 그 자체로
+쓸모가 있다 — 지금 `check-post-consistency.rb` 가 잡지 않는 것들을 잡는다.
+
+그래서 Stage 0 만 먼저 구현한다. 1단계 이후는 계정과 비용과 운영 책임이 걸린 결정이라
+사람이 정할 일이다.
+
+## 설계서가 이 저장소에 대해 틀리게 적은 것
+
+설계서는 `2c8afcce` 를 읽고 썼다. 그 뒤로 main 이 9 commit 움직였고(요약 탭, 인용 목록
+상한 제거, 시리즈 패널 압축, 미리보기 캐시 등), 아래는 그와 별개로 확인한 사실이다.
+
+| 설계서 서술 | 실제 (이 문서 작성 시점) | 계약에 반영한 결정 |
+| --- | --- | --- |
+| `published` 를 status 와 공존하는 Jekyll boolean 으로 다루고 모순을 검사 | `_posts` 전체에서 `published:` 0건, `draft:` 0건. `AGENTS.md` 는 두 키를 **금지**한다 | 공존 규칙을 넣지 않는다. 두 키가 나타나면 **오류**로 막는다 |
+| `_posts/**` 파일 1,246개 | 1,253개. 그중 날짜 접두사가 있는 것 1,082개 | 날짜 없는 **171개**를 `not-a-post` 로 분류해 따로 센다 |
+| status 누락은 published 로 해석 | 맞다. 그리고 누락이 **1,100개**로 다수다 | 누락을 정상으로 보고, 파일에 써 넣지 않는다 |
+| 유형은 경로 첫 폴더명 소문자화 | 맞다. 등록된 유형 9개(`til notes book conference techblog lecture problemsolving recruit reference`) | 그대로 쓴다 |
+| `monticker` 등 미등록 폴더는 '기타 경로' | 맞다. `_posts/` 최상위에 `monticker` 가 있다 | `unregistered` 로 표시만 하고 옮기지 않는다 |
+| `_posts/TIL` 대소문자 불일치 | 맞다. 디렉터리는 `TIL`, 유형 ID 는 `til` | 소문자화해 맞추되 경로는 건드리지 않는다 |
+| `timezone` 이 비어 있다 | 맞다 (`_config.yml:12`) | 새 글 날짜에 `+09:00` 을 명시하도록 요구한다 |
+| `cms` 를 Jekyll `exclude` 에 추가 | 현재 `exclude` 에 `docs`, `tools` 는 있고 `cms` 는 없다 | 그 디렉터리를 만들 때 함께 넣는다. Stage 0 은 만들지 않는다 |
+
+설계서의 나머지 서술(상태 필터 동작, `post-revisions.rb` 의 6줄·10건 제한, PWA 캐시 활성,
+Supabase 댓글 로그인을 관리자 세션으로 인정하지 않을 것)은 확인한 범위에서 맞다.
+
+## 기존 검사와 겹치지 않게 나누기
+
+`scripts/check-post-consistency.rb` 는 이미 돌고 있고 pre-commit 에 걸려 있다. 남겨 둔다.
+다만 설계서 19장이 지적한 대로 **오류로 막아야 할 것을 경고로 흘린다.** 특히 front matter
+YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝낸다.
+
+| | `check-post-consistency.rb` | Stage 0 `validate-content.rb` |
+| --- | --- | --- |
+| 다루는 범위 | 날짜 있는 글만 | `_posts/**` 전부 + 사전(`_topics`, `_series_pages`, `_content_types`, `_post_statuses`) |
+| YAML 파손 | 경고 후 건너뜀, exit 0 | **오류** |
+| 금지 키 | 안 봄 | **오류** |
+| 알 수 없는 status | 안 봄 | **오류** |
+| 시리즈 참조·순서 | 안 봄 | **오류** |
+| 토픽 `posts`/`featured` 참조 | 안 봄 | **오류** |
+| 태그·분류 표기 충돌 | 오류 | 안 봄 (중복하지 않는다) |
+| 끊어진 내부 링크 | 경고 | 안 봄 |
+
+## Stage 0 범위
+
+1. **콘텐츠 모델** — `_posts` 의 모든 파일을 읽어 경로, 분류, 상태, 시리즈, 토픽 소속,
+   유효성 등급을 가진 레코드로 만든다. 원문 YAML 의 주석·순서·따옴표는 건드리지 않는다
+   (Stage 0 은 **읽기 전용**이다).
+2. **색인** — 위 레코드를 JSON 으로 낸다. 이후 단계의 목록·검색 API 가 이 모양을 그대로 쓴다.
+3. **검증** — 계약 위반을 오류로 내고 exit 1 한다.
+
+구현하지 않는 것: 쓰기, 인증, Worker, 이미지, PR 생성. 설계서 1단계부터의 일이다.
+
+### 유효성 등급
+
+| 등급 | 뜻 | 수 |
+| --- | --- | --- |
+| `post` | 날짜 접두사가 있어 Jekyll 이 글로 내보내는 파일 | 1,082 |
+| `not-a-post` | `_posts` 안이지만 날짜 접두사가 없어 Jekyll 이 무시하는 파일 | 171 |
+| `broken` | front matter YAML 이 파싱되지 않는 파일 | 0 |
+
+### 오류로 막는 것
+
+- front matter YAML 파싱 실패 또는 매핑이 아님 (`broken`)
+- `published:` 또는 `draft:` 키 사용 (`AGENTS.md` 금지 항목)
+- `status` 가 `_post_statuses` 에 없는 값
+- `series` 가 `_series_pages` 의 `series_id` 에 없음
+- 같은 시리즈 안에서 `series_order` 중복
+- `series_order` 가 음수이거나 정수가 아님
+- `_topics` 의 `posts` / `featured` / `exclude` 가 없는 slug 를 가리킴
+- `categories` / `tags` 가 배열이 아님
+
+### 경고로만 두는 것
+
+- 미등록 최상위 폴더 (`monticker`, 25건)
+- 날짜 없는 파일 (171건 — 과거 자료라 지금 고칠 일이 아니다)
+- front matter 가 아예 없는 글 (15건, 아래 참고)
+- `series` 는 있는데 `series_order` 가 없음
+
+### 처음 돌렸을 때 틀린 쪽은 규칙이었다
+
+초안 규칙으로 main 을 검사하니 오류 17건이 나왔다. 둘 다 콘텐츠가 아니라 규칙이 틀렸다.
+
+- **front matter 없는 글 16건을 `broken` 오류로 잡았다.** 그런데 이 파일들은 `_site` 에
+  멀쩡히 렌더된다 — 날짜 접두사만 있으면 Jekyll 이 `_config.yml` 의 defaults 를 적용하고
+  제목을 파일명에서 가져온다. `_posts/notes/programming/2024-09-07-closure.md` 는 `# Closure`
+  한 줄로 시작해 `/posts/closure/` 로 나간다. 빌드를 깨뜨리지 않으므로 오류가 아니다.
+  다만 편집기 입장에서는 고칠 `title` 도 `status` 도 없으니 경고로 남긴다.
+- **`series_order: 0` 을 "양의 정수가 아님" 으로 잡았다.** `batch-structure-improvement`
+  시리즈는 "Part 0 — 왜 이 배치는 가끔 터질까?" 로 시작해 0..5 로 간다. 의도된 값이다.
+  규칙을 음이 아닌 정수로 바꿨다.
+
+글은 하나도 고치지 않았다. 계약은 이 블로그를 적는 것이지 이상적인 블로그를 적는 것이 아니다.
+
+## 수용 기준과 실측
+
+| 기준 | 결과 |
+| --- | --- |
+| main 에서 오류 0 | `0 error(s), 41 warning(s)` |
+| 색인이 `_posts` 전체를 덮는다 | 1,253개 = post 1,082 + not-a-post 171, 누락 0 |
+| 색인이 실제 빌드와 일치한다 | `published` 984개가 `_site/posts/` 985개와 1:1. 남는 하나는 목록 페이지 `index.html` |
+| 고의로 깨뜨린 fixture 가 걸린다 | YAML 파손·금지 키·없는 시리즈·순서 중복 네 종 모두 exit 1 |
+| 정상 fixture 는 통과한다 | exit 0 |
+
+세 번째 줄이 설계서 22장 수용 기준 1번("하위 경로를 누락 없이 색인하고 비정규 파일은 구분")에
+해당한다. 색인이 published 라고 부른 글은 전부 빌드되어 있고, 빌드된 것 중 색인에 없는 것은
+없다.
+
+## 파일
+
+| 경로 | 하는 일 |
+| --- | --- |
+| `scripts/cms/content_contract.rb` | `_posts` 와 사전을 읽어 파일당 레코드 하나로 만든다. 읽기 전용 |
+| `scripts/cms/validate-content.rb` | 계약을 검사해 오류면 exit 1. `--json` 은 색인, `--quiet` 는 오류만 |
+| `tests/cms/fixtures/` | 축소 저장소 5개(정상 + 위반 4종) |
+| `tests/cms/run-fixtures.sh` | fixture 와 실제 저장소를 함께 검사 |
+
+`CMS_CONTENT_ROOT` 로 검사 대상 루트를 바꿀 수 있다. 고의로 깨진 글을 진짜 `_posts` 에
+넣지 않고 fixture 로 돌리기 위한 것이다.
+
+`scripts` 와 `tests` 는 `_config.yml` 의 `exclude` 에 넣었다. `scripts/` 는 전부터
+`_site/scripts/` 로 복사돼 사이트에 그대로 올라가고 있었고(링크하는 곳은 없다), fixture 에는
+일부러 깨뜨린 글이 들어 있다.
+
+## 이후 단계에 넘기는 질문
+
+- Worker 를 둘 도메인과 계정. 설계서는 `workers.dev` 로 시작하자고 한다.
+- 관리자 허용 목록에 넣을 GitHub 숫자 ID.
+- 비공개 초안을 공개 저장소 밖(DO/R2)에 두는 비용과 백업 책임.
+- `_posts` 밖의 171개 날짜 없는 파일을 자료로 남길지, 글로 승격할지, 옮길지.

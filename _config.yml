@@ -265,6 +265,11 @@ exclude:
   - "*.gemspec"
   - docs
   - tools
+  # Maintenance scripts and the CMS content-contract fixtures were being copied
+  # into _site and served - nothing links to them and the fixtures hold posts
+  # that are broken on purpose.
+  - scripts
+  - tests
   - README.md
   - LICENSE
   - "*.config.js"
