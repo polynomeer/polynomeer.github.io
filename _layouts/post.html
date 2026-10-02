@@ -26,26 +26,34 @@ tail_includes:
         {% include practical-validation-badges.html post=page lang=lang %}
       </div>
 
-      <!-- published date -->
-      <span>
-        {{ site.data.locales[lang].post.posted }}
-        {% include datetime.html date=page.date tooltip=true lang=lang %}
-      </span>
-
-      <!-- lastmod date -->
-      {% if page.last_modified_at %}
-        <span>
-          {{ site.data.locales[lang].post.updated }}
-          {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
-        </span>
-      {% endif %}
-
       {%- comment -%}
-        고쳐 쓴 기록은 날짜 옆의 작은 알약입니다. 글에 대한 메타데이터라 게시일·수정일과 같은
-        줄에 있는 편이 맞고, 본문 아래에서는 이어 읽을 글들보다 앞자리를 차지했습니다.
-        닫혀 있을 때만 줄 안에 들어가고, 펼치면 한 줄을 통째로 씁니다.
+        날짜와 고쳐 쓴 기록이 한 줄을 나눠 씁니다. 날짜는 왼쪽, 기록은 오른쪽 끝입니다.
+        글에 대한 메타데이터라 게시일·수정일과 같은 줄에 있는 편이 맞고, 본문 아래에서는
+        이어 읽을 글들보다 앞자리를 차지했습니다. 닫혀 있을 때만 줄 안에 들어가고, 펼치면
+        한 줄을 통째로 씁니다.
+
+        날짜 둘을 span 으로 한 번 더 묶는 이유는 사이의 가운뎃점이 `span + span::before`
+        에서 나오기 때문입니다. 셋을 그대로 flex 자식으로 두면 날짜끼리도 양끝으로 벌어집니다.
       {%- endcomment -%}
-      {% include post-revisions.html lang=lang %}
+      <div class="post-date-row">
+        <span class="post-date-group">
+          <!-- published date -->
+          <span>
+            {{ site.data.locales[lang].post.posted }}
+            {% include datetime.html date=page.date tooltip=true lang=lang %}
+          </span>
+
+          <!-- lastmod date -->
+          {% if page.last_modified_at %}
+            <span>
+              {{ site.data.locales[lang].post.updated }}
+              {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
+            </span>
+          {% endif %}
+        </span>
+
+        {% include post-revisions.html lang=lang %}
+      </div>
 
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}

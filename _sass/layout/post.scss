@@ -3910,17 +3910,25 @@ html[data-mode='dark'] .about-terminal {
 }
 
 /* substantive edits after publication (see _plugins/post-revisions.rb).
-   머리말의 날짜 줄 안에 앉습니다. 닫혀 있으면 알약 하나라 줄에 끼어들고, 펼치면 목록이
-   좁은 인라인 상자에 갇히지 않도록 블록으로 바뀌어 한 줄을 통째로 씁니다. */
+   머리말의 날짜 줄 오른쪽 끝에 앉습니다. 닫혀 있으면 알약 하나이고, 펼치면 목록이 좁은
+   칸에 갇히지 않도록 줄 하나를 통째로 받습니다. */
+.post-date-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.75rem;
+}
+
 .post-revisions {
   display: inline-block;
-  margin: 0 0 0 0.2rem;
+  margin: 0 0 0 auto;
   font-size: 0.78rem;
   vertical-align: baseline;
 
   &[open] {
+    flex: 1 0 100%;
     display: block;
-    margin: 0.6rem 0 0;
+    margin: 0.5rem 0 0;
   }
 }
 
