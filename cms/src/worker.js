@@ -1,0 +1,251 @@
+// The Worker: OAuth in, authorised writes out.
+//
+// Routes are deliberately few. Everything that is not /auth/* requires a
+// valid session for the one administrator; there is no public surface here
+// beyond the login redirect itself.
+//
+//   GET  /auth/login     -> redirect to GitHub, state in a short-lived cookie
+//   GET  /auth/callback  -> exchange the code, check the allowlist, set session
+//   POST /auth/logout    -> clear the session
+//   GET  /api/me         -> who is signed in
+//   POST /api/changes    -> commit a change, optionally open a pull request
+//
+// The GitHub token never leaves this file: it is exchanged server-side and
+// used server-side. Nothing in a response body or a cookie carries it.
+
+import {
+  SESSION_COOKIE,
+  STATE_COOKIE,
+  clearCookie,
+  isAllowed,
+  parseAllowlist,
+  randomToken,
+  readCookie,
+  serializeCookie,
+  signSession,
+  verifySession
+} from './auth.js';
+import { ConflictError, GitHubError, createGitHubClient } from './github.js';
+
+const SESSION_TTL_SECONDS = 60 * 60 * 8;
+const STATE_TTL_SECONDS = 10 * 60;
+
+export function json(body, status = 200, headers = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      // An admin API has nothing to cache and a stale draft would be worse
+      // than a slow one.
+      'cache-control': 'no-store',
+      ...headers
+    }
+  });
+}
+
+function problem(status, code, message, extra = {}) {
+  return json({ error: { code, message, ...extra } }, status);
+}
+
+export async function currentSession(request, env) {
+  const token = readCookie(request.headers.get('cookie'), SESSION_COOKIE);
+  const payload = await verifySession(token, env.SESSION_SECRET);
+  if (!payload) {
+    return null;
+  }
+
+  // The allowlist is re-checked on every request, so revoking access does not
+  // wait for the session to expire.
+  return isAllowed(payload.uid, parseAllowlist(env.ADMIN_GITHUB_IDS)) ? payload : null;
+}
+
+function loginRedirect(env, url) {
+  const state = randomToken();
+  const authorize = new URL('https://github.com/login/oauth/authorize');
+  authorize.searchParams.set('client_id', env.GITHUB_CLIENT_ID);
+  authorize.searchParams.set('redirect_uri', new URL('/auth/callback', url.origin).toString());
+  // `repo` is the narrowest scope that can commit to a repository's contents.
+  authorize.searchParams.set('scope', 'repo');
+  authorize.searchParams.set('state', state);
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      location: authorize.toString(),
+      'set-cookie': serializeCookie(STATE_COOKIE, state, { maxAge: STATE_TTL_SECONDS })
+    }
+  });
+}
+
+async function handleCallback(request, env, url, fetchImpl) {
+  const expected = readCookie(request.headers.get('cookie'), STATE_COOKIE);
+  const received = url.searchParams.get('state');
+
+  // Without this check an attacker can hand the administrator a callback URL
+  // and have their own GitHub account signed in on this browser.
+  if (!expected || !received || expected !== received) {
+    return problem(400, 'oauth_state_mismatch', 'Sign-in could not be verified. Start again.');
+  }
+
+  const code = url.searchParams.get('code');
+  if (!code) {
+    return problem(400, 'oauth_no_code', 'GitHub did not return an authorization code.');
+  }
+
+  const tokenResponse = await fetchImpl('https://github.com/login/oauth/access_token', {
+    method: 'POST',
+    headers: { accept: 'application/json', 'content-type': 'application/json' },
+    body: JSON.stringify({
+      client_id: env.GITHUB_CLIENT_ID,
+      client_secret: env.GITHUB_CLIENT_SECRET,
+      code,
+      redirect_uri: new URL('/auth/callback', url.origin).toString()
+    })
+  });
+
+  const tokenBody = await tokenResponse.json();
+  if (!tokenResponse.ok || !tokenBody.access_token) {
+    return problem(502, 'oauth_exchange_failed', 'GitHub refused the authorization code.');
+  }
+
+  const userResponse = await fetchImpl('https://api.github.com/user', {
+    headers: {
+      authorization: `Bearer ${tokenBody.access_token}`,
+      accept: 'application/vnd.github+json',
+      'user-agent': 'polynomeer-cms'
+    }
+  });
+  const user = await userResponse.json();
+
+  if (!isAllowed(user.id, parseAllowlist(env.ADMIN_GITHUB_IDS))) {
+    // Deliberately the same shape for "not on the list" as for a bad token:
+    // this endpoint should not confirm who is an administrator.
+    return problem(403, 'not_an_administrator', 'This account cannot sign in here.');
+  }
+
+  const session = await signSession(
+    {
+      uid: user.id,
+      login: user.login,
+      // The GitHub token rides inside the signed, HttpOnly cookie rather than
+      // a server-side store. There is one administrator and no revocation
+      // list to keep; the cookie is unreadable by script and dies in 8 hours.
+      ght: tokenBody.access_token,
+      exp: Date.now() + SESSION_TTL_SECONDS * 1000
+    },
+    env.SESSION_SECRET
+  );
+
+  const headers = new Headers({ location: '/' });
+  headers.append('set-cookie', serializeCookie(SESSION_COOKIE, session, { maxAge: SESSION_TTL_SECONDS }));
+  headers.append('set-cookie', clearCookie(STATE_COOKIE));
+  return new Response(null, { status: 302, headers });
+}
+
+async function handleChange(request, env, session, fetchImpl) {
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return problem(400, 'invalid_json', 'The request body is not JSON.');
+  }
+
+  const { message, files, changeId, branch, pullRequest } = payload ?? {};
+
+  if (typeof message !== 'string' || !message.trim()) {
+    return problem(422, 'message_required', 'A commit message is required.');
+  }
+  if (!Array.isArray(files) || files.length === 0) {
+    return problem(422, 'files_required', 'A change needs at least one file.');
+  }
+
+  for (const file of files) {
+    const path = file?.path;
+    // Everything this CMS writes belongs in one of two places. Anything else
+    // - a workflow, a plugin, _config.yml - is not an editing operation.
+    if (typeof path !== 'string' ||
+        !(path.startsWith('_posts/') || path.startsWith('assets/img/'))) {
+      return problem(422, 'path_not_allowed', `Cannot write ${String(path)}.`, { path });
+    }
+    if (path.includes('..') || path.startsWith('/')) {
+      return problem(422, 'path_not_allowed', 'Paths must be relative and cannot escape.', { path });
+    }
+  }
+
+  const client = createGitHubClient({
+    fetch: fetchImpl,
+    token: session.ght,
+    owner: env.GITHUB_OWNER,
+    repo: env.GITHUB_REPO
+  });
+
+  const target = branch || env.DEFAULT_BRANCH || 'main';
+
+  try {
+    const result = await client.commitFiles({ branch: target, message, files, changeId });
+
+    if (!pullRequest) {
+      return json({ branch: target, ...result });
+    }
+
+    const opened = await client.openPullRequest({
+      head: target,
+      base: env.DEFAULT_BRANCH || 'main',
+      title: pullRequest.title || message.split('\n')[0],
+      body: pullRequest.body || ''
+    });
+
+    return json({
+      branch: target,
+      ...result,
+      pullRequest: { number: opened.pullRequest.number, url: opened.pullRequest.html_url },
+      pullRequestCreated: opened.created
+    });
+  } catch (error) {
+    if (error instanceof ConflictError) {
+      return problem(409, 'branch_moved',
+        'The branch changed while this was being saved. Reload and apply the change again.');
+    }
+    if (error instanceof GitHubError) {
+      return problem(502, 'github_error', 'GitHub rejected the change.', { status: error.status });
+    }
+    throw error;
+  }
+}
+
+export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
+  return {
+    async fetch(request, env) {
+      const url = new URL(request.url);
+
+      if (url.pathname === '/auth/login') {
+        return loginRedirect(env, url);
+      }
+
+      if (url.pathname === '/auth/callback') {
+        return handleCallback(request, env, url, fetchImpl);
+      }
+
+      if (url.pathname === '/auth/logout' && request.method === 'POST') {
+        return json({ ok: true }, 200, { 'set-cookie': clearCookie(SESSION_COOKIE) });
+      }
+
+      const session = await currentSession(request, env);
+      if (!session) {
+        return problem(401, 'sign_in_required', 'Sign in to continue.');
+      }
+
+      if (url.pathname === '/api/me') {
+        return json({ uid: session.uid, login: session.login });
+      }
+
+      if (url.pathname === '/api/changes' && request.method === 'POST') {
+        return handleChange(request, env, session, fetchImpl);
+      }
+
+      return problem(404, 'not_found', 'No such endpoint.');
+    }
+  };
+}
+
+export default createWorker();

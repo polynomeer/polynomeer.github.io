@@ -184,3 +184,36 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
 의존성을 두지 않는다. 세션 서명, OAuth state, 허용 목록, GitHub 요청 구성은 전부 순수
 함수라 Web Crypto 만으로 쓰고 `node --test` 로 검사한다. Cloudflare 에 묶이는 부분은
 `fetch` 핸들러 하나뿐이고, 배포할 때 wrangler 를 더하면 된다.
+
+## Stage 1 구현 현황
+
+| 파일 | 하는 일 | 검사 |
+| --- | --- | --- |
+| `cms/src/auth.js` | 세션 서명·검증, OAuth state, 허용 목록, 쿠키 | 14 |
+| `cms/src/github.js` | 원자적 commit, CAS ref, 멱등 재시도, 멱등 PR | 10 |
+| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 오류 매핑 | 14 |
+
+```bash
+cd cms && npm test   # 38 tests, 의존성 0
+```
+
+### 배포할 때 필요한 것
+
+`cms/wrangler.jsonc` 에 공개 설정만 들어 있다. secret 은 git 에 넣지 않고 넣는다.
+
+```bash
+cd cms
+npx wrangler secret put SESSION_SECRET        # 32자 이상
+npx wrangler secret put GITHUB_CLIENT_ID
+npx wrangler secret put GITHUB_CLIENT_SECRET
+npx wrangler deploy
+```
+
+GitHub OAuth App 의 Authorization callback URL 은 배포된 Worker 주소 + `/auth/callback` 이다.
+`repo` scope 를 요구하는데, 저장소 contents 에 commit 할 수 있는 가장 좁은 고전 scope 가
+그것이다. 더 좁히려면 GitHub App 으로 바꿔야 하고 설계서 21장이 그 경로를 적어 두었다.
+
+### 아직 없는 것
+
+편집 화면. 지금은 API 만 있고 `curl` 로 쓸 수 있다. 다음 작업이다.
+

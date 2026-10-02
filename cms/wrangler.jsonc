@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "polynomeer-cms",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-02",
+
+  // Public configuration only. The three secrets below are set with
+  // `wrangler secret put` and never appear in this file or in git:
+  //
+  //   SESSION_SECRET        32+ chars, signs the session cookie
+  //   GITHUB_CLIENT_SECRET  from the GitHub OAuth app
+  //
+  // GITHUB_CLIENT_ID is not a secret, but it is kept with them so the OAuth
+  // app can be swapped without a deploy.
+  "vars": {
+    "ADMIN_GITHUB_IDS": "62940574",
+    "GITHUB_OWNER": "polynomeer",
+    "GITHUB_REPO": "polynomeer.github.io",
+    "DEFAULT_BRANCH": "main"
+  },
+
+  "observability": { "enabled": true }
+}
