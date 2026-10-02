@@ -32,8 +32,7 @@ tail_includes:
         이어 읽을 글들보다 앞자리를 차지했습니다. 닫혀 있을 때만 줄 안에 들어가고, 펼치면
         한 줄을 통째로 씁니다.
 
-        날짜 둘을 span 으로 한 번 더 묶는 이유는 사이의 가운뎃점이 `span + span::before`
-        에서 나오기 때문입니다. 셋을 그대로 flex 자식으로 두면 날짜끼리도 양끝으로 벌어집니다.
+        날짜와 작성자를 span으로 묶어 가운뎃점으로 구분하고, 수정 기록과 함께 배치합니다.
       {%- endcomment -%}
       <div class="post-date-row">
         <span class="post-date-group">
@@ -50,6 +49,31 @@ tail_includes:
               {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
             </span>
           {% endif %}
+          <!-- author(s) -->
+          <span>
+            {% if page.author %}
+              {% assign authors = page.author %}
+            {% elsif page.authors %}
+              {% assign authors = page.authors %}
+            {% endif %}
+
+            {{ site.data.locales[lang].post.written_by }}
+
+            <em>
+              {% if authors %}
+                {% for author in authors %}
+                  {% if site.data.authors[author].url -%}
+                    <a href="{{ site.data.authors[author].url }}">{{ site.data.authors[author].name }}</a>
+                  {%- else -%}
+                    {{ site.data.authors[author].name }}
+                  {%- endif %}
+                  {% unless forloop.last %}{{ '</em>, <em>' }}{% endunless %}
+                {% endfor %}
+              {% else %}
+                <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>
+              {% endif %}
+            </em>
+          </span>
         </span>
 
         {% include post-revisions.html lang=lang %}
@@ -72,33 +96,7 @@ tail_includes:
         </div>
       {% endif %}
 
-      <div class="d-flex justify-content-between mt-3">
-        <!-- author(s) -->
-        <span>
-          {% if page.author %}
-            {% assign authors = page.author %}
-          {% elsif page.authors %}
-            {% assign authors = page.authors %}
-          {% endif %}
-
-          {{ site.data.locales[lang].post.written_by }}
-
-          <em>
-            {% if authors %}
-              {% for author in authors %}
-                {% if site.data.authors[author].url -%}
-                  <a href="{{ site.data.authors[author].url }}">{{ site.data.authors[author].name }}</a>
-                {%- else -%}
-                  {{ site.data.authors[author].name }}
-                {%- endif %}
-                {% unless forloop.last %}{{ '</em>, <em>' }}{% endunless %}
-              {% endfor %}
-            {% else %}
-              <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>
-            {% endif %}
-          </em>
-        </span>
-
+      <div class="d-flex justify-content-end mt-3">
         <div>
           {% if site.likes.provider == 'supabase'
             and site.likes.supabase.url
