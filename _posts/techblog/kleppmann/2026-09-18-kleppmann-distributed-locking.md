@@ -64,7 +64,9 @@ sequenceDiagram
 
 원문의 결론은 Redlock이 이도 저도 아니라는 것이다.
 
-> "it is unnecessarily heavyweight and expensive for efficiency-optimization locks, but it is not sufficiently safe for situations in which correctness depends on the lock." (Kleppmann)
+{% citation kleppmann-distributed-locking %}
+"it is unnecessarily heavyweight and expensive for efficiency-optimization locks, but it is not sufficiently safe for situations in which correctness depends on the lock."
+{% endcitation %}
 
 효율 락으로 쓰기에는 불필요하게 무겁고, 정확성이 락에 달린 상황에서는 충분히 안전하지 않다는 뜻이다. 그래서 원문은 효율이 목적이면 Redis 한 대의 단순 락을 쓰고 가끔 깨질 수 있다고 코드에 분명히 적으라고 하고, 정확성이 목적이면 ZooKeeper 같은 합의 시스템을 쓰고 락 아래의 모든 자원 접근에 fencing token을 강제하라고 한다.
 
@@ -144,7 +146,9 @@ c-2에는 대가가 있었다. lease가 항상 작업보다 짧으면 1,159건 �
 
 그리고 저장소가 토큰을 검사한다는 것이 구체적으로 무엇인지가 그림 한 장이다. 쓰기 시점 비교인지 읽기부터 쓰기까지의 비교-후-교체인지가 결과를 가르는데, 원문의 그림은 전자로 읽힌다. 그런데 원문 발행 직후 Redis 저자 Salvatore Sanfilippo(antirez)가 쓴 반론 [Is Redlock safe?](http://antirez.com/news/101)는 후자를 적었다. 그는 Redlock의 고유한 무작위 토큰으로 무엇을 하느냐고 묻고 스스로 답한다.
 
-> "For example you can implement Check and Set." (antirez)
+{% citation antirez-is-redlock-safe %}
+"For example you can implement Check and Set."
+{% endcitation %}
 
 예컨대 그 토큰으로 Check and Set을 구현할 수 있다는 것이다. 작업을 시작할 때 자원의 상태에 토큰을 새기고, 쓸 때 토큰이 그대로일 때만 읽기-수정-쓰기를 하라는 설명이 이어진다. 실험 3의 c-2와 같은 형태다. 이후 논쟁은 주로 시계와 Redlock의 안전성에 머물렀지만, 나는 이 구현 형태가 더 실용적인 쟁점이라고 본다.
 
