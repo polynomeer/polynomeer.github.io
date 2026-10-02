@@ -3819,10 +3819,30 @@ html[data-mode='dark'] {
   }
 }
 
-/* 본문 아래의 두 묶음 - 인용한 글(_plugins/post-backlinks.rb)과 관련된 글
-   (_plugins/related-posts.rb) - 은 같은 표를 씁니다. 제목 왼쪽, 작은 라벨 오른쪽. */
-#post-backlinks {
+/* 본문 아래의 목록들 - 이 글의 출처, 이 글을 언급한 글(_plugins/post-backlinks.rb),
+   관련된 글(_plugins/related-posts.rb) - 은 같은 표를 씁니다. 제목 왼쪽, 작은 라벨 오른쪽. */
+
+/* 작성자가 직접 만든 연결(나가는 출처, 들어오는 언급)을 한 묶음으로 둡니다. 둘 다 있으면
+   넓은 화면에서 좌우 두 칸으로 놓아 세로 길이를 줄입니다. */
+.post-connections {
   margin-bottom: 2rem;
+
+  > aside + aside {
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    &.is-split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 2rem;
+      align-items: start;
+
+      > aside + aside {
+        margin-top: 0;
+      }
+    }
+  }
 }
 
 .post-tail-list {

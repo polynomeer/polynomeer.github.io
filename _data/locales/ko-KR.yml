@@ -146,7 +146,8 @@ post:
     prompt: 읽는 시간
   relate_posts: 관련된 글
   continue_reading: 이어서 읽기
-  backlinks: 이 글을 인용한 글
+  backlinks: 이 글을 언급한 글
+  connections: 이 글과 연결된 글
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
   revisions: 변경이력
@@ -220,7 +221,7 @@ stats:
   upkeep_note: 글을 쓰고 두었는지, 다시 손대고 서로 연결했는지를 보여주는 수치입니다.
   fact_revised: 발행 후 고쳐 쓴 글
   fact_revisions: "개정 :COUNT건"
-  fact_cited: 다른 글이 인용한 글
+  fact_cited: 다른 글이 언급한 글
   fact_citations: "인용 :COUNT건"
   fact_tags: 쓰인 태그
   footnote: 모든 수치는 사이트를 빌드할 때 계산합니다. 방문자 수나 조회 수는 포함하지 않습니다.

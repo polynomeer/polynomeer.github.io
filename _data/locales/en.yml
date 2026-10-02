@@ -146,7 +146,8 @@ post:
     prompt: read
   relate_posts: Further Reading
   continue_reading: Continue reading
-  backlinks: Posts that cite this one
+  backlinks: Posts that mention this one
+  connections: Posts connected to this one
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer
   revisions: Revision history
@@ -220,7 +221,7 @@ stats:
   upkeep_note: Whether posts were written and left, or came back to and connected to each other.
   fact_revised: Revised after publishing
   fact_revisions: ":COUNT revisions"
-  fact_cited: Cited by another post
+  fact_cited: Mentioned by another post
   fact_citations: ":COUNT citations"
   fact_tags: Tags in use
   footnote: Everything is computed when the site is built. Visits and page views are not part of it.
