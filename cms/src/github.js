@@ -19,6 +19,7 @@
 
 export const BLOB_MODE = '100644';
 export const IDEMPOTENCY_TRAILER = 'X-CMS-Change-Id';
+export const TITLE_INDEX_PATH = 'cms/content-index.json';
 
 export class GitHubError extends Error {
   constructor(message, { status, body } = {}) {
@@ -188,6 +189,24 @@ export function createGitHubClient({
         .filter((entry) => entry.type === 'blob' &&
           entry.path.startsWith('_posts/') && /\.(md|markdown)$/.test(entry.path))
         .map((entry) => ({ path: entry.path, sha: entry.sha }));
+    },
+
+    /**
+     * Titles for the list, from the file scripts/cms/validate-content.rb --index
+     * writes. The tree read gives paths and shas and no contents, so this is
+     * the only way a title reaches the editor without reading every post.
+     *
+     * Never throws. A repository without the file, an index larger than the
+     * Contents API's 1 MB limit, or a half-written one all mean the list falls
+     * back to filenames - which is what it showed before the file existed.
+     */
+    async readTitleIndex(branch, path = TITLE_INDEX_PATH) {
+      try {
+        const parsed = JSON.parse((await api.readFile(path, branch)).text);
+        return parsed?.titles && typeof parsed.titles === 'object' ? parsed.titles : {};
+      } catch {
+        return {};
+      }
     },
 
     /** Contents API, base64 in and out; `sha` is the blob the edit is based on. */

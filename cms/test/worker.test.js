@@ -38,7 +38,7 @@ function request(path, { method = 'GET', cookie, body } = {}) {
 }
 
 /** Minimal GitHub stand-in for the commit path. */
-function githubFake({ headMessage = 'previous', patch = { status: 200 }, pulls = [] } = {}) {
+function githubFake({ headMessage = 'previous', patch = { status: 200 }, pulls = [], index } = {}) {
   const calls = [];
   const reply = (body, status = 200) => ({
     ok: status < 400,
@@ -60,6 +60,13 @@ function githubFake({ headMessage = 'previous', patch = { status: 200 }, pulls =
           { type: 'blob', path: '_posts/notes/image.png', sha: 'blob-i' },
           { type: 'tree', path: '_posts/notes', sha: 'tree-n' }
         ] });
+      }
+      if (url.includes('/contents/cms/content-index.json')) {
+        if (index === undefined) return reply({ message: 'Not Found' }, 404);
+        return reply({
+          sha: 'idx',
+          content: btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(index))))
+        });
       }
       if (url.endsWith('/git/blobs')) return reply({ sha: 'blob1' });
       if (url.endsWith('/git/trees')) return reply({ sha: 'tree2' });
@@ -420,4 +427,87 @@ test('a missing branch with nothing to branch from is still an error', async () 
     () => client.commitFiles({ branch: 'main', message: 'm', files: [{ path: 'a', content: 'b' }] }),
     (error) => error.status === 404
   );
+});
+
+// Titles come from cms/content-index.json because the tree read carries none.
+// Everything here is about the list staying correct when that file is wrong,
+// stale or absent - it is an enhancement, never a dependency.
+
+test('the list carries the title and status the index holds', async () => {
+  const github = githubFake({
+    index: {
+      titles: {
+        '_posts/notes/a.md': { title: '한글 제목', status: 'draft' }
+      }
+    }
+  });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(
+    request('/api/posts', { cookie: await sessionCookie() }), env
+  );
+  const body = await response.json();
+
+  assert.equal(body.indexed, 1);
+  const post = body.posts.find((p) => p.path === '_posts/notes/a.md');
+  assert.equal(post.title, '한글 제목');
+  assert.equal(post.status, 'draft');
+  // The tree is still what says the file exists.
+  assert.equal(post.sha, 'blob-a');
+});
+
+test('a post the index has not caught up with is still listed', async () => {
+  const github = githubFake({ index: { titles: {} } });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const body = await (await worker.fetch(
+    request('/api/posts', { cookie: await sessionCookie() }), env
+  )).json();
+
+  assert.equal(body.indexed, 0);
+  assert.ok(body.posts.some((p) => p.path === '_posts/notes/a.md'));
+  assert.equal(body.posts[0].title, undefined);
+});
+
+test('a missing index is not an error', async () => {
+  const worker = createWorker({ fetch: githubFake().fetchImpl });
+
+  const response = await worker.fetch(
+    request('/api/posts', { cookie: await sessionCookie() }), env
+  );
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.indexed, 0);
+  assert.ok(body.posts.length > 0);
+});
+
+test('an index that is not the shape we expect is ignored, not thrown', async () => {
+  for (const index of [{ titles: 'nope' }, { nothing: true }, []]) {
+    const worker = createWorker({ fetch: githubFake({ index }).fetchImpl });
+    const response = await worker.fetch(
+      request('/api/posts', { cookie: await sessionCookie() }), env
+    );
+    assert.equal(response.status, 200, JSON.stringify(index));
+    assert.equal((await response.json()).indexed, 0);
+  }
+});
+
+test('the index is read from the same branch as the tree', async () => {
+  const github = githubFake({ index: { titles: {} } });
+  const worker = createWorker({ fetch: github.fetchImpl });
+  await worker.fetch(request('/api/posts', { cookie: await sessionCookie() }), env);
+
+  const read = github.calls.find((c) => c.url.includes('/contents/cms/content-index.json'));
+  assert.ok(read.url.includes('ref=main'));
+});
+
+test('the index path is not reachable through the post read route', async () => {
+  // Reads stay confined to _posts even though the worker itself reads this
+  // one file outside it.
+  const worker = createWorker({ fetch: githubFake().fetchImpl });
+  const response = await worker.fetch(
+    request('/api/posts/cms%2Fcontent-index.json', { cookie: await sessionCookie() }), env
+  );
+  assert.equal(response.status, 422);
 });

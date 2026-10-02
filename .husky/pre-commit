@@ -1,1 +1,13 @@
 LC_ALL=en_US.UTF-8 ruby scripts/check-post-consistency.rb --quiet
+
+# The CMS list reads titles from cms/content-index.json; without this it goes
+# stale the moment a post is renamed or retitled. Only when posts are part of
+# the commit, so a style-only change does not drag a 165 KB file with it.
+#
+# Generated from the working tree, not the staged content: with a partially
+# staged post the indexed title can be the one still being written. It is a
+# label in a list, and the next commit corrects it.
+if git diff --cached --name-only --diff-filter=ACMR | grep -q '^_posts/'; then
+  LC_ALL=en_US.UTF-8 ruby scripts/cms/validate-content.rb --index
+  git add cms/content-index.json
+fi

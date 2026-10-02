@@ -11,6 +11,7 @@
 #   ruby scripts/cms/validate-content.rb           # report, exit 1 on error
 #   ruby scripts/cms/validate-content.rb --quiet   # errors only
 #   ruby scripts/cms/validate-content.rb --json    # the content index, no checks
+#   ruby scripts/cms/validate-content.rb --index   # write cms/content-index.json
 
 require 'json'
 require_relative 'content_contract'
@@ -43,6 +44,43 @@ if ARGV.include?('--json')
     total: records.size,
     posts: index
   )
+  exit 0
+end
+
+# The editor's list comes from one recursive tree read, which carries paths and
+# blob shas and no file contents - so without this the only name it can show is
+# the filename, and searching by title cannot work at all. Reading 1,272 files
+# to recover the titles is not an option over an API, so they are written out
+# here, next to the validator that already parsed every front matter.
+#
+# Lean on purpose: the Contents API refuses a file over 1 MB, and the full
+# --json index is 583 KB and grows with every field. Two keys per post is 145 KB.
+if ARGV.include?('--index')
+  entries = records
+            .select { |r| r.front_matter && r.front_matter['title'] }
+            .sort_by(&:path)
+            .map do |r|
+    info = { 'title' => r.front_matter['title'].to_s }
+    info['status'] = r.status if r.status
+    [r.path, info]
+  end
+
+  # One line per post, so a diff shows the posts that changed and not the
+  # whole file.
+  body = entries.map { |path, info| "    #{path.to_json}: #{JSON.generate(info)}" }
+
+  out = File.expand_path('../../cms/content-index.json', __dir__)
+  File.write(out, <<~JSON)
+    {
+      "generatedFrom": "ruby scripts/cms/validate-content.rb --index",
+      "total": #{entries.size},
+      "titles": {
+    #{body.join(",\n")}
+      }
+    }
+  JSON
+
+  puts "wrote #{out} (#{entries.size} titles, #{File.size(out) / 1024} KB)"
   exit 0
 end
 

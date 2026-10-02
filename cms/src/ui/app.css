@@ -66,3 +66,14 @@ textarea { min-height: 50vh; font-family: ui-monospace, SFMono-Regular, Menlo, m
 .preview img { max-width: 100%; }
 .preview pre { overflow: auto; background: var(--bg); padding: .6rem; border-radius: .4rem; }
 .ok { color: var(--ok); }
+
+.posts .flag {
+  margin-left: 0.4rem;
+  padding: 0 0.3rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.75;
+  vertical-align: middle;
+}

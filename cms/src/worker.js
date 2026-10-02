@@ -260,7 +260,20 @@ export function createWorker({ fetch: fetchImpl = globalThis.fetch } = {}) {
 
       if (url.pathname === '/api/posts' && request.method === 'GET') {
         try {
-          return json({ branch, posts: await client().listPosts(branch) });
+          const api = client();
+          // The tree read is the authority on what exists; the index only adds
+          // names to it. A post committed since the index was generated is
+          // listed either way, under its filename.
+          const [tree, titles] = await Promise.all([
+            api.listPosts(branch),
+            api.readTitleIndex(branch)
+          ]);
+
+          return json({
+            branch,
+            indexed: Object.keys(titles).length,
+            posts: tree.map((entry) => ({ ...entry, ...(titles[entry.path] ?? {}) }))
+          });
         } catch (error) {
           return problem(502, 'github_error', 'Could not list posts.', { status: error.status });
         }

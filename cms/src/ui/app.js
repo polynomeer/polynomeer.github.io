@@ -76,6 +76,7 @@ function renderList() {
     .slice(0, 200);
 
   $('count').textContent = `${shown.length} / ${posts.length}`;
+
   $('posts').replaceChildren(...shown.map((post) => {
     const li = document.createElement('li');
     if (current && current.path === post.path) li.setAttribute('aria-current', 'true');
@@ -85,6 +86,15 @@ function renderList() {
     // textContent, not innerHTML: a title is author input and this list is
     // the one place it would otherwise be injected as markup.
     button.textContent = post.title || post.path.split('/').pop();
+
+    // Only the states that mean "not on the site". Saying "published" on a
+    // thousand rows says nothing.
+    if (post.status && post.status !== 'published') {
+      const flag = document.createElement('span');
+      flag.className = 'flag';
+      flag.textContent = post.status;
+      button.append(flag);
+    }
 
     const meta = document.createElement('span');
     meta.className = 'meta';
