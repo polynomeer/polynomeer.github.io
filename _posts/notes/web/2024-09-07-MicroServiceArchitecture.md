@@ -9,8 +9,9 @@ tags: [MSA, Microservice, Architecture]
 
 마이크로서비스 아키텍처는 하나의 큰 애플리케이션을 여러 개의 작은 서비스로 나누는 방식이다. 각 서비스는 독립적으로 배포되고, 자신의 데이터와 책임을 가진다. Lewis와 Fowler의 정의는 다음과 같다.
 
-> "In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API."
-> ([Microservices](https://martinfowler.com/articles/microservices.html), 2014)
+{% citation fowler-microservices %}
+"In short, the microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API."
+{% endcitation %}
 
 애플리케이션을 각자 프로세스로 도는 작은 서비스의 묶음으로 만들고, HTTP API 같은 가벼운 방식으로 통신한다는 뜻이다.
 

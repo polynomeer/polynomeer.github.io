@@ -19,5 +19,139 @@ antirez-is-redlock-safe:
 airbnb-avoiding-double-payments:
   type: article
   title: Avoiding Double Payments in a Distributed Payments System
+  author: Jon Chew, Ninad Khisti
   publisher: The Airbnb Tech Blog
   url: https://medium.com/airbnb-engineering/avoiding-double-payments-in-a-distributed-payments-system-2981f6b070bb
+
+postgresql-asynchronous-commit:
+  type: doc
+  title: Asynchronous Commit
+  publisher: PostgreSQL Documentation
+  url: https://www.postgresql.org/docs/current/wal-async-commit.html
+
+postgresql-transaction-isolation:
+  type: doc
+  title: Transaction Isolation
+  publisher: PostgreSQL Documentation
+  url: https://www.postgresql.org/docs/current/transaction-iso.html
+
+postgresql-using-explain:
+  type: doc
+  title: Using EXPLAIN
+  publisher: PostgreSQL Documentation
+  url: https://www.postgresql.org/docs/current/using-explain.html
+
+postgresql-logical-decoding-concepts:
+  type: doc
+  title: Logical Decoding Concepts
+  publisher: PostgreSQL Documentation
+  url: https://www.postgresql.org/docs/current/logicaldecoding-explanation.html
+
+morling-outbox-pattern:
+  type: article
+  title: Reliable Microservices Data Exchange With the Outbox Pattern
+  author: Gunnar Morling
+  publisher: Debezium Blog
+  published: 2019-02-19
+  url: https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/
+
+fowler-microservices:
+  type: article
+  title: Microservices
+  author: James Lewis, Martin Fowler
+  publisher: martinfowler.com
+  published: 2014-03-25
+  url: https://martinfowler.com/articles/microservices.html
+
+fowler-integration-test:
+  type: article
+  title: IntegrationTest
+  author: Martin Fowler
+  publisher: martinfowler.com
+  url: https://martinfowler.com/bliki/IntegrationTest.html
+
+rfc-8446:
+  type: rfc
+  title: RFC 8446 The Transport Layer Security (TLS) Protocol Version 1.3
+  publisher: IETF
+  url: https://datatracker.ietf.org/doc/html/rfc8446
+  number: 8446
+
+rfc-8725:
+  type: rfc
+  title: RFC 8725 JSON Web Token Best Current Practices
+  publisher: IETF
+  url: https://datatracker.ietf.org/doc/html/rfc8725
+  number: 8725
+
+jmh-sample-dead-code:
+  type: code
+  title: JMHSample_08_DeadCode.java
+  author: openjdk/jmh
+  repo: openjdk/jmh
+  commit: "1.37"
+  path: jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_08_DeadCode.java
+
+java-bytebuffer:
+  type: doc
+  title: ByteBuffer (Java SE 21 API)
+  publisher: Oracle
+  url: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html
+
+owasp-sql-injection-prevention:
+  type: doc
+  title: SQL Injection Prevention Cheat Sheet
+  publisher: OWASP Cheat Sheet Series
+  url: https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html
+
+brooker-backoff-and-jitter:
+  type: article
+  title: Exponential Backoff And Jitter
+  author: Marc Brooker
+  publisher: AWS Architecture Blog
+  published: 2015-03-04
+  url: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+
+google-sre-book:
+  type: book
+  title: Site Reliability Engineering
+  publisher: Google, O'Reilly
+  url: https://sre.google/sre-book/table-of-contents/
+
+lamport-tla-home:
+  type: web
+  title: The TLA+ Home Page
+  author: Leslie Lamport
+  url: https://lamport.azurewebsites.net/tla/tla.html
+
+spring-transactional-javadoc:
+  type: doc
+  title: Transactional (Spring Framework API)
+  publisher: Spring Framework Javadoc
+  url: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html
+
+spring-reference-bean-nature:
+  type: doc
+  title: Customizing the Nature of a Bean
+  publisher: Spring Framework Reference
+  url: https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html
+
+kakaobank-notification-platform-1:
+  type: article
+  title: "하루 N억 건의 알림 시스템 구축기 (1): 카카오뱅크는 어떻게 발송 플랫폼의 새로운 뼈대를 세웠나"
+  publisher: 카카오뱅크 기술 블로그
+  published: 2026-09-07
+  url: https://tech.kakaobank.com/posts/2609-new-notification-platform-1/
+
+line-kafka-e2ee:
+  type: article
+  title: 초당 100만 건, LINE 앱에 Apache Kafka 종단 간 암호화 적용기
+  publisher: LY Corporation Tech Blog
+  published: 2026-07-10
+  url: https://techblog.lycorp.co.jp/ko/applying-e2ee-to-apache-kafka-in-line-app
+
+kakao-realtime-messaging-3:
+  type: article
+  title: 실시간 메시징 시스템 개발기 - 삽질 과정
+  publisher: 카카오테크
+  url: https://tech.kakao.com/posts/678

@@ -62,7 +62,9 @@ while (true) {
 
 Javadoc의 권고도 같은 방향이다.
 
-> "It is therefore recommended that direct buffers be allocated primarily for large, long-lived buffers that are subject to the underlying system's native I/O operations."
+{% citation java-bytebuffer at="Direct vs. non-direct buffers" %}
+"It is therefore recommended that direct buffers be allocated primarily for large, long-lived buffers that are subject to the underlying system's native I/O operations."
+{% endcitation %}
 
 네이티브 IO에 쓰이는 크고 오래 사는 버퍼에 주로 할당하라는 뜻이다.
 

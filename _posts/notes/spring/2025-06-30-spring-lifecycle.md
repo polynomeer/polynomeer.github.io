@@ -104,9 +104,11 @@ Spring Framework 레퍼런스는 이 콜백이 일반 프로퍼티가 채워진 
 
 스프링은 보통 초기화 이후의 후처리 단계(`postProcessAfterInitialization`)에서 프록시를 만든다. 그래서 초기화 콜백이 실행될 때는 아직 프록시가 없다. 레퍼런스는 이 점을 직접 적는다.
 
-> "Thus, the initialization callback is called on the raw bean reference, which means that AOP interceptors and so forth are not yet applied to the bean."
->
-> (초기화 콜백은 원본 빈 참조에서 호출되므로 AOP 인터셉터 등은 아직 적용되지 않은 상태다.)
+{% citation spring-reference-bean-nature %}
+"Thus, the initialization callback is called on the raw bean reference, which means that AOP interceptors and so forth are not yet applied to the bean."
+
+(초기화 콜백은 원본 빈 참조에서 호출되므로 AOP 인터셉터 등은 아직 적용되지 않은 상태다.)
+{% endcitation %}
 
 여기에 [self-invocation](/posts/proxy-limits/) 문제가 겹친다. 프록시 모드에서는 프록시를 거쳐 들어온 외부 호출만 가로채므로, 같은 객체 안에서 다른 메서드를 부르면 `@Transactional`이 붙어 있어도 트랜잭션이 시작되지 않는다. 트랜잭션 레퍼런스도 `@PostConstruct` 같은 초기화 코드에서 이 기능에 기대지 말라고 적는다([Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)).
 

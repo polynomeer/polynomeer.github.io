@@ -44,8 +44,9 @@ ResultSet rs = ps.executeQuery();
 
 `PreparedStatement`는 SQL과 값을 분리해서 전달한다. 그래서 값이 쿼리 문법으로 해석되지 않고 데이터로만 처리된다. OWASP의 SQL Injection 방어 가이드도 같은 이유를 든다.
 
-> "prepared statements ensure that an attacker cannot change the intent of a query, even if SQL commands are inserted by an attacker."
-> ([OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html))
+{% citation owasp-sql-injection-prevention %}
+"prepared statements ensure that an attacker cannot change the intent of a query, even if SQL commands are inserted by an attacker."
+{% endcitation %}
 
 공격자가 SQL 명령을 끼워 넣어도 쿼리의 의도는 바뀌지 않는다는 뜻이다. 사용자 입력이 포함되는 SQL이라면 사실상 기본 선택지라고 봐야 한다.
 

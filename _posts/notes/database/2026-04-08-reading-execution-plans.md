@@ -19,7 +19,9 @@ Nested Loop  (cost=0.43..8.48 rows=1 width=64) (actual time=0.05..0.06 rows=1 lo
 
 비용을 읽을 때는 `loops`를 먼저 본다. 안쪽 노드의 `actual time`은 1회 실행의 평균이므로, 실제 비용은 `actual time × loops`다. PostgreSQL 문서도 같은 계산을 적는다.
 
-> "Multiply by the `loops` value to get the total time actually spent in the node."
+{% citation postgresql-using-explain %}
+"Multiply by the `loops` value to get the total time actually spent in the node."
+{% endcitation %}
 
 `loops` 값을 곱해야 그 노드에서 실제로 쓴 총시간이 나온다는 뜻이다([PostgreSQL: Using EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html)). 그래서 "0.01ms짜리 인덱스 스캔"이 10만 번 돌면 1초다. 느린 쿼리에서 범인은 대개 단일 비용이 큰 노드가 아니라 loops가 큰 노드다.
 

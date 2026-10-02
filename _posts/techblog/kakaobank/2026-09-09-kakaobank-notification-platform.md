@@ -31,7 +31,9 @@ problem_decision_result:
 
 해법은 두 층이다. Service Layer는 개발자가 보는 세상이다. `RequestHandler`(메서드 3개: 처리 가능한가, 처리하라, 이름)와 `Sender`(외부 API 호출 하나)만 구현하고, 재시도·타임아웃·동시성은 몰라도 된다. 그것을 숨기는 것이 Core Layer이고, 중심에 `WorkStealQueue`가 있다. 큐를 채널 기준으로 나누고(Push 큐, Email 큐, SMS 큐), 각 큐 안에서는 순차, 큐들 사이는 병렬로 처리한다. 그런데 부하가 한 큐에 몰리면 다시 단일 큐의 문제가 된다. 그래서 [Work-Stealing](/posts/ordering-versus-isolation/)을 넣는데, 원문은 방향을 바꾼다. 일반적인 Work-Stealing은 유휴 스레드가 다른 작업의 태스크를 찾아 실행하는 방식이다([`ForkJoinPool` Javadoc](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html)). 원문은 이를 자원 중심이라 부르고 대비를 세운다.
 
-> "Work-Stealing이 노는 일꾼(Worker)이 없게 만드는 자원 중심 알고리즘이라면, 메시징 시스템은 오래 기다리는 메시지가 없게 만드는 데이터 중심 알고리즘이어야 하기 때문입니다."
+{% citation kakaobank-notification-platform-1 %}
+"Work-Stealing이 노는 일꾼(Worker)이 없게 만드는 자원 중심 알고리즘이라면, 메시징 시스템은 오래 기다리는 메시지가 없게 만드는 데이터 중심 알고리즘이어야 하기 때문입니다."
+{% endcitation %}
 
 구체적으로는 중앙 관리자가 100ms마다 모든 큐를 스캔한다. Age(큐 생성 시각부터 지난 시간)가 500ms를 넘은 큐가 있으면 그 큐를 반으로 나눠 유휴 워커에 준다. 구현에는 세 장치가 있다. 첫째는 [Lock-Free](/posts/lock-free-and-cas/)다. 락을 잡지 않고 CAS(값이 예상한 그대로일 때만 바꾸는 원자적 연산)로 분할 시점을 잡으며, Barrier(배열 안에서 분할 지점을 가리키는 표지)로 경계를 표시한다. 둘째는 Zero-Copy다. 큐를 나눌 때 배열을 복사하지 않고 인덱스만 조정한다. 셋째는 고정 크기 배열이다. 새 배열을 만들지 않으므로 [GC 압박](/posts/java-garbage-collection/)이 줄어든다. 원문은 초당 200번의 steal이 일어나도 새 배열을 만들지 않는다고 적었다.
 

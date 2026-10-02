@@ -91,8 +91,9 @@ public void rollbackOnCheckedExceptionWithRollbackFor(...) throws Exception { ..
 
 `readOnly`는 기본적으로 힌트이기 때문이다. `@Transactional` Javadoc은 이 속성을 이렇게 설명한다.
 
-> "This just serves as a hint for the actual transaction subsystem; it will *not necessarily* cause failure of write access attempts."
-> ([Transactional Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html))
+{% citation spring-transactional-javadoc %}
+"This just serves as a hint for the actual transaction subsystem; it will *not necessarily* cause failure of write access attempts."
+{% endcitation %}
 
 하위 시스템에 주는 힌트일 뿐이고, 쓰기 시도를 반드시 실패시키지는 않는다는 뜻이다. 그래서 다음과 같이 읽어야 한다.
 

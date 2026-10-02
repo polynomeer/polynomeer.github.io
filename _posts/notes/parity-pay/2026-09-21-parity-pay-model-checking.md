@@ -20,7 +20,9 @@ problem_decision_result:
 
 그래서 순서를 전부 밟는 도구가 필요했다. TLA+는 시스템의 동작을 상태와 전이로 적는 명세 언어이고, TLC는 그 명세를 검사하는 [모델 검사기](/posts/model-checking-basics/)다. Lamport는 TLC를 explicit-state 모델 검사기, 즉 도달할 수 있는 상태를 하나씩 직접 만들어 보며 검사하는 도구로 소개한다([TLA+ Tools](https://lamport.azurewebsites.net/tla/tools.html)). 이 글처럼 모델이 작으면 도달 가능한 상태를 전부 밟는다. Lamport는 TLA+의 쓸모를 이렇게 적었다.
 
-> "TLA+ and its tools are useful for eliminating fundamental design errors, which are hard to find and expensive to correct in code." ([The TLA+ Home Page](https://lamport.azurewebsites.net/tla/tla.html))
+{% citation lamport-tla-home %}
+"TLA+ and its tools are useful for eliminating fundamental design errors, which are hard to find and expensive to correct in code."
+{% endcitation %}
 
 코드에서 찾기 어렵고 고치기 비싼 설계 오류를 걸러내는 데 쓴다는 뜻이다. 이 글은 그 도구를 UNKNOWN 해소 규칙에 대 본 기록이다.
 

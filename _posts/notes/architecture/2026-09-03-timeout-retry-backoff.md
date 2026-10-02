@@ -48,7 +48,9 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 지터는 그 간격에 무작위성을 준다. 목적은 동기화된 폭주를 흩는 것이다. 장애가 복구되는 순간 수천 클라이언트가 동시에 재시도하면 그 자체가 새 장애다(thundering herd). Marc Brooker의 시뮬레이션에서는 백오프만 둔 재시도가 여전히 같은 시각에 뭉쳤다.
 
-> "The solution isn't to remove backoff. It's to add jitter." ([AWS Architecture Blog: Exponential Backoff And Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/))
+{% citation brooker-backoff-and-jitter %}
+"The solution isn't to remove backoff. It's to add jitter."
+{% endcitation %}
 
 백오프를 없애는 것이 아니라 지터를 더하는 것이 답이라는 뜻이다.
 
@@ -70,7 +72,9 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 데드라인 전파가 이 문제를 푼다. "언제까지"라는 기한을 호출에 실어 보내고, 각 층은 남은 시간만큼만 기다린다. SRE 책의 표현은 이렇다.
 
-> "Servers should check the deadline left at each stage before attempting to perform any more work on the request." ([Google SRE: Addressing Cascading Failures](https://sre.google/sre-book/addressing-cascading-failures/))
+{% citation google-sre-book at="Addressing Cascading Failures" %}
+"Servers should check the deadline left at each stage before attempting to perform any more work on the request."
+{% endcitation %}
 
 단계마다 남은 기한을 확인한 뒤에 다음 작업을 하라는 것이다. 남은 시간이 0이면 호출을 아예 시작하지 않는다. gRPC의 deadline이 이 모델이다. 개념상 기한은 절대 시각이지만, gRPC는 서버 간 시계 차이를 피하려고 전파할 때 경과 시간을 뺀 남은 시간(timeout)으로 바꿔 보낸다([gRPC: Deadlines](https://grpc.io/docs/guides/deadlines/)). HTTP에서는 헤더로 직접 구현한다.
 

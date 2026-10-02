@@ -48,7 +48,9 @@ COMMIT;
 
 PostgreSQL은 [MVCC](/posts/mvcc/) 스냅샷으로 구현한다. READ COMMITTED는 문장 단위 스냅샷, REPEATABLE READ는 트랜잭션 단위 스냅샷이다. 정확히는 트랜잭션 안에서 `BEGIN` 같은 제어문이 아닌 첫 문장이 시작될 때의 스냅샷을 끝까지 쓴다([PostgreSQL: Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html)). 그래서 PostgreSQL의 REPEATABLE READ에서는 팬텀도 보이지 않는다.
 
-> "PostgreSQL's Repeatable Read implementation does not allow phantom reads."
+{% citation postgresql-transaction-isolation %}
+"PostgreSQL's Repeatable Read implementation does not allow phantom reads."
+{% endcitation %}
 
 표준은 수준마다 일어나면 안 되는 현상만 정하므로, 이렇게 더 엄격한 것은 허용된다는 것이 같은 문서의 설명이다. 대신 갱신 충돌이 나면 `could not serialize access due to concurrent update`로 트랜잭션을 실패시킨다. 그래서 애플리케이션이 재시도를 준비해야 한다.
 

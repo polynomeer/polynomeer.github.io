@@ -94,7 +94,9 @@ write skew는 양쪽 RR에서 20/20 살아남았고 SERIALIZABLE에서만 막혔
 
 SSI는 Serializable Snapshot Isolation이다. MySQL SERIALIZABLE은 autocommit이 꺼진 트랜잭션에서 일반 `SELECT`를 `SELECT ... FOR SHARE`로 바꾼다([MySQL 8.4](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html)). PostgreSQL의 predicate lock(읽은 범위의 기록)은 충돌 판정에만 쓰인다.
 
-> "In PostgreSQL these locks do not cause any blocking and therefore can not play any part in causing a deadlock." ([PostgreSQL 17](https://www.postgresql.org/docs/17/transaction-iso.html))
+{% citation postgresql-transaction-isolation at="PostgreSQL 17" %}
+"In PostgreSQL these locks do not cause any blocking and therefore can not play any part in causing a deadlock."
+{% endcitation %}
 
 대기를 만들지 않으니 데드락의 원인도 되지 않는다는 뜻이다. 비용이 숫자로 갈렸다. non-repeatable read와 phantom 시나리오의 중앙값이다.
 

@@ -44,7 +44,9 @@ RS256/ES256은 비대칭키다. 발급자만 개인키를 갖고 검증자는 �
 
 두 사고의 교훈은 같다. **알고리즘은 토큰이 정하는 것이 아니라 서버가 정한다.** 검증 시 기대하는 알고리즘을 고정하고, 헤더의 `alg`는 그것과 일치하는지 확인하는 용도로만 쓴다. RFC 8725 3.1은 라이브러리 쪽 요구사항으로 이를 적는다.
 
-> "Libraries MUST enable the caller to specify a supported set of algorithms and MUST NOT use any other algorithms when performing cryptographic operations."
+{% citation rfc-8725 at="Section 3.1" %}
+"Libraries MUST enable the caller to specify a supported set of algorithms and MUST NOT use any other algorithms when performing cryptographic operations."
+{% endcitation %}
 
 라이브러리는 호출자가 허용 알고리즘 집합을 지정할 수 있게 해야 하고, 그 밖의 알고리즘은 쓰지 말아야 한다는 뜻이다.
 

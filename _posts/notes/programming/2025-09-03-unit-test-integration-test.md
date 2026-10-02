@@ -36,9 +36,11 @@ tags: [Unit Test, Integration Test, Testing]
 
 통합 테스트는 여러 구성 요소가 함께 동작할 때 기대한 결과가 나오는지를 본다. Fowler의 정의는 다음과 같다([IntegrationTest](https://martinfowler.com/bliki/IntegrationTest.html)).
 
-> "Integration tests determine if independently developed units of software work correctly when they are connected to each other."
->
-> (통합 테스트는 따로 개발된 소프트웨어 단위들이 서로 연결됐을 때 올바르게 동작하는지 확인한다.)
+{% citation fowler-integration-test %}
+"Integration tests determine if independently developed units of software work correctly when they are connected to each other."
+
+(통합 테스트는 따로 개발된 소프트웨어 단위들이 서로 연결됐을 때 올바르게 동작하는지 확인한다.)
+{% endcitation %}
 
 예를 들어:
 

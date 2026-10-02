@@ -24,7 +24,9 @@ Debezium은 DB 입장에서 보면 [복제본](/posts/db-replication/)처럼 행
 
 이때 **복제 슬롯은 커넥터가 읽을 때까지 WAL을 보관한다.** 슬롯은 소비자의 상태를 모른다.
 
-> "They will prevent removal of required resources even when there is no connection using them." ([PostgreSQL 문서](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html))
+{% citation postgresql-logical-decoding-concepts %}
+"They will prevent removal of required resources even when there is no connection using them."
+{% endcitation %}
 
 연결이 없어도 필요한 자원의 삭제를 막는다는 뜻이다. 그래서 커넥터가 멈추면 슬롯의 위치가 앞으로 가지 않고, DB는 그 위치부터의 WAL을 지우지 못한다. WAL이 계속 쌓여 결국 디스크가 찬다. CDC 운영에서 가장 흔한 장애가 이것이고, 커넥터 하나가 멈춘 것이 DB 장애로 번지는 경로다. 그래서 슬롯이 얼마나 뒤처졌는지를 반드시 감시해야 한다. LSN(Log Sequence Number)은 WAL 안의 위치를 나타내는 번호다. `pg_replication_slots`의 `restart_lsn`, `confirmed_flush_lsn`이 현재 LSN에서 얼마나 떨어져 있는지가 슬롯의 지연이다.
 
@@ -94,7 +96,9 @@ Debezium은 트랜잭션마다 BEGIN과 END 이벤트를 별도 토픽에 내고
 
 가장 큰 차이는 **결합의 대상**이다. CDC를 쓰면 하류 시스템이 우리 테이블 구조에 묶이고, 컬럼 이름을 바꾸는 리팩터링이 다른 팀을 깨뜨린다. Outbox는 계약을 명시적으로 정의하므로 내부 구조를 바꿀 자유가 남는다. Debezium의 Outbox 글도 이 점을 든다.
 
-> "This also helps to make sure that event consumers won't break when for instance altering the internal domain model or the `PurchaseOrder` table." ([Gunnar Morling](https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/))
+{% citation morling-outbox-pattern %}
+"This also helps to make sure that event consumers won't break when for instance altering the internal domain model or the `PurchaseOrder` table."
+{% endcitation %}
 
 내부 모델이나 테이블을 바꿔도 소비자가 깨지지 않는다는 뜻이다.
 

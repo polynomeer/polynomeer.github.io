@@ -36,7 +36,9 @@ Airbnb는 결제를 [SOA](/posts/microservice-architecture/)(서비스 지향 �
 
 원문의 중심은 요청을 세 단계로 자르는 것이다. Pre-RPC에서 요청 내용을 DB에 기록하고, RPC에서 외부(결제 프로세서, 매입사)를 호출하고, Post-RPC에서 응답과 재시도 가능 여부를 DB에 기록한다. 규칙은 둘이다. Pre·Post-RPC 단계에서는 네트워크 호출을 하지 않고, RPC 단계에서는 DB를 만지지 않는다.
 
-> "We essentially want to avoid mixing network communication with database work." (Jon Chew, Ninad Khisti)
+{% citation airbnb-avoiding-double-payments %}
+"We essentially want to avoid mixing network communication with database work."
+{% endcitation %}
 
 네트워크 통신과 DB 작업을 섞지 않겠다는 것이다. 원문은 Pre·Post 단계의 RPC가 [커넥션 풀의 빠른 고갈](/posts/connections-and-sessions/)과 성능 저하를 만든다는 것을 힘들게 배웠다고 적고, 네트워크 호출은 본질적으로 신뢰할 수 없다고 이유를 단다. 그래서 Pre와 Post는 각각 라이브러리가 연 하나의 DB 트랜잭션으로 감싸인다. RPC 단계는 멱등한 계산이나 RPC를 하는 자리이고, 원문은 그 예로 재시도 요청이면 하위 서비스에 거래 상태를 먼저 조회하는 것을 든다.
 

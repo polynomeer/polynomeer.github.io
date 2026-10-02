@@ -82,7 +82,9 @@ TLS 1.3의 0-RTT는 재개 시 핸드셰이크 완료 전에 애플리케이션 
 
 문제는 재전송 공격(replay)이다. RFC 8446은 0-RTT 데이터의 보안 성질이 다른 TLS 데이터보다 약하다고 명시하고, 그 이유를 이렇게 적는다([2.3절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.3)).
 
-> "There are no guarantees of non-replay between connections."
+{% citation rfc-8446 at="Section 2.3" %}
+"There are no guarantees of non-replay between connections."
+{% endcitation %}
 
 연결 사이의 재전송을 막는다는 보장이 없다는 뜻이다. 1-RTT 데이터는 서버가 연결마다 새로 만드는 Random 값이 키 계산에 들어가므로, 예전 메시지를 그대로 다시 보내도 통하지 않는다. 0-RTT 데이터는 ServerHello보다 먼저 나가므로 이 보호를 받지 못한다. 공격자가 이 데이터를 가로채 다시 보내면 서버가 같은 요청을 두 번 처리할 수 있다. 서버 측 완화책은 [8절](https://datatracker.ietf.org/doc/html/rfc8446#section-8)에 있지만 완전하지 않다.
 

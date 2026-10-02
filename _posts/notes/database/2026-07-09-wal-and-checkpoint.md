@@ -93,7 +93,9 @@ PostgreSQL에서는 `checkpoint_timeout`, `max_wal_size`, `checkpoint_completion
 
 PostgreSQL의 `synchronous_commit=off`가 특이하다. 유실은 가능하지만 일관성은 깨지지 않는다.
 
-> "The risk that is taken by using asynchronous commit is of data loss, not data corruption."
+{% citation postgresql-asynchronous-commit %}
+"The risk that is taken by using asynchronous commit is of data loss, not data corruption."
+{% endcitation %}
 
 비동기 커밋이 지는 위험은 데이터 유실이지 손상이 아니라는 뜻이다([PostgreSQL: Asynchronous Commit](https://www.postgresql.org/docs/current/wal-async-commit.html)). "최근 몇 건이 없었던 일이 될 수 있다"이지 "데이터가 망가진다"가 아니다. 설정을 고를 때는 이 구분을 기준으로 삼는다.
 

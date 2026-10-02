@@ -68,7 +68,9 @@ problem_decision_result:
 
 죽은 코드 제거는 1.07ns짜리 일을 0.043ns로 보고한다. 결과를 아무도 쓰지 않으므로 컴파일러가 계산을 지울 수 있고, 남은 0.043ns는 대략 루프 카운터 값이다.
 
-> "The downfall of many benchmarks is Dead-Code Elimination (DCE): compilers are smart enough to deduce some computations are redundant and eliminate them completely." ([JMHSample_08_DeadCode](https://github.com/openjdk/jmh/blob/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_08_DeadCode.java))
+{% citation jmh-sample-dead-code %}
+"The downfall of many benchmarks is Dead-Code Elimination (DCE): compilers are smart enough to deduce some computations are redundant and eliminate them completely."
+{% endcitation %}
 
 JMH는 반환값을 Blackhole(값을 소비한 것처럼 만드는 객체)에 넘겨 이 제거를 막는다.
 
