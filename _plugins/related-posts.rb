@@ -134,16 +134,6 @@ module Jekyll
           end
 
           scores.delete(page_index)
-          # Series neighbours already appear in the reading navigation.
-          if page.data['series'] && page.data['series_order']
-            members = by_series[page.data['series']].sort_by do |i|
-              order = posts[i].data['series_order']
-              [order.nil? ? 1 : 0, order || 0]
-            end
-            position = members.index(page_index)
-            scores.delete(members[position - 1]) if position && position.positive?
-            scores.delete(members[position + 1]) if position && position + 1 < members.size
-          end
           if scores.empty?
             page.data['related_entries'] = []
             next

@@ -27,13 +27,10 @@ Two exclusions:
 
 ## Rendering
 
-`_includes/post-nav.html` renders previous/next buttons inside the series panel
-above post content. The buttons are outside its collapsed-by-default `details`
-list, so they remain visible whether the list is open or closed. Ordinary posts
-have no chronological navigation. There is no separate "Continue reading" section.
+The series panel above post content has a collapsed-by-default list. There are
+no previous/next post buttons and no separate "Continue reading" section.
 `_includes/related-posts.html` starts the tail with up to three recommendation cards.
-Recommendations retain the plugin ranking after excluding the series neighbours
-already shown in navigation, with up to three remaining candidates.
+Recommendations retain the plugin ranking, including series neighbours.
 
 `_includes/post-backlinks.html` follows this section, before comments. Its heading
 and first three citation rows are visible. A button expands any remaining rows;
