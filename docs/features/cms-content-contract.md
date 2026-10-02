@@ -193,13 +193,14 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
 | --- | --- | --- |
 | `cms/src/auth.js` | 세션 서명·검증, OAuth state, 허용 목록, 쿠키 | 14 |
 | `cms/src/github.js` | 원자적 commit, CAS ref, 브랜치 생성, 멱등 재시도, 멱등 PR | 10 |
-| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 제목 색인 병합, 오류 매핑 | 28 |
+| `cms/src/worker.js` | 라우트와 인가, 경로 제한, 제목 색인 병합, 이력, 오류 매핑 | 35 |
 | `cms/src/ui/markdown.js` | 미리보기가 작성자 입력을 실행하지 않음, 이미지 주소 해석 | 17 |
 | `cms/src/ui/frontmatter.js` | 원문 보존 분리·결합 | 10 |
 | `cms/src/ui/images.js` | 업로드 파일명, 이름 충돌, 크기 등급 | 9 |
+| `cms/src/ui/diff.js` | 줄 단위 비교, 접기, 긴 글에서의 동작 | 8 |
 
 ```bash
-cd cms && npm test   # 88 tests, 의존성 0
+cd cms && npm test   # 103 tests, 의존성 0
 ```
 
 설정하고 쓰는 방법은 [`docs/guides/cms-usage-guide.md`](../guides/cms-usage-guide.md)에 따로 적었다.
@@ -255,5 +256,5 @@ dev 서버도 접두사를 떼지 않는다.
 
 ### 아직 없는 것
 
-수정 이력 보기, 메타데이터 사전 편집, 새 글의 유형·경로 직접 지정, 이미지 리사이즈.
+메타데이터 사전 편집, 새 글의 유형·경로 직접 지정, 이미지 리사이즈.
 
