@@ -10,7 +10,7 @@ description: "HTTP의 요청과 응답을 메서드 의미, 안전성, 멱등성
 
 > 강의: [김영한, 모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-웹-네트워크/dashboard?cid=326277)
 >
-> 2026-10-02 기준 41/41강 완강 표시를 확인했다. 전체 커리큘럼과 「HTTP 메서드의 속성」의 0:00~1:41 스크립트를 다시 확인했다. 메서드 의미는 RFC로 보충했고, 그림은 새로 구성했다. [학습성과](/learning-evidence/inflearn-http-basics/)
+> [학습성과](/learning-evidence/inflearn-http-basics/)
 
 웹 요청을 보낼 수 있다는 것과 HTTP를 이해한다는 것은 다르다. 요청 결과가 도착하지 않았을 때 다시 보내도 되는지, 같은 응답을 저장해 재사용해도 되는지, 조회 링크가 서버 상태를 바꾸어도 되는지에는 프로토콜의 의미가 필요하다.
 

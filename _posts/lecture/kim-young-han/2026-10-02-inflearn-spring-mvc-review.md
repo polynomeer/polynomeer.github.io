@@ -10,7 +10,7 @@ description: "직접 만드는 MVC와 DispatcherServlet을 연결하고, 요청 
 
 > 강의: [김영한, 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술](https://www.inflearn.com/course/스프링-mvc-1/dashboard?cid=326674)
 >
-> 2026-10-02 기준 72/72강 완강 표시를 확인했다. 전체 커리큘럼과 「스프링 MVC 전체 구조」의 0:00~3:01 스크립트를 다시 확인했다. 아래 구조도와 점검표는 복습용으로 재구성했다. [학습성과](/learning-evidence/inflearn-spring-mvc/)
+> [학습성과](/learning-evidence/inflearn-spring-mvc/)
 
 컨트롤러 메서드가 호출되려면 그 전에 해야 할 일이 있다. URL에 맞는 처리 대상을 찾고, 요청 값을 메서드 인자로 바꾸고, 실행 결과를 HTTP 응답으로 만들어야 한다. 이 과정을 한 메서드의 내부 동작처럼 생각하면 오류가 났을 때 살펴볼 범위가 너무 넓어진다.
 

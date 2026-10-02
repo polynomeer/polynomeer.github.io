@@ -10,7 +10,7 @@ description: "엔티티 조회와 DTO 조회를 구분하고 연관관계, 컬�
 
 > 강의: [김영한, 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/스프링부트-JPA-API개발-성능최적화/dashboard?cid=324214)
 >
-> 2026-10-02 기준 24/24강 완강 표시를 확인했다. 전체 커리큘럼과 「API 개발 고급 정리」의 0:00~1:49 스크립트를 다시 확인했다. 아래 데이터와 전략 비교는 설명용이며 벤치마크 결과가 아니다. [학습성과](/learning-evidence/inflearn-jpa-application-2/)
+> [학습성과](/learning-evidence/inflearn-jpa-application-2/)
 
 조회 API의 성능을 볼 때 SQL 개수만 세면 놓치는 것이 있다. 한 번의 조회로 줄였더라도 결과 행이 크게 늘어날 수 있고, 데이터베이스에서 처리할 페이징을 애플리케이션 메모리에서 처리하게 될 수도 있다. 먼저 반환할 응답의 형태와 조회할 관계를 구분해야 한다.
 

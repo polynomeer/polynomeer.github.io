@@ -10,7 +10,7 @@ description: "데이터 모델과 기본 SQL을 연결하고 WHERE, GROUP BY, HA
 
 > 강의: [김영한의 실전 데이터베이스 입문 - 모든 IT인을 위한 SQL 첫걸음(SQL부터 차근차근)](https://www.inflearn.com/course/김영한-실전-데이터베이스-입문/dashboard?cid=338210)
 >
-> 2026-10-02 기준 53/53강 완강 표시를 확인했다. 전체 커리큘럼과 「SQL 실행 순서」의 0:29~2:20 스크립트를 다시 확인했다. 아래 SQL과 데이터는 별도로 만든 설명용 예시이며 실행 측정 결과가 아니다. [학습성과](/learning-evidence/inflearn-database-intro/)
+> [학습성과](/learning-evidence/inflearn-database-intro/)
 
 SQL을 처음 복습할 때는 문법이 맞는지에 집중하기 쉽다. 하지만 문장이 실행되더라도 원하는 데이터를 의미하는지는 다른 문제다. 어떤 행을 먼저 남기고, 무엇을 기준으로 묶고, 묶인 결과 중 무엇을 선택하는지 설명할 수 있어야 한다.
 

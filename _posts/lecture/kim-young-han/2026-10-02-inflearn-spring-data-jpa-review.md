@@ -10,7 +10,7 @@ description: "공통 리포지토리, 쿼리 메서드, @Query의 역할을 나�
 
 > 강의: [김영한, 실전! 스프링 데이터 JPA](https://www.inflearn.com/course/스프링-데이터-JPA-실전/dashboard?cid=324474)
 >
-> 2026-10-02 기준 32/32강 완강 표시를 확인했다. 전체 커리큘럼과 「@Query, 리포지토리 메소드에 쿼리 정의하기」의 0:00~2:12 스크립트를 다시 확인했다. 코드와 점검표는 별도로 구성했다. [학습성과](/learning-evidence/inflearn-spring-data-jpa/)
+> [학습성과](/learning-evidence/inflearn-spring-data-jpa/)
 
 스프링 데이터 JPA를 사용하면 저장소 구현 코드가 짧아진다. 하지만 코드가 짧아진 것과 조회의 의미가 단순해진 것은 다르다. 반환할 데이터의 개수, 정렬, 필요한 관계, 데이터 변경의 경계는 여전히 개발자가 결정해야 한다.
 
