@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 9: 캐시의 저장, 신선도, 재검증을 구분하기"
-date: 2026-10-02 11:09:00 +0900
+date: 2022-10-19 20:55:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, Cache, Web]

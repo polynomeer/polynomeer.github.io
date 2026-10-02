@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 1: 웹 프레임워크 앞에서 확인할 것들"
-date: 2026-10-02 11:01:00 +0900
+date: 2022-09-03 21:14:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, Web]

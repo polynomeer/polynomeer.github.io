@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 5: 메서드의 의미와 재시도 판단"
-date: 2026-10-02 11:05:00 +0900
+date: 2022-09-25 15:22:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, REST, API]

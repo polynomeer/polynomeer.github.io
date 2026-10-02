@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 7: 상태 코드가 클라이언트의 다음 행동을 정한다"
-date: 2026-10-02 11:07:00 +0900
+date: 2022-10-07 21:49:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, API, Web]

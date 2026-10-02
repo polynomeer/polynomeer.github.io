@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 10: 배운 개념을 작은 API의 설계 기준으로 바꾸기"
-date: 2026-10-02 11:10:00 +0900
+date: 2022-10-26 21:31:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, API, Web]

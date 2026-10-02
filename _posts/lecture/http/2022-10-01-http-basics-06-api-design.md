@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 6: 폼 전송에서 리소스 중심 API 설계까지"
-date: 2026-10-02 11:06:00 +0900
+date: 2022-10-01 16:08:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, REST, API]

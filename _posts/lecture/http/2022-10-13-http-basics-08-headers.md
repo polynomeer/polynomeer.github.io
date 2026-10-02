@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 8: 표현과 협상, 인증과 쿠키를 헤더로 연결하기"
-date: 2026-10-02 11:08:00 +0900
+date: 2022-10-13 22:16:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, Web, Cookie]

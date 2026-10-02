@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 4: 무상태, 연결 재사용, 메시지 구조"
-date: 2026-10-02 11:04:00 +0900
+date: 2022-09-19 21:37:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, Web, Network]

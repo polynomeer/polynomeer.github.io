@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 3: URL 한 줄에서 요청과 응답까지"
-date: 2026-10-02 11:03:00 +0900
+date: 2022-09-14 20:41:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, URI, Web]

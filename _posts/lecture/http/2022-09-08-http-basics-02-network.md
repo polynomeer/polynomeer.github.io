@@ -1,6 +1,6 @@
 ---
 title: "HTTP 웹 기본 지식 2: IP, TCP, 포트, DNS의 역할 나누기"
-date: 2026-10-02 11:02:00 +0900
+date: 2022-09-08 22:03:00 +0900
 status: published
 categories: [Lecture, HTTP]
 tags: [HTTP, Network, TCP, DNS]
