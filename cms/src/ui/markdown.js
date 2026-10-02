@@ -47,9 +47,41 @@ export function safeUrl(url) {
   return value;
 }
 
-function renderInline(escaped) {
+/**
+ * The site-root path an asset reference means, or null if it is not one.
+ *
+ * Posts here write `../../../assets/img/...`, which only resolves because it
+ * overshoots the root from a two-segment permalink. Both that and the plain
+ * `/assets/...` form name the same file.
+ */
+export function assetPath(url) {
+  if (url.startsWith('/assets/')) {
+    return url;
+  }
+  const climbed = url.replace(/^(\.\.?\/)+/, '');
+  return climbed !== url && climbed.startsWith('assets/') ? `/${climbed}` : null;
+}
+
+function renderInline(escaped, images, siteBase) {
   return escaped
-    .replace(IMAGE, (_match, alt, src) => `<img src="${safeUrl(src)}" alt="${alt}">`)
+    .replace(IMAGE, (_match, alt, src) => {
+      // An image picked in this session is not committed yet, so its URL
+      // 404s. `images` maps the exact path the markdown names to an object
+      // URL this editor created; it is our own string, not author input, so
+      // it does not go through safeUrl - and a src that is not an exact key
+      // still does.
+      const pending = images?.get?.(src);
+      if (pending) {
+        return `<img src="${pending}" alt="${alt}">`;
+      }
+
+      // The editor is not served from the blog, so without this every image
+      // already committed is a broken icon here. Only after safeUrl, and
+      // only for a path that points at the site's own assets.
+      const url = safeUrl(src);
+      const rooted = siteBase ? assetPath(url) : null;
+      return `<img src="${rooted ? siteBase + rooted : url}" alt="${alt}">`;
+    })
     .replace(LINK, (_match, text, href) =>
       `<a href="${safeUrl(href)}" rel="noopener noreferrer" target="_blank">${text}</a>`)
     .replace(INLINE_CODE, '<code>$1</code>')
@@ -69,7 +101,7 @@ export function findLiquid(source) {
   return found;
 }
 
-export function renderMarkdown(source) {
+export function renderMarkdown(source, { images, siteBase } = {}) {
   const lines = String(source).split('\n');
   const out = [];
 
@@ -80,7 +112,7 @@ export function renderMarkdown(source) {
 
   const closeParagraph = () => {
     if (paragraph.length) {
-      out.push(`<p>${renderInline(paragraph.join(' '))}</p>`);
+      out.push(`<p>${renderInline(paragraph.join(' '), images, siteBase)}</p>`);
       paragraph = [];
     }
   };
@@ -124,7 +156,7 @@ export function renderMarkdown(source) {
       closeParagraph();
       closeList();
       const level = heading[1].length;
-      out.push(`<h${level}>${renderInline(escapeHtml(heading[2]))}</h${level}>`);
+      out.push(`<h${level}>${renderInline(escapeHtml(heading[2]), images, siteBase)}</h${level}>`);
       continue;
     }
 
@@ -132,7 +164,7 @@ export function renderMarkdown(source) {
     if (quote) {
       closeParagraph();
       closeList();
-      out.push(`<blockquote>${renderInline(escapeHtml(quote[1]))}</blockquote>`);
+      out.push(`<blockquote>${renderInline(escapeHtml(quote[1]), images, siteBase)}</blockquote>`);
       continue;
     }
 
@@ -146,7 +178,7 @@ export function renderMarkdown(source) {
         out.push(`<${wanted}>`);
         list = wanted;
       }
-      out.push(`<li>${renderInline(escapeHtml((bullet || numbered)[1]))}</li>`);
+      out.push(`<li>${renderInline(escapeHtml((bullet || numbered)[1]), images, siteBase)}</li>`);
       continue;
     }
 

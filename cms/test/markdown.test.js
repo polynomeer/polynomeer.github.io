@@ -75,3 +75,63 @@ test('liquid is reported with line numbers rather than rendered', () => {
 test('escapeHtml covers the five characters that matter', () => {
   assert.equal(escapeHtml(`<>&"'`), '&lt;&gt;&amp;&quot;&#39;');
 });
+
+test('an image staged in this session previews from its object url', async () => {
+  const { renderMarkdown } = await import('../src/ui/markdown.js');
+  const images = new Map([['/assets/img/posts/a.png', 'blob:http://cms/abc']]);
+
+  const html = renderMarkdown('![shot](/assets/img/posts/a.png)', { images });
+  assert.match(html, /src="blob:http:\/\/cms\/abc"/);
+});
+
+test('only an exact staged path bypasses the url check', async () => {
+  const { renderMarkdown } = await import('../src/ui/markdown.js');
+  const images = new Map([['/assets/img/posts/a.png', 'blob:http://cms/abc']]);
+
+  // Not staged, and a scheme: still becomes '#'.
+  const html = renderMarkdown('![x](javascript:alert(1))', { images });
+  assert.match(html, /src="#"/);
+  assert.doesNotMatch(html, /blob:/);
+});
+
+test('without the map, images render exactly as before', async () => {
+  const { renderMarkdown } = await import('../src/ui/markdown.js');
+  const html = renderMarkdown('![shot](/assets/img/posts/a.png)');
+  assert.match(html, /src="\/assets\/img\/posts\/a\.png"/);
+});
+
+test('a committed image is previewed from the site it was committed to', async () => {
+  const { renderMarkdown } = await import('../src/ui/markdown.js');
+  const html = renderMarkdown('![x](/assets/img/posts/a.png)', { siteBase: 'https://example.test' });
+  assert.match(html, /src="https:\/\/example\.test\/assets\/img\/posts\/a\.png"/);
+});
+
+test('siteBase does not rewrite an absolute url, and cannot revive a blocked one', async () => {
+  const { renderMarkdown } = await import('../src/ui/markdown.js');
+  const site = { siteBase: 'https://example.test' };
+
+  assert.match(renderMarkdown('![x](https://cdn.test/a.png)', site), /src="https:\/\/cdn\.test\/a\.png"/);
+  // safeUrl turned this into '#', which is not root-relative, so it stays '#'.
+  assert.match(renderMarkdown('![x](javascript:alert(1))', site), /src="#"/);
+});
+
+test('the relative asset paths the posts actually use are recognised', async () => {
+  const { assetPath } = await import('../src/ui/markdown.js');
+
+  assert.equal(assetPath('../../../assets/img/posts/a.png'), '/assets/img/posts/a.png');
+  assert.equal(assetPath('./../../../assets/img/posts/a.png'), '/assets/img/posts/a.png');
+  assert.equal(assetPath('/assets/img/posts/a.png'), '/assets/img/posts/a.png');
+
+  // Not the site's assets, so not rewritten.
+  assert.equal(assetPath('https://cdn.test/a.png'), null);
+  assert.equal(assetPath('./diagram.png'), null);
+  assert.equal(assetPath('#'), null);
+});
+
+test('a post written with relative asset paths previews its images', async () => {
+  const { renderMarkdown } = await import('../src/ui/markdown.js');
+  const html = renderMarkdown('![a](../../../assets/img/posts/a.png)', {
+    siteBase: 'https://example.test'
+  });
+  assert.match(html, /src="https:\/\/example\.test\/assets\/img\/posts\/a\.png"/);
+});

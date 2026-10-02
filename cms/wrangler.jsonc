@@ -16,7 +16,12 @@
     "ADMIN_GITHUB_IDS": "62940574",
     "GITHUB_OWNER": "polynomeer",
     "GITHUB_REPO": "polynomeer.github.io",
-    "DEFAULT_BRANCH": "main"
+    "DEFAULT_BRANCH": "main",
+
+    // Where the built site serves its images from. The preview rewrites
+    // /assets/... to this, because the editor is not served from the blog
+    // and would otherwise show every committed image as a broken icon.
+    "SITE_URL": "https://polynomeer.github.io"
   },
 
   // The editor's files. Served by the platform straight from src/ui, which
