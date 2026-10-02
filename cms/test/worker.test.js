@@ -328,3 +328,96 @@ test('the editor shell is served without a session, api and auth are not', async
   assert.equal(served.length, 2, 'assets never answer an api path');
 });
 
+
+// A pull-request save targets `cms/<slug>`, which does not exist until the
+// first save. Before this was handled the default UI path - the PR checkbox
+// is on by default - failed with a 502 on every new post.
+function githubMissingBranchFake({ missing = 'cms/x' } = {}) {
+  const calls = [];
+  const reply = (body, status = 200) => ({
+    ok: status < 400, status,
+    text: async () => JSON.stringify(body),
+    json: async () => body
+  });
+
+  return {
+    calls,
+    fetchImpl: async (url, init = {}) => {
+      calls.push({ url, method: init.method ?? 'GET', body: init.body ? JSON.parse(init.body) : null });
+
+      if (url.includes(`/git/ref/heads/${encodeURIComponent(missing)}`)) {
+        return reply({ message: 'Not Found' }, 404);
+      }
+      if (url.includes('/git/ref/heads/')) return reply({ object: { sha: 'mainhead' } });
+      if (url.endsWith('/git/refs')) return reply({ ref: `refs/heads/${missing}` });
+      if (url.includes('/git/commits/')) return reply({ sha: 'mainhead', message: 'x', tree: { sha: 'tree1' } });
+      if (url.endsWith('/git/trees')) return reply({ sha: 'tree2' });
+      if (url.endsWith('/git/commits')) return reply({ sha: 'commit2' });
+      if (url.includes('/git/refs/heads/')) return reply({});
+      if (url.includes('/pulls')) {
+        return init.method === 'POST'
+          ? reply({ number: 7, html_url: 'https://example.invalid/7' })
+          : reply([]);
+      }
+      throw new Error(`unexpected ${init.method ?? 'GET'} ${url}`);
+    }
+  };
+}
+
+test('a pull-request save creates its branch from the default branch', async () => {
+  const github = githubMissingBranchFake({ missing: 'cms/post' });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(request('/api/changes', {
+    method: 'POST',
+    cookie: await sessionCookie(),
+    body: {
+      message: 'post: add one',
+      branch: 'cms/post',
+      pullRequest: {},
+      files: [{ path: '_posts/notes/2026-10-02-x.md', content: 'hi' }]
+    }
+  }), env);
+
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.pullRequest.number, 7);
+
+  const created = github.calls.find((c) => c.method === 'POST' && c.url.endsWith('/git/refs'));
+  assert.ok(created, 'the branch was never created');
+  assert.equal(created.body.ref, 'refs/heads/cms/post');
+  // Cut from the default branch head, not from nothing.
+  assert.equal(created.body.sha, 'mainhead');
+});
+
+test('a branch that already exists is not re-created', async () => {
+  const github = githubMissingBranchFake({ missing: 'nothing-is-missing' });
+  const worker = createWorker({ fetch: github.fetchImpl });
+
+  const response = await worker.fetch(request('/api/changes', {
+    method: 'POST',
+    cookie: await sessionCookie(),
+    body: {
+      message: 'post: edit',
+      files: [{ path: '_posts/notes/2026-10-02-x.md', content: 'hi' }]
+    }
+  }), env);
+
+  assert.equal(response.status, 200);
+  assert.ok(!github.calls.some((c) => c.method === 'POST' && c.url.endsWith('/git/refs')));
+});
+
+test('a missing branch with nothing to branch from is still an error', async () => {
+  // createFrom only rescues the case the worker asked for. A 404 on the
+  // default branch itself must not be silently papered over.
+  const { createGitHubClient } = await import('../src/github.js');
+  const client = createGitHubClient({
+    fetch: async () => ({ ok: false, status: 404, text: async () => '{}', json: async () => ({}) }),
+    token: 't0ken', owner: 'o', repo: 'r'
+  });
+
+  await assert.rejects(
+    () => client.commitFiles({ branch: 'main', message: 'm', files: [{ path: 'a', content: 'b' }] }),
+    (error) => error.status === 404
+  );
+});

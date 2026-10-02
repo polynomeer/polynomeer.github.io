@@ -179,10 +179,13 @@ async function handleChange(request, env, session, fetchImpl) {
     repo: env.GITHUB_REPO
   });
 
-  const target = branch || env.DEFAULT_BRANCH || 'main';
+  const base = env.DEFAULT_BRANCH || 'main';
+  const target = branch || base;
 
   try {
-    const result = await client.commitFiles({ branch: target, message, files, changeId });
+    const result = await client.commitFiles({
+      branch: target, message, files, changeId, createFrom: base
+    });
 
     if (!pullRequest) {
       return json({ branch: target, ...result });
@@ -190,7 +193,7 @@ async function handleChange(request, env, session, fetchImpl) {
 
     const opened = await client.openPullRequest({
       head: target,
-      base: env.DEFAULT_BRANCH || 'main',
+      base,
       title: pullRequest.title || message.split('\n')[0],
       body: pullRequest.body || ''
     });

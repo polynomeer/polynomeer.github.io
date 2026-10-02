@@ -115,19 +115,34 @@ export function createGitHubClient({
      * together, so the site is never built from a post whose image has not
      * landed yet.
      *
+     * `createFrom` is the branch to cut `branch` from if it does not exist
+     * yet, which is what a pull-request save needs on its first write.
+     *
      * files: [{ path, content, encoding? }] or [{ path, delete: true }]
      *   encoding 'utf-8' (default) sends the text inline; 'base64' uploads a
      *   blob first, which is what images need.
      *
      * Returns { commitSha, alreadyApplied }.
      */
-    async commitFiles({ branch, message, files, changeId }) {
+    async commitFiles({ branch, message, files, changeId, createFrom }) {
       if (!Array.isArray(files) || files.length === 0) {
         throw new Error('commitFiles needs at least one file');
       }
 
-      const ref = await api.getRef(branch);
-      const headSha = ref.object.sha;
+      let headSha;
+      try {
+        headSha = (await api.getRef(branch)).object.sha;
+      } catch (error) {
+        // A pull-request save targets a branch that does not exist until the
+        // first save creates it. Only a 404 means that, and only when we were
+        // told what to branch from.
+        if (error.status !== 404 || !createFrom || createFrom === branch) {
+          throw error;
+        }
+        headSha = (await api.getRef(createFrom)).object.sha;
+        await api.createRef(branch, headSha);
+      }
+
       const head = await api.getCommit(headSha);
 
       if (changeId && typeof head.message === 'string' &&
