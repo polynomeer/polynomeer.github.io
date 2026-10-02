@@ -1,0 +1,13 @@
+{% capture series_navigation %}{% include post-nav.html lang=include.lang %}{% endcapture %}
+{% capture recommendations %}{% include related-posts.html lang=include.lang %}{% endcapture %}
+{% assign series_navigation = series_navigation | strip %}
+{% assign recommendations = recommendations | strip %}
+{% if series_navigation contains '<nav' or recommendations != empty %}
+  <aside class="continue-reading" aria-labelledby="continue-reading-label">
+    <h3 class="post-tail-heading" id="continue-reading-label">
+      {{ site.data.locales[include.lang].post.continue_reading | default: 'Continue reading' }}
+    </h3>
+    {{ series_navigation }}
+    {{ recommendations }}
+  </aside>
+{% endif %}

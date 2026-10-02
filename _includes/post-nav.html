@@ -1,5 +1,5 @@
 <!-- Navigation at the bottom of the post. -->
-<!-- Series posts step through the series in series_order; everything else walks the timeline. -->
+<!-- Only series posts have previous/next navigation. -->
 <!--
   There is no placeholder for a missing neighbour. A post at either end of its
   series used to get a full-size box containing a dash, which spends the same
@@ -9,8 +9,8 @@
 
 {% assign previous = site.data.locales[include.lang].post.button.previous %}
 {% assign next = site.data.locales[include.lang].post.button.next %}
-{% assign previous_post = page.previous %}
-{% assign next_post = page.next %}
+{% assign previous_post = nil %}
+{% assign next_post = nil %}
 
 {% if page.series and page.series_order %}
   {% assign previous = site.data.locales[include.lang].post.series_previous %}
@@ -35,7 +35,7 @@
 {% endif %}
 
 {% if previous_post.url or next_post.url %}
-  <nav class="post-navigation" aria-label="Post Navigation">
+  <nav class="post-navigation" aria-label="{{ site.data.locales[include.lang].post.series }}">
     {% if previous_post.url %}
       <a class="post-nav-link is-previous" href="{{ previous_post.url | relative_url }}">
         <span class="post-nav-label">{{ previous }}</span>

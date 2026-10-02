@@ -14,8 +14,7 @@ similarity-based recommendations it cannot be wrong.
 status filter, so hidden posts neither appear nor contribute). It scans the
 markdown source of every published post for `/posts/<slug>/` references —
 both `[text](/posts/slug/)` and raw `href="..."` — and inverts the mapping
-into `post.data['backlinks']` (newest first, at most 8) plus
-`post.data['backlinks_total']`.
+into `post.data['backlinks']` (all citations, newest first).
 
 Reading the source rather than the rendered HTML keeps the pass independent of
 render order, which matters because a post's own page has to include the list.
@@ -28,11 +27,20 @@ Two exclusions:
 
 ## Rendering
 
-`_includes/post-backlinks.html` renders the list as the first tail include of
-`_layouts/post.html`, above the similarity-based recommendations, with a
-"and N more" line when the count exceeds the cap. Styles live with the other
-post-tail rules in `_sass/layout/post.scss`; strings are `post.backlinks` and
-`post.backlinks_more` in the locale files.
+`_includes/continue-reading.html` is the first tail include. It groups series
+previous/next links and up to three recommendations under one heading. Ordinary
+posts have no chronological navigation. Recommendations already shown as a
+series neighbour are omitted; the remaining list is not padded with unrelated
+posts. Empty reading sections are not rendered.
+
+`_includes/post-backlinks.html` follows this section, before comments. It uses a
+native `details` element, collapsed by default, with the citation count in its
+summary. Expanding it shows every citation without JavaScript. The label means
+"posts that cite this one", not sources cited by the current post.
+
+Both sections use compact title rows instead of cards. Styles live in
+`_sass/layout/post.scss`; heading strings are `post.continue_reading` and
+`post.backlinks` in the locale files.
 
 ## Current shape
 
