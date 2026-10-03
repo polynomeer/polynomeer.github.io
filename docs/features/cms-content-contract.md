@@ -201,24 +201,21 @@ YAML 이 깨진 파일을 `warn` 한 줄 찍고 건너뛴 뒤 exit 0 으로 끝�
 | `cms/src/ui/diff.js` | 줄 단위 비교, 접기, 긴 글에서의 동작 | 8 |
 
 ```bash
-cd cms && npm test   # 108 tests, 의존성 0
+cd cms && npm test   # 128 tests, 의존성 0
 ```
 
-설정하고 쓰는 방법은 [`docs/guides/cms-usage-guide.md`](../guides/cms-usage-guide.md)에 따로 적었다.
+올리는 절차는 [`docs/guides/cms-deploy-guide.md`](../guides/cms-deploy-guide.md),
+쓰는 방법은 [`docs/guides/cms-usage-guide.md`](../guides/cms-usage-guide.md)에 따로 적었다.
 
 ### 배포할 때 필요한 것
 
-`cms/wrangler.jsonc` 에 공개 설정만 들어 있다. secret 은 git 에 넣지 않고 넣는다.
+`cms/wrangler.jsonc` 에 공개 설정만 들어 있고, secret 세 개는 `wrangler secret put` 으로만
+들어간다. 절차는 [`docs/guides/cms-deploy-guide.md`](../guides/cms-deploy-guide.md)에 있다.
 
-```bash
-cd cms
-npx wrangler secret put SESSION_SECRET        # 32자 이상
-npx wrangler secret put GITHUB_CLIENT_ID
-npx wrangler secret put GITHUB_CLIENT_SECRET
-npx wrangler deploy
-```
+**배포가 먼저다.** GitHub OAuth App 의 Authorization callback URL 이 배포된 Worker 주소 +
+`/auth/callback` 인데, 그 주소는 한 번 배포해야 나온다. secret 없이 올라간 Worker 는 화면은
+뜨고 로그인만 안 되는 상태로 기다린다.
 
-GitHub OAuth App 의 Authorization callback URL 은 배포된 Worker 주소 + `/auth/callback` 이다.
 `repo` scope 를 요구하는데, 저장소 contents 에 commit 할 수 있는 가장 좁은 고전 scope 가
 그것이다. 더 좁히려면 GitHub App 으로 바꿔야 하고 설계서 21장이 그 경로를 적어 두었다.
 

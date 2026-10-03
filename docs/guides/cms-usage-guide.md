@@ -20,39 +20,27 @@
 
 ## 한 번만 하는 준비
 
-### 1. GitHub OAuth App 만들기
+Cloudflare Workers 에 올리고 GitHub OAuth App 을 붙이는 일이다. 절차는
+[`cms-deploy-guide.md`](./cms-deploy-guide.md)에 따로 적었다 — 순서가 있다. 주소를 받으려면
+먼저 배포해야 하고, OAuth App 은 그 주소가 있어야 만들 수 있다.
 
-<https://github.com/settings/developers> → New OAuth App.
-
-| 항목 | 값 |
-| --- | --- |
-| Application name | 아무거나 |
-| Homepage URL | 배포될 Worker 주소 |
-| Authorization callback URL | 배포될 Worker 주소 + `/auth/callback` |
-
-주소를 아직 모르면 `npx wrangler deploy` 를 먼저 돌려 받은 뒤 App 에 채워 넣는다.
-
-`repo` scope 를 요구한다. 저장소 contents 에 commit 할 수 있는 가장 좁은 고전 scope 가 그것이다.
-더 좁히려면 OAuth App 대신 GitHub App 으로 바꿔야 한다.
-
-### 2. secret 넣고 배포
+요약하면 여섯 단계다.
 
 ```bash
 cd cms
-npx wrangler secret put SESSION_SECRET        # 32자 이상, 직접 만든 임의 문자열
+npx wrangler login       # 1. Cloudflare 로그인
+npx wrangler deploy      # 2. 배포해서 주소를 받는다
+                         # 3. 그 주소로 GitHub OAuth App 을 만든다
+                         # 4. 관리자 GitHub 숫자 ID 확인
+npx wrangler secret put SESSION_SECRET        # 5. secret 세 개
 npx wrangler secret put GITHUB_CLIENT_ID
 npx wrangler secret put GITHUB_CLIENT_SECRET
-npx wrangler deploy
+                         # 6. 열어서 로그인해 본다
 ```
 
-`wrangler.jsonc` 의 `SITE_URL` 은 미리보기가 커밋된 이미지를 가져올 주소다. 블로그 주소를
-바꾸면 여기도 바꾼다.
-
-세 값 모두 `wrangler.jsonc` 에 쓰지 않는다. 그 파일은 git 에 올라간다.
-`GITHUB_CLIENT_ID` 는 비밀이 아니지만, OAuth App 을 바꿀 때 배포 없이 교체하려고 같이 둔다.
-
-`wrangler.jsonc` 의 공개 설정은 네 개다. 관리자 GitHub 숫자 ID(`ADMIN_GITHUB_IDS`),
-저장소 owner 와 이름, 기본 브랜치.
+`wrangler.jsonc` 에는 공개 설정만 있다. 관리자 GitHub 숫자 ID(`ADMIN_GITHUB_IDS`), 저장소
+owner 와 이름, 기본 브랜치, 그리고 미리보기가 커밋된 이미지를 가져올 `SITE_URL`. secret 세
+개는 여기에 쓰지 않는다 — 이 파일은 git 에 올라간다.
 
 ## 로그인
 
@@ -286,17 +274,19 @@ node cms/tools/dev-server.js
 cd cms && npm test
 ```
 
-의존성 0, 테스트 108개.
+의존성 0, 테스트 128개.
 
 | 파일 | 검사하는 것 | 개수 |
 | --- | --- | --- |
 | `test/auth.test.js` | 세션 서명·검증, OAuth state, 허용 목록, 쿠키 | 14 |
 | `test/github.test.js` | 원자적 commit, CAS ref, 멱등 재시도, 멱등 PR | 10 |
-| `test/worker.test.js` | 라우트와 인가, 읽기·쓰기 경로 제한, 브랜치 생성, 목록, 이력, 오류 매핑 | 40 |
+| `test/worker.test.js` | 라우트와 인가, 읽기·쓰기 경로 제한, 브랜치 생성, 목록, 이력, 오류 매핑 | 43 |
 | `test/markdown.test.js` | 미리보기가 작성자 입력을 실행하지 않는지, 이미지 주소 해석 | 17 |
 | `test/frontmatter.test.js` | 원문 보존 분리·결합 | 10 |
 | `test/images.test.js` | 업로드 파일명, 이름 충돌, 크기 등급 | 9 |
 | `test/diff.test.js` | 줄 단위 비교, 접기, 긴 글에서의 동작 | 8 |
+| `test/citations.test.js` | 인용 삽입 | 8 |
+| `test/sourcedraft.test.js` | 출처 항목 작성 | 9 |
 
 특히 다음 세 가지는 테스트가 깨지도록 묶여 있다. 고칠 때 같이 보면 된다.
 
