@@ -3,242 +3,195 @@ title: Apache POI SXSSF vs XSSF vs HSSF
 date: 2020-09-05
 categories: [Notes, Common]
 tags: [Apache POI, Excel]
+mermaid: true
 ---
 
-# Apache POI SXSSF vs XSSF vs HSSF
+Java로 Excel 파일을 만들거나 읽을 때 가장 먼저 만나는 라이브러리가 Apache POI다. 그런데 POI 안에는 Excel을 다루는 구현이 여러 개 있다. `HSSFWorkbook`, `XSSFWorkbook`, `SXSSFWorkbook`은 같은 `Workbook` 인터페이스를 구현하지만 다루는 파일 형식과 메모리 사용 방식이 다르다. 수천 행짜리 파일에서는 차이가 보이지 않다가 수십만 행에서 갑자기 OOM(OutOfMemoryError, 힙에 새 객체를 둘 공간이 없을 때 나는 오류)이 나는 이유가 이 차이에 있다. 이 글은 세 구현을 파일 형식, 메모리 모델, 제약의 순서로 정리한다.
 
-## Apache POI
+## Apache POI가 다루는 것
 
-Apache POI는 아파치 소프트웨어 재단에서 만든 라이브러리로 MS Office 파일 포맷을 순수 자바 언어로서 읽고 쓰는 기능을 제공한다. 주로 워드, 엑셀, 파워포인트와 같은 파일을 지원하며 최근의 오피스 포맷인 Office Open XML File Formats (OOXML, xml 기반의 *.docx, *xlsx, *.pptx 등) 이나 아웃룩, 비지오, 퍼블리셔 등으로 지원 파일을 늘려가고 있다.
+POI 프로젝트는 스스로의 목표를 OOXML(Office Open XML) 표준과 Microsoft의 OLE2 복합 문서 형식에 기반한 파일 형식을 다루는 Java API를 만드는 것이라고 적는다([Apache POI](https://poi.apache.org/)). Excel로 좁히면 두 형식이 있다.
 
-POI라는 이름은 "Poor Obfuscation Implementation"의 줄임말로서 기존의 MS Office 파일 포맷(OLE 2 Compund Document Format: OLE2)이 일부러 해독하기 힘들게 만들어 놓은 것 같음에도 불구하고 실제로 리버스 엔지니어링되어 사용할 수 있게 되었음을 의미한다.
+- `.xls`: Excel 97부터 2007 이전까지 쓰던 바이너리 형식(OLE2 기반)
+- `.xlsx`: Excel 2007부터 쓰는 XML 기반 형식(OOXML). 실제로는 여러 XML 파일을 묶은 zip이다.
 
-## Apache POI의 목적
+POI의 Excel 구현과 의존성은 다음처럼 나뉜다([Apache POI: Component Overview](https://poi.apache.org/components/)).
 
-Apache POI API의 주요 용도는 웹 스파이더, 인덱스 빌더 및 콘텐츠 관리 시스템과 같은 [텍스트 추출](https://poi.apache.org/text-extraction.html) 애플리케이션이다.
+| 구현 | 파일 형식 | Maven artifactId |
+| --- | --- | --- |
+| HSSF | `.xls` | `poi` |
+| XSSF | `.xlsx` | `poi-ooxml` |
+| Common SS (`org.apache.poi.ss.usermodel`) | `.xls`, `.xlsx` 공통 인터페이스 | `poi-ooxml` |
 
-Java(XLS)를 사용하여 Excel 파일을 읽거나 써야 하는 경우 HSSF를 사용한다. Java(XLSX)를 사용하여 OOXML Excel 파일을 읽거나 써야 하는 경우 XSSF를 사용한다. 결합된 SS 인터페이스를 사용하면 Java를 사용하여 모든 종류의 Excel 파일(XLS 및 XLSX)을 쉽게 읽고 쓸 수 있다. **또한 메모리에 최적화된 방식으로 대용량 Excel(XLSX) 파일을 작성할 수 있는 특수 SXSSF 구현이 있다.**
+SXSSF는 이 표에 따로 나오지 않는다. XSSF의 하위 패키지(`org.apache.poi.xssf.streaming`)에 있으므로 XSSF와 같은 `poi-ooxml`로 쓴다. Common SS 행에는 `WorkbookFactory` 같은 공통 진입점이 core `poi`만으로는 안 되고 `poi-ooxml`을 요구한다는 주석이 붙어 있다.
 
-## Component Map
+`Workbook`, `Sheet`, `Row`, `Cell` 같은 공통 인터페이스로 코드를 쓰면 구현만 바꿔 끼울 수 있다. 세 구현 중 무엇을 고를지는 아래 흐름으로 정리된다.
 
-|                          Component                           |    Application type     |                       Maven artifactId                       |                            Notes                             |
-| :----------------------------------------------------------: | :---------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| [POIFS](https://poi.apache.org/components/poifs/index.html)  |     OLE2 Filesystem     |                            *poi*                             |        Required to work with OLE2 / POIFS based files        |
-|  [HPSF](https://poi.apache.org/components/hpsf/index.html)   |   OLE2 Property Sets    |                            *poi*                             |                                                              |
-|    [HSSF](https://poi.apache.org/components/spreadsheet/)    |        Excel XLS        |                            *poi*                             |       For HSSF only, if common SS is needed see below        |
-|     [HSLF](https://poi.apache.org/components/slideshow/)     |     PowerPoint PPT      |                       *poi-scratchpad*                       |                                                              |
-|     [HWPF](https://poi.apache.org/components/document/)      |        Word DOC         |                       *poi-scratchpad*                       |                                                              |
-| [HDGF](https://poi.apache.org/components/diagram/index.html) |        Visio VSD        |                       *poi-scratchpad*                       |                                                              |
-|  [HPBF](https://poi.apache.org/components/hpbf/index.html)   |      Publisher PUB      |                       *poi-scratchpad*                       |                                                              |
-|  [HSMF](https://poi.apache.org/components/hsmf/index.html)   |       Outlook MSG       |                       *poi-scratchpad*                       |                                                              |
-|                             DDF                              | Escher common drawings  |                            *poi*                             |                                                              |
-|                             HWMF                             |      WMF drawings       |                       *poi-scratchpad*                       |                                                              |
-| [OpenXML4J](https://poi.apache.org/components/oxml4j/index.html) |          OOXML          | *poi-ooxml* plus either *poi-ooxml-lite* or *poi-ooxml-full* |    See notes below for differences between these options     |
-|    [XSSF](https://poi.apache.org/components/spreadsheet/)    |       Excel XLSX        |                         *poi-ooxml*                          |                                                              |
-|     [XSLF](https://poi.apache.org/components/slideshow/)     |     PowerPoint PPTX     |                         *poi-ooxml*                          |                                                              |
-|     [XWPF](https://poi.apache.org/components/document/)      |        Word DOCX        |                         *poi-ooxml*                          |                                                              |
-| [XDGF](https://poi.apache.org/components/diagram/index.html) |       Visio VSDX        |                         *poi-ooxml*                          |                                                              |
-| [Common SL](https://poi.apache.org/components/slideshow/index.html) | PowerPoint PPT and PPTX |               *poi-scratchpad* and *poi-ooxml*               | SL code is in the core POI jar, but implementations are in poi-scratchpad and poi-ooxml. |
-| [Common SS](https://poi.apache.org/components/spreadsheet/)  |   Excel XLS and XLSX    |                         *poi-ooxml*                          | WorkbookFactory and friends all require poi-ooxml, not just core poi |
-
-## HSSF and XSSF
-
-HSSF는 Excel '97(-2007) 파일 형식의 POI 프로젝트 순수 Java 구현입니다. XSSF는 Excel 2007 OOXML(.xlsx) 파일 형식의 POI 프로젝트 순수 Java 구현이다.
-
-HSSF 및 XSSF는 스프레드시트를 읽고 XLS 스프레드시트를 작성, 수정, 읽고 쓰는 방법을 제공한다.
-
-- 특별한 도움이 필요한 사람들을 위한 낮은 수준의 구조
-- 효율적인 읽기 전용 액세스를 위한 eventmodel API
-- XLS 파일 생성, 읽기 및 수정을 위한 전체 usermodel API
-
-_HSSF 및 XSSF 지원을 위해 공통 SS 사용자 모델을 사용하려는 순수한 HSSF 사용자 모델에서 변환하려면 [ss 사용자 모델 변환 가이드](https://poi.apache.org/components/spreadsheet/converting.html) 를 참조 (호환 가능)_
-
-스프레드시트 데이터만 읽는다면 파일 형식에 따라 org.apache.poi.hssf.eventusermodel 패키지 또는 org.apache.poi.xssf.eventusermodel 패키지의 eventmodel api를 사용하면 된다.
-
-스프레드시트 데이터를 수정하는 경우 usermodel API를 사용하면된다. 이 방법으로 스프레드시트를 생성할 수도 있다.
-
-usermodel 시스템은 낮은 수준의 eventusermodel보다 메모리 공간이 더 높지만 작업하기가 훨씬 더 간단하다는 주요 이점이 있다. 또한 새로운 XSSF 지원 Excel 2007 OOXML(.xlsx) 파일은 XML 기반이므로 처리를 위한 메모리 공간이 이전 HSSF 지원(.xls) 바이너리 파일보다 높다는 점에 유의해야 한다.
-
-65,535개의 행만 지원하므로 대용량의 엑셀파일에서 사용할 수 없다.
-
+```mermaid
+flowchart TD
+    Start["fa:fa-file-excel Excel 작업"] --> Q1{"파일 형식은?"}
+    Q1 -->|".xls"| H["HSSF<br/>최대 65,536행"]
+    Q1 -->|".xlsx"| Q2{"읽기인가 쓰기인가?"}
+    Q2 -->|"대용량 읽기"| EV["XSSF 이벤트 API<br/>SAX로 순차 읽기"]
+    Q2 -->|"쓰기"| Q3{"이미 쓴 행을<br/>다시 고쳐야 하나?"}
+    Q3 -->|"그렇다"| X["XSSF<br/>모든 행을 메모리에"]
+    Q3 -->|"아니다, 순서대로 쓴다"| S["SXSSF<br/>최근 N행만 메모리에"]
+    S --> T["fa:fa-folder-open 밀려난 행은 임시 파일로"]
 ```
+
+## HSSF와 XSSF: usermodel의 두 구현
+
+POI 문서는 HSSF를 "Excel '97(-2007) file format"의 순수 Java 구현으로, XSSF를 "Excel 2007 OOXML (.xlsx) file format"의 순수 Java 구현으로 정의한다([Apache POI: Spreadsheet](https://poi.apache.org/components/spreadsheet/)).
+
+둘 다 두 층의 API를 제공한다.
+
+- usermodel: 워크북 전체를 객체 트리로 메모리에 올려 읽고, 고치고, 새로 만든다. 다루기 쉽다.
+- eventusermodel: 파일을 처음부터 끝까지 흘려 읽으면서 레코드나 XML 이벤트를 콜백으로 받는다. 읽기 전용이고 코드가 복잡하지만 메모리를 적게 쓴다.
+
+같은 문서는 두 가지 메모리 비교를 명시한다. usermodel은 eventusermodel보다 메모리를 더 쓰지만 훨씬 다루기 쉽다. 그리고 XSSF가 다루는 `.xlsx`는 XML 기반이어서 처리에 드는 메모리가 HSSF가 다루는 바이너리 `.xls`보다 크다.
+
+그래서 읽기 작업은 규모에 따라 나뉜다. 크지 않은 파일은 usermodel로 읽으면 되고, 큰 `.xlsx`를 읽기만 할 때는 이벤트 방식(`org.apache.poi.xssf.eventusermodel`)으로 행을 순서대로 받는 편이 메모리를 아낀다.
+
+### HSSF의 행 한계
+
+HSSF가 다루는 `.xls`는 형식 자체에 상한이 있다. POI의 `SpreadsheetVersion`은 Excel 97 형식의 행 수를 64K(2^16), 열 수를 256(2^8)으로, Excel 2007 형식의 행 수를 1M(2^20), 열 수를 16K(2^14)로 정의한다([SpreadsheetVersion Javadoc](https://poi.apache.org/apidocs/dev/org/apache/poi/ss/SpreadsheetVersion.html)).
+
+| 형식 | 최대 행 | 최대 열 | 행 인덱스 범위 |
+| --- | --- | --- | --- |
+| `.xls` (HSSF) | 65,536 | 256 | 0 ~ 65,535 |
+| `.xlsx` (XSSF, SXSSF) | 1,048,576 | 16,384 | 0 ~ 1,048,575 |
+
+인덱스가 0부터 시작하므로 `.xls`에는 65,536행까지 들어간다. 65,537번째 행(인덱스 65536)을 만들려고 하면 예외가 난다.
+
+```text
 java.lang.IllegalArgumentException: Invalid row number (65536) outside allowable range (0..65535)
 	at org.apache.poi.hssf.usermodel.HSSFRow.setRowNum(HSSFRow.java:246)
-	at org.apache.poi.hssf.usermodel.HSSFRow.<init>(HSSFRow.java:96)
-	at org.apache.poi.hssf.usermodel.HSSFRow.<init>(HSSFRow.java:80)
 	at org.apache.poi.hssf.usermodel.HSSFSheet.createRow(HSSFSheet.java:263)
-	at org.apache.poi.hssf.usermodel.HSSFSheet.createRow(HSSFSheet.java:96)
-	at com.example.exceldemo.test.getRow(test.java:33)
-	at com.example.exceldemo.test.getCell(test.java:38)
-	at com.example.exceldemo.test.setCellValue(test.java:46)
-	at com.example.exceldemo.test.writeWorkbook(test.java:56)
-	at com.example.exceldemo.test.main(test.java:83)
-Invalid row number (65536) outside allowable range (0..65535)
 ```
 
-## SXSSF
+데이터가 6만 행을 넘을 수 있는 다운로드라면 형식부터 `.xlsx`여야 한다. 그러면 남는 선택지는 XSSF와 SXSSF다.
 
-3.8-beta3부터 POI는 XSSF를 기반으로 구축된 낮은 메모리 공간 SXSSF API를 제공한다.
+## XSSF가 큰 파일에서 무너지는 이유
 
-SXSSF는 매우 큰 스프레드시트를 생성해야 하고 힙 공간이 제한적일 때 사용되는 XSSF의 API 호환 스트리밍 확장이다. SXSSF는 슬라이딩 창 내에 있는 행에 대한 액세스를 제한하여 낮은 메모리 공간을 달성하는 반면 XSSF는 문서의 모든 행에 대한 액세스를 제공한다. 더 이상 창에 없는 이전 행은 디스크에 기록되기 때문에 액세스할 수 없게 된다.
+`XSSFWorkbook`은 usermodel이다. 시트의 모든 행과 셀이 객체로 힙에 있다. 어느 행이든 `getRow()`로 다시 꺼내 고칠 수 있다는 장점이 이 구조에서 나온다.
 
-자동 플러시 모드에서는 메모리에 특정 행 수를 유지하기 위해 액세스 창의 크기를 지정할 수 있다. 해당 값에 도달하면 추가 행을 생성하면 인덱스가 가장 낮은 행이 액세스 창에서 제거되고 디스크에 기록된다. 또는 창 크기가 동적으로 커지도록 설정할 수 있다. 필요에 따라 flushRows(int keepRows)를 명시적으로 호출하여 주기적으로 트리밍할 수 있다.
+비용도 같은 구조에서 나온다. 행 수와 열 수에 비례해 객체 수가 늘고, `write()`가 끝날 때까지 하나도 해제되지 않는다. 여기에 원본 데이터를 담은 리스트까지 메모리에 있으면 같은 데이터가 두 번 올라가 있는 셈이다. 수천 행에서는 보이지 않던 비용이 수십만 행에서 OOM으로 나타난다.
 
-구현의 스트리밍 특성으로 인해 XSSF와 비교할 때 다음과 같은 제한 사항이 있다.
+## SXSSF: 슬라이딩 윈도우로 쓰는 XSSF
 
-- 특정 시점에 제한된 수의 행만 액세스할 수 있다.
-- Sheet.clone()은 지원되지 않는다.
-- 수식 평가가 지원되지 않는다.
+SXSSF(`org.apache.poi.xssf.streaming`)는 POI 3.8-beta3부터 제공된다. POI 문서는 이를 다음처럼 소개한다([Apache POI: Spreadsheet](https://poi.apache.org/components/spreadsheet/)).
 
-![스프레드시트 API 기능 요약](https://poi.apache.org/components/spreadsheet/images/ss-features.png)
+> "SXSSF is an API-compatible streaming extension of XSSF to be used when very large spreadsheets have to be produced, and heap space is limited."
 
-SXSSF(패키지: org.apache.poi.xssf.streaming)는 매우 큰 스프레드시트를 생성해야 하고 힙 공간이 제한적일 때 사용되는 XSSF의 API 호환 스트리밍 확장이다. SXSSF는 슬라이딩 창 내에 있는 행에 대한 액세스를 제한하여 낮은 메모리 공간을 달성하는 반면 XSSF는 문서의 모든 행에 대한 액세스를 제공한다. 더 이상 창에 없는 이전 행은 디스크에 기록되기 때문에 액세스할 수 없게 된다.
+XSSF와 API가 호환되는 스트리밍 확장이고, 매우 큰 스프레드시트를 만들어야 하는데 힙이 제한적일 때 쓰라는 뜻이다.
 
-*새 SXSSFWorkbook(int windowSize)* 을 통해 통합 문서 생성 시 창 크기를 지정 하거나 *SXSSFSheet#setRandomAccessWindowSize(int windowSize)* 를 통해 시트별로 설정할 수 있다 .
+### 윈도우가 움직이는 방식
 
-createRow()를 통해 새 행이 생성되고 플러시되지 않은 레코드의 총 수가 지정된 창 크기를 초과하면 인덱스 값이 가장 낮은 행이 플러시되고 더 이상 getRow()를 통해 액세스할 수 없다. 따라서 엑셀의 행을 getRow()를 통해 참조하여 조작할 필요가 있다면 SXSSF를 사용하기는 어렵다.
+SXSSF는 메모리에 둘 행 수, 즉 윈도우 크기를 정한다. `new SXSSFWorkbook(int windowSize)`로 워크북 전체에, `SXSSFSheet#setRandomAccessWindowSize(int)`로 시트별로 지정할 수 있다. 기본값은 100행이다([Apache POI: SXSSF](https://poi.apache.org/components/spreadsheet/how-to.html#sxssf)).
 
-기본 창 크기는 *100* 이며 SXSSFWorkbook.DEFAULT_WINDOW_SIZE에 의해 정의된다.
+`createRow()`로 새 행을 만들 때 아직 내보내지 않은 행 수가 윈도우 크기를 넘으면, 인덱스가 가장 낮은 행이 임시 파일로 기록되고 메모리에서 빠진다. 그 행은 더 이상 `getRow()`로 꺼낼 수 없다. Javadoc은 윈도우 크기를 "`SXSSFSheet.getRow(int)`로 접근할 수 있는 최대 행 수"로 설명한다([SXSSFWorkbook Javadoc](https://poi.apache.org/apidocs/dev/org/apache/poi/xssf/streaming/SXSSFWorkbook.html)).
 
-windowSize -1은 무제한 액세스를 나타낸다. 이 경우 flushRows() 호출에 의해 플러시되지 않은 모든 레코드를 임의 액세스에 사용할 수 있다.
+윈도우 크기가 100일 때 1,000행을 쓰는 과정을 그리면 다음과 같다.
 
-SXSSF는 임시 파일을 할당하는데, 이는 dispose 메서드를 호출함으로써 **반드시 명시적으로 지워주어야 한다.**
+```mermaid
+sequenceDiagram
+    participant App as 애플리케이션
+    participant Win as 윈도우 100행
+    participant Tmp as 임시 파일
+    App->>Win: createRow 0 ~ 99
+    Note over Win: 100행이 모두 메모리에
+    App->>Win: createRow 100
+    Win->>Tmp: 행 0 기록 후 메모리에서 제거
+    App->>Win: createRow 101
+    Win->>Tmp: 행 1 기록 후 메모리에서 제거
+    Note over Win,Tmp: 1,000행까지 반복
+    App->>Tmp: write 호출 시 임시 파일과 나머지로 xlsx 조립
+```
 
-SXSSFWorkbook은 기본적으로 공유 문자열 테이블 대신 인라인 문자열을 사용한다. 문서 내용을 메모리에 보관할 필요가 없지만 일부 클라이언트와 호환되지 않는 문서를 생성하는 것으로 알려져 있기 때문에 이는 매우 효율적이다. 공유 문자열이 활성화되면 문서의 모든 고유 문자열을 메모리에 보관해야 한다. 문서 내용에 따라 공유 문자열이 비활성화된 경우보다 훨씬 더 많은 리소스를 사용할 수 있다.
-
-사용 중인 기능(예: 병합된 영역, 하이퍼링크, 주석 등)에 따라 여전히 많은 양의 메모리를 소비할 수 있는 것들이 여전히 메모리에만 저장되므로 다음과 같은 경우 많은 메모리가 필요할 수 있습니다. 광범위하게 사용되다.
-
-공유 문자열을 활성화할지 여부를 결정하기 전에 메모리 예산과 호환성 요구 사항을 주의 깊게 검토해야한다.
-
-아래 예는 100행의 창이 있는 시트를 작성한다. 행 수가 101에 도달하면 rownum=0인 행이 디스크로 플러시되고 메모리에서 제거되고, rownum이 102에 도달하면 rownum=1인 행이 플러시되는 식이다.
+공식 예제를 줄이면 이렇다. 1,000행을 쓰고 나면 0~899행은 이미 디스크로 나갔고 마지막 100행만 메모리에 남는다.
 
 ```java
-package com.example.exceldemo;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.junit.Assert;
-import org.springframework.util.StopWatch;
-
-import java.io.FileOutputStream;
-
-public class SXSSFTest {
-
-    public static void main(String[] args) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        SXSSFWorkbook wb = new SXSSFWorkbook(100); // keep 100 rows in memory, exceeding rows will be flushed to disk
-        Sheet sh = wb.createSheet();
-        for (int rownum = 0; rownum < 1000; rownum++) {
-            Row row = sh.createRow(rownum);
-            for (int cellnum = 0; cellnum < 10; cellnum++) {
-                Cell cell = row.createCell(cellnum);
-                String address = new CellReference(cell).formatAsString();
-                cell.setCellValue(address);
-            }
-        }
-        // Rows with rownum < 900 are flushed and not accessible
-        for (int rownum = 0; rownum < 900; rownum++) {
-            Assert.assertNull(sh.getRow(rownum));
-        }
-        // ther last 100 rows are still in memory
-        for (int rownum = 900; rownum < 1000; rownum++) {
-            Assert.assertNotNull(sh.getRow(rownum));
-        }
-        FileOutputStream out = new FileOutputStream("sxssf1.xlsx");
-        wb.write(out);
-        out.close();
-        // dispose of temporary files backing this workbook on disk
-        wb.dispose();
-
-        stopWatch.stop();
-        System.out.println("SXSSF with window size 100 : " + stopWatch.getTotalTimeMillis());
+SXSSFWorkbook wb = new SXSSFWorkbook(100);   // 메모리에 100행만 유지
+Sheet sh = wb.createSheet();
+for (int rownum = 0; rownum < 1000; rownum++) {
+    Row row = sh.createRow(rownum);
+    for (int cellnum = 0; cellnum < 10; cellnum++) {
+        row.createCell(cellnum).setCellValue(rownum + ":" + cellnum);
     }
-
 }
-
+// sh.getRow(0) ~ sh.getRow(899)는 null, sh.getRow(900) ~ sh.getRow(999)는 접근 가능
+try (FileOutputStream out = new FileOutputStream("sxssf.xlsx")) {
+    wb.write(out);
+}
+wb.dispose();   // 임시 파일 삭제
 ```
 
-다음 예제는 자동 플러시(windowSize=-1)를 끄고 코드에서 데이터 부분이 디스크에 기록되는 방식을 수동으로 제어한다.
+### 자동 flush를 끄고 직접 내보내기
+
+윈도우 크기를 `-1`로 주면 접근 제한이 사라지고 자동으로 내보내지 않는다. 대신 `flushRows(int keepRows)`를 직접 호출해 최근 `keepRows`행만 남기고 나머지를 내보낸다. `flushRows()`는 `flushRows(0)`과 같아서 모든 행을 내보낸다. 윈도우 크기 `0`은 셀을 채우기 전에 행이 내보내지므로 허용되지 않는다([SXSSFWorkbook Javadoc](https://poi.apache.org/apidocs/dev/org/apache/poi/xssf/streaming/SXSSFWorkbook.html)).
 
 ```java
-package com.example.exceldemo;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.util.StopWatch;
-
-import java.io.FileOutputStream;
-
-public class SXSSFTest2 {
-
-    public static void main(String[] args) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        SXSSFWorkbook wb = new SXSSFWorkbook(-1); // turn off auto-flushing and accumulate all rows in memory
-        Sheet sh = wb.createSheet();
-        for (int rownum = 0; rownum < 1000; rownum++) {
-            Row row = sh.createRow(rownum);
-            for (int cellnum = 0; cellnum < 10; cellnum++) {
-                Cell cell = row.createCell(cellnum);
-                String address = new CellReference(cell).formatAsString();
-                cell.setCellValue(address);
-            }
-            // manually control how rows are flushed to disk
-            if (rownum % 100 == 0) {
-                ((SXSSFSheet) sh).flushRows(100); // retain 100 last rows and flush all others
-                // ((SXSSFSheet)sh).flushRows() is a shortcut for ((SXSSFSheet)sh).flushRows(0),
-                // this method flushes all rows
-            }
-        }
-        FileOutputStream out = new FileOutputStream("sxssf2.xlsx");
-        wb.write(out);
-        out.close();
-        // dispose of temporary files backing this workbook on disk
-        wb.dispose();
-
-        stopWatch.stop();
-        System.out.println("SXSSF with window size 100 : " + stopWatch.getTotalTimeMillis() + "ms");
+SXSSFWorkbook wb = new SXSSFWorkbook(-1);   // 자동 flush 끔
+SXSSFSheet sh = wb.createSheet();
+for (int rownum = 0; rownum < 1000; rownum++) {
+    Row row = sh.createRow(rownum);
+    row.createCell(0).setCellValue(rownum);
+    if (rownum % 100 == 0) {
+        sh.flushRows(100);   // 최근 100행만 남기고 나머지를 디스크로
     }
 }
-
 ```
 
-### 임시파일 용량 압축
+몇 행 단위로 묶어서 처리한 뒤 한 번에 내보내고 싶을 때, 예를 들어 묶음 안에서는 행을 오가며 값을 고쳐야 할 때 이 방식이 쓸모 있다.
 
-SXSSF는 임시 파일(시트당 임시 파일)의 시트 데이터를 플러시하며 이러한 임시 파일의 크기는 매우 커질 수 있습니다. 예를 들어, 20MB csv 데이터의 경우 temp xml의 크기는 기가바이트 이상이 된다. 임시 파일의 크기가 문제인 경우 SXSSF에 gzip 압축을 사용하도록 지시할 수 있다.
+## SXSSF를 쓸 때 지켜야 할 것
+
+### 임시 파일은 직접 지운다
+
+POI 문서는 SXSSF가 임시 파일을 만들고, 이 파일은 항상 `dispose()`를 호출해 명시적으로 지워야 한다고 적는다. Javadoc에 따르면 `dispose()`는 워크북을 받치는 임시 파일을 삭제하고, 그 뒤로는 워크북을 쓸 수 없다. `close()`는 내부 XSSF 워크북과 패키지 자원을 닫는 별도 메서드다. 그래서 `write()`가 예외로 끝나도 임시 파일이 남지 않도록 `finally`에서 `dispose()`를 부르는 편이 안전하다.
+
+임시 파일은 생각보다 크다. 문서는 20MB짜리 CSV 데이터의 임시 XML이 1GB를 넘을 수 있다고 예를 든다. 디스크 사용량이 문제라면 `setCompressTempFiles(true)`로 임시 XML을 gzip으로 압축할 수 있다. Javadoc은 이 설정이 성능 저하를 부를 수 있고, 호출 이후에 만드는 시트에만 적용된다고 적는다.
 
 ```java
 SXSSFWorkbook wb = new SXSSFWorkbook();
-wb.setCompressTempFiles(true); // 임시 파일은 gzip으로 압축됩니다.
+wb.setCompressTempFiles(true);   // 이후 만드는 시트의 임시 XML을 gzip으로
 ```
 
-## 결론
+### 메모리에 남는 것들이 있다
 
-- Row를 일일이 get해서 조작할 필요가 있다면 XSSF 사용
-- Row를 조작할 일이 없다면 SXSSF 사용
-- select 쿼리로 처리하는 부분이 있다면 id기준으로 정렬 후 cursor를 두어 chunk단위로 가져와서 처리
+SXSSF가 줄이는 것은 행과 셀이다. 문서는 병합 영역, 하이퍼링크, 주석 같은 기능은 여전히 메모리에만 저장되므로 많이 쓰면 메모리를 많이 요구할 수 있다고 적는다.
 
-## References
+문자열도 따져 볼 지점이다. SXSSF는 기본적으로 공유 문자열 테이블 대신 인라인 문자열을 쓴다. 문서 내용을 메모리에 둘 필요가 없어 효율적이지만, 일부 클라이언트와 호환되지 않는 문서를 만든다고 알려져 있다. 공유 문자열을 켜면 문서의 모든 고유 문자열을 메모리에 둬야 한다. 호환성 요구와 메모리 예산을 같이 보고 정해야 한다.
 
-- https://ko.wikipedia.org/wiki/%EC%95%84%ED%8C%8C%EC%B9%98_POI
-- https://poi.apache.org/components/spreadsheet/
-- https://poi.apache.org/components/spreadsheet/how-to.html#user_api
-- https://poi.apache.org/apidocs/dev/org/apache/poi/xssf/streaming/SXSSFWorkbook.html
-- https://www.tutorialspoint.com/apache_poi/apache_poi_quick_guide.htm
-- https://stackoverflow.com/questions/45936257/apache-poi-hssf-vs-poi-xssf
-- https://stackoverflow.com/questions/33047512/hssfworkbook-vs-xssfworkbook-vs-sxssfworkbook-apache-poi
-- https://www.adoclib.com/blog/hssfworkbook-vs-xssfworkbook-vs-sxssfworkbook-apache-poi.html
-- https://j-dev.tistory.com/entry/SpringPOI-%EB%8C%80%EC%9A%A9%EB%9F%89-%EC%97%91%EC%85%80-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C
-- https://topic.alibabacloud.com/a/the-difference-between-hssfxssf-and-sxssf_8_8_31570522.html
-- https://okky.kr/articles/408564
-- https://qiita.com/tool-taro/items/4b3c802bb114a9110ecb
+스타일과 폰트는 SXSSF에 한정된 이야기는 아니지만 대량 쓰기에서 자주 문제가 된다. POI의 Quick Guide는 워크북의 고유 폰트 수가 32,767개로 제한되므로 셀마다 폰트를 만들지 말고 재사용하라고 적는다([Busy Developers' Guide](https://poi.apache.org/components/spreadsheet/quick-guide.html)). `CellStyle`과 `Font`는 루프 밖에서 한 번 만들어 재사용한다.
+
+### 할 수 없는 것
+
+POI 문서가 꼽는 SXSSF의 제약은 세 가지다.
+
+- 특정 시점에 접근할 수 있는 행 수가 제한된다.
+- `Sheet.clone()`을 지원하지 않는다.
+- 수식 평가를 지원하지 않는다.
+
+첫 번째 제약은 쓰기 패턴을 바꾼다. 마지막에 합계를 위쪽 행에 넣거나, 뒤쪽 데이터를 보고 앞쪽 서식을 바꾸거나, 모든 행을 보고 열 너비를 자동으로 맞추는 작업은 이미 디스크로 나간 행을 건드려야 한다. 이런 양식은 쓰면서 값을 누적하거나, 필요한 값을 미리 계산해 두고 한 번에 순서대로 써야 한다.
+
+## 어느 것을 고를까
+
+| 상황 | 선택 |
+| --- | --- |
+| `.xls`를 읽거나 써야 한다 | HSSF (65,536행 한계 확인) |
+| `.xlsx`를 만들고, 이미 쓴 행을 자유롭게 고쳐야 하며, 행 수가 크지 않다 | XSSF |
+| `.xlsx`를 대량으로 만들고, 행을 위에서 아래로 한 번씩만 쓴다 | SXSSF |
+| 큰 `.xlsx`를 읽기만 한다 | XSSF 이벤트 API |
+
+SXSSF로 바꿔도 원본 데이터를 리스트 하나로 다 받아 두면 메모리 문제는 절반만 풀린다. 조회도 id 같은 정렬 키를 기준으로 일정 건수씩 끊어 읽고, 읽은 묶음을 바로 행으로 흘려보내야 입력과 출력이 모두 일정한 크기로 묶인다.
+
+## 참고
+
+- [Apache POI](https://poi.apache.org/)
+- [Apache POI: Component Overview](https://poi.apache.org/components/)
+- [Apache POI: Spreadsheet (HSSF, XSSF, SXSSF)](https://poi.apache.org/components/spreadsheet/)
+- [Apache POI: SXSSF (Streaming Usermodel API)](https://poi.apache.org/components/spreadsheet/how-to.html#sxssf)
+- [Apache POI: Busy Developers' Guide to HSSF and XSSF Features](https://poi.apache.org/components/spreadsheet/quick-guide.html)
+- [Apache POI Javadoc: SXSSFWorkbook](https://poi.apache.org/apidocs/dev/org/apache/poi/xssf/streaming/SXSSFWorkbook.html)
+- [Apache POI Javadoc: SpreadsheetVersion](https://poi.apache.org/apidocs/dev/org/apache/poi/ss/SpreadsheetVersion.html)
