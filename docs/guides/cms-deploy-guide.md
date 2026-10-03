@@ -6,14 +6,13 @@
 
 ## 이 문서의 스크린샷에 대해
 
-실제로 찍을 수 있었던 화면만 넣었다. **로그인해야 보이는 화면은 없다** — Cloudflare 대시보드,
-GitHub OAuth App 만들기 폼, `wrangler` 가 실제 계정에 배포하는 출력은 계정 안에서만 보이고,
-그 계정에 들어가는 일은 직접 해야 한다. 지어낸 그림을 넣는 것보다 없는 편이 낫다고 봤다.
+전부 실제 화면이다. 지어낸 그림은 없다.
 
-빈자리에는 **무엇이 보일지**를 글로 적었다. 진행하면서 직접 찍어 `docs/guides/images/cms-deploy/`
-에 넣고 그 자리의 주석을 바꾸면 다음에 볼 때 완성된 문서가 된다.
+터미널 출력도 실제로 돌린 결과만 실었고, 형태만 적은 블록은 그렇다고 표시했다. 명령은
+wrangler 4.147.0, GitHub·Cloudflare 화면은 2026-10-03 기준이다.
 
-터미널 출력은 전부 실제로 돌린 결과다. 명령은 wrangler 4.147.0 에서 확인했다.
+아직 못 찍은 화면이 두 개 있다. `wrangler` 의 권한 승인 페이지와, 실제로 배포될 때의 터미널
+출력이다. 그 자리에는 무엇이 보일지 글로 적어 두었다.
 
 ## 무엇이 올라가는가
 
@@ -80,15 +79,24 @@ GitHub OAuth App 만들기 폼, `wrangler` 가 실제 계정에 배포하는 출
 동의 항목 중 **[Optional] 제3자 제공**은 체크하지 않아도 가입된다. 나머지 `[Required]` 세 개만
 있으면 된다.
 
-가입하면 확인 메일이 온다. 링크를 눌러 이메일을 인증한다. 인증 전에는 다음 단계의
-`wrangler login` 이 끝까지 가지 않는다.
+가입하면 확인 메일이 온다. **링크를 눌러 이메일을 인증한다.**
+
+인증을 건너뛰면 대시보드에는 들어가지지만 Workers 를 쓰려는 순간 이 화면에서 막힌다.
+
+![이메일 인증 안내 화면](images/cms-deploy/02b-cloudflare-verify.jpg)
+
+메일을 못 받았으면 **Resend email** 을 누른다. 스팸함도 본다.
 
 > **이미 계정이 있으면** 이 단계를 건너뛴다. <https://dash.cloudflare.com/login>
 >
 > ![Cloudflare 로그인 화면](images/cms-deploy/02-cloudflare-login.jpg)
 
-도메인을 추가하라는 화면이 나와도 **무시하고 넘어간다.** 이 편집기는 `workers.dev` 하위 도메인을
-쓰므로 도메인이 필요 없다.
+인증까지 끝나면 대시보드가 이렇게 보인다.
+
+![Cloudflare 대시보드](images/cms-deploy/03-cloudflare-dashboard.jpg)
+
+**Add a domain** 이 눈에 띄지만 무시한다. 이 편집기는 `workers.dev` 하위 도메인을 쓰므로
+도메인이 필요 없다. 왼쪽 **Compute → Workers & Pages** 가 나중에 배포된 Worker 가 보일 곳이다.
 
 ## 2. 터미널에서 Cloudflare 에 로그인
 
@@ -176,16 +184,25 @@ Deployed polynomeer-cms triggers (…)
 
 <https://github.com/settings/developers> → **New OAuth App**.
 
+![GitHub OAuth App 등록 폼](images/cms-deploy/05-github-oauth-app.jpg)
+
 | 항목 | 넣을 값 |
 | --- | --- |
 | Application name | 아무거나 (`polynomeer-cms`) |
 | Homepage URL | 3단계에서 받은 주소 |
-| Authorization callback URL | 3단계에서 받은 주소 + `/auth/callback` |
+| Application description | 비워 둬도 된다 |
+| **Redirect URI** | 3단계에서 받은 주소 + `/auth/callback` |
+| Allow wildcard matching | **끄기** |
+| Enable Device Flow | **끄기** |
+| **Expire user access tokens** | **끄기** (기본값이 켜짐 — 아래) |
 
-*(찍지 못한 화면: 이 폼. 로그인해야 열린다. 입력칸 네 개짜리 한 장이다.)*
+문서나 블로그에서 **Authorization callback URL** 이라고 부르는 칸이 지금은 **Redirect URIs**
+아래의 **Redirect URI** 다. 같은 것이다.
 
-callback URL 은 **한 글자도 틀리면 안 된다.** Worker 가 보내는 값과 같아야 하고, Worker 는
-`https://<주소>/auth/callback` 을 보낸다. 끝에 `/` 를 붙이지 않는다.
+### Redirect URI 는 한 글자도 틀리면 안 된다
+
+Worker 가 보내는 값과 같아야 하고, Worker 는 `https://<주소>/auth/callback` 을 보낸다.
+끝에 `/` 를 붙이지 않는다.
 
 ```
 맞음   https://polynomeer-cms.example.workers.dev/auth/callback
@@ -193,7 +210,16 @@ callback URL 은 **한 글자도 틀리면 안 된다.** Worker 가 보내는 �
 틀림   http://polynomeer-cms.example.workers.dev/auth/callback
 ```
 
-만들고 나서 두 가지를 챙긴다.
+### Expire user access tokens 는 꺼 둔다
+
+기본으로 켜져 있다. 켜 두면 발급된 토큰이 8시간 뒤 만료되고, 갱신하려면 `refresh_token` 을
+써야 한다. **이 편집기는 `refresh_token` 을 쓰지 않는다** — `cms/src/worker.js` 는
+`access_token` 만 세션에 담는다.
+
+세션 자체도 8시간이라 실제로는 비슷한 때 함께 끝나지만, 토큰이 먼저 죽으면 로그아웃이 아니라
+**저장할 때 502** 로 나타난다. 알아보기 어려운 실패가 하나 느는 것 말고 얻는 게 없으니 끈다.
+
+### 만들고 나서 두 가지를 챙긴다
 
 - **Client ID** — 화면에 그냥 보인다. 비밀이 아니다
 - **Client secret** — `Generate a new client secret` 를 눌러 만든다. **그 화면을 벗어나면

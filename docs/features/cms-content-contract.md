@@ -212,7 +212,7 @@ cd cms && npm test   # 128 tests, 의존성 0
 `cms/wrangler.jsonc` 에 공개 설정만 들어 있고, secret 세 개는 `wrangler secret put` 으로만
 들어간다. 절차는 [`docs/guides/cms-deploy-guide.md`](../guides/cms-deploy-guide.md)에 있다.
 
-**배포가 먼저다.** GitHub OAuth App 의 Authorization callback URL 이 배포된 Worker 주소 +
+**배포가 먼저다.** GitHub OAuth App 의 Redirect URI(옛 이름 Authorization callback URL)가 배포된 Worker 주소 +
 `/auth/callback` 인데, 그 주소는 한 번 배포해야 나온다. secret 없이 올라간 Worker 는 화면은
 뜨고 로그인만 안 되는 상태로 기다린다.
 
