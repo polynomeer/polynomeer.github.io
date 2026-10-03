@@ -4,7 +4,38 @@
 올린 뒤의 사용법은 [`cms-usage-guide.md`](./cms-usage-guide.md), 왜 이렇게 만들었는지는
 [`../features/cms-content-contract.md`](../features/cms-content-contract.md)에 있다.
 
+## 이 문서의 스크린샷에 대해
+
+실제로 찍을 수 있었던 화면만 넣었다. **로그인해야 보이는 화면은 없다** — Cloudflare 대시보드,
+GitHub OAuth App 만들기 폼, `wrangler` 가 실제 계정에 배포하는 출력은 계정 안에서만 보이고,
+그 계정에 들어가는 일은 직접 해야 한다. 지어낸 그림을 넣는 것보다 없는 편이 낫다고 봤다.
+
+빈자리에는 **무엇이 보일지**를 글로 적었다. 진행하면서 직접 찍어 `docs/guides/images/cms-deploy/`
+에 넣고 그 자리의 주석을 바꾸면 다음에 볼 때 완성된 문서가 된다.
+
+터미널 출력은 전부 실제로 돌린 결과다. 명령은 wrangler 4.147.0 에서 확인했다.
+
 ## 무엇이 올라가는가
+
+```
+    브라우저
+       │  https://polynomeer-cms.<...>.workers.dev
+       ▼
+ ┌─────────────────────────────┐
+ │ Cloudflare Worker           │
+ │                             │
+ │  src/ui/*     편집 화면      │ ── 정적 파일 9개
+ │  src/worker.js 로그인·커밋   │
+ └──────┬───────────────┬──────┘
+        │               │
+        ▼               ▼
+   GitHub OAuth     GitHub API
+   (본인 확인)      (글 커밋 / PR)
+                         │
+                         ▼
+                 polynomeer.github.io
+                      저장소
+```
 
 | | |
 | --- | --- |
@@ -13,93 +44,180 @@
 | GitHub OAuth App | 본인 확인용. GitHub 쪽에 따로 만든다 |
 | secret 3개 | Cloudflare 에만 넣는다. git 에 올리지 않는다 |
 
-Durable Object 도 R2 도 데이터베이스도 쓰지 않는다. 글은 저장소에 커밋되고, 그게 전부다.
+데이터베이스도 Durable Object 도 R2 도 쓰지 않는다. 글은 저장소에 커밋되고, 그게 전부다.
 
 ## 준비물
 
-- Cloudflare 계정 (무료 플랜으로 충분하다)
+- Cloudflare 계정 (무료 플랜으로 충분하다 — 1단계에서 만든다)
 - Node — 이 저장소에서 쓰는 버전이면 된다
 - 블로그 저장소를 소유한 GitHub 계정
+- 터미널 15분
 
 ## 순서가 왜 이런가
 
-OAuth App 에는 **Worker 주소**가 필요한데, 그 주소는 **배포해야** 나온다. 그래서 배포가 먼저다.
+이 절차에서 헷갈리는 지점은 하나뿐이다. **OAuth App 에는 Worker 주소가 필요한데, 그 주소는
+배포해야 나온다.**
 
-secret 없이 올라간 Worker 는 고장난 게 아니다. 화면은 뜨고 로그인만 안 된다. 2번에서 주소를
-받고, 3~5번에서 로그인을 붙인다.
+그래서 배포가 먼저다. secret 없이 올라간 Worker 는 고장난 게 아니다. 화면은 뜨고 로그인만 안
+된다. 3단계에서 주소를 받고, 4~6단계에서 로그인을 붙인다.
 
-## 1. Cloudflare 에 로그인
-
-```bash
-cd cms && npx wrangler login
+```
+1 가입 ──→ 2 wrangler login ──→ 3 배포 ──┐
+                                        │ 주소를 받는다
+                                        ▼
+6 확인 ←── 5 secret 3개 ←── 4 OAuth App 만들기
 ```
 
-브라우저가 열린다. 계정이 없으면 거기서 만들면 된다. 끝나면 확인한다.
+---
+
+## 1. Cloudflare 가입
+
+<https://dash.cloudflare.com/sign-up> 에서 이메일과 비밀번호만 넣으면 끝난다. 카드도 도메인도
+필요 없다.
+
+![Cloudflare 가입 화면](images/cms-deploy/01-cloudflare-signup.jpg)
+
+동의 항목 중 **[Optional] 제3자 제공**은 체크하지 않아도 가입된다. 나머지 `[Required]` 세 개만
+있으면 된다.
+
+가입하면 확인 메일이 온다. 링크를 눌러 이메일을 인증한다. 인증 전에는 다음 단계의
+`wrangler login` 이 끝까지 가지 않는다.
+
+> **이미 계정이 있으면** 이 단계를 건너뛴다. <https://dash.cloudflare.com/login>
+>
+> ![Cloudflare 로그인 화면](images/cms-deploy/02-cloudflare-login.jpg)
+
+도메인을 추가하라는 화면이 나와도 **무시하고 넘어간다.** 이 편집기는 `workers.dev` 하위 도메인을
+쓰므로 도메인이 필요 없다.
+
+## 2. 터미널에서 Cloudflare 에 로그인
+
+```bash
+cd ~/Study/polynomeer.github.io/cms
+npx wrangler login
+```
+
+`wrangler` 는 설치해 둘 필요가 없다. `npx` 가 알아서 받는다. 처음 한 번은 받느라 조금 걸린다.
+
+브라우저가 열리고 **Allow** 를 누르면 터미널로 돌아온다.
+*(찍지 못한 화면: Cloudflare 권한 승인 페이지. "Wrangler 가 계정에 접근하도록 허용할까요"
+한 장이다.)*
+
+된 건지 확인한다.
 
 ```bash
 npx wrangler whoami
 ```
 
-`You are not authenticated` 가 나오면 아직 안 된 것이다.
-
-## 2. 먼저 배포해서 주소를 받는다
-
-```bash
-npx wrangler deploy
-```
-
-처음 배포하는 계정이면 `*.workers.dev` 하위 도메인을 하나 정하라고 묻는다. 정하고 나면 출력
-마지막 줄에 주소가 찍힌다.
+로그인 전에는 이렇게 나온다. 아래 내용이 보이면 아직 1~2단계가 안 끝난 것이다.
 
 ```
-https://polynomeer-cms.<정한-이름>.workers.dev
+ ⛅️ wrangler 4.147.0
+────────────────────
+Getting User settings...
+You are not authenticated. Please run `wrangler login`.
 ```
 
-**이 주소를 적어 둔다.** 아래에서 세 번 쓴다.
+로그인됐으면 계정 이메일과 Account ID 가 표로 나온다.
 
-지금 열어 보면 "이 저장소의 관리자만 쓸 수 있습니다" 와 로그인 버튼이 보인다. 눌러도 아직
-안 된다. 정상이다.
+## 3. 먼저 배포해서 주소를 받는다
 
-설정이 맞는지만 먼저 보고 싶으면 배포하지 않고 확인할 수 있다.
+올리기 전에 설정이 맞는지만 확인할 수 있다. 이 명령은 **아무것도 올리지 않는다.**
 
 ```bash
 npx wrangler deploy --dry-run
 ```
 
-## 3. GitHub OAuth App 만들기
+실제 출력이다.
+
+```
+ ⛅️ wrangler 4.147.0
+────────────────────
+✨ Read 9 files from the assets directory /Users/hammac/Study/polynomeer.github.io/cms/src/ui
+Total Upload: 32.45 KiB / gzip: 9.94 KiB
+Your Worker has access to the following bindings:
+Binding                                            Resource
+env.ASSETS                                         Assets
+env.ADMIN_GITHUB_IDS ("62940574")                  Environment Variable
+env.GITHUB_OWNER ("polynomeer")                    Environment Variable
+env.GITHUB_REPO ("polynomeer.github.io")           Environment Variable
+env.DEFAULT_BRANCH ("main")                        Environment Variable
+env.SITE_URL ("https://polynomeer.github.io")      Environment Variable
+
+--dry-run: exiting now.
+```
+
+파일 9개와 변수 5개가 보이면 설정은 정상이다. 이제 진짜로 올린다.
+
+```bash
+npx wrangler deploy
+```
+
+처음 배포하는 계정이면 **`*.workers.dev` 하위 도메인을 하나 정하라고 묻는다.** 아무거나
+정하면 되고, 나중에 바꾸기 번거로우니 한 번에 정한다. 출력 마지막 줄에 주소가 찍힌다.
+
+대강 이런 모양이다 — **아래는 실제 출력이 아니라 형태만 적은 것이다.** 이 명령은 계정
+안에서만 돌아가므로 확인할 수 없었다.
+
+```
+Uploaded polynomeer-cms (…)
+Deployed polynomeer-cms triggers (…)
+  https://polynomeer-cms.<정한-이름>.workers.dev
+```
+
+**이 주소를 적어 둔다.** 아래에서 세 번 쓴다.
+
+지금 열어 보면 이 화면이 뜬다. 버튼을 눌러도 아직 안 된다. **정상이다** — secret 을 아직 안
+넣었다.
+
+![로그인 전 편집기 화면](images/cms-deploy/06-cms-signed-out.jpg)
+
+## 4. GitHub OAuth App 만들기
 
 <https://github.com/settings/developers> → **New OAuth App**.
 
 | 항목 | 넣을 값 |
 | --- | --- |
 | Application name | 아무거나 (`polynomeer-cms`) |
-| Homepage URL | 2번에서 받은 주소 |
-| Authorization callback URL | 2번에서 받은 주소 + `/auth/callback` |
+| Homepage URL | 3단계에서 받은 주소 |
+| Authorization callback URL | 3단계에서 받은 주소 + `/auth/callback` |
 
-callback URL 은 **한 글자도 틀리면 안 된다.** 끝의 `/` 유무까지 Worker 가 보내는 값과 같아야
-한다. Worker 는 `https://<주소>/auth/callback` 을 보낸다.
+*(찍지 못한 화면: 이 폼. 로그인해야 열린다. 입력칸 네 개짜리 한 장이다.)*
+
+callback URL 은 **한 글자도 틀리면 안 된다.** Worker 가 보내는 값과 같아야 하고, Worker 는
+`https://<주소>/auth/callback` 을 보낸다. 끝에 `/` 를 붙이지 않는다.
+
+```
+맞음   https://polynomeer-cms.example.workers.dev/auth/callback
+틀림   https://polynomeer-cms.example.workers.dev/auth/callback/
+틀림   http://polynomeer-cms.example.workers.dev/auth/callback
+```
 
 만들고 나서 두 가지를 챙긴다.
 
-- **Client ID** — 화면에 그냥 보인다
+- **Client ID** — 화면에 그냥 보인다. 비밀이 아니다
 - **Client secret** — `Generate a new client secret` 를 눌러 만든다. **그 화면을 벗어나면
-  다시 못 본다.** 바로 다음 단계로 간다
+  다시 못 본다.** 바로 5단계로 간다. 잃어버렸으면 새로 만들면 된다
 
 이 App 은 `repo` scope 를 요구한다. 저장소 contents 에 commit 할 수 있는 가장 좁은 고전
 scope 가 그것이다.
 
-## 4. 관리자 GitHub ID 확인
+## 5. 관리자 GitHub ID 확인
 
-로그인은 **숫자 ID** 하나만 허용한다. 이름이 아니라 숫자다.
+로그인은 **숫자 ID** 하나만 허용한다. 계정 이름이 아니라 숫자다.
 
 ```bash
 curl -s https://api.github.com/users/polynomeer | grep '"id"'
 ```
 
-`cms/wrangler.jsonc` 의 `ADMIN_GITHUB_IDS` 에 이미 `62940574` 가 들어 있다. 값이 같으면 할 일이
-없다. 다르면 고치고 다시 `npx wrangler deploy` 한다. 이 값은 비밀이 아니라서 git 에 있어도 된다.
+```
+  "id": 62940574,
+```
 
-## 5. secret 세 개 넣기
+`cms/wrangler.jsonc` 의 `ADMIN_GITHUB_IDS` 에 이미 이 값이 들어 있다. 같으면 할 일이 없다.
+다르면 고치고 `npx wrangler deploy` 를 다시 한다. 이 값은 비밀이 아니라서 git 에 있어도 된다.
+
+## 6. secret 세 개 넣기
 
 세션 서명에 쓸 값을 먼저 만든다.
 
@@ -107,17 +225,17 @@ curl -s https://api.github.com/users/polynomeer | grep '"id"'
 openssl rand -base64 48
 ```
 
-출력을 복사해 두고, 세 개를 차례로 넣는다. 각 명령이 값을 물으면 붙여넣고 Enter 를 친다.
-입력은 화면에 보이지 않는다.
+출력(64자)을 복사해 두고, 세 개를 차례로 넣는다. 각 명령이 값을 물으면 붙여넣고 Enter 를
+친다. **입력은 화면에 보이지 않는다.** 붙여넣기가 됐는지 안 보여도 그냥 Enter 를 치면 된다.
 
 ```bash
-npx wrangler secret put SESSION_SECRET        # 방금 만든 값
-npx wrangler secret put GITHUB_CLIENT_ID      # 3번의 Client ID
-npx wrangler secret put GITHUB_CLIENT_SECRET  # 3번의 Client secret
+npx wrangler secret put SESSION_SECRET        # 방금 만든 64자
+npx wrangler secret put GITHUB_CLIENT_ID      # 4단계의 Client ID
+npx wrangler secret put GITHUB_CLIENT_SECRET  # 4단계의 Client secret
 ```
 
 - `SESSION_SECRET` 은 **32자 이상**이어야 한다. 짧으면 Worker 가 거부한다
-- secret 은 넣는 즉시 적용된다. 다시 배포하지 않아도 된다
+- secret 은 넣는 즉시 적용된다. **다시 배포하지 않아도 된다**
 - 세 값 모두 `wrangler.jsonc` 에 쓰지 않는다. 그 파일은 git 에 올라간다
 
 넣은 목록은 볼 수 있다. 값은 못 본다.
@@ -126,21 +244,30 @@ npx wrangler secret put GITHUB_CLIENT_SECRET  # 3번의 Client secret
 npx wrangler secret list
 ```
 
-## 6. 되는지 확인
+## 7. 되는지 확인
 
 주소를 열고 순서대로 본다.
 
 1. **GitHub로 로그인** → GitHub 승인 화면 → 돌아온다
 2. 머리줄에 `@polynomeer` 가 뜬다
-3. 왼쪽 목록에 글이 1,200개 넘게 뜨고, 한글 제목으로 검색된다
-4. 아무 글이나 열어 한 글자 고치고 **저장** → `커밋 ...` 과 `PR #…` 이 뜬다
+3. 왼쪽 목록에 글이 1,200개 넘게 뜨고, **한글 제목으로 검색된다**
+4. 아무 글이나 열어 한 글자 고치고 **저장** → `커밋 …` 과 `PR #…` 이 뜬다
 5. GitHub 에서 그 PR 이 실제로 열렸는지 본다
+
+4단계까지 되면 이런 화면이다.
+
+![편집기 화면](images/cms-deploy/07-cms-editor.jpg)
+
+*(위 그림은 로컬 개발 서버에서 찍었다. 배포본도 같은 화면이고, 다른 점은 머리줄의 계정
+이름에 `(dev)` 가 붙지 않는다는 것뿐이다.)*
 
 여기까지 되면 끝이다.
 
+---
+
 ## 잘 안 될 때
 
-실시간 로그부터 본다.
+실시간 로그부터 본다. 다른 터미널에 띄워 두고 다시 시도하면 원인이 바로 보인다.
 
 ```bash
 npx wrangler tail
@@ -148,16 +275,20 @@ npx wrangler tail
 
 | 증상 | 원인 | 조치 |
 | --- | --- | --- |
-| 승인 후 돌아오는 길에 500 | `SESSION_SECRET` 이 없거나 32자 미만 | 5번을 다시 한다 |
-| `Sign-in could not be verified` | callback URL 불일치, 또는 브라우저가 쿠키를 막음 | 3번의 URL 을 글자 그대로 확인 |
-| `This account cannot sign in here` | `ADMIN_GITHUB_IDS` 가 로그인한 계정과 다름 | 4번 |
-| `GitHub refused the authorization code` | Client ID 나 secret 이 틀림 | 5번을 다시 한다 |
+| 승인 후 돌아오는 길에 **500** | `SESSION_SECRET` 이 없거나 32자 미만 | 6단계를 다시 |
+| `Sign-in could not be verified` | callback URL 불일치, 또는 브라우저가 쿠키를 막음 | 4단계 URL 을 글자 그대로 확인 |
+| `This account cannot sign in here` | `ADMIN_GITHUB_IDS` 가 로그인한 계정과 다름 | 5단계 |
+| `GitHub refused the authorization code` | Client ID 나 secret 이 틀림 | 6단계를 다시 |
 | 로그인은 되는데 목록이 비어 있음 | `GITHUB_OWNER` / `GITHUB_REPO` 가 틀림 | `wrangler.jsonc` 고치고 재배포 |
 | 글자만 나오고 모양이 없음 | 정적 파일이 안 올라감 | `npx wrangler deploy` 를 다시 |
-| 저장이 502 | 토큰 권한 부족 | OAuth App 이 `repo` scope 인지 확인 |
+| 저장이 **502** | 토큰 권한 부족 | OAuth App 이 `repo` scope 인지 확인 |
 
-로그인 실패 메시지는 일부러 뭉뚱그려 둔 것이 있다. 허용 목록에 없는 계정과 잘못된 토큰이
-같은 응답을 받는다 — 이 화면이 누가 관리자인지 알려 주면 안 되기 때문이다.
+**500 과 거부는 다르다.** 비밀번호처럼 틀렸다고 알려 주는 게 아니라, `SESSION_SECRET` 이
+없으면 콜백에서 서명하다 터진다. 로그에 `session secret must be at least 32 characters`
+가 보이면 그것이다.
+
+로그인 실패 메시지 중에는 **일부러 뭉뚱그린 것**이 있다. 허용 목록에 없는 계정과 잘못된
+토큰이 같은 응답을 받는다 — 이 화면이 누가 관리자인지 알려 주면 안 되기 때문이다.
 
 ## 고친 뒤 다시 올리기
 
