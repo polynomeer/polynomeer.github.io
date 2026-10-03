@@ -7,191 +7,265 @@ series: sequence-bottleneck
 series_title: 키 생성 병목을 추적해 구조를 바꾼 기록
 series_order: 3
 mermaid: true
+problem_decision_result:
+  problem: "계약 코드를 SELECT 안의 시퀀스 증가 함수로 발급해, 시퀀스 행 하나의 UPDATE 락이 비즈니스 트랜잭션 커밋까지 유지됐다. 동시 요청과 배치가 이 행 앞에서 줄을 서며 계약 생성 처리에 2분이 걸렸다."
+  decision: "채번을 SELECT 단계에서 빼내 INSERT 시점에 소비하도록 옮기고, 시퀀스 테이블을 한 번의 증가로 여러 번호를 확보하는 범위 할당 방식으로 바꾸고, 시퀀스 증가를 별도 트랜잭션으로 분리했다. 결번은 허용했다."
+  result: "계약 생성 처리 시간이 2분에서 10초로 줄고 락 대기와 배치 병목이 줄었다. 다만 범위를 확보하는 연산이 여러 인스턴스에서 동시에 실행될 경우를 설계에서 고려하지 않아, 겹치는 범위를 받을 위험이 남았다."
 ---
 
-# Part 3. 채번을 INSERT 시점으로 옮기고 범위 단위로 받기
+[1편](/posts/sequence-part1/)에서는 INSERT가 느린 줄 알았고, 2편에서는 계약 코드를 받아 오는 `SELECT next_seq('CONTRACT_CODE')` 안에 시퀀스 행을 갱신하는 UPDATE가 숨어 있었다는 것을 확인했다. 그 UPDATE의 X 락은 비즈니스 트랜잭션이 커밋할 때까지 풀리지 않았고, 동시에 들어온 요청과 배치는 그 행 하나 앞에서 줄을 섰다.
 
-[2편](/posts/architectural-decisions/)에서 병목의 정체를 확인했다. INSERT가 느린 게 아니라, INSERT에 필요한 키를 받기 위해 모든 요청이 시퀀스 테이블의 행 하나를 갱신하려고 줄을 서고 있었다. 이번 글에서는 그 구조를 실제로 어떻게 바꿨는지, 그리고 바꾸면서 무엇을 포기하기로 했는지 정리한다.
+2편 끝에서 병목을 세 축으로 나눴다. 채번 시점, 채번 단위, 트랜잭션 경계다. 이 글은 세 축을 각각 어떻게 바꿨는지, 그 결과 2분이 10초가 된 과정, 그리고 그 설계가 여러 인스턴스 환경을 고려하지 못해 남긴 결함과 그 결함을 고치는 방향을 정리한다.
 
-> 이 글의 코드와 SQL은 회사의 실제 소스가 아니라, 설계 결정을 원리대로 다시 구성한 예시다. 청크 크기 같은 숫자도 설명용 값이지 운영값이 아니다.
+> 퇴사한 회사의 코드에는 지금 접근할 수 없다. 이 글의 코드는 내가 같은 문제를 처음부터 다시 구현한 [랩](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)의 코드이거나, 구조를 설명하려고 다시 구성한 예시다. 랩의 테이블 이름, 범위 크기(500, 1000), 스레드 수는 재현용으로 정한 값이지 운영값이 아니다.
 
-## 바꿔야 할 것은 세 가지였다
+## 바꾸기 전과 후
 
-2편 끝에서 남긴 선택지를 다시 보면, 사실 서로 배타적인 선택지가 아니었다. 병목을 만든 요인이 세 겹으로 겹쳐 있었고, 각각을 따로 풀어야 했다.
+전체 그림부터 보면 이렇다.
 
-1. 채번 시점이 너무 이르다. 후보를 조회하는 단계에서 키를 미리 받아두니, 조회부터 INSERT까지 이어지는 긴 구간 내내 시퀀스 행에 대한 갱신이 트랜잭션에 묶여 있었다.
-2. 채번 단위가 너무 작다. 한 건마다 한 번씩 시퀀스 행을 갱신하니, 건수만큼 [락 경합](/posts/lock-types-and-waits/)이 발생했다.
-3. 채번이 비즈니스 트랜잭션과 같은 트랜잭션에 있다. 시퀀스 행의 락이 비즈니스 트랜잭션이 커밋될 때까지 풀리지 않았다.
+```mermaid
+flowchart TD
+    subgraph BEFORE["변경 전"]
+        B1["fab:fa-java 계약 생성 트랜잭션"] -->|"계약마다 SELECT next_seq"| B2[("fa:fa-lock 시퀀스 행<br/>번호 1개당 UPDATE 1번")]
+        B2 -.->|"X 락은 비즈니스 커밋까지"| B1
+        B1 --> B3[("fa:fa-database 계약 테이블")]
+    end
+    subgraph AFTER["변경 후"]
+        A0["fa:fa-gears 범위 확보<br/>별도 짧은 트랜잭션"] -->|"UPDATE 1번에 N개"| A2[("fa:fa-lock 시퀀스 행")]
+        A0 -->|"확보한 범위"| A3["fa:fa-bolt 메모리의 번호 범위"]
+        A1["fab:fa-java 계약 생성 트랜잭션"] -->|"INSERT 시점에 다음 번호"| A3
+        A1 --> A4[("fa:fa-database 계약 테이블")]
+    end
+```
 
-셋 중 하나만 고쳐도 체감은 좋아진다. 하지만 하나만 고치면 나머지 둘이 다음 병목이 된다.
+변경 전에는 비즈니스 트랜잭션이 시퀀스 행을 직접 잡고 있었다. 변경 후에는 시퀀스 행을 만지는 일이 별도의 짧은 트랜잭션으로 빠지고, 비즈니스 트랜잭션은 메모리에 확보해 둔 범위에서 번호를 꺼내 쓰기만 한다.
 
-## 첫 번째: 채번을 SELECT에서 INSERT 직전으로 옮기기
+## 첫 번째 축: 채번을 SELECT 단계에서 빼내 INSERT 시점으로
 
-기존 흐름은 이랬다.
+변경 전에는 계약 코드를 SELECT 단계에서 받았다.
 
 ```text
-후보 조회 (SELECT ... next_value('CONTRACT_CODE') ...)
-  → 단가 계산
+계약 코드 SELECT (next_seq 내부 UPDATE, 여기서 X 락 획득)
   → 검증
+  → 다른 계약 처리
   → INSERT
+  → COMMIT (여기서 X 락 해제)
 ```
 
-키가 조회 결과에 포함되어 나왔기 때문에, 시퀀스 행의 갱신은 트랜잭션의 맨 앞에서 일어나고 락은 맨 뒤에서 풀렸다. 그 사이의 계산과 검증 시간이 전부 락 보유 시간이 됐다.
-
-게다가 조회된 후보가 검증에서 탈락하면, 이미 증가시킨 시퀀스 값은 쓰이지 않은 채 버려졌다. 채번은 됐는데 INSERT는 안 되는 경우가 구조적으로 존재했다.
-
-바꾼 흐름은 단순하다.
+키가 실제로 필요한 순간은 INSERT 하나뿐인데, 번호를 받는 시점이 그보다 앞에 있었기 때문에 그 사이의 처리 시간이 전부 락 보유 시간이 됐다. 그래서 채번 로직을 SELECT 단계에서 제거하고, 번호는 INSERT 시점에 꺼내 쓰도록 옮겼다.
 
 ```text
-후보 조회 (키 없음)
-  → 단가 계산
-  → 검증
-  → 채번
+검증
+  → 다른 계약 처리
+  → INSERT 시점에 확보된 범위에서 다음 번호를 꺼냄 (DB 락 없음)
   → INSERT
+  → COMMIT
 ```
 
-키가 필요한 순간은 INSERT 직전 하나뿐이다. 그 시점까지 채번을 미루면 락 보유 구간이 "트랜잭션 전체"에서 "채번 한 줄"로 줄어든다. 검증에서 탈락한 후보는 애초에 채번하지 않는다.
+다만 이 축만 바꾸면 번호를 꺼내는 일이 여전히 시퀀스 행 UPDATE라서, 경합은 그대로 남고 위치만 뒤로 밀린다. INSERT 시점에 번호를 "DB 락 없이" 꺼낼 수 있으려면, 번호를 미리 여러 개 확보해 두는 두 번째 축이 함께 바뀌어야 했다.
 
-이 변경만으로는 경합 횟수가 줄지 않는다. 여전히 건수만큼 채번한다. 하지만 각 경합의 길이가 짧아져서, 다음 변경의 효과가 온전히 드러날 수 있는 바탕이 됐다.
+## 두 번째 축: 번호를 하나씩이 아니라 범위로 받기
 
-## 두 번째: 한 건이 아니라 범위를 받기
-
-시퀀스 행을 갱신하는 횟수 자체를 줄여야 했다. 방법은 한 번의 갱신으로 N개의 번호를 통째로 확보하고, 그 범위를 애플리케이션 메모리에서 순서대로 소비하는 것이다. Hibernate가 `allocationSize`로 하는 것과 같은 원리다.
-
-MySQL에는 `RETURNING`이 없어서 갱신과 조회를 한 번에 묶기 어렵다. 대신 `LAST_INSERT_ID(expr)`를 쓰면 같은 커넥션 안에서 원자적으로 새 상한을 받을 수 있다. [MySQL 문서](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_last-insert-id)는 인자로 준 값이 그 커넥션의 다음 `LAST_INSERT_ID()` 반환값으로 기억된다고 설명하고, 이 방식으로 시퀀스를 흉내 내는 예제로 `UPDATE ... SET id=LAST_INSERT_ID(id+1)`을 든다. 여러 클라이언트가 동시에 UPDATE를 해도 각자 자기 값을 받으므로 "multi-user safe"(여러 사용자가 동시에 써도 안전하다)라고 적고 있다. 아래 SQL은 같은 방식에서 증가폭만 1이 아니라 범위 크기로 바꾼 것이다.
-
-```sql
-UPDATE contract_sequence
-SET current_value = LAST_INSERT_ID(current_value + 100)
-WHERE name = 'CONTRACT_CODE';
-
-SELECT LAST_INSERT_ID();   -- 새 상한. [상한-99, 상한]이 이 인스턴스의 몫이 된다
-```
-
-애플리케이션 쪽은 커서와 상한 두 값만 들고 있으면 된다.
-
-```java
-@Component
-public class ContractCodeAllocator {
-
-    private static final int RANGE_SIZE = 100; // 예시값
-
-    private final JdbcTemplate jdbcTemplate;
-    private final TransactionTemplate allocationTx;
-
-    private long cursor = 0;
-    private long upperBound = 0;
-
-    public ContractCodeAllocator(JdbcTemplate jdbcTemplate, PlatformTransactionManager txManager) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.allocationTx = new TransactionTemplate(txManager);
-        this.allocationTx.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-    }
-
-    public synchronized long next() {
-        if (cursor >= upperBound) {
-            allocateRange();
-        }
-        return ++cursor;
-    }
-
-    private void allocateRange() {
-        long newUpper = allocationTx.execute(status -> {
-            jdbcTemplate.update(
-                "UPDATE contract_sequence SET current_value = LAST_INSERT_ID(current_value + ?) WHERE name = ?",
-                RANGE_SIZE, "CONTRACT_CODE");
-            return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
-        });
-        this.upperBound = newUpper;
-        this.cursor = newUpper - RANGE_SIZE;
-    }
-}
-```
-
-동작을 시간순으로 보면 이렇다.
+시퀀스 테이블을 범위 할당(range allocation) 방식으로 바꿨다. 한 번의 증가로 N개의 번호를 통째로 확보하고, 그 범위를 애플리케이션 메모리에서 순서대로 소비한다. 범위를 다 쓰면 다시 한 번 증가시켜 다음 범위를 받는다. JPA의 `@SequenceGenerator`가 `allocationSize`로 하는 일과 같은 원리다.
 
 ```mermaid
 sequenceDiagram
-    participant App as 애플리케이션 (커서, 상한)
-    participant DB as contract_sequence
-
-    App->>DB: UPDATE current_value = LAST_INSERT_ID(current_value + 100)
-    DB-->>App: 새 상한 1100
-    Note over App: 1001~1100을 메모리에서 순차 소비
-    App->>App: next() x 100 (DB 접근 없음)
-    App->>DB: 상한 도달 시 다시 UPDATE + 100
+    participant Biz as 계약 생성 트랜잭션
+    participant Mem as 메모리의 번호 범위
+    participant SeqTx as 범위 확보 트랜잭션
+    participant SEQ as 시퀀스 행
+    Biz->>Mem: 다음 번호
+    Note over Mem: 범위 소진
+    Mem->>SeqTx: 새 범위 요청
+    SeqTx->>SEQ: value를 N만큼 증가
+    SeqTx->>SEQ: COMMIT
+    SeqTx-->>Mem: 새 범위 N개
+    Mem-->>Biz: 범위의 첫 번호
+    Biz->>Mem: 다음 번호 x (N-1)
+    Note over Biz,Mem: DB 접근 없이 메모리에서 소비
 ```
 
-시퀀스 행에 대한 경합은 사라지지 않는다. 다만 "매 채번마다"가 아니라 "N번의 채번마다 한 번"으로 빈도가 N분의 1이 된다. 배치가 수만 건을 밀어 넣을 때, 시퀀스 행을 만지는 횟수는 수만 번에서 수백 번으로 줄어든다.
+시퀀스 행에 대한 경합이 없어지는 것은 아니다. 빈도가 "번호 하나마다"에서 "N개마다 한 번"으로 줄어든다. 계약 K건을 만드는 동안 시퀀스 행을 만지는 횟수가 K번에서 K/N번이 된다.
 
-## 세 번째: 채번을 별도 트랜잭션으로 분리하기
+당시 N을 얼마로 잡았고 어떤 근거로 정했는지는 기록으로 남아 있지 않다. 그래서 크기를 고르는 기준은 이 글 뒷부분에 일반론으로만 정리한다.
 
-위 코드에서 [`REQUIRES_NEW`](/posts/transaction-propagation/)(호출한 쪽 트랜잭션을 잠시 멈추고 새 트랜잭션을 열어 따로 커밋하는 전파 옵션)가 눈에 띄지 않을 수 있는데, 실제로는 이 한 줄이 두 번째 변경만큼 중요했다.
+## 세 번째 축: 시퀀스 증가를 별도 트랜잭션으로
 
-범위를 확보하는 UPDATE가 비즈니스 트랜잭션 안에서 실행되면, 시퀀스 행의 락은 그 트랜잭션이 커밋될 때까지 유지된다. 배치 트랜잭션이 몇 초씩 걸리면 그동안 다른 인스턴스는 범위를 확보하지 못하고 대기한다. 첫 번째 변경으로 채번을 INSERT 직전까지 미뤄도, 트랜잭션 경계가 같으면 락은 여전히 커밋까지 붙잡혀 있다.
+범위를 확보하는 UPDATE를 비즈니스 트랜잭션 안에서 실행하면, 첫 번째와 두 번째 축을 바꿔도 2편의 문제가 그대로 돌아온다. 범위 확보는 드물어지지만, 한 번 확보할 때마다 시퀀스 행의 락이 비즈니스 트랜잭션이 끝날 때까지 유지되기 때문이다. 그래서 시퀀스 증가 로직을 별도 트랜잭션으로 분리했다.
 
-채번을 별도 트랜잭션으로 떼어내면 UPDATE와 SELECT가 끝나는 즉시 커밋되고 락이 풀린다. 시퀀스 행의 락 보유 시간은 비즈니스 로직과 무관하게 밀리초 단위로 고정된다.
+Spring에서는 이것을 보통 `REQUIRES_NEW` 전파로 표현한다. [Spring 문서](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html)에 따르면 `REQUIRES_NEW`는 바깥 트랜잭션에 참여하지 않고 독립된 물리 트랜잭션을 쓰며, 안쪽 트랜잭션의 락은 그 트랜잭션이 끝나는 즉시 풀린다. 랩의 구현도 범위 확보 메서드를 `@Transactional(propagation = Propagation.REQUIRES_NEW)`로 감쌌다.
 
-대신 한 가지를 받아들여야 한다. 비즈니스 트랜잭션이 롤백돼도 확보한 범위는 되돌아오지 않는다. 그 번호들은 쓰이지 않은 채 사라진다. 이 문제는 다음 절로 이어진다.
+경계를 나눈 뒤의 시간 순서는 이렇다.
 
-## 결번을 허용하기로 했다
+```mermaid
+sequenceDiagram
+    participant A as 트랜잭션 A 업무
+    participant RA as A의 범위 확보 트랜잭션
+    participant SEQ as 시퀀스 행
+    participant B as 트랜잭션 B 업무
+    A->>RA: 범위 요청
+    RA->>SEQ: UPDATE value + N
+    Note over SEQ: X 락
+    RA->>SEQ: COMMIT
+    Note over SEQ: 즉시 해제
+    RA-->>A: 범위
+    B->>SEQ: 범위가 필요하면 바로 UPDATE 가능
+    A->>A: 검증, INSERT 계속
+    A->>A: COMMIT
+```
 
-범위 할당 방식은 필연적으로 결번을 만든다.
+시퀀스 행의 락 보유 시간이 "비즈니스 트랜잭션 전체"에서 "UPDATE 한 번과 커밋"으로 줄어든다. 비즈니스 로직이 얼마나 오래 걸리든 시퀀스 행은 영향을 받지 않는다.
 
-- 확보한 범위를 다 쓰기 전에 인스턴스가 재시작되면, 남은 번호가 유실된다.
-- 비즈니스 트랜잭션이 롤백돼도 채번 트랜잭션은 이미 커밋됐으므로 그 번호는 유실된다.
-- 인스턴스가 여러 대면 각자 다른 범위를 들고 있으므로, 생성 시각 순서와 번호 순서가 일치하지 않는다.
+이 분리에는 비용이 둘 있다.
 
-이걸 막으려면 유실된 번호를 회수하는 별도 장치를 만들거나, 범위 할당을 포기하고 다시 한 건씩 채번해야 한다. 어느 쪽이든 원래 병목으로 돌아가는 비용이다.
+- 커넥션: `REQUIRES_NEW`는 바깥 트랜잭션의 커넥션을 쥔 채 커넥션을 하나 더 받는다. Spring 문서는 동시 스레드 수보다 커넥션 풀이 최소 하나 이상 크지 않으면 이 옵션을 쓰지 말라고 경고한다. 풀이 작으면 모든 스레드가 바깥 커넥션을 쥔 채 두 번째 커넥션을 기다리며 멈출 수 있다.
+- 되돌릴 수 없음: 범위 확보 트랜잭션은 이미 커밋됐으므로, 비즈니스 트랜잭션이 롤백돼도 확보한 번호는 시퀀스 테이블로 돌아오지 않는다.
 
-그래서 먼저 확인한 것은 "계약 코드는 연속적이어야 하는가"였다. 답은 아니었다. 계약 코드에 요구되는 것은 유일성이지 연속성이 아니었다. 정산과 외부 유통에서 이 코드를 식별자로 쓰지만, 코드 사이에 빈 번호가 있다고 해서 잘못되는 업무는 없었다. 회계 전표나 세금계산서처럼 법적으로 연속 번호를 요구하는 도메인이었다면 다른 답을 냈어야 한다.
+두 번째 비용이 결번 문제로 이어진다.
 
-결번을 허용하기로 하면서 한 가지는 코드 규칙으로 못 박았다. 번호로 정렬하지 않는다. 여러 인스턴스가 각자의 범위를 소비하면 나중에 생성된 계약이 더 작은 번호를 가질 수 있다. 시간순이 필요한 조회는 생성 시각 컬럼을 쓰고, 계약 코드는 오직 식별에만 쓴다.
+## 결번은 허용했다
 
-## 범위 크기는 어떻게 정해야 하는가
+범위 할당은 구조적으로 결번(쓰이지 않고 건너뛴 번호)을 만든다.
 
-솔직하게 적으면, 당시 범위 크기는 근거를 갖고 계산한 값이 아니라 감으로 정한 값이었다. 돌이켜보면 이 값은 다음 세 가지 사이의 트레이드오프이고, 그 기준으로 정했어야 했다.
+- 확보한 범위를 다 쓰기 전에 인스턴스가 재시작되면 남은 번호가 사라진다.
+- 비즈니스 트랜잭션이 롤백돼도 범위 확보는 커밋된 뒤라 그 번호는 사라진다.
 
-### 1. 시퀀스 행을 만지는 주기
+결번을 막으려면 유실된 번호를 회수하는 장치를 만들거나 한 건씩 채번하는 방식으로 돌아가야 하는데, 어느 쪽이든 원래 병목으로 돌아가는 비용이다. 이 설계는 결번이 생겨도 비즈니스상 큰 문제가 없다는 전제에서 출발했다. 계약 코드는 정산과 외부 유통에서 계약을 가리키는 식별자라 유일해야 하지만, 번호 사이에 빈 자리가 있다고 틀어지는 업무는 아니었다. 법적으로 연속 번호가 필요한 문서(세금계산서 같은)였다면 이 전제가 성립하지 않으므로 다른 구조를 골라야 한다.
 
-범위 크기 N을 채번 처리량으로 나누면 시퀀스 행을 갱신하는 주기가 나온다. 초당 1,000건을 채번하는 배치에서 N=100이면 0.1초마다 갱신이 일어나고, 이 정도면 경합이 다시 보이기 시작한다. 갱신 주기가 최소 초 단위, 가능하면 분 단위가 되도록 N을 잡는 것이 출발점이다.
+## 결과: 2분에서 10초로
 
-### 2. 한 번에 잃어도 되는 번호의 양
+계약 생성 처리 시간이 2분에서 10초로 줄었다. 락 대기와 배치 병목이 줄었고, 동시 요청 상황에서도 처리 시간을 예측할 수 있게 됐다.
 
-재시작 한 번에 최대 N개가 사라진다. 인스턴스가 M대면 배포 한 번에 최대 M×N개가 사라진다. 이 양이 식별자의 자릿수 예산에서 무시할 수 있는 수준이어야 한다. 9자리 코드라면 10억 개 중 배포마다 수천 개가 비는 것은 문제가 아니지만, 6자리 코드라면 이야기가 다르다.
+1편의 INSERT 튜닝이 2분을 약 1분 30초까지 줄인 것과 비교하면 차이가 분명하다. INSERT 튜닝은 실행 비용을 줄였고, 이번 변경은 대기를 없앴다. 남아 있던 시간의 대부분이 실행이 아니라 대기였다는 2편의 해석과도 맞는 결과다.
 
-### 3. 번호 순서가 시각 순서에서 얼마나 벗어나도 되는가
+## 설계가 놓친 것: 여러 인스턴스가 동시에 범위를 확보하면
 
-N이 클수록 인스턴스 간 번호 역전 폭이 커진다. 결번을 허용했더라도 "대략 최근 것이 큰 번호"라는 성질을 운영자가 기대하고 있다면, N은 그 기대를 깨지 않는 범위 안에 있어야 한다.
+여기까지가 당시 한 일이다. 그런데 이 설계에는 내가 당시 예상하지 못한 빈틈이 있었다.
 
-이 셋을 놓고 보면 답은 "고정값 하나"가 아니라 "채번 처리량을 관측하고 조정하는 값"이다. 실제로 필요한 것은 두 가지 지표였다.
+운영 인스턴스는 여러 대였다. 각 인스턴스는 자기 메모리에 범위를 들고 있다가 소진되면 시퀀스 테이블에서 새 범위를 확보한다. 그런데 이 "범위를 확보하는 연산"이 여러 인스턴스에서 동시에 실행될 수 있다는 점을 설계에서 고려하지 않았다. 범위 확보가 인스턴스 사이에서 항상 안전하게 직렬화된다는 보장이 설계에 없었다.
 
-- 단위 시간당 범위 할당 횟수: 이 값이 높으면 N을 키운다.
-- 재시작으로 유실된 번호 수(할당 상한과 실제 최대 사용값의 차이): 이 값이 자릿수 예산 대비 커지면 N을 줄인다.
+이 빈틈이 생긴 배경에는 두 가지 전제가 있었다.
 
-Hibernate가 구현하는 JPA `@SequenceGenerator`의 `allocationSize` 기본값이 50인 것도 참고할 만하다([Jakarta Persistence API 문서](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/sequencegenerator)). 대부분의 OLTP 트래픽에서는 그 정도로도 경합이 사라지고, 배치처럼 몰아서 채번하는 경로만 별도로 더 큰 N을 쓰는 편이 낫다. 채번 경로가 하나뿐이라면 배치 기준으로 N을 잡되, 위의 2번 기준으로 상한을 두면 된다.
+- 단일 서버 위주로 쓰인다는 전제. 트래픽과 사용자가 적어 두 인스턴스가 같은 순간에 범위를 확보하는 일 자체가 드물었다.
+- `SELECT ... FOR UPDATE`가 느리다는 판단. 당시에는 행을 잠그는 조회 자체가 느리다고 보고 그것을 피하는 방향으로 설계했던 것 같다.
 
-## 검토했지만 택하지 않은 것
+두 번째 전제는 나중에 틀린 것으로 확인했다. 이후 직접 벤치마크해 보니 `SELECT ... FOR UPDATE`도 느리지 않았고, 청크 단위로 묶어 FOR UPDATE를 거는 방식으로도 충분한 성능이 나왔을 것이다. 그 벤치마크의 조건과 수치는 기록해 두지 않아 여기에 적지 못한다. 실제 운영에서 두 인스턴스가 겹치는 범위를 받아 계약 코드가 중복 발급된 적이 있는지도 확인되지 않았다.
 
-- UUID 또는 시각 기반 ID: 락이 없고 분산 환경에 맞지만, 기존 계약 코드 형식을 유지해야 하는 제약 때문에 제외했다. 정산과 외부 유통이 이 형식을 전제로 돌고 있었다.
-- Redis INCR: 빠르지만 Redis 장애나 재시작 시 값이 유실될 수 있고, 계약 코드처럼 영속성이 필요한 식별자를 휘발성 저장소에 맡기고 싶지 않았다.
-- DB 네이티브 시퀀스: MySQL에는 없고, 있는 DB로 옮기는 것은 이 문제를 풀기 위한 변경으로는 너무 컸다.
+## 랩에서 재현한 충돌
 
-세 가지 모두 "기술을 바꾸는" 선택이고, 범위 할당은 "구조를 바꾸는" 선택이었다. 기존 시퀀스 테이블과 코드 형식을 그대로 두고 병목만 제거할 수 있다는 점이 결정적이었다.
+빈틈이 어떤 모양인지 보려고 랩에서 범위 확보를 "SELECT로 현재 값을 읽고, 애플리케이션에서 계산하고, 별도 UPDATE로 반영"하는 구조로 재구성했다. 세 단계가 하나의 원자적 연산으로 묶여 있지 않다. 아래는 랩 코드에서 핵심 줄만 옮긴 것이다([NonAtomicContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/NonAtomicContractCodeAllocator.java)).
 
-## 결과
+```java
+// 랩 코드: 재현용 "변경 전" 구조
+long current = jdbcTemplate.queryForObject(
+        "SELECT current_value FROM contract_sequence WHERE seq_key = ?",
+        Long.class, seqKey);                       // 1) 락 없이 읽는다
+widenRaceWindow();                                 // 재현용 50ms 지연
+long newValue = current + blockSize;               // 2) 메모리에서 계산한다
+jdbcTemplate.update(
+        "UPDATE contract_sequence SET current_value = ? WHERE seq_key = ?",
+        newValue, seqKey);                         // 3) 따로 쓴다
+return new AllocatedRange(current + 1, newValue);
+```
 
-계약 생성 처리 시간이 2분에서 10초로 줄었다. INSERT 튜닝으로는 2분에서 1분 30초까지밖에 못 갔던 것([1편](/posts/sequence-part1/))과 비교하면, 병목의 위치를 제대로 찾은 뒤의 변경이 얼마나 다른지 드러난다.
+두 인스턴스가 이 사이에 끼어들면 순서는 이렇게 된다.
 
-더 중요한 것은 처리 시간이 건수에 비례해 늘지 않게 됐다는 점이다. 이전에는 건수가 두 배가 되면 채번 대기도 두 배가 됐다. 지금은 건수가 늘어도 시퀀스 행을 만지는 횟수는 N분의 1로만 늘어난다.
+```mermaid
+sequenceDiagram
+    participant I1 as 인스턴스 1
+    participant SEQ as contract_sequence
+    participant I2 as 인스턴스 2
+    I1->>SEQ: SELECT current_value
+    SEQ-->>I1: 0
+    I2->>SEQ: SELECT current_value
+    SEQ-->>I2: 0
+    I1->>SEQ: UPDATE current_value = 1000
+    Note over I1: 1~1000 확보
+    I2->>SEQ: UPDATE current_value = 1000
+    Note over I2: 1~1000 확보, 범위 중복
+    Note over SEQ: 최종값 1000<br/>한 번의 증가가 사라짐
+```
 
-## 정리
+평범한 SELECT는 락을 걸지 않으므로 두 인스턴스가 같은 값을 읽고, 두 UPDATE는 같은 값을 쓴다. [lost update](/posts/isolation-levels-and-anomalies/)(두 트랜잭션이 같은 값을 읽고 각자 쓴 결과 한쪽의 갱신이 사라지는 현상)이고, 그 결과 두 인스턴스가 같은 번호 범위에서 같은 계약 코드를 발급한다.
 
-세 변경의 대가로 결번을 받아들였다. 이 결정은 "계약 코드에 연속성이 필요한가"라는 도메인 질문에 답한 뒤에야 내릴 수 있었다.
+랩의 테스트([NonAtomicAllocatorConcurrencyTest](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/sequence/NonAtomicAllocatorConcurrencyTest.java))는 Testcontainers로 띄운 MySQL에 10개 스레드를 `CountDownLatch`로 동시에 출발시켜 각자 1,000개짜리 범위를 확보하게 한다. 스레드 하나가 인스턴스 하나 역할이다. 2026-09-29 로컬 실행에서 이 구조는 겹치는 범위를 만들었고, 최종 시퀀스 값은 기대치 10,000에 못 미쳤다.
 
-1편에서 INSERT가 느리다고 생각했을 때는 INSERT를 튜닝했다. 2편에서 시퀀스 함수 안의 UPDATE를 찾았을 때는 그 함수를 고칠지 고민했다. 3편에서 실제로 바꾼 것은 SQL 한 줄이 아니라 채번의 시점, 단위, 트랜잭션 경계였다. 병목을 찾는 일과 병목을 없애는 일은 다른 종류의 작업이고, 후자는 대개 "무엇을 포기할 것인가"를 정하는 일이었다.
+이 재현에는 조건이 붙는다. SELECT와 UPDATE 사이에 50ms 지연을 일부러 넣었다. 같은 머신의 로컬 MySQL에서는 두 문장 사이가 너무 짧아, 지연 없이는 겹침이 매번 재현된다고 보장할 수 없었기 때문이다. 이 결과는 "이 구조에서는 겹칠 수 있다"를 보여 줄 뿐, 운영에서 얼마나 자주 겹쳤을지를 말해 주지는 않는다.
+
+## 고치는 방향: 계산과 확정을 하나의 원자적 연산으로
+
+문제를 인지한 뒤 정리한 방향은, 범위를 계산하는 일과 확정하는(쓰는) 일을 떼어 놓지 않고 인스턴스 수와 무관한 원자적 연산 하나로 묶는 것이다. 방법은 두 가지다. 이 방향이 실제 운영 코드에 반영됐는지는 확인되지 않았고, 아래 코드는 둘 다 랩의 구현이다.
+
+첫째, 원자적 UPDATE 하나로 읽기, 계산, 쓰기를 묶는다. MySQL에는 `UPDATE ... RETURNING`이 없지만 `LAST_INSERT_ID(expr)`를 쓰면 같은 효과를 낼 수 있다. [MySQL 문서](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_last-insert-id)는 `UPDATE sequence SET id=LAST_INSERT_ID(id+1)` 다음에 `SELECT LAST_INSERT_ID()`로 값을 읽는 시퀀스 흉내 예제를 들고, 이 방식이 "multi-user safe"(여러 클라이언트가 동시에 써도 안전)하다고 적는다. 값이 커넥션 단위로 기억되기 때문이다. 랩은 증가폭만 1에서 범위 크기로 바꿨다([AtomicUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/AtomicUpdateContractCodeAllocator.java)).
+
+```java
+// 랩 코드: 원자적 UPDATE 하나로 범위 확보
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public AllocatedRange allocateBlock(String seqKey, int blockSize) {
+    jdbcTemplate.update(
+        "UPDATE contract_sequence SET current_value = LAST_INSERT_ID(current_value + ?) WHERE seq_key = ?",
+        blockSize, seqKey);
+    long blockEnd = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+    return new AllocatedRange(blockEnd - blockSize + 1, blockEnd);
+}
+```
+
+UPDATE는 행에 X 락을 걸고 커밋까지 유지하므로, 같은 행을 갱신하려는 다른 인스턴스의 UPDATE는 앞 트랜잭션이 끝난 뒤 갱신된 값 위에서 실행된다. 2편에서 병목을 만든 바로 그 성질이, 트랜잭션이 짧아지자 범위가 겹치지 않게 하는 장치가 된다.
+
+```mermaid
+sequenceDiagram
+    participant I1 as 인스턴스 1
+    participant SEQ as contract_sequence
+    participant I2 as 인스턴스 2
+    I1->>SEQ: UPDATE value = LAST_INSERT_ID(value + 1000)
+    Note over SEQ: I1이 X 락 보유
+    I2->>SEQ: 같은 UPDATE
+    Note over I2: I1 커밋까지 대기
+    I1->>SEQ: SELECT LAST_INSERT_ID() 후 COMMIT
+    Note over I1: 1~1000 확보
+    SEQ-->>I2: 갱신된 1000 위에서 UPDATE
+    I2->>SEQ: SELECT LAST_INSERT_ID() 후 COMMIT
+    Note over I2: 1001~2000 확보
+```
+
+랩에서 확인한 함정이 하나 있다. `LAST_INSERT_ID()`는 커넥션 단위 상태라서, UPDATE와 그 뒤의 `SELECT LAST_INSERT_ID()`가 다른 커넥션에서 실행되면 엉뚱한 값을 읽는다. 랩은 메서드를 트랜잭션으로 감싸 두 JDBC 호출이 같은 커넥션을 쓰게 했다.
+
+둘째, 시퀀스 행을 `SELECT ... FOR UPDATE`로 잠근 뒤 같은 트랜잭션 안에서 범위를 계산하고 갱신하고 커밋한다([SelectForUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/SelectForUpdateContractCodeAllocator.java)). 다른 인스턴스는 그 트랜잭션이 끝날 때까지 같은 행의 잠금을 기다리므로 범위가 겹칠 수 없다. 당시 피했던 바로 그 방식이고, 위 회고대로 느리지도 않았다. [비관적 락과 원자적 업데이트](/posts/how-to-control-race-condition/)의 차이는 문장 수와 코드 모양이지, 직렬화를 DB 행 락에 맡긴다는 점은 같다.
+
+랩에서 같은 조건(10개 스레드, 1,000개씩, 지연 없음)으로 돌린 결과는 두 방식 모두 같았다. 2회 반복 모두 겹침이 0건이었고, 받은 범위를 정렬해 이어 붙이면 1부터 10,000까지 빈틈 없이 채워졌다. 이 테스트는 정합성을 보는 것이고, 두 방식의 성능을 비교한 측정은 아니다.
+
+두 방식 모두 인스턴스가 몇 대로 늘어도 그대로 안전하다. 그래서 채번에 인스턴스 식별자를 넣거나 인스턴스별로 시퀀스를 나눌 필요는 없다. 그렇게 하면 오히려 결번 관리가 복잡해진다. 트래픽이 더 커진다면 DB의 `AUTO_INCREMENT`를 그대로 쓰거나 전용 ID 생성기(Snowflake류)로 분리하는 것이 다음 대안이다.
+
+## 범위 크기를 고르는 기준
+
+당시 값이 남아 있지 않으므로, 여기서는 일반적인 기준만 적는다. 범위 크기 N은 세 가지 사이의 균형이다.
+
+- 시퀀스 행을 만지는 주기: N을 채번 처리량으로 나누면 범위 확보 주기가 나온다. 주기가 짧으면 경합이 다시 보이기 시작한다.
+- 한 번에 잃어도 되는 번호의 양: 재시작 한 번에 최대 N개, 인스턴스가 M대면 배포 한 번에 최대 M×N개가 사라진다. 이 양이 계약 코드의 자릿수에 비해 무시할 만해야 한다.
+- 번호 순서와 생성 순서의 어긋남: 인스턴스마다 다른 범위를 소비하므로, 나중에 만든 계약이 더 작은 번호를 가질 수 있다. N이 클수록 어긋남이 커진다. 시간순 정렬이 필요하면 번호가 아니라 생성 시각 컬럼을 써야 한다.
+
+참고로 JPA `@SequenceGenerator`의 `allocationSize` 기본값은 50이다([Jakarta Persistence 3.1](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/sequencegenerator)). 고정값 하나를 정하기보다, 단위 시간당 범위 확보 횟수와 재시작으로 유실된 번호 수(확보 상한과 실제 최대 사용값의 차이)를 관측하며 조정하는 값으로 다루는 편이 맞다.
+
+## 이 변경이 남긴 것
+
+- 얻은 것: 계약 생성 2분에서 10초. 시퀀스 행의 락 보유 시간이 비즈니스 로직 길이와 분리됐다.
+- 받아들인 것: 결번, 그리고 번호 순서와 생성 순서의 어긋남.
+- 놓친 것: 범위 확보의 인스턴스 간 원자성. 단일 서버 전제와 FOR UPDATE에 대한 잘못된 판단이 겹쳐 생긴 빈틈이고, 고치는 방향은 정리했지만 운영에 반영됐는지는 확인되지 않았다.
+
+돌이켜 보면 2편에서 병목을 만든 것과 이번에 빈틈을 막는 것은 같은 메커니즘이다. 행 하나에 걸리는 X 락은 오래 쥐면 병목이 되고, 짧게 쥐면 직렬화 장치가 된다. 당시에는 락 자체를 피하려 했고, 고쳐야 했던 것은 락을 쥐는 시간이었다.
+
+같은 개편에서 했던 다른 구조 작업은 [ArchUnit 규칙 도입 기록](/posts/archunit-guardrails-on-legacy/)과 [Shadow Release 조회 전환 기록](/posts/shadow-release-query-migration/)에 정리했다.
 
 ## 참고
 
 - [MySQL 8.0 Reference Manual - Information Functions, LAST_INSERT_ID()](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_last-insert-id) — `LAST_INSERT_ID(expr)`로 시퀀스를 흉내 내는 예제와 커넥션 단위 동작
+- [MySQL 8.0 Reference Manual - Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) — UPDATE의 레코드 락과 커밋 시 해제
+- [Spring Framework Reference - Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html) — `REQUIRES_NEW`의 독립 트랜잭션, 락 해제 시점, 커넥션 풀 경고
 - [Jakarta Persistence 3.1 - SequenceGenerator](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/sequencegenerator) — `allocationSize` 정의와 기본값 50
+- 랩 코드(engineering-lab, 커밋 `d52297d`)
+  - [README - 시나리오 1 계약 코드 채번 동시성](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)
+  - [NonAtomicContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/NonAtomicContractCodeAllocator.java) — 재현용 변경 전 구조
+  - [AtomicUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/AtomicUpdateContractCodeAllocator.java) — 원자적 UPDATE
+  - [SelectForUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/SelectForUpdateContractCodeAllocator.java) — SELECT ... FOR UPDATE
+  - [ConcurrentAllocationHarness.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/sequence/ConcurrentAllocationHarness.java) — 10개 스레드 동시 출발 하네스
+  - [V1__init.sql](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/resources/db/migration/V1__init.sql) — `contract_sequence` 스키마
