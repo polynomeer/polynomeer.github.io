@@ -69,6 +69,15 @@
         "cms/tools/dev-server.js"
       ],
       "port": 4010
+    },
+    {
+      "name": "cms-dev-cite",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "CMS_DEV_SHOW_CONTENT=1 node cms/tools/dev-server.js"
+      ],
+      "port": 4010
     }
   ]
 }
