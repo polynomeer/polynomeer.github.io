@@ -5,111 +5,99 @@ categories: [Notes, Common]
 tags: [SQS, Messaging, Idempotency, Batch, Architecture, Reliability]
 mermaid: true
 problem_decision_result:
-  problem: "파트너사 앨범 등록, 검수 요청, 외부 플랫폼 전송이 폴링 기반 단일 스레드 배치로 처리됐다. 요청이 몰리면 대기열이 적체되고, 한 작업의 실패가 뒤의 작업까지 지연시켰다."
-  decision: "폴링을 제거하고 작업 단위를 메시지로 정의해 Amazon SQS에 적재했다. 워커를 역할별로 분리해 수평 확장 가능하게 하고, 재시도 정책과 DLQ로 실패를 격리했으며, 메시지 ID 기반으로 중복 전달을 멱등하게 처리했다."
-  result: "평균 처리 대기 시간이 3~5분에서 1분 내외로 줄었다. 동시 처리량이 늘고, 실패한 작업이 격리되면서 전체 실패율이 낮아졌다."
+  problem: "앨범 등록, 검수 요청, 외부 플랫폼 전송이 폴링 기반 단일 스레드 배치로 처리됐다. 요청이 몰리면 대기열이 적체되고, 일부 작업의 실패가 전체 처리 흐름을 지연시켰다."
+  decision: "폴링 구조를 없애고 작업 단위를 메시지로 분리해 Amazon SQS에 적재했다. 워커를 역할별로 분리해 수평 확장할 수 있게 하고, 재시도 정책과 DLQ로 실패를 격리했다."
+  result: "평균 처리 대기 시간이 3~5분에서 1분 내외로 줄었다. 동시 처리량이 늘었고, 실패한 작업이 격리되면서 전체 실패율이 낮아졌다."
 ---
 
-글로벌 유통 시스템(MDS)에서는 파트너사가 앨범을 올리고, 관리자가 검수하고, 검수가 끝나면 해외 플랫폼으로 전송하는 흐름이 계속 발생한다. 처음에는 이 작업들을 폴링 배치가 순서대로 처리했다. 이 글은 그 구조가 어디서 한계에 부딪혔는지, 큐로 바꾸면서 무엇을 새로 떠안게 됐는지(중복 전달, 순서, 실패 격리), 그리고 각각을 어떻게 다뤘는지 정리한 기록이다.
+음원 유통 시스템(MDS)에서는 앨범 등록, 검수 요청, 외부 음원 플랫폼으로의 전송이 계속 발생한다. 처음에는 이 작업들을 폴링 배치가 순서대로 처리했다. 이 글은 그 구조가 어디서 막혔는지, 큐로 바꾸면서 무엇을 새로 떠안게 되는지(중복 전달, 순서, 실패 격리), 그리고 운영에서 확인된 것과 확인하지 못한 것을 나눠 정리한 기록이다.
 
-> 이 글의 코드는 회사의 실제 소스가 아니라, 설계 결정을 원리대로 다시 구성한 예시다. 재시도 횟수와 가시성 타임아웃 같은 숫자는 설명용 값이지 운영값이 아니다.
+## 어떤 시스템이었나
 
-## 폴링이 한계에 부딪힌 지점
+MDS는 외주 개발사가 PHP로 만든 기존 유통망 시스템을 리뉴얼한 시스템이다. 앨범과 곡을 등록·검수하고, DDEX(음원 메타데이터와 전송을 위한 업계 표준 메시지 형식) 기반 자동 전송으로 국내외 음원 플랫폼에 유통하며, 그 수익을 정산한다. 외부 연동, 배치 처리, 정산 로직이 계속 늘어나는 시스템이었다.
 
-폴링 배치의 구조는 단순하다. 일정 주기마다 "처리할 것이 있는가"를 DB에서 조회하고, 있으면 하나씩 처리한다.
+| 항목 | 내용 |
+| --- | --- |
+| 기간 | 2023년 1월부터 2024년 1월까지 |
+| 인원 | 백엔드 4명(시니어 1명, 주니어 3명), 정산개발팀 2명, 프론트엔드 4명 |
+| 스택 | Java, Spring Boot, JPA, Spring Batch, MySQL, Amazon SQS, ArchUnit |
+| 내 역할 | 콘텐츠(앨범·곡) 관리 API와 라이선스 관리 API 개발, 이후 계약관리 영역까지 정담당 |
+
+메시지 처리량, 워커 수, 큐 개수 같은 규모 수치는 확인되지 않았다. 이 글에서 숫자로 확인된 것은 평균 처리 대기 시간 하나다. 멱등 처리를 운영에서 어떤 스키마로 구현했는지도 확인되지 않아, 그 부분은 같은 설계를 다시 구현한 개인 랩([engineering-lab/career-lab/mds-distribution](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md))의 설계로 설명하고 그렇게 표시한다.
+
+## 폴링 배치가 막힌 지점
+
+기존 구조는 폴링 기반 단일 스레드 배치였다. 주기마다 처리할 작업이 있는지 조회하고, 있으면 하나씩 순서대로 처리한다. 형태만 그리면 이렇다.
 
 ```text
-매 N분:
-  SELECT * FROM task WHERE status = 'PENDING' ORDER BY created_at
-  for each task:
-    process(task)          -- 단일 스레드, 순차
-    UPDATE task SET status = 'DONE'
+매 주기:
+  처리 대기 작업 조회 (등록 순)
+  for each 작업:
+    처리                  -- 단일 스레드, 순차
+    완료 표시
 ```
 
-이 구조는 처리할 것이 드물고 고르게 들어올 때는 문제가 없다. MDS는 그렇지 않았다. 파트너사가 앨범을 한꺼번에 수십 장 올리는 날이 있었고, 검수 승인이 한 시간에 몰리는 날이 있었다. 그럴 때 세 가지가 동시에 나빠졌다.
+요청이 급증하면 두 가지가 동시에 나빠졌다.
 
-대기 시간이 폴링 주기에 묶인다. 요청이 폴링 직후에 들어오면 다음 폴링까지 기다린다. 주기를 줄이면 빈 조회가 늘어나 DB만 괴롭힌다. 주기를 늘리면 대기가 늘어난다. 어느 쪽으로 조정해도 "요청이 들어오는 순간 처리를 시작한다"는 목표에는 닿지 않는다.
+첫째, 대기열이 적체된다. 한 스레드가 순서대로 처리하므로 처리 속도가 요청 속도를 넘지 못하면 대기 작업이 쌓이고, 새 요청은 쌓인 작업이 모두 끝난 뒤에야 차례가 온다. 게다가 요청은 다음 폴링 주기가 돌아와야 처리가 시작된다. 주기를 줄이면 빈 조회가 늘고, 늘리면 대기가 는다.
 
-한 작업의 지연이 뒤 작업 전체의 지연이 된다. 단일 스레드가 순서대로 처리하므로, 외부 플랫폼 전송 하나가 응답을 30초 기다리면 그 뒤에 줄 선 검수 요청 수십 건이 전부 30초씩 밀린다. 실패해서 재시도하면 그만큼 더 밀린다.
+둘째, 일부 작업의 실패가 전체 흐름을 지연시킨다. 외부 플랫폼 전송처럼 응답을 기다리는 작업이 늦어지거나 실패해 재시도하면, 그 뒤에 줄 선 앨범 등록과 검수 요청이 모두 그만큼 밀린다.
 
-처리량을 늘릴 방법도 없다. 배치 인스턴스를 두 대 띄우면 같은 작업을 둘 다 집어간다. 그걸 막으려면 조회에 락을 걸거나 작업을 인스턴스별로 나눠야 하는데, 그 순간 폴링 배치는 더 이상 단순하지 않다.
+처리량을 늘리기도 어렵다. 같은 배치를 두 대 띄우면 같은 작업을 둘 다 집어 가므로, 조회에 락을 걸거나 작업을 인스턴스별로 나누는 조율이 필요해진다.
 
-평균 처리 대기 시간이 3~5분이었다. 이 숫자 자체보다, 요청이 몰리는 날에 이 숫자가 얼마까지 늘어날지 예측할 수 없다는 점이 문제였다.
+이 구조에서 평균 처리 대기 시간은 3~5분이었다.
 
-## 큐로 바꾸면 무엇이 달라지는가
+## 작업을 메시지로 바꾸면 달라지는 것
 
-작업을 "DB의 PENDING 행"이 아니라 "큐의 메시지"로 정의하면 세 문제가 각각 풀린다.
+폴링을 없애고, 작업 단위를 메시지로 분리해 Amazon SQS에 적재했다. 워커는 역할별로 나눠 수평 확장할 수 있게 했고, 재시도 정책과 DLQ(Dead Letter Queue, 계속 실패한 메시지를 옮겨 두는 별도 큐)를 적용했다. [메시지 큐](/posts/message-queue/)를 사이에 두면 요청을 받는 쪽과 처리하는 쪽이 분리된다.
 
-- 메시지가 도착하는 순간 워커가 받는다. 폴링 주기가 사라진다.
-- 워커가 여러 개면 메시지가 분산된다. 한 워커가 30초를 기다려도 다른 워커는 계속 처리한다.
-- 워커를 더 띄우면 처리량이 늘어난다. 큐가 분배를 맡으므로 워커끼리 조율할 필요가 없다.
+전후 구조를 나란히 놓으면 다음과 같다. 큐와 워커의 개수는 확인되지 않아, 역할별로 나뉘었다는 사실만 그렸다.
 
 ```mermaid
-flowchart LR
-    A[앨범 등록] --> Q1[SQS: album-registered]
-    B[검수 승인] --> Q2[SQS: review-approved]
-    Q1 --> W1[등록 워커 x N]
-    Q2 --> W2[전송 워커 x M]
-    W1 -->|재시도 소진| D1[DLQ]
-    W2 -->|재시도 소진| D2[DLQ]
-    D1 --> O[알림 / 수동 재처리]
-    D2 --> O
+flowchart TD
+    subgraph BEFORE["이전: 폴링 배치"]
+        R1["fa:fa-user 등록·검수·전송 요청"] --> T1[("fa:fa-database 작업 테이블")]
+        C1["fa:fa-clock 폴링 주기"] --> P1["fa:fa-gears 단일 스레드 배치<br/>순차 처리"]
+        T1 --> P1
+        P1 --> X1["fa:fa-globe 외부 음원 플랫폼"]
+    end
+    subgraph AFTER["이후: SQS 이벤트 파이프라인"]
+        R2["fa:fa-user 등록·검수·전송 요청"] --> Q["fab:fa-aws Amazon SQS"]
+        Q --> W1["fa:fa-gears 역할별 워커 A"]
+        Q --> W2["fa:fa-gears 역할별 워커 B"]
+        W2 --> X2["fa:fa-globe 외부 음원 플랫폼"]
+        Q -->|재시도 상한 초과| D["fa:fa-triangle-exclamation DLQ"]
+    end
 ```
 
-워커를 역할별로 나눈 이유는 부하 특성이 다르기 때문이다. 앨범 등록은 DB 쓰기가 주고 빠르다. 외부 플랫폼 전송은 네트워크 대기가 주고 느리며 실패가 잦다. 한 큐에 섞으면 느린 작업이 빠른 작업의 처리량을 잡아먹는다. 큐를 나누면 각 워커의 수를 그 작업의 특성에 맞춰 따로 조정할 수 있다.
+폴링 배치의 문제는 각각 이렇게 바뀐다.
 
-Amazon SQS를 택한 것은 이미 AWS 위에서 운영 중이었고, 메시지 브로커를 직접 운영하지 않아도 되며, 재시도와 DLQ(Dead Letter Queue, 계속 실패한 메시지를 옮겨 두는 별도 큐)가 큐 설정만으로 붙기 때문이다. 순서 보장이나 정확히 한 번 전달 같은 강한 보장은 표준 큐에서 제공하지 않는데, 그 부분은 아래에서 다룬다.
+- 메시지가 큐에 들어오면 워커가 받아 간다. 폴링 주기를 기다리지 않는다.
+- 한 워커가 느린 작업을 붙잡고 있어도 다른 워커는 다음 메시지를 처리한다.
+- 워커를 더 띄우면 처리량이 늘어난다. 메시지 분배는 큐가 맡으므로 워커끼리 조율할 필요가 없다.
 
-## 큐가 가져오는 새 문제 1: 같은 메시지가 두 번 온다
+워커를 역할별로 나눈 것도 같은 맥락이다. 앨범 등록과 외부 전송은 처리 시간과 실패 양상이 다르다. 역할별로 나누면 느린 작업이 빠른 작업을 붙잡지 않고, 역할마다 워커 수를 따로 늘릴 수 있다.
 
-SQS 표준 큐는 [최소 한 번(at-least-once) 전달](/posts/kafka-delivery-guarantees/)이다. 워커가 메시지를 받으면 메시지는 큐에 남은 채 가시성 타임아웃(visibility timeout) 동안만 다른 워커에게 보이지 않는다. 그래서 워커가 처리하고 삭제하기 전에 죽으면, 타임아웃이 지난 뒤 같은 메시지가 다른 워커에게 다시 간다([AWS 문서: Visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)). 워커가 정상이어도 드물게 중복이 생긴다. SQS는 메시지 사본을 여러 서버에 저장하는데, 수신이나 삭제 시점에 그중 한 서버가 응답하지 못하면 그 서버의 사본이 지워지지 않고 나중에 다시 전달될 수 있다([AWS 문서: At-least-once delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)).
+그런데 이 전환은 공짜가 아니다. 폴링 배치에서는 한 스레드가 한 작업을 읽고 완료 표시를 했으니 같은 작업이 두 번 처리되거나 순서가 바뀔 일이 없었다. 큐로 바꾸면 이 두 가지를 애플리케이션이 다뤄야 한다.
 
-폴링 배치에서는 없던 문제다. 그때는 한 스레드가 한 행을 읽고 상태를 바꿨으니 두 번 처리될 일이 없었다. 큐로 바꾸는 순간 "같은 작업이 두 번 실행돼도 결과가 같아야 한다"는 요구([멱등성](/posts/idempotency-key-design/))가 생긴다. AWS 문서도 같은 메시지를 두 번 이상 처리해도 문제가 없도록 애플리케이션을 멱등하게 설계하라고 권한다.
+## 새 문제 1: 같은 메시지가 두 번 온다
 
-해법은 메시지에 고유 ID를 부여하고, 처리 완료된 ID를 기록해서 다시 오면 건너뛰는 것이다. 어디에 기록하느냐가 설계의 갈림길이다.
+SQS 표준 큐는 최소 한 번(at-least-once) 전달이다. 워커가 메시지를 받으면 메시지는 큐에 남은 채 가시성 타임아웃(visibility timeout) 동안만 다른 워커에게 보이지 않는다. 그 안에 처리하고 삭제하지 못하면 메시지가 다시 보이고 다른 워커가 받아 간다([Visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)). 워커가 정상이어도 드물게 중복이 생긴다. SQS는 메시지 사본을 여러 서버에 저장하는데, 수신이나 삭제 시점에 그중 한 서버가 응답하지 못하면 그 사본이 지워지지 않고 다시 전달될 수 있다. AWS 문서는 애플리케이션을 멱등하게, 즉 "not be affected adversely when processing the same message more than once"(같은 메시지를 여러 번 처리해도 나쁜 영향을 받지 않도록) 설계하라고 권한다([At-least-once delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)). 멱등성의 정의는 [Stateless와 Idempotent](/posts/stateless-and-idempotent/)에 정리했다.
 
-| | DB 테이블 + 유니크 제약 | Redis SET + TTL |
-| --- | --- | --- |
-| 동시 중복 방어 | 제약 위반으로 DB가 막아줌 | `SET NX`로 원자적 |
-| 영속성 | 영구 | TTL 만료 후 사라짐 |
-| 처리 결과와의 원자성 | 같은 트랜잭션에 넣을 수 있음 | 별도 시스템, 원자성 없음 |
-| 비용 | 쓰기마다 행 추가, 정리 필요 | 빠름, 자동 만료 |
-
-정산 기준 데이터를 다루는 MDS에서는 "처리했다는 기록"과 "처리 결과" 사이의 원자성이 중요했다. 결과는 커밋됐는데 기록이 안 남으면 중복 처리되고, 기록은 남았는데 결과가 롤백되면 영영 처리되지 않는다. 같은 DB 트랜잭션에 넣을 수 있는 유니크 제약 방식이 이 요구에 맞는다.
-
-```java
-@Component
-@RequiredArgsConstructor
-public class AlbumRegisteredListener {
-
-    private final ProcessedMessageRepository processed;
-    private final AlbumRegistrationService service;
-
-    @SqsListener("album-registered")
-    @Transactional
-    public void on(AlbumRegisteredEvent event) {
-        try {
-            // 기록을 먼저 시도한다. 이미 있으면 유니크 제약이 막는다.
-            processed.save(new ProcessedMessage(event.messageId(), Instant.now()));
-        } catch (DataIntegrityViolationException duplicate) {
-            log.info("duplicate skipped: {}", event.messageId());
-            return;
-        }
-        service.register(event);   // 같은 트랜잭션. 실패하면 기록도 롤백된다.
-    }
-}
-```
+운영에서 멱등 처리를 어떤 테이블과 컬럼으로 했는지는 확인되지 않았다. 아래는 랩의 설계다. 메시지 ID를 기본 키로 하는 `processed_message` 테이블을 두고, 처리 전에 INSERT를 시도해 신규와 중복을 가른다.
 
 ```sql
+-- 랩 스키마 (NEW-DESIGN, 운영 스키마 아님)
 CREATE TABLE processed_message (
-    message_id   VARCHAR(64) PRIMARY KEY,
-    processed_at DATETIME NOT NULL
+    message_id    VARCHAR(100) PRIMARY KEY,
+    message_type  VARCHAR(50)  NOT NULL,
+    status        VARCHAR(20)  NOT NULL DEFAULT 'PROCESSING',
+    attempt_count INT          NOT NULL DEFAULT 1,
+    ...
 );
 ```
 
-기록을 처리보다 먼저 시도하는 이유는, 두 워커가 같은 메시지를 동시에 받았을 때 둘 다 "아직 처리 안 됨"으로 읽고 둘 다 처리하는 창을 없애기 위해서다. `existsById()`로 확인한 뒤 처리하는 방식은 확인과 기록 사이에 창이 있다. INSERT를 먼저 하면 유니크 제약이 둘 중 하나를 확실히 거른다. DB 종류에 따라 예외 형태가 다르지만, Spring의 [`DataIntegrityViolationException`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/dao/DataIntegrityViolationException.html)이 드라이버별 예외를 통일해주므로 catch 블록은 하나면 된다.
-
-두 워커가 같은 메시지를 동시에 받았을 때의 순서를 그리면 다음과 같다.
+확인 후 기록(`existsById()`로 본 뒤 처리)이 아니라 기록 먼저 시도하는 이유는, 두 워커가 같은 메시지를 동시에 받았을 때 둘 다 "아직 없음"으로 읽는 틈을 없애기 위해서다. INSERT를 먼저 하면 기본 키 제약이 둘 중 하나를 거른다.
 
 ```mermaid
 sequenceDiagram
@@ -119,71 +107,113 @@ sequenceDiagram
     A->>DB: INSERT message_id
     B->>DB: INSERT message_id
     DB-->>A: 성공
-    DB-->>B: 유니크 제약 위반
-    A->>A: service.register(event) 후 커밋
-    B->>B: duplicate skipped, return
+    DB-->>B: 기본 키 제약 위반
+    A->>A: 앨범 등록 처리 후 DONE 표시
+    B->>B: 중복으로 보고 건너뜀
 ```
 
-정확히 어느 방식으로 구현했는지는 기억이 흐리다. 위는 지금 다시 설계한다면 택할 방식이고, 그 근거는 "기록과 결과가 같이 커밋되거나 같이 롤백돼야 한다"는 요구다.
+### 랩에서 실제로 부딪힌 것
 
-## 큐가 가져오는 새 문제 2: 순서가 뒤바뀐다
+랩 README의 "실행하며 실제로 발견한 것"에 남긴 세 가지가 이 설계의 전제를 드러낸다.
 
-표준 큐는 순서를 보장하지 않는다. 앨범 등록 이벤트와 그 앨범의 수정 이벤트가 거의 동시에 발행되면, 수정이 먼저 처리될 수 있다.
+첫째, `save()`가 INSERT를 하지 않았다. `ProcessedMessage`의 ID는 애플리케이션이 채운다. 처음 구현에서는 중복 메시지가 멱등 처리되지 않고 앨범이 2건 등록됐다. Spring Data JPA는 버전 속성이 없으면 ID가 `null`인지로 새 엔티티를 판단하고, 새 엔티티가 아니면 `persist` 대신 `merge`를 호출한다([Entity State-detection Strategies](https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html)). `merge`는 행이 있으면 UPDATE를 하므로 기본 키 위반이 나지 않았다. `Persistable`을 구현해 `isNew()`가 항상 `true`를 돌려주게 해서 INSERT를 강제했다.
 
-FIFO 큐로 바꾸면 순서는 보장되지만 처리량 상한이 생긴다. 고처리량 모드가 아니면 파티션당 API 액션별 초당 300건이다([AWS 문서: Message quotas](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/quotas-messages.html)). 또 같은 메시지 그룹 안에서는 처리 중인 메시지가 삭제되거나 타임아웃될 때까지 다음 메시지가 나오지 않으므로, 그룹 안의 병렬 처리를 포기해야 한다. 순서가 정말 필요한 곳에만 쓸 도구다.
-
-MDS의 앨범은 등록, 검수, 전송이라는 상태를 이미 데이터에 갖고 있었다. 그래서 순서를 큐에 맡기는 대신 이 상태를 기준으로 삼는 쪽을 택했다. 원칙은 이렇다. 메시지는 "무엇을 하라"가 아니라 "어떤 대상이 어떤 상태가 되어야 한다"를 싣고, 워커는 처리 전에 대상의 현재 상태를 읽어 이 전이가 지금 유효한지 확인한다.
+랩 코드: [ProcessedMessage.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/domain/ProcessedMessage.java)
 
 ```java
-public void apply(AlbumEvent event) {
-    Album album = albumRepository.findById(event.albumId());
-    if (!album.canTransitionTo(event.targetState())) {
-        noOpCounter.increment(event.type());   // 무효한 전이는 무시하되 세어둔다
-        return;
+public class ProcessedMessage implements Persistable<String> {
+    ...
+    @Override
+    @Transient
+    public boolean isNew() {
+        return true;   // save()가 항상 persist(INSERT)를 시도하게 한다
     }
-    album.transitionTo(event.targetState());
 }
 ```
 
-이미 검수 완료된 앨범에 "검수 요청" 이벤트가 늦게 도착하면 무시된다. 아직 등록되지 않은 앨범에 "전송" 이벤트가 먼저 도착하면, 그 메시지는 실패로 처리돼 재시도 대상이 되고, 그사이 등록이 끝나면 다음 재시도에서 성공한다.
+둘째, 동시 중복이 항상 기본 키 위반으로 나타나지는 않는다. 같은 키로 INSERT가 몰리면 MySQL의 잠금 대기 상황에 따라 다른 `DataAccessException` 계열 예외가 날 수 있어, 랩은 상위 타입인 `DataAccessException`을 잡아 "이미 누군가 처리 중이거나 처리했다"로 취급한다.
 
-무시할 때 로그만 남기지 않고 카운터를 올리는 이유는 운영 때문이다. 순서가 뒤바뀌어 정상적으로 무시되는 이벤트와, 버그 때문에 계속 무시되고 있는 이벤트는 로그로는 구분이 안 된다. no-op 횟수가 평소 수준을 넘으면 알림이 가야 "무시되면 안 되는데 무시되고 있다"를 알 수 있다.
+셋째, 기본 키 제약만으로는 실패한 메시지가 영원히 건너뛰어진다. 처리에 실패한 메시지가 재전달되면 INSERT가 항상 위반으로 끝나기 때문이다. 이것은 멱등이 아니라 유실이다. 그래서 랩은 상태를 두고, `FAILED`인 메시지만 조건부 UPDATE로 재시도를 허용한다.
 
-## 큐가 가져오는 새 문제 3: 실패를 어디에 격리하는가
+랩 코드: [IdempotentMessageProcessor.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/messaging/IdempotentMessageProcessor.java)
 
-폴링 배치에서 실패한 작업은 다음 폴링에 다시 잡혔다. 영영 실패하는 작업은 매 폴링마다 다시 실패하며 뒤 작업을 막았다.
-
-SQS에서는 워커가 메시지를 삭제하지 않으면 가시성 타임아웃 후 재전달된다. 이게 재시도다. 재전달 횟수가 redrive 정책에 설정한 상한(maxReceiveCount)을 넘으면 큐가 그 메시지를 DLQ로 옮긴다([AWS 문서: Dead-letter queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)). 이게 격리다.
-
-```text
-메시지 수신 → 처리 실패 (삭제 안 함)
-  → 가시성 타임아웃 경과 → 재전달 (1회)
-  → 실패 → 재전달 (2회)
-  → ...
-  → maxReceiveCount 도달 → DLQ로 이동
+```java
+public boolean tryBegin(String messageId, String messageType) {
+    if (tryInsertNew(messageId, messageType)) {
+        return true;                        // 처음 온 메시지
+    }
+    return tryRetryFailed(messageId);       // FAILED일 때만 PROCESSING으로 바꾸고 재시도
+}
 ```
 
-이 흐름에서 정해야 할 값이 셋 있다.
+메시지 처리 상태는 다음처럼 움직인다.
 
-- **가시성 타임아웃**: 워커가 정상적으로 처리를 끝내는 데 걸리는 최대 시간보다 길어야 한다. 짧으면 처리 중인 메시지가 다른 워커에게 재전달돼 중복이 는다. 외부 전송 워커는 네트워크 대기 때문에 이 값이 등록 워커보다 훨씬 길어야 하고, 이것도 큐를 나눈 이유 중 하나다.
-- **재시도 상한**: 일시적 장애(네트워크 순단, 외부 API 일시 오류)를 넘길 만큼은 되어야 하고, 영구적 실패(잘못된 데이터)를 몇 시간씩 붙잡고 있지 않을 만큼은 작아야 한다.
-- **DLQ 이후**: 셋 중 가장 놓치기 쉽다. DLQ는 실패를 격리할 뿐 해결하지 않는다. DLQ에 메시지가 쌓이면 알림이 가야 하고, 원인을 고친 뒤 DLQ의 메시지를 원래 큐로 되돌리는 절차가 있어야 한다. SQS는 이 되돌리기를 DLQ redrive라는 기능으로 제공한다. 이 절차 없이 DLQ만 두면, 실패한 작업이 조용히 사라지는 것과 다르지 않다.
+```mermaid
+stateDiagram-v2
+    [*] --> PROCESSING : INSERT 성공
+    PROCESSING --> DONE : 처리 성공
+    PROCESSING --> FAILED : 처리 중 예외
+    FAILED --> PROCESSING : 재전달, 조건부 UPDATE 성공
+    DONE --> DONE : 재전달, 건너뜀
+```
 
-DLQ 이후 절차가 당시 어디까지 갖춰져 있었는지는 정확히 기억나지 않는다. 다시 한다면 DLQ 깊이를 메트릭으로 두고 임계값 알림을 걸고, 재처리는 운영자가 원인을 확인한 뒤 수동으로 트리거하는 방식으로 시작했을 것이다. 자동 재처리는 원인이 고쳐지지 않은 상태에서 같은 실패를 반복할 뿐이다.
+랩 테스트(`AlbumRegistrationIdempotencyTest`, Testcontainers MySQL)는 순차 중복, 두 스레드의 동시 중복, 실패 후 재시도, 완료 후 재전달 네 경우에서 앨범이 정확히 한 번 등록되는 것을 확인한다. 네 테스트 모두 통과했다.
+
+### 랩 설계에 남은 틈
+
+랩 리스너는 등록 처리와 `DONE` 표시를 같은 트랜잭션에 넣지 않는다. `tryBegin`이 `PROCESSING` 행을 먼저 커밋하고, 처리가 끝나면 별도 트랜잭션으로 `DONE`을 표시한다. 그래서 워커가 처리 도중 예외가 아니라 프로세스째 죽으면 행은 `PROCESSING`으로 남고, 가시성 타임아웃 뒤 재전달된 메시지는 "처리 중"으로 보여 건너뛰어진다. 처리 결과와 처리 기록을 한 트랜잭션에 묶거나, `PROCESSING`에도 만료 시각을 두어 오래된 것은 재시도를 허용해야 닫히는 틈이다. 랩은 아직 이 경우를 테스트하지 않는다.
+
+## 새 문제 2: 순서가 보장되지 않는다
+
+표준 큐는 순서를 보장하지 않는다. 같은 앨범에 대한 두 이벤트가 거의 동시에 발행되면 나중 것이 먼저 처리될 수 있다.
+
+MDS에서 메시지 순서를 어떻게 다뤘는지는 확인하지 못했다. 그래서 선택지를 일반론으로만 적는다.
+
+- FIFO 큐는 같은 메시지 그룹 안에서 순서를 지킨다. 대신 그룹 안에서는 처리 중인 메시지가 삭제되거나 타임아웃될 때까지 다음 메시지가 나오지 않고([Visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)), 고처리량 모드가 아니면 파티션당 API 액션별 초당 300건으로 제한된다([Message quotas](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/quotas-messages.html)).
+- 표준 큐를 쓰면서 워커가 처리 전에 대상의 현재 상태를 읽고, 그 메시지가 지금 상태에서 유효한 전이인지 확인하는 방법도 있다. 이 경우 늦게 도착해 무효가 된 메시지를 조용히 버리면 버그로 버려지는 메시지와 구분되지 않으므로, 버린 횟수를 지표로 남겨야 한다.
+
+## 새 문제 3: 실패를 어디에 격리하는가
+
+폴링 배치에서는 실패한 작업이 다음 폴링에 다시 잡혔고, 계속 실패하는 작업은 매번 뒤 작업을 붙잡았다.
+
+SQS에서는 워커가 메시지를 삭제하지 않으면 가시성 타임아웃 뒤 다시 전달된다. 이것이 재시도다. 수신 횟수가 redrive 정책의 `maxReceiveCount`를 넘으면 큐가 그 메시지를 DLQ로 옮긴다([Dead-letter queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)). 이것이 격리다. 계속 실패하는 메시지가 빠져나가므로 다른 메시지의 처리를 막지 않는다.
+
+```mermaid
+sequenceDiagram
+    participant Q as SQS 큐
+    participant W as 워커
+    participant D as DLQ
+    Q->>W: 메시지 전달, 수신 1회
+    W--xW: 처리 실패, 삭제하지 않음
+    Note over Q: 가시성 타임아웃 경과
+    Q->>W: 재전달, 수신 2회
+    W--xW: 처리 실패
+    Note over Q: 수신 횟수가 maxReceiveCount 초과
+    Q->>D: 메시지 이동
+```
+
+운영에서 쓴 재시도 횟수와 가시성 타임아웃 값은 기록이 없다. 값을 정하는 기준은 문서에 있다.
+
+- 가시성 타임아웃은 워커가 처리하고 삭제하는 데 걸리는 최대 시간에 맞춘다. 기본값은 30초, 최대 12시간이다. 짧으면 처리 중인 메시지가 다른 워커에 재전달돼 중복이 늘고, 길면 실패한 메시지가 늦게 다시 나타난다([Visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)). 처리 시간이 다른 작업을 역할별로 나누면 이 값도 역할별로 맞출 수 있다.
+- `maxReceiveCount`는 일시적 오류를 넘길 만큼 커야 한다. AWS 문서는 이 값을 1처럼 낮게 잡으면 한 번의 실패로 DLQ로 간다고 예를 든다.
+- DLQ는 실패를 격리할 뿐 해결하지 않는다. DLQ에 메시지가 쌓이면 알림이 가야 하고, 원인을 고친 뒤 원래 큐로 되돌리는 절차(DLQ redrive)가 있어야 한다. 이 절차가 없으면 DLQ는 실패한 작업이 조용히 사라지는 곳이 된다.
+
+DLQ 이후 절차가 당시 어디까지 갖춰져 있었는지는 정확히 기억나지 않는다.
 
 ## 결과
 
-평균 처리 대기 시간이 3~5분에서 1분 내외로 줄었다. 더 중요한 것은 요청이 몰리는 날에도 이 값이 크게 흔들리지 않게 됐다는 점이다. 워커 수를 늘리면 처리량이 따라 늘었고, 외부 전송이 실패해도 등록과 검수는 영향받지 않았다.
+평균 처리 대기 시간이 3~5분에서 1분 내외로 줄었다. 동시 처리량이 늘었고, 실패한 작업이 DLQ로 격리되면서 전체 실패율이 낮아졌다. 실패율의 전후 수치는 기록이 없다.
 
-돌아보면 이 변경의 주된 효과는 실패의 범위를 좁힌 것이었고, 대기 시간 단축은 그 결과였다.
+남은 비용은 다음과 같다.
 
-## 정리
+| 비용 | 내용 |
+| --- | --- |
+| 중복 전달 | 모든 소비자가 멱등해야 한다. 운영 구현 세부는 확인하지 못했고, 랩 설계에는 프로세스 중단 시 `PROCESSING`이 남는 틈이 있다. |
+| 순서 | 표준 큐는 순서를 보장하지 않는다. 운영에서 어떻게 다뤘는지는 확인하지 못했다. |
+| DLQ 운영 | 격리된 메시지를 확인하고 되돌리는 절차가 따로 필요하다. |
+| 관측 | 큐 깊이, 가장 오래된 메시지 나이, DLQ 깊이를 지표로 따로 봐야 한다. |
 
-- 폴링 배치의 한계는 느린 것이 아니라, 대기 시간이 폴링 주기에 묶이고 한 작업의 실패가 전체를 막으며 처리량을 늘릴 수 없다는 구조에 있다.
-- 큐로 바꾸면 세 문제가 풀리지만, 대신 중복 전달, 순서 역전, 실패 격리라는 세 문제를 새로 떠안는다. 큐 도입 작업의 대부분은 이 셋을 다루는 일이었다.
-- 중복은 메시지 ID를 처리 결과와 같은 트랜잭션에 기록해서 막는다. 순서는 큐가 아니라 데이터의 상태 전이로 다룬다. 실패는 재시도 상한과 DLQ로 격리하되, DLQ 이후 절차가 없으면 격리가 아니라 유실이다.
-
-[정산 중 수정 차단](/posts/settlement-write-guard/)에서 상태 플래그가 락을 대신했듯이, 여기서는 상태 전이가 큐의 순서 보장을 대신했다. "지금 이 대상이 어떤 상태인가"를 시스템이 알고 있으면, 인프라가 보장해주지 않는 것을 도메인 규칙으로 메울 수 있다.
+돌아보면 이 전환의 효과는 대기 시간이 줄어든 것만이 아니라, 한 작업의 지연과 실패가 다른 작업으로 번지는 범위를 좁힌 것이었다. 같은 시스템에서 정산 중 수정을 막은 방법은 [정산 중 기준 데이터 수정 차단](/posts/settlement-write-guard/)에 정리했다.
 
 ## 참고
 
@@ -191,4 +221,7 @@ DLQ 이후 절차가 당시 어디까지 갖춰져 있었는지는 정확히 기
 - [Amazon SQS visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) — AWS 문서
 - [Using dead-letter queues in Amazon SQS](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html) — AWS 문서
 - [Amazon SQS message quotas](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/quotas-messages.html) — AWS 문서
-- [DataIntegrityViolationException](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/dao/DataIntegrityViolationException.html) — Spring Framework Javadoc
+- [Spring Data JPA: Entity State-detection Strategies](https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html) — Spring Data JPA 문서
+- 랩 README — [career-lab/mds-distribution/README.md](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md)
+- 랩 코드 — [IdempotentMessageProcessor.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/messaging/IdempotentMessageProcessor.java), [AlbumRegistrationListener.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/messaging/AlbumRegistrationListener.java), [ProcessedMessage.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/domain/ProcessedMessage.java)
+- 랩 테스트 — [AlbumRegistrationIdempotencyTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/test/java/com/portfolio/mdslab/messaging/AlbumRegistrationIdempotencyTest.java)
