@@ -3072,13 +3072,10 @@ html[data-mode='dark'] {
   }
 }
 
-.post-eyebrow {
-  margin: 0 0 0.35rem;
-  color: var(--type-color, var(--label-color));
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+/* Inside a post the type badge stays grey: the colour is for scanning lists,
+   and on the post itself it competed with the title. */
+.post-type-row .content-type-badge {
+  --type-color: initial;
 }
 
 .post-status-badge {
