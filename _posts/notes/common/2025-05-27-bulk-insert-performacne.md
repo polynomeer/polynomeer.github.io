@@ -3,147 +3,173 @@ title: "대용량 지분율 데이터 처리 성능 개선과 동시성 제어 �
 date: 2025-05-27
 categories: [Notes, Common]
 tags: [Batch, Bulk Insert, Concurrency, Redis, Performance]
+mermaid: true
+problem_decision_result:
+  problem: "월 단위 지분율 데이터를 삭제 후 재등록하는 작업에서 삭제가 2시간 이상, 등록이 40분 이상 걸렸고, TTL 없이 무조건 DEL하는 Redis 락 때문에 삭제와 등록이 교차 실행될 수 있었다."
+  decision: "기간 조건과 복합 인덱스를 재설계하고 대형 유통사 전용 쿼리 경로와 청크 단위 트랜잭션을 함께 적용했다. 락은 SETNX와 Lock Token, TTL로 다시 만들고 DB Job 상태를 기준으로 삼았다. 등록은 파싱-검증-매핑-삽입 파이프라인과 ThreadPool 병렬 처리로 바꿨다."
+  result: "삭제는 2시간에서 5분으로, 등록은 40분에서 12분으로 줄었고, 동시 실행 환경에서도 삭제와 등록의 순서가 지켜지게 됐다."
 ---
 
-*이 글은 실제 운영 경험을 바탕으로 일부 표현과 도메인을 일반화해 재구성한 기록입니다.*
+*이 글은 실제 운영 경험을 바탕으로 도메인 표현을 일반화해 재구성한 기록이다. SQL과 코드는 회사의 실제 소스가 아니라 설명용 예시이거나, 같은 문제를 처음부터 다시 구현해 본 개인 랩의 코드다.*
 
-## 문제 배경
+## 어떤 조건에서 나온 결론인가
 
-운영 중인 시스템에서는 파트너사의 지분율 데이터를 정기적으로 갱신한다. 그중 *협회 유형* 파트너는 건수가 80만 건 이상이고, 매월 1회 정기적으로 등록된다. 근본적인 병목은 대량 삭제와 대량 등록이 하나의 작업 흐름 안에서 강하게 결합되어 있다는 점이었다.
+음원 플랫폼 회사에서 저작권·실연권 지분율 시스템을 개선한 기록이다. 2022년 8월부터 11월까지 기존 시스템을 혼자 설계하고 구현했다. 스택은 Java, Spring Boot, MySQL, Redis, AWS였다.
 
-![stake-system](../../../assets/img/posts/stake-system-sequence.png)
+지분율 데이터는 유통사별 월 단위 정산에 쓰이는 기준 데이터다. 정책이 바뀌거나 오류를 정정해야 하면 특정 월의 데이터를 대량으로 삭제한 뒤 다시 등록했다. 그래서 이 삭제·재등록이 늦어지거나 실패하면 정산 일정 전체가 밀렸다. 배치와 운영 요청이 동시에 들어오는 환경이라 성능과 함께 동시 실행 제어도 필요했다.
 
-기존 방식은 전체 데이터를 삭제한 뒤 다시 등록하는 구조였고([전체 삭제 후 전체 등록 구조의 위험성](/posts/bulk-insert-with-lock-part2/)), 다음 문제가 있었다.
+데이터 분포는 고르지 않았다. 협회 데이터와 일부 대형 유통사가 전체 지분율 데이터의 80% 이상을 차지했다. 아래 결론은 이 치우친 분포를 전제로 한다.
 
-* 대량의 데이터 삭제/삽입으로 인해 DB 부하 증가
-* 삭제 대상 데이터 조회 쿼리의 성능 문제
-* 다른 서버 또는 작업과 겹칠 경우 데이터 정합성 문제 발생
-* 재등록 배치 처리 시간이 2시간 이상 소요, 운영 효율 저하
+## 개선 전후 구조
 
-아래 개선은 이 네 문제에 차례로 대응한다. 월 단위 주기라는 데이터 특성으로 조회 범위를 줄이고, 겹치는 실행은 락으로 막고, 등록은 병렬로 나눈다.
+개선 전에는 삭제가 하나의 긴 트랜잭션이었고, 등록은 단일 스레드였으며, 두 작업 사이의 순서는 TTL 없는 Redis 키 하나에 기대고 있었다. 개선 후 구조와 나란히 놓으면 다음과 같다.
 
----
+```mermaid
+flowchart TD
+    subgraph BEFORE["개선 전"]
+        U1["fa:fa-user 운영자"] --> X1["fa:fa-file-excel 엑셀 업로드"]
+        L1["fa:fa-lock Redis SET<br/>TTL 없음, 무조건 DEL"]
+        D1["fa:fa-trash 삭제<br/>단일 장기 트랜잭션<br/>2시간 이상"]
+        I1["fa:fa-gears 등록<br/>단일 스레드 순차 처리<br/>40분 이상"]
+        X1 --> D1 --> I1
+        L1 -.-> D1
+        L1 -.-> I1
+        D1 --> DB1[("fa:fa-database MySQL")]
+        I1 --> DB1
+    end
+    subgraph AFTER["개선 후"]
+        U2["fa:fa-user 운영자"] --> X2["fa:fa-file-excel 엑셀 업로드"]
+        L2["fa:fa-lock SETNX + Token + TTL"]
+        S2[("fa:fa-database MySQL Job 상태<br/>정합성 기준")]
+        D2["fa:fa-trash 삭제<br/>복합 인덱스 + 대형 유통사 전용 경로<br/>청크 단위 커밋, 5분"]
+        I2["fa:fa-gears 등록<br/>파싱-검증-매핑-삽입<br/>ThreadPool 병렬, 12분"]
+        X2 --> D2 --> I2
+        L2 -.-> D2
+        L2 -.-> I2
+        D2 --> S2
+        I2 --> S2
+    end
+```
 
-## 문제 해결 전략
+## 대량 삭제: 2시간에서 5분으로
 
-### 1. 등록 특성 분석: 한 달 단위 주기
+삭제 배치가 2시간 이상 걸리는 것을 확인하고 실행계획(MySQL이 쿼리를 어떤 인덱스와 순서로 실행할지 보여 주는 결과)을 조회했다. 기간이 겹치는 행을 찾는 조건이 OR로 묶여 있었고, 그래서 [인덱스](/posts/db-index/)를 제대로 타지 못하고 있었다.
 
-* 협회 지분율은 *매월 1회*만 갱신됨
-* 이를 기반으로 *동일 월 기준의 데이터는 별도로 분기 처리 가능*
-
-그래서 쿼리 범위를 월 단위로 제한해 불필요한 연산을 줄일 수 있다.
-
----
-
-### 2. 쿼리 튜닝: 분기 처리 및 배치 분할
-
-#### 문제 원인
+MySQL 문서는 여러 컬럼으로 만든 복합 인덱스를 왼쪽 컬럼부터 차례로 쓸 수 있다고 설명하면서, 서로 다른 컬럼을 OR로 묶은 조건은 그 인덱스로 조회하지 못하는 예를 함께 든다([Multiple-Column Indexes](https://dev.mysql.com/doc/refman/8.0/en/multiple-column-indexes.html)). 아래는 이 차이를 보여 주는 설명용 예시이고, 실제 테이블과 조건식은 아니다.
 
 ```sql
-SELECT *
-FROM share_rate
+-- 설명용 예시: 기간 조건이 OR로 묶이면 인덱스 범위를 하나로 좁히기 어렵다
+DELETE FROM share_rate
 WHERE partner_id = :partnerId
-  AND start_date <= :newEndDate
-  AND end_date >= :newStartDate;
-```
+  AND (start_date BETWEEN :from AND :to OR end_date BETWEEN :from AND :to);
 
-- `partner_id`만으로 파티셔닝 또는 [인덱스](/posts/btree-index-internals/)가 되어 있지 않으면 Full Scan(테이블 전체를 처음부터 끝까지 읽는 것) 발생
-- 월 단위 요청이라도 전체 테이블을 스캔하여 불필요한 기간도 포함
-- 불필요한 연산량이 늘어 쿼리 응답이 지연됨
-
-#### 개선 방안
-
-```sql
-SELECT *
-FROM share_rate
+-- 설명용 예시: 유통사 등치 조건 + 기간 범위로 (partner_id, start_date, end_date) 인덱스를 탄다
+DELETE FROM share_rate
 WHERE partner_id = :partnerId
-  AND start_date <= :newEndDate
-  AND end_date >= :newStartDate
-  AND start_date >= :monthStart
-  AND start_date < :nextMonthStart;
+  AND start_date <= :to
+  AND end_date >= :from;
 ```
 
-- `:monthStart`과 `:nextMonthStart`는 예를 들어 `2024-05-01` ~ `2024-06-01`처럼 요청 월 기준으로 계산한 범위
-- `start_date` 기준으로 범위를 제한하면 인덱스를 더 잘 활용 가능
-- 실제 처리 대상이 되는 행만 대상으로 삼아 필터링 비용 감소
+원인이 쿼리 하나에만 있지는 않았다. 데이터 분포를 직접 쿼리로 확인해 보니 협회와 일부 대형 유통사가 전체의 80% 이상을 차지했다. 유통사를 가리지 않는 일반 쿼리로 처리하면 이 소수 유통사의 대량 데이터가 매번 스캔 범위와 트랜잭션 시간을 좌우했다. 이 분포가 단일 장기 트랜잭션과 맞물려 락을 쥐는 시간이 더 길어졌다.
 
-#### 예시
+그래서 세 가지를 함께 적용했다.
 
-요청하려는 대상 지분율의 기간이 2024년 5월이라면:
+1. 기간 조건을 인덱스를 쓸 수 있는 형태로 다시 정의하고, 유통사ID와 기간 컬럼으로 복합 인덱스를 다시 설계했다.
+2. 협회와 대형 유통사는 유통사 코드를 조건절에 고정한 전용 쿼리 경로로 분리했다. 복합 인덱스는 선두 컬럼(맨 앞 컬럼)인 유통사ID가 등치(`=`) 조건으로 들어올 때 가장 좁게 탄다. 전용 경로는 항상 이 형태로 들어가고, 유통사별 데이터량에 맞춰 청크 크기도 따로 정할 수 있었다. 나머지 소규모 유통사는 데이터가 적어 일반 경로로 충분했다.
+3. 삭제를 단일 장기 트랜잭션이 아니라 청크(일정 건수씩 나눈 묶음) 단위 트랜잭션으로 바꿨다.
 
-```sql
--- 개선 전: 전체 기간 대상
-WHERE start_date <= '2024-05-31' AND end_date >= '2024-05-01'
+삭제 시간은 2시간에서 5분으로 줄었다(24배). 이 결과는 한 조치의 단독 효과가 아니다. 복합 인덱스가 스캔 범위를 줄였고, 전용 경로가 인덱스 선택성을 끌어올렸고, 청크화가 트랜잭션과 락을 쥐는 시간을 줄였다. 세 가지가 함께 작용한 결과다.
 
--- 개선 후: 5월 데이터만 대상으로 스캔
-WHERE start_date >= '2024-05-01' AND start_date < '2024-06-01'
-```
+나중에 같은 구조를 랩에서 다시 구현해 보니, 청크화만 놓고 보면 총 처리 시간은 오히려 늘 수 있었다. 청크마다 커밋하면 커밋마다 로그를 디스크에 내려 쓰는 비용이 붙기 때문이다. MySQL 기본값(`innodb_flush_log_at_trx_commit=1`)에서는 "Logs are written and flushed to disk at each transaction commit."(커밋마다 로그를 쓰고 디스크로 flush한다)([InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)). 청크화가 줄이는 것은 한 트랜잭션이 다른 작업을 막는 시간이다.
 
-#### 결과
+## 분산 락: TTL과 소유권 검증
 
-- 삭제 성능 24배 개선 (2시간 → 5분)
-- DB 커넥션 및 락 경합 최소화
+삭제와 등록은 같은 월 데이터를 건드리므로 동시에 돌면 안 된다. 기존 Redis 락은 `SET`으로 락을 잡고, TTL(키 만료 시간) 없이, `finally` 블록에서 소유권 확인 없이 `DEL`을 호출하는 구조였다. 그 결과 두 가지 구멍이 있었다.
 
----
+- 프로세스가 예외나 네트워크 지연으로 비정상 종료되면 락이 영원히 풀리지 않는다.
+- 락을 갖지 않은 프로세스가 무조건 `DEL`로 남의 락을 지울 수 있다. 그러면 삭제와 등록이 교차 실행되는 Race Condition(실행 순서에 따라 결과가 달라지는 상황)이 생길 수 있고, Redis와 DB의 상태도 어긋날 수 있다.
 
-### 3. 동시성 제어: Redis 기반 분산 락 도입
+TTL만 거는 것으로는 두 번째 구멍이 막히지 않는다. 그래서 `SETNX`와 Lock Token(락을 잡은 쪽만 아는 고유 값)으로 락을 다시 설계했다. 락을 잡을 때 TTL을 함께 걸어 비정상 종료에도 락이 자동으로 풀리게 했고, 해제할 때는 현재 락의 토큰이 내 토큰과 같은지 확인한 뒤에만 지우게 했다. Redis `SET` 문서도 만료 후 보낸 `DEL`이 다른 클라이언트의 락을 지울 수 있으니, 값이 일치할 때만 지우라고 권한다([SET](https://redis.io/docs/latest/commands/set/)).
 
-* 지분율 갱신은 기존 데이터를 삭제 후 재삽입하므로, 두 작업이 동시에 돌면 한쪽이 지운 데이터를 다른 쪽이 다시 쓰는 식으로 섞일 수 있다.
-* 기존의 락은 옵션 없는 `SET`만 사용하고 있었다. `SET`은 키가 이미 있어도 값을 덮어쓰고 기존 TTL도 버린다([Redis 문서: SET](https://redis.io/docs/latest/commands/set/)). 그래서 이미 다른 작업이 락을 잡고 있는지 확인하는 것과 락을 잡는 것이 한 명령으로 묶이지 않았고, 만료 시간도 없었다.
-* 이를 `NX`(키가 없을 때만 설정)와 만료 시간을 함께 주는 `SET` 기반 [분산 락](/posts/bulk-insert-with-lock-part4/)으로 바꿨다. 아래 코드의 `setIfAbsent(key, value, TTL)`이 이 형태다. Redis 문서는 `SETNX`도 `SET`의 옵션으로 대체할 수 있다고 적고 있다.
+아래는 랩 코드다. 랩은 GET과 비교, DEL 사이에 다른 요청이 끼어들 틈을 없애려고 이 과정을 Lua 스크립트 하나로 묶었다.
 
 ```java
-String lockKey = "shareRate:association:lock";
-boolean locked = redis.setIfAbsent(lockKey, "LOCK", 5분 TTL);
-if (!locked) {
-    // 다른 프로세스가 작업 중 → 종료
-    return;
+// 랩 코드: SafeRedisLock (실제 운영 코드 아님)
+public boolean tryAcquire(String key, String token, Duration ttl) {
+    return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, token, ttl));
 }
-try {
-    deleteOldData();
-    insertNewData();
-} finally {
-    redis.delete(lockKey); // 락 해제
+
+// "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end"
+public boolean release(String key, String token) {
+    Long result = redisTemplate.execute(COMPARE_AND_DELETE, Collections.singletonList(key), token);
+    return result != null && result == 1L;
 }
 ```
 
-#### 효과
+락만으로는 "지금 어디까지 끝났는가"에 답할 수 없다. 그래서 작업 상태를 네 단계로 정의하고, DB의 Job 메타데이터를 기준 상태로, Redis는 보조 수단으로만 썼다. 상태 전이는 다음과 같다.
 
-- 삭제와 등록 간의 충돌 제거
-- 다중 배치 서버에서 정합성 있는 작업 수행 가능
+```mermaid
+stateDiagram-v2
+    [*] --> 삭제중
+    삭제중 --> 삭제완료
+    삭제완료 --> 등록중
+    등록중 --> 등록완료
+    등록완료 --> [*]
+```
 
----
+이렇게 바꾼 뒤 동시 실행 환경에서도 삭제와 등록의 순서가 지켜졌고, 락을 쥔 프로세스가 비정상 종료돼도 TTL로 락이 풀렸다. Redis에 장애가 나도 정합성의 기준은 DB 상태에 남았다.
 
-### 4. 병렬 처리: 등록 시 병렬 처리로 시간 단축
+## 대량 등록: 40분에서 12분으로
 
-* 락으로 작업 단위의 동시 실행을 막은 뒤, 작업 안의 등록은 N건 단위로 나누어 병렬로 처리
-* 각 Chunk를 멀티스레드 혹은 병렬 스트림으로 분배
+등록은 엑셀 데이터를 파싱해 DB에 저장하는 과정 전체를 단일 스레드에서 순차로 처리했다. 대량 업로드 시 40분 이상 걸렸고, CPU를 충분히 쓰지 못한 채 I/O 대기 시간이 길었다.
+
+처리 흐름을 파싱, 검증, 매핑, 삽입 네 단계로 나눴다. DB 삽입은 청크 단위로 묶고, ThreadPool로 청크를 병렬 처리하되 Backpressure(동시에 진행 중인 작업 수에 상한을 두어 앞단이 뒷단을 밀어붙이지 못하게 하는 흐름 제어)로 DB 과부하를 막았다.
+
+```mermaid
+flowchart TD
+    X["fa:fa-file-excel 엑셀"] --> P["fa:fa-gears 1. 파싱"]
+    P --> V["fa:fa-gears 2. 검증"]
+    V --> M["fa:fa-gears 3. 매핑"]
+    M --> W["fa:fa-gears 4. 청크 단위 삽입<br/>ThreadPool 병렬"]
+    W -- "Backpressure로 동시 청크 수 제한" --> DB[("fa:fa-database MySQL")]
+```
+
+랩에서는 이 흐름을 `Semaphore`로 구현했다. 청크를 제출하기 전에 허가를 얻고, 청크 처리가 끝나면 돌려준다. 스레드 수와 상한 값은 랩에서 임의로 정한 값이다.
 
 ```java
-List<List<ShareRate>> chunks = partition(dataList, 10000);
-chunks.parallelStream().forEach(chunk -> shareRateRepository.saveAll(chunk));
+// 랩 코드: ParallelRegistrationPipeline (실제 운영 코드 아님)
+for (List<RawEquityRow> chunk : chunks) {
+    acquireUninterruptibly(backpressure);        // 동시에 진행 중인 청크 수가 상한이면 대기
+    futures.add(pool.submit(() -> {
+        try {
+            return processAndInsertChunk(chunk); // 검증·매핑 후 배치 INSERT
+        } finally {
+            backpressure.release();
+        }
+    }));
+}
 ```
 
-#### 결과
+등록 시간은 40분에서 12분으로 줄었다(70% 단축).
 
-- 전체 등록 처리 시간 40분 → 12분 (70% 단축)
-- 서버 리소스 효율적 사용 및 전체 Throughput(단위 시간당 처리량) 증가
+## 개선 요약
 
----
+| 항목 | 개선 전 | 개선 후 | 효과 |
+| --- | --- | --- | --- |
+| 삭제 처리 시간 | 2시간 | 5분 | 24배 단축 |
+| 등록 처리 시간 | 40분 | 12분 | 70% 단축 |
+| 동시 실행 제어 | Redis `SET`, TTL 없음, 무조건 `DEL` | `SETNX` + Lock Token + TTL, 토큰 확인 후 해제 | 삭제·등록 교차 실행 제거 |
+| 작업 상태 | 정의된 상태 모델 없음 | 삭제중-삭제완료-등록중-등록완료, DB 기준 | Redis 장애에도 DB 기준 정합성 유지 |
+| 등록 방식 | 단일 스레드 순차 처리 | 4단계 파이프라인 + ThreadPool + Backpressure | DB 과부하 없이 처리 효율 향상 |
 
-## 정리하며
+## 이 선택이 남긴 것
 
-삭제 시간을 줄인 것은 쿼리 자체의 튜닝보다 "협회 지분율은 매월 1회만 갱신된다"는 데이터 특성이었다. 이 특성 덕분에 조회 범위를 한 달로 좁힐 수 있었다. 정합성은 Redis 락으로, 등록 시간은 Chunk 단위 병렬 처리로 따로 다뤘다. 80만 건 이상을 전체 삭제 후 재등록하는 배치를 단계별로 다룬 기록은 [대량 배치 안정성을 높이기 위한 구조 개선](/posts/bulk-insert-with-lock-part1/) 시리즈에도 있다.
-
-### 개선 요약
-
-| 항목       | 개선 전    | 개선 후           | 효과      |
-| -------- | ------- | -------------- | ------- |
-| 삭제 처리 시간 | 2시간     | 5분             | 24배 개선  |
-| 등록 처리 시간 | 40분     | 12분            | 70% 단축  |
-| 정합성 보장   | 없음      | Redis 락 도입     | 충돌 제거   |
-| 병렬 처리    | 단일 트랜잭션 | Chunk 기반 병렬 처리 | 리소스 최적화 |
+청크 단위 커밋을 택하면서 삭제 전체가 하나의 트랜잭션으로 원자적이라는 성질은 내려놓았다. 중간까지 커밋된 상태가 생길 수 있고, 그 상태를 읽어 판단하는 일은 상태 전이 모델이 맡게 됐다. 또 청크화의 효과는 처리량보다 락 점유 시간에서 나오므로, 총 처리 시간을 더 줄이려면 커밋 빈도와 디스크 flush 비용 사이의 균형을 따로 맞춰야 한다.
 
 ## 참고
 
+- [Multiple-Column Indexes](https://dev.mysql.com/doc/refman/8.0/en/multiple-column-indexes.html) — MySQL 8.0 Reference Manual
+- [InnoDB Startup Options and System Variables: innodb_flush_log_at_trx_commit](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit) — MySQL 8.0 Reference Manual
 - [SET](https://redis.io/docs/latest/commands/set/) — Redis 문서
+- [데이터베이스 인덱스를 어떻게 이해해야 하는가](/posts/db-index/)
+- 랩 코드: [SafeRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/SafeRedisLock.java), [ParallelRegistrationPipeline.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/registration/ParallelRegistrationPipeline.java), [OptimizedDeletionService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/deletion/OptimizedDeletionService.java), [README](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/README.md)
