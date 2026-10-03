@@ -1,295 +1,328 @@
 ---
-title: "Redis 기반 인증 토큰 관리로 분산 환경의 인증 일관성 확보"
+title: "크리에이터 스튜디오 개요: 외부 연동 분리, 감사 로그, 토큰 세션, 매핑 장애에서 내린 판단"
 date: 2025-05-22
 categories: [Notes, Common]
-tags: [Redis, Authentication, Token, Session, Distributed System]
+tags: [Spring, Redis, Authentication, Audit Log, Architecture]
+mermaid: true
+problem_decision_result:
+  problem: "신규 B2C 오디오 제작 플랫폼에서 외부 마케팅·분석 연동이 도메인 트랜잭션 안에 있었고, 감사 질문에 답할 표준 로그 체계가 없었다. access token 원문을 Redis key로 쓰는 세션 구조에는 refresh 이후 옛 token이 통과하는 빈틈이 있었고, 운영 중에는 Creator-Producer 매핑이 바뀌어 콘텐츠가 사라진 것처럼 보이는 장애가 났다."
+  decision: "외부 연동은 @TransactionalEventListener 기반 Post-Commit 이벤트로 분리하고 재시도 3회 후 로그만 남기는 정책으로 정했다. 감사 로그는 포맷 표준화, Logback MDC, Filebeat·Elasticsearch·Kibana로 묶었다. 세션 빈틈은 해시 key와 현재 token 역인덱스로 개선안을 설계했고, 매핑 장애는 DML 대신 애플리케이션 흐름으로 복구했다."
+  result: "외부 연동 실패가 핵심 저장에 번지지 않게 됐고, 감사 로그 체계는 ISMS 심사와 ITGC 감사 대응에 쓰였다. 세션 개선안은 설계까지만 했고 구현하지 않았다. 매핑 장애의 원인은 두 가설까지 좁혔지만 확정하지 못했다."
 ---
 
-분산 서버 환경에서는 사용자 인증 상태를 어느 서버에서든 같은 결과로 판단할 수 있어야 합니다. FLO 서버가 발급한 인증 토큰을 여러 서비스 서버에서 함께 쓰게 되면서, 인증 처리의 일관성을 확보하려고 Redis 기반 토큰 세션 관리 구조를 설계했습니다.
+크리에이터 스튜디오는 누구나 오디오 콘텐츠를 만들어 음원 플랫폼에 배포할 수 있게 하는 B2C 제작 플랫폼이다. 2022년 4월에 새로 만들기 시작했고, 나는 초기 구축에 참여한 뒤 정담당자로 유지보수를 맡았다.
 
-## 기존 문제점
+이 글은 그 프로젝트에서 내린 판단 네 가지를 한 번에 정리한 개요다. 외부 연동을 트랜잭션 밖으로 옮긴 일, 감사 로그 체계를 만든 일, 인증 세션 구조에서 빈틈을 찾고 개선안을 설계한 일, Creator-Producer 매핑 장애를 복구한 일이다. 각각이 어디까지 진행됐는지가 다르다. 구현해서 운영한 것, 설계까지만 한 것, 원인을 확정하지 못한 것을 구분해서 적는다.
 
-기존 구조에서는 FLO 서버로부터 발급받은 인증 토큰을 단일 서버 메모리 또는 [세션](/posts/session-and-jwt/) 기반으로 관리하고 있었습니다. 이 방식에는 세 가지 문제가 있었습니다.
+회사 코드는 지금 볼 수 없다. 그래서 글의 코드는 두 종류다. 구조를 설명하려고 다시 쓴 예시와, 확정된 사실을 개인 실험 저장소(engineering-lab의 creator-studio 모듈, 이하 랩)에서 다시 구현한 코드다. 각 코드 블록에 어느 쪽인지 표시한다.
 
-* 서버 인스턴스 간 세션 공유 불가: 로드밸런싱된 환경에서 토큰이 특정 서버에만 저장되면 다른 서버에서는 인증 상태를 확인할 수 없습니다.
-* 토큰 만료 및 갱신 로직의 중복: 각 서버가 별도로 토큰 TTL(Time To Live, 키가 자동 삭제되기까지 남은 시간)을 관리해야 했고, 만료 시 재발급 로직도 중복으로 존재했습니다.
-* 로그 및 감사 대응 한계: 인증 이벤트가 흩어져 있어 실시간 감사 로그 수집이 어려웠습니다.
+## 용어
 
-## 개선 방향: Redis를 통한 인증 토큰 중앙화
+- Braze: 마케팅 자동화 도구. 사용자 행동 이벤트를 받아 캠페인과 푸시에 쓴다.
+- Mixpanel: 사용자 행동 분석 도구. 이벤트를 모아 추이를 본다.
+- ISMS(정보보호 관리체계 인증): 기업의 정보보호 관리 체계를 외부 심사로 확인받는 국내 인증이다.
+- ITGC(IT 일반통제): 회계 감사에서 재무 데이터를 다루는 IT 시스템의 통제를 점검하는 항목이다.
+- MDC(Mapped Diagnostic Context): 로깅 라이브러리가 제공하는 스레드별 키-값 저장소다. 넣어 둔 값이 같은 스레드의 모든 로그에 붙는다.
+- TTL(Time To Live): Redis 키가 자동으로 삭제되기까지 남은 시간이다.
 
-세 문제의 공통 원인은 토큰 상태가 서버마다 따로 있다는 점이었습니다. 그래서 Redis를 중앙 저장소로 두고 **토큰을 세션처럼 관리**하는 방식을 도입했습니다. 모든 서버가 같은 키를 조회하므로 인증 상태가 공유되고, 만료는 Redis의 [TTL](/posts/redis-lite-java-keyspace/)이 한 곳에서 처리합니다.
+## 프로젝트의 조건
 
-### 구조 개요
+| 항목 | 내용 |
+| --- | --- |
+| 서비스 | 오디오 콘텐츠 제작·배포 B2C 플랫폼(프로그램, 에피소드, 클립) |
+| 기간 | 2022년 4월부터 8월까지 초기 구축, 이후 정담당자로 유지보수 |
+| 팀 | 초기 구축은 Java 개발자 3명(시니어 1명, 주니어 2명, 나 포함) |
+| 내 역할 | 초기에는 프로그램, 에피소드, 클립 API 구현. 이후 외부 연동(Braze, Mixpanel), 인증, KMS 암호화, ISMS 감사 대응을 단독으로 맡았다 |
+| 스택 | Java, Spring Boot, JPA, QueryDSL, MySQL, Redis, AWS |
+| 로그 수집 | Filebeat, Elasticsearch, Kibana |
 
-```plaintext
-[FLO 서버]──[서비스 서버]──┬──▶ Redis (Token 저장소)
-                           └──▶ 인증 토큰 조회/검증/갱신
+사용자 수, 트래픽, 이벤트 건수, 로그 보관 기간 같은 수치는 기록으로 남아 있지 않다. 그래서 이 글의 판단 근거는 처리량이 아니라 데이터의 성격과 구조다. KMS로 어떤 필드를 암호화했는지도 기록이 없어 이 글에서는 다루지 않는다.
+
+## 시스템 구성
+
+스튜디오 API를 중심으로 바깥과 연결되는 지점을 그리면 다음과 같다. 인증은 스튜디오 밖에서 일어나고, 외부 연동은 커밋 뒤에 나가며, 로그는 별도 경로로 수집된다.
+
+```mermaid
+flowchart TD
+    subgraph Client["클라이언트"]
+        FE["fa:fa-display FE"]
+    end
+    LOGIN["fa:fa-shield-halved 음원 플랫폼 로그인 페이지"]
+    subgraph Studio["크리에이터 스튜디오"]
+        API["fa:fa-gears 스튜디오 API"]
+        DB[("fa:fa-database MySQL")]
+        R[("fa:fa-bolt Redis 세션")]
+        LSN["fa:fa-bell Post-Commit 리스너"]
+    end
+    subgraph External["외부 마케팅·분석"]
+        BZ["fa:fa-bullhorn Braze"]
+        MP["fa:fa-chart-line Mixpanel"]
+    end
+    subgraph Logs["로그 수집과 검색"]
+        FB["fa:fa-truck-fast Filebeat"] --> ES[("fa:fa-magnifying-glass Elasticsearch")] --> KB["fa:fa-chart-column Kibana"]
+    end
+    FE -- "로그인" --> LOGIN
+    FE -- "API 요청 + access token" --> API
+    API --> DB
+    API --> R
+    API -. "커밋 후 이벤트" .-> LSN
+    LSN --> BZ
+    LSN --> MP
+    API -- "공통 포맷 로그" --> FB
 ```
 
-### 핵심 구현 내용
+## 도메인: Character, Creator, Producer
 
-1. 토큰 발급 시 Redis에 저장
+스튜디오의 사용자는 세 단계로 이어진다. 음원 플랫폼 계정 아래에 Character가 있고, Character가 스튜디오에 처음 가입하면 Creator로 매핑된다. 모든 Creator는 Producer 아래에 속한다. 직접 가입할 때는 Producer를 먼저 만들고 Creator 이름을 입력한다.
 
-   * 키: `auth:token:{userId}`
-   * 값: `{accessToken, refreshToken, issuedAt, expiresAt}`
-   * TTL: `expiresAt - issuedAt` 기준으로 설정
+가입으로 들어오는 경로는 세 가지다. 댓글처럼 오디오 계정이 필요한 기능을 누를 때, 스튜디오에 직접 접속할 때, 기존 Creator가 보낸 초대 푸시 링크를 누를 때다.
 
-2. 서비스 서버는 토큰을 Redis에서 조회하여 인증 상태를 판단
+```mermaid
+flowchart TD
+    E1["fa:fa-comment 오디오 계정이 필요한 기능"] --> JOIN["fa:fa-user-plus 스튜디오 최초 가입"]
+    E2["fa:fa-desktop 스튜디오 직접 접속"] --> JOIN
+    E3["fa:fa-paper-plane 기존 Creator의 초대 푸시"] --> JOIN
+    ACC["fa:fa-user 음원 플랫폼 계정"] --> CH["fa:fa-id-badge Character"] --> JOIN
+    JOIN --> CR["fa:fa-microphone Creator"]
+    CR -- "producer_id" --> PR["fa:fa-people-group Producer"]
+    PR --> P["fa:fa-folder-open 프로그램, 에피소드, 클립"]
+```
 
-   * 미존재 시 → FLO에 재인증 요청
-   * 존재하되 만료 임박 시 → 자동 갱신 수행
+Creator와 콘텐츠 사이에 Producer가 있다는 점은 뒤의 매핑 장애에서 그대로 문제가 된다.
 
-3. 토큰 만료 및 자동 갱신 로직을 일원화
+## 1. 외부 연동을 커밋 뒤로 옮겼다
 
-   * Redis TTL 만료 → 인증 재요청 유도
-   * Refresh Token이 존재할 경우 내부적으로 자동 갱신 시도
+### 문제
 
-4. 보안 로그 및 감사 로깅 연계
+처음에는 콘텐츠를 만들거나 고치는 서비스 메서드 안에서 저장이 끝나면 바로 Braze와 Mixpanel을 호출했다. 이 구조에서 세 가지 문제가 있었다.
 
-   * Redis에서 발생하는 TTL 만료 및 갱신 이벤트를 기반으로 Kafka 로그 발행
-   * 외부 감사 및 실시간 모니터링 대응 강화
-
-   만료 이벤트를 감사 로그의 근거로 쓸 때는 시점에 주의해야 합니다. Redis 문서에 따르면 `expired` 이벤트는 TTL이 0이 되는 순간이 아니라 키가 접근되거나 백그라운드 정리에서 발견되어 삭제될 때 발생하고, 문서는 "there are no guarantees that the Redis server will be able to generate the `expired` event at the time the key time to live reaches the value of zero"라고 적고 있습니다(TTL이 0이 되는 시점에 이벤트가 생성된다는 보장은 없다). 또한 keyspace notification은 Pub/Sub 위에서 동작하므로 구독 클라이언트가 끊겨 있던 동안의 이벤트는 유실됩니다([Redis keyspace notifications](https://redis.io/docs/latest/develop/pubsub/keyspace-notifications/)).
-
-## 보안성과 실시간성 향상
-
-Redis 기반 인증 구조를 통해 얻은 효과는 다음과 같습니다.
-
-| 항목       | 개선 전              | 개선 후                    |
-| -------- | ----------------- | ----------------------- |
-| 인증 상태 공유 | 단일 서버에 국한         | 모든 서버 간 공유 가능 (분산 캐시)   |
-| 토큰 갱신 로직 | 서버별 중복 로직 존재      | 중앙 집중화, TTL 기반 자동 갱신 관리 |
-| 감사 대응    | 이벤트 수집 어려움        | TTL 및 갱신 로그 실시간 수집 가능   |
-| 장애 복원력   | 서버 재시작 시 인증정보 손실  | Redis 복구 시 세션 상태 유지 가능  |
-| 확장성      | 인증 정보 분산 문제 발생 가능 | Redis 확장으로 수평 확장 용이     |
-
-## 도입 시 고려사항
-
-* **토큰 저장 키 전략 통일**: 사용자 기준 또는 세션 기준으로 명확한 네이밍 규칙 수립 필요
-* **보안 저장**: Redis에는 암호화되지 않은 토큰을 저장하지 않도록 주의 (AES 등으로 암호화 가능)
-* **TTL 동기화**: FLO 서버의 토큰 유효기간과 Redis TTL 간 정밀한 동기화 필요
-
-## 마무리하며
-
-Redis에 토큰을 모으면서 인증 상태 공유, 갱신 로직의 일원화, 만료와 갱신 이벤트 기반의 감사 로그 연계를 한 구조 안에서 처리할 수 있게 됐습니다. 대신 Redis가 모든 인증 요청의 경로에 들어오므로, Redis의 가용성과 TTL 동기화가 인증 품질을 좌우하게 됩니다. 이 비용은 아래 "Redis 세션 방식의 한계"에서 다룹니다.
-
----
-
-## 실전 구현 예시
-
-### 1. Redis에 인증 토큰 저장하기
+1. 외부 응답이 느리면 트랜잭션이 그만큼 길어진다. `@Transactional` 메서드가 끝나야 커밋되기 때문이다.
+2. 외부 호출이 실패하면 예외가 메서드 밖으로 올라가 콘텐츠 저장까지 롤백된다. 네트워크 장애가 핵심 데이터 저장 실패로 번진다.
+3. 재시도 로직이 호출하는 곳마다 흩어져 있어 일관성이 없었다.
 
 ```java
-@Service
-@RequiredArgsConstructor
-public class AuthTokenService {
-
-    private final RedisTemplate<String, AuthToken> redisTemplate;
-    private static final String PREFIX = "auth:token:";
-
-    public void saveToken(Long userId, AuthToken token) {
-        String key = PREFIX + userId;
-        Duration ttl = Duration.between(LocalDateTime.now(), token.getExpiresAt());
-        redisTemplate.opsForValue().set(key, token, ttl);
-    }
+// 구조 설명용 예시(실제 코드 아님)
+@Transactional
+public void createProgram(ProgramCreateRequest request) {
+    Program program = programRepository.save(Program.from(request));
+    brazeClient.track(program.getId());     // 외부 호출이 트랜잭션 안에 있다
+    mixpanelClient.track(program.getId());
 }
 ```
 
-### 2. Redis에서 토큰 조회 및 자동 갱신 트리거
+### 결정
+
+Braze와 Mixpanel 호출은 콘텐츠 생성의 일부가 아니라, 생성됐다는 사실에 대한 반응이다. 그래서 외부 연동을 도메인 트랜잭션의 부수 효과로 정의했다. 도메인 로직은 이벤트 발행만 하고, 외부 호출은 커밋 이후 비동기로 처리한다.
+
+Spring의 `@TransactionalEventListener`가 이 구분을 표현한다. [Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html)에 따르면 이 리스너는 지정한 트랜잭션 단계에서 실행되고, 기본 단계는 `AFTER_COMMIT`이다. 롤백되면 리스너가 실행되지 않으므로, 저장되지 않은 콘텐츠를 외부에 알리는 일도 없다. 이 리스너가 동작하지 않는 경우는 [`@TransactionalEventListener`가 무시되는 이유](/posts/transactional-event-listener/)에 따로 정리했다.
+
+Braze 리스너와 Mixpanel 리스너는 각자 자기 API만 호출하는 별개의 리스너였다. 두 시스템은 서로의 처리 결과에 의존하지 않으므로 순서 보장이 필요 없었다. 리스너를 어떻게 등록하고 분리했는지 같은 구현 세부는 기억나지 않는다.
+
+```mermaid
+sequenceDiagram
+    participant S as 콘텐츠 서비스
+    participant DB as MySQL
+    participant B as Braze 리스너
+    participant M as Mixpanel 리스너
+    S->>DB: INSERT
+    S->>S: 이벤트 발행, 외부 호출 없음
+    alt 커밋
+        S->>DB: COMMIT
+        par 서로 독립
+            B->>B: Braze 호출, 최대 3회 시도
+        and
+            M->>M: Mixpanel 호출, 최대 3회 시도
+        end
+        Note over B,M: 최종 실패 시 로그만 남긴다
+    else 롤백
+        S->>DB: ROLLBACK
+        Note over B,M: 리스너는 실행되지 않는다
+    end
+```
+
+### 끝내 실패하면 어떻게 하는가
+
+커밋 뒤로 옮기면 "콘텐츠는 저장됐는데 외부 연동은 실패한" 상태가 생길 수 있다. 이 상태를 다루는 정책을 이렇게 표준화했다.
+
+- 재시도는 3회로 제한한다.
+- 최종 실패하면 별도로 재처리하지 않고 알림(로그)만 남긴다.
+- 멱등성(같은 이벤트가 두 번 가도 결과가 같게 하는 처리)은 따로 고려하지 않는다.
+
+마지막 두 항목의 근거는 연동 데이터의 성격이었다. Braze와 Mixpanel은 개별 이벤트 하나하나가 아니라 전체 통계 카운트로 추이를 보는 용도였다. 그래서 약간의 미스카운트(중복이나 누락)는 허용할 수 있다고 협의했다. 모든 도메인이 같은 수준의 정합성을 요구하지는 않으므로, 이 정책은 결제나 정산처럼 한 건의 누락도 문제가 되는 도메인에는 그대로 옮길 수 없다.
+
+랩에서는 이 구조를 다음처럼 다시 구현했다. 도메인 서비스는 이벤트를 발행할 뿐 외부 시스템을 모른다.
 
 ```java
-public Optional<AuthToken> getValidToken(Long userId) {
-    String key = PREFIX + userId;
-    AuthToken token = redisTemplate.opsForValue().get(key);
-
-    if (token == null || token.isExpired()) {
-        return Optional.empty(); // FLO에 재인증 필요
-    }
-
-    // 토큰이 곧 만료될 경우 갱신 트리거
-    if (token.isExpiringSoon()) {
-        refreshTokenAsync(userId, token.getRefreshToken());
-    }
-
-    return Optional.of(token);
+// 랩 코드: ProgramCreationService.java
+@Transactional
+public Program createProgram(Long producerId, Long creatorId, String title) {
+    Program program = programRepository.save(new Program(producerId, creatorId, title));
+    eventPublisher.publishEvent(new ContentChangedEvent(ContentType.PROGRAM, program.getId(), ChangeType.CREATED));
+    return program;
 }
 ```
 
-### 3. 토큰 만료 체크 및 갱신 조건
+랩의 `PostCommitEventListenerTest`는 커밋되면 두 리스너가 각각 실행되고, 롤백되면 실행되지 않는다는 두 가지를 확인한다. 두 테스트 모두 통과했다. 랩의 backoff 값과 스레드풀 크기는 랩에서 새로 정한 값이고 운영 값은 기록이 없다.
+
+### 결과
+
+외부 연동 실패가 핵심 트랜잭션에 영향을 주지 않게 됐다. 트랜잭션 길이와 장애 전파 범위가 줄었고, 재시도 정책이 한곳에서 일관되게 적용됐다. 이 결과를 보여주는 수치(트랜잭션 시간, 실패 건수)는 남아 있지 않다.
+
+## 2. 감사 로그 체계를 만들었다
+
+### 문제
+
+감사 요구사항은 "누가, 언제, 무엇을 했는가"로 모인다. 그런데 이 질문을 일관되게 추적할 표준화된 로그 체계가 없었다.
+
+### 결정과 구현
+
+세 가지를 함께 정했다.
+
+1. Audit Log의 포맷과 이벤트 구조를 표준화했다.
+2. Logback MDC로 요청 ID, 사용자 ID, 세션 정보를 공통 로그에 자동으로 넣었다.
+3. Filebeat로 로그 파일을 수집해 Elasticsearch에 쌓고, Kibana에서 검색하게 했다.
+
+MDC는 값을 스레드 단위로 관리한다. [Logback 매뉴얼](https://logback.qos.ch/manual/mdc.html)은 이를 "The `MDC` manages contextual information on a _per thread basis_."라고 적는다. 요청이 들어올 때 필터에서 값을 넣고 나갈 때 비우면, 그 사이의 모든 로그에 같은 값이 붙는다. 같은 매뉴얼은 자식 스레드가 부모의 MDC를 자동으로 물려받지 않는다고도 적는다. 1번에서 외부 연동을 별도 스레드로 옮겼으므로, 그 경로의 로그에는 요청 컨텍스트가 자동으로 붙지 않는다. 당시 그 경로에 MDC를 전파했는지는 기록이 없다.
+
+구체적인 필드 목록, 이벤트 분류 체계, 출력 형식(JSON 여부)도 기록이 없어 여기서 예시를 만들지 않는다. 구성의 세부는 [ISMS 대응을 위한 로그 수집 체계 개선](/posts/logsystem/)에 정리했다.
+
+### 결과
+
+운영 이슈 추적과 보안 감사 대응이 쉬워졌다. 회사는 ISMS 인증을 3회 연속 통과했고, 나는 그중 2023년과 2024년 두 차례 심사에 직접 참여했다. 3회는 회사의 인증 이력이고 2회는 내가 심사 현장에 있었던 횟수다. 참여한 심사에서 감사원 질문에 답하며 이 Audit Log 체계를 직접 언급하고 시연했다. 같은 로그 체계는 ITGC 회계 감사 대응에도 쓰였다.
+
+인증 통과를 이 로그 체계 하나의 성과로 말할 수는 없다. ISMS 심사는 관리 체계 전체를 보기 때문이다. 감사 로그의 위·변조 방지 장치가 있었는지는 내가 모른다.
+
+## 3. 인증 세션 구조의 빈틈을 찾고 개선안을 설계했다
+
+### 당시 구조
+
+인증은 스튜디오 밖에서 일어났다. FE가 음원 플랫폼 로그인 페이지에서 인증해 access token을 얻고, 그 token을 붙여 스튜디오에 요청한다. 스튜디오 backend는 로그인 서버나 인증 서버를 서버 대 서버로 직접 호출하지 않았다. token을 발급하거나 갱신하는 일도 스튜디오가 하지 않았다.
+
+스튜디오는 받은 token을 Redis에 저장해 세션처럼 썼다. key는 access token 원문이고, value는 JWT(서명된 JSON 클레임 묶음)를 파싱한 값 전체였다. refresh token도 한 번은 저장했던 것으로 기억한다. [세션과 JWT](/posts/session-and-jwt/)의 관점에서 보면, 서버 저장소 없이 검증할 수 있는 JWT를 다시 서버 쪽 저장소에 담아 세션처럼 쓴 혼합 구조다.
+
+### 문제: refresh 이후에도 옛 token이 통과한다
+
+FE가 token을 refresh하면 새 access token을 받는다. 이 교환은 FE와 인증 쪽 사이에서 일어나므로 스튜디오는 알 수 없다. 그런데 옛 access token의 만료 시각(exp)은 아직 남아 있고, Redis에도 옛 token을 key로 한 세션이 그대로 있다. 그래서 옛 token으로 온 요청도 계속 통과될 수 있었다.
+
+```mermaid
+sequenceDiagram
+    participant FE as FE
+    participant AUTH as 인증 쪽
+    participant API as 스튜디오 API
+    participant R as Redis
+    FE->>AUTH: refresh
+    AUTH-->>FE: 새 token
+    Note over API,R: 스튜디오는 refresh를 모른다
+    FE->>API: 요청 + 새 token
+    API->>R: 새 token 세션
+    FE->>API: 요청 + 옛 token, exp 남음
+    API->>R: GET 옛 token
+    R-->>API: 세션 있음, 통과
+```
+
+access token은 Bearer token이다. [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750#section-1.2)은 이를 "any party in possession of the token (a 'bearer') can use the token in any way that any other party in possession of it can"인 token으로 정의한다. 가진 사람이면 누구든 쓸 수 있다는 뜻이다. 필요 없어진 옛 token이 exp까지 살아 있으면, 유출됐을 때 쓸 수 있는 시간도 그만큼 길다.
+
+나는 Redis TTL을 exp에 맞추는 것으로는 이 문제가 풀리지 않는다는 점을 짚었다. TTL은 저절로 사라지는 시점을 정할 뿐이고, 아직 만료되지 않은 옛 token을 지우지는 않는다. 필요한 것은 "새 token이 발급됐으니 이전 token은 폐기한다"는 별도 정책이다. 그런데 key가 token 원문뿐이라서, 새 token이 들어왔을 때 같은 사용자, 같은 기기의 이전 token이 무엇인지 찾을 방법이 없었다.
+
+원문을 key로 쓰는 구조에는 다른 약점도 있었다. Redis 관리 도구나 백업(RDB, AOF)에서 자격 증명 원문이 보이고, 긴 JWT가 key가 되어 메모리와 네트워크 비용이 커지며, refresh마다 key가 늘어나고, 특정 사용자의 세션을 한 번에 찾아 강제 로그아웃시키기 어렵다.
+
+### 개선안과 진행 범위
+
+설계한 개선안은 두 가지다.
+
+1. 세션 key를 access token 원문 대신 `sha256(access_token)`으로 바꾼다.
+2. `sub`(JWT의 사용자 식별자)와 `device_id` 조합을 key로 하는 역인덱스를 두고, 값으로 "현재 유효한 token의 해시"를 저장한다.
+
+새 token이 한 번 쓰이면 역인덱스에서 이전 해시를 찾아 그 세션을 즉시 지운다. 이후 옛 token 요청은 해시가 맞지 않아 거절된다.
+
+```mermaid
+flowchart TD
+    subgraph Before["당시 구조"]
+        K1["fa:fa-key 옛 token 원문"] --> V1["fa:fa-file-lines 세션"]
+        K2["fa:fa-key 새 token 원문"] --> V2["fa:fa-file-lines 세션"]
+    end
+    subgraph After["개선안"]
+        IDX["fa:fa-list sub + device_id 역인덱스"] -- "현재 token 해시" --> H2["fa:fa-hashtag sha256(새 token)"]
+        H2 --> V3["fa:fa-file-lines 세션"]
+        H1["fa:fa-hashtag sha256(옛 token)"] -. "새 token 사용 시 삭제" .-> X["fa:fa-ban 삭제됨"]
+    end
+```
+
+나는 문제를 식별하고 개선안을 제안하는 데까지만 진행했다. 실제 구현과 배포는 하지 않았다. 실제 refresh token 형식, TTL 값, Redis key prefix, JWT 서명을 어디서 검증했는지, 로그아웃 처리 방식은 기록에 없다.
+
+이 개선안은 이후 랩에서 처음 코드로 옮겼다. 랩의 원래 구조 재현은 refresh가 새 세션을 추가할 뿐, 이전 세션을 찾지 못한다.
 
 ```java
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AuthToken implements Serializable {
+// 랩 코드: LegacySessionManager.java
+return issue(memberId, deviceId); // 새 세션만 추가될 뿐, 이전 access token 세션은 손대지 않는다.
+```
 
-    private String accessToken;
-    private String refreshToken;
-    private LocalDateTime issuedAt;
-    private LocalDateTime expiresAt;
+랩의 `SessionRotationRaceConditionTest`는 Testcontainers로 띄운 `redis:7.4-alpine`에서 원래 구조와 개선안을 비교한다. 원래 구조에서는 refresh 직후 옛 access token 조회가 통과하고, 개선안에서는 거절된다. 개선안은 refresh를 두 번 해도 기기당 세션 하나만 남기고, 이미 쓴 refresh token의 재사용을 거절한다. 네 테스트 모두 통과했다. 랩은 token을 서명된 JWT가 아닌 무작위 문자열로 단순화했고, refresh를 랩의 세션 관리자가 직접 처리한다. 그래서 이 결과는 key 구조가 옛 token을 거절할 수 있다는 확인이지 운영 환경의 결과가 아니다.
 
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expiresAt);
-    }
+## 4. Creator-Producer 매핑 장애를 애플리케이션 흐름으로 복구했다
 
-    public boolean isExpiringSoon() {
-        return Duration.between(LocalDateTime.now(), expiresAt).toMinutes() < 5;
-    }
+### 증상
+
+A Creator가 a Producer를 만들어 가입했는데, 이후 b Producer로 재매핑됐다. 그 사이에 a Producer가 삭제됐다가 다시 만들어졌는지 같은 경위는 불명확하다. A Creator 입장에서는 그동안 등록한 프로그램, 에피소드, 클립이 전부 사라진 것처럼 보였고 VoC(고객 문의)가 접수됐다. 콘텐츠는 a Producer 쪽에 있고, Creator가 가리키는 Producer만 바뀌었기 때문이다.
+
+### 복구: DML 대신 정상 흐름
+
+UI로 바로 재매핑을 되돌리기 어려웠다. DML로 DB를 직접 고치는 방법도 있었지만, 그러면 연관 검증이나 부수 효과 같은 비즈니스 로직을 건너뛸 위험이 있다고 판단했다. 그래서 우회 경로를 택했다.
+
+```mermaid
+flowchart TD
+    S0["fa:fa-triangle-exclamation A Creator가 b Producer에 매핑됨"] --> S1["fa:fa-user-plus 운영팀 계정으로 B Creator 생성"]
+    S1 --> S2["fa:fa-link B Creator를 b Producer에 매핑"]
+    S2 --> S3["fa:fa-rotate-left A Creator를 a Producer로 재매핑"]
+    S3 --> S4["fa:fa-circle-check A Creator의 콘텐츠 접근 복구"]
+```
+
+B Creator가 b Producer의 대표로 설정됐을 가능성이 있지만 정확하지 않다. a, b Producer가 최종적으로 어떻게 처리됐는지도 기록이 없다.
+
+### 원인: 두 가설까지 좁혔다
+
+이후 재구성하면서 원인 후보를 두 가지로 좁혔다.
+
+1. 가입 여부 조회가 status, character_id, 캐시 불일치 같은 이유로 기존 Creator를 "미가입"으로 오판해, 재가입 흐름이 새 Producer를 만들었을 가능성.
+2. Producer 생성 기능이 새 Producer를 INSERT한 뒤 기존 Creator의 `producer_id`를 새 값으로 덮어썼을 가능성.
+
+실제 로그와 DB 조회로 어느 쪽인지 확정하지는 못했다. 그래서 이 두 가지는 가설이다.
+
+### 재발 방지 방향
+
+제안한 방향은 Producer 생성과 기존 Creator의 Producer 변경을 별개 동작으로 나누는 것, 기존 Creator가 있으면 재가입 대신 복구나 상태 확인 경로로 안내하는 것, 기존 Producer에 콘텐츠가 있으면 producer_id 변경을 막거나 명시적 이관 절차를 요구하는 것, 매핑 변경 이력을 기록하는 것이다. 이 방향이 실제로 구현됐는지는 확인되지 않았다.
+
+랩에서는 가설 2를 "그런 구조였다면 어떻게 보이는가"로 재현하고, 제안 방향을 구현했다. 가입 진입점은 이미 Creator가 있으면 새 Producer를 만들지 않고 거절한다.
+
+```java
+// 랩 코드: CreatorOnboardingService.java
+if (creatorRepository.existsByMemberId(memberId)) {
+    throw new CreatorAlreadyExistsException(memberId);
 }
 ```
 
-### 4. 토큰 자동 갱신 (비동기 처리)
+랩의 `CreatorProducerMappingIntegrationTest` 네 개는 모두 통과했다. 가설 2 구조에서는 콘텐츠가 사라진 것처럼 보이고, 분리된 구조에서는 재가입이 거절되며, 콘텐츠가 있는 Producer로부터의 매핑 변경은 명시적 확인 없이 차단되고, 확인하고 바꾸면 이력이 남는다. 이것은 가설 하나를 재현한 결과이지 실제 원인의 증명이 아니다.
 
-```java
-@Async
-public void refreshTokenAsync(Long userId, String refreshToken) {
-    try {
-        AuthToken newToken = floApiClient.refreshToken(refreshToken);
-        saveToken(userId, newToken);
-        log.info("[Token Refresh] User {} token refreshed successfully", userId);
-    } catch (Exception e) {
-        log.error("[Token Refresh] Failed to refresh token for user {}", userId, e);
-    }
-}
-```
+## 네 판단이 남긴 비용
 
----
+| 작업 | 진행 범위 | 남은 비용과 공백 |
+| --- | --- | --- |
+| 외부 연동 분리 | 구현, 운영 | 최종 실패한 이벤트는 로그로만 남고 재처리되지 않는다. 통계 용도라서 허용한 비용이다 |
+| 감사 로그 | 구현, 감사 대응에 사용 | 비동기 경로의 컨텍스트 전파, 위·변조 방지 여부는 기록이 없다 |
+| 세션 개선안 | 설계까지 | 내가 맡은 동안 옛 token 통과 문제는 운영에서 해결되지 않았다 |
+| 매핑 장애 | 복구 완료 | 원인 미확정, 재발 방지책의 구현 여부 미확인 |
 
-## Redis TTL 활용 팁
-
-* TTL 조회: Redis 명령어 `TTL auth:token:{userId}` 로 확인 가능
-* TTL 만료 이벤트 수신 (옵션):
-  Redis `notify-keyspace-events` 기능을 사용하면 토큰 만료 시 이벤트 발생 → Kafka 등과 연동 가능. 설정값의 `E`는 keyevent 채널(`__keyevent@<db>__`)로 발행하라는 뜻이고, `x`는 만료(expired) 이벤트를 고르는 플래그입니다. 앞서 적은 것처럼 이벤트 발생 시점은 실제 삭제 시점이므로, 정확한 만료 시각이 필요하면 저장된 `expiresAt`을 기준으로 삼아야 합니다.
-
-```shell
-# redis-cli
-CONFIG SET notify-keyspace-events Ex
-```
-
-```java
-// RedisMessageListener를 활용해 만료 이벤트 처리 가능
-```
-
----
-
-## 마무리 요약
-
-* 토큰은 TTL 기반으로 Redis에 저장해 세션처럼 활용
-* 만료 임박 시 자동 갱신을 비동기로 트리거
-* 토큰 상태는 모든 서버 인스턴스에서 일관되게 참조 가능
-* Redis TTL 및 키 이벤트 기능으로 보안 로그 및 장애 대응력도 강화 (만료 이벤트는 지연·유실될 수 있음)
-
----
-
-Redis 기반의 세션 방식은 비교적 간단하고 빠르지만, 규모가 커지면 다른 인증 구조도 검토할 필요가 있습니다. 아래는 Redis 방식의 한계와, 그 한계를 다른 방식으로 푸는 대안들입니다.
-
----
-
-## Redis 세션 방식의 한계
-
-| 항목                | 내용                                                              |
-| ----------------- | --------------------------------------------------------------- |
-| **스케일 문제**        | Redis는 단일 장애점(SPOF)이 될 수 있음 (Sentinel/Cluster로 완화 가능하지만 복잡성 증가) |
-| **Token 재전송 취약성** | AccessToken이 노출되면 세션이 탈취될 수 있음                                  |
-| **로그아웃 처리 어려움**   | JWT처럼 자체 만료 기능이 없어서 "강제 만료"를 수동 관리해야 함                          |
-| **서버 부하**         | 매 요청마다 Redis를 조회 → 고트래픽 환경에서는 병목 가능                             |
-
----
-
-## 대안 인증 방식 세 가지
-
-### 1. Stateless JWT + Refresh Token (with Rotation)
-
-> 서버는 토큰을 저장하지 않음. 클라이언트가 모든 상태를 보유
-
-[JWT](/posts/jwt-structure-and-verification/)를 Access Token으로 쓰고, 서버는 인증 상태를 저장하지 않는 [무상태](/posts/stateful-stateless/) 방식입니다.
-
-* **AccessToken**: JWT (short TTL, e.g., 15분)
-* **RefreshToken**: Secure storage (cookie with httpOnly/secure)
-* **Refresh Rotation**: RefreshToken도 재발급하며, old refresh 사용 시 탈취로 간주
-
-**장점**
-
-* 완전한 무상태(stateless) 인증
-* Redis 같은 세션 저장소 불필요
-* 수평 확장에 최적화
-* `Authorization` 헤더 검증만으로 인증 완료
-
-**단점**
-
-* 로그아웃/강제만료 등 세션 무효화는 `Token blacklist` 등 추가 로직 필요
-* RefreshToken 유출 시 리스크 → rotation 및 single-use 보안 강화 필요
-
-**구성도**
-
-```plaintext
-[Client] —AccessToken→ [API]
-        ↳ RefreshToken (Cookie) → [Auth Server]
-```
-
----
-
-### 2. OAuth2 + OpenID Connect (OIDC) with Authorization Server
-
-> 인증 자체를 외부 전문 인증 서버로 위임
-
-인증은 [OpenID Connect](/posts/openid-connect/)를 지원하는 외부 인증 서버가 맡고, 서비스는 발급된 토큰을 검증하는 역할만 맡습니다.
-
-* Keycloak, Auth0, Firebase Auth, AWS Cognito 등을 사용
-* OIDC 프로토콜로 사용자 정보 제공 (`/userinfo`)
-* 서버는 토큰 서명만 검증 (JWK 공개키)
-
-**장점**
-
-* 인증 로직 자체를 위임 → 내부 서비스는 오직 토큰 검증만
-* 다양한 소셜 로그인 연동 (구글, 애플 등)
-* 세션 관리, MFA, 이메일 인증 등 지원
-
-**단점**
-
-* 인증 서버 운영 및 복잡성 증가
-* 토큰 서명 검증(JWK fetch) 캐싱 필요
-
----
-
-### 3. Passkey/FIDO2 기반 비밀번호 없는 인증
-
-> 생체인식 또는 디바이스 기반 인증
-
-* WebAuthn 기반, 사용자 디바이스에 Credential 저장
-* 브라우저 또는 OS가 직접 인증 처리
-
-**장점**
-
-* 비밀번호 노출 리스크 없음
-* 피싱 공격 거의 불가능
-* 점점 보편화 (Apple, Google, Microsoft 채택)
-
-**단점**
-
-* 호환성 제한 (모바일 우선 서비스는 유리)
-* 기업 시스템에서는 계정 연동 등 추가 구조 필요
-
----
-
-## 실무 선택 가이드
-
-| 조건                  | 추천 인증 방식                |
-| ------------------- | ----------------------- |
-| 단일 시스템, 빠른 구현       | Redis 기반 세션 방식          |
-| REST API 기반, 확장성 우선 | **JWT + Refresh Token** |
-| SaaS/글로벌 인증 연동      | **OAuth2 + OIDC**       |
-| 모바일/보안 민감 서비스       | **Passkey + FIDO2**     |
-| 엔터프라이즈 사내 시스템       | SSO (SAML + OIDC 조합)    |
-
----
-
-## 결론: 인증 방식은 목적과 맥락에 따라 고른다
-
-Redis 방식은 단일 시스템에서 빠르게 구현하기에는 여전히 유효합니다. 다만 매 요청마다 Redis를 조회하는 비용과 Redis 장애의 영향을 줄이고 싶다면, JWT 기반 + Rotation 방식이나 OAuth2 인증 서버 분리를 검토할 수 있습니다. 어느 쪽이든 세션 무효화나 인증 서버 운영처럼 다른 형태의 비용이 따라온다는 점은 위의 단점 항목과 같습니다.
+네 작업을 다시 보면 공통점이 하나 있다. 결정의 근거가 성능 수치보다 데이터의 성격과 책임의 경계였다. 외부 연동은 통계라서 느슨한 정합성을 택했고, 세션은 스튜디오가 token 발급자가 아니라서 TTL만으로는 폐기를 표현할 수 없었고, 매핑 복구는 DB보다 애플리케이션 흐름이 비즈니스 규칙을 지킨다고 봤다.
 
 ## 참고
 
-- [Redis keyspace notifications](https://redis.io/docs/latest/develop/pubsub/keyspace-notifications/) — 이벤트 플래그, 만료 이벤트의 발생 시점, Pub/Sub 유실
-
----
+- [Spring Framework Javadoc: TransactionalEventListener](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html) — 트랜잭션 단계별 실행, 기본 단계 `AFTER_COMMIT`
+- [Logback Manual, Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html) — 스레드 단위 관리, 자식 스레드 비상속
+- [RFC 6750 1.2절: Bearer Token 정의](https://datatracker.ietf.org/doc/html/rfc6750#section-1.2)
+- 랩 [creator-studio README](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/README.md) — 사실 기반 재현과 새 설계의 구분
+- 랩 코드 [`ProgramCreationService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/ProgramCreationService.java)
+- 랩 테스트 [`PostCommitEventListenerTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/integration/PostCommitEventListenerTest.java)
+- 랩 코드 [`LegacySessionManager.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/session/LegacySessionManager.java)
+- 랩 테스트 [`SessionRotationRaceConditionTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/session/SessionRotationRaceConditionTest.java)
+- 랩 코드 [`CreatorOnboardingService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/CreatorOnboardingService.java)
+- 랩 테스트 [`CreatorProducerMappingIntegrationTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/onboarding/CreatorProducerMappingIntegrationTest.java)
