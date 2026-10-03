@@ -6,7 +6,7 @@ tags: [SQS, Messaging, Idempotency, Batch, Architecture, Reliability]
 mermaid: true
 problem_decision_result:
   problem: "앨범 등록, 검수 요청, 외부 플랫폼 전송이 폴링 기반 단일 스레드 배치로 처리됐다. 요청이 몰리면 대기열이 적체되고, 일부 작업의 실패가 전체 처리 흐름을 지연시켰다."
-  decision: "폴링 구조를 없애고 작업 단위를 메시지로 분리해 Amazon SQS에 적재했다. 워커를 역할별로 분리해 수평 확장할 수 있게 하고, 재시도 정책과 DLQ로 실패를 격리했다."
+  decision: "폴링 구조를 없애고 작업 단위를 메시지로 분리해 Amazon SQS에 적재했다. 워커를 역할별로 분리해 수평 확장할 수 있게 하고, 재시도 정책과 DLQ로 실패를 격리하고, 메시지 ID에 DB 유니크 제약을 걸어 중복 처리를 막았다."
   result: "평균 처리 대기 시간이 3~5분에서 1분 내외로 줄었다. 동시 처리량이 늘었고, 실패한 작업이 격리되면서 전체 실패율이 낮아졌다."
 ---
 
@@ -23,7 +23,7 @@ MDS는 외주 개발사가 PHP로 만든 기존 유통망 시스템을 리뉴얼
 | 스택 | Java, Spring Boot, JPA, Spring Batch, MySQL, Amazon SQS, ArchUnit |
 | 내 역할 | 콘텐츠(앨범·곡) 관리 API와 라이선스 관리 API 개발, 이후 계약관리 영역까지 정담당 |
 
-메시지 처리량, 워커 수, 큐 개수 같은 규모 수치는 확인되지 않았다. 이 글에서 숫자로 확인된 것은 평균 처리 대기 시간 하나다. 멱등 처리를 운영에서 어떤 스키마로 구현했는지도 확인되지 않아, 그 부분은 같은 설계를 다시 구현한 개인 랩([engineering-lab/career-lab/mds-distribution](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md))의 설계로 설명하고 그렇게 표시한다.
+메시지 처리량, 워커 수, 큐 개수 같은 규모 수치는 확인되지 않았다. 이 글에서 숫자로 확인된 것은 평균 처리 대기 시간 하나다. 멱등 처리는 메시지 ID에 DB 유니크 제약을 거는 방식이었지만 어느 테이블에 어떤 컬럼으로 걸었는지는 기억나지 않아, 그 부분은 같은 설계를 다시 구현한 개인 랩([engineering-lab/career-lab/mds-distribution](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md))의 설계로 설명하고 그렇게 표시한다.
 
 ## 폴링 배치가 막힌 지점
 
@@ -84,7 +84,7 @@ flowchart TD
 
 SQS 표준 큐는 최소 한 번(at-least-once) 전달이다. 워커가 메시지를 받으면 메시지는 큐에 남은 채 가시성 타임아웃(visibility timeout) 동안만 다른 워커에게 보이지 않는다. 그 안에 처리하고 삭제하지 못하면 메시지가 다시 보이고 다른 워커가 받아 간다([Visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)). 워커가 정상이어도 드물게 중복이 생긴다. SQS는 메시지 사본을 여러 서버에 저장하는데, 수신이나 삭제 시점에 그중 한 서버가 응답하지 못하면 그 사본이 지워지지 않고 다시 전달될 수 있다. AWS 문서는 애플리케이션을 멱등하게, 즉 "not be affected adversely when processing the same message more than once"(같은 메시지를 여러 번 처리해도 나쁜 영향을 받지 않도록) 설계하라고 권한다([At-least-once delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)). 멱등성의 정의는 [Stateless와 Idempotent](/posts/stateless-and-idempotent/)에 정리했다.
 
-운영에서 멱등 처리를 어떤 테이블과 컬럼으로 했는지는 확인되지 않았다. 아래는 랩의 설계다. 메시지 ID를 기본 키로 하는 `processed_message` 테이블을 두고, 처리 전에 INSERT를 시도해 신규와 중복을 가른다.
+운영에서는 메시지 ID에 DB 유니크 제약을 걸어, 같은 ID가 두 번 처리되지 않게 막았다. 다만 어느 테이블에 어떤 컬럼으로 제약을 걸었는지는 기억나지 않는다. 아래는 같은 방식을 다시 구현한 랩의 설계다. 메시지 ID를 기본 키로 하는 `processed_message` 테이블을 두고, 처리 전에 INSERT를 시도해 신규와 중복을 가른다.
 
 ```sql
 -- 랩 스키마 (NEW-DESIGN, 운영 스키마 아님)
@@ -208,7 +208,7 @@ DLQ 이후 절차가 당시 어디까지 갖춰져 있었는지는 정확히 기
 
 | 비용 | 내용 |
 | --- | --- |
-| 중복 전달 | 모든 소비자가 멱등해야 한다. 운영 구현 세부는 확인하지 못했고, 랩 설계에는 프로세스 중단 시 `PROCESSING`이 남는 틈이 있다. |
+| 중복 전달 | 모든 소비자가 멱등해야 한다. 운영에서는 메시지 ID 유니크 제약으로 막았지만 스키마 세부는 기록이 없고, 랩 설계에는 프로세스 중단 시 `PROCESSING`이 남는 틈이 있다. |
 | 순서 | 표준 큐는 순서를 보장하지 않는다. 운영에서 어떻게 다뤘는지는 확인하지 못했다. |
 | DLQ 운영 | 격리된 메시지를 확인하고 되돌리는 절차가 따로 필요하다. |
 | 관측 | 큐 깊이, 가장 오래된 메시지 나이, DLQ 깊이를 지표로 따로 봐야 한다. |
