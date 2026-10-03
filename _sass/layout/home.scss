@@ -1083,13 +1083,58 @@ body.tag-filter-open {
 
 }
 
-/* Card hierarchy: case-study marker and series meta */
-.card-wrapper.is-case-study {
-  border-left: 3px solid var(--metric-color);
-  border-radius: $radius-lg;
+/* Feed cards carry their content type's accent (`--type-<id>` in the
+   palettes): a stripe on the left, a faint ring on hover, and the badge in
+   the same colour. The stripe used to mark only case-study cards (orange for
+   work, purple for personal projects); those are told apart by their badges,
+   so one stripe now means one thing. Cards rendered by the filter script
+   carry the same `data-post-type`, so they match too. */
+$content-types: til, notes, techblog, conference, book, lecture, recruit, problemsolving, reference;
 
-  &.is-case-personal {
-    border-left-color: var(--link-color);
+@each $type in $content-types {
+  .card-wrapper[data-post-type='#{$type}'] {
+    --type-color: var(--type-#{$type});
+  }
+}
+
+#post-list .card-wrapper {
+  border-left: 3px solid var(--type-color, transparent);
+  border-radius: $radius-lg;
+  transition: outline-color 0.2s ease;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+
+  &:hover {
+    outline-color: color-mix(in srgb, var(--type-color, var(--link-color)) 45%, transparent);
+  }
+
+  .post-meta-item time {
+    color: var(--accent-date);
+  }
+
+  .post-meta-series,
+  .post-meta-series i {
+    color: var(--link-color);
+  }
+}
+
+/* Paging and the filter toggle pick up the link purple. */
+nav.home-paginator {
+  .page-index > span:first-child {
+    color: var(--link-color);
+    font-weight: 700;
+  }
+
+  .page-item:not(.disabled) .page-link {
+    color: var(--link-color);
+  }
+}
+
+summary.post-filter-summary {
+  border-color: color-mix(in srgb, var(--link-color) 45%, transparent);
+
+  > i {
+    color: var(--link-color);
   }
 }
 

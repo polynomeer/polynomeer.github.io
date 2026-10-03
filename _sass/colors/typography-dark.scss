@@ -34,6 +34,13 @@
   --type-recruit: #ff79c6;
   --type-problemsolving: #ff5555;
   --type-reference: #8e95b1;
+  --accent-date: #8be9fd;
+  --nav-accent-1: #bd93f9;
+  --nav-accent-2: #50fa7b;
+  --nav-accent-3: #8be9fd;
+  --nav-accent-4: #ffb86c;
+  --nav-accent-5: #ff79c6;
+  --nav-accent-6: #f1fa8c;
   --button-bg: #343746;
   --btn-border-color: #59617c;
   --btn-outline-primary: #bd93f9;
@@ -264,6 +271,6 @@
   /* Post header: dates pick up the Dracula cyan; the rest of the header stays
      quiet so the title leads. */
   .post-header .post-date-row time {
-    color: #8be9fd;
+    color: var(--accent-date);
   }
 } /* dark-scheme */
