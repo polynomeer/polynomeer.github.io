@@ -56,16 +56,16 @@ nodes:
       ko-KR: 정산·배치 정합성
       en: Settlement and Batch Consistency
     summary:
-      ko-KR: 80만 건 규모의 정산 배치에서 처리 시간과 정합성을 동시에 잡기 위해 청크 분할, 분산락 재설계, 명시적 상태 전이를 적용한 실무 기록입니다.
-      en: Production record of applying chunking, distributed lock redesign, and explicit state transitions to an 800k-row settlement batch so runtime and consistency held together.
+      ko-KR: 정산 기준 데이터를 삭제·재등록하는 대량 배치에서 처리 시간과 정합성을 동시에 잡기 위해 청크 분할, 분산락 재설계, 명시적 상태 전이를 적용한 실무 기록입니다.
+      en: Production record of applying chunking, distributed lock redesign, and explicit state transitions to a bulk settlement data batch so runtime and consistency held together.
     why_it_matters:
       ko-KR: 실패하면 정산 일정 전체가 흔들리는 흐름에서, 추측이 아니라 계측과 구조로 문제를 닫아본 경험이 있다는 것을 보여주는 축입니다.
       en: Shows hands-on experience closing problems with measurement and structure in a flow where failure would derail the whole settlement schedule.
     signals:
-      - ko-KR: 분산락이 있는데도 레이스가 난 원인을 로그로 추적하고 소유 토큰과 조건부 해제로 재설계했습니다.
-        en: Traced a race that happened under a distributed lock and redesigned it with ownership tokens and conditional release.
-      - ko-KR: 삭제·등록 배치를 청크와 병렬 처리로 재설계해 2시간을 5분으로 줄였습니다.
-        en: Cut a delete-and-reload batch from 2 hours to 5 minutes with chunking and parallel processing.
+      - ko-KR: TTL이 없고 무조건 해제하던 분산락을 SETNX, 소유 토큰, TTL, 토큰 확인 해제로 재설계했습니다.
+        en: Redesigned a distributed lock that had no TTL and released unconditionally, using SETNX, an ownership token, a TTL, and token-checked release.
+      - ko-KR: 삭제를 인덱스, 전용 경로, 청크 트랜잭션으로 2시간에서 5분으로, 등록을 병렬 파이프라인으로 40분에서 12분으로 줄였습니다.
+        en: Cut deletion from 2 hours to 5 minutes with an index, a dedicated path, and chunked transactions, and registration from 40 to 12 minutes with a parallel pipeline.
       - ko-KR: 삭제중, 삭제완료, 등록중, 등록완료 상태를 명시해 운영자의 호출 순서가 아니라 시스템이 정합성을 강제하게 했습니다.
         en: Made the system enforce consistency through explicit states instead of relying on operators calling APIs in order.
     representative_posts:

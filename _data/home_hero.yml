@@ -11,9 +11,9 @@ metrics:
   - from: 2시간
     to: 5분
     label:
-      ko-KR: 80만 건 정산 배치 처리 시간
-      en: 800k-row settlement batch runtime
-    url: /posts/bulk-insert-with-lock-part3/
+      ko-KR: 지분율 데이터 대량 삭제 시간
+      en: Equity data bulk delete runtime
+    url: /posts/bulk-insert-performacne/
   - from: 480건
     to: 75건
     label:

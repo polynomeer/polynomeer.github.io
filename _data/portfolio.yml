@@ -50,8 +50,8 @@ career:
         ko-KR: 저작권·실연권 지분율을 대량으로 처리하는 정산 시스템에서 동시성 문제와 배치 병목을 개선해 데이터 정합성과 처리 성능을 높였습니다.
         en: Fixed concurrency problems and batch bottlenecks in a settlement system that processes copyright and performance-right shares in bulk, improving both consistency and throughput.
       detail:
-        ko-KR: 인덱스 재설계와 청크 기반 트랜잭션 전환으로 80만 건 이상의 대량 삭제 처리 시간을 2시간에서 5분으로 단축했습니다. Redis 분산락을 SETNX와 Lock Token 기반으로 재설계하고 삭제중, 삭제완료, 등록중, 등록완료 상태 전이 모델을 도입해 Race Condition을 제거했으며, 병렬 파이프라인으로 대량 등록 시간을 40분에서 12분으로 줄였습니다.
-        en: Index redesign and chunked transactions cut a bulk delete of over 800k rows from 2 hours to 5 minutes. Redesigned the Redis lock around SETNX with an ownership token, introduced an explicit state transition model, and removed the race condition; a parallel pipeline brought bulk registration from 40 to 12 minutes.
+        ko-KR: 인덱스 재설계, 대형 배급사 전용 경로, 청크 기반 트랜잭션 전환으로 대량 삭제 처리 시간을 2시간에서 5분으로 단축했습니다. Redis 분산락을 SETNX와 Lock Token 기반으로 재설계하고 삭제중, 삭제완료, 등록중, 등록완료 상태 전이 모델을 도입해 Race Condition을 제거했으며, 병렬 파이프라인으로 대량 등록 시간을 40분에서 12분으로 줄였습니다.
+        en: Index redesign, a dedicated path for large distributors, and chunked transactions cut a bulk delete from 2 hours to 5 minutes. Redesigned the Redis lock around SETNX with an ownership token, introduced an explicit state transition model, and removed the race condition; a parallel pipeline brought bulk registration from 40 to 12 minutes.
       metrics:
         - label: { ko-KR: 대량 삭제, en: Bulk delete }
           from: 2시간
