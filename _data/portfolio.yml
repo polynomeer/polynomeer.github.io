@@ -67,15 +67,15 @@ career:
 
     - id: mds
       title:
-        ko-KR: 글로벌 유통 시스템(MDS) 구축
-        en: Global Music Distribution System (MDS)
+        ko-KR: 음원 유통 시스템(MDS) 리뉴얼
+        en: Music Distribution System (MDS) renewal
       period: 2023.1 – 2024.1
       role:
         ko-KR: 시니어 개발자가 설계한 ArchUnit 기반 공통 인터페이스 계약에 따라 콘텐츠·라이선스 관리 API 개발, 이후 계약 관리까지 인수인계받아 정담당자로 유지보수
         en: Built content and license management APIs on the ArchUnit-enforced interface contract designed by a senior engineer; later took over contract management as the owning maintainer
       summary:
-        ko-KR: 글로벌 파트너사가 앨범을 등록하고 관리자가 검수하는 음원 유통 시스템을 구축하고, DDEX 기반 자동 전송으로 해외 플랫폼과의 직접 유통·정산 구조를 지원했습니다.
-        en: Built a distribution system where global partners register albums and administrators review them, with DDEX-based automated delivery supporting direct distribution and settlement with overseas platforms.
+        ko-KR: 외주 개발사가 PHP로 만든 기존 유통 시스템을 리뉴얼 수준으로 재구성한 프로젝트로, DDEX로 국내외 음원 플랫폼에 자동 전송하는 구조에서 정산과 운영 기능을 맡았습니다.
+        en: A renewal of an outsourced PHP distribution system that delivers to domestic and overseas music platforms via DDEX; I worked on its settlement and operations features.
       detail:
         ko-KR: 정산 대상 단위에 상태 플래그 기반 경량 락을 설계해 정산 중 메타데이터 변경을 사전 차단했습니다. 폴링 기반 배치를 Amazon SQS 이벤트 파이프라인으로 전환해 평균 처리 대기 시간을 3~5분에서 1분 내외로 줄였습니다.
         en: Designed a state-flag lightweight lock per settlement target to block metadata edits during settlement runs. Replaced a polling batch with an Amazon SQS event pipeline, bringing average wait from 3–5 minutes to about 1 minute.
