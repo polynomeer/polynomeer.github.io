@@ -2085,10 +2085,11 @@ search {
 }
 
 /* Main sidebar menu: one Dracula accent per icon (`--nav-accent-N` in the
-   palettes), in menu order - home, start, topics, series, stats, about. The
-   labels stay neutral. */
+   palettes), in menu order - home, start, topics, series, stats, about, at
+   full opacity (the base rule dims icons to 0.8). The labels stay neutral. */
 @for $i from 1 through 6 {
   #sidebar .nav > .nav-item:nth-child(#{$i}) .nav-link i {
     color: var(--nav-accent-#{$i});
+    opacity: 1;
   }
 }

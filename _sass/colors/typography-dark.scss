@@ -35,12 +35,15 @@
   --type-problemsolving: #ff5555;
   --type-reference: #8e95b1;
   --accent-date: #8be9fd;
-  --nav-accent-1: #bd93f9;
-  --nav-accent-2: #50fa7b;
-  --nav-accent-3: #8be9fd;
-  --nav-accent-4: #ffb86c;
-  --nav-accent-5: #ff79c6;
-  --nav-accent-6: #f1fa8c;
+
+  /* Sidebar icons use the bright variants of the Dracula accents (its ANSI
+     "bright" colours) so they read at icon size. */
+  --nav-accent-1: #d6acff;
+  --nav-accent-2: #69ff94;
+  --nav-accent-3: #a4ffff;
+  --nav-accent-4: #ffca85;
+  --nav-accent-5: #ff92df;
+  --nav-accent-6: #ffffa5;
   --button-bg: #343746;
   --btn-border-color: #59617c;
   --btn-outline-primary: #bd93f9;

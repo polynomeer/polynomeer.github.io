@@ -1083,12 +1083,11 @@ body.tag-filter-open {
 
 }
 
-/* Feed cards carry their content type's accent (`--type-<id>` in the
-   palettes): a stripe on the left, a faint ring on hover, and the badge in
-   the same colour. The stripe used to mark only case-study cards (orange for
-   work, purple for personal projects); those are told apart by their badges,
-   so one stripe now means one thing. Cards rendered by the filter script
-   carry the same `data-post-type`, so they match too. */
+/* Feed cards stay plain; the content type's accent (`--type-<id>` in the
+   palettes) shows on the badge, and on hover as a thin solid ring in the same
+   colour. A left stripe and then a corner glow were tried and dropped as
+   decoration. Cards rendered by the filter script carry the same
+   `data-post-type`, so their badges match too. */
 $content-types: til, notes, techblog, conference, book, lecture, recruit, problemsolving, reference;
 
 @each $type in $content-types {
@@ -1098,13 +1097,13 @@ $content-types: til, notes, techblog, conference, book, lecture, recruit, proble
 }
 
 #post-list .card-wrapper {
-  border-left: 3px solid var(--type-color, transparent);
-  border-radius: $radius-lg;
-  transition: outline-color 0.2s ease;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
+  .post-preview {
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: outline-color 0.2s ease;
+  }
 
-  &:hover {
+  &:hover .post-preview {
     outline-color: color-mix(in srgb, var(--type-color, var(--link-color)) 45%, transparent);
   }
 
