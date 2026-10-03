@@ -5,20 +5,36 @@ categories: [Notes, Common]
 tags: [Settlement, Concurrency, Lock, AOP, Spring, Consistency]
 mermaid: true
 problem_decision_result:
-  problem: "정산 배치가 도는 동안에도 계약·앨범·곡 메타데이터 수정이 그대로 반영돼, 정산 시작 시점과 종료 시점의 기준 데이터가 달라지고 재정산이 반복됐다."
-  decision: "정산 대상 단위에 '정산 중' 상태 플래그를 두고, 수정 API를 애너테이션과 AOP 인터셉터로 진입 시점에 차단했다. 물리 DB 락 대신 상태 기반 제어를 택하고, TTL로 비정상 종료를 복구했다."
-  result: "정산과 운영 수정이 동시에 발생하는 환경에서도 기준 데이터가 정산 도중 바뀌지 않게 됐고, 장기 트랜잭션 없이 재정산 빈도를 줄였다."
+  problem: "정산은 계약·앨범·곡 메타데이터를 기준으로 수익을 계산하는데, 정산이 도는 동안에도 수정 요청이 그대로 반영됐다. 시작 시점과 종료 시점의 기준 데이터가 달라지거나 일부 변경만 반영된 채 계산될 수 있어 재정산과 운영 리스크로 이어졌다."
+  decision: "앨범계약·곡계약·영상계약 테이블에 정산 상태 플래그를 두고, 수정 API에 애너테이션과 AOP 인터셉터를 붙여 정산 중 변경 요청을 사전 차단했다. 물리 DB 락 대신 상태 기반 제어를 택해 장기 트랜잭션과 락 경합을 피했고, TTL로 비정상 종료를 복구했다."
+  result: "정산과 운영 수정이 동시에 일어나는 환경에서도 정산 기준 데이터의 일관성을 유지했고 재정산 빈도가 줄었다. 장기 DB 락 없이 동시성을 제어했다."
 ---
 
-글로벌 유통 시스템(MDS)에서 정산은 계약, 앨범, 곡 메타데이터를 기준으로 수익을 계산하는 프로세스였다. 이 글은 그 정산이 도는 동안 기준 데이터가 바뀌는 문제를 어떻게 막았는지, 왜 DB 락이 아니라 애플리케이션 레벨의 상태 플래그를 택했는지, 그리고 그 선택이 남긴 구멍을 어디까지 받아들였는지 정리한 기록이다.
+음원 유통 시스템(MDS)에서 정산은 계약, 앨범, 곡 메타데이터를 기준으로 수익을 계산하는 프로세스였다. 이 글은 정산이 도는 동안 그 기준 데이터가 바뀌는 문제를 어떻게 막았는지, 왜 DB 락이 아니라 애플리케이션 레벨의 상태 플래그를 택했는지, 그 선택이 남긴 틈이 무엇인지 정리한 기록이다.
 
-> 이 글의 코드와 SQL은 회사의 실제 소스가 아니라, 설계 결정을 원리대로 다시 구성한 예시다. TTL 같은 숫자도 설명용 값이지 운영값이 아니다.
+## 어떤 시스템이었나
 
-## 정산 도중에 기준이 움직였다
+MDS는 외주 개발사가 PHP로 만든 기존 유통망 시스템을 리뉴얼한 시스템이다. 기존 시스템에서 넘겨받을 수 있었던 것은 테이블과 데이터뿐이었고, 그 데이터를 기준으로 스키마를 새로 설계한 뒤 DBA와 함께 마이그레이션했다. 앨범과 곡을 등록·검수하고, DDEX(음원 메타데이터와 전송을 위한 업계 표준 메시지 형식) 기반 자동 전송으로 국내외 음원 플랫폼에 유통하며, 그 수익을 정산한다.
 
-MDS는 해외 파트너사가 앨범을 등록하고 관리자가 검수하며, 해외 플랫폼에 유통하고 그 수익을 정산하는 시스템이다. 정산은 배치로 돌고, 대상 계약과 앨범, 곡의 메타데이터를 읽어 계약 조건대로 수익을 배분한다.
+판단의 전제가 되는 조건은 다음과 같다.
 
-문제는 정산이 도는 동안에도 운영자가 메타데이터를 수정할 수 있었다는 점이다. 계약 조건이 바뀌거나 앨범의 곡 구성이 바뀌면, 그 변경이 정산 중인 데이터에 그대로 반영됐다.
+| 항목 | 내용 |
+| --- | --- |
+| 기간 | 2023년 1월부터 2024년 1월까지 |
+| 인원 | 백엔드 4명(시니어 1명, 주니어 3명), 정산개발팀 2명, 프론트엔드 4명 |
+| 스택 | Java, Spring Boot, JPA, Spring Batch, MySQL, Amazon SQS, ArchUnit |
+| 내 역할 | 콘텐츠(앨범·곡) 관리 API와 라이선스 관리 API 개발, 이후 계약관리 영역까지 인수인계받아 정담당자로 유지보수 |
+| 공통 규칙 | 시니어 개발자가 설계한 공통 인터페이스 계약을 문서화하고 ArchUnit 테스트로 강제 |
+
+정산 대상 행 수나 정산 1회의 소요 시간 같은 규모 수치는 기록이 남아 있지 않다. 그래서 이 글의 판단은 "정산은 배치로 오래 돌고, 운영 수정은 사람이 화면에서 수시로 한다"는 정성적 조건 위에서 읽어야 한다.
+
+회사 코드는 퇴사 후 볼 수 없다. 코드 예시는 같은 설계를 처음부터 다시 구현한 개인 랩([engineering-lab/career-lab/mds-distribution](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md))에서 가져왔고, 랩에서 정한 값(TTL 15분 등)은 운영값이 아니다. 본문에서 랩 코드와 운영 사실을 구분해 적는다.
+
+## 정산 도중에 기준이 움직일 수 있었다
+
+정산은 배치로 돈다. 대상 계약과 앨범, 곡의 메타데이터를 읽어 계약 조건대로 수익을 계산한다. 그런데 정산이 도는 동안에도 운영자는 같은 데이터를 수정할 수 있었고, 그 수정은 정산 중인 데이터에 그대로 반영됐다.
+
+어떤 일이 생길 수 있는지 숫자를 넣어 그려 보면 이렇다. 아래 배분율과 곡 번호는 설명용 예시다.
 
 ```text
 정산 시작 (계약 A: 배분율 70%)
@@ -28,188 +44,233 @@ MDS는 해외 파트너사가 앨범을 등록하고 관리자가 검수하며, 
 정산 종료
 ```
 
-한 번의 정산 안에서 같은 계약이 두 가지 기준으로 계산됐다. 결과는 어느 쪽 기준으로도 맞지 않는 숫자였고, 발견되면 재정산해야 했다. 발견되지 않으면 더 나빴다.
+한 번의 정산 안에서 같은 계약이 두 가지 기준으로 계산된다. 정산 시작 시점과 종료 시점의 기준이 다르고, 결과는 어느 기준으로 봐도 맞지 않는 숫자가 된다. 이런 결과가 발견되면 재정산해야 하고, 재정산은 다시 운영 리스크가 된다. 막아야 하는 것은 "정산이 끝나기 전까지 그 정산이 읽는 기준 데이터가 바뀌는 것"이었다.
 
-이 문제는 "가끔" 발생했다. 정산은 주기적으로 돌고 운영 수정은 매일 일어나니, 둘이 겹치는 창은 좁았다. 하지만 한 번이라도 겹치면 그 정산 결과 전체를 의심해야 했다. 그래서 드물다는 이유로 내버려 둘 수 없었다. [지분율 배치](/posts/share-ratio-1/)에서 겪은 것과 같은 종류의 문제였다.
+## 무엇을 잠가야 하는가
 
-## 가장 먼저 떠오른 답은 DB 락이었다
+정산 대상 단위는 계약이다. MDS의 계약은 앨범계약, 곡계약, 영상계약 세 테이블로 나뉘어 있었고, 정산 상태 플래그는 이 세 테이블에 각각 별도로 두었다. 정산 중에는 이 세 테이블의 업데이트가 막혀야 했다.
 
-정산이 읽는 행을 정산이 끝날 때까지 잠그면 된다. `SELECT ... FOR UPDATE`([행 락](/posts/lock-types-and-waits/)을 거는 조회)로 대상 계약과 앨범을 잠그고, 정산 트랜잭션이 커밋될 때 풀면 그 사이의 수정은 대기하거나 실패한다.
-
-이 방식을 택하지 않은 이유는 정산이 오래 걸리기 때문이다.
-
-- 정산 배치는 트랜잭션 하나로 감쌀 수 있는 길이가 아니다. 그 시간 동안 트랜잭션을 열어두면 장기 트랜잭션이 되고, [undo 로그](/posts/redo-undo-log/)와 커넥션을 계속 붙잡는다. MySQL 문서도 트랜잭션을 주기적으로 커밋하지 않으면 InnoDB가 undo 로그를 버리지 못해 rollback segment가 커진다고 설명한다([InnoDB Multi-Versioning](https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html)).
-- 잠긴 행을 읽는 다른 조회까지 영향을 받거나, 락 대기가 쌓여 타임아웃이 난다.
-- 정산 배치가 청크 단위로 커밋하는 구조라면 하나의 긴 트랜잭션이라는 전제 자체가 성립하지 않는다.
-
-물리 락은 정합성을 즉시 강제한다. 그런데 그 강제는 락을 쥔 트랜잭션이 정산 내내 열려 있어야 성립하고, 정산은 오래 걸린다. 그 결과 물리 락을 쓰면 장기 트랜잭션이 따라온다. [대용량 배치에서 장기 트랜잭션을 없앤](/posts/bulk-insert-with-lock-part3/) 직후였기 때문에 다시 장기 트랜잭션을 만드는 선택지는 제외했다.
-
-## 필요한 것은 락이 아니라 상태였다
-
-문제를 다시 정의하면 이렇다. 정산이 막아야 하는 것은 특정 행에 대한 접근이 아니라 "정산 중인 계약을 지금 수정해도 되는가"라는 판단이다. 이 판단에는 DB 락이 아니라 계약이 지금 어떤 상태인지에 대한 정보가 필요하다.
-
-그래서 정산 대상 단위(계약)에 상태를 두기로 했다.
-
-```mermaid
-stateDiagram-v2
-    [*] --> IDLE
-    IDLE --> IN_PROGRESS : 정산 시작
-    IN_PROGRESS --> IDLE : 정산 완료
-    IN_PROGRESS --> IDLE : TTL 만료 (비정상 종료 복구)
-```
-
-상태가 `IN_PROGRESS`인 계약에 대한 수정 요청은 처리하지 않고 거절한다. 정산은 시작할 때 상태를 켜고 끝날 때 끈다. 상태 확인과 갱신은 밀리초 안에 끝나는 짧은 트랜잭션이고, 정산 배치 자체는 이 상태와 무관하게 청크 단위로 커밋하며 돌 수 있다.
-
-물리 락과 비교하면 이렇다.
-
-| | 물리 DB 락 | 상태 플래그 |
-| --- | --- | --- |
-| 강제 수준 | DB가 강제, 우회 불가 | 애플리케이션이 강제, 코드 규율 필요 |
-| 트랜잭션 길이 | 정산 전체 | 상태 갱신 한 번 |
-| 대기 동작 | 수정 요청이 락 해제까지 블로킹 | 수정 요청이 즉시 거절 |
-| 비정상 종료 | 커넥션 끊기면 자동 해제 | 별도 복구 장치 필요 |
-| 다른 조회 영향 | 있음 | 없음 |
-
-강제 수준과 자동 복구를 내주고 트랜잭션 길이와 조회 영향을 얻는 거래다. 정산은 오래 걸리므로, 트랜잭션 길이를 줄이는 쪽의 이득이 더 크다고 봤다. 내준 두 가지는 아래에서 AOP와 TTL로 메운다.
-
-## 수정 API마다 검사 코드를 넣지 않기 위해
-
-상태 플래그의 약점은 "코드 규율이 필요하다"는 점이다. 모든 수정 경로가 상태를 확인해야 하고, 하나라도 빠지면 그 경로로 정산 중 수정이 들어온다. 수정 API는 계약, 앨범, 곡에 걸쳐 여러 개였고, 앞으로도 늘어날 것이었다.
-
-그래서 검사를 각 서비스 메서드 안에 쓰지 않고 애너테이션으로 선언하게 하고, 검사 자체는 [AOP](/posts/aop/) 애스펙트 하나에 모았다.
-
-```java
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface BlockDuringSettlement {
-}
-
-@Aspect
-@Component
-@RequiredArgsConstructor
-public class SettlementGuardAspect {
-
-    private final SettlementStateRepository stateRepository;
-
-    @Before("@annotation(BlockDuringSettlement) && args(contractId,..)")
-    public void rejectIfSettling(Long contractId) {
-        if (stateRepository.isInProgress(contractId)) {
-            throw new SettlementInProgressException(contractId);
-        }
-    }
-}
-```
-
-수정 API는 애너테이션 한 줄만 붙인다.
-
-```java
-@BlockDuringSettlement
-@Transactional
-public void updateContract(Long contractId, ContractUpdateRequest request) {
-    // 수정 로직. 정산 상태는 여기서 신경 쓰지 않는다.
-}
-```
-
-AOP를 택한 이유는 두 가지다.
-
-1. 검사 위치가 트랜잭션 경계의 바깥이 된다. `@Before` 어드바이스는 [`@Transactional` 프록시](/posts/spring-internals-lab-transactional/)보다 먼저 실행되도록 순서를 잡을 수 있다. 정산 중이면 트랜잭션을 열기도 전에 거절하므로, 거절된 요청은 DB에 아무 흔적도 남기지 않는다. 다만 이 순서는 저절로 정해지지 않는다. Spring 문서는 서로 다른 애스펙트의 어드바이스가 같은 지점에 걸리면 "unless you specify otherwise, the order of execution is undefined"(따로 지정하지 않으면 실행 순서는 정해지지 않는다)라고 적는다([Advice Ordering](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html)). 트랜잭션 어드바이스의 기본 순서는 `Ordered.LOWEST_PRECEDENCE`이므로([Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)), 가드 애스펙트에 그보다 작은 `@Order` 값을 명시해야 이 순서가 보장된다.
-2. 빠뜨린 경로를 찾기 쉽다. "수정 API인데 `@BlockDuringSettlement`가 없는 메서드"는 정적으로 찾을 수 있다. MDS는 아키텍처 규칙을 [ArchUnit](/posts/archunit-guardrails-on-legacy/)으로 강제하는 구조였고, 이런 종류의 규칙을 테스트로 만드는 것이 자연스러운 팀이었다.
-
-요청 흐름 전체는 이렇다.
+전체 구조를 그리면 다음과 같다. 운영자의 수정 요청은 수정 API 앞에서 가드를 지나고, 정산 배치는 같은 계약 테이블의 플래그를 켜고 끈다.
 
 ```mermaid
 flowchart TD
-    A[계약 수정 요청] --> B{SettlementGuardAspect}
-    B -->|IDLE| C[트랜잭션 시작 → 수정 → 커밋]
-    B -->|IN_PROGRESS| D[SettlementInProgressException → 거절]
-    E[정산 배치 시작] --> F[상태를 IN_PROGRESS로 전환]
-    F --> G[청크 단위 정산]
-    G --> H[상태를 IDLE로 전환]
+    OP["fa:fa-user 운영자"] --> API["fa:fa-pen-to-square 수정 API<br/>계약·앨범·곡"]
+    API --> GUARD{"fa:fa-shield-halved AOP 가드<br/>정산 중인가"}
+    GUARD -->|정산 중| REJECT["fa:fa-ban 요청 사전 차단"]
+    GUARD -->|정산 중 아님| WRITE["fa:fa-floppy-disk 수정 반영"]
+    subgraph DB["fa:fa-database MySQL"]
+        AC[("앨범계약<br/>+ 정산 플래그")]
+        TC[("곡계약<br/>+ 정산 플래그")]
+        VC[("영상계약<br/>+ 정산 플래그")]
+    end
+    WRITE --> DB
+    GUARD -. 플래그 조회 .-> DB
+    BATCH["fab:fa-java 정산 배치"] -->|"시작: 플래그 켜기<br/>종료: 플래그 끄기"| DB
 ```
 
-거절된 요청은 오류로 돌려주고, 운영자는 정산이 끝난 뒤 다시 시도한다. 정산 중 들어온 수정을 보관했다가 자동으로 적용하는 방식은 택하지 않았다. 정산 결과를 본 뒤에야 그 수정이 여전히 유효한지 판단할 수 있는 경우가 많아서, 사람이 다시 요청하는 편이 안전하다.
+플래그가 수정 대상과 같은 계약 행에 있다는 점은 뒤에서 남은 틈을 이야기할 때 다시 중요해진다.
 
-## 정산이 죽으면 플래그도 죽는가
+## DB 락을 쓰지 않은 이유
 
-상태 플래그 방식의 가장 큰 구멍은 정산 프로세스가 비정상 종료됐을 때다. `IN_PROGRESS`를 켜고 정산을 돌리다가 프로세스가 죽으면, 플래그는 영원히 켜진 채 남고 그 계약은 아무도 수정할 수 없게 된다. 물리 락이라면 커넥션이 끊기는 순간 DB가 풀어주지만, 상태 플래그는 아무도 풀어주지 않는다.
+가장 직접적인 방법은 정산이 읽는 행을 정산이 끝날 때까지 잠그는 것이다. `SELECT ... FOR UPDATE`(읽으면서 그 행에 쓰기 락을 거는 조회)로 대상 계약을 잠그고 정산 트랜잭션이 커밋될 때 풀면, 그사이의 수정은 락을 기다리다 실패한다.
 
-그래서 플래그에 만료 시각(TTL, Time To Live)을 함께 기록했다.
+이 방식을 택하지 않은 이유는 장기 트랜잭션과 락 경합이었다. 행 락은 락을 잡은 트랜잭션이 끝나야 풀린다. 그래서 정산 내내 수정을 막으려면 정산 전체를 하나의 트랜잭션으로 열어 두어야 하고, 정산은 배치로 오래 돈다.
 
-```sql
-CREATE TABLE settlement_state (
-    contract_id BIGINT PRIMARY KEY,
-    status      VARCHAR(20) NOT NULL,   -- IDLE | IN_PROGRESS
-    expires_at  DATETIME NULL,
-    updated_at  DATETIME NOT NULL
-);
+- 트랜잭션이 오래 열려 있으면 커넥션을 계속 붙잡고, InnoDB는 그 트랜잭션이 볼 수 있는 옛 버전을 지우지 못한다. MySQL 문서는 읽기만 하는 트랜잭션도 주기적으로 커밋하라고 권하며, 그러지 않으면 "InnoDB cannot discard data from the update undo logs"(InnoDB가 update undo 로그를 버리지 못한다)고 설명한다([InnoDB Multi-Versioning](https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html)). undo 로그가 무엇인지는 [Redo Log와 Undo Log](/posts/redo-undo-log/)에 정리했다.
+- 잠긴 행을 쓰려는 다른 요청이 락 대기로 쌓이고, 대기가 길어지면 타임아웃으로 실패한다. 이것이 락 경합이다.
+- 정산을 청크(일정 건수 단위) 커밋으로 나누는 순간, 하나의 긴 트랜잭션이라는 전제가 사라지고 커밋 사이에 락이 풀린다.
+
+두 방식의 성격을 나란히 놓으면 이렇다.
+
+| | 물리 DB 락 | 상태 플래그 |
+| --- | --- | --- |
+| 강제 주체 | DB, 우회 불가 | 애플리케이션, 모든 수정 경로가 검사해야 함 |
+| 트랜잭션 길이 | 정산 전체 | 플래그 갱신 한 번 |
+| 수정 요청의 동작 | 락 해제까지 대기 | 즉시 거절 |
+| 정산 프로세스가 죽으면 | 커넥션이 끊기며 DB가 해제 | 따로 복구 장치가 필요 |
+
+상태 플래그는 강제력과 자동 해제를 내주고 짧은 트랜잭션을 얻는다. 내준 두 가지를 메우는 장치가 AOP 가드와 TTL이다.
+
+## 상태 모델
+
+플래그가 표현하는 상태는 둘뿐이다. 정산이 시작되면 켜지고, 끝나면 꺼지고, 정산이 끝을 알리지 못한 채 죽으면 TTL이 지난 뒤 꺼진 것으로 취급된다.
+
+```mermaid
+stateDiagram-v2
+    [*] --> 대기
+    대기 --> 정산중 : 정산 시작, 플래그 켜기
+    정산중 --> 대기 : 정산 종료, 플래그 끄기
+    정산중 --> 대기 : TTL 경과, 비정상 종료로 간주
 ```
 
-`IN_PROGRESS`이지만 `expires_at`이 지난 상태는 `IDLE`로 취급한다. 수정 API의 검사도, 정산 시작의 전이도 이 규칙을 따른다. 정산이 죽어도 TTL이 지나면 시스템이 저절로 열린다.
+플래그 갱신은 행 하나를 바꾸는 짧은 트랜잭션이다. 정산 배치 본체는 이 상태와 별개로 자기 트랜잭션 단위대로 커밋하며 돌 수 있다.
 
-TTL 값은 "정산이 정상적으로 걸리는 최대 시간에 여유를 더한 값"으로 잡아야 한다. 너무 짧으면 정상적인 정산 도중에 락이 풀려 원래 문제가 재발하고, 너무 길면 장애 후 복구까지 그만큼 수정이 막힌다. 정산 소요 시간을 관측하고 있어야 정할 수 있는 값이다.
+## 수정 API마다 검사 코드를 쓰지 않기 위해
 
-## 남은 구멍과 그것을 받아들인 이유
+상태 플래그의 약점은 모든 수정 경로가 플래그를 확인해야 한다는 것이다. 한 경로라도 빠지면 그 경로로 정산 중 수정이 들어온다. 수정 API는 계약, 앨범, 곡에 걸쳐 여러 개였다.
 
-애플리케이션 레벨 검사는 이론적으로 경합 창이 있다.
+그래서 검사 코드를 메서드마다 쓰지 않고, 수정 API에 애너테이션을 붙이면 [AOP](/posts/aop/)(여러 메서드에 공통으로 끼워 넣을 동작을 한곳에 모으는 기법) 인터셉터가 검사하도록 했다. 운영에서 가드가 컨트롤러와 서비스 중 어느 계층에 걸렸는지는 지금 확인할 수 없다. 아래는 랩에서 서비스 메서드에 건 형태다.
 
-```text
-t0  수정 요청 A: 상태 확인 → IDLE
-t1  정산 배치: 상태를 IN_PROGRESS로 전환, 정산 시작
-t2  수정 요청 A: 트랜잭션 시작 → 수정 → 커밋
+랩 코드: 수정 메서드는 애너테이션 한 줄로 보호 대상이 된다([AlbumMetadataService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/settlement/AlbumMetadataService.java)).
+
+```java
+@SettlementGuarded(type = SettlementTargetType.ALBUM, idParam = "albumId")
+@Transactional
+public Album updateMetadataGuarded(Long albumId, String newTitle) { ... }
 ```
 
-A는 검사 시점에는 통과했지만 실제 쓰기는 정산 시작 이후에 일어났다. 물리 락이라면 있을 수 없는 일이다.
+랩 코드: 가드는 상태를 읽기만 하고, 정산 중이면 예외로 요청을 끊는다([SettlementLockAspect.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/settlement/SettlementLockAspect.java)).
 
-이 창을 다룰 때 지켜야 할 것과, 없애기 위해 하지 않은 것을 구분해서 적는다.
-
-정산 시작 측은 원자적이어야 한다. 상태를 확인하고 나서 갱신하는 두 단계로 나누면 두 정산 배치가 같은 계약을 동시에 잡을 수 있다. 조건부 UPDATE 한 문장으로 "갱신이 곧 확인"이 되게 하면 이 문제가 사라진다.
-
-```sql
-UPDATE settlement_state
-SET status = 'IN_PROGRESS',
-    expires_at = NOW() + INTERVAL 6 HOUR,   -- 예시값
-    updated_at = NOW()
-WHERE contract_id = :contractId
-  AND (status = 'IDLE' OR expires_at < NOW());
+```java
+@Before("@annotation(guarded)")
+public void checkNotSettling(JoinPoint joinPoint, SettlementGuarded guarded) {
+    Long targetId = extractTargetId(joinPoint, guarded.idParam());
+    lockRepository.findByTargetTypeAndTargetId(guarded.type(), targetId)
+            .filter(lock -> lock.isActiveConsidering(LocalDateTime.now()))
+            .ifPresent(lock -> {
+                throw new SettlementInProgressException(guarded.type(), targetId, lock.getExpiresAt());
+            });
+}
 ```
 
-영향받은 행이 1이면 정산을 시작하고, 0이면 이미 다른 정산이 돌고 있는 것이므로 건너뛴다. JPA의 `@Version` [낙관적 락](/posts/how-to-control-race-condition/)이 내부에서 하는 일과 같은 원리다.
+가드는 플래그를 켜거나 끄지 않는다. 켜고 끄는 것은 정산 배치의 책임이고, 가드는 읽기만 한다. 그래서 여러 수정 요청이 동시에 가드를 지나도 서로 기다리지 않는다.
 
-**수정 요청 측의 창은 받아들였다.** 검사를 트랜잭션 진입 직전으로 옮겨 창을 밀리초 단위로 줄였지만, 완전히 없애려면 수정 트랜잭션 안에서 상태 행을 잠그거나 버전 컬럼으로 낙관적 락을 걸어야 한다. 그렇게 하면 모든 수정 트랜잭션이 상태 행을 건드리게 되고, 물리 락을 피하려던 이유 중 일부가 되돌아온다.
+### 가드와 트랜잭션의 순서
 
-받아들인 근거는 트래픽 패턴이었다. 정산은 정해진 주기에 시작하고, 운영 수정은 사람이 화면에서 한 건씩 한다. 두 사건이 같은 밀리초 안에 같은 계약에 겹칠 확률은 "정산이 도는 내내 수정이 열려 있던" 원래 문제와 비교하면 무시할 수 있는 수준이었다. 창을 0으로 만드는 비용보다 창의 크기를 정산 전체 길이에서 몇 밀리초로 줄인 것으로 충분하다고 판단했다.
+가드가 트랜잭션보다 먼저 돌면 거절된 요청은 트랜잭션을 열지도 않는다. 그런데 이 순서는 저절로 정해지지 않는다. Spring 문서는 서로 다른 애스펙트의 어드바이스가 같은 지점에 걸리면 "unless you specify otherwise, the order of execution is undefined"(따로 지정하지 않으면 실행 순서는 정해지지 않는다)고 적는다([Advice Ordering](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html)). `@Transactional`의 트랜잭션 어드바이스 기본 순서는 `Ordered.LOWEST_PRECEDENCE`이므로([Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)), 가드를 먼저 돌리려면 가드 애스펙트에 더 작은 `@Order` 값을 명시해야 한다.
 
-다만 이 판단은 트래픽 패턴이 바뀌면 다시 해야 한다. 수정이 자동화되어 정산 시작과 같은 시각에 대량으로 들어오는 구조가 된다면, 그때는 수정 트랜잭션 안에서 상태 행을 잠그는 쪽으로 옮겨야 한다.
+랩의 `SettlementLockAspect`에는 `@Order`가 없다. 랩 테스트는 통과하지만, 이 순서를 검증하는 테스트는 아니다. 거절이 트랜잭션 안에서 일어나도 결과는 롤백이라 데이터는 같지만, 거절될 요청마다 커넥션을 잡았다 놓는 비용이 생긴다.
 
-## 지분율 배치와 무엇이 같고 무엇이 다른가
+### 빠진 경로를 찾는 방법
 
-[대량 배치 안정성 시리즈](/series/batch-structure-improvement/)에서 다룬 지분율 배치도 상태 전이로 정합성을 지켰다. 두 사례를 나란히 놓으면 원리는 같고 적용 위치가 다르다.
+애너테이션 방식에서는 "수정 API인데 가드 애너테이션이 없는 메서드"가 코드에서 정적으로 드러난다. MDS는 공통 인터페이스 계약을 ArchUnit(아키텍처 규칙을 단위 테스트로 검사하는 라이브러리) 테스트로 강제하고 있었으므로, 이런 규칙도 같은 방식으로 테스트로 만들 수 있다. 다만 가드 누락을 검사하는 ArchUnit 규칙을 실제로 두었는지는 기록이 없어 여기 적지 않는다.
+
+## 정산이 죽으면 플래그도 남는다
+
+상태 플래그의 가장 큰 구멍은 정산 프로세스가 비정상 종료됐을 때다. 플래그를 켠 채로 정산이 죽으면, 아무도 플래그를 끄지 않는다. 그 계약은 계속 수정할 수 없는 상태로 남는다. 물리 락이라면 커넥션이 끊길 때 DB가 풀어 주지만, 플래그는 그렇지 않다.
+
+그래서 TTL(Time To Live, 정해진 시간이 지나면 만료되는 값) 기반 자동 복구를 두었다. 운영에서 쓴 정확한 TTL 값과 구현 방식은 기억나지 않는다. 값을 정하는 원칙은 분명하다. TTL이 정산의 정상 소요 시간보다 짧으면 정상 정산 도중에 플래그가 풀려 원래 문제가 돌아오고, 너무 길면 장애 후 그만큼 수정이 막힌다. 정산 소요 시간을 관측하고 있어야 정할 수 있는 값이다.
+
+랩에서는 별도 복구 배치 없이, 읽는 시점에 만료 여부를 판단하는 지연 평가로 구현했다. TTL이 지난 플래그는 켜져 있어도 꺼진 것으로 본다.
+
+랩 코드: [SettlementLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/domain/SettlementLock.java)
+
+```java
+public boolean isActiveConsidering(LocalDateTime now) {
+    if (status != LockStatus.LOCKED) {
+        return false;
+    }
+    return expiresAt == null || now.isBefore(expiresAt);
+}
+```
+
+정산이 죽었을 때의 흐름은 다음과 같다. 랩 테스트(`SettlementGuardTest`)는 TTL을 2초로 두고 해제를 호출하지 않은 채 이 흐름을 재현한다.
+
+```mermaid
+sequenceDiagram
+    participant B as 정산 배치
+    participant L as 정산 플래그
+    participant O as 운영자 수정 요청
+    B->>L: 플래그 켜기, 만료 시각 기록
+    B--xB: 비정상 종료, 해제 호출 없음
+    O->>L: 상태 확인
+    L-->>O: 정산 중, 요청 차단
+    Note over L: 만료 시각 경과
+    O->>L: 상태 확인
+    L-->>O: 만료됨, 대기로 취급
+    O->>O: 수정 반영
+```
+
+랩 실행 결과(로컬 Testcontainers MySQL, TTL 2초, Awaitility 대기 상한 6초)에서 이 테스트는 2.27초 걸려 통과했다. TTL 2초가 지난 직후 다음 수정 시도에서 차단이 풀렸다는 뜻이다. 운영 TTL과는 무관한 숫자다.
+
+TTL에는 짝이 되는 규칙이 하나 더 있다. 정산 A의 TTL이 지나 정산 B가 플래그를 다시 잡았는데, 뒤늦게 살아난 A가 종료하며 플래그를 끄면 B가 도는 중에 수정이 열린다. 랩은 플래그를 켠 실행의 ID(`locked_by`)를 함께 기록하고, 해제는 그 ID가 일치할 때만 하도록 막았다.
+
+## 정산 시작은 원자적이어야 한다
+
+플래그를 켜는 쪽도 경합이 있다. "플래그가 꺼져 있는지 확인한 뒤 켠다"를 두 단계로 나누면, 두 정산 실행이 같은 계약을 동시에 꺼져 있다고 보고 둘 다 시작할 수 있다. 확인과 갱신을 조건부 UPDATE 한 문장으로 합치면 이 틈이 사라진다.
+
+랩 코드: 꺼져 있거나 만료된 경우에만 켠다([SettlementLockRepository.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/repository/SettlementLockRepository.java)).
+
+```java
+@Modifying
+@Transactional
+@Query("""
+    UPDATE SettlementLock l
+       SET l.status = LOCKED, l.lockedAt = :now, l.expiresAt = :expiresAt, l.lockedBy = :runId
+     WHERE l.targetType = :targetType AND l.targetId = :targetId
+       AND (l.status = UNLOCKED OR l.expiresAt < :now)
+    """)
+int tryAcquire(...);
+```
+
+(enum 값은 실제 코드에서 전체 경로로 쓴다. 읽기 쉽게 줄였다.)
+
+반환값이 1이면 이 실행이 플래그를 잡은 것이고, 0이면 다른 실행이 유효한 플래그를 쥐고 있으므로 시작하지 않는다. 행 단위 조건부 UPDATE는 DB가 그 행에 쓰기 락을 걸고 수행하므로 두 실행 중 하나만 1을 받는다.
+
+랩을 만들며 겪은 함정도 하나 있다. 이 메서드처럼 리포지토리 인터페이스에 직접 선언한 `@Query` 메서드는 기본 트랜잭션을 물려받지 않는다. Spring Data JPA 문서는 "Declared query methods (including default methods) do not get any transaction configuration applied by default"(직접 선언한 쿼리 메서드에는 기본 트랜잭션 설정이 적용되지 않는다)고 적는다([Transactionality](https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html)). 처음에는 호출하는 쪽에 트랜잭션이 없어 `TransactionRequiredException`이 났고, 메서드에 `@Transactional`을 직접 붙여 해결했다.
+
+이 부분은 운영 구조와 다르다. 랩은 플래그를 별도 `settlement_lock` 테이블에 두었지만, 운영에서는 플래그가 세 계약 테이블 각각에 있었다. 운영에서 플래그를 켜는 문장이 조건부 UPDATE였는지는 기억나지 않는다.
+
+## 확인과 쓰기 사이의 틈
+
+수정 요청 쪽에는 이론상 틈이 남는다. 가드가 확인한 시점과 실제로 쓰는 시점이 다르기 때문이다.
+
+```mermaid
+sequenceDiagram
+    participant O as 수정 요청
+    participant G as AOP 가드
+    participant T as 계약 행
+    participant B as 정산 배치
+    O->>G: 수정 요청
+    G->>T: 플래그 조회
+    T-->>G: 꺼져 있음, 통과
+    B->>T: 플래그 켜고 정산 시작
+    O->>T: 수정 UPDATE
+    Note over T: 정산 시작 후의 쓰기가 반영됨
+```
+
+가드는 통과했지만 쓰기는 정산 시작 뒤에 일어났다. 물리 락이라면 생길 수 없는 순서다.
+
+운영에서 확인된 사실은 두 가지다. 플래그는 수정 대상과 같은 계약 행에 있었고, MDS 전반에는 낙관적 락(행에 버전 값을 두고, 갱신할 때 읽었던 버전과 다르면 실패시키는 방식)을 적용했다. 낙관적 락의 구체 방식과, 그것으로 이 틈을 어떻게 막았는지는 기억나지 않는다.
+
+그래서 아래는 경험이 아니라 일반론이다. 플래그 켜기와 운영자 수정이 모두 같은 행의 버전을 확인하고 올리는 갱신이라면, 위 순서에서 수정 UPDATE는 자기가 읽은 버전이 이미 바뀌었으므로 실패한다. 반대로 플래그를 켜는 쪽이 버전을 올리지 않는 문장이라면 수정 쪽 버전 비교가 이 순서를 잡지 못한다. 낙관적 락이 틈을 막는지는 "양쪽 갱신이 모두 같은 버전 규칙을 지나는가"에 달려 있다. JPA의 `@Version`과 조건부 UPDATE로 경합을 다루는 방법은 [Spring과 JPA에서 Race Condition을 다루는 방법](/posts/how-to-control-race-condition/)에 정리했다.
+
+랩은 이 틈을 다루지 않는다. 플래그가 별도 테이블에 있고 가드는 읽기만 하므로, 위 순서는 랩에서 그대로 재현된다.
+
+## 지분율 배치와 비교
+
+같은 회사의 지분율 시스템에서도 상태로 정합성을 지켰다. 그쪽은 Redis 분산락을 SETNX와 토큰 기반 해제로 다시 설계하고, 삭제중, 삭제완료, 등록중, 등록완료의 상태 전이 모델을 정의했다. 두 사례를 나란히 놓으면 원리는 같고 막는 방향이 다르다.
 
 | | 지분율 배치 | MDS 정산 |
 | --- | --- | --- |
 | 지키려는 것 | 삭제와 등록의 순서 | 정산 기준 데이터의 불변 |
-| 경쟁하는 주체 | 배치 vs 배치 | 배치 vs 운영자 |
-| 상태의 주인 | 작업(Job) | 대상(계약) |
-| 락의 성격 | 배타적, 작업 간 상호 배제 | 방향성, 배치는 진행하고 수정만 차단 |
+| 경쟁하는 주체 | 작업과 작업 | 정산 배치와 운영자 |
+| 상태를 기록한 곳 | Redis 락과 작업 상태 | 계약 행의 플래그 |
+| 막는 방향 | 서로를 배제 | 정산은 진행, 수정만 차단 |
 
-지분율 배치는 두 작업이 서로를 배제해야 했고, MDS 정산은 한쪽(정산)은 진행하면서 다른 쪽(수정)만 막아야 했다. 그래서 지분율에서는 Redis 분산락과 소유 토큰이 필요했고, MDS에서는 DB 행 하나의 상태와 TTL로 충분했다.
+정산은 진행하면서 수정만 막으면 됐기 때문에, MDS에서는 계약 행의 플래그와 TTL만으로 충분했다. 해제 시 소유자를 확인하는 규칙은 두 사례에 공통으로 필요하다.
 
-두 사례에 공통된 점은 "지금 이 데이터가 어떤 상태에 있는가"를 시스템이 명시적으로 기록했다는 것이다. 상태가 기록되어 있으면 그 상태에서 허용되지 않는 동작을 코드로 막을 수 있다. 기록되어 있지 않으면 정합성은 운영자의 호출 순서나 타이밍에 맡겨진다.
+## 결과와 비용
 
-## 결정 과정 요약
+정산과 운영 수정이 동시에 일어나는 환경에서도 정산 기준 데이터의 일관성을 유지했고, 재정산 빈도가 줄었다. 재정산이 몇 번에서 몇 번으로 줄었는지는 기록이 없다. 정산 전체를 덮는 DB 락이 없으므로 장기 트랜잭션과 락 경합도 생기지 않았다.
 
-| 관찰 | 배제한 것 | 택한 것 | 비용 |
-| --- | --- | --- | --- |
-| 정산 도중 수정이 반영되어 한 정산 안에 두 기준이 섞임 | 정산 중 수정을 허용하는 기존 구조 | 계약 단위 `IN_PROGRESS` 상태 | 애플리케이션이 검사와 복구를 떠안음 |
-| 정산이 오래 걸림 | 정산 전체를 덮는 `SELECT ... FOR UPDATE` | 짧은 트랜잭션의 상태 갱신 | DB가 강제하지 않음 |
-| 수정 API가 여러 개이고 늘어남 | 메서드마다 검사 코드 작성 | 애너테이션과 AOP, ArchUnit 규칙 | 애스펙트 순서를 명시해야 함 |
-| 정산 프로세스가 죽으면 플래그가 남음 | 플래그가 켜진 채 영구히 남는 상태 | `expires_at` 기반 TTL | TTL 값을 정산 소요 시간 관측으로 정해야 함 |
-| 검사와 쓰기 사이에 밀리초 단위 창이 있음 | 수정 트랜잭션 안에서 상태 행 잠금 | 창을 받아들임 | 트래픽 패턴이 바뀌면 재검토 |
+대가로 남은 것은 다음과 같다.
 
-물리 락을 배제한 근거는 강제력이 아니라 락을 쥐고 있어야 하는 시간이었다. 정합성 도구를 고를 때 "얼마나 강제적인가"와 함께 "얼마나 오래 잡고 있어야 하는가"를 먼저 확인한 것이 이 설계의 출발점이다.
+| 비용 | 내용 |
+| --- | --- |
+| 강제력 | DB가 아니라 애플리케이션이 막는다. 가드가 없는 수정 경로, 배치나 SQL로 직접 쓰는 경로는 막지 못한다. |
+| TTL 값 | 정산 소요 시간을 알아야 정할 수 있고, 정산이 느려지면 다시 정해야 한다. |
+| 확인과 쓰기 사이의 틈 | 낙관적 락이 양쪽 갱신에 같은 규칙으로 걸려 있어야 닫힌다. 운영에서 어떻게 닫았는지는 확인하지 못했다. |
+| 거절의 비용 | 정산 중 수정 요청은 실패로 끝나고, 정산이 끝난 뒤 다시 요청해야 한다. |
+
+물리 락을 배제한 근거는 강제력이 아니라 락을 쥐고 있어야 하는 시간이었다. 정합성 도구를 고를 때 "얼마나 강하게 막는가"와 함께 "얼마나 오래 잡고 있어야 하는가"를 먼저 따져 본 것이 이 설계의 출발점이다.
 
 ## 참고
 
 - [Spring Framework Reference: Advice Ordering](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html)
 - [Spring Framework Reference: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
+- [Spring Data JPA Reference: Transactionality](https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html)
 - [MySQL 8.0 Reference Manual: InnoDB Multi-Versioning](https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html)
+- 랩 README — [career-lab/mds-distribution/README.md](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md)
+- 랩 코드 — [SettlementLockAspect.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/settlement/SettlementLockAspect.java), [SettlementLockRepository.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/repository/SettlementLockRepository.java), [SettlementLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/main/java/com/portfolio/mdslab/domain/SettlementLock.java)
+- 랩 테스트 — [SettlementGuardTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/src/test/java/com/portfolio/mdslab/settlement/SettlementGuardTest.java)
