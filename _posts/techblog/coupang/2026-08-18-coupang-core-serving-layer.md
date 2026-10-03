@@ -17,7 +17,7 @@ problem_decision_result:
 
 원문: [대용량 트래픽 처리를 위한 쿠팡의 백엔드 전략 — 마이크로서비스로 고객에게 데이터 서빙하기: 고가용성, 고처리량, 그리고 지연시간 최소화 (Part 1)](https://medium.com/coupang-engineering/184f7fdb1367) — Coupang Engineering Blog, Gogi (Du Hyeong) Kim·Key (Ki Hyeon) Kim, 2022-09-02
 
-[JSP 전환기 3편](/posts/legacy-jsp-system-refactoring-3/)에서 조회와 명령을 분리하는 CQRS를 도입했고, [parity-pay 7편](/posts/parity-pay-ledger/)에서 원장(진실)과 잔액 스냅샷(조회)을 나눴다. 둘 다 "읽기용 표현을 따로 둔다"는 결정이고, 그 결정의 대가는 "둘이 어긋날 수 있다"였다. 쿠팡 글은 그 결정을 1,800만 사용자의 상품 페이지 규모에서 한 것이다. 대가를 어떻게 지불했는지 보고 싶었다.
+[MCP 전면 개편기 3편](/posts/legacy-jsp-system-refactoring-3/)에서 조회와 명령을 분리하는 CQRS를 도입했고, [parity-pay 7편](/posts/parity-pay-ledger/)에서 원장(진실)과 잔액 스냅샷(조회)을 나눴다. 둘 다 "읽기용 표현을 따로 둔다"는 결정이고, 그 결정의 대가는 "둘이 어긋날 수 있다"였다. 쿠팡 글은 그 결정을 1,800만 사용자의 상품 페이지 규모에서 한 것이다. 대가를 어떻게 지불했는지 보고 싶었다.
 
 ## 원문이 말하는 것
 
