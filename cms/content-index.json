@@ -1,6 +1,6 @@
 {
   "generatedFrom": "ruby scripts/cms/validate-content.rb --index",
-  "total": 1096,
+  "total": 1097,
   "titles": {
     "_posts/TIL/2020-TIL/2020-11-06-2020-11-06-TIL.md": {"title":"2020-11-06-TIL","status":"published"},
     "_posts/TIL/2020-TIL/2020-11-17-2020-11-17-TIL.md": {"title":"2020-11-17-TIL","status":"published"},
@@ -916,6 +916,7 @@
     "_posts/notes/redis/2026-03-27-redis-lite-java-overview.md": {"title":"redis-lite-java로 이해하는 Redis 아키텍처 개요","status":"published"},
     "_posts/notes/redis/2026-03-27-redis-lite-java-request-flow.md": {"title":"RESP, Reactor, Command Registry로 보는 Redis 요청 처리 흐름","status":"published"},
     "_posts/notes/redis/2026-04-20-redis-single-thread-stalls.md": {"title":"Redis 단일 스레드가 멈추는 순간 - SCAN이 3.7배 오래 걸리면서 아무도 막지 않고, 120ms 멈춤이 p99에 안 잡히는 이유","status":"published"},
+    "_posts/notes/redis/2026-10-04-valkey.md": {"title":"Valkey - Redis 라이선스 변경에서 갈라진 포크와 그 뒤의 2년","status":"published"},
     "_posts/notes/spring-ops-lab/2026-09-23-tomcat-thread-exhaustion.md": {"title":"무너지는 Spring 서버 1 - CPU는 놀고 있는데 API가 느리다: 업스트림 하나가 무관한 엔드포인트를 죽이는 과정을 thread dump 세 장으로 읽기","status":"published"},
     "_posts/notes/spring/2024-09-07-aop.md": {"title":"Spring AOP 핵심 정리","status":"published"},
     "_posts/notes/spring/2024-09-07-controller-advice.md": {"title":"@ControllerAdvice와 @RestControllerAdvice 정리","status":"published"},
