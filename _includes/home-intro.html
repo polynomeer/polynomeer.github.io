@@ -1,0 +1,31 @@
+{%- comment -%}
+  Compact intro on page 1 of the home feed: one line on who writes here and two
+  ways in. The full hero with metrics lives on About (home-hero.html); the line
+  reuses recruit_mode.hero.short_title so the two never disagree.
+{%- endcomment -%}
+{%- assign recruit = site.data.recruit_mode -%}
+{%- assign hero = site.data.home_hero -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign title = recruit.hero.short_title | default: recruit.hero.title -%}
+{%- if title -%}
+<section class="home-intro px-xl-1" aria-label="{{ site.data.locales[lang].home.hero_label }}">
+  <div class="home-intro-text">
+    <p class="home-intro-eyebrow" data-l10n-ko="{{ hero.eyebrow['ko-KR'] | escape }}" data-l10n-en="{{ hero.eyebrow.en | escape }}">
+      {%- include localized-value.html value=hero.eyebrow lang=lang -%}
+    </p>
+    <p class="home-intro-title" data-l10n-ko="{{ title['ko-KR'] | escape }}" data-l10n-en="{{ title.en | escape }}">
+      {%- include localized-value.html value=title lang=lang -%}
+    </p>
+  </div>
+  <div class="home-intro-actions">
+    <a class="home-intro-action is-primary" href="{{ '/about/' | relative_url }}"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].home.intro_about | escape }}"
+      data-l10n-en="{{ site.data.locales.en.home.intro_about | escape }}"
+    >{{ site.data.locales[lang].home.intro_about }}</a>
+    <a class="home-intro-action" href="{{ '/start/' | relative_url }}"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].home.intro_start | escape }}"
+      data-l10n-en="{{ site.data.locales.en.home.intro_start | escape }}"
+    >{{ site.data.locales[lang].home.intro_start }}</a>
+  </div>
+</section>
+{%- endif -%}

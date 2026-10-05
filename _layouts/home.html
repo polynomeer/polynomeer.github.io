@@ -52,23 +52,20 @@ refactor: true
 
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
 
+{% if paginator.page == 1 %}
+  {% include home-intro.html lang=lang %}
+{% endif %}
+
 <section id="home-discovery-filter" class="px-xl-1">
   {%- comment -%}
-    The feed comes first; the filter opens on demand and is forced open by the
-    script whenever a filter is active, so a narrowed feed is never unexplained.
+    Search and the filter pills stay in view: one panel above the feed, so a
+    narrowed feed always shows what narrowed it.
   {%- endcomment -%}
-  <details id="home-filter-details" class="post-filter-details">
-    <summary class="post-filter-summary">
-      <i class="fas fa-sliders fa-fw" aria-hidden="true"></i>
-      <span
-        data-l10n-ko="{{ site.data.locales['ko-KR'].home.filter_toggle | escape }}"
-        data-l10n-en="{{ site.data.locales.en.home.filter_toggle | escape }}"
-      >{{ site.data.locales[lang].home.filter_toggle }}</span>
-      <span id="home-filter-state" class="post-filter-summary-state"></span>
-    </summary>
+  <div class="post-filter-details">
     <div class="post-status-filter-bar">
     <div class="post-filter-row post-filter-row-inline">
       <label class="post-filter-field post-filter-field-search">
+        <i class="fas fa-magnifying-glass post-filter-search-icon" aria-hidden="true"></i>
         <input
           id="home-post-search"
           type="search"
@@ -78,6 +75,7 @@ refactor: true
           placeholder="{{ site.data.locales[lang].home.search_filter_placeholder }}..."
           aria-label="{{ site.data.locales[lang].home.search_filter_label }}"
         >
+        <kbd class="post-filter-shortcut" title="{{ site.data.locales[lang].home.search_shortcut | escape }}">/</kbd>
       </label>
 
       <div class="post-filter-field post-filter-field-compact post-filter-field-select">
@@ -238,8 +236,22 @@ refactor: true
       </section>
     </div>
     </div>
-  </details>
+  </div>
 </section>
+
+{% if paginator.page == 1 %}
+  <div id="home-feed-head" class="home-feed-head px-xl-1">
+    <h2
+      data-l10n-ko="{{ site.data.locales['ko-KR'].home.feed_heading | escape }}"
+      data-l10n-en="{{ site.data.locales.en.home.feed_heading | escape }}"
+    >{{ site.data.locales[lang].home.feed_heading }}</h2>
+    <a
+      href="{{ '/archives/' | relative_url }}"
+      data-l10n-ko="{{ site.data.locales['ko-KR'].home.archive_link | escape }}"
+      data-l10n-en="{{ site.data.locales.en.home.archive_link | escape }}"
+    >{{ site.data.locales[lang].home.archive_link }}</a>
+  </div>
+{% endif %}
 
 <div id="post-list" class="flex-grow-1 px-xl-1">
   <div id="static-post-list">
@@ -254,12 +266,23 @@ refactor: true
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% if post_content_type_id == 'til' %}
       {% unless in_til_group %}
-        <div class="til-group"><span class="til-group-label">TIL</span>
+        {% assign til_count = 0 %}
+        {% for next_post in posts offset: forloop.index0 %}
+          {% capture next_type %}{% include content-type-id.html post=next_post %}{% endcapture %}
+          {% if next_type contains 'til' %}{% assign til_count = til_count | plus: 1 %}{% else %}{% break %}{% endif %}
+        {% endfor %}
+        <div class="til-group">
+          <div class="til-group-head">
+            <span class="til-group-label">TIL</span>
+            <span class="til-group-count">{{ site.data.locales[lang].home.til_count | replace: ':N', til_count }}</span>
+            <a class="til-group-all" href="{{ '/types/til/' | relative_url }}">{{ site.data.locales[lang].home.til_all }}</a>
+          </div>
         {% assign in_til_group = true %}
       {% endunless %}
       <a class="til-row" href="{{ post.url | relative_url }}" data-post-type="til">
+        <span class="til-row-date">{{ post.date | date: '%m.%d' }}</span>
         <span class="til-row-title">{{ post.title }}</span>
-        {% include datetime.html date=post.date lang=lang %}
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
       </a>
       {% continue %}
     {% endif %}
@@ -273,7 +296,7 @@ refactor: true
     {% assign card_kind = card_kind | strip %}
     {% if card_kind == '' %}{% assign card_kind = nil %}{% endif %}
     <article
-      class="card-wrapper card{% if card_kind %} is-case-study is-case-{{ card_kind }}{% endif %}"
+      class="card-wrapper card{% if card_kind %} is-case-study is-case-{{ card_kind }}{% endif %}{% if post.pin %} is-pinned{% endif %}"
       data-post-url="{{ post.url | relative_url }}"
       data-post-type="{{ post_content_type_id }}"
       data-post-search="{{ post_search_blob | escape }}"
@@ -306,11 +329,9 @@ refactor: true
 
         <div class="col-md-{{ card_body_col }}">
           <div class="card-body d-flex flex-column">
-            <div class="card-title-row my-2 mt-md-0">
-              <h2 class="card-title">
-                <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
-              </h2>
+            <div class="card-title-row mb-2">
               <div class="card-title-badges">
+                {% include content-type-badge.html post=post lang=lang %}
                 {% if card_kind == 'personal' %}
                   <span class="home-case-badge is-personal">
                     <i class="fas fa-flask fa-fw"></i>
@@ -328,8 +349,10 @@ refactor: true
                     <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
                   </span>
                 {% endif %}
-                {% include content-type-badge.html post=post lang=lang %}
               </div>
+              <h2 class="card-title">
+                <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
+              </h2>
             </div>
 
             <div class="card-text content mt-0 mb-3">
@@ -368,15 +391,13 @@ refactor: true
 
                   {% if post.series %}
                     {% assign card_series_page = site.series_pages | where: 'series_id', post.series | first %}
+                    {% assign card_series_title = card_series_page.title | default: post.series_title | default: post.series %}
+                    {% capture card_series_label %}{{ site.data.locales[lang].home.series_mark }}{% if post.series_order %} · {{ site.data.locales[lang].home.series_part | replace: ':N', post.series_order }}{% endif %}{% endcapture %}
                     <span class="post-meta-item post-meta-series">
-                      <i class="fas fa-list-ol fa-fw"></i>
                       {% if card_series_page %}
-                        <a href="{{ card_series_page.url | relative_url }}">{{ card_series_page.title }}</a>
+                        <a href="{{ card_series_page.url | relative_url }}" title="{{ card_series_title | escape }}">{{ card_series_label }}</a>
                       {% else %}
-                        <span>{{ post.series_title | default: post.series }}</span>
-                      {% endif %}
-                      {% if post.series_order %}
-                        <span class="post-meta-series-order">{{ site.data.locales[lang].home.series_part | replace: ':N', post.series_order }}</span>
+                        <span title="{{ card_series_title | escape }}">{{ card_series_label }}</span>
                       {% endif %}
                     </span>
                   {% endif %}
@@ -447,6 +468,9 @@ refactor: true
       personal: {{ site.data.locales[lang].home.project_study_mark | jsonify }},
       career: {{ site.data.locales[lang].home.case_study_mark | jsonify }}
     };
+    const tilCountTemplate = {{ site.data.locales[lang].home.til_count | jsonify }};
+    const tilAllLabel = {{ site.data.locales[lang].home.til_all | jsonify }};
+    const tilAllUrl = {{ '/types/til/' | relative_url | jsonify }};
     const filterAllLabel = {{ site.data.locales[lang].home.filter_all | jsonify }};
     const selectedTagLabelTemplate = {{ site.data.locales[lang].home.tag_filter_selected | jsonify }};
     let allPosts = null;
@@ -669,20 +693,20 @@ refactor: true
       ` : '';
 
       return `
-        <article class="card-wrapper card" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}" data-post-tags="${escapeAttribute((post.tags || []).join(','))}">
+        <article class="card-wrapper card${post.pin ? ' is-pinned' : ''}" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}" data-post-tags="${escapeAttribute((post.tags || []).join(','))}">
           <div class="post-preview row g-0 flex-md-row-reverse">
             ${renderImage(post)}
             <div class="col-md-${cardBodyCol}">
               <div class="card-body d-flex flex-column">
-                <div class="card-title-row my-2 mt-md-0">
+                <div class="card-title-row mb-2">
+                  <div class="card-title-badges">
+                    ${renderTypeBadge(post)}
+                    ${kindBadge}
+                    ${pinBadge}
+                  </div>
                   <h2 class="card-title">
                     <a href="${escapeHtml(post.url)}" class="post-card-title-link">${escapeHtml(post.title)}</a>
                   </h2>
-                  <div class="card-title-badges">
-                    ${kindBadge}
-                    ${pinBadge}
-                    ${renderTypeBadge(post)}
-                  </div>
                 </div>
 
                 <div class="card-text content mt-0 mb-3">
@@ -717,10 +741,16 @@ refactor: true
       let group = [];
       const flush = () => {
         if (!group.length) return;
-        out.push(`<div class="til-group"><span class="til-group-label">TIL</span>${group.map((post) => `
+        out.push(`<div class="til-group">
+          <div class="til-group-head">
+            <span class="til-group-label">TIL</span>
+            <span class="til-group-count">${escapeHtml(tilCountTemplate.replace(':N', group.length))}</span>
+            <a class="til-group-all" href="${escapeHtml(tilAllUrl)}">${escapeHtml(tilAllLabel)}</a>
+          </div>${group.map((post) => `
           <a class="til-row" href="${escapeHtml(post.url)}" data-post-type="til">
+            <span class="til-row-date">${escapeHtml(post.monthDay || '')}</span>
             <span class="til-row-title">${escapeHtml(post.title)}</span>
-            <time>${escapeHtml(post.dateLabel || '')}</time>
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
           </a>`).join('')}</div>`);
         group = [];
       };
@@ -861,6 +891,9 @@ refactor: true
 
     const toggleFilteredMode = (enabled) => {
       staticPostList.hidden = enabled;
+      // "Recent posts" stops being true once the feed is narrowed.
+      const feedHead = document.getElementById('home-feed-head');
+      if (feedHead) feedHead.hidden = enabled;
       filteredPostList.hidden = !enabled;
 
       if (staticPagination) {
@@ -1014,6 +1047,12 @@ refactor: true
     });
 
     document.addEventListener('keydown', (event) => {
+      const typing = event.target.closest?.('input, textarea, select, [contenteditable="true"]');
+      if (event.key === '/' && !typing && !event.metaKey && !event.ctrlKey && !event.altKey && searchInput) {
+        event.preventDefault();
+        searchInput.focus();
+        return;
+      }
       if (event.key === 'Escape') {
         closeTypeMenu();
         closeTagDialog();
