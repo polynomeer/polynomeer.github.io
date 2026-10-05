@@ -31,20 +31,18 @@ Matches on the post URL or, for personal projects, on the post's series page per
 {%- endif -%}
 {%- if matched_item -%}
 {%- comment -%}
-  Drawn like a repository card: an icon tile, the kind and period over the
-  project title, and the repository as a button on the right. Other posts of
-  the same project follow on one quiet line.
+  One row of chips: the kind (personal project or case study) as an outlined
+  chip, the project title and period as text, the repository as a filled chip.
+  Other posts of the same project follow on one quiet line.
 {%- endcomment -%}
 {%- if matched_kind == 'career' -%}{%- assign kind_key = 'case_study_mark' -%}{%- else -%}{%- assign kind_key = 'project_study_mark' -%}{%- endif -%}
 <aside class="portfolio-context is-{{ matched_kind }}" aria-label="{{ site.data.locales[lang].post.portfolio_context_label }}">
 <div class="portfolio-context-main">
-<span class="portfolio-context-icon" aria-hidden="true"><i class="fas {% if matched_kind == 'career' %}fa-briefcase{% else %}fa-flask{% endif %}"></i></span>
-<div class="portfolio-context-text">
-<span class="portfolio-context-kind"><span data-i18n="home.{{ kind_key }}">{{ site.data.locales[lang].home[kind_key] }}</span>{%- if matched_item.period %} · <span class="portfolio-context-period">{{ matched_item.period }}</span>{% endif -%}</span>
+<span class="portfolio-context-kind"><i class="fas {% if matched_kind == 'career' %}fa-briefcase{% else %}fa-flask{% endif %}" aria-hidden="true"></i><span data-i18n="home.{{ kind_key }}">{{ site.data.locales[lang].home[kind_key] }}</span></span>
 <a class="portfolio-context-title" href="{{ '/about/' | relative_url }}#{{ matched_item.id }}" data-l10n-ko="{{ matched_item.title['ko-KR'] | escape }}" data-l10n-en="{{ matched_item.title.en | escape }}">
 {%- include localized-value.html value=matched_item.title lang=lang -%}
 </a>
-</div>
+{%- if matched_item.period %}<span class="portfolio-context-period">{{ matched_item.period }}</span>{% endif -%}
 {%- if matched_item.repo -%}
 <a class="portfolio-context-repo" href="{{ matched_item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i>GitHub</a>
 {%- endif -%}

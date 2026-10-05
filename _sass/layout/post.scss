@@ -2140,60 +2140,41 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-/* Which project or job a post belongs to, drawn like a repository card: an
-   icon tile, kind and period over the title, the repository as a button. */
+/* Which project or job a post belongs to, as one row of chips: the kind as an
+   outlined chip, title and period as text, the repository as a filled chip. */
 .portfolio-context {
-  margin: 1rem 0 1.2rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 0.75rem;
-  background: var(--card-bg);
+  margin: 0.9rem 0 1.1rem;
 }
 
 .portfolio-context-main {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.85rem;
-}
-
-.portfolio-context-icon {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  border-radius: 0.65rem;
-  background: color-mix(in srgb, var(--link-color) 16%, transparent);
-  color: var(--link-color);
-  font-size: 1.05rem;
-
-  .is-career & {
-    background: color-mix(in srgb, var(--metric-color) 16%, transparent);
-    color: var(--metric-color);
-  }
-}
-
-.portfolio-context-text {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.45;
+  gap: 0.4rem 0.6rem;
 }
 
 .portfolio-context-kind {
-  color: var(--text-muted-color);
-  font-size: 0.78rem;
-}
+  --kind-color: var(--link-color);
 
-.portfolio-context-period {
-  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--kind-color) 55%, transparent);
+  border-radius: 999px;
+  color: var(--kind-color);
+  font-size: 0.76rem;
+  font-weight: 600;
+
+  .is-career & {
+    --kind-color: var(--metric-color);
+  }
 }
 
 .portfolio-context-title {
   color: var(--heading-color);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 
   &:hover {
     color: var(--link-color);
@@ -2201,19 +2182,23 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
+.portfolio-context-period {
+  color: var(--text-muted-color);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .portfolio-context-repo {
   display: inline-flex;
-  flex: none;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid var(--btn-border-color);
-  border-radius: 0.5rem;
+  gap: 0.35rem;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  background: var(--card-hovor-bg);
   color: var(--text-color);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
 
   &:hover {
-    border-color: var(--link-color);
     color: var(--link-color);
     text-decoration: none;
   }
@@ -2223,8 +2208,7 @@ html[data-mode='dark'] .about-terminal {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem 0.85rem;
-  margin-top: 0.6rem;
-  padding-left: 3.25rem;
+  margin-top: 0.45rem;
   font-size: 0.82rem;
 }
 
