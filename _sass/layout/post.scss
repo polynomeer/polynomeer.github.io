@@ -2140,14 +2140,14 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
+/* Which project or job a post belongs to. A strip between two hairlines rather
+   than a tinted box with an accent bar: it is a line of context, not a callout. */
 .portfolio-context {
   margin: 0.4rem 0 1.4rem;
-  padding: 0.85rem 1rem;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(98, 114, 164, 0.22);
-  border-left: 3px solid var(--label-color);
-  background: rgba(68, 71, 90, 0.12);
-  font-size: 0.9rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid rgba(98, 114, 164, 0.2);
+  border-bottom: 1px solid rgba(98, 114, 164, 0.2);
+  font-size: 0.88rem;
 }
 
 .portfolio-context-main {
@@ -2181,10 +2181,9 @@ html[data-mode='dark'] .about-terminal {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem 0.85rem;
-  margin-top: 0.55rem;
-  padding-top: 0.55rem;
-  border-top: 1px dashed rgba(98, 114, 164, 0.25);
-  font-size: 0.86rem;
+  margin-top: 0.35rem;
+  padding-left: 1.6rem;
+  font-size: 0.84rem;
 }
 
 .portfolio-context-links-label {
@@ -4395,7 +4394,6 @@ html[data-mode='dark'] {
   margin: 1.25rem 0;
   padding: 1rem 1.1rem 0.85rem;
   border: 1px solid var(--btn-border-color);
-  border-left: 3px solid var(--link-color);
   border-radius: 0.6rem;
 
   /* 어두운 테마의 blockquote 배경과 둥근 모서리가 카드 안에서 한 겹 더 생기지 않게
