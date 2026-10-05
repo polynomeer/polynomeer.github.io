@@ -29,54 +29,33 @@ swcache: true
   {% assign feed_posts = feed_posts | push: post %}
 {% endfor %}
 
+{%- comment -%}
+  Every listed post, not only notes and the last two years: the year and kind
+  filters have to see the whole archive, the same set the static pages list.
+  Each object is written on one line with whitespace-trimming tags, and the
+  summary is cut to what a card shows (two lines), which keeps the file small.
+  Image and pin fields are written only when set.
+{%- endcomment -%}
 [
-  {% assign home_feed_first_item = true %}
-  {% for post in feed_posts %}
-    {% assign post_ts = post.date | date: '%s' | plus: 0 %}
-    {% assign include_in_home_feed_data = false %}
-    {%- comment -%}
-      Every listed post, not only notes and the last two years: the year and
-      kind filters have to see the whole archive, the same set the static
-      pages list. Summaries are cut short to keep the file small.
-    {%- endcomment -%}
-    {% assign include_in_home_feed_data = true %}
-    {% if include_in_home_feed_data %}
-      {% unless home_feed_first_item %},{% endunless %}
-      {% assign home_feed_first_item = false %}
-    {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-    {% assign post_content_type_id = post_content_type_id | strip %}
-    {% assign content_type = site.data.content_types[post_content_type_id] %}
-    {% capture summary %}{% include post-description.html %}{% endcapture %}
-    {% assign summary = summary | strip | strip_newlines | truncate: 160 %}
-    {% capture post_kind %}{% include post-case-kind.html post=post content_type_id=post_content_type_id %}{% endcapture %}
-    {% assign post_topics = post.topic_hubs | map: 'id' %}
-    {% assign src = nil %}
-    {% assign alt = nil %}
-    {% if post.image %}
-      {% assign src = post.image.path | default: post.image %}
-      {% unless src contains '//' %}
-        {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
-      {% endunless %}
-      {% assign alt = post.image.alt | default: 'Preview Image' %}
-    {% endif %}
-    {
-      "title": {{ post.title | jsonify }},
-      "url": {{ post.url | relative_url | jsonify }},
-      "typeId": {{ post_content_type_id | jsonify }},
-      "typeLabel": {{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},
-      "typeIcon": {{ content_type.icon | jsonify }},
-      "typeUrl": {{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},
-      "summary": {{ summary | jsonify }},
-      "dateLabel": {{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},
-      "categories": {{ post.categories | jsonify }},
-      "tags": {{ post.tags | jsonify }},
-      "imageSrc": {{ src | jsonify }},
-      "imageAlt": {{ alt | jsonify }},
-      "pin": {{ post.pin | default: false | jsonify }},
-      "kind": {{ post_kind | strip | jsonify }},
-      "topics": {{ post_topics | jsonify }},
-      "year": {{ post.date | date: '%Y' | jsonify }}
-    }
-    {% endif %}
-  {% endfor %}
+{%- for post in feed_posts -%}
+  {%- capture post_content_type_id -%}{% include content-type-id.html post=post %}{%- endcapture -%}
+  {%- assign post_content_type_id = post_content_type_id | strip -%}
+  {%- assign content_type = site.data.content_types[post_content_type_id] -%}
+  {%- capture summary -%}{% include post-description.html %}{%- endcapture -%}
+  {%- assign summary = summary | strip | strip_newlines | truncate: 120 -%}
+  {%- capture post_kind -%}{% include post-case-kind.html post=post content_type_id=post_content_type_id %}{%- endcapture -%}
+  {%- assign post_topics = post.topic_hubs | map: 'id' -%}
+  {%- assign src = nil -%}
+  {%- if post.image -%}
+    {%- assign src = post.image.path | default: post.image -%}
+    {%- unless src contains '//' -%}
+      {%- assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' -%}
+    {%- endunless -%}
+  {%- endif -%}
+  {%- unless forloop.first -%},{%- endunless -%}
+  {"title":{{ post.title | jsonify }},"url":{{ post.url | relative_url | jsonify }},"typeId":{{ post_content_type_id | jsonify }},"typeLabel":{{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},"typeIcon":{{ content_type.icon | jsonify }},"typeUrl":{{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},"summary":{{ summary | jsonify }},"dateLabel":{{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},"categories":{{ post.categories | jsonify }},"tags":{{ post.tags | jsonify }},
+  {%- if src -%}"imageSrc":{{ src | jsonify }},"imageAlt":{{ post.image.alt | default: 'Preview Image' | jsonify }},{%- endif -%}
+  {%- if post.pin -%}"pin":true,{%- endif -%}
+  "kind":{{ post_kind | strip | jsonify }},"topics":{{ post_topics | jsonify }},"year":{{ post.date | date: '%Y' | jsonify }}}
+{%- endfor -%}
 ]
