@@ -103,12 +103,12 @@ nodes:
       - ko-KR: 브로커를 죽이고 파티션 키를 흩어 acks와 파티션 키가 정확성의 일부임을 실측했고, 처리할 수 없는 레코드가 조용히 사라지는 경로를 찾아 DLT로 닫았습니다.
         en: Killed the broker and scattered partition keys to show that acks and partition keys are part of correctness, and closed the path where unprocessable records vanished silently with a dead-letter topic.
     representative_posts:
-      - _posts/notes/parity-pay/2026-02-11-parity-pay-invariants.md
-      - _posts/notes/parity-pay/2026-02-19-parity-pay-lock-hold-time.md
-      - _posts/notes/parity-pay/2026-03-16-parity-pay-outbox.md
-      - _posts/notes/parity-pay/2026-04-09-parity-pay-kafka-failures.md
-      - _posts/notes/parity-pay/2026-07-02-parity-pay-external-isolation.md
-      - _posts/notes/parity-pay/2026-04-19-parity-pay-lock-lease.md
+      - _posts/notes/parity-pay/2026-09-10-parity-pay-invariants.md
+      - _posts/notes/parity-pay/2026-09-15-parity-pay-lock-hold-time.md
+      - _posts/notes/parity-pay/2026-09-18-parity-pay-outbox.md
+      - _posts/notes/parity-pay/2026-09-22-parity-pay-kafka-failures.md
+      - _posts/notes/parity-pay/2026-09-23-parity-pay-external-isolation.md
+      - _posts/notes/parity-pay/2026-09-24-parity-pay-lock-lease.md
     supporting_links:
       - title:
           ko-KR: 시리즈 전체 보기
