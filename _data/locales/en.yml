@@ -290,14 +290,11 @@ home:
   case_study_mark: "Case study"
   project_study_mark: "Side project"
   series_part: "Part :N"
-  series_mark: Series
   feed_heading: Recent posts
   archive_link: All posts ›
   til_count: ":N"
   til_all: All TIL ›
   search_shortcut: "Press / to jump to search"
-  intro_about: About me
-  intro_start: Start here
   hero_label: Introduction
   browse_archive: Browse every post in the archive
   search_filter_label: Search

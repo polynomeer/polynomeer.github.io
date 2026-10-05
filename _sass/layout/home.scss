@@ -5,260 +5,26 @@
 @use 'variables-hook' as *;
 @use 'addon/module' as *;
 
-#post-status-filter {
-  margin-top: 1.25rem;
-}
-
-.post-filter-details {
-  margin-bottom: 1rem;
-}
-
-#home-discovery-filter {
-  margin-top: 1.25rem;
-}
-
-.post-status-filter-bar {
-  display: block;
-  padding: 0.8rem 1rem;
-  border-radius: 1rem;
-  border: 1px solid var(--btn-border-color);
-  background: var(--card-bg);
-}
-
-.post-filter-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.7rem;
-}
-
-.post-filter-row-inline {
-  align-items: center;
-}
-
-.post-filter-field {
-  display: block;
-  min-width: 0;
-  margin: 0;
-}
-
-.post-filter-field-select {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.post-filter-field-search {
-  /* The search gets its own line; the selects share the next one. */
-  flex: 1 1 100%;
-}
-
-.post-filter-plain {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.post-filter-plain-select {
-  width: 100%;
-  height: 2.6rem;
-  padding: 0 2rem 0 0.8rem;
-  border-radius: 0.9rem;
-  border: 1px solid rgba(98, 114, 164, 0.2);
-  background-color: var(--filter-input-bg);
-  color: var(--text-color);
-  font-size: 0.86rem;
-  cursor: pointer;
-
-  &:focus {
-    border-color: rgba(139, 233, 253, 0.32);
-    outline: none;
-  }
-}
-
-.post-filter-field-compact {
-  flex: 0 0 12rem;
-}
-
-.post-filter-field-tag {
-  flex: 0 0 11rem;
-}
-
-.post-filter-input,
-.post-filter-select-native {
+/* The tag dialog's search field. */
+.post-filter-input {
   width: 100%;
   height: 2.6rem;
   min-height: 2.6rem;
   padding: 0.58rem 0.8rem;
   border-radius: 0.9rem;
-  border: 1px solid rgba(98, 114, 164, 0.2);
+  border: 1px solid var(--btn-border-color);
   background: var(--filter-input-bg);
   color: var(--text-color);
   outline: none;
   box-shadow: none;
   transition:
     border-color 0.2s ease,
-    background-color 0.2s ease,
     box-shadow 0.2s ease;
 
   &:focus {
-    border-color: rgba(139, 233, 253, 0.32);
-    box-shadow: 0 0 0 0.18rem rgba(139, 233, 253, 0.08);
+    border-color: color-mix(in srgb, var(--link-color) 55%, transparent);
+    box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--link-color) 14%, transparent);
   }
-}
-
-.post-filter-select-native {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.post-filter-visible-label {
-  flex: 0 0 auto;
-  color: var(--text-muted-color);
-  font-size: 0.8rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.post-filter-trigger,
-.post-filter-reset {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.55rem;
-  width: 100%;
-  height: 2.6rem;
-  min-height: 2.6rem;
-  padding: 0.58rem 0.8rem;
-  border-radius: 0.9rem;
-  border: 1px solid rgba(98, 114, 164, 0.2);
-  background: var(--filter-input-bg);
-  color: var(--text-color);
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-
-  &:hover {
-    border-color: rgba(139, 233, 253, 0.28);
-    background: rgba(68, 71, 90, 0.22);
-  }
-}
-
-.post-filter-trigger {
-  .post-filter-trigger-label {
-    color: var(--text-muted-color);
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-
-  .post-filter-trigger-value {
-    flex: 1 1 auto;
-    min-width: 0;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  i {
-    color: var(--text-muted-color);
-    font-size: 0.78rem;
-  }
-
-  &.is-active {
-    border-color: rgba(139, 233, 253, 0.28);
-    background: rgba(139, 233, 253, 0.1);
-  }
-}
-
-.post-filter-select-wrap {
-  position: relative;
-  flex: 1 1 auto;
-}
-
-.post-filter-trigger-select {
-  justify-content: space-between;
-  width: 100%;
-
-  .post-filter-trigger-value {
-    font-weight: 700;
-  }
-
-  &.is-open {
-    border-color: rgba(139, 233, 253, 0.3);
-    background: rgba(68, 71, 90, 0.24);
-    box-shadow: 0 0 0 0.18rem rgba(139, 233, 253, 0.08);
-  }
-}
-
-.type-filter-menu {
-  position: absolute;
-  top: calc(100% + 0.45rem);
-  left: 0;
-  z-index: 30;
-  display: grid;
-  gap: 0.28rem;
-  width: 100%;
-  padding: 0.42rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(98, 114, 164, 0.22);
-  background: var(--card-bg);
-  box-shadow: 0 20px 44px rgba(10, 11, 16, 0.34);
-}
-
-.type-filter-option {
-  display: flex;
-  align-items: center;
-  gap: 0.68rem;
-  width: 100%;
-  padding: 0.62rem 0.72rem;
-  border: 0;
-  border-radius: 0.78rem;
-  background: transparent;
-  color: var(--text-color);
-  text-align: left;
-  font-weight: 700;
-  transition:
-    background-color 0.18s ease,
-    color 0.18s ease,
-    transform 0.18s ease;
-
-  &:hover {
-    background: rgba(68, 71, 90, 0.24);
-    transform: translateX(1px);
-  }
-
-  &.is-selected {
-    background: rgba(139, 233, 253, 0.12);
-
-    .type-filter-option-check {
-      opacity: 1;
-      color: var(--accent-cyan);
-    }
-  }
-}
-
-.type-filter-option-check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1rem;
-  opacity: 0;
-  color: var(--accent-cyan);
-}
-
-.post-filter-reset {
-  flex: 0 0 auto;
-  width: auto;
-  justify-content: center;
-  padding-inline: 0.95rem;
-  color: var(--text-muted-color);
-  font-size: 0.8rem;
-  font-weight: 700;
 }
 
 .tag-filter-dialog {
@@ -430,54 +196,6 @@
 
 body.tag-filter-open {
   overflow: hidden;
-}
-
-.post-filter-select {
-  appearance: none;
-  -webkit-appearance: none;
-  line-height: 1.2;
-  padding-right: 2.2rem;
-  border-color: rgba(139, 233, 253, 0.16);
-  background: transparent;
-}
-
-.post-filter-select-wrap {
-  position: relative;
-  display: block;
-  flex: 1 1 auto;
-  width: 100%;
-
-  i {
-    position: absolute;
-    top: 50%;
-    right: 0.82rem;
-    transform: translateY(-50%);
-    color: rgba(248, 248, 242, 0.62);
-    font-size: 0.78rem;
-    pointer-events: none;
-  }
-}
-
-.post-status-filter-btn {
-  padding: 0.35rem 0.78rem;
-  min-height: 2.75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(98, 114, 164, 0.18);
-  background: rgba(68, 71, 90, 0.22);
-  color: var(--text-muted-color);
-  font-size: 0.8rem;
-  font-weight: 700;
-  transition:
-    color 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-
-  &.active {
-    background: rgba(139, 233, 253, 0.12);
-    border-color: rgba(139, 233, 253, 0.24);
-    color: var(--text-color);
-  }
 }
 
 #post-list {
@@ -804,10 +522,6 @@ body.tag-filter-open {
 
 /* Hide SideBar and TOC */
 @media all and (max-width: 830px) {
-  .post-filter-row {
-    flex-wrap: nowrap;
-  }
-
   #static-post-list,
   #filtered-post-list {
     .card {
@@ -828,32 +542,6 @@ body.tag-filter-open {
 }
 
 @media all and (max-width: 576px) {
-  .post-filter-row {
-    flex-wrap: wrap;
-  }
-
-  .post-filter-field-select {
-    gap: 0.55rem;
-  }
-
-  .post-filter-visible-label {
-    font-size: 0.76rem;
-  }
-
-  .post-filter-field-search {
-    flex: 1 1 0;
-  }
-
-  .post-filter-field-compact {
-    flex: 0 0 9rem;
-  }
-
-  .post-filter-field-tag,
-  .post-filter-reset {
-    flex: 1 1 calc(50% - 0.35rem);
-    width: 100%;
-  }
-
   .tag-filter-panel {
     width: calc(100vw - 1rem);
     margin-top: 4.75rem;
@@ -863,10 +551,6 @@ body.tag-filter-open {
 
 /* Sidebar is visible */
 @media all and (min-width: 831px) {
-  #post-status-filter {
-    margin-top: 2rem;
-  }
-
   #post-list {
     margin-top: 1.5rem;
   }
@@ -1106,189 +790,6 @@ nav.home-paginator {
   }
 }
 
-/* Filter controls as one family of pills: label, value and a chevron inside a
-   rounded outline, whatever drives them (the custom type menu, a native
-   select, the tag dialog). A pill that narrows the feed turns the link colour. */
-section#home-discovery-filter {
-  .post-filter-row-inline {
-    gap: 0.55rem;
-  }
-
-  .post-filter-field-search {
-    flex: 1 1 100%;
-  }
-
-  .post-filter-field-compact,
-  .post-filter-field-tag {
-    flex: 0 0 auto;
-  }
-
-  .post-filter-field-select,
-  .post-filter-plain,
-  .post-filter-field-tag .post-filter-trigger,
-  .post-filter-reset {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    width: auto;
-    height: 2.25rem;
-    min-height: 2.25rem;
-    padding: 0 0.85rem;
-    border: 1px solid rgba(98, 114, 164, 0.3);
-    border-radius: 999px;
-    background: transparent;
-    font-size: 0.84rem;
-  }
-
-  .post-filter-field-select .post-filter-trigger {
-    width: auto;
-    height: auto;
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    box-shadow: none;
-  }
-
-  .post-filter-field-select .post-filter-trigger-value {
-    font-weight: 500;
-  }
-
-  .post-filter-visible-label,
-  .post-filter-trigger-label {
-    color: var(--text-muted-color);
-    font-size: 0.8rem;
-    font-weight: 600;
-  }
-
-  .post-filter-plain-select {
-    width: auto;
-    height: auto;
-    padding: 0 1rem 0 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    color: var(--text-color);
-    font-size: 0.84rem;
-  }
-
-  .post-filter-field.is-active,
-  .post-filter-field-tag .post-filter-trigger.is-active {
-    border-color: color-mix(in srgb, var(--link-color) 60%, transparent);
-    background: color-mix(in srgb, var(--link-color) 12%, transparent);
-
-    .post-filter-trigger-value,
-    .post-filter-plain-select {
-      color: var(--link-color);
-    }
-  }
-}
-
-/* Search field: a leading icon and a `/` shortcut hint inside the input. */
-section#home-discovery-filter label.post-filter-field-search {
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  .post-filter-input {
-    padding-left: 2.4rem;
-    padding-right: 2.6rem;
-  }
-
-  .post-filter-search-icon {
-    position: absolute;
-    left: 0.95rem;
-    color: var(--text-muted-color);
-    font-size: 0.85rem;
-    pointer-events: none;
-  }
-
-  .post-filter-shortcut {
-    position: absolute;
-    right: 0.75rem;
-    padding: 0.05rem 0.45rem;
-    border: 1px solid var(--btn-border-color);
-    border-radius: 0.35rem;
-    background: none;
-    color: var(--text-muted-color);
-    font-family: var(--bs-font-monospace, monospace);
-    font-size: 0.72rem;
-    box-shadow: none;
-  }
-}
-
-/* Compact intro above the feed on page 1 (home-intro.html). */
-.home-intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem 1.5rem;
-  margin-top: 1.25rem;
-  padding: 1.4rem 1.5rem;
-  border: 1px solid var(--btn-border-color);
-  border-radius: 1.1rem;
-  background: var(--card-bg);
-}
-
-.home-intro-text {
-  flex: 1 1 22rem;
-  min-width: 0;
-}
-
-.home-intro-eyebrow {
-  margin: 0 0 0.35rem;
-  color: var(--accent-date);
-  font-family: var(--bs-font-monospace, monospace);
-  font-size: 0.78rem;
-}
-
-.home-intro-title {
-  margin: 0;
-  color: var(--heading-color);
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.5;
-  word-break: keep-all;
-}
-
-.home-intro-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.home-intro-action {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.5rem;
-  padding: 0 1rem;
-  border: 1px solid var(--btn-border-color);
-  border-radius: 0.7rem;
-  color: var(--text-color);
-  font-size: 0.86rem;
-  font-weight: 600;
-
-  @extend %no-bottom-border;
-
-  &:hover {
-    border-color: var(--link-color);
-    color: var(--link-color);
-    text-decoration: none;
-  }
-
-  &.is-primary {
-    border-color: var(--link-color);
-    background: var(--link-color);
-    color: var(--main-bg);
-
-    &:hover {
-      color: var(--main-bg);
-      opacity: 0.88;
-    }
-  }
-}
-
 /* "최근 글" heading between the filter panel and the feed. */
 .home-feed-head {
   display: flex;
@@ -1311,83 +812,6 @@ section#home-discovery-filter label.post-filter-field-search {
 
     @extend %no-bottom-border;
   }
-}
-
-/* Feed cards: badges on their own row above the title, type first with a
-   coloured dot in place of its icon; the pin sits at the far right. */
-div#post-list {
-  .card .card-body .card-title-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.55rem;
-  }
-
-  .card .card-body .card-title-badges {
-    justify-content: flex-start;
-    gap: 0.4rem;
-
-    .content-type-badge,
-    .home-case-badge,
-    .home-pin-badge {
-      padding: 0.3rem 0.65rem;
-      font-size: 0.72rem;
-    }
-
-    .content-type-badge {
-      gap: 0.4rem;
-      border-color: transparent;
-      color: var(--type-color, var(--text-color));
-
-      i {
-        display: none;
-      }
-
-      &::before {
-        content: '';
-        width: 0.4rem;
-        height: 0.4rem;
-        border-radius: 50%;
-        background: currentcolor;
-      }
-    }
-
-    .home-case-badge {
-      border-color: transparent;
-
-      i {
-        display: none;
-      }
-    }
-
-    .home-pin-badge {
-      margin-left: auto;
-      padding-right: 0;
-      border: 0;
-      background: none;
-    }
-  }
-
-  .card .card-body .card-title {
-    font-size: 1.15rem;
-    line-height: 1.45;
-    letter-spacing: -0.01em;
-  }
-
-  .card .card-body .post-meta {
-    .post-meta-item > i {
-      display: none;
-    }
-
-    .post-meta-item time {
-      font-family: var(--bs-font-monospace, monospace);
-      font-size: 0.78rem;
-    }
-  }
-}
-
-#post-list .card-wrapper.is-pinned .post-preview {
-  outline-color: color-mix(in srgb, var(--link-color) 70%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--link-color) 14%, transparent);
 }
 
 /* TIL posts on the feed: one box of single-line rows per run of TILs, with a
@@ -1519,26 +943,293 @@ nav.home-paginator .pagination {
   }
 }
 
-/* In the pill the type menu's chevron follows its value instead of sitting at
-   a fixed right offset, where it ran over a short value like "전체". */
-section#home-discovery-filter .post-filter-select-wrap i {
-  position: static;
-  margin-left: 0.35rem;
-  transform: none;
-  color: var(--text-muted-color);
+/* Home filter: a search field, the content types as one row of chips, and
+   the other filters as pills that open a small menu (see home.html). */
+#home-discovery-filter {
+  margin-top: 1.25rem;
 }
 
-/* No keyboard, no shortcut hint. */
-@media (hover: none) {
-  .post-filter-shortcut {
+.home-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 1.1rem;
+  background: var(--card-bg);
+}
+
+.home-filter-search {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0 0.75rem 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.8rem;
+  background: var(--filter-input-bg);
+  color: var(--text-muted-color);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: color-mix(in srgb, var(--link-color) 55%, transparent);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--link-color) 14%, transparent);
+  }
+
+  > i {
+    font-size: 0.85rem;
+  }
+
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    background: none;
+    color: var(--text-color);
+    font-size: 0.92rem;
+    outline: none;
+  }
+
+  kbd {
+    padding: 0.05rem 0.45rem;
+    border: 1px solid var(--btn-border-color);
+    border-radius: 0.35rem;
+    background: none;
+    color: var(--text-muted-color);
+    font-family: var(--bs-font-monospace, monospace);
+    font-size: 0.72rem;
+    box-shadow: none;
+  }
+}
+
+.home-filter-native {
+  display: none;
+}
+
+/* content types: single-choice chips, each with its type colour */
+.home-filter-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.home-filter-type {
+  --chip-color: var(--type-color, var(--link-color));
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--chip-color) 55%, transparent);
+    color: var(--text-color);
+  }
+
+  &[aria-checked='true'] {
+    border-color: color-mix(in srgb, var(--chip-color) 60%, transparent);
+    background: color-mix(in srgb, var(--chip-color) 16%, transparent);
+    color: var(--chip-color);
+  }
+}
+
+.home-filter-type-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--chip-color);
+}
+
+/* kind, topic, year and tag: pills that open a menu or the tag dialog */
+.home-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--btn-border-color);
+}
+
+.home-filter-menu-wrap {
+  position: relative;
+}
+
+.home-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 2.15rem;
+  padding: 0 0.75rem 0 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  background: var(--filter-input-bg);
+  color: var(--text-color);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  &:hover,
+  &[aria-expanded='true'] {
+    border-color: var(--btn-border-color);
+  }
+
+  > i {
+    color: var(--text-muted-color);
+    font-size: 0.62rem;
+    transition: transform 0.2s ease;
+  }
+
+  &[aria-expanded='true'] > i {
+    transform: rotate(180deg);
+  }
+
+  &.is-active {
+    border-color: color-mix(in srgb, var(--link-color) 50%, transparent);
+    background: color-mix(in srgb, var(--link-color) 14%, transparent);
+
+    .home-filter-pill-value {
+      color: var(--link-color);
+    }
+  }
+}
+
+.home-filter-pill-label {
+  color: var(--text-muted-color);
+  font-size: 0.76rem;
+}
+
+.home-filter-pill-value {
+  max-width: 10rem;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.home-filter-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 11rem;
+  max-height: 18rem;
+  overflow-y: auto;
+  padding: 0.35rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.85rem;
+  background: var(--card-bg);
+  box-shadow: 0 18px 40px -12px rgba(10, 11, 16, 0.45);
+
+  &.is-wide {
+    min-width: 15rem;
+  }
+
+  &[hidden] {
     display: none;
   }
 }
 
-/* Phones: cap the native selects so two pills share a line. */
+.home-filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: none;
+  color: var(--text-color);
+  font-size: 0.84rem;
+  text-align: left;
+
+  > i {
+    width: 0.8rem;
+    color: var(--link-color);
+    font-size: 0.7rem;
+    visibility: hidden;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in srgb, var(--link-color) 10%, transparent);
+    outline: none;
+  }
+
+  &[aria-selected='true'] {
+    color: var(--link-color);
+    font-weight: 600;
+
+    > i {
+      visibility: visible;
+    }
+  }
+}
+
+.home-filter-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  padding: 0.3rem 0.4rem;
+  border: 0;
+  background: none;
+  color: var(--text-muted-color);
+  font-size: 0.8rem;
+
+  &:hover {
+    color: var(--link-color);
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+@media (hover: none) {
+  .home-filter-search kbd {
+    display: none;
+  }
+}
+
+/* Phones: the type chips scroll sideways on one line. */
 @media all and (max-width: 576px) {
-  section#home-discovery-filter .post-filter-plain .post-filter-plain-select {
-    max-width: 7.5rem;
-    text-overflow: ellipsis;
+  .home-filter {
+    padding: 0.85rem;
+  }
+
+  .home-filter-types {
+    flex-wrap: nowrap;
+    margin: 0 -0.85rem;
+    padding: 0 0.85rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .home-filter-menu.is-wide {
+    min-width: 13rem;
   }
 }

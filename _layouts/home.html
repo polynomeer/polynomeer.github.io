@@ -52,139 +52,98 @@ refactor: true
 
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
 
-{% if paginator.page == 1 %}
-  {% include home-intro.html lang=lang %}
-{% endif %}
-
 <section id="home-discovery-filter" class="px-xl-1">
   {%- comment -%}
-    Search and the filter pills stay in view: one panel above the feed, so a
-    narrowed feed always shows what narrowed it.
+    Search on top, the content types as one row of chips, then the other
+    filters as pills that open a small menu. The native selects stay in the
+    page, hidden, and hold the state: the chips and menus only set them and
+    fire `change`, so the filter script reads one source either way.
   {%- endcomment -%}
-  <div class="post-filter-details">
-    <div class="post-status-filter-bar">
-    <div class="post-filter-row post-filter-row-inline">
-      <label class="post-filter-field post-filter-field-search">
-        <i class="fas fa-magnifying-glass post-filter-search-icon" aria-hidden="true"></i>
-        <input
-          id="home-post-search"
-          type="search"
-          class="post-filter-input"
-          data-i18n-aria-label="home.search_filter_label"
-          data-i18n-placeholder="home.search_filter_placeholder"
-          placeholder="{{ site.data.locales[lang].home.search_filter_placeholder }}..."
-          aria-label="{{ site.data.locales[lang].home.search_filter_label }}"
-        >
-        <kbd class="post-filter-shortcut" title="{{ site.data.locales[lang].home.search_shortcut | escape }}">/</kbd>
-      </label>
+  <div class="home-filter">
+    <label class="home-filter-search">
+      <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+      <input
+        id="home-post-search"
+        type="search"
+        data-i18n-aria-label="home.search_filter_label"
+        data-i18n-placeholder="home.search_filter_placeholder"
+        placeholder="{{ site.data.locales[lang].home.search_filter_placeholder }}..."
+        aria-label="{{ site.data.locales[lang].home.search_filter_label }}"
+      >
+      <kbd title="{{ site.data.locales[lang].home.search_shortcut | escape }}">/</kbd>
+    </label>
 
-      <div class="post-filter-field post-filter-field-compact post-filter-field-select">
-        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.type_filter_label }}</span>
-        <div class="post-filter-select-wrap">
-          <select
-            id="home-type-filter"
-            class="post-filter-select-native"
-            data-i18n-aria-label="home.type_filter_label"
-            aria-label="{{ site.data.locales[lang].home.type_filter_label }}"
-          >
-            <option value="all" data-i18n="home.filter_all">{{ site.data.locales[lang].home.filter_all }}</option>
-            {% for type_page in sorted_content_types %}
-              {% if type_page.content_type_id == 'problemsolving' %}
-                {% continue %}
-              {% endif %}
-              {% assign content_type_id = type_page.content_type_id %}
-              {% assign content_type = site.data.content_types[content_type_id] %}
-              {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-              <option value="{{ content_type_id }}">{{ content_type_label }}</option>
-            {% endfor %}
+    <select id="home-type-filter" class="home-filter-native" hidden aria-hidden="true" tabindex="-1">
+      <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
+      {% for type_page in sorted_content_types %}
+        {% if type_page.content_type_id == 'problemsolving' %}{% continue %}{% endif %}
+        {% assign content_type_id = type_page.content_type_id %}
+        {% assign content_type = site.data.content_types[content_type_id] %}
+        <option value="{{ content_type_id }}">{{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id }}</option>
+      {% endfor %}
+    </select>
+    <div class="home-filter-types" role="radiogroup" aria-label="{{ site.data.locales[lang].home.type_filter_label }}">
+      <button type="button" class="home-filter-type" role="radio" aria-checked="true" data-type-chip="all">{{ site.data.locales[lang].home.filter_all }}</button>
+      {% for type_page in sorted_content_types %}
+        {% if type_page.content_type_id == 'problemsolving' %}{% continue %}{% endif %}
+        {% assign content_type_id = type_page.content_type_id %}
+        {% assign content_type = site.data.content_types[content_type_id] %}
+        <button type="button" class="home-filter-type" role="radio" aria-checked="false" data-type-chip="{{ content_type_id }}" style="--type-color: var(--type-{{ content_type_id }})">
+          <span class="home-filter-type-dot" aria-hidden="true"></span>
+          {{- content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id -}}
+        </button>
+      {% endfor %}
+    </div>
+
+    <div class="home-filter-row">
+      {% assign filter_topics = site.topics | sort: 'order' %}
+      {% assign filter_years = '' | split: '' %}
+      {% for post in site.posts %}
+        {% assign post_year = post.date | date: '%Y' %}
+        {% unless filter_years contains post_year %}{% assign filter_years = filter_years | push: post_year %}{% endunless %}
+      {% endfor %}
+      {% assign filter_years = filter_years | sort | reverse %}
+      {% assign menu_ids = 'kind,topic,year' | split: ',' %}
+      {% for menu_id in menu_ids %}
+        {% capture menu_label_key %}{{ menu_id }}_filter_label{% endcapture %}
+        <div class="home-filter-menu-wrap" data-filter-menu>
+          <select id="home-{{ menu_id }}-filter" class="home-filter-native" hidden aria-hidden="true" tabindex="-1">
+            <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
+            {% case menu_id %}
+              {% when 'kind' %}
+                <option value="personal">{{ site.data.locales[lang].home.project_study_mark }}</option>
+                <option value="career">{{ site.data.locales[lang].home.case_study_mark }}</option>
+              {% when 'topic' %}
+                {% for topic in filter_topics %}<option value="{{ topic.topic_id }}">{{ topic.title }}</option>{% endfor %}
+              {% when 'year' %}
+                {% for year in filter_years %}<option value="{{ year }}">{{ year }}</option>{% endfor %}
+            {% endcase %}
           </select>
-          <button
-            id="home-type-filter-trigger"
-            type="button"
-            class="post-filter-trigger post-filter-trigger-select"
-            aria-haspopup="listbox"
-            aria-expanded="false"
-            aria-controls="home-type-filter-menu"
-          >
-            <span id="home-type-filter-value" class="post-filter-trigger-value">{{ site.data.locales[lang].home.filter_all }}</span>
+          <button type="button" class="home-filter-pill" aria-haspopup="listbox" aria-expanded="false">
+            <span class="home-filter-pill-label">{{ site.data.locales[lang].home[menu_label_key] }}</span>
+            <span class="home-filter-pill-value">{{ site.data.locales[lang].home.filter_all }}</span>
             <i class="fas fa-chevron-down" aria-hidden="true"></i>
           </button>
-          <div id="home-type-filter-menu" class="type-filter-menu" role="listbox" hidden>
-            <button type="button" class="type-filter-option" data-type-option="all" role="option" aria-selected="true">
-              <span class="type-filter-option-check"><i class="fas fa-check"></i></span>
-              <span>{{ site.data.locales[lang].home.filter_all }}</span>
-            </button>
-            {% for type_page in sorted_content_types %}
-              {% if type_page.content_type_id == 'problemsolving' %}
-                {% continue %}
-              {% endif %}
-              {% assign content_type_id = type_page.content_type_id %}
-              {% assign content_type = site.data.content_types[content_type_id] %}
-              {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-              <button type="button" class="type-filter-option" data-type-option="{{ content_type_id }}" role="option" aria-selected="false">
-                <span class="type-filter-option-check"><i class="fas fa-check"></i></span>
-                <span>{{ content_type_label }}</span>
-              </button>
-            {% endfor %}
-          </div>
+          <div class="home-filter-menu{% if menu_id == 'topic' %} is-wide{% endif %}" role="listbox" aria-label="{{ site.data.locales[lang].home[menu_label_key] }}" hidden></div>
         </div>
-      </div>
+      {% endfor %}
 
-      {%- comment -%}
-        Kind (personal project / case study), topic hub and year. Plain native
-        selects: few options, and the browser's own menu is the accessible one.
-      {%- endcomment -%}
-      <label class="post-filter-field post-filter-field-compact post-filter-plain">
-        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.kind_filter_label }}</span>
-        <select id="home-kind-filter" class="post-filter-plain-select">
-          <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
-          <option value="personal">{{ site.data.locales[lang].home.project_study_mark }}</option>
-          <option value="career">{{ site.data.locales[lang].home.case_study_mark }}</option>
-        </select>
-      </label>
-      <label class="post-filter-field post-filter-field-compact post-filter-plain">
-        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.topic_filter_label }}</span>
-        <select id="home-topic-filter" class="post-filter-plain-select">
-          <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
-          {% assign filter_topics = site.topics | sort: 'order' %}
-          {% for topic in filter_topics %}
-            <option value="{{ topic.topic_id }}">{{ topic.title }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      <label class="post-filter-field post-filter-field-compact post-filter-plain">
-        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.year_filter_label }}</span>
-        <select id="home-year-filter" class="post-filter-plain-select">
-          <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
-          {% assign filter_years = '' | split: '' %}
-          {% for post in site.posts %}
-            {% assign post_year = post.date | date: '%Y' %}
-            {% unless filter_years contains post_year %}{% assign filter_years = filter_years | push: post_year %}{% endunless %}
-          {% endfor %}
-          {% assign filter_years = filter_years | sort | reverse %}
-          {% for year in filter_years %}
-            <option value="{{ year }}">{{ year }}</option>
-          {% endfor %}
-        </select>
-      </label>
+      <button
+        id="home-tag-filter-trigger"
+        type="button"
+        class="home-filter-pill"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="home-tag-filter-dialog"
+        aria-label="{{ site.data.locales[lang].home.tag_filter_trigger }}"
+      >
+        <span class="home-filter-pill-label">{{ site.data.locales[lang].home.tag_filter_label }}</span>
+        <span id="home-tag-filter-value" class="home-filter-pill-value">{{ site.data.locales[lang].home.filter_all }}</span>
+        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+      </button>
 
-      <div class="post-filter-field post-filter-field-tag">
-        <button
-          id="home-tag-filter-trigger"
-          type="button"
-          class="post-filter-trigger"
-          aria-haspopup="dialog"
-          aria-expanded="false"
-          aria-controls="home-tag-filter-dialog"
-          aria-label="{{ site.data.locales[lang].home.tag_filter_trigger }}"
-        >
-          <span class="post-filter-trigger-label">{{ site.data.locales[lang].home.tag_filter_label }}</span>
-          <span id="home-tag-filter-value" class="post-filter-trigger-value">{{ site.data.locales[lang].home.filter_all }}</span>
-          <i class="fas fa-chevron-down" aria-hidden="true"></i>
-        </button>
-      </div>
-
-      <button id="home-filter-reset" type="button" class="post-filter-reset" hidden>
+      <button id="home-filter-reset" type="button" class="home-filter-reset" hidden>
+        <i class="fas fa-xmark" aria-hidden="true"></i>
         {{ site.data.locales[lang].home.filter_reset }}
       </button>
     </div>
@@ -234,7 +193,6 @@ refactor: true
         <div id="home-tag-filter-all" class="tag-filter-chip-grid tag-filter-chip-grid-all"></div>
         <p id="home-tag-filter-empty" class="tag-filter-empty" hidden>{{ site.data.locales[lang].home.tag_filter_empty }}</p>
       </section>
-    </div>
     </div>
   </div>
 </section>
@@ -297,7 +255,7 @@ refactor: true
     {% assign card_kind = card_kind | strip %}
     {% if card_kind == '' %}{% assign card_kind = nil %}{% endif %}
     <article
-      class="card-wrapper card{% if card_kind %} is-case-study is-case-{{ card_kind }}{% endif %}{% if post.pin %} is-pinned{% endif %}"
+      class="card-wrapper card{% if card_kind %} is-case-study is-case-{{ card_kind }}{% endif %}"
       data-post-url="{{ post.url | relative_url }}"
       data-post-type="{{ post_content_type_id }}"
       data-post-search="{{ post_search_blob | escape }}"
@@ -330,9 +288,11 @@ refactor: true
 
         <div class="col-md-{{ card_body_col }}">
           <div class="card-body d-flex flex-column">
-            <div class="card-title-row mb-2">
+            <div class="card-title-row my-2 mt-md-0">
+              <h2 class="card-title">
+                <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
+              </h2>
               <div class="card-title-badges">
-                {% include content-type-badge.html post=post lang=lang %}
                 {% if card_kind == 'personal' %}
                   <span class="home-case-badge is-personal">
                     <i class="fas fa-flask fa-fw"></i>
@@ -350,10 +310,8 @@ refactor: true
                     <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
                   </span>
                 {% endif %}
+                {% include content-type-badge.html post=post lang=lang %}
               </div>
-              <h2 class="card-title">
-                <a href="{{ post.url | relative_url }}" class="post-card-title-link">{{ post.title }}</a>
-              </h2>
             </div>
 
             <div class="card-text content mt-0 mb-3">
@@ -392,13 +350,15 @@ refactor: true
 
                   {% if post.series %}
                     {% assign card_series_page = site.series_pages | where: 'series_id', post.series | first %}
-                    {% assign card_series_title = card_series_page.title | default: post.series_title | default: post.series %}
-                    {% capture card_series_label %}{{ site.data.locales[lang].home.series_mark }}{% if post.series_order %} · {{ site.data.locales[lang].home.series_part | replace: ':N', post.series_order }}{% endif %}{% endcapture %}
                     <span class="post-meta-item post-meta-series">
+                      <i class="fas fa-list-ol fa-fw"></i>
                       {% if card_series_page %}
-                        <a href="{{ card_series_page.url | relative_url }}" title="{{ card_series_title | escape }}">{{ card_series_label }}</a>
+                        <a href="{{ card_series_page.url | relative_url }}">{{ card_series_page.title }}</a>
                       {% else %}
-                        <span title="{{ card_series_title | escape }}">{{ card_series_label }}</span>
+                        <span>{{ post.series_title | default: post.series }}</span>
+                      {% endif %}
+                      {% if post.series_order %}
+                        <span class="post-meta-series-order">{{ site.data.locales[lang].home.series_part | replace: ':N', post.series_order }}</span>
                       {% endif %}
                     </span>
                   {% endif %}
@@ -444,10 +404,14 @@ refactor: true
     const yearSelect = document.getElementById('home-year-filter');
     const extraSelects = [kindSelect, topicSelect, yearSelect].filter(Boolean);
     const selectedLabel = (select) => select.options[select.selectedIndex]?.textContent.trim() || '';
-    const typeFilterTrigger = document.getElementById('home-type-filter-trigger');
-    const typeFilterValue = document.getElementById('home-type-filter-value');
-    const typeFilterMenu = document.getElementById('home-type-filter-menu');
-    const typeFilterOptions = Array.from(document.querySelectorAll('[data-type-option]'));
+    const typeChips = Array.from(document.querySelectorAll('[data-type-chip]'));
+    const filterMenus = Array.from(document.querySelectorAll('[data-filter-menu]')).map((wrap) => ({
+      wrap,
+      select: wrap.querySelector('select'),
+      pill: wrap.querySelector('.home-filter-pill'),
+      value: wrap.querySelector('.home-filter-pill-value'),
+      menu: wrap.querySelector('.home-filter-menu')
+    }));
     const tagFilterTrigger = document.getElementById('home-tag-filter-trigger');
     const tagFilterValue = document.getElementById('home-tag-filter-value');
     const tagFilterDialog = document.getElementById('home-tag-filter-dialog');
@@ -511,14 +475,10 @@ refactor: true
     const updateResetButton = () => {
       const active = [];
 
-      // Mark each filter pill that narrows the feed, so the active ones read at a glance.
-      typeSelect?.closest('.post-filter-field')?.classList.toggle('is-active', typeSelect.value !== 'all');
-      extraSelects.forEach((select) => {
-        select.closest('.post-filter-field')?.classList.toggle('is-active', select.value !== 'all');
-      });
+      syncFilterControls();
 
-      if (typeSelect && typeSelect.value !== 'all' && typeFilterValue) {
-        active.push(typeFilterValue.textContent.trim());
+      if (typeSelect && typeSelect.value !== 'all') {
+        active.push(selectedLabel(typeSelect));
       }
 
       extraSelects.forEach((select) => {
@@ -550,30 +510,42 @@ refactor: true
       }
     };
 
-    const closeTypeMenu = () => {
-      if (!typeFilterMenu || !typeFilterTrigger || typeFilterMenu.hidden) return;
-      typeFilterMenu.hidden = true;
-      typeFilterTrigger.setAttribute('aria-expanded', 'false');
-      typeFilterTrigger.classList.remove('is-open');
-    };
-
-    const updateTypeTrigger = () => {
-      if (!typeSelect || !typeFilterValue) return;
-      const selectedOption = typeSelect.options[typeSelect.selectedIndex];
-      typeFilterValue.textContent = selectedOption ? selectedOption.textContent.trim() : filterAllLabel;
-
-      typeFilterOptions.forEach((option) => {
-        const isSelected = option.dataset.typeOption === typeSelect.value;
-        option.classList.toggle('is-selected', isSelected);
-        option.setAttribute('aria-selected', String(isSelected));
+    // The chips and menu pills only mirror the hidden selects, which hold the state.
+    const syncFilterControls = () => {
+      typeChips.forEach((chip) => {
+        chip.setAttribute('aria-checked', String(chip.dataset.typeChip === (typeSelect?.value || 'all')));
+      });
+      filterMenus.forEach(({ select, pill, value, menu }) => {
+        if (!select) return;
+        value.textContent = selectedLabel(select);
+        pill.classList.toggle('is-active', select.value !== 'all');
+        menu.querySelectorAll('[data-value]').forEach((option) => {
+          option.setAttribute('aria-selected', String(option.dataset.value === select.value));
+        });
       });
     };
 
-    const openTypeMenu = () => {
-      if (!typeFilterMenu || !typeFilterTrigger) return;
-      typeFilterMenu.hidden = false;
-      typeFilterTrigger.setAttribute('aria-expanded', 'true');
-      typeFilterTrigger.classList.add('is-open');
+    const closeMenus = ({ except = null, restoreFocus = false } = {}) => {
+      filterMenus.forEach((entry) => {
+        if (entry === except || entry.menu.hidden) return;
+        entry.menu.hidden = true;
+        entry.pill.setAttribute('aria-expanded', 'false');
+        if (restoreFocus) entry.pill.focus();
+      });
+    };
+
+    const openMenu = (entry) => {
+      closeMenus({ except: entry });
+      if (!entry.menu.childElementCount) {
+        entry.menu.innerHTML = Array.from(entry.select.options).map((option) => `
+          <button type="button" role="option" class="home-filter-option" data-value="${escapeAttribute(option.value)}" aria-selected="false">
+            <i class="fas fa-check" aria-hidden="true"></i><span>${escapeHtml(option.textContent.trim())}</span>
+          </button>`).join('');
+      }
+      syncFilterControls();
+      entry.menu.hidden = false;
+      entry.pill.setAttribute('aria-expanded', 'true');
+      (entry.menu.querySelector('[aria-selected="true"]') || entry.menu.querySelector('[data-value]'))?.focus();
     };
 
     const updateTagTrigger = () => {
@@ -693,20 +665,20 @@ refactor: true
       ` : '';
 
       return `
-        <article class="card-wrapper card${post.pin ? ' is-pinned' : ''}" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}" data-post-tags="${escapeAttribute((post.tags || []).join(','))}">
+        <article class="card-wrapper card" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}" data-post-tags="${escapeAttribute((post.tags || []).join(','))}">
           <div class="post-preview row g-0 flex-md-row-reverse">
             ${renderImage(post)}
             <div class="col-md-${cardBodyCol}">
               <div class="card-body d-flex flex-column">
-                <div class="card-title-row mb-2">
-                  <div class="card-title-badges">
-                    ${renderTypeBadge(post)}
-                    ${kindBadge}
-                    ${pinBadge}
-                  </div>
+                <div class="card-title-row my-2 mt-md-0">
                   <h2 class="card-title">
                     <a href="${escapeHtml(post.url)}" class="post-card-title-link">${escapeHtml(post.title)}</a>
                   </h2>
+                  <div class="card-title-badges">
+                    ${kindBadge}
+                    ${pinBadge}
+                    ${renderTypeBadge(post)}
+                  </div>
                 </div>
 
                 <div class="card-text content mt-0 mb-3">
@@ -975,27 +947,39 @@ refactor: true
       .filter(Boolean)
       .forEach((control) => {
         control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', () => {
-          if (control === typeSelect) {
-            updateTypeTrigger();
-          }
           applyFilter({ resetPage: true });
         });
       });
 
-    typeFilterTrigger?.addEventListener('click', () => {
-      if (typeFilterMenu?.hidden) {
-        openTypeMenu();
-      } else {
-        closeTypeMenu();
-      }
+    typeChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        if (!typeSelect || typeSelect.value === chip.dataset.typeChip) return;
+        typeSelect.value = chip.dataset.typeChip;
+        typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      });
     });
 
-    typeFilterMenu?.addEventListener('click', (event) => {
-      const option = event.target.closest('[data-type-option]');
-      if (!option || !typeSelect) return;
-      typeSelect.value = option.dataset.typeOption || 'all';
-      typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-      closeTypeMenu();
+    filterMenus.forEach((entry) => {
+      entry.pill.addEventListener('click', () => {
+        if (entry.menu.hidden) openMenu(entry);
+        else closeMenus();
+      });
+      entry.menu.addEventListener('click', (event) => {
+        const option = event.target.closest('[data-value]');
+        if (!option) return;
+        closeMenus({ restoreFocus: true });
+        if (entry.select.value === option.dataset.value) return;
+        entry.select.value = option.dataset.value;
+        entry.select.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      entry.menu.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        const options = Array.from(entry.menu.querySelectorAll('[data-value]'));
+        const index = options.indexOf(document.activeElement);
+        const next = event.key === 'ArrowDown' ? Math.min(index + 1, options.length - 1) : Math.max(index - 1, 0);
+        options[next]?.focus();
+      });
     });
 
     tagFilterTrigger?.addEventListener('click', () => {
@@ -1037,10 +1021,9 @@ refactor: true
       if (searchInput) searchInput.value = '';
       if (typeSelect) typeSelect.value = 'all';
       extraSelects.forEach((select) => { select.value = 'all'; });
-      updateTypeTrigger();
       selectedTag = '';
       updateTagTrigger();
-      closeTypeMenu();
+      closeMenus();
       closeTagDialog({ restoreFocus: false });
       applyFilter({ resetPage: true });
     });
@@ -1053,15 +1036,14 @@ refactor: true
         return;
       }
       if (event.key === 'Escape') {
-        closeTypeMenu();
+        closeMenus({ restoreFocus: true });
         closeTagDialog();
       }
     });
 
     document.addEventListener('click', (event) => {
-      if (!typeFilterMenu || !typeFilterTrigger || typeFilterMenu.hidden) return;
-      if (event.target.closest('.post-filter-select-wrap')) return;
-      closeTypeMenu();
+      if (event.target.closest('[data-filter-menu]')) return;
+      closeMenus();
     });
 
     filteredPagination.addEventListener('click', (event) => {
@@ -1074,7 +1056,6 @@ refactor: true
 
     bindCardNavigation(staticPostList);
     bindCardNavigation(filteredPostList);
-    updateTypeTrigger();
     updateTagTrigger();
     updateResetButton();
     applyFilter();

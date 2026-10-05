@@ -285,14 +285,11 @@ home:
   case_study_mark: "실무 사례"
   project_study_mark: "개인 프로젝트"
   series_part: ":N편"
-  series_mark: 시리즈
   feed_heading: 최근 글
   archive_link: 아카이브 전체 ›
   til_count: ":N편"
   til_all: TIL 전체 ›
   search_shortcut: "/ 키로 검색창으로 이동"
-  intro_about: 소개 보기
-  intro_start: 처음이라면
   hero_label: 소개
   browse_archive: 아카이브에서 전체 글 보기
   search_filter_label: 검색
