@@ -46,7 +46,7 @@ ZGC는 [최대 정지 시간이 1밀리초 미만이고 힙 크기와 무관하�
 
 시그널은 커널이 프로세스에 보내는 짧은 알림이다. 대부분의 시그널은 프로세스가 핸들러를 달아 가로채거나 무시할 수 있다. `SIGSTOP`은 다르다. [signal(7)](https://man7.org/linux/man-pages/man7/signal.7.html)은 `SIGKILL`과 `SIGSTOP`은 잡거나, 막거나, 무시할 수 없다고 적는다. 기본 동작은 프로세스 정지이고, `SIGCONT`를 받아야 다시 돈다. 터미널에서 Ctrl+Z로 보내는 `SIGTSTP`과 달리 프로세스가 거부할 방법이 없다.
 
-[ParityPay 10편](/posts/parity-pay-lock-lease/)은 이 성질을 실험에 썼다. `SIGSTOP`으로 프로세스를 400ms씩 35회 멈추자, lease를 주기적으로 연장하는 Watchdog 스레드도 같이 멈췄고 락 소유가 131쌍 겹쳤다. 프로세스 안의 어떤 스레드도 프로세스 전체의 멈춤을 막지 못한다.
+나중에 [ParityPay 10편](/posts/parity-pay-lock-lease/)에서 이 성질을 실험에 썼다. `SIGSTOP`으로 프로세스를 400ms씩 35회 멈추자, lease를 주기적으로 연장하는 Watchdog 스레드도 같이 멈췄고 락 소유가 131쌍 겹쳤다. 프로세스 안의 어떤 스레드도 프로세스 전체의 멈춤을 막지 못한다.
 
 ## 하이퍼바이저: VM 정지
 

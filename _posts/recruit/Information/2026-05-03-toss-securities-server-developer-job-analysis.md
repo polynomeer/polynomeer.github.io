@@ -6,7 +6,7 @@ tags: [Recruit, Career, Job Posting, Backend, Consistency]
 series: toss-securities
 series_title: 토스증권 공개 자료로 읽는 서버 아키텍처
 series_order: 1
-series_description: 토스증권 채용공고, 서버 챕터 Q&A, SLASH 22·23 발표, Toss Tech와 AWS 기술 글을 1차 자료로 삼아 시세·주문 경로, CQRS 읽기 모델과 검증기, Kafka 데이터센터 이중화를 리뷰하고 ParityPay 실측과 맞대어 본 시리즈.
+series_description: 토스증권 채용공고, 서버 챕터 Q&A, SLASH 22·23 발표, Toss Tech와 AWS 기술 글을 1차 자료로 삼아 시세·주문 경로, CQRS 읽기 모델과 검증기, Kafka 데이터센터 이중화를 리뷰하고, 이후 만든 ParityPay의 실측과 맞대어 본 시리즈.
 mermaid: true
 ---
 
@@ -61,7 +61,7 @@ Product 서버 개발자가 닿을 수 있는 영역은 계좌 정보와 실시�
 
 서버 챕터 Q&A에 따르면 원본 데이터는 Oracle에서 관리하고, 조회 트래픽은 별도의 읽기 전용 모델로 분리하며, MySQL 계열 수평 확장에 Vitess(MySQL 앞에 두는 샤딩 게이트웨이, [샤딩](/posts/partitioning-and-sharding/))를 쓴다. 공개 당시 API [p95](/posts/percentile-statistics/)는 약 40ms, 실시간 일관성이 필요한 데이터는 대부분 10ms 이내에 갱신됐다. 여기서 눈여겨볼 것은 성능 수치가 아니라 그 다음 문장이다. 원본과 read view 사이에 실시간 검증기를 운영하고, 실시간 검증이 놓친 잔차는 일 배치로 다시 대사한다.
 
-[CQRS](/posts/event-sourcing-and-cqrs/)를 성능 패턴으로만 쓰는 것이 아니라, eventual consistency(쓰기 직후에는 읽기 모델이 잠시 뒤처질 수 있는 일관성)가 만드는 위험을 온라인 검증과 배치 [대사](/posts/parity-pay-reconciliation/) 두 겹으로 잡는다는 이야기로 나는 읽는다. 이 구조는 [토스증권의 CQRS·검증기와 ParityPay](/posts/toss-securities-cqrs-validator-vs-parity-pay/)에서 따로 비교했다. 이 구조를 놓고 나올 만한 질문은 다음과 같다.
+[CQRS](/posts/event-sourcing-and-cqrs/)를 성능 패턴으로만 쓰는 것이 아니라, eventual consistency(쓰기 직후에는 읽기 모델이 잠시 뒤처질 수 있는 일관성)가 만드는 위험을 온라인 검증과 배치 [대사](/posts/parity-pay-reconciliation/) 두 겹으로 잡는다는 이야기로 나는 읽는다. 이 구조는 이후 [토스증권의 CQRS·검증기와 ParityPay](/posts/toss-securities-cqrs-validator-vs-parity-pay/)에서 따로 비교했다. 이 구조를 놓고 나올 만한 질문은 다음과 같다.
 
 - read model 지연을 사용자에게 어떻게 표현할 것인가
 - [CDC](/posts/cdc-principles-and-limits/) 이벤트가 중복·역전·유실되면 어떻게 복구할 것인가

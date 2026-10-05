@@ -112,7 +112,7 @@ PostgreSQL의 `synchronous_commit=off`가 특이하다. 유실은 가능하지�
 2. 리두 로그 크기를 줄여 체크포인트를 강제로 자주 일으키고 처리량 저하를 관찰한다.
 3. 체크포인트 직후의 WAL 생성량 급증(`full_page_writes`)을 실제로 본다.
 
-[ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잠금 보유 17ms 중 마지막 0.761ms가 "COMMIT — 잠금 해제"였다. 그 0.761ms 안에서 일어나는 일이 이 글의 내용이고, 설정에 따라 그 값이 달라진다.
+이후 [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잰 잠금 보유 17ms 중 마지막 0.761ms가 "COMMIT — 잠금 해제"였다. 그 0.761ms 안에서 일어나는 일이 이 글의 내용이고, 설정에 따라 그 값이 달라진다.
 
 ## 정리
 

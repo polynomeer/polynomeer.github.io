@@ -71,7 +71,7 @@ Kafka 자체가 이 기능을 쓴다. `__consumer_offsets`가 컴팩션 토픽�
 
 ## 실무와의 접점
 
-[ParityPay 5편](/posts/parity-pay-outbox/)의 Outbox 테이블은 DB에 만든 로그이고, 그 글의 한계에 "테이블 정리를 하지 않았다"를 적었다. Kafka의 두 정책이 그 문제의 두 답에 해당한다. 시간 기준으로 지울 것인가(`delete`), 키별 최신만 남길 것인가(`compact`). Outbox는 발행 의도의 이력이므로 전자가 맞고, 상태 스냅샷 테이블이라면 후자의 사고방식이 맞다.
+이후 [ParityPay 5편](/posts/parity-pay-outbox/)에서 쓴 Outbox 테이블은 DB에 만든 로그이고, 그 글의 한계에 "테이블 정리를 하지 않았다"를 적었다. Kafka의 두 정책이 그 문제의 두 답에 해당한다. 시간 기준으로 지울 것인가(`delete`), 키별 최신만 남길 것인가(`compact`). Outbox는 발행 의도의 이력이므로 전자가 맞고, 상태 스냅샷 테이블이라면 후자의 사고방식이 맞다.
 
 ## 정리
 

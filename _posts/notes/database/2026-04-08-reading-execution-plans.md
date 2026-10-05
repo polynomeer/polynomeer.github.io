@@ -88,7 +88,7 @@ Nested Loop  (cost=0.43..8.48 rows=1 width=64) (actual time=0.05..0.06 rows=1 lo
 
 ## 실무와의 접점
 
-[벌크 삽입 성능](/posts/bulk-insert-performacne/)과 [키 생성 병목](/posts/sequence-part1/)에서 다룬 것은 쓰기 경로였다. 읽기 경로도 순서는 같다. 추측으로 인덱스를 추가하기 전에 계획을 읽고, 계획을 믿기 전에 추정과 실제를 비교한다. [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잠금 보유 17ms 중 DB가 실제로 일한 시간은 2.31ms였다. 그렇게 숫자를 나눠 보기 전까지는 어디를 고쳐야 할지 알 수 없다.
+[벌크 삽입 성능](/posts/bulk-insert-performacne/)과 [키 생성 병목](/posts/sequence-part1/)에서 다룬 것은 쓰기 경로였다. 읽기 경로도 순서는 같다. 추측으로 인덱스를 추가하기 전에 계획을 읽고, 계획을 믿기 전에 추정과 실제를 비교한다. 나중에 [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 재 보니 잠금 보유 17ms 중 DB가 실제로 일한 시간은 2.31ms였다. 그렇게 숫자를 나눠 보기 전까지는 어디를 고쳐야 할지 알 수 없다.
 
 ## 정리
 

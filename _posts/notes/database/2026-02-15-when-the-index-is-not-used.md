@@ -102,7 +102,7 @@ P(country='kr') = 2/8      (kr에 도시가 둘)
 5. **AND로 묶인 컬럼들이 상관있는지 본다.** 있으면 확장 통계를 검토한다.
 6. **추정이 크게 틀린데 지금은 빠른 곳을 기록해 둔다.** 뒤집힐 후보다.
 
-[키 생성 병목 시리즈](/posts/sequence-part1/)와 [대량 배치](/posts/bulk-insert-performacne/)에서 다룬 것은 쓰기 경로였다. 읽기 경로에서도 순서는 같다. 추측으로 인덱스를 추가하기 전에 계획을 읽고, 계획을 믿기 전에 추정과 실제를 비교한다. [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잠금 보유 17ms를 DB 실행 2.31ms와 대기 14.7ms로 나눠 본 뒤에야 고칠 곳이 보인 것과 같은 절차다.
+[키 생성 병목 시리즈](/posts/sequence-part1/)와 [대량 배치](/posts/bulk-insert-performacne/)에서 다룬 것은 쓰기 경로였다. 읽기 경로에서도 순서는 같다. 추측으로 인덱스를 추가하기 전에 계획을 읽고, 계획을 믿기 전에 추정과 실제를 비교한다. 이후 [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잠금 보유 17ms를 DB 실행 2.31ms와 대기 14.7ms로 나눠 본 뒤에야 고칠 곳이 보인 것과 같은 절차다.
 
 ## 측정에서 틀렸던 것 둘
 

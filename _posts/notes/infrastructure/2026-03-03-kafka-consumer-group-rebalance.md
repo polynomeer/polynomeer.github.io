@@ -59,7 +59,7 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 ## 이 설명이 깨지는 곳
 
-- **리밸런스가 없어도 중복은 생긴다.** 오프셋 커밋 전에 죽으면 다시 받는다. [at-least-once](/posts/kafka-delivery-guarantees/)는 리밸런스와 무관한 전제이고, [멱등](/posts/idempotency-key-design/) 소비자가 따로 필요하다([ParityPay 8편](/posts/parity-pay-kafka-failures/)).
+- **리밸런스가 없어도 중복은 생긴다.** 오프셋 커밋 전에 죽으면 다시 받는다. [at-least-once](/posts/kafka-delivery-guarantees/)는 리밸런스와 무관한 전제이고, [멱등](/posts/idempotency-key-design/) 소비자가 따로 필요하다(이후 [ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 다뤘다).
 - 파티션 수를 늘리면 순서 보장이 깨진다. 키 해시의 분모가 바뀌어 같은 키가 다른 파티션으로 간다. 줄이는 것은 아예 안 된다.
 - `max.poll.records`를 줄이는 것이 흔한 처방이지만 만능이 아니다. 건당 처리가 느리면 배치를 줄여도 총 시간이 그대로다. 처리를 비동기로 빼면 이번엔 커밋 시점이 어려워진다.
 - `group.instance.id`를 잘못 쓰면 두 컨슈머가 같은 ID를 주장한다. 그룹에는 같은 ID의 인스턴스가 한 번에 하나만 있을 수 있으므로([Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/)), 컨테이너 오케스트레이터가 같은 ID로 두 파드를 띄우면 하나가 `FENCED_INSTANCE_ID`로 쫓겨난다([KIP-345](https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances)).

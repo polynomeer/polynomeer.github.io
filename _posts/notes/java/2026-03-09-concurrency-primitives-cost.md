@@ -51,7 +51,7 @@ JVM의 모니터 락은 경쟁 정도에 따라 다르게 동작한다. 경쟁�
 - 가상 스레드에서 `synchronized`는 과거에 핀닝을 일으켰다. 캐리어 스레드가 묶여 동시성이 떨어졌고, 그래서 `ReentrantLock`으로 바꾸라는 권고가 있었다. JDK 24에서 이 제약이 해소됐으므로([JEP 491](https://openjdk.org/jeps/491)), 실행하는 JDK 버전에 따라 조언이 다르다([가상 스레드의 내부](/posts/virtual-threads-internals/)).
 - 마이크로벤치마크가 가장 자주 틀리는 영역이 여기다. JIT가 경쟁 없는 락을 제거하거나 루프를 통째로 없앨 수 있다. JMH(OpenJDK의 마이크로벤치마크 도구) 없이 잰 수치는 대개 무의미하다([JIT 컴파일](/posts/jit-compilation/), [마이크로벤치마크 결함 실험](/posts/microbenchmark-faults-experiment/)).
 - 락 경합이 아니라 대기가 문제인 경우가 더 많다. DB나 외부 호출을 기다리는 스레드는 락 때문에 느린 것이 아니다([Tomcat 스레드 고갈](/posts/tomcat-thread-exhaustion/)).
-- 여러 프로세스에 걸친 동시성은 이 도구들의 범위 밖이다. 그 자리에는 DB의 조건부 갱신이나 분산락이 오고, 후자는 별개의 실패 모드를 갖는다([ParityPay 10편](/posts/parity-pay-lock-lease/)).
+- 여러 프로세스에 걸친 동시성은 이 도구들의 범위 밖이다. 그 자리에는 DB의 조건부 갱신이나 분산락이 오고, 후자는 별개의 실패 모드를 갖는다(이후 [ParityPay 10편](/posts/parity-pay-lock-lease/)에서 다뤘다).
 
 ## 무엇을 재면 확인되는가
 
@@ -65,7 +65,7 @@ JMH로 스레드 수를 1, 2, 4, 8, 16으로 늘려 가며 같은 연산을 재�
 
 ## 실무와의 접점
 
-[지분율 시스템](/series/batch-structure-improvement/)에서 만든 것은 프로세스 안의 락이 아니라 Redis 분산락이었다. 같은 "배타성"이라는 단어를 쓰지만 실패 모드가 전혀 다르다. JVM 락은 프로세스가 죽으면 같이 사라지고, 분산락은 프로세스가 죽어도 남아서 TTL이 정리해야 한다. [ParityPay 10편](/posts/parity-pay-lock-lease/)의 결론이 그 차이에서 나왔다. 그래서 락을 고르기 전에 "무엇과 무엇 사이의 배타성인가"부터 정해야 한다.
+[지분율 시스템](/series/batch-structure-improvement/)에서 만든 것은 프로세스 안의 락이 아니라 Redis 분산락이었다. 같은 "배타성"이라는 단어를 쓰지만 실패 모드가 전혀 다르다. JVM 락은 프로세스가 죽으면 같이 사라지고, 분산락은 프로세스가 죽어도 남아서 TTL이 정리해야 한다. 나중에 [ParityPay 10편](/posts/parity-pay-lock-lease/)의 결론이 그 차이에서 나왔다. 그래서 락을 고르기 전에 "무엇과 무엇 사이의 배타성인가"부터 정해야 한다.
 
 ## 정리
 

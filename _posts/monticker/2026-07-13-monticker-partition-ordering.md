@@ -58,7 +58,7 @@ offsets 2277-2336 seq=35 n=60  ts=…07.622   ← seq 35 배치가
 offsets 2337-2405 seq=34 n=69  ts=…07.532   ← seq 34 배치보다 먼저 적재됐다
 ```
 
-원인은 kafka-go `Writer`의 `RequiredAcks` 기본값이 `RequireNone`(acks=0)이고 게이트웨이가 그것을 명시하지 않은 것이었다. kafka-go 소스의 필드 주석도 "Defaults to RequireNone."이다([writer.go, v0.4.51](https://github.com/segmentio/kafka-go/blob/v0.4.51/writer.go)). 브로커 응답을 기다리지 않으니 파티션 라이터가 다음 배치를 바로 보내고, 두 요청이 서로 다른 커넥션으로 나가면 브로커가 나중 것을 먼저 적재한다. 같은 이유로 브로커가 죽어도 프로듀서는 실패를 모른다. 그래서 acks=0에서는 순서 역전과 조용한 유실([at-most-once](/posts/kafka-delivery-guarantees/))이 같은 원인에서 나온다. [parity-pay 8편](/posts/parity-pay-kafka-failures/)에서 acks=1·0으로 "PUBLISHED인데 브로커에 없음"을 만들어 본 것과 같은 자리의 문제가, 여기서는 만들지 않았는데 이미 있었다.
+원인은 kafka-go `Writer`의 `RequiredAcks` 기본값이 `RequireNone`(acks=0)이고 게이트웨이가 그것을 명시하지 않은 것이었다. kafka-go 소스의 필드 주석도 "Defaults to RequireNone."이다([writer.go, v0.4.51](https://github.com/segmentio/kafka-go/blob/v0.4.51/writer.go)). 브로커 응답을 기다리지 않으니 파티션 라이터가 다음 배치를 바로 보내고, 두 요청이 서로 다른 커넥션으로 나가면 브로커가 나중 것을 먼저 적재한다. 같은 이유로 브로커가 죽어도 프로듀서는 실패를 모른다. 그래서 acks=0에서는 순서 역전과 조용한 유실([at-most-once](/posts/kafka-delivery-guarantees/))이 같은 원인에서 나온다. 이후 [parity-pay 8편](/posts/parity-pay-kafka-failures/)에서 acks=1·0으로 "PUBLISHED인데 브로커에 없음"을 만들어 본 것과 같은 자리의 문제가, 여기서는 만들지 않았는데 이미 있었다.
 
 `RequiredAcks: RequireAll`로 고쳤다(복제 계수 1인 로컬에서는 acks=1과 같고, 운영 RF ≥ 2에서 맞는 값). 고친 뒤 격자 키 = 종목 ID 36회 + 이후 9회, 위반 0. e2e p50은 조건별로 −5~+9ms로 차이가 없었다. 결함 D-M2-01.
 
@@ -163,9 +163,9 @@ P=6, C=6. 종목 하나(파티션 1에 고정)를 핫 종목으로 만들고, �
 
 ## parity-pay와 실무의 같은 자리
 
-[parity-pay 8편](/posts/parity-pay-kafka-failures/)에서 파티션 키를 랜덤으로 두면 결제의 1/3이 뒤집혀 판매자에게 3,600원씩 더 나가는 것을 봤다. 여기서는 키가 맞는데도 acks=0 때문에 같은 파티션 안에서 순서가 뒤집혔다. 순서 보장은 키 하나로 끝나는 것이 아니라 **키(어느 파티션에), acks(브로커에 그 순서로 적혔는가), 컨슈머 스레드 모델(그 순서로 읽는가)** 세 조건이 다 맞아야 한다. 두 저장소가 각각 다른 조건을 빠뜨렸다.
+이후 [parity-pay 8편](/posts/parity-pay-kafka-failures/)에서 파티션 키를 랜덤으로 두면 결제의 1/3이 뒤집혀 판매자에게 3,600원씩 더 나가는 것을 봤다. 여기서는 키가 맞는데도 acks=0 때문에 같은 파티션 안에서 순서가 뒤집혔다. 순서 보장은 키 하나로 끝나는 것이 아니라 **키(어느 파티션에), acks(브로커에 그 순서로 적혔는가), 컨슈머 스레드 모델(그 순서로 읽는가)** 세 조건이 다 맞아야 한다. 두 저장소가 각각 다른 조건을 빠뜨렸다.
 
-[MDS의 SQS 파이프라인](/posts/polling-to-sqs-pipeline/)에서는 순서를 큐가 아니라 데이터의 상태 전이로 다뤘다. 앨범 수정이 등록보다 먼저 와도 상태가 맞지 않으면 재시도로 넘기면 됐다. 시세는 그 방법이 통하지 않는 도메인이다. 틱에는 "아직 아닌" 상태가 없고, 늦게 온 옛 가격을 최신가로 덮어쓰면 그것으로 끝이다. 그래서 여기서는 발행 측(키·acks)과 소비 측(파티션당 스레드 1개)이 순서를 지켜야 하고, 그 대가가 핫 종목의 인질 문제다. 상태 전이로 순서를 흡수할 수 있는 도메인과 없는 도메인의 차이를 실무·parity-pay·monticker 세 곳에서 각각 다른 모양으로 만났다.
+[MDS의 SQS 파이프라인](/posts/polling-to-sqs-pipeline/)에서는 순서를 큐가 아니라 데이터의 상태 전이로 다뤘다. 앨범 수정이 등록보다 먼저 와도 상태가 맞지 않으면 재시도로 넘기면 됐다. 시세는 그 방법이 통하지 않는 도메인이다. 틱에는 "아직 아닌" 상태가 없고, 늦게 온 옛 가격을 최신가로 덮어쓰면 그것으로 끝이다. 그래서 여기서는 발행 측(키·acks)과 소비 측(파티션당 스레드 1개)이 순서를 지켜야 하고, 그 대가가 핫 종목의 인질 문제다. 상태 전이로 순서를 흡수할 수 있는 도메인과 없는 도메인의 차이를 실무와 monticker에서, 그리고 이후 parity-pay에서 각각 다른 모양으로 만났다.
 
 ## 정리
 

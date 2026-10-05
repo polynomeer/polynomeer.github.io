@@ -129,7 +129,7 @@ stateDiagram-v2
 
 `COMPLETED`는 바뀌지 않는다. 재채점은 상태를 되돌리지 않고 새 revision을 만든다. 이 밖에 첫날 코드가 테스트로 고정한 규칙이 몇 가지 있다.
 
-- 워커를 잃은 줄 알고 다시 임대하면 attempt와 fencing token이 함께 오른다. 죽은 줄 알았던 워커의 결과가 늦게 오면 token이 낮아 거절된다. fencing token이 무엇을 막는지는 [락 lease와 fencing token 실험](/posts/parity-pay-lock-lease/)에 적었다.
+- 워커를 잃은 줄 알고 다시 임대하면 attempt와 fencing token이 함께 오른다. 죽은 줄 알았던 워커의 결과가 늦게 오면 token이 낮아 거절된다. fencing token이 무엇을 막는지는 이후 [락 lease와 fencing token 실험](/posts/parity-pay-lock-lease/)에 적었다.
 - 같은 결과가 두 번 오면 중복 검사를 fencing 검사보다 먼저 한다. 순서가 반대면 정상적인 재전달이 스테일 결과로 잘못 기록된다.
 - 플랫폼 장애(`SYSTEM_ERROR`)는 집계에서 가장 먼저 본다. 사용자 코드 실패로 덮으면 사용자가 멀쩡한 코드를 고치게 된다.
 

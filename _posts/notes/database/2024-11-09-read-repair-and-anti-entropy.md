@@ -56,7 +56,7 @@ sequenceDiagram
 
 Cassandra의 `nodetool repair`가 같은 구조다. [repair 문서](https://cassandra.apache.org/doc/latest/cassandra/managing/operating/repair.html)는 이것을 anti-entropy 메커니즘이라 부르고, 지난 수리 이후 데이터만 보는 incremental repair와 전체를 보는 full repair를 나눈다. 운영에서 중요한 조건이 하나 있다. 삭제는 tombstone이라는 표식으로 남고, `gc_grace_seconds`(기본 10일)가 지나면 표식이 지워진다. 그 전에 수리가 돌지 않아 어떤 복제본이 삭제를 못 받았다면, 표식이 사라진 뒤 그 복제본의 옛 값이 수리로 다시 퍼진다. 문서가 수리를 grace 기간 안에 반드시 돌리라고, 지운 데이터가 되살아날 수 있다고 경고하는 이유다.
 
-Airbnb 글의 비동기 수리는 더 넓은 뜻이다. 테이블 스캔, 람다 함수, cron 작업으로 서버가 정합성을 검사하고, 서버가 클라이언트에 비동기 알림을 보내 클라이언트 쪽 상태도 맞춘다. 원문은 이것이 읽기·쓰기 수리와 함께 쓰이는 두 번째 방어선이라고 적는다. [ParityPay 3편](/posts/parity-pay-unknown-state/)에서 결과를 모르는 결제를 `UNKNOWN`으로 두고 서버의 복구 작업이 외부에 조회해 확정한 것이 이 범주다.
+Airbnb 글의 비동기 수리는 더 넓은 뜻이다. 테이블 스캔, 람다 함수, cron 작업으로 서버가 정합성을 검사하고, 서버가 클라이언트에 비동기 알림을 보내 클라이언트 쪽 상태도 맞춘다. 원문은 이것이 읽기·쓰기 수리와 함께 쓰이는 두 번째 방어선이라고 적는다. 이후 [ParityPay 3편](/posts/parity-pay-unknown-state/)에서 결과를 모르는 결제를 `UNKNOWN`으로 두고 서버의 복구 작업이 외부에 조회해 확정한 것이 이 범주다.
 
 ## 세 방법의 비교
 

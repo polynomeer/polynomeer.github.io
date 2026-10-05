@@ -17,7 +17,7 @@ tags: [Distributed System, Clock, Ordering, Lamport Clock, Concurrency, Distribu
 
 NTP를 맞춰도 서버 간 오차는 남는다. 일반적인 데이터센터에서 수 밀리초, 나쁘면 그 이상이다. 그래서 두 사건이 같은 서버에서 일어난 것이 아니라면 "A의 타임스탬프가 B보다 작으니 A가 먼저다"는 성립하지 않는다.
 
-[분산락 글](/posts/kleppmann-distributed-locking/)에서 Kleppmann이 Redlock을 비판한 근거의 하나가 이것이었다. [ParityPay 10편](/posts/parity-pay-lock-lease/)에서는 "lease의 시계는 락 서버의 것"이라는 형태로 같은 문제를 만났다. 홀드 시각은 클라이언트가 응답을 받은 뒤 찍히고 lease는 락 서버가 `SET`을 실행한 순간부터 흐르므로, 클라이언트는 자기 lease가 이미 절반 넘게 탔다는 것을 알 수 없다.
+[분산락 글](/posts/kleppmann-distributed-locking/)에서 Kleppmann이 Redlock을 비판한 근거의 하나가 이것이었다. 이후 [ParityPay 10편](/posts/parity-pay-lock-lease/)에서는 "lease의 시계는 락 서버의 것"이라는 형태로 같은 문제를 만났다. 홀드 시각은 클라이언트가 응답을 받은 뒤 찍히고 lease는 락 서버가 `SET`을 실행한 순간부터 흐르므로, 클라이언트는 자기 lease가 이미 절반 넘게 탔다는 것을 알 수 없다.
 
 ## 논리 시계: 시각을 포기하고 순서를 얻는다
 
@@ -62,7 +62,7 @@ Last-Write-Wins(타임스탬프가 큰 쓰기를 채택하는 충돌 해소)가 
 2. 벽시계로 잰 경과 시간과 단조 시계로 잰 값을 나란히 두고, NTP 보정 순간에 벌어지는지 본다.
 3. 이벤트를 타임스탬프로 정렬했을 때 인과 역전이 얼마나 자주 나오는지 센다.
 
-[ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 순서 역전을 다뤘지만 기준은 파티션 오프셋이었지 시계가 아니었다. 그것이 맞는 선택이었다는 것이 이 글의 결론이기도 하다.
+이후 [ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 순서 역전을 다뤘지만 기준은 파티션 오프셋이었지 시계가 아니었다. 그것이 맞는 선택이었다는 것이 이 글의 결론이기도 하다.
 
 ## 실무와의 접점
 

@@ -89,7 +89,7 @@ sequenceDiagram
 
 ## 실무와의 접점
 
-[ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잔액 UPDATE가 행을 잠근 뒤 열두 문장과 커밋 fsync가 전부 잠금 안에서 일어나 보유 시간이 17ms였고, 그중 DB가 실제로 일한 시간은 2.31ms였다. 그 잠금 위에 `REQUIRES_NEW`가 커넥션 하나를 더 쥐게 한다. 그래서 트랜잭션 경계를 바꿀 때는 코드가 깔끔해지는지보다 이 경계 안에서 어떤 자원을 얼마나 오래 쥐는지를 먼저 본다.
+이후 [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 재 보니 잔액 UPDATE가 행을 잠근 뒤 열두 문장과 커밋 fsync가 전부 잠금 안에서 일어나 보유 시간이 17ms였고, 그중 DB가 실제로 일한 시간은 2.31ms였다. 그 잠금 위에 `REQUIRES_NEW`가 커넥션 하나를 더 쥐게 한다. 그래서 트랜잭션 경계를 바꿀 때는 코드가 깔끔해지는지보다 이 경계 안에서 어떤 자원을 얼마나 오래 쥐는지를 먼저 본다.
 
 ## 정리
 

@@ -161,7 +161,7 @@ JPA 설정은 `ddl-auto: validate`, `open-in-view: false`였다. Hibernate는 �
 
 캐시는 아예 없었다. 아키텍처 문서는 비정규화된 읽기 모델을 "성능 때문에 나중에 도입해도 된다"고만 적었다.
 
-이 선택의 약점은 메모리 안의 이벤트다. 커밋 직후 프로세스가 죽으면 이벤트는 사라지고, 복구는 스케줄러 주기(기본 60초)를 기다린다. 인스턴스가 여러 개가 되면 일을 나눠 가지는 장치도 없다. 같은 문제를 Transactional Outbox로 푼 사례는 [ParityPay 아웃박스 글](/posts/parity-pay-outbox/)에 있다.
+이 선택의 약점은 메모리 안의 이벤트다. 커밋 직후 프로세스가 죽으면 이벤트는 사라지고, 복구는 스케줄러 주기(기본 60초)를 기다린다. 인스턴스가 여러 개가 되면 일을 나눠 가지는 장치도 없다. 같은 문제를 Transactional Outbox로 푼 사례는 이후 [ParityPay 아웃박스 글](/posts/parity-pay-outbox/)에 정리했다.
 
 ## 결정 6. LLM 연동: 용도별 인터페이스와 평범한 HTTP 호출
 

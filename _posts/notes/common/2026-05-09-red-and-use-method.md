@@ -62,7 +62,7 @@ Duration은 반드시 분포로 본다. 평균은 꼬리를 숨기고, 여러 �
 
 RED와 USE가 전부 정상인데 업무가 실패하는 경우가 있다. 결제 승인율이 떨어지거나, 특정 기관 호출만 `UNKNOWN`으로 쌓이거나, 배치가 돌았는데 처리 건수가 0인 경우다. HTTP는 200을 돌려주고 있으므로 RED에 안 잡힌다.
 
-그래서 세 번째 축으로 업무 지표가 필요하다. "시간당 승인 건수", "UNKNOWN 상태 거래 수", "[대사](/posts/parity-pay-reconciliation/) 불일치 건수" 같은 것들이고, [ParityPay 1편](/posts/parity-pay-invariants/)에서 불변조건 위반 지표를 둔 것이 이 계열이다. 그 글에 적었듯 **불변조건 위반 지표는 평소 0이어야 하고, 0이 아니면 그 자체가 장애**라서 임계값을 고민할 필요가 없다.
+그래서 세 번째 축으로 업무 지표가 필요하다. "시간당 승인 건수", "UNKNOWN 상태 거래 수", "[대사](/posts/parity-pay-reconciliation/) 불일치 건수" 같은 것들이고, 이후 [ParityPay 1편](/posts/parity-pay-invariants/)에서 불변조건 위반 지표를 둔 것이 이 계열이다. **불변조건 위반 지표는 평소 0이어야 하고, 0이 아니면 그 자체가 장애**라서 임계값을 고민할 필요가 없다.
 
 [spring-ops-lab의 S5](https://github.com/polynomeer/spring-ops-lab)가 이 주제이고 아직 측정 전이다.
 

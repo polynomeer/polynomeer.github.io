@@ -138,7 +138,7 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 
 이 선택의 대가는 표 첫 줄에 있다. 워커가 job을 꺼낸 뒤 처리하기 전에 죽으면 그 job은 Redis에서도 사라진다. 첫 구현의 재시도(최대 3회)와 dead-letter 리스트는 처리 중 예외가 났을 때만 동작하고, 프로세스가 죽는 경우는 다루지 않는다. 반대 방향의 중복 전달은 다뤘다. 워커는 같은 `submission_id`의 활성 평가가 이미 있으면 건너뛴다. 아키텍처 문서 §8이 at-least-once 전달을 전제로 중복 소비에 안전해야 한다고 적었기 때문이다.
 
-같은 날 큐 자체와 별개로 순서 문제를 하나 겪었다. 트랜잭션 안에서 바로 enqueue하면, 워커가 다른 트랜잭션에서 커밋되기 전의 Submission을 조회해 찾지 못하고 job을 버린다. 그래서 트랜잭션 안에서는 Spring 이벤트만 발행하고, 실제 enqueue는 [`@TransactionalEventListener`](/posts/transactional-event-listener-checklist/)의 `AFTER_COMMIT` 단계에서 한다. Spring 문서는 이 리스너가 기본적으로 트랜잭션의 커밋 단계에 묶인다고 설명한다([Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)). 이 규칙은 다음 날 Build 파이프라인에서 같은 버그를 다시 만난 뒤 ADR-0004가 됐다. DB 커밋과 메시지 발행 사이의 더 일반적인 해법인 Outbox는 [ParityPay 5편](/posts/parity-pay-outbox/)에서 다뤘다. 아키텍처 문서도 "같은 트랜잭션 또는 Outbox Pattern"을 적었지만, 첫 구현은 커밋 후 리스너 쪽을 택했다. 커밋 직후 enqueue 전에 프로세스가 죽으면 job이 빠진다는 점은 Outbox와 다른 대가다.
+같은 날 큐 자체와 별개로 순서 문제를 하나 겪었다. 트랜잭션 안에서 바로 enqueue하면, 워커가 다른 트랜잭션에서 커밋되기 전의 Submission을 조회해 찾지 못하고 job을 버린다. 그래서 트랜잭션 안에서는 Spring 이벤트만 발행하고, 실제 enqueue는 [`@TransactionalEventListener`](/posts/transactional-event-listener-checklist/)의 `AFTER_COMMIT` 단계에서 한다. Spring 문서는 이 리스너가 기본적으로 트랜잭션의 커밋 단계에 묶인다고 설명한다([Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)). 이 규칙은 다음 날 Build 파이프라인에서 같은 버그를 다시 만난 뒤 ADR-0004가 됐다. DB 커밋과 메시지 발행 사이의 더 일반적인 해법인 Outbox는 이후 [ParityPay 5편](/posts/parity-pay-outbox/)에서 다뤘다. 아키텍처 문서도 "같은 트랜잭션 또는 Outbox Pattern"을 적었지만, 첫 구현은 커밋 후 리스너 쪽을 택했다. 커밋 직후 enqueue 전에 프로세스가 죽으면 job이 빠진다는 점은 Outbox와 다른 대가다.
 
 ## 시뮬레이션: 실제 인프라 대신 규칙 기반 상태 계산
 

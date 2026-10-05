@@ -30,7 +30,7 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 재시도는 **상대에게 보내는 요청 수를 곱한다.** 3회 재시도는 3배다.
 
-[ParityPay 9편](/posts/parity-pay-external-isolation/)에서 타임아웃 3초에 재시도 3회를 붙이자 기관이 받은 요청이 정확히 3.00배가 됐다. 초당 11건이던 부하가 33건이 됐는데, 그 기관은 이미 느려서 타임아웃이 나던 중이었다.
+이후 [ParityPay 9편](/posts/parity-pay-external-isolation/)에서 타임아웃 3초에 재시도 3회를 붙이자 기관이 받은 요청이 정확히 3.00배가 됐다. 초당 11건이던 부하가 33건이 됐는데, 그 기관은 이미 느려서 타임아웃이 나던 중이었다.
 
 이 증폭은 계층마다 다시 곱해진다. 클라이언트 3회 × 게이트웨이 3회 × 서비스 3회면 가장 안쪽 서비스가 보는 부하는 27배다. Google SRE 책은 같은 계산을 "세 번 재시도"(층마다 시도 4회) 기준으로 해서, 사용자 동작 하나가 데이터베이스에 64회의 시도를 만든다고 적는다([Google SRE: Addressing Cascading Failures](https://sre.google/sre-book/addressing-cascading-failures/)). 대규모 장애에서 "복구했는데 다시 죽는" 경우의 흔한 원인이다.
 
@@ -54,7 +54,7 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 백오프를 없애는 것이 아니라 지터를 더하는 것이 답이라는 뜻이다.
 
-다만 **지터가 값을 하려면 동기화된 폭주가 있어야 한다.** ParityPay 9편에서 지수 백오프와 지터를 붙였을 때 총량은 그대로 3.00배였고, 초당 최대가 33에서 38~41로 오히려 높았다. 부하가 초당 10건씩 고르게 도착하는 조건이라 펼칠 봉우리가 없었다.
+다만 **지터가 값을 하려면 동기화된 폭주가 있어야 한다.** 이후 ParityPay 9편에서 지수 백오프와 지터를 붙였을 때 총량은 그대로 3.00배였고, 초당 최대가 33에서 38~41로 오히려 높았다. 부하가 초당 10건씩 고르게 도착하는 조건이라 펼칠 봉우리가 없었다.
 
 그래서 지터는 재시도 정책의 필수 요소이지만 재시도 자체를 정당화하지 않는다. 상대가 계속 느려서 매 시도가 타임아웃되는 조건에서는 총 부하가 줄지 않는다. 경합 때문에 실패하는 경우는 다르다. Brooker의 시뮬레이션처럼 충돌이 재시도를 부르는 상황에서는 지터가 충돌을 줄여, 클라이언트 100개 기준 호출 수가 절반 넘게 줄었다.
 
@@ -84,7 +84,7 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 재시도를 제약해도 상대가 완전히 죽어 있으면 매 요청이 타임아웃까지 기다린다. 그 대기가 우리 자원을 먹는다.
 
-차단기(circuit breaker)가 이 대기를 줄인다. 실패율이 임계를 넘으면 회로를 열어 즉시 실패시키고, 주기적으로 프로브를 보내 회복을 확인한다. ParityPay 9편에서 죽은 기관에 보내는 요청이 370건에서 46건이 됐고, 대가는 복귀 지연 3.8초였다.
+차단기(circuit breaker)가 이 대기를 줄인다. 실패율이 임계를 넘으면 회로를 열어 즉시 실패시키고, 주기적으로 프로브를 보내 회복을 확인한다. 나중에 ParityPay 9편에서 재 보니 죽은 기관에 보내는 요청이 370건에서 46건이 됐고, 대가는 복귀 지연 3.8초였다.
 
 벌크헤드는 또 다른 축이다. 상대별로 동시 호출 수를 제한해 한쪽의 장애가 전체 자원을 먹지 못하게 한다. [스레드 고갈 실험](/posts/tomcat-thread-exhaustion/)에서 벌크헤드 permit 20개가 thread dump에 정확히 20개로 보였다.
 
@@ -92,8 +92,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 ## 이 설명이 깨지는 곳
 
-- 타임아웃은 실패가 아니다. 상대가 처리했는데 응답만 유실됐을 수 있다. 결과를 모르는 상태이고, 재시도가 아니라 조회가 먼저다([ParityPay 3편](/posts/parity-pay-unknown-state/)).
-- 파라미터에 근거가 있어야 한다. ParityPay 9편의 한계에 "벌크헤드 50과 차단기 값은 근거 있는 값이 아니다"를 적었다. [큐잉 이론](/posts/queueing-theory-for-servers/)이 그 근거를 세우는 출발점이다.
+- 타임아웃은 실패가 아니다. 상대가 처리했는데 응답만 유실됐을 수 있다. 결과를 모르는 상태이고, 재시도가 아니라 조회가 먼저다(이후 [ParityPay 3편](/posts/parity-pay-unknown-state/)에서 다뤘다).
+- 파라미터에 근거가 있어야 한다. 이후 ParityPay 9편의 한계에 "벌크헤드 50과 차단기 값은 근거 있는 값이 아니다"를 적었다. [큐잉 이론](/posts/queueing-theory-for-servers/)이 그 근거를 세우는 출발점이다.
 - 차단기가 열려 있는 동안의 요청도 상태를 갖는다. 기관에 도달하지 않았으므로 `UNKNOWN`이 아니라 `FAILED`다. 이 구분이 없으면 격리 장치가 복구 작업의 부하가 된다.
 - 재시도가 없으면 리더 교체 같은 정상 동작이 장애로 보인다. 재시도를 없애는 것이 답은 아니다([합의 알고리즘](/posts/consensus-raft/)).
 

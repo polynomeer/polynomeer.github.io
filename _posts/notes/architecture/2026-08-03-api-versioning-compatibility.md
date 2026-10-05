@@ -80,7 +80,7 @@ API는 요청-응답이라 양쪽이 살아 있지만, 이벤트는 저장된다
 - protobuf는 필드 번호가 계약이다. 번호를 재사용하면 조용히 깨진다. 제거한 번호는 `reserved`로 막는다. [가이드](https://protobuf.dev/programming-guides/proto3/#fieldreserved)에 따르면 `reserved` 번호를 다시 쓰면 protoc가 오류를 낸다.
 - JSON은 강제가 없으므로 규칙을 사람이 지켜야 한다.
 
-[ParityPay 5편](/posts/parity-pay-outbox/)의 한계에 "스키마 진화를 다루지 않았다"를 적었다. 이벤트에 `event_version`이 있고 발행 전 봉투 스키마를 검증하지만, 소비자가 옛 버전을 어떻게 다룰지가 정해져 있지 않았다. 이벤트 소싱이라면 더 엄격하다. 저장된 사건은 과거의 사실이라 고칠 수 없고, 읽을 때 변환하는 업캐스팅이 필요하다([이벤트 소싱과 CQRS](/posts/event-sourcing-and-cqrs/)).
+이후 [ParityPay 5편](/posts/parity-pay-outbox/)의 한계에 "스키마 진화를 다루지 않았다"를 적었다. 이벤트에 `event_version`이 있고 발행 전 봉투 스키마를 검증하지만, 소비자가 옛 버전을 어떻게 다룰지가 정해져 있지 않았다. 이벤트 소싱이라면 더 엄격하다. 저장된 사건은 과거의 사실이라 고칠 수 없고, 읽을 때 변환하는 업캐스팅이 필요하다([이벤트 소싱과 CQRS](/posts/event-sourcing-and-cqrs/)).
 
 ## 이 설명이 깨지는 곳
 

@@ -7,7 +7,7 @@ tags: [TLA+, Model Checking, Formal Verification, Testing]
 mermaid: true
 ---
 
-[ParityPay 12편](/posts/parity-pay-model-checking/)은 이런 상황에서 시작한다. 부하·장애 실험 41종과 통합 시험 328개를 돌렸는데도 "고객은 청구됐는데 결제는 실패로 확정된" 경로를 한 번도 밟지 못했다. 그 경로는 기관이 요청을 받았지만 아직 기록하지 않은 짧은 창 안에서 조회가 두 번 일어나야 드러난다. 시험은 그 순간이 오기를 기다릴 수밖에 없다. 반면 TLC는 같은 경로를 5단계 만에 찾았다.
+이후 [ParityPay 12편](/posts/parity-pay-model-checking/)이 이런 상황에서 시작했다. 부하·장애 실험 41종과 통합 시험 328개를 돌렸는데도 "고객은 청구됐는데 결제는 실패로 확정된" 경로를 한 번도 밟지 못했다. 그 경로는 기관이 요청을 받았지만 아직 기록하지 않은 짧은 창 안에서 조회가 두 번 일어나야 드러난다. 시험은 그 순간이 오기를 기다릴 수밖에 없다. 반면 TLC는 같은 경로를 5단계 만에 찾았다.
 
 이 글은 그 글에 나오는 용어를 처음부터 설명한다. 모델 검사, TLA+, TLC, 상태 공간, 불변조건, 반례다.
 
@@ -26,7 +26,7 @@ mermaid: true
 
 ## 상태와 상태 공간
 
-**상태**(state)는 변수들의 값 한 벌이다. ParityPay 모델이라면 `payStatus = UNKNOWN, pgState = inflight, notFound = 1, ...`이 상태 하나다. 상태에서 상태로 넘어가는 한 걸음을 **전이**(transition, TLA+에서는 action)라고 한다.
+**상태**(state)는 변수들의 값 한 벌이다. 이후 ParityPay에서 만든 모델이라면 `payStatus = UNKNOWN, pgState = inflight, notFound = 1, ...`이 상태 하나다. 상태에서 상태로 넘어가는 한 걸음을 **전이**(transition, TLA+에서는 action)라고 한다.
 
 초기 상태에서 출발해 전이를 따라 도달할 수 있는 상태 전체가 **상태 공간**(state space)이다. TLC는 이 그래프를 따라가며 상태를 전부 밟는다.
 
@@ -49,7 +49,7 @@ flowchart LR
 NoFalseFailure == ~(payStatus = "FAILED" /\ pgState = "approved")
 ```
 
-"결제가 FAILED인데 기관에는 승인이 있는" 상태가 없어야 한다는 뜻이다. 결제 도메인에서 불변조건을 어떻게 고르는지는 [ParityPay 1편](/posts/parity-pay-invariants/)에 정리했다.
+"결제가 FAILED인데 기관에는 승인이 있는" 상태가 없어야 한다는 뜻이다. 결제 도메인에서 불변조건을 어떻게 고르는지는 이후 [ParityPay 1편](/posts/parity-pay-invariants/)에 정리했다.
 
 불변조건이 깨지는 상태를 만나면 TLC는 그 상태까지 가는 경로를 출력한다. 각 단계에서 어떤 전이가 일어났고 변수가 어떤 값이 됐는지를 차례로 보여 준다. 이 경로가 **반례**(counterexample, error trace)다. 위 그림의 S0 → S1 → S2 → S3이 12편에서 TLC가 보여 준 반례와 같은 모양이다. 반례는 "틀렸다"는 판정에서 그치지 않는다. 어떤 순서로 틀리는지를 재현 가능한 형태로 준다. 그래서 고칠 곳을 바로 찾을 수 있다.
 

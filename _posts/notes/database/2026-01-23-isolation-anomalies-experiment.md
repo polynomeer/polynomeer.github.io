@@ -140,7 +140,7 @@ READ COMMITTED(PostgreSQL 기본값)와 MySQL의 세 수준 전부에서 거절 
 - PostgreSQL에서 RR 이상을 쓰면 재시도가 기능의 일부다. 직렬화 실패는 버그가 아니라 문서에 적힌 동작이다.
 - MySQL SERIALIZABLE은 읽기가 쓰기를 막는다. 조회가 많은 서비스에서 이 수준을 켜면 지연이 아니라 정지에 가깝게 나타난다.
 
-[ParityPay 1편](/posts/parity-pay-invariants/)의 INV-003("지갑 가용 잔액은 음수가 되지 않는다")을 격리 수준이 아니라 조건부 UPDATE와 DB 제약으로 지킨 이유가 이 표에 있다. 그리고 [10편](/posts/parity-pay-lock-lease/)에서 분산락 대신 조건부 원자 UPDATE를 고른 근거도 같은 자리다. 다만 그 프로젝트는 PostgreSQL을 READ COMMITTED로 쓰므로 위 표의 첫 열에 해당하고, 격리 수준을 올렸다면 재시도 설계가 따라왔어야 한다.
+이후 [ParityPay 1편](/posts/parity-pay-invariants/)의 INV-003("지갑 가용 잔액은 음수가 되지 않는다")을 격리 수준이 아니라 조건부 UPDATE와 DB 제약으로 지킨 이유가 이 표에 있다. 그리고 [10편](/posts/parity-pay-lock-lease/)에서 분산락 대신 조건부 원자 UPDATE를 고른 근거도 같은 자리다. 다만 그 프로젝트는 PostgreSQL을 READ COMMITTED로 쓰므로 위 표의 첫 열에 해당하고, 격리 수준을 올렸다면 재시도 설계가 따라왔어야 한다.
 
 ## 측정에서 틀렸던 것
 

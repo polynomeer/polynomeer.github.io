@@ -35,7 +35,7 @@ DB 비밀번호, API 키, 토큰 서명 키, 암호화 키, 외부 기관 인증
 
 시크릿에 기본값을 주면 **배포가 조용히 성공한다.** 설정이 빠졌는데도 애플리케이션이 뜨고, 알려진 값으로 동작한다. 개발 편의로 넣은 `password: changeme`가 운영에 그대로 가는 경로가 이것이다.
 
-[ParityPay](/posts/parity-pay-invariants/)의 [ADR-011](https://github.com/polynomeer/parity-pay/blob/main/docs/adr/011-deployment-shape.md)이 이 규칙을 적었다. 웹훅 서명 비밀값이 기본 설정에 개발용 값으로 박혀 있어서, 아무것도 주입하지 않아도 배포가 알려진 비밀값으로 조용히 떴다. 그래서 기본값을 없애고 없으면 뜨지 않게 했다. 기동 실패는 시끄럽고 즉시 발견되지만, 알려진 값으로 뜬 서비스는 조용하다.
+이후 [ParityPay](/posts/parity-pay-invariants/)의 [ADR-011](https://github.com/polynomeer/parity-pay/blob/main/docs/adr/011-deployment-shape.md)이 이 규칙을 적었다. 웹훅 서명 비밀값이 기본 설정에 개발용 값으로 박혀 있어서, 아무것도 주입하지 않아도 배포가 알려진 비밀값으로 조용히 떴다. 그래서 기본값을 없애고 없으면 뜨지 않게 했다. 기동 실패는 시끄럽고 즉시 발견되지만, 알려진 값으로 뜬 서비스는 조용하다.
 
 스프링에서는 `@Value("${app.secret}")`에 기본값을 주지 않으면 없을 때 기동이 실패한다. 이것이 의도된 동작이다.
 
@@ -59,7 +59,7 @@ DB 비밀번호, API 키, 토큰 서명 키, 암호화 키, 외부 기관 인증
 
 ## 이 설명이 깨지는 곳
 
-- **로그가 가장 흔한 유출 경로다.** 요청 본문을 통째로 찍거나, 예외 메시지에 연결 문자열이 포함되거나, 설정 객체를 `toString()`으로 남기면 그대로 나간다. [ParityPay의 규칙](/posts/parity-pay-invariants/)에 "로그·이벤트 payload에 비밀번호, 토큰, 전체 계좌번호를 남기지 않는다"가 있는 이유다.
+- **로그가 가장 흔한 유출 경로다.** 요청 본문을 통째로 찍거나, 예외 메시지에 연결 문자열이 포함되거나, 설정 객체를 `toString()`으로 남기면 그대로 나간다. 나중에 [ParityPay의 규칙](/posts/parity-pay-invariants/)에 "로그·이벤트 payload에 비밀번호, 토큰, 전체 계좌번호를 남기지 않는다"를 둔 이유다.
 - 암호화 저장이 접근 제어를 대신하지 않는다. 복호화 키에 접근 가능한 모두가 평문에 접근 가능하다.
 - 쿠버네티스 Secret은 기본적으로 base64 인코딩일 뿐이다. 문서는 Secret이 기본적으로 API 서버의 저장소(etcd)에 암호화되지 않은 채 저장된다고 적고, 최소 조치로 저장 시 암호화와 최소 권한 RBAC(역할 기반 접근 제어)을 든다([Kubernetes: Secrets](https://kubernetes.io/docs/concepts/configuration/secret/)).
 - 개발 환경의 시크릿도 시크릿이다. 개발 DB가 운영 데이터의 복사본이면 특히 그렇다.
