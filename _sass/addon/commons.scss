@@ -103,6 +103,28 @@ blockquote {
     margin-bottom: 0;
   }
 
+  /* Quotes in posts: a rounded box with an opening quote mark instead of the
+     accent bar on the left. Citation cards reuse the mark (post.scss);
+     prompt boxes ([!INFO] and friends) keep their own look. */
+  .content &:not([class^='prompt-']) {
+    position: relative;
+    padding: 1rem 1.2rem 1rem 3rem;
+    border-left: 0;
+    border-radius: 0.9rem;
+    background: var(--blockquote-bg);
+  }
+
+  .content &:not([class^='prompt-'])::before {
+    content: '\201C';
+    position: absolute;
+    top: 0.55rem;
+    left: 0.95rem;
+    color: var(--blockquote-mark-color);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+
   &[class^='prompt-'] {
     border-left: 0;
     position: relative;

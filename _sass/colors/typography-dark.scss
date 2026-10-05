@@ -20,6 +20,8 @@
   --metric-color: #ffb86c;
   --blockquote-border-color: #bd93f9;
   --blockquote-text-color: #c0c5dd;
+  --blockquote-bg: rgba(68, 71, 90, 0.28);
+  --blockquote-mark-color: rgba(189, 147, 249, 0.75);
   --link-color: #bd93f9;
   --link-underline-color: rgba(189, 147, 249, 0.52);
   --link-hover-color: #50fa7b;
@@ -205,11 +207,6 @@
     background-color: rgba(68, 71, 90, 0.4);
   }
 
-  blockquote:not([class^='prompt-']) {
-    background: rgba(68, 71, 90, 0.28);
-    border-radius: 0.9rem;
-    padding: 1rem 1.2rem;
-  }
 
   .table-wrapper > table thead {
     border-bottom-color: rgba(93, 101, 129, 0.42);

@@ -4442,7 +4442,7 @@ html[data-mode='dark'] {
      테마 규칙(html[data-mode] blockquote:not(...))보다 구체적인 선택자로 덮습니다. */
   blockquote.citation-quote.citation-quote {
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 2.4rem;
     border: 0;
     border-radius: 0;
     background: none;
@@ -4452,6 +4452,12 @@ html[data-mode='dark'] {
 
     > p:last-child {
       margin-bottom: 0;
+    }
+
+    /* Same opening mark as the plain quotes, pulled into the card's corner. */
+    &::before {
+      top: -0.15rem;
+      left: 0;
     }
   }
 }
