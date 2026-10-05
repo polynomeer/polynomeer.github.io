@@ -1208,15 +1208,6 @@ $btn-mb: 0.5rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     white-space: nowrap;
-
-    /* hairline that fills the rest of the row */
-    &::after {
-      content: '';
-      flex: 1 1 auto;
-      height: 1px;
-      background: currentcolor;
-      opacity: 0.25;
-    }
   }
 
   .sidebar-nav-group-list {
@@ -1231,10 +1222,10 @@ $btn-mb: 0.5rem;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      padding: 0.28rem 0.55rem;
+      padding: 0.28rem 0.65rem;
       border-radius: 999px;
-      border: 1px solid transparent;
-      background: color-mix(in srgb, var(--sidebar-hover-bg) 55%, transparent);
+      border: 1px solid var(--btn-border-color);
+      background: transparent;
       color: var(--sidebar-muted-color);
       font-size: 0.74rem;
       font-weight: 600;
@@ -1244,20 +1235,16 @@ $btn-mb: 0.5rem;
         border-color 0.2s ease,
         background-color 0.2s ease;
 
+      /* text-only chips: the icon rows above already carry the icons */
       i {
-        font-size: 0.68rem;
-        opacity: 0.7;
+        display: none;
       }
 
       &:hover {
-        border-color: var(--btn-border-color);
+        border-color: color-mix(in srgb, var(--sidebar-btn-color) 60%, transparent);
         background: var(--sidebar-hover-bg);
         color: var(--sidebar-active-color);
         text-decoration: none;
-
-        i {
-          opacity: 1;
-        }
       }
     }
 
@@ -1265,11 +1252,6 @@ $btn-mb: 0.5rem;
       border-color: color-mix(in srgb, var(--sidebar-btn-color) 60%, transparent);
       background: var(--sidebar-hover-bg);
       color: var(--sidebar-active-color);
-
-      i {
-        color: var(--sidebar-btn-color);
-        opacity: 1;
-      }
     }
   }
 
@@ -1323,9 +1305,11 @@ $btn-mb: 0.5rem;
   }
 
   .sidebar-bottom {
+    padding-top: 1rem;
     padding-left: 2rem;
     padding-right: 1rem;
     margin-bottom: 1.5rem;
+    border-top: 1px solid var(--sidebar-border-color);
 
     $btn-size: 1.75rem;
     $contact-width: ($btn-size * 5) + ($sb-btn-gap * 4);
