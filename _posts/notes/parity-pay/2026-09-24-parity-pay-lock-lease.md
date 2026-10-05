@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 10 - 락 lease가 트랜잭션보다 먼저 끝나면 정말 정합성이 깨지는가: SETNX 락, Watchdog, fencing token, 그리고 락 없는 구조의 실측"
-date: 2026-04-19
+date: 2026-09-24
 categories: [Notes, ParityPay]
 tags: [Payment, Distributed Lock, Redis, Fencing Token, Concurrency, PostgreSQL, Fault Injection]
 series: parity-pay

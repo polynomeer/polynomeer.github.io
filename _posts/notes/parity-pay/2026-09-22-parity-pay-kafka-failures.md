@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 8 - Kafka에서 중복·유실·순서 역전을 직접 만들어 보기: 멱등 소비자와 Outbox가 막는 것과 못 막는 것"
-date: 2026-04-09
+date: 2026-09-22
 categories: [Notes, ParityPay]
 tags: [Payment, Kafka, Transactional Outbox, Idempotency, Fault Injection, Partitioning, Reliability]
 series: parity-pay

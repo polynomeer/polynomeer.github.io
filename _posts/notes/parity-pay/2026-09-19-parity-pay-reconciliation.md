@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 6 - 대사: \"기관에 물어보지 못했다\"와 \"기관에 기록이 없다\"는 다른 상태다"
-date: 2026-03-24
+date: 2026-09-19
 categories: [Notes, ParityPay]
 tags: [Payment, Reconciliation, Ledger, Consistency, PostgreSQL, Operations, Fault Injection]
 series: parity-pay

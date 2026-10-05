@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 9 - 느린 기관 앞에서 결제 서버를 지키기: 타임아웃, 재시도, 차단기, 리미터, 벌크헤드가 각각 무엇을 막는가"
-date: 2026-07-02
+date: 2026-09-23
 categories: [Notes, ParityPay]
 tags: [Payment, Resilience, Circuit Breaker, Bulkhead, Rate Limiter, Timeout, Fault Injection, Virtual Threads]
 series: parity-pay

@@ -16,7 +16,7 @@ ParityPay 저장소의 첫 커밋은 2026-09-07이다. 이 글은 그날의 커�
 
 ParityPay는 가상의 커머스 플랫폼에 내장되는 페이머니 결제 서비스다. 사용자는 Mock Bank 계좌에서 페이머니를 충전하고, 그 잔액으로 결제하고, 취소한다. 구매확정 뒤에는 판매자에게 정산되고, 운영자는 내부 원장과 외부기관 기록이 어긋나는지 대사(reconciliation, 두 기록을 맞춰 보는 작업)한다.
 
-제품 기획서([docs/01](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/01-product-plan.md))는 풀려는 문제를 기능이 아니라 실패 목록으로 적었다. 클라이언트 재시도로 같은 결제가 두 번 승인되는 것, 잔액 조회와 차감 사이의 경쟁으로 잔액이 음수가 되는 것, 외부 승인 뒤 응답이 유실되어 성공을 실패로 오판하는 것, DB 커밋 뒤 이벤트 발행이 실패해 후속 처리가 빠지는 것, 취소하면서 기존 원장을 고쳐 감사 근거가 사라지는 것이다. 이 실패들을 막는 규칙이 열 개의 불변조건(INV-001~010)이고, 그중 핵심 여섯 개는 [시리즈 1편](/posts/parity-pay-invariants/)에서 따로 다뤘다.
+제품 기획서([docs/01](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/01-product-plan.md))는 풀려는 문제를 기능이 아니라 실패 목록으로 적었다. 클라이언트 재시도로 같은 결제가 두 번 승인되는 것, 잔액 조회와 차감 사이의 경쟁으로 잔액이 음수가 되는 것, 외부 승인 뒤 응답이 유실되어 성공을 실패로 오판하는 것, DB 커밋 뒤 이벤트 발행이 실패해 후속 처리가 빠지는 것, 취소하면서 기존 원장을 고쳐 감사 근거가 사라지는 것이다. 이 실패들을 막는 규칙이 열 개의 불변조건(INV-001~010)이고, 그중 핵심 여섯 개는 이후 [시리즈 1편](/posts/parity-pay-invariants/)에서 따로 다룬다.
 
 설계 판단의 조건은 다음과 같다. 결론이 다른 상황에 옮겨질 수 있는지 판단하는 데 필요하다.
 
@@ -80,7 +80,7 @@ sequenceDiagram
     end
 ```
 
-타임아웃을 실패로 확정하지 않고 `UNKNOWN`으로 두는 이유와 복구 규칙은 [3편](/posts/parity-pay-unknown-state/)에서 다뤘다. 페이머니 결제는 외부 호출이 없어서 멱등 키 선점, 잔액 차감, 원장 전기, 결제 기록이 한 번의 로컬 트랜잭션으로 끝난다.
+타임아웃을 실패로 확정하지 않고 `UNKNOWN`으로 두는 이유와 복구 규칙은 이후 [3편](/posts/parity-pay-unknown-state/)에서 다룬다. 페이머니 결제는 외부 호출이 없어서 멱등 키 선점, 잔액 차감, 원장 전기, 결제 기록이 한 번의 로컬 트랜잭션으로 끝난다.
 
 ## 아키텍처 형태: 모듈러 모놀리스
 
@@ -105,7 +105,7 @@ sequenceDiagram
 | NoSQL 원장 | 확장성 이점보다 트랜잭션·제약 비용이 현재 범위에서 크다 |
 | PostgreSQL (선택) | 금융 효과를 로컬 트랜잭션과 제약으로 보호한다 |
 
-이 결정의 실질은 "PostgreSQL을 쓴다"보다 "규칙을 PostgreSQL 안에 둔다"에 있다. 첫날의 원장 커밋([`2041438`](https://github.com/polynomeer/parity-pay/blob/204143832d80e31fb5bce59bafab457613571046/apps/pay-api/src/main/resources/db/migration/V3__ledger_invariants.sql))은 차변·대변 균형(INV-001)을 커밋 시점에 검사하는 지연 제약 트리거로, 확정 원장의 수정·삭제 금지(INV-006)를 UPDATE·DELETE를 거부하는 트리거로 만들었다. 같은 업무 참조의 중복 효과(INV-004)는 유니크 제약이 마지막 방어선이다. 애플리케이션 코드가 틀리거나 운영자가 SQL을 직접 쳐도 규칙이 깨지지 않게 하려는 것이다. 이 구조는 [7편](/posts/parity-pay-ledger/)에서 자세히 다뤘다.
+이 결정의 실질은 "PostgreSQL을 쓴다"보다 "규칙을 PostgreSQL 안에 둔다"에 있다. 첫날의 원장 커밋([`2041438`](https://github.com/polynomeer/parity-pay/blob/204143832d80e31fb5bce59bafab457613571046/apps/pay-api/src/main/resources/db/migration/V3__ledger_invariants.sql))은 차변·대변 균형(INV-001)을 커밋 시점에 검사하는 지연 제약 트리거로, 확정 원장의 수정·삭제 금지(INV-006)를 UPDATE·DELETE를 거부하는 트리거로 만들었다. 같은 업무 참조의 중복 효과(INV-004)는 유니크 제약이 마지막 방어선이다. 애플리케이션 코드가 틀리거나 운영자가 SQL을 직접 쳐도 규칙이 깨지지 않게 하려는 것이다. 이 구조는 이후 [7편](/posts/parity-pay-ledger/)에서 자세히 다룬다.
 
 동시성 제어도 같은 방향이다. [ADR-004](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/004-atomic-balance-update.md)는 잔액 차감을 `WHERE available_amount >= :amount AND version = :expectedVersion`을 담은 단일 UPDATE로 정했다. 대안이었던 `SELECT FOR UPDATE`는 락 대기와 트랜잭션 길이가 늘 수 있고, 분산락은 DB 갱신과의 원자성이 자동으로 보장되지 않으며 실패 모드가 하나 더 생긴다는 이유로 뺐다. 분산락이 실제로 어떻게 깨지는지는 이후 [10편](/posts/parity-pay-lock-lease/)에서 직접 만들어 쟀다.
 

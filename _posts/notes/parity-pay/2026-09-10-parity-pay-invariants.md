@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 1 - 장애가 나도 지켜야 할 금융 불변조건 여섯 가지"
-date: 2026-02-11
+date: 2026-09-10
 categories: [Notes, ParityPay]
 tags: [Payment, Ledger, Consistency, Idempotency, Architecture, Side Project]
 series: parity-pay

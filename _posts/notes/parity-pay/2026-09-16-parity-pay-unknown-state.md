@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 3 - 외부 승인 응답이 사라졌을 때: 타임아웃은 실패가 아니다"
-date: 2026-02-27
+date: 2026-09-16
 categories: [Notes, ParityPay]
 tags: [Payment, Timeout, Recovery, Idempotency, State Machine, Reliability]
 series: parity-pay

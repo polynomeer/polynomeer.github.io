@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 2 - 잠금을 필요 이상으로 오래 쥐고 있었다: 추론을 측정으로 바꾼 기록"
-date: 2026-02-19
+date: 2026-09-15
 categories: [Notes, ParityPay]
 tags: [Payment, Concurrency, Lock, PostgreSQL, Performance, Measurement, JPA]
 series: parity-pay

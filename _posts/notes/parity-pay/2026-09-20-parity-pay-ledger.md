@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 7 - 애플리케이션 코드를 믿지 않는 원장: 이중부기를 계정 체계, DB 제약, 속성 테스트로 강제하기"
-date: 2026-04-01
+date: 2026-09-20
 categories: [Notes, ParityPay]
 tags: [Payment, Ledger, Double Entry, PostgreSQL, Property Based Testing, Consistency, Domain Modeling]
 series: parity-pay

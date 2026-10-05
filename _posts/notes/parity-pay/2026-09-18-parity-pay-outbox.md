@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 5 - DB 커밋과 Kafka 발행 사이: Transactional Outbox와 at-least-once 소비자"
-date: 2026-03-16
+date: 2026-09-18
 categories: [Notes, ParityPay]
 tags: [Payment, Kafka, Transactional Outbox, Idempotency, PostgreSQL, Event Driven, Fault Injection]
 series: parity-pay

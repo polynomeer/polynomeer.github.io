@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 4 - 실험 27종이 찾아낸 결함 12건: 문서와 코드를 읽어서 나온 것은 하나도 없었다"
-date: 2026-03-08
+date: 2026-09-17
 categories: [Notes, ParityPay]
 tags: [Payment, Testing, Fault Injection, Load Testing, Reliability, Observability]
 series: parity-pay
