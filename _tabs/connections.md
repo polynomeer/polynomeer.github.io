@@ -5,8 +5,8 @@ title_key: connections
 hero_title: true
 icon: fas fa-circle-nodes
 order: 6
-group: evidence
 permalink: /connections/
+group: hidden
 ---
 
 {% include lang.html %}

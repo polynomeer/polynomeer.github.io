@@ -1368,14 +1368,22 @@ $btn-mb: 0.5rem;
       gap: $sb-btn-gap;
     }
 
+    /* Theme (moon/sun) and language (KO/EN) as two small segmented
+       switches on one line, instead of two full-width pills. */
     .sidebar-controls-row {
       margin-bottom: 0.9rem;
-      align-items: stretch;
       width: $contact-width;
 
       .lang-switcher {
-        width: 100%;
+        flex: 1 1 0;
+        width: auto;
         min-width: 0;
+        padding: 0.15rem;
+      }
+
+      .lang-switcher-btn {
+        padding: 0.32rem 0.4rem;
+        font-size: 0.72rem;
       }
     }
 

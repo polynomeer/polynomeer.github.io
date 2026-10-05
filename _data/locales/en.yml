@@ -381,6 +381,8 @@ page_hero:
     summary: The second level under each content type, the same list the types page narrows to.
 
 sidebar:
+  chips:
+    sources: Sources & links
   quick_links: Quick Access
   browse: Browse
   evidence: Evidence
@@ -495,6 +497,7 @@ tech_blogs:
   kind_talk: Talk
 
 citation:
+  connections_link: See how posts link to each other on the connection map
   eyebrow: Evidence
   index_title: Sources
   implicit: A review of the whole original

@@ -376,6 +376,8 @@ page_hero:
     summary: 타입 아래의 두 번째 분류입니다. 타입 페이지에서 한 단계 좁힌 것과 같은 목록입니다.
 
 sidebar:
+  chips:
+    sources: 출처·연결
   quick_links: 빠른 이동
   browse: 둘러보기
   evidence: 근거
@@ -490,6 +492,7 @@ tech_blogs:
   kind_talk: 발표
 
 citation:
+  connections_link: 연결 지도에서 글 사이의 링크 보기
   eyebrow: 근거
   index_title: 출처
   implicit: 원문 전체를 읽고 쓴 리뷰

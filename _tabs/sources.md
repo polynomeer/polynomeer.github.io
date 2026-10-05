@@ -20,4 +20,6 @@ permalink: /sources/
   title_ko=c_ko.index_title title_en=c_en.index_title
   summary_ko=c_ko.index_description summary_en=c_en.index_description %}
 
+<p class="sources-connections-link"><a href="{{ '/connections/' | relative_url }}"><i class="fas fa-circle-nodes" aria-hidden="true"></i> {{ site.data.locales[lang].citation.connections_link }}</a></p>
+
 {% include sources-index.html lang=lang %}
