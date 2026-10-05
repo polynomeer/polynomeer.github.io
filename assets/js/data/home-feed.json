@@ -53,7 +53,7 @@ swcache: true
     {%- endunless -%}
   {%- endif -%}
   {%- unless forloop.first -%},{%- endunless -%}
-  {"title":{{ post.title | jsonify }},"url":{{ post.url | relative_url | jsonify }},"typeId":{{ post_content_type_id | jsonify }},"typeLabel":{{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},"typeIcon":{{ content_type.icon | jsonify }},"typeUrl":{{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},"summary":{{ summary | jsonify }},"dateLabel":{{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},"categories":{{ post.categories | jsonify }},"tags":{{ post.tags | jsonify }},
+  {"title":{{ post.title | jsonify }},"url":{{ post.url | relative_url | jsonify }},"typeId":{{ post_content_type_id | jsonify }},"typeLabel":{{ content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: post_content_type_id | jsonify }},"typeIcon":{{ content_type.icon | jsonify }},"typeUrl":{{ '/types/' | append: post_content_type_id | append: '/' | relative_url | jsonify }},"summary":{{ summary | jsonify }},"dateLabel":{{ post.date | date: site.data.locales[lang].df.post.strftime | jsonify }},"monthDay":{{ post.date | date: '%m.%d' | jsonify }},"categories":{{ post.categories | jsonify }},"tags":{{ post.tags | jsonify }},
   {%- if src -%}"imageSrc":{{ src | jsonify }},"imageAlt":{{ post.image.alt | default: 'Preview Image' | jsonify }},{%- endif -%}
   {%- if post.pin -%}"pin":true,{%- endif -%}
   "kind":{{ post_kind | strip | jsonify }},"topics":{{ post_topics | jsonify }},"year":{{ post.date | date: '%Y' | jsonify }}}

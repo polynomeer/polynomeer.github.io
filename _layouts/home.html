@@ -214,18 +214,14 @@ refactor: true
 <div id="post-list" class="flex-grow-1 px-xl-1">
   <div id="static-post-list">
   {%- comment -%}
-    One rule for TILs and pinned posts: they move only on the first screen.
-    On page 1, up to two pinned posts lead as cards, then every TIL on the
-    page in one box of single-line rows (TILs are short daily notes and
-    crowded the feed as cards), then the rest. A pinned post shows once,
-    at the top. From page 2 on, and in filtered results, every post is a
-    card in date order; a pinned post keeps only its badge.
+    Pinned posts lead page 1 as cards (up to two, shown once). TILs are short
+    daily notes and crowded the feed as cards, so every TIL on a page goes
+    into one box of single-line rows, placed where the first of them falls.
+    From page 2 on, a pinned post keeps only its badge.
   {%- endcomment -%}
-  {% assign display_posts = posts %}
-  {% assign page_tils = '' | split: '' %}
+  {% assign pinned_urls = '' | split: '' %}
+  {% assign display_posts = '' | split: '' %}
   {% if paginator.page == 1 %}
-    {% assign pinned_urls = '' | split: '' %}
-    {% assign display_posts = '' | split: '' %}
     {% for pinned in ordered_posts %}
       {% if pinned.pin %}
         {% assign pinned_urls = pinned_urls | push: pinned.url %}
@@ -233,19 +229,18 @@ refactor: true
         {% if pinned_urls.size == 2 %}{% break %}{% endif %}
       {% endif %}
     {% endfor %}
-    {% assign rest_posts = '' | split: '' %}
-    {% for post in posts %}
-      {% if pinned_urls contains post.url %}{% continue %}{% endif %}
-      {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-      {% if post_content_type_id contains 'til' %}
-        {% assign page_tils = page_tils | push: post %}
-      {% else %}
-        {% assign rest_posts = rest_posts | push: post %}
-      {% endif %}
-    {% endfor %}
-    {% if page_tils.size > 0 %}{% assign display_posts = display_posts | push: 'til-box' %}{% endif %}
-    {% assign display_posts = display_posts | concat: rest_posts %}
   {% endif %}
+  {% assign page_tils = '' | split: '' %}
+  {% for post in posts %}
+    {% if pinned_urls contains post.url %}{% continue %}{% endif %}
+    {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+    {% if post_content_type_id contains 'til' %}
+      {% if page_tils.size == 0 %}{% assign display_posts = display_posts | push: 'til-box' %}{% endif %}
+      {% assign page_tils = page_tils | push: post %}
+    {% else %}
+      {% assign display_posts = display_posts | push: post %}
+    {% endif %}
+  {% endfor %}
   {% for post in display_posts %}
     {% if post == 'til-box' %}
       <div class="til-group">
@@ -449,6 +444,10 @@ refactor: true
       personal: {{ site.data.locales[lang].home.project_study_mark | jsonify }},
       career: {{ site.data.locales[lang].home.case_study_mark | jsonify }}
     };
+    const tilCountTemplate = {{ site.data.locales[lang].home.til_count | jsonify }};
+    const tilAllLabel = {{ site.data.locales[lang].home.til_all | jsonify }};
+    const tilAllUrl = {{ '/types/til/' | relative_url | jsonify }};
+    const tilIcon = {{ site.data.content_types.til.icon | jsonify }};
     const filterAllLabel = {{ site.data.locales[lang].home.filter_all | jsonify }};
     const selectedTagLabelTemplate = {{ site.data.locales[lang].home.tag_filter_selected | jsonify }};
     let allPosts = null;
@@ -721,8 +720,33 @@ refactor: true
       `;
     };
 
-    // Filtered results are plain cards in date order: no TIL box, no pinning.
-    const renderPosts = (posts) => posts.map(renderCard).join('');
+    // Same grouping as the static list: every TIL on the page goes into one
+    // box of rows, placed where the first of them falls. No pinning here.
+    const renderPosts = (posts) => {
+      const out = [];
+      const tils = posts.filter((post) => post.typeId === 'til');
+      let tilBoxShown = false;
+      posts.forEach((post) => {
+        if (post.typeId !== 'til') {
+          out.push(renderCard(post));
+          return;
+        }
+        if (tilBoxShown) return;
+        tilBoxShown = true;
+        out.push(`<div class="til-group">
+          <div class="til-group-head">
+            <span class="til-group-label"><i class="${escapeHtml(tilIcon)}" aria-hidden="true"></i>TIL</span>
+            <span class="til-group-count">${escapeHtml(tilCountTemplate.replace(':N', tils.length))}</span>
+            <a class="til-group-all" href="${escapeHtml(tilAllUrl)}">${escapeHtml(tilAllLabel)}</a>
+          </div>${tils.map((til) => `
+          <a class="til-row" href="${escapeHtml(til.url)}" data-post-type="til">
+            <span class="til-row-date">${escapeHtml(til.monthDay || '')}</span>
+            <span class="til-row-title">${escapeHtml(til.title)}</span>
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </a>`).join('')}</div>`);
+      });
+      return out.join('');
+    };
 
     const renderEmptyState = () => {
       filteredPostList.innerHTML = `<div class="post-filter-empty">${escapeHtml(noResultsMessage)}</div>`;
