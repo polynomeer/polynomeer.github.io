@@ -5,260 +5,211 @@ layout: page
 
 {% include lang.html %}
 
-{% assign df_strftime_m = site.data.locales[lang].df.archives.strftime | default: '/ %m' %}
-{% assign df_dayjs_m = site.data.locales[lang].df.archives.dayjs | default: '/ MM' %}
+{% assign ar = site.data.locales[lang].archives %}
+{% assign ar_ko = site.data.locales['ko-KR'].archives %}
+{% assign ar_en = site.data.locales.en.archives %}
 {% assign latest_year = site.posts.first.date | date: '%Y' %}
+{% assign first_year = site.posts.last.date | date: '%Y' %}
 {% assign yearly_posts = site.posts | group_by_exp: 'post', "post.date | date: '%Y'" %}
-{% assign active_years = yearly_posts | size %}
 {% assign sorted_content_types = site.content_types | sort: 'order' %}
+{% assign now_ym = site.time | date: '%Y%m' | plus: 0 %}
+
+{%- comment -%}
+  The archive is for finding a post by when it was written. A bar per year
+  (the selected one filled) leads to that year's twelve months, shaded by how
+  many posts each has; a month jumps to its section. The type chips count the
+  selected year's posts. Below, the year's posts are grouped by month, one
+  row each: date, type colour, title, series. TIL rows sit quieter.
+
+  Without JavaScript every year is listed and the bars are plain links.
+{%- endcomment -%}
+{% assign max_year_count = 0 %}
+{% for year_group in yearly_posts %}
+  {% if year_group.items.size > max_year_count %}{% assign max_year_count = year_group.items.size %}{% endif %}
+{% endfor %}
 
 <div id="archives" class="pl-xl-3">
-  {% assign ar_ko = site.data.locales['ko-KR'].archives %}
-  {% assign ar_en = site.data.locales.en.archives %}
-  {% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
-  {% assign tabs_en = site.data.locales.en.tabs %}
-
-  {% capture archives_stats %}
-    <div class="page-hero-stats">
-      {% include page-hero-stat.html lang=lang value=site.posts.size
-        label_ko=ar_ko.total_posts label_en=ar_en.total_posts %}
-      {% include page-hero-stat.html lang=lang value=active_years
-        label_ko=ar_ko.active_years label_en=ar_en.active_years %}
-      {% include page-hero-stat.html lang=lang value=latest_year
-        label_ko=ar_ko.latest_year label_en=ar_en.latest_year %}
-    </div>
+  {% capture archives_extra %}
+    <a class="archive-on-this-day" href="{{ '/on-this-day/' | relative_url }}"
+      data-l10n-ko="{{ ar_ko.on_this_day | escape }}" data-l10n-en="{{ ar_en.on_this_day | escape }}">{{ ar.on_this_day }}</a>
   {% endcapture %}
-
+  {% capture eyebrow_range %}archive · {{ first_year }} – {{ latest_year }}{% endcapture %}
+  {% capture summary_ko %}{{ ar_ko.description | replace: ':COUNT', site.posts.size }}{% endcapture %}
+  {% capture summary_en %}{{ ar_en.description | replace: ':COUNT', site.posts.size }}{% endcapture %}
+  {% assign title_ko = site.data.locales['ko-KR'].tabs.archives %}
+  {% assign title_en = site.data.locales.en.tabs.archives %}
   {% include page-hero.html
     lang=lang
-    eyebrow_ko=ar_ko.eyebrow eyebrow_en=ar_en.eyebrow
-    title_ko=tabs_ko.archives title_en=tabs_en.archives
-    summary_ko=ar_ko.description summary_en=ar_en.description
-    extra=archives_stats %}
+    eyebrow_ko=eyebrow_range eyebrow_en=eyebrow_range
+    title_ko=title_ko title_en=title_en
+    summary_ko=summary_ko summary_en=summary_en
+    extra=archives_extra %}
 
-  <section class="archives-controls">
-    <div class="archives-filters">
-      <div class="archives-filter-group">
-        <span class="archives-filter-label" data-i18n="archives.filter_type">{{ site.data.locales[lang].archives.filter_type }}</span>
-        <div class="archives-filter-options" data-filter-group="type">
-          <button type="button" class="archives-filter-chip active" data-filter-group="type" data-filter-value="all" data-i18n="archives.filter_all">
-            {{ site.data.locales[lang].archives.filter_all }}
-          </button>
-          {% for type_page in sorted_content_types %}
-            {% assign content_type_id = type_page.content_type_id %}
-            {% assign content_type = site.data.content_types[content_type_id] %}
-            {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-            <button type="button" class="archives-filter-chip" data-filter-group="type" data-filter-value="{{ content_type_id }}">
-              {{ content_type_label }}
-            </button>
+  <section class="archive-overview" aria-label="{{ ar.years_label }}">
+    <div class="archive-years">
+      {% assign years_asc = yearly_posts | reverse %}
+      {% for year_group in years_asc %}
+        {% assign pct = year_group.items.size | times: 100 | divided_by: max_year_count %}
+        <a
+          class="archive-year-bar{% if year_group.name == latest_year %} is-selected{% endif %}"
+          href="#archive-year-{{ year_group.name }}"
+          data-archive-year="{{ year_group.name }}"
+          aria-label="{{ year_group.name }} · {{ ar.year_post_count | replace: ':COUNT', year_group.items.size }}"
+        >
+          <span class="archive-year-bar-count">{{ year_group.items.size }}</span>
+          <span class="archive-year-bar-fill" style="height: {{ pct }}%"></span>
+          <span class="archive-year-bar-label">{{ year_group.name }}</span>
+        </a>
+      {% endfor %}
+    </div>
+
+    {% for year_group in yearly_posts %}
+      {% assign cur_year = year_group.name %}
+      {% assign month_groups = year_group.items | group_by_exp: 'post', "post.date | date: '%m'" %}
+      {% assign max_month = 0 %}
+      {% for mg in month_groups %}{% if mg.items.size > max_month %}{% assign max_month = mg.items.size %}{% endif %}{% endfor %}
+      <div class="archive-months" data-archive-months="{{ cur_year }}"{% unless cur_year == latest_year %} hidden{% endunless %}>
+        <span class="archive-months-label">{{ ar.months_label | replace: ':YEAR', cur_year }}</span>
+        <div class="archive-month-grid">
+          {% for m in (1..12) %}
+            {% if m < 10 %}{% capture mm %}0{{ m }}{% endcapture %}{% else %}{% capture mm %}{{ m }}{% endcapture %}{% endif %}
+            {% assign month_count = 0 %}
+            {% for g in month_groups %}{% if g.name == mm %}{% assign month_count = g.items.size %}{% break %}{% endif %}{% endfor %}
+            {% capture ym %}{{ cur_year }}{{ mm }}{% endcapture %}
+            {% assign ym = ym | plus: 0 %}
+            {% if month_count > 0 %}
+              {% assign level = month_count | times: 100 | divided_by: max_month %}
+              <a class="archive-month" href="#archive-{{ cur_year }}-{{ mm }}" style="--level: {{ level }}%" title="{{ ar.month_count | replace: ':MONTH', m | replace: ':COUNT', month_count }}">{{ m }}</a>
+            {% elsif ym > now_ym %}
+              <span class="archive-month is-future">{{ m }}</span>
+            {% else %}
+              <span class="archive-month is-empty">{{ m }}</span>
+            {% endif %}
           {% endfor %}
         </div>
       </div>
-
-      {% assign sorted_post_statuses = site.post_statuses | sort: 'order' %}
-      {% assign visible_status_count = 0 %}
-      {% for status_page in sorted_post_statuses %}
-        {% assign status_id = status_page.post_status_id %}
-        {% assign matching_posts = site.posts | where: 'status', status_id %}
-        {% if matching_posts.size > 0 %}
-          {% assign visible_status_count = visible_status_count | plus: 1 %}
-        {% endif %}
-      {% endfor %}
-      {% if visible_status_count > 1 %}
-        <div class="archives-filter-group">
-          <span class="archives-filter-label" data-i18n="archives.filter_status">{{ site.data.locales[lang].archives.filter_status }}</span>
-          <div class="archives-filter-options" data-filter-group="status">
-            <button type="button" class="archives-filter-chip active" data-filter-group="status" data-filter-value="all" data-i18n="archives.filter_all">
-              {{ site.data.locales[lang].archives.filter_all }}
-            </button>
-            {% for status_page in sorted_post_statuses %}
-              {% assign status_id = status_page.post_status_id %}
-              {% assign post_status = site.data.post_statuses[status_id] %}
-              {% assign matching_posts = site.posts | where: 'status', status_id %}
-              {% if post_status and matching_posts.size > 0 %}
-                <button type="button" class="archives-filter-chip" data-filter-group="status" data-filter-value="{{ status_id }}">
-                  {{ post_status.title }}
-                </button>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-    </div>
+    {% endfor %}
   </section>
+
+  <div class="archives-filters" role="group" aria-label="{{ ar.filter_type }}">
+    <button type="button" class="archives-filter-chip active" data-filter-value="all" aria-pressed="true">
+      {{ ar.filter_all }} <span class="archives-filter-count" data-count-for="all"></span>
+    </button>
+    {% for type_page in sorted_content_types %}
+      {% assign content_type_id = type_page.content_type_id %}
+      {% assign content_type = site.data.content_types[content_type_id] %}
+      {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
+      <button type="button" class="archives-filter-chip" data-filter-value="{{ content_type_id }}" aria-pressed="false" style="--type-color: var(--type-{{ content_type_id }})">
+        <span class="archives-filter-dot" aria-hidden="true"></span>{{ content_type_label }} <span class="archives-filter-count" data-count-for="{{ content_type_id }}"></span>
+      </button>
+    {% endfor %}
+  </div>
 
   {% for year_group in yearly_posts %}
     {% assign cur_year = year_group.name %}
-    {% assign year_posts = year_group.items %}
-    {% assign year_post_count = year_posts | size %}
-    {% assign year_type_groups = year_posts | group_by_exp: 'post', "post.path | split: '/' | slice: 1, 1 | first | downcase" %}
-    {% assign is_open = false %}
-    {% if cur_year == latest_year %}
-      {% assign is_open = true %}
-    {% endif %}
-
-    <section class="archive-year-group{% if is_open %} is-open{% endif %}" data-year="{{ cur_year }}">
-      <button
-        type="button"
-        class="archive-year-toggle"
-        aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
-        aria-controls="archive-year-{{ cur_year }}"
-      >
-        <div class="archive-year-main">
-          <time class="year lead d-block">{{ cur_year }}</time>
-          <div class="archive-year-summary">
-            <span
-              class="archive-year-count"
-              data-l10n-ko="{{ site.data.locales['ko-KR'].archives.year_post_count | replace: ':COUNT', year_post_count | escape }}"
-              data-l10n-en="{% if year_post_count == 1 %}{{ site.data.locales.en.archives.year_post_count_singular | replace: ':COUNT', year_post_count | escape }}{% else %}{{ site.data.locales.en.archives.year_post_count | replace: ':COUNT', year_post_count | escape }}{% endif %}"
-            >
-              {% if lang == 'en' %}
-                {% if year_post_count == 1 %}
-                  {{ site.data.locales.en.archives.year_post_count_singular | replace: ':COUNT', year_post_count }}
-                {% else %}
-                  {{ site.data.locales.en.archives.year_post_count | replace: ':COUNT', year_post_count }}
-                {% endif %}
-              {% else %}
-                {{ site.data.locales[lang].archives.year_post_count | replace: ':COUNT', year_post_count }}
-              {% endif %}
-            </span>
-
-            <div class="archive-type-summary">
-              {% assign shown_type_count = 0 %}
-              {% for type_page in sorted_content_types %}
-                {% if shown_type_count >= 3 %}
-                  {% break %}
-                {% endif %}
-
-                {% assign content_type_id = type_page.content_type_id %}
-                {% assign content_type = site.data.content_types[content_type_id] %}
-                {% assign matching_type_group = year_type_groups | where: 'name', content_type_id | first %}
-                {% assign matching_type_count = matching_type_group.items | size | default: 0 %}
-
-                {% if matching_type_count > 0 %}
-                  {% assign shown_type_count = shown_type_count | plus: 1 %}
-                  {% assign content_type_label = content_type.title.en | default: content_type.title['ko-KR'] | default: content_type.title | default: content_type_id %}
-                  <span class="archive-type-pill">
-                    <span>{{ content_type_label }}</span>
-                    <strong>{{ matching_type_count }}</strong>
-                  </span>
-                {% endif %}
-              {% endfor %}
-            </div>
+    {% assign month_groups = year_group.items | group_by_exp: 'post', "post.date | date: '%m'" %}
+    <section class="archive-year" id="archive-year-{{ cur_year }}" data-year="{{ cur_year }}">
+      <h2 class="archive-year-title">{{ cur_year }}</h2>
+      {% for mg in month_groups %}
+        {% assign month_num = mg.name | plus: 0 %}
+        <section class="archive-month-section" id="archive-{{ cur_year }}-{{ mg.name }}">
+          <div class="archive-month-head">
+            <h3>{{ ar.month_name | replace: ':MONTH', month_num }}</h3>
+            <span class="archive-month-count">{{ ar.year_post_count | replace: ':COUNT', mg.items.size }}</span>
           </div>
-        </div>
-      </button>
-
-      <ul id="archive-year-{{ cur_year }}" class="list-unstyled"{% unless is_open %} hidden{% endunless %}>
-        {% for post in year_posts %}
-          {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-          {% assign post_content_type_id = post_content_type_id | strip %}
-          <li
-            class="archive-post-item"
-            data-content-type="{{ post_content_type_id }}"
-            data-post-status="{{ post.status | default: 'none' }}"
-          >
-            {% assign ts = post.date | date: '%s' %}
-            <div class="archive-post-date">
-              <span class="date day" data-ts="{{ ts }}" data-df="DD">{{ post.date | date: '%d' }}</span>
-              <span class="date month small text-muted ms-1" data-ts="{{ ts }}" data-df="{{ df_dayjs_m }}">
-                {{ post.date | date: df_strftime_m }}
-              </span>
-            </div>
-
-            <div class="archive-post-main">
-              <a href="{{ post.url | relative_url }}" class="archive-post-link">{{ post.title }}</a>
-              <div class="archive-post-meta">
-                {% include content-type-badge.html post=post link=true %}
-                {% include post-status-badge.html post=post link=true %}
-              </div>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+          <ul class="archive-rows list-unstyled">
+            {% for post in mg.items %}
+              {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+              {% assign post_content_type_id = post_content_type_id | strip %}
+              <li class="archive-row{% if post_content_type_id == 'til' %} is-quiet{% endif %}" data-content-type="{{ post_content_type_id }}" style="--type-color: var(--type-{{ post_content_type_id }})">
+                <a href="{{ post.url | relative_url }}" class="archive-row-link">
+                  <time class="archive-row-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%m.%d' }}</time>
+                  <span class="archive-row-dot" aria-hidden="true"></span>
+                  <span class="archive-row-title">{{ post.title }}</span>
+                  {% if post.series and post.series_order %}
+                    <span class="archive-row-series" title="{{ post.series_title | escape }}">{{ post.series_title | truncate: 18 }} · {{ post.series_order }}</span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endfor %}
     </section>
   {% endfor %}
 
-  <p
-    class="archives-empty-state"
-    data-i18n="archives.empty"
-    hidden
-  >
-    {{ site.data.locales[lang].archives.empty }}
-  </p>
+  <p class="archives-empty-state" hidden>{{ ar.empty }}</p>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const archiveRoot = document.getElementById('archives');
-    const emptyState = archiveRoot?.querySelector('.archives-empty-state');
-    const activeFilters = {
-      type: 'all',
-      status: 'all'
-    };
+    const root = document.getElementById('archives');
+    if (!root) return;
+    const bars = Array.from(root.querySelectorAll('[data-archive-year]'));
+    const monthStrips = Array.from(root.querySelectorAll('[data-archive-months]'));
+    const years = Array.from(root.querySelectorAll('.archive-year'));
+    const chips = Array.from(root.querySelectorAll('.archives-filter-chip'));
+    const empty = root.querySelector('.archives-empty-state');
+    let year = bars.find((b) => b.classList.contains('is-selected'))?.dataset.archiveYear;
+    let type = 'all';
 
-    const applyFilters = () => {
-      if (!archiveRoot) return;
-
-      let visibleCount = 0;
-
-      archiveRoot.querySelectorAll('.archive-year-group').forEach((group) => {
-        let visibleInGroup = 0;
-
-        group.querySelectorAll('.archive-post-item').forEach((item) => {
-          const matchesType = activeFilters.type === 'all' || item.dataset.contentType === activeFilters.type;
-          const matchesStatus = activeFilters.status === 'all' || item.dataset.postStatus === activeFilters.status;
-          const isVisible = matchesType && matchesStatus;
-          item.hidden = !isVisible;
-
-          if (isVisible) {
-            visibleCount += 1;
-            visibleInGroup += 1;
-          }
-        });
-
-        group.hidden = visibleInGroup === 0;
+    const render = () => {
+      const section = years.find((s) => s.dataset.year === year);
+      years.forEach((s) => { s.hidden = s !== section; });
+      monthStrips.forEach((m) => { m.hidden = m.dataset.archiveMonths !== year; });
+      bars.forEach((b) => {
+        const on = b.dataset.archiveYear === year;
+        b.classList.toggle('is-selected', on);
+        b.setAttribute('aria-current', String(on));
       });
 
-      if (emptyState) {
-        emptyState.hidden = visibleCount > 0;
-      }
-    };
-
-    document.querySelectorAll('#archives .archive-year-toggle').forEach((toggle) => {
-      toggle.addEventListener('click', () => {
-        const group = toggle.closest('.archive-year-group');
-        const list = group?.querySelector('ul');
-        if (!list) return;
-
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        list.hidden = expanded;
-        group.classList.toggle('is-open', !expanded);
-      });
-    });
-
-    document.querySelectorAll('#archives .archives-filter-chip').forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const groupName = chip.dataset.filterGroup;
+      // Chip counts follow the selected year.
+      const rows = section ? Array.from(section.querySelectorAll('.archive-row')) : [];
+      const counts = rows.reduce((acc, row) => {
+        acc[row.dataset.contentType] = (acc[row.dataset.contentType] || 0) + 1;
+        return acc;
+      }, {});
+      chips.forEach((chip) => {
         const value = chip.dataset.filterValue;
+        const n = value === 'all' ? rows.length : counts[value] || 0;
+        chip.querySelector('.archives-filter-count').textContent = n;
+        chip.hidden = value !== 'all' && n === 0 && value !== type;
+      });
 
-        if (!groupName || !value) return;
+      let visible = 0;
+      section?.querySelectorAll('.archive-month-section').forEach((month) => {
+        let inMonth = 0;
+        month.querySelectorAll('.archive-row').forEach((row) => {
+          const show = type === 'all' || row.dataset.contentType === type;
+          row.hidden = !show;
+          if (show) inMonth += 1;
+        });
+        month.hidden = inMonth === 0;
+        visible += inMonth;
+      });
+      if (empty) empty.hidden = visible > 0;
+    };
 
-        activeFilters[groupName] = value;
-
-        archiveRoot
-          .querySelectorAll(`.archives-filter-chip[data-filter-group="${groupName}"]`)
-          .forEach((candidate) => {
-            const isActive = candidate.dataset.filterValue === value;
-            candidate.classList.toggle('active', isActive);
-            candidate.setAttribute('aria-pressed', String(isActive));
-          });
-
-        applyFilters();
+    bars.forEach((bar) => {
+      bar.addEventListener('click', (event) => {
+        event.preventDefault();
+        year = bar.dataset.archiveYear;
+        render();
       });
     });
 
-    applyFilters();
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        type = chip.dataset.filterValue;
+        chips.forEach((c) => {
+          const on = c === chip;
+          c.classList.toggle('active', on);
+          c.setAttribute('aria-pressed', String(on));
+        });
+        render();
+      });
+    });
+
+    render();
   });
 </script>

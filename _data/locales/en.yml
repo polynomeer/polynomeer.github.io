@@ -238,7 +238,7 @@ on_this_day:
 
 archives:
   eyebrow: Time archive
-  description: Explore the full writing history with yearly summaries and post metadata.
+  description: ":COUNT posts in the order they were written. Pick a year to see how much was written each month, and that year's posts."
   total_posts: Total posts
   active_years: Active years
   latest_year: Latest year
@@ -248,6 +248,11 @@ archives:
   empty: No archive posts match the selected filters.
   year_post_count: ":COUNT posts"
   year_post_count_singular: ":COUNT post"
+  on_this_day: Written around this time last year ›
+  years_label: Posts per year
+  months_label: "By month, :YEAR"
+  month_count: "Month :MONTH: :COUNT posts"
+  month_name: "Month :MONTH"
 
 # categories page
 categories:

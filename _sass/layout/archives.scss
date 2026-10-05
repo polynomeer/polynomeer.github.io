@@ -1,286 +1,325 @@
 /*
-  Style for Archives
+  Style for Archives: a bar per year, the selected year's months, type chips
+  and the month-grouped rows (see _layouts/archives.html).
 */
 
 @use 'variables-hook' as *;
 @use 'addon/module' as *;
 
 #archives {
-  letter-spacing: 0.03rem;
-  display: grid;
-  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 
-  .archives-filters {
-    display: grid;
-    gap: 0.85rem;
-  }
-
-  .archives-filter-group {
-    display: grid;
-    gap: 0.45rem;
-  }
-
-  .archives-filter-label {
-    color: var(--text-muted-color);
-    font-size: 0.82rem;
-    font-weight: 700;
-  }
-
-  .archives-filter-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .archives-filter-chip {
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    border: 1px solid rgba(120, 130, 160, 0.22);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--text-muted-color);
-    font-size: 0.82rem;
-    line-height: 1.1;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease,
-      transform 0.2s ease;
-
-    &:hover {
-      color: var(--heading-color);
-      border-color: rgba(139, 233, 253, 0.35);
-      background: rgba(139, 233, 253, 0.08);
-      transform: translateY(-1px);
-    }
-
-    &.active {
-      color: #0f1720;
-      border-color: rgba(139, 233, 253, 0.5);
-      background: rgba(139, 233, 253, 0.9);
-      font-weight: 700;
-    }
-  }
-
-  .archive-year-group {
-    padding: 1rem 1.15rem;
-    border: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.22));
-    border-radius: 1.25rem;
-    background:
-      radial-gradient(circle at top right, rgba(139, 233, 253, 0.06), transparent 24%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01)),
-      var(--main-bg, #ffffff);
-    box-shadow: 0 10px 26px rgba(15, 18, 30, 0.08);
-
-    &.is-open {
-      border-color: rgba(139, 233, 253, 0.22);
-    }
-  }
-
-  .archive-year-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    width: 100%;
-    padding: 0.1rem 0;
-    border: 0;
-    background: transparent;
-    text-align: left;
-    color: inherit;
-    vertical-align: top;
-
-    &::after {
-      content: '\f107';
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      font-size: 1rem;
-      color: var(--text-muted-color);
-      transition: transform 0.2s ease;
-    }
-
-    &[aria-expanded='false']::after {
-      transform: rotate(-90deg);
-    }
-  }
-
-  .archive-year-main {
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
-    min-width: 0;
-  }
-
-  .archive-year-summary {
-    display: grid;
-    gap: 0.5rem;
-  }
-
-  .archive-year-count {
-    color: var(--heading-color);
-    font-size: 0.92rem;
-    font-weight: 700;
-  }
-
-  .archive-type-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-
-  .archive-type-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.3rem 0.62rem;
-    border-radius: 999px;
-    font-size: 0.76rem;
-    color: var(--text-muted-color);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(120, 130, 160, 0.18);
-
-    strong {
-      color: var(--heading-color);
-      font-size: 0.75rem;
-    }
-  }
-
-  .year {
-    flex: 0 0 auto;
-    min-width: 4.5rem;
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1;
-    color: var(--heading-color);
-
-    /* four digits were wrapping to two lines in the narrow phone column */
-    white-space: nowrap;
-  }
-
-  ul {
+  .page-hero {
     margin-bottom: 0;
-    padding-top: 1rem;
+  }
+}
 
-    li {
-      font-size: 1.02rem;
-      line-height: 1.5;
+.archive-on-this-day {
+  font-size: 0.86rem;
+  color: var(--link-color);
+}
+
+.archive-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.4rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 1.1rem;
+  background: var(--card-bg);
+}
+
+.archive-years {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  align-items: end;
+  gap: 0.6rem;
+  height: 9rem;
+}
+
+.archive-year-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  height: 100%;
+  color: var(--text-muted-color);
+  font-family: var(--bs-font-monospace, monospace);
+
+  &:hover {
+    color: var(--text-color);
+    text-decoration: none;
+
+    .archive-year-bar-fill {
+      background: color-mix(in srgb, var(--link-color) 45%, var(--card-hovor-bg));
     }
-  } /* #archives ul */
-
-  .archive-post-item {
-    display: grid;
-    grid-template-columns: 5rem minmax(0, 1fr);
-    gap: 0.75rem 1rem;
-    align-items: center;
-    padding: 0.95rem 0.2rem;
-    border-top: 1px solid rgba(120, 130, 160, 0.12);
   }
 
-  .archive-post-date {
-    display: inline-flex;
-    align-items: baseline;
-    justify-content: flex-start;
-    gap: 0.25rem;
-    min-width: 0;
-    padding: 0.45rem 0.55rem;
-    border-radius: 0.85rem;
-    border: 1px solid rgba(120, 130, 160, 0.16);
-    background: rgba(255, 255, 255, 0.03);
-    white-space: nowrap;
-  }
+  &.is-selected {
+    color: var(--text-color);
 
-  .archive-post-main {
-    min-width: 0;
-    display: grid;
-    gap: 0.5rem;
-  }
+    .archive-year-bar-fill {
+      background: var(--link-color);
+    }
 
-  .archive-post-link {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 1.06rem;
-    font-weight: 700;
-    color: var(--heading-color);
-
-    &:hover {
-      border-bottom: none;
+    .archive-year-bar-count {
       color: var(--link-color);
     }
   }
+}
 
-  .archive-post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
+.archive-year-bar-count {
+  font-size: 0.7rem;
+}
 
-    .content-type-badge,
-    .post-status-badge {
-      margin: 0;
-    }
+.archive-year-bar-fill {
+  width: 100%;
+  min-height: 0.3rem;
+  max-height: calc(100% - 2.6rem);
+  border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;
+  background: var(--card-hovor-bg);
+  transition: background-color 0.15s ease;
+}
+
+.archive-year-bar-label {
+  font-size: 0.74rem;
+}
+
+.archive-months {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--btn-border-color);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.archive-months-label {
+  color: var(--text-muted-color);
+  font-size: 0.76rem;
+}
+
+.archive-month-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.archive-month {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 2.1rem;
+  padding-bottom: 0.15rem;
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--link-color) var(--level, 0%), var(--card-hovor-bg));
+  color: var(--text-color);
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.66rem;
+
+  &:hover {
+    color: var(--text-color);
+    text-decoration: none;
+    outline: 2px solid var(--link-color);
+    outline-offset: 1px;
   }
 
-  .archives-empty-state {
-    margin: -0.25rem 0 0;
-    padding: 1rem 1.1rem;
-    border-radius: 1rem;
+  &.is-empty {
+    background: none;
+    border: 1px solid var(--btn-border-color);
     color: var(--text-muted-color);
-    text-align: center;
-    border: 1px dashed rgba(120, 130, 160, 0.22);
   }
 
-  .date {
-    white-space: nowrap;
-    display: inline-block;
-    position: static;
+  &.is-future {
+    background: none;
+    border: 1px dashed var(--btn-border-color);
+    color: var(--text-muted-color);
+    opacity: 0.6;
+  }
+}
 
-    &.month {
-      width: auto;
-      text-align: center;
-      color: var(--text-muted-color) !important;
-    }
+.archives-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
 
-    &.day {
-      font-size: 0.95rem;
-      font-weight: 700;
-      font-family: Lato, sans-serif;
-    }
+.archives-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted-highlight-color, var(--text-color));
+  font-size: 0.8rem;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--type-color, var(--link-color)) 55%, transparent);
   }
 
-} /* #archives */
+  &.active {
+    border-color: color-mix(in srgb, var(--type-color, var(--link-color)) 60%, transparent);
+    background: color-mix(in srgb, var(--type-color, var(--link-color)) 16%, transparent);
+    color: var(--type-color, var(--link-color));
+    font-weight: 600;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.archives-filter-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--type-color, var(--text-muted-color));
+}
+
+.archives-filter-count {
+  color: var(--text-muted-color);
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+.archive-year[hidden],
+.archive-month-section[hidden],
+.archive-row[hidden] {
+  display: none;
+}
+
+h2.archive-year-title {
+  margin: 0 0 0.25rem;
+  color: var(--heading-color);
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 1.3rem;
+}
+
+.archive-month-section {
+  margin-bottom: 1.25rem;
+  scroll-margin-top: 4.5rem;
+}
+
+.archive-month-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.4rem 0.25rem;
+  border-bottom: 1px solid var(--btn-border-color);
+
+  h3 {
+    margin: 0;
+    color: var(--heading-color);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+}
+
+.archive-month-count {
+  color: var(--text-muted-color);
+  font-size: 0.76rem;
+}
+
+.archive-rows {
+  margin: 0;
+}
+
+.archive-row + .archive-row {
+  border-top: 1px solid color-mix(in srgb, var(--btn-border-color) 60%, transparent);
+}
+
+#archives .archive-row-link {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 0.25rem;
+  color: var(--text-color);
+
+  &:hover {
+    color: var(--text-color);
+    text-decoration: none;
+
+    .archive-row-title {
+      color: var(--link-color);
+    }
+  }
+}
+
+.archive-row-date {
+  flex: none;
+  width: 2.8rem;
+  color: var(--accent-date);
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.76rem;
+}
+
+.archive-row-dot {
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--type-color, var(--text-muted-color));
+}
+
+.archive-row-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.archive-row-series {
+  flex: none;
+  max-width: 12rem;
+  padding: 0.05rem 0.55rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--link-color) 14%, transparent);
+  color: var(--link-color);
+  font-size: 0.7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.archive-row.is-quiet {
+  .archive-row-date,
+  .archive-row-title {
+    color: var(--text-muted-color);
+  }
+}
+
+.archives-empty-state {
+  color: var(--text-muted-color);
+}
 
 @media all and (max-width: 576px) {
-  #archives {
-    margin-top: -1rem;
+  .archive-overview {
+    padding: 1rem;
+  }
 
-    .archives-stats {
-      grid-template-columns: 1fr;
-    }
+  .archive-years {
+    gap: 0.35rem;
+    height: 7.5rem;
+  }
 
-    .archives-filter-options {
-      gap: 0.45rem;
-    }
+  .archive-month-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 
-    .archive-year-toggle,
-    .archive-year-main,
-    .archive-post-item {
-      gap: 0.75rem;
-    }
-
-    .archive-post-item {
-      grid-template-columns: 1fr;
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    .archive-post-date,
-    .archive-post-meta {
-      width: fit-content;
-    }
-
-    ul {
-      letter-spacing: 0;
-    }
+  .archive-row-series {
+    display: none;
   }
 }

@@ -239,11 +239,6 @@
     }
   }
 
-  #archives li:nth-child(odd) {
-    background-image: none;
-    background-color: rgba(68, 71, 90, 0.25);
-  }
-
   /* stylelint-disable-next-line selector-id-pattern */
   #disqus_thread {
     color-scheme: none;

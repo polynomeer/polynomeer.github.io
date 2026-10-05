@@ -238,7 +238,7 @@ on_this_day:
 
 archives:
   eyebrow: 시간순 아카이브
-  description: 연도별 요약과 포스트 메타데이터를 함께 보면서 전체 글 흐름을 탐색합니다.
+  description: ":COUNT편을 쓴 순서대로. 연도를 고르면 그해 달마다 얼마나 썼는지와 글 목록이 함께 바뀝니다."
   total_posts: 전체 글
   active_years: 연도 수
   latest_year: 최신 연도
@@ -246,7 +246,12 @@ archives:
   filter_status: 상태 필터
   filter_all: 전체
   empty: 선택한 조건과 일치하는 아카이브 글이 없습니다.
-  year_post_count: ":COUNT개 글"
+  year_post_count: ":COUNT편"
+  on_this_day: 1년 전 이맘때 쓴 글 ›
+  years_label: 연도별 글 수
+  months_label: ":YEAR년 달별"
+  month_count: ":MONTH월 :COUNT편"
+  month_name: ":MONTH월"
 
 # categories page
 categories:
