@@ -14,19 +14,17 @@ tail_includes:
 
 <article class="px-1">
   <header class="post-header">
-    {%- comment -%} Type and status badges sit above the title, as on the feed cards. {%- endcomment -%}
-    <div class="post-type-row mb-3">
-      {% include content-type-badge.html post=page lang=lang %}
-      {% include post-status-badge.html post=page lang=lang %}
-      {% include practical-validation-badges.html post=page lang=lang %}
-    </div>
-
     <h1 data-toc-skip>{{ page.title }}</h1>
     {% if page.description %}
       <p class="post-desc fw-light mb-4">{{ page.description }}</p>
     {% endif %}
 
     <div class="post-meta text-muted">
+      <div class="post-type-row mb-3">
+        {% include content-type-badge.html post=page lang=lang %}
+        {% include post-status-badge.html post=page lang=lang %}
+        {% include practical-validation-badges.html post=page lang=lang %}
+      </div>
 
       {%- comment -%}
         날짜와 작성자를 span으로 묶어 가운뎃점으로 구분합니다.

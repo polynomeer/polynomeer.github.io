@@ -53,12 +53,7 @@ Matches on the post URL or, for personal projects, on the post's series page per
   {%- assign ctx_part = 0 -%}
   {%- for p in ctx_series_posts -%}{%- if p.url == page.url -%}{%- assign ctx_part = forloop.index -%}{%- endif -%}{%- endfor -%}
   {%- if ctx_series_page and ctx_part > 0 -%}
-{%- comment -%} One tick per part (up to 24): read parts filled, this one in the accent. {%- endcomment -%}
-<a class="portfolio-context-series" href="{{ ctx_series_page.url | relative_url }}" title="{{ ctx_series_page.title | escape }}" aria-label="{{ site.data.locales[lang].post.series }} {{ site.data.locales[lang].post.series_progress | replace: ':CURRENT', ctx_part | replace: ':TOTAL', ctx_series_posts.size }}"><span class="portfolio-context-series-label">{{ site.data.locales[lang].post.series }}</span><span class="portfolio-context-series-count">{{ ctx_part }} / {{ ctx_series_posts.size }}</span>
-{%- if ctx_series_posts.size <= 24 -%}
-<span class="portfolio-context-series-ticks" aria-hidden="true">{%- for p in ctx_series_posts -%}<span class="{% if forloop.index == ctx_part %}is-current{% elsif forloop.index < ctx_part %}is-before{% endif %}"></span>{%- endfor -%}</span>
-{%- endif -%}
-</a>
+<a class="portfolio-context-series" href="{{ ctx_series_page.url | relative_url }}"><span class="portfolio-context-series-label">{{ site.data.locales[lang].post.series }}</span>{{ site.data.locales[lang].post.series_progress | replace: ':CURRENT', ctx_part | replace: ':TOTAL', ctx_series_posts.size }}<i class="fas fa-angle-right" aria-hidden="true"></i></a>
     {%- assign portfolio_context_series_shown = true -%}
   {%- endif -%}
 {%- endif -%}
