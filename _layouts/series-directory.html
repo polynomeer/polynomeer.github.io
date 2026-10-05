@@ -4,6 +4,7 @@ layout: page
 
 {% include lang.html %}
 
+{% assign sd = site.data.locales[lang].series_directory %}
 {% assign series_entries = '' | split: '' %}
 
 {% for post in site.posts %}
@@ -13,6 +14,17 @@ layout: page
     {% endunless %}
   {% endif %}
 {% endfor %}
+
+{%- comment -%}
+  The series page is for following a series to the end. It opens with the
+  series this browser read most recently and has not finished (built by
+  series-progress.js from the #series-index JSON below), then the series by
+  group. A series still being written - a part in the last 60 days, or
+  `series_status: ongoing` - gets a wide card with its part map; the rest are
+  compact cards. Every card shows one tick per part, filled once read.
+{%- endcomment -%}
+{% assign now_s = site.time | date: '%s' | plus: 0 %}
+{% assign ongoing_window = 5184000 %}
 
 {% if series_entries.size > 0 %}
   <section class="series-directory">
@@ -24,14 +36,42 @@ layout: page
       title_ko=sd_ko.directory_title title_en=sd_en.directory_title
       summary_ko=sd_ko.directory_description summary_en=sd_en.directory_description %}
 
-    {%- comment -%}
-      Series are grouped by what they are, not by when they were written: things I built,
-      what I did at work, what I read, what I studied. The order below is the reading order
-      the groups deserve, and a series without a `group` falls into "other" rather than
-      disappearing.
-    {%- endcomment -%}
+    <section
+      class="series-resume"
+      data-series-resume
+      hidden
+      aria-label="{{ sd.resume_title }}"
+      data-label-progress="{{ sd.resume_progress }}"
+      data-label-next="{{ sd.resume_next }}"
+    >
+      <div class="series-resume-main">
+        <span class="series-resume-kicker">{{ sd.resume_title }}</span>
+        <a class="series-resume-title" data-resume-title href="#"></a>
+        <div class="series-ticks is-large" data-resume-ticks aria-hidden="true"></div>
+        <span class="series-resume-progress" data-resume-progress></span>
+      </div>
+      <a class="series-resume-link" data-resume-link href="#">
+        <span data-resume-next-label></span>
+        <strong data-resume-next-title></strong>
+      </a>
+    </section>
+
     {% assign group_order = 'project,work,review,study,other' | split: ',' %}
 
+    {%- comment -%} Count series per group for the tabs. {%- endcomment -%}
+    {% capture group_counts %}{% for group_name in group_order %}{% assign n = 0 %}{% for series_id in series_entries %}{% assign sp = site.series_pages | where: 'series_id', series_id | first %}{% assign sp_group = sp.group | default: 'other' %}{% if sp_group == group_name %}{% assign n = n | plus: 1 %}{% endif %}{% endfor %}{{ n }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
+    {% assign group_counts = group_counts | strip | split: ',' %}
+
+    <nav class="series-tabs" aria-label="{{ sd.tabs_label }}">
+      <a href="#series-groups" class="series-tab" data-series-tab="all" aria-current="true">{{ sd.tab_all }} {{ series_entries.size }}</a>
+      {% for group_name in group_order %}
+        {% if group_counts[forloop.index0] != '0' %}
+          <a href="#series-group-{{ group_name }}" class="series-tab" data-series-tab="{{ group_name }}">{{ sd.groups[group_name] }} {{ group_counts[forloop.index0] }}</a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+
+    <div id="series-groups">
     {% for group_name in group_order %}
       {% assign group_ids = '' | split: '' %}
       {% for series_id in series_entries %}
@@ -43,61 +83,126 @@ layout: page
       {% endfor %}
 
       {% if group_ids.size > 0 %}
-        <h2 class="series-group-title" id="series-group-{{ group_name }}"
-          data-l10n-ko="{{ site.data.locales['ko-KR'].series_directory.groups[group_name] | escape }}"
-          data-l10n-en="{{ site.data.locales.en.series_directory.groups[group_name] | escape }}">
-          {{ site.data.locales[lang].series_directory.groups[group_name] }}
-        </h2>
+        {% assign feature_cards = '' %}
+        {% assign compact_cards = '' %}
+        {% for series_id in group_ids %}
+          {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
+          {% assign first_post = series_posts | first %}
+          {% if first_post %}
+            {% assign last_post = series_posts | sort: 'date' | last %}
+            {% assign series_page = site.series_pages | where: 'series_id', series_id | first %}
+            {% assign series_url = first_post.url %}
+            {% if series_page %}{% assign series_url = series_page.url %}{% endif %}
+            {% assign series_title = series_page.title | default: first_post.series_title | default: series_id %}
+            {% assign series_urls = series_posts | map: 'url' | join: ',' %}
+            {% assign last_s = last_post.date | date: '%s' | plus: 0 %}
+            {% assign age = now_s | minus: last_s %}
+            {% assign status = series_page.series_status %}
+            {% if status == nil and age < ongoing_window %}{% assign status = 'ongoing' %}{% endif %}
 
-        <div class="series-grid">
-          {% for series_id in group_ids %}
-        {% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}
-        {% assign first_post = series_posts | first %}
-        {% assign last_post = series_posts | sort: 'date' | last %}
-        {% if first_post %}
-          {% assign series_page = site.series_pages | where: 'series_id', series_id | first %}
-          {% assign series_url = first_post.url %}
-          {% if series_page %}
-            {% assign series_url = series_page.url %}
-          {% endif %}
-          {% assign series_urls = series_posts | map: 'url' | join: ',' %}
-          <article class="series-card" data-series-id="{{ series_id }}" data-series-posts="{{ series_urls }}">
-            <a href="{{ series_url | relative_url }}" class="series-card-link">
-              <div class="series-card-header">
-                <div class="series-card-title-wrap">
-                  <span class="series-card-label">{{ site.data.locales[lang].post.series }}</span>
-                  <h3>{{ first_post.series_title | default: series_id }}</h3>
+            {% capture ticks %}
+              {% if series_posts.size <= 40 %}
+                <div class="series-ticks" data-ticks="next" aria-hidden="true">
+                  {%- for post in series_posts -%}<span data-tick-url="{{ post.url | relative_url }}"></span>{%- endfor -%}
                 </div>
-                <span class="series-count">
-                  {{
-                    site.data.locales[lang].series_directory.post_count
-                    | replace: ':COUNT', series_posts.size
-                  }}
-                </span>
-              </div>
+              {% endif %}
+            {% endcapture %}
 
-              <p class="series-card-description">
-                {{ first_post.series_description | default: site.data.locales[lang].series_directory.fallback_description }}
-              </p>
+            {% capture status_chip %}
+              {% if status == 'ongoing' %}<span class="series-status is-ongoing">{{ sd.status_ongoing }}</span>{% elsif status == 'complete' %}<span class="series-status">{{ sd.status_complete }}</span>{% endif %}
+            {% endcapture %}
 
-              <div class="series-card-meta">
-                <span class="series-card-progress" hidden data-label-progress="{{ site.data.locales[lang].series_directory.read_progress }}"></span>
-                <span class="series-card-start">
-                  {{ site.data.locales[lang].series_directory.start_from }}
-                  <strong>{{ first_post.title }}</strong>
-                </span>
-                {% if last_post %}
-                  <span class="series-card-updated">
-                    {% include datetime.html date=last_post.date lang=lang %}
-                  </span>
-                {% endif %}
-              </div>
-            </a>
-          </article>
-        {% endif %}
-          {% endfor %}
-        </div>
+            {% if status == 'ongoing' %}
+              {% capture card %}
+                <article class="series-card is-feature" data-series-id="{{ series_id }}" data-series-posts="{{ series_urls }}">
+                  <div class="series-card-top">
+                    {{ status_chip }}
+                    <span class="series-card-updated">{{ sd.last_part }} <time>{{ last_post.date | date: '%Y.%m.%d' }}</time></span>
+                    <span class="series-count">{{ sd.post_count | replace: ':COUNT', series_posts.size }}</span>
+                  </div>
+                  <h3 class="series-card-title"><a href="{{ series_url | relative_url }}">{{ series_title }}</a></h3>
+                  <p class="series-card-description">{{ series_page.description | default: first_post.series_description | default: sd.fallback_description }}</p>
+                  {% if series_page.series_groups %}
+                    {% assign grouped = 0 %}
+                    <div class="series-map" aria-label="{{ sd.map_label }}">
+                      {% for group in series_page.series_groups %}
+                        {% assign group_posts = series_posts | where_exp: 'post', 'post.series_order >= group.starts_at and post.series_order <= group.ends_at' %}
+                        {% if group_posts.size > 0 %}
+                          {% assign grouped = grouped | plus: group_posts.size %}
+                          {% assign g_first = group_posts | first %}
+                          {% assign g_last = group_posts | last %}
+                          <span class="series-map-part tone-{{ group.tone | default: 'cyan' }}" style="flex: {{ group_posts.size }}">{{ group.label }} · {{ g_first.series_order }}{% if g_last.series_order != g_first.series_order %}–{{ g_last.series_order }}{% endif %}</span>
+                        {% endif %}
+                      {% endfor %}
+                      {% assign rest = series_posts.size | minus: grouped %}
+                      {% if rest > 0 %}
+                        <span class="series-map-part is-rest" style="flex: {{ rest }}">{{ sd.map_rest | replace: ':N', rest }}</span>
+                      {% endif %}
+                    </div>
+                  {% elsif series_page.hero_note %}
+                    <span class="series-card-note">{{ series_page.hero_note }}</span>
+                  {% endif %}
+                  {{ ticks }}
+                  <div class="series-card-actions">
+                    <a href="{{ first_post.url | relative_url }}">{{ sd.from_first }}</a>
+                    {% if last_post.url != first_post.url %}
+                      <a href="{{ last_post.url | relative_url }}">{{ sd.latest_part | replace: ':N', last_post.series_order }}</a>
+                    {% endif %}
+                    <span class="series-card-progress" hidden data-label-progress="{{ sd.read_progress }}"></span>
+                  </div>
+                </article>
+              {% endcapture %}
+              {% assign feature_cards = feature_cards | append: card %}
+            {% else %}
+              {% capture card %}
+                <article class="series-card" data-series-id="{{ series_id }}" data-series-posts="{{ series_urls }}">
+                  <div class="series-card-top">
+                    {{ status_chip }}
+                    <span class="series-count">{{ sd.post_count | replace: ':COUNT', series_posts.size }}</span>
+                  </div>
+                  <h3 class="series-card-title"><a href="{{ series_url | relative_url }}">{{ series_title }}</a></h3>
+                  {{ ticks }}
+                  <span class="series-card-progress" hidden data-label-progress="{{ sd.read_progress }}"></span>
+                  <a class="series-card-start" href="{{ first_post.url | relative_url }}">{{ sd.start_from }}: {{ first_post.title }}</a>
+                </article>
+              {% endcapture %}
+              {% assign compact_cards = compact_cards | append: card %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        <section class="series-group" id="series-group-{{ group_name }}" data-series-group="{{ group_name }}">
+          <h2 class="series-group-title"
+            data-l10n-ko="{{ site.data.locales['ko-KR'].series_directory.groups[group_name] | escape }}"
+            data-l10n-en="{{ site.data.locales.en.series_directory.groups[group_name] | escape }}">
+            {{ sd.groups[group_name] }}
+          </h2>
+          {% if feature_cards != '' %}<div class="series-feature-list">{{ feature_cards }}</div>{% endif %}
+          {% if compact_cards != '' %}<div class="series-grid">{{ compact_cards }}</div>{% endif %}
+        </section>
       {% endif %}
     {% endfor %}
+    </div>
+
+    <script type="application/json" id="series-index">
+      [{% for series_id in series_entries %}{% assign series_posts = site.posts | where: 'series', series_id | sort: 'series_order' %}{% assign series_page = site.series_pages | where: 'series_id', series_id | first %}{% assign first_post = series_posts | first %}{"title":{{ series_page.title | default: first_post.series_title | default: series_id | jsonify }},"url":{{ series_page.url | default: first_post.url | relative_url | jsonify }},"posts":[{% for post in series_posts %}{"url":{{ post.url | relative_url | jsonify }},"title":{{ post.title | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
+    </script>
   </section>
+
+  <script>
+    (() => {
+      // Group tabs: show one group, or all. Without the script they are
+      // plain links to each group's heading.
+      const tabs = Array.from(document.querySelectorAll('[data-series-tab]'));
+      const groups = Array.from(document.querySelectorAll('[data-series-group]'));
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', (event) => {
+          event.preventDefault();
+          const pick = tab.dataset.seriesTab;
+          tabs.forEach((t) => t.setAttribute('aria-current', String(t === tab)));
+          groups.forEach((g) => { g.hidden = pick !== 'all' && g.dataset.seriesGroup !== pick; });
+        });
+      });
+    })();
+  </script>
 {% endif %}

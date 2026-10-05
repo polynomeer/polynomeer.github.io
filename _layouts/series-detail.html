@@ -4,192 +4,209 @@ layout: page
 
 {% include lang.html %}
 
+{% assign sd = site.data.locales[lang].series_directory %}
 {% assign series_posts = site.posts | where: 'series', page.series_id | sort: 'series_order' %}
 {% assign first_post = series_posts | first %}
 {% assign last_post = series_posts | sort: 'date' | last %}
 {% assign series_title = page.title | default: first_post.series_title | default: page.series_id %}
 
+{%- comment -%}
+  A series page answers "where am I, and where do I go next": how far this
+  browser has read (one tick per part, filled by series-progress.js), entry
+  routes for readers who came for one question (`entry_routes`), then every
+  part by group with read / next / new marks. Parts outside every
+  `series_groups` range land in a closing "later parts" group so none drop
+  off the page.
+{%- endcomment -%}
+{% assign now_s = site.time | date: '%s' | plus: 0 %}
+{% assign last_s = last_post.date | date: '%s' | plus: 0 %}
+{% assign age = now_s | minus: last_s %}
+{% assign status = page.series_status %}
+{% if status == nil and age < 5184000 %}{% assign status = 'ongoing' %}{% endif %}
+{% assign repo_item = site.data.portfolio.personal.items | where: 'series', page.series_id | first %}
+
+{% capture part_prefix_base %}{{ series_title }} {% endcapture %}
+
 {% if series_posts.size > 0 %}
   <section class="series-detail-page" data-series-id="{{ page.series_id }}">
-    <div class="series-detail-hero">
-      <a class="series-detail-backlink" href="{{ '/series/' | relative_url }}">
-        <i class="fas fa-arrow-left"></i>
-        <span>{{ site.data.locales[lang].post.series }}</span>
-      </a>
-
-      <div class="series-detail-hero-copy">
-        {% if page.kicker %}
-          <p class="page-hero-eyebrow">{{ page.kicker }}</p>
+    <header class="series-detail-hero">
+      <nav class="series-detail-crumb" aria-label="{{ site.data.locales[lang].post.series }}">
+        <a href="{{ '/series/' | relative_url }}">{{ site.data.locales[lang].post.series }}</a>
+        {% if page.group %}<span aria-hidden="true">›</span> <span>{{ sd.groups[page.group] }}</span>{% endif %}
+      </nav>
+      {% if page.hero_note %}
+        <p class="series-detail-note">{{ page.hero_note }}</p>
+      {% elsif page.kicker %}
+        <p class="series-detail-note">{{ page.kicker }}</p>
+      {% endif %}
+      <h2 class="series-detail-title">{{ series_title }}</h2>
+      {% assign summary = page.description | default: first_post.series_description %}
+      {% if summary %}<p class="series-detail-summary">{{ summary }}</p>{% endif %}
+      <div class="series-detail-chips">
+        <span>{{ sd.post_count | replace: ':COUNT', series_posts.size }}</span>
+        <span>
+          {{ first_post.date | date: '%Y.%-m' }} –
+          {% if status == 'ongoing' %}{{ sd.status_ongoing }}{% else %}{{ last_post.date | date: '%Y.%-m' }}{% endif %}
+        </span>
+        {% if repo_item.repo %}
+          <a href="{{ repo_item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> {{ sd.repo }}</a>
         {% endif %}
+      </div>
+    </header>
 
-        <h2>{{ series_title }}</h2>
-
-        {% if page.description %}
-          <p class="page-hero-summary">{{ page.description }}</p>
-        {% elsif first_post.series_description %}
-          <p class="page-hero-summary">{{ first_post.series_description }}</p>
-        {% endif %}
-
-        <div class="series-detail-meta">
-          <span>{{ series_posts.size }}편</span>
-          {% if first_post and last_post %}
-            <span>
-              {% include datetime.html date=first_post.date lang=lang %}
-              -
-              {% include datetime.html date=last_post.date lang=lang %}
-            </span>
-          {% endif %}
-          {% if page.hero_note %}
-            <span>{{ page.hero_note }}</span>
-          {% endif %}
+    {% capture ticks %}
+      {% if series_posts.size <= 40 %}
+        <div class="series-ticks is-large" data-ticks="next" aria-hidden="true">
+          {%- for post in series_posts -%}<span data-tick-url="{{ post.url | relative_url }}"></span>{%- endfor -%}
         </div>
+      {% endif %}
+    {% endcapture %}
+    {% if series_posts.size <= 40 %}
+      {% include series-progress.html lang=lang continue=true ticks=ticks %}
+    {% else %}
+      {% include series-progress.html lang=lang continue=true %}
+    {% endif %}
 
-        {% include series-progress.html lang=lang continue=true %}
-      </div>
-    </div>
-
-    {% if page.series_groups %}
-      <div class="series-cluster-grid">
-        {% for group in page.series_groups %}
-          {% assign group_posts = series_posts | where_exp: 'post', 'post.series_order >= group.starts_at and post.series_order <= group.ends_at' %}
-          {% if group_posts.size > 0 %}
-            <section class="series-cluster series-cluster--{{ group.tone | default: 'cyan' }}">
-              <header class="series-cluster-header">
-                <div class="series-cluster-title-wrap">
-                  <span class="series-cluster-badge">{{ group.label }}</span>
-                  <h3>{{ group.title }}</h3>
-                </div>
-                {% if group.count_label %}
-                  <span class="series-cluster-count">{{ group.count_label }}</span>
-                {% endif %}
-              </header>
-
-              {% if group.summary %}
-                <p class="series-cluster-summary">{{ group.summary }}</p>
-              {% endif %}
-
-              <ol
-                class="series-cluster-list list-unstyled mb-0"
-                data-series-pager="10"
-                data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
-                data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
-                data-label-nav="{{ site.data.locales[lang].post.series_pager_nav }}"
-              >
-                {% for post in group_posts %}
-                  {% assign detail_tags = post.tags | slice: 1, 3 %}
-                  {% assign detail_meta = detail_tags | join: ' · ' %}
-                  <li class="series-cluster-item" data-pager-item data-post-url="{{ post.url | relative_url }}">
-                    <a href="{{ post.url | relative_url }}" class="series-cluster-link">
-                      <span class="series-cluster-step">{{ post.series_order }}</span>
-                      <div class="series-cluster-post">
-                        <strong>{{ post.title }}</strong>
-                        {% if detail_meta and detail_meta != empty %}
-                          <span>{{ detail_meta }}</span>
-                        {% endif %}
-                      </div>
-                    </a>
-                  </li>
-                {% endfor %}
-              </ol>
-            </section>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      {% if page.bonus_group %}
-        {% assign bonus_posts = series_posts | where_exp: 'post', 'post.series_order >= page.bonus_group.starts_at and post.series_order <= page.bonus_group.ends_at' %}
-        {% if bonus_posts.size > 0 %}
-          <section class="series-cluster series-cluster--{{ page.bonus_group.tone | default: 'slate' }} series-cluster--bonus">
-            <header class="series-cluster-header">
-              <div class="series-cluster-title-wrap">
-                <span class="series-cluster-badge">{{ page.bonus_group.label }}</span>
-                <h3>{{ page.bonus_group.title }}</h3>
-              </div>
-            </header>
-
-            {% if page.bonus_group.summary %}
-              <p class="series-cluster-summary">{{ page.bonus_group.summary }}</p>
+    {% if page.entry_routes %}
+      <section class="series-routes" aria-labelledby="series-routes-title">
+        <h3 id="series-routes-title" class="series-detail-subhead">{{ sd.routes_title }}</h3>
+        <div class="series-route-grid">
+          {% for route in page.entry_routes %}
+            {% assign route_first = route.parts | first %}
+            {% assign route_post = series_posts | where: 'series_order', route_first | first %}
+            {% if route_post %}
+              <a class="series-route" href="{{ route_post.url | relative_url }}">
+                <strong>{{ route.label }}</strong>
+                <span>{% for n in route.parts %}{{ n }}{{ sd.part_suffix }}{% unless forloop.last %} → {% endunless %}{% endfor %}{% if route.note %}. {{ route.note }}{% endif %}</span>
+              </a>
             {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
 
-            <div
-              class="series-bonus-grid"
-              data-series-pager="9"
+    <section class="series-parts" aria-labelledby="series-parts-title">
+      <h3 id="series-parts-title" class="series-detail-subhead">{{ sd.parts_title }}</h3>
+
+      {% if page.series_groups %}
+        {% assign rest_posts = '' | split: '' %}
+        {% for post in series_posts %}
+          {% assign in_group = false %}
+          {% for group in page.series_groups %}
+            {% if post.series_order >= group.starts_at and post.series_order <= group.ends_at %}{% assign in_group = true %}{% break %}{% endif %}
+          {% endfor %}
+          {% if page.bonus_group and post.series_order >= page.bonus_group.starts_at and post.series_order <= page.bonus_group.ends_at %}{% assign in_group = true %}{% endif %}
+          {% unless in_group %}{% assign rest_posts = rest_posts | push: post %}{% endunless %}
+        {% endfor %}
+      {% endif %}
+
+      {% assign group_count = page.series_groups.size | default: 0 %}
+      {% assign last_index = group_count %}
+      {% for i in (0..last_index) %}
+        {% if page.series_groups and i < group_count %}
+          {% assign group = page.series_groups[i] %}
+          {% assign group_posts = series_posts | where_exp: 'post', 'post.series_order >= group.starts_at and post.series_order <= group.ends_at' %}
+          {% assign group_label = group.label %}
+          {% assign group_title = group.title %}
+          {% assign group_summary = group.summary %}
+          {% assign group_tone = group.tone | default: 'cyan' %}
+        {% elsif page.series_groups %}
+          {% assign group_posts = rest_posts %}
+          {% assign group_label = sd.rest_group %}
+          {% assign group_title = nil %}
+          {% assign group_summary = nil %}
+          {% assign group_tone = 'rest' %}
+        {% else %}
+          {% assign group_posts = series_posts %}
+          {% assign group_label = nil %}
+          {% assign group_title = nil %}
+          {% assign group_summary = nil %}
+          {% assign group_tone = nil %}
+        {% endif %}
+
+        {% if group_posts.size > 0 %}
+          <div class="series-part-group">
+            {% if group_label %}
+              <div class="series-part-group-head">
+                <span class="series-part-badge tone-{{ group_tone }}">{{ group_label }}</span>
+                {% if group_title %}<span class="series-part-group-title">{{ group_title }}</span>{% endif %}
+              </div>
+              {% if group_summary %}<p class="series-part-group-summary">{{ group_summary }}</p>{% endif %}
+            {% endif %}
+            <ol
+              class="series-part-list list-unstyled mb-0"
+              data-series-pager="12"
               data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
               data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
               data-label-nav="{{ site.data.locales[lang].post.series_pager_nav }}"
             >
-              {% for post in bonus_posts %}
-                {% assign detail_tags = post.tags | slice: 1, 3 %}
-                {% assign detail_meta = detail_tags | join: ' · ' %}
-                <a href="{{ post.url | relative_url }}" class="series-bonus-card" data-pager-item data-post-url="{{ post.url | relative_url }}">
-                  <span class="series-bonus-step">{{ post.series_order }}</span>
-                  <strong>{{ post.title }}</strong>
-                  {% if detail_meta and detail_meta != empty %}
-                    <span>{{ detail_meta }}</span>
-                  {% endif %}
-                </a>
+              {% for post in group_posts %}
+                {% capture part_prefix %}{{ part_prefix_base }}{{ post.series_order }} - {% endcapture %}
+                {% assign part_title = post.title %}
+                {% if post.title contains part_prefix %}{% assign part_title = post.title | remove_first: part_prefix %}{% endif %}
+                {% assign post_s = post.date | date: '%s' | plus: 0 %}
+                {% assign post_age = now_s | minus: post_s %}
+                <li class="series-part" data-pager-item data-post-url="{{ post.url | relative_url }}" data-part-url="{{ post.url | relative_url }}">
+                  <a href="{{ post.url | relative_url }}" class="series-part-link">
+                    <span class="series-part-step">{{ post.series_order | default: forloop.index }}</span>
+                    <span class="series-part-title">{{ part_title }}</span>
+                    {% if post_age < 1209600 %}<span class="series-part-new">{{ sd.part_new }}</span>{% endif %}
+                    <span class="series-part-next">{{ sd.part_next }}</span>
+                  </a>
+                </li>
               {% endfor %}
-            </div>
-          </section>
+            </ol>
+          </div>
         {% endif %}
-      {% endif %}
+        {% unless page.series_groups %}{% break %}{% endunless %}
+      {% endfor %}
+    </section>
 
-      {% if page.series_flow %}
-        <section class="series-flow-panel">
-          <h3>추천 읽기 순서</h3>
-          <div class="series-flow-list">
-            {% for item in page.series_flow %}
-              <span class="series-flow-chip">{{ item }}</span>
+    {% if page.bonus_group %}
+      {% assign bonus_posts = series_posts | where_exp: 'post', 'post.series_order >= page.bonus_group.starts_at and post.series_order <= page.bonus_group.ends_at' %}
+      {% if bonus_posts.size > 0 %}
+        <section class="series-cluster series-cluster--{{ page.bonus_group.tone | default: 'slate' }} series-cluster--bonus">
+          <header class="series-cluster-header">
+            <div class="series-cluster-title-wrap">
+              <span class="series-cluster-badge">{{ page.bonus_group.label }}</span>
+              <h3>{{ page.bonus_group.title }}</h3>
+            </div>
+          </header>
+          {% if page.bonus_group.summary %}
+            <p class="series-cluster-summary">{{ page.bonus_group.summary }}</p>
+          {% endif %}
+          <div class="series-bonus-grid">
+            {% for post in bonus_posts %}
+              <a href="{{ post.url | relative_url }}" class="series-bonus-card" data-post-url="{{ post.url | relative_url }}">
+                <span class="series-bonus-step">{{ post.series_order }}</span>
+                <strong>{{ post.title }}</strong>
+              </a>
             {% endfor %}
           </div>
         </section>
       {% endif %}
+    {% endif %}
 
-      {% if page.series_stats %}
-        <section class="series-stats-grid">
-          {% for stat in page.series_stats %}
-            <article class="series-stat-card">
-              <strong>{{ stat.value }}</strong>
-              <span>{{ stat.label }}</span>
-              {% if stat.detail %}
-                <small>{{ stat.detail }}</small>
-              {% endif %}
-            </article>
+    {% if page.series_flow %}
+      <section class="series-flow-panel">
+        <h3>추천 읽기 순서</h3>
+        <div class="series-flow-list">
+          {% for item in page.series_flow %}
+            <span class="series-flow-chip">{{ item }}</span>
           {% endfor %}
-        </section>
-      {% endif %}
-    {% else %}
-      <section class="series-cluster series-cluster--default">
-        <header class="series-cluster-header">
-          <div class="series-cluster-title-wrap">
-            <span class="series-cluster-badge">{{ site.data.locales[lang].post.series }}</span>
-            <h3>전체 글</h3>
-          </div>
-        </header>
+        </div>
+      </section>
+    {% endif %}
 
-        <ol
-          class="series-cluster-list list-unstyled mb-0"
-          data-series-pager="10"
-          data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}"
-          data-label-next="{{ site.data.locales[lang].post.series_pager_next }}"
-          data-label-nav="{{ site.data.locales[lang].post.series_pager_nav }}"
-        >
-          {% for post in series_posts %}
-            {% assign detail_tags = post.tags | slice: 0, 4 %}
-            {% assign detail_meta = detail_tags | join: ' · ' %}
-            <li class="series-cluster-item" data-pager-item data-post-url="{{ post.url | relative_url }}">
-              <a href="{{ post.url | relative_url }}" class="series-cluster-link">
-                <span class="series-cluster-step">{{ post.series_order | default: forloop.index }}</span>
-                <div class="series-cluster-post">
-                  <strong>{{ post.title }}</strong>
-                  {% if detail_meta and detail_meta != empty %}
-                    <span>{{ detail_meta }}</span>
-                  {% endif %}
-                </div>
-              </a>
-            </li>
-          {% endfor %}
-        </ol>
+    {% if page.series_stats %}
+      <section class="series-stats-grid">
+        {% for stat in page.series_stats %}
+          <article class="series-stat-card">
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+            {% if stat.detail %}<small>{{ stat.detail }}</small>{% endif %}
+          </article>
+        {% endfor %}
       </section>
     {% endif %}
   </section>

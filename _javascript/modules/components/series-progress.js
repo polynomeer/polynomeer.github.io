@@ -10,6 +10,12 @@
  *   post.
  * - Series directory cards carry `data-series-posts` (comma-separated URLs)
  *   and show a read count.
+ * - Any `[data-tick-url]` (one tick per part) gets `.is-read`; in a
+ *   `[data-ticks]` row the first unread tick also gets `.is-next`, and on the
+ *   series page the first unread part gets `.is-next` too.
+ * - `[data-series-resume]` on the series directory turns into an "continue
+ *   reading" banner for the series read most recently and not finished,
+ *   built from the `#series-index` JSON.
  * Without JavaScript or storage nothing is shown.
  */
 
@@ -87,6 +93,63 @@ function renderProgress(box, urls, read, firstUnread) {
   box.hidden = false;
 }
 
+function renderResume(read) {
+  const slot = document.querySelector('[data-series-resume]');
+  const source = document.getElementById('series-index');
+  if (!slot || !source) {
+    return;
+  }
+
+  let index;
+  try {
+    index = JSON.parse(source.textContent);
+  } catch (_) {
+    return;
+  }
+
+  let best = null;
+  index.forEach((series) => {
+    const urls = series.posts.map((p) => normalize(p.url));
+    const times = urls.map((u) => read[u] || 0);
+    const done = times.filter(Boolean).length;
+    if (done === 0 || done === urls.length) {
+      return;
+    }
+    const last = Math.max(...times);
+    if (!best || last > best.last) {
+      best = { series, urls, done, last };
+    }
+  });
+  if (!best) {
+    return;
+  }
+
+  const { series, urls, done } = best;
+  const nextIndex = urls.findIndex((u) => !read[u]);
+  const next = series.posts[nextIndex];
+
+  slot.querySelector('[data-resume-title]').textContent = series.title;
+  slot.querySelector('[data-resume-title]').href = series.url;
+  slot.querySelector('[data-resume-ticks]').innerHTML = urls
+    .map((u, i) => {
+      const cls = read[u] ? 'is-read' : i === nextIndex ? 'is-next' : '';
+      return `<span class="${cls}"></span>`;
+    })
+    .join('');
+  slot.querySelector('[data-resume-progress]').textContent = fill(
+    slot.dataset.labelProgress || ':READ/:TOTAL',
+    { READ: done, TOTAL: urls.length, NEXT: nextIndex + 1 }
+  );
+  const link = slot.querySelector('[data-resume-link]');
+  link.href = next.url;
+  link.querySelector('[data-resume-next-label]').textContent = fill(
+    slot.dataset.labelNext || ':NEXT',
+    { NEXT: nextIndex + 1 }
+  );
+  link.querySelector('[data-resume-next-title]').textContent = next.title;
+  slot.hidden = false;
+}
+
 export function initSeriesProgress() {
   const read = loadRead();
   if (read === null) {
@@ -125,7 +188,32 @@ export function initSeriesProgress() {
     renderProgress(box, unique, read, firstUnread);
   });
 
-  // 4. directory cards
+  // 4. ticks: one per part, read ones filled, the first unread marked next
+  document.querySelectorAll('[data-ticks]').forEach((row) => {
+    let nextMarked = false;
+    row.querySelectorAll('[data-tick-url]').forEach((tick) => {
+      const isRead = Boolean(read[normalize(tick.dataset.tickUrl)]);
+      tick.classList.toggle('is-read', isRead);
+      if (!isRead && !nextMarked && row.dataset.ticks === 'next') {
+        tick.classList.add('is-next');
+        nextMarked = true;
+      }
+    });
+  });
+
+  // 5. series page: the first unread part is "next", once something is read
+  const detail = document.querySelector('.series-detail-page');
+  if (detail) {
+    const parts = [...detail.querySelectorAll('[data-part-url]')];
+    if (parts.some((p) => read[normalize(p.dataset.partUrl)])) {
+      parts.find((p) => !read[normalize(p.dataset.partUrl)])?.classList.add('is-next');
+    }
+  }
+
+  // 6. directory: continue the series read most recently
+  renderResume(read);
+
+  // 7. directory cards
   document.querySelectorAll('.series-card[data-series-posts]').forEach((card) => {
     const urls = card.dataset.seriesPosts
       .split(',')

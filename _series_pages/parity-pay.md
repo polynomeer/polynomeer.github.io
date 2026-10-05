@@ -5,6 +5,14 @@ group: project
 permalink: /series/parity-pay/
 description: 결제·원장 백엔드 ParityPay를 만들며 중복 요청, 동시 차감, 외부 응답 유실, 이벤트 중복 전달, 프로세스 재시작 아래에서 금융 불변조건을 어떻게 지켰는지, 실험이 찾아낸 결함과 측정의 실수까지 기록한 시리즈. 불변조건과 동시성, 외부 불확실성, DB와 메시지의 이중 쓰기, 원장과 대사, 브로커·외부기관·분산락 실험까지 열 편이다.
 hero_note: 장애 실험으로 검증한 결제 백엔드
+entry_routes:
+  - label: 처음이라면
+    parts: [1, 2]
+    note: 무엇을 지키는지부터
+  - label: Kafka와 이중 쓰기가 궁금하다면
+    parts: [5, 8]
+  - label: 장애 대응이 궁금하다면
+    parts: [3, 9, 10]
 series_groups:
   - label: 불변조건
     title: 무엇을 지키고, 어디서 강제하는가

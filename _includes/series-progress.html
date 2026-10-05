@@ -4,7 +4,7 @@
 {%- endcomment -%}
 {%- assign lang = include.lang | default: site.lang -%}
 <div
-  class="series-progress"
+  class="series-progress{% if include.ticks %} has-ticks{% endif %}"
   hidden
   data-label-progress="{{ site.data.locales[lang].post.series_read_progress }}"
   data-label-continue="{{ site.data.locales[lang].post.series_continue }}"
@@ -12,6 +12,8 @@
   data-label-restart="{{ site.data.locales[lang].post.series_restart }}"
   data-label-all-read="{{ site.data.locales[lang].post.series_all_read }}"
 >
+  {%- comment -%} `ticks`: one mark per part, used in place of the bar. {%- endcomment -%}
+  {% if include.ticks %}{{ include.ticks }}{% endif %}
   <div class="series-progress-track" aria-hidden="true"><span class="series-progress-fill"></span></div>
   <span class="series-progress-label"></span>
   {% if include.continue %}

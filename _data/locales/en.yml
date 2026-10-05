@@ -292,13 +292,32 @@ series_directory:
     review: Reviews of others' work
     study: Deep-dive study logs
     other: Other series
-  eyebrow: Connected series
-  directory_title: Read through ordered series
-  directory_description: Browse connected sequences of posts in one place and start each series from the first entry.
+  eyebrow: Series
+  directory_title: Follow a series to the end
+  directory_description: A series pushes one problem through to the end over several posts. This browser remembers how far you read, so you can pick up where you left off.
   post_count: ":COUNT posts"
   fallback_description: A connected sequence of posts designed to be read in order.
   start_from: Start with
   read_progress: ":READ of :TOTAL read"
+  resume_title: Continue reading
+  resume_progress: ":READ / :TOTAL read · next is part :NEXT"
+  resume_next: "Continue with part :NEXT →"
+  tabs_label: Series groups
+  tab_all: All
+  status_ongoing: Ongoing
+  status_complete: Complete
+  last_part: Latest part
+  map_label: Parts by group
+  map_rest: "+:N more"
+  from_first: From part 1
+  latest_part: "Latest, part :N"
+  routes_title: Start from what you want to know
+  parts_title: All parts
+  rest_group: Later parts
+  part_next: Next
+  part_new: New
+  repo: GitHub repository
+  part_suffix: ""
 
 home:
   case_study_mark: "Case study"
