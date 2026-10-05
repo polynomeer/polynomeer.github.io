@@ -132,6 +132,44 @@ refactor: true
         </div>
       </div>
 
+      {%- comment -%}
+        Kind (personal project / case study), topic hub and year. Plain native
+        selects: few options, and the browser's own menu is the accessible one.
+      {%- endcomment -%}
+      <label class="post-filter-field post-filter-field-compact post-filter-plain">
+        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.kind_filter_label }}</span>
+        <select id="home-kind-filter" class="post-filter-plain-select">
+          <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
+          <option value="personal">{{ site.data.locales[lang].home.project_study_mark }}</option>
+          <option value="career">{{ site.data.locales[lang].home.case_study_mark }}</option>
+        </select>
+      </label>
+      <label class="post-filter-field post-filter-field-compact post-filter-plain">
+        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.topic_filter_label }}</span>
+        <select id="home-topic-filter" class="post-filter-plain-select">
+          <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
+          {% assign filter_topics = site.topics | sort: 'order' %}
+          {% for topic in filter_topics %}
+            <option value="{{ topic.topic_id }}">{{ topic.title }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="post-filter-field post-filter-field-compact post-filter-plain">
+        <span class="post-filter-visible-label">{{ site.data.locales[lang].home.year_filter_label }}</span>
+        <select id="home-year-filter" class="post-filter-plain-select">
+          <option value="all">{{ site.data.locales[lang].home.filter_all }}</option>
+          {% assign filter_years = '' | split: '' %}
+          {% for post in site.posts %}
+            {% assign post_year = post.date | date: '%Y' %}
+            {% unless filter_years contains post_year %}{% assign filter_years = filter_years | push: post_year %}{% endunless %}
+          {% endfor %}
+          {% assign filter_years = filter_years | sort | reverse %}
+          {% for year in filter_years %}
+            <option value="{{ year }}">{{ year }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
       <div class="post-filter-field post-filter-field-tag">
         <button
           id="home-tag-filter-trigger"
@@ -210,21 +248,9 @@ refactor: true
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
     {% comment %} Case-study badge (notes only): career posts are "실무 사례", posts of a personal portfolio project are "개인 프로젝트". Reviews and conference notes carry a PDR card too but are not case studies. {% endcomment %}
-    {% assign card_kind = nil %}
-    {% if post.problem_decision_result %}
-      {% if site.data.portfolio and site.data.portfolio.personal %}
-        {% for item in site.data.portfolio.personal.items %}
-          {% if item.series and item.series == post.series %}
-            {% assign card_kind = 'personal' %}{% break %}
-          {% elsif item.posts and item.posts contains post.url %}
-            {% assign card_kind = 'personal' %}{% break %}
-          {% endif %}
-        {% endfor %}
-      {% endif %}
-      {% if card_kind == nil and post_content_type_id == 'notes' %}
-        {% assign card_kind = 'career' %}
-      {% endif %}
-    {% endif %}
+    {% capture card_kind %}{% include post-case-kind.html post=post content_type_id=post_content_type_id %}{% endcapture %}
+    {% assign card_kind = card_kind | strip %}
+    {% if card_kind == '' %}{% assign card_kind = nil %}{% endif %}
     <article
       class="card-wrapper card{% if card_kind %} is-case-study is-case-{{ card_kind }}{% endif %}"
       data-post-url="{{ post.url | relative_url }}"
@@ -364,6 +390,11 @@ refactor: true
 
     const searchInput = document.getElementById('home-post-search');
     const typeSelect = document.getElementById('home-type-filter');
+    const kindSelect = document.getElementById('home-kind-filter');
+    const topicSelect = document.getElementById('home-topic-filter');
+    const yearSelect = document.getElementById('home-year-filter');
+    const extraSelects = [kindSelect, topicSelect, yearSelect].filter(Boolean);
+    const selectedLabel = (select) => select.options[select.selectedIndex]?.textContent.trim() || '';
     const typeFilterTrigger = document.getElementById('home-type-filter-trigger');
     const typeFilterValue = document.getElementById('home-type-filter-value');
     const typeFilterMenu = document.getElementById('home-type-filter-menu');
@@ -384,6 +415,10 @@ refactor: true
     const homeFeedDataUrl = {{ '/assets/js/data/home-feed.json' | relative_url | jsonify }};
     const noResultsMessage = {{ site.data.locales[lang].search.no_results | jsonify }};
     const pinPrompt = {{ site.data.locales[lang].post.pin_prompt | jsonify }};
+    const kindLabels = {
+      personal: {{ site.data.locales[lang].home.project_study_mark | jsonify }},
+      career: {{ site.data.locales[lang].home.case_study_mark | jsonify }}
+    };
     const filterAllLabel = {{ site.data.locales[lang].home.filter_all | jsonify }};
     const selectedTagLabelTemplate = {{ site.data.locales[lang].home.tag_filter_selected | jsonify }};
     let allPosts = null;
@@ -422,6 +457,10 @@ refactor: true
       if (typeSelect && typeSelect.value !== 'all' && typeFilterValue) {
         active.push(typeFilterValue.textContent.trim());
       }
+
+      extraSelects.forEach((select) => {
+        if (select.value !== 'all') active.push(selectedLabel(select));
+      });
 
       if (selectedTag !== '') {
         active.push(selectedTag);
@@ -577,6 +616,18 @@ refactor: true
           <span>${escapeHtml(pinPrompt)}</span>
         </span>
       ` : '';
+      // Same case-study badge as the static cards (post-case-kind.html).
+      const kindBadge = post.kind === 'personal' ? `
+        <span class="home-case-badge is-personal">
+          <i class="fas fa-flask fa-fw"></i>
+          <span>${escapeHtml(kindLabels.personal)}</span>
+        </span>
+      ` : post.kind === 'career' ? `
+        <span class="home-case-badge">
+          <i class="fas fa-briefcase fa-fw"></i>
+          <span>${escapeHtml(kindLabels.career)}</span>
+        </span>
+      ` : '';
 
       return `
         <article class="card-wrapper card" data-post-url="${escapeHtml(post.url)}" data-post-type="${escapeHtml(post.typeId)}" data-post-tags="${escapeAttribute((post.tags || []).join(','))}">
@@ -589,6 +640,7 @@ refactor: true
                     <a href="${escapeHtml(post.url)}" class="post-card-title-link">${escapeHtml(post.title)}</a>
                   </h2>
                   <div class="card-title-badges">
+                    ${kindBadge}
                     ${pinBadge}
                     ${renderTypeBadge(post)}
                   </div>
@@ -759,7 +811,11 @@ refactor: true
     const applyFilter = async ({ resetPage = false } = {}) => {
       const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
       const selectedType = typeSelect ? typeSelect.value : 'all';
-      const hasFilter = searchTerm !== '' || selectedType !== 'all' || selectedTag !== '';
+      const selectedKind = kindSelect ? kindSelect.value : 'all';
+      const selectedTopic = topicSelect ? topicSelect.value : 'all';
+      const selectedYear = yearSelect ? yearSelect.value : 'all';
+      const hasFilter = searchTerm !== '' || selectedType !== 'all' || selectedTag !== '' ||
+        selectedKind !== 'all' || selectedTopic !== 'all' || selectedYear !== 'all';
 
       if (!hasFilter) {
         currentPage = 1;
@@ -783,7 +839,10 @@ refactor: true
         const matchesTag = selectedTag === '' || (Array.isArray(post.tags) && post.tags.includes(selectedTag));
         const searchable = searchMap ? searchMap[post.url] || '' : '';
         const matchesSearch = searchTerm === '' || searchable.includes(searchTerm);
-        return matchesType && matchesTag && matchesSearch;
+        const matchesKind = selectedKind === 'all' || post.kind === selectedKind;
+        const matchesTopic = selectedTopic === 'all' || (Array.isArray(post.topics) && post.topics.includes(selectedTopic));
+        const matchesYear = selectedYear === 'all' || post.year === selectedYear;
+        return matchesType && matchesTag && matchesSearch && matchesKind && matchesTopic && matchesYear;
       });
 
       toggleFilteredMode(true);
@@ -816,7 +875,7 @@ refactor: true
       });
     };
 
-    [searchInput, typeSelect]
+    [searchInput, typeSelect, ...extraSelects]
       .filter(Boolean)
       .forEach((control) => {
         control.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', () => {
@@ -881,6 +940,7 @@ refactor: true
     filterReset?.addEventListener('click', () => {
       if (searchInput) searchInput.value = '';
       if (typeSelect) typeSelect.value = 'all';
+      extraSelects.forEach((select) => { select.value = 'all'; });
       updateTypeTrigger();
       selectedTag = '';
       updateTagTrigger();

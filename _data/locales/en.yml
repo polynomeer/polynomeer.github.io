@@ -295,6 +295,9 @@ home:
   search_filter_label: Search
   search_filter_placeholder: Search posts
   type_filter_label: Type
+  kind_filter_label: Kind
+  topic_filter_label: Topic
+  year_filter_label: Year
   tag_filter_label: Tag
   tag_filter_trigger: Choose tag
   tag_filter_title: Filter feed by tag

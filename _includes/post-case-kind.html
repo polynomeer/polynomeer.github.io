@@ -1,0 +1,25 @@
+{%- comment -%}
+  Case-study kind of a post, printed as `personal`, `career` or nothing.
+  Only posts with a problem/decision/result summary count: a post of a
+  personal portfolio project (matched by series or URL in _data/portfolio.yml)
+  is `personal`, any other such note is `career`. Shared by the home cards
+  (badge) and the home feed data (kind filter), so the two never disagree.
+
+    {% include post-case-kind.html post=post content_type_id=type_id %}
+{%- endcomment -%}
+{%- assign case_kind = '' -%}
+{%- if include.post.problem_decision_result -%}
+  {%- if site.data.portfolio and site.data.portfolio.personal -%}
+    {%- for item in site.data.portfolio.personal.items -%}
+      {%- if item.series and item.series == include.post.series -%}
+        {%- assign case_kind = 'personal' -%}{%- break -%}
+      {%- elsif item.posts and item.posts contains include.post.url -%}
+        {%- assign case_kind = 'personal' -%}{%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if case_kind == '' and include.content_type_id == 'notes' -%}
+    {%- assign case_kind = 'career' -%}
+  {%- endif -%}
+{%- endif -%}
+{{- case_kind -}}

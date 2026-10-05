@@ -5,7 +5,6 @@ swcache: true
 
 {% include lang.html %}
 {% assign home_feed_excluded_segment = '/problemsolving/' %}
-{% assign home_feed_cutoff_ts = site.time | date: '%s' | plus: 0 | minus: 63072000 %}
 {% assign ordered_entries = '' | split: '' %}
 
 {% for post in site.posts %}
@@ -35,9 +34,12 @@ swcache: true
   {% for post in feed_posts %}
     {% assign post_ts = post.date | date: '%s' | plus: 0 %}
     {% assign include_in_home_feed_data = false %}
-    {% if post.path contains '/notes/' or post.pin == true or post_ts >= home_feed_cutoff_ts %}
-      {% assign include_in_home_feed_data = true %}
-    {% endif %}
+    {%- comment -%}
+      Every listed post, not only notes and the last two years: the year and
+      kind filters have to see the whole archive, the same set the static
+      pages list. Summaries are cut short to keep the file small.
+    {%- endcomment -%}
+    {% assign include_in_home_feed_data = true %}
     {% if include_in_home_feed_data %}
       {% unless home_feed_first_item %},{% endunless %}
       {% assign home_feed_first_item = false %}
@@ -45,7 +47,9 @@ swcache: true
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% assign content_type = site.data.content_types[post_content_type_id] %}
     {% capture summary %}{% include post-description.html %}{% endcapture %}
-    {% assign summary = summary | strip | strip_newlines %}
+    {% assign summary = summary | strip | strip_newlines | truncate: 160 %}
+    {% capture post_kind %}{% include post-case-kind.html post=post content_type_id=post_content_type_id %}{% endcapture %}
+    {% assign post_topics = post.topic_hubs | map: 'id' %}
     {% assign src = nil %}
     {% assign alt = nil %}
     {% if post.image %}
@@ -68,7 +72,10 @@ swcache: true
       "tags": {{ post.tags | jsonify }},
       "imageSrc": {{ src | jsonify }},
       "imageAlt": {{ alt | jsonify }},
-      "pin": {{ post.pin | default: false | jsonify }}
+      "pin": {{ post.pin | default: false | jsonify }},
+      "kind": {{ post_kind | strip | jsonify }},
+      "topics": {{ post_topics | jsonify }},
+      "year": {{ post.date | date: '%Y' | jsonify }}
     }
     {% endif %}
   {% endfor %}
