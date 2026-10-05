@@ -30,17 +30,24 @@ Matches on the post URL or, for personal projects, on the post's series page per
   {%- endif -%}
 {%- endif -%}
 {%- if matched_item -%}
-<aside class="portfolio-context" aria-label="{{ site.data.locales[lang].post.portfolio_context_label }}">
+{%- comment -%}
+  Drawn like a repository card: an icon tile, the kind and period over the
+  project title, and the repository as a button on the right. Other posts of
+  the same project follow on one quiet line.
+{%- endcomment -%}
+{%- if matched_kind == 'career' -%}{%- assign kind_key = 'case_study_mark' -%}{%- else -%}{%- assign kind_key = 'project_study_mark' -%}{%- endif -%}
+<aside class="portfolio-context is-{{ matched_kind }}" aria-label="{{ site.data.locales[lang].post.portfolio_context_label }}">
 <div class="portfolio-context-main">
-<i class="fas {% if matched_kind == 'career' %}fa-briefcase{% else %}fa-flask{% endif %}" aria-hidden="true"></i>
-<p>
-{%- assign ctx_key = 'portfolio_context_' | append: matched_kind -%}
-<span data-i18n="post.{{ ctx_key }}">{{ site.data.locales[lang].post[ctx_key] }}</span>
+<span class="portfolio-context-icon" aria-hidden="true"><i class="fas {% if matched_kind == 'career' %}fa-briefcase{% else %}fa-flask{% endif %}"></i></span>
+<div class="portfolio-context-text">
+<span class="portfolio-context-kind"><span data-i18n="home.{{ kind_key }}">{{ site.data.locales[lang].home[kind_key] }}</span>{%- if matched_item.period %} · <span class="portfolio-context-period">{{ matched_item.period }}</span>{% endif -%}</span>
 <a class="portfolio-context-title" href="{{ '/about/' | relative_url }}#{{ matched_item.id }}" data-l10n-ko="{{ matched_item.title['ko-KR'] | escape }}" data-l10n-en="{{ matched_item.title.en | escape }}">
 {%- include localized-value.html value=matched_item.title lang=lang -%}
 </a>
-{%- if matched_item.period %} <span class="portfolio-context-period">({{ matched_item.period }})</span>{% endif -%}
-</p>
+</div>
+{%- if matched_item.repo -%}
+<a class="portfolio-context-repo" href="{{ matched_item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i>GitHub</a>
+{%- endif -%}
 </div>
 {%- assign siblings = '' | split: '' -%}
 {%- for url in matched_item.posts -%}
@@ -49,17 +56,12 @@ Matches on the post URL or, for personal projects, on the post's series page per
     {%- if sib -%}{%- assign siblings = siblings | push: sib -%}{%- endif -%}
   {%- endif -%}
 {%- endfor -%}
-{%- if siblings.size > 0 or matched_item.repo -%}
-<div class="portfolio-context-links">
 {%- if siblings.size > 0 -%}
+<div class="portfolio-context-links">
 <span class="portfolio-context-links-label" data-i18n="post.portfolio_context_siblings">{{ site.data.locales[lang].post.portfolio_context_siblings }}</span>
 {%- for sib in siblings -%}
 <a href="{{ sib.url | relative_url }}">{{ sib.title }}</a>
 {%- endfor -%}
-{%- endif -%}
-{%- if matched_item.repo -%}
-<a href="{{ matched_item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
-{%- endif -%}
 </div>
 {%- endif -%}
 </aside>

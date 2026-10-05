@@ -2140,50 +2140,92 @@ html[data-mode='dark'] .about-terminal {
   }
 }
 
-/* Which project or job a post belongs to. A strip between two hairlines rather
-   than a tinted box with an accent bar: it is a line of context, not a callout. */
+/* Which project or job a post belongs to, drawn like a repository card: an
+   icon tile, kind and period over the title, the repository as a button. */
 .portfolio-context {
   margin: 0.4rem 0 1.4rem;
-  padding: 0.65rem 0;
-  border-top: 1px solid rgba(98, 114, 164, 0.2);
-  border-bottom: 1px solid rgba(98, 114, 164, 0.2);
-  font-size: 0.88rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  background: var(--card-bg);
 }
 
 .portfolio-context-main {
   display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 0.85rem;
+}
 
-  > i {
-    margin-top: 0.2rem;
-    color: var(--label-color);
-  }
+.portfolio-context-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--link-color) 16%, transparent);
+  color: var(--link-color);
+  font-size: 1.05rem;
 
-  p {
-    margin: 0;
-    line-height: 1.6;
-    color: var(--text-muted-color);
+  .is-career & {
+    background: color-mix(in srgb, var(--metric-color) 16%, transparent);
+    color: var(--metric-color);
   }
 }
 
-.portfolio-context-title {
-  font-weight: 700;
-  color: var(--heading-color);
+.portfolio-context-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.45;
+}
+
+.portfolio-context-kind {
+  color: var(--text-muted-color);
+  font-size: 0.78rem;
 }
 
 .portfolio-context-period {
-  color: var(--text-muted-color);
   font-variant-numeric: tabular-nums;
+}
+
+.portfolio-context-title {
+  color: var(--heading-color);
+  font-weight: 700;
+  font-size: 0.95rem;
+
+  &:hover {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+}
+
+.portfolio-context-repo {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.5rem;
+  color: var(--text-color);
+  font-size: 0.82rem;
+
+  &:hover {
+    border-color: var(--link-color);
+    color: var(--link-color);
+    text-decoration: none;
+  }
 }
 
 .portfolio-context-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem 0.85rem;
-  margin-top: 0.35rem;
-  padding-left: 1.6rem;
-  font-size: 0.84rem;
+  margin-top: 0.6rem;
+  padding-left: 3.25rem;
+  font-size: 0.82rem;
 }
 
 .portfolio-context-links-label {
