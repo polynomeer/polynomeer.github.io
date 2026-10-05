@@ -109,7 +109,7 @@ blockquote {
   .content &:not([class^='prompt-']) {
     position: relative;
     padding: 1rem 1.2rem 1rem 3rem;
-    border-left: 0;
+    border: 1px solid var(--btn-border-color);
     border-radius: 0.9rem;
     background: var(--blockquote-bg);
   }

@@ -4437,6 +4437,8 @@ html[data-mode='dark'] {
   padding: 1rem 1.1rem 0.85rem;
   border: 1px solid var(--btn-border-color);
   border-radius: 0.6rem;
+  background: var(--blockquote-bg);
+  box-shadow: var(--card-shadow);
 
   /* 어두운 테마의 blockquote 배경과 둥근 모서리가 카드 안에서 한 겹 더 생기지 않게
      테마 규칙(html[data-mode] blockquote:not(...))보다 구체적인 선택자로 덮습니다. */
