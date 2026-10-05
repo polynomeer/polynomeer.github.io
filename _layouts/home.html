@@ -214,10 +214,8 @@ refactor: true
 <div id="post-list" class="flex-grow-1 px-xl-1">
   <div id="static-post-list">
   {%- comment -%}
-    Pinned posts lead page 1 as cards (up to two, shown once). TILs are short
-    daily notes and crowded the feed as cards, so every TIL on a page goes
-    into one box of single-line rows, placed where the first of them falls.
-    From page 2 on, a pinned post keeps only its badge.
+    Pinned posts lead page 1 as cards (up to two, shown once). From page 2
+    on, a pinned post keeps only its badge in its date position.
   {%- endcomment -%}
   {% assign pinned_urls = '' | split: '' %}
   {% assign display_posts = '' | split: '' %}
@@ -230,35 +228,12 @@ refactor: true
       {% endif %}
     {% endfor %}
   {% endif %}
-  {% assign page_tils = '' | split: '' %}
   {% for post in posts %}
-    {% if pinned_urls contains post.url %}{% continue %}{% endif %}
-    {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
-    {% if post_content_type_id contains 'til' %}
-      {% if page_tils.size == 0 %}{% assign display_posts = display_posts | push: 'til-box' %}{% endif %}
-      {% assign page_tils = page_tils | push: post %}
-    {% else %}
+    {% unless pinned_urls contains post.url %}
       {% assign display_posts = display_posts | push: post %}
-    {% endif %}
+    {% endunless %}
   {% endfor %}
   {% for post in display_posts %}
-    {% if post == 'til-box' %}
-      <div class="til-group">
-        <div class="til-group-head">
-          <span class="til-group-label"><i class="{{ site.data.content_types.til.icon }}" aria-hidden="true"></i>TIL</span>
-          <span class="til-group-count">{{ site.data.locales[lang].home.til_count | replace: ':N', page_tils.size }}</span>
-          <a class="til-group-all" href="{{ '/types/til/' | relative_url }}">{{ site.data.locales[lang].home.til_all }}</a>
-        </div>
-        {% for til in page_tils %}
-          <a class="til-row" href="{{ til.url | relative_url }}" data-post-type="til">
-            <span class="til-row-date">{{ til.date | date: '%m.%d' }}</span>
-            <span class="til-row-title">{{ til.title }}</span>
-            <i class="fas fa-chevron-right" aria-hidden="true"></i>
-          </a>
-        {% endfor %}
-      </div>
-      {% continue %}
-    {% endif %}
     {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
@@ -444,10 +419,6 @@ refactor: true
       personal: {{ site.data.locales[lang].home.project_study_mark | jsonify }},
       career: {{ site.data.locales[lang].home.case_study_mark | jsonify }}
     };
-    const tilCountTemplate = {{ site.data.locales[lang].home.til_count | jsonify }};
-    const tilAllLabel = {{ site.data.locales[lang].home.til_all | jsonify }};
-    const tilAllUrl = {{ '/types/til/' | relative_url | jsonify }};
-    const tilIcon = {{ site.data.content_types.til.icon | jsonify }};
     const filterAllLabel = {{ site.data.locales[lang].home.filter_all | jsonify }};
     const selectedTagLabelTemplate = {{ site.data.locales[lang].home.tag_filter_selected | jsonify }};
     let allPosts = null;
@@ -720,33 +691,8 @@ refactor: true
       `;
     };
 
-    // Same grouping as the static list: every TIL on the page goes into one
-    // box of rows, placed where the first of them falls. No pinning here.
-    const renderPosts = (posts) => {
-      const out = [];
-      const tils = posts.filter((post) => post.typeId === 'til');
-      let tilBoxShown = false;
-      posts.forEach((post) => {
-        if (post.typeId !== 'til') {
-          out.push(renderCard(post));
-          return;
-        }
-        if (tilBoxShown) return;
-        tilBoxShown = true;
-        out.push(`<div class="til-group">
-          <div class="til-group-head">
-            <span class="til-group-label"><i class="${escapeHtml(tilIcon)}" aria-hidden="true"></i>TIL</span>
-            <span class="til-group-count">${escapeHtml(tilCountTemplate.replace(':N', tils.length))}</span>
-            <a class="til-group-all" href="${escapeHtml(tilAllUrl)}">${escapeHtml(tilAllLabel)}</a>
-          </div>${tils.map((til) => `
-          <a class="til-row" href="${escapeHtml(til.url)}" data-post-type="til">
-            <span class="til-row-date">${escapeHtml(til.monthDay || '')}</span>
-            <span class="til-row-title">${escapeHtml(til.title)}</span>
-            <i class="fas fa-chevron-right" aria-hidden="true"></i>
-          </a>`).join('')}</div>`);
-      });
-      return out.join('');
-    };
+    // Filtered results are plain cards in date order, without pinning.
+    const renderPosts = (posts) => posts.map(renderCard).join('');
 
     const renderEmptyState = () => {
       filteredPostList.innerHTML = `<div class="post-filter-empty">${escapeHtml(noResultsMessage)}</div>`;
