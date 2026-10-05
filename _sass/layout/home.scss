@@ -259,9 +259,7 @@
   padding: 0.42rem;
   border-radius: 1rem;
   border: 1px solid rgba(98, 114, 164, 0.22);
-  background:
-    radial-gradient(circle at top right, rgba(139, 233, 253, 0.08), transparent 34%),
-    linear-gradient(180deg, rgba(44, 47, 61, 0.98), rgba(34, 36, 48, 0.98));
+  background: var(--card-bg);
   box-shadow: 0 20px 44px rgba(10, 11, 16, 0.34);
 }
 
@@ -338,9 +336,7 @@
   overflow: auto;
   border-radius: 1.15rem;
   border: 1px solid rgba(98, 114, 164, 0.22);
-  background:
-    radial-gradient(circle at top right, rgba(139, 233, 253, 0.1), transparent 30%),
-    linear-gradient(180deg, rgba(44, 47, 61, 0.96), rgba(34, 36, 48, 0.98));
+  background: var(--card-bg);
   box-shadow: 0 28px 80px rgba(10, 11, 16, 0.45);
 }
 
@@ -495,9 +491,7 @@ body.tag-filter-open {
   line-height: 1.2;
   padding-right: 2.2rem;
   border-color: rgba(139, 233, 253, 0.16);
-  background:
-    linear-gradient(180deg, rgba(54, 57, 73, 0.92), rgba(35, 37, 49, 0.96)),
-    rgba(40, 42, 54, 0.5);
+  background: transparent;
 }
 
 .post-filter-select-wrap {
@@ -941,9 +935,7 @@ body.tag-filter-open {
   padding: 1.5rem 1.4rem 1.35rem;
   border-radius: 1.1rem;
   border: 1px solid rgba(98, 114, 164, 0.22);
-  background:
-    radial-gradient(120% 140% at 100% 0%, rgba(98, 114, 164, 0.22), transparent 60%),
-    rgba(68, 71, 90, 0.16);
+  background: rgba(68, 71, 90, 0.16);
 }
 
 .home-hero-eyebrow {

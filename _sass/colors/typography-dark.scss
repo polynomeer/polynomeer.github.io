@@ -137,14 +137,9 @@
 
   body {
     background-color: var(--main-bg);
-    background-image:
-      radial-gradient(circle at top right, rgba(189, 147, 249, 0.08), transparent 28%),
-      radial-gradient(circle at top left, rgba(139, 233, 253, 0.05), transparent 24%),
-      linear-gradient(180deg, #2b2d39 0%, #282a36 100%);
   }
 
   #sidebar {
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 16%);
     box-shadow: 20px 0 48px rgba(10, 10, 14, 0.2);
 
     .profile-wrapper {
@@ -198,10 +193,6 @@
     border: 1px solid rgba(93, 101, 129, 0.22);
   }
 
-  .post-preview::before {
-    background: linear-gradient(135deg, rgba(139, 233, 253, 0.1), rgba(189, 147, 249, 0.16));
-  }
-
   .post-tag,
   #search-hints .post-tag {
     background-color: rgba(68, 71, 90, 0.4);
@@ -241,14 +232,8 @@
   }
 
   #archives li:nth-child(odd) {
-    background-image: linear-gradient(
-      to left,
-      #282a36,
-      #3b3f51,
-      #3b3f51,
-      #3b3f51,
-      #282a36
-    );
+    background-image: none;
+    background-color: rgba(68, 71, 90, 0.25);
   }
 
   /* stylelint-disable-next-line selector-id-pattern */
