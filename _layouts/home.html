@@ -257,38 +257,39 @@ refactor: true
   <div id="static-post-list">
   {%- comment -%}
     TIL posts are short daily notes; as full cards they crowded the feed and
-    pushed the notes and case studies down. Consecutive TILs collapse into one
-    box of single-line rows; every other post keeps its card.
+    pushed the notes and case studies down. Grouping only consecutive TILs
+    still left a one-row box between every two cards once TILs became daily,
+    so every TIL on the page goes into one box of single-line rows, placed
+    where the first of them falls. The dates in the rows keep their order.
   {%- endcomment -%}
-  {% assign in_til_group = false %}
+  {% assign page_tils = '' | split: '' %}
+  {% for post in posts %}
+    {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
+    {% if post_content_type_id contains 'til' %}{% assign page_tils = page_tils | push: post %}{% endif %}
+  {% endfor %}
+  {% assign til_box_shown = false %}
   {% for post in posts %}
     {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
     {% assign post_content_type_id = post_content_type_id | strip %}
     {% if post_content_type_id == 'til' %}
-      {% unless in_til_group %}
-        {% assign til_count = 0 %}
-        {% for next_post in posts offset: forloop.index0 %}
-          {% capture next_type %}{% include content-type-id.html post=next_post %}{% endcapture %}
-          {% if next_type contains 'til' %}{% assign til_count = til_count | plus: 1 %}{% else %}{% break %}{% endif %}
-        {% endfor %}
+      {% unless til_box_shown %}
         <div class="til-group">
           <div class="til-group-head">
             <span class="til-group-label">TIL</span>
-            <span class="til-group-count">{{ site.data.locales[lang].home.til_count | replace: ':N', til_count }}</span>
+            <span class="til-group-count">{{ site.data.locales[lang].home.til_count | replace: ':N', page_tils.size }}</span>
             <a class="til-group-all" href="{{ '/types/til/' | relative_url }}">{{ site.data.locales[lang].home.til_all }}</a>
           </div>
-        {% assign in_til_group = true %}
+          {% for til in page_tils %}
+            <a class="til-row" href="{{ til.url | relative_url }}" data-post-type="til">
+              <span class="til-row-date">{{ til.date | date: '%m.%d' }}</span>
+              <span class="til-row-title">{{ til.title }}</span>
+              <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </a>
+          {% endfor %}
+        </div>
+        {% assign til_box_shown = true %}
       {% endunless %}
-      <a class="til-row" href="{{ post.url | relative_url }}" data-post-type="til">
-        <span class="til-row-date">{{ post.date | date: '%m.%d' }}</span>
-        <span class="til-row-title">{{ post.title }}</span>
-        <i class="fas fa-chevron-right" aria-hidden="true"></i>
-      </a>
       {% continue %}
-    {% endif %}
-    {% if in_til_group %}
-      </div>
-      {% assign in_til_group = false %}
     {% endif %}
     {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
     {% comment %} Case-study badge (notes only): career posts are "실무 사례", posts of a personal portfolio project are "개인 프로젝트". Reviews and conference notes carry a PDR card too but are not case studies. {% endcomment %}
@@ -412,7 +413,6 @@ refactor: true
       </div>
     </article>
   {% endfor %}
-  {% if in_til_group %}</div>{% endif %}
   </div>
 
   <div id="filtered-post-list" hidden></div>
@@ -735,34 +735,33 @@ refactor: true
       `;
     };
 
-    // Same grouping as the static list: consecutive TILs become one box of rows.
+    // Same grouping as the static list: every TIL on the page goes into one
+    // box of rows, placed where the first of them falls.
     const renderPosts = (posts) => {
       const out = [];
-      let group = [];
-      const flush = () => {
-        if (!group.length) return;
+      const tils = posts.filter((post) => post.typeId === 'til');
+      const renderTilBox = () => {
         out.push(`<div class="til-group">
           <div class="til-group-head">
             <span class="til-group-label">TIL</span>
-            <span class="til-group-count">${escapeHtml(tilCountTemplate.replace(':N', group.length))}</span>
+            <span class="til-group-count">${escapeHtml(tilCountTemplate.replace(':N', tils.length))}</span>
             <a class="til-group-all" href="${escapeHtml(tilAllUrl)}">${escapeHtml(tilAllLabel)}</a>
-          </div>${group.map((post) => `
+          </div>${tils.map((post) => `
           <a class="til-row" href="${escapeHtml(post.url)}" data-post-type="til">
             <span class="til-row-date">${escapeHtml(post.monthDay || '')}</span>
             <span class="til-row-title">${escapeHtml(post.title)}</span>
             <i class="fas fa-chevron-right" aria-hidden="true"></i>
           </a>`).join('')}</div>`);
-        group = [];
       };
+      let tilBoxShown = false;
       posts.forEach((post) => {
-        if (post.typeId === 'til') {
-          group.push(post);
-        } else {
-          flush();
+        if (post.typeId !== 'til') {
           out.push(renderCard(post));
+        } else if (!tilBoxShown) {
+          renderTilBox();
+          tilBoxShown = true;
         }
       });
-      flush();
       return out.join('');
     };
 
