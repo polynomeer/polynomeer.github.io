@@ -290,7 +290,7 @@
 
     .type-filter-option-check {
       opacity: 1;
-      color: #8be9fd;
+      color: var(--accent-cyan);
     }
   }
 }
@@ -301,7 +301,7 @@
   justify-content: center;
   width: 1rem;
   opacity: 0;
-  color: #8be9fd;
+  color: var(--accent-cyan);
 }
 
 .post-filter-reset {
@@ -665,7 +665,7 @@ body.tag-filter-open {
           border-radius: 999px;
           border: 1px solid rgba(255, 184, 108, 0.28);
           background: rgba(255, 184, 108, 0.12);
-          color: #ffb86c;
+          color: var(--accent-orange);
           font-size: 0.75rem;
           font-weight: 700;
           line-height: 1;

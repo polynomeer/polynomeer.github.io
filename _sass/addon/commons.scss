@@ -943,7 +943,7 @@ main {
 /* Overwrite bootstrap outline button */
 .btn.btn-outline-primary {
   &:not(.disabled):hover {
-    border-color: #ff79c6 !important;
+    border-color: var(--accent-pink) !important;
   }
 }
 

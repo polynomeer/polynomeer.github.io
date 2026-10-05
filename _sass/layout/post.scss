@@ -60,7 +60,7 @@ header {
           transform 0.2s ease;
 
         &:hover:not(:disabled) {
-          color: #ff79c6;
+          color: var(--accent-pink);
           border-color: rgba(255, 121, 198, 0.45);
           background: rgba(255, 121, 198, 0.08);
           transform: translateY(-1px);
@@ -82,7 +82,7 @@ header {
 
       &[data-liked='true'] {
         .post-like-button {
-          color: #ff79c6;
+          color: var(--accent-pink);
           border-color: rgba(255, 121, 198, 0.5);
           background: rgba(255, 121, 198, 0.12);
         }
@@ -192,7 +192,7 @@ header {
   --wc-stm-form-button-border: 1px solid var(--btn-border-color);
   --wc-stm-form-submit-background-color: var(--sidebar-btn-bg);
   --wc-stm-form-cancel-background-color: var(--sidebar-btn-bg);
-  --wc-stm-form-button-background-color-hover: #ff79c6;
+  --wc-stm-form-button-background-color-hover: var(--accent-pink);
   --wc-stm-form-button-color-hover: white;
 
   font-size: 1rem;
@@ -324,7 +324,7 @@ header {
     margin-bottom: 0.7rem;
 
     i {
-      color: #8be9fd;
+      color: var(--accent-cyan);
     }
 
     h4 {
@@ -622,7 +622,7 @@ header {
   .comment-submit-button.btn-primary {
     border-color: rgba(80, 250, 123, 0.55);
     background: rgba(80, 250, 123, 0.14);
-    color: #50fa7b;
+    color: var(--accent-green);
     box-shadow: none;
 
     &:hover:not(:disabled),
@@ -713,7 +713,7 @@ header {
     text-decoration: none;
 
     &:hover {
-      color: #ff79c6;
+      color: var(--accent-pink);
     }
   }
 }
@@ -1085,7 +1085,7 @@ header {
 
 .capability-map-legend-item--cyan,
 .capability-map-cluster--cyan {
-  color: #8be9fd;
+  color: var(--accent-cyan);
 }
 
 .capability-map-legend-item--green,
@@ -1270,7 +1270,7 @@ header {
   }
 
   .capability-map-node-body i {
-    color: #8be9fd;
+    color: var(--accent-cyan);
   }
 }
 
@@ -3012,7 +3012,7 @@ html[data-mode='dark'] {
   .series-cluster-badge,
   .series-cluster-step,
   .series-bonus-step {
-    color: #8be9fd;
+    color: var(--accent-cyan);
   }
 }
 
@@ -3052,7 +3052,7 @@ html[data-mode='dark'] {
   .series-cluster-badge,
   .series-cluster-step,
   .series-bonus-step {
-    color: #ff79c6;
+    color: var(--accent-pink);
   }
 }
 
@@ -4305,7 +4305,7 @@ html[data-mode='dark'] {
 }
 
 .post-revision-added {
-  color: #50fa7b;
+  color: var(--accent-green);
 }
 
 .post-revision-removed {
