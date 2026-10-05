@@ -408,6 +408,11 @@ header {
     .problem-decision-result-eyebrow {
       flex: none;
       margin: 0;
+      padding: 0.1rem 0.55rem;
+      border-radius: 0.4rem;
+      background: color-mix(in srgb, var(--accent-cyan) 14%, transparent);
+      color: var(--accent-cyan);
+      letter-spacing: 0.04em;
     }
   }
 
@@ -2190,7 +2195,11 @@ html[data-mode='dark'] .about-terminal {
 /* Which project or job a post belongs to, as one row of chips: the kind as an
    outlined chip, title and period as text, the repository as a filled chip. */
 .portfolio-context {
-  margin: 0.9rem 0 1.1rem;
+  margin: 1rem 0 1.1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.9rem;
+  background: var(--card-bg);
 }
 
 .portfolio-context-main {
@@ -2207,8 +2216,9 @@ html[data-mode='dark'] .about-terminal {
   align-items: center;
   gap: 0.35rem;
   padding: 0.15rem 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--kind-color) 55%, transparent);
+  border: 1px solid transparent;
   border-radius: 999px;
+  background: color-mix(in srgb, var(--kind-color) 14%, transparent);
   color: var(--kind-color);
   font-size: 0.76rem;
   font-weight: 600;
@@ -2231,23 +2241,55 @@ html[data-mode='dark'] .about-terminal {
 
 .portfolio-context-period {
   color: var(--text-muted-color);
-  font-size: 0.82rem;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.76rem;
 }
 
 .portfolio-context-series {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  color: var(--link-color);
-  font-size: 0.84rem;
-
-  i {
-    font-size: 0.75em;
-  }
+  gap: 0.5rem;
+  padding: 0.12rem 0.7rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 999px;
+  color: var(--text-color);
+  font-size: 0.76rem;
 
   &:hover {
+    border-color: var(--link-color);
+    color: var(--text-color);
     text-decoration: none;
+  }
+}
+
+.portfolio-context-series-count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* the post meta puts a bullet between adjacent spans; not inside this chip */
+header .post-meta .portfolio-context-series span::before {
+  content: none;
+  padding: 0;
+}
+
+/* one tick per part: read parts in the link colour, this part in the accent */
+.portfolio-context-series-ticks {
+  display: inline-flex;
+  gap: 2px;
+
+  span {
+    width: 3px;
+    height: 0.62rem;
+    border-radius: 2px;
+    background: var(--btn-border-color);
+
+    &.is-before {
+      background: var(--link-color);
+    }
+
+    &.is-current {
+      background: var(--accent-pink);
+    }
   }
 }
 
@@ -3478,15 +3520,13 @@ html[data-mode='dark'] {
     }
 
     .is-active-link {
+      border-radius: 0.5rem;
+      background: var(--card-bg);
       color: var(--toc-highlight) !important;
       font-weight: 600;
 
       &::before {
-        display: inline-block;
-        width: 1px;
-        left: -1px;
-        height: 1.25rem;
-        background-color: var(--toc-highlight) !important;
+        display: none;
       }
     }
 
@@ -4909,4 +4949,10 @@ html[data-mode='dark'] {
   margin-top: 0.8rem;
   color: var(--text-muted-color);
   font-size: 0.85rem;
+}
+
+/* Post header dates in the monospace face, like the feed. */
+.post-header .post-date-row time {
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.85em;
 }
