@@ -130,6 +130,9 @@ tail_includes:
         </div>
       </div>
 
+      {%- comment -%} Which project or job the post belongs to, right under the dates. {%- endcomment -%}
+      {% include portfolio-context.html lang=lang %}
+
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
         {% capture class %}class="preview-img{% if page.image.no_bg %}{{ ' no-bg' }}{% endif %}"{% endcapture %}
@@ -151,8 +154,6 @@ tail_includes:
   </header>
 
   {% include series-navigation.html lang=lang %}
-
-  {% include portfolio-context.html lang=lang %}
 
   {% include problem-decision-result.html lang=lang %}
 
