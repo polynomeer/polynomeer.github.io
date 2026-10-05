@@ -77,7 +77,7 @@ sequenceDiagram
 
 ## 기술 선택과 이유
 
-초기 ADR 0001–0006은 통합 개발 문서 §6.5의 표를 옮긴 것이다. 결정, 한 줄 이유, 재검토 조건은 있지만 검토한 대안은 없다. 대안이 기록된 것은 기술 스택을 정한 [ADR-0007](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0007-kotlin-spring-boot-and-nextjs.md)뿐이다. 그래서 아래 비교에서 "필요"는 저장소 문서에서 가져왔고, 대안 비교는 내가 그 필요에 비추어 사후에 다시 세운 것이다. 기술의 성질은 각 공식 문서에서 확인했다. ADR이라는 기록 방식 자체는 [ADR 정리 글](/posts/architecture-decision-records/)에 적어 두었다.
+초기 ADR 0001–0006은 통합 개발 문서 §6.5의 표를 옮긴 것이다. 결정, 한 줄 이유, 재검토 조건은 있지만 검토한 대안은 없다. 대안이 기록된 것은 기술 스택을 정한 [ADR-0007](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0007-kotlin-spring-boot-and-nextjs.md)뿐이다. 그래서 아래 비교에서 "필요"는 저장소 문서에서 가져왔고, 대안 비교는 내가 그 필요에 비추어 사후에 다시 세운 것이다. 같은 비교를 저장소에도 [초기 기술 선택 비교](https://github.com/polynomeer/proofu/blob/f1c18f6fe78fd7862f6f1499101747b9521f9ca8/docs/architecture/tech-selection.md) 문서로 남겼다. 기술의 성질은 각 공식 문서에서 확인했다. ADR이라는 기록 방식 자체는 [ADR 정리 글](/posts/architecture-decision-records/)에 적어 두었다.
 
 ### 모듈형 모놀리스
 
@@ -228,6 +228,7 @@ API 엔드포인트, 화면, AI 호출은 이 뼈대 위에 같은 날 오전부
 ## 참고
 
 - 저장소: [polynomeer/proofu](https://github.com/polynomeer/proofu) — 이 글의 코드와 문서 링크는 커밋 `5d6874b`, `0ffce5d`, `a3620d5`, `f9df540`, `47f019c`, `587d8f3`에 고정
+- 재구성한 대안 비교: [docs/architecture/tech-selection.md](https://github.com/polynomeer/proofu/blob/f1c18f6fe78fd7862f6f1499101747b9521f9ca8/docs/architecture/tech-selection.md)
 - 초기 ADR: [0001](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0001-modular-monolith.md), [0002](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0002-postgresql-primary-store.md), [0003](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0003-rest-and-openapi.md), [0004](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0004-async-jobs.md), [0005](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0005-provider-neutral-ai-gateway.md), [0006](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0006-immutable-submission-snapshot.md), [0007](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0007-kotlin-spring-boot-and-nextjs.md)
 - 초기 스키마: [`migrations/V1__initial_schema.sql`](https://github.com/polynomeer/proofu/blob/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b/migrations/V1__initial_schema.sql), CI: [`.github/workflows/ci.yml`](https://github.com/polynomeer/proofu/blob/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b/.github/workflows/ci.yml)
 - PostgreSQL 16 문서: [SELECT Locking Clause](https://www.postgresql.org/docs/16/sql-select.html), [Text Search Indexes](https://www.postgresql.org/docs/16/textsearch-indexes.html), [Text Search Dictionaries](https://www.postgresql.org/docs/16/textsearch-dictionaries.html), [JSON Types](https://www.postgresql.org/docs/16/datatype-json.html), [CREATE TRIGGER](https://www.postgresql.org/docs/16/sql-createtrigger.html)
