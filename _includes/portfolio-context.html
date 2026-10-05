@@ -43,6 +43,20 @@ Matches on the post URL or, for personal projects, on the post's series page per
 {%- include localized-value.html value=matched_item.title lang=lang -%}
 </a>
 {%- if matched_item.period %}<span class="portfolio-context-period">{{ matched_item.period }}</span>{% endif -%}
+{%- comment -%}
+  A post in a series: the series joins this row (part N of M, linking to the
+  series page) and post.html leaves out the separate series panel.
+{%- endcomment -%}
+{%- if page.series and page.series_order -%}
+  {%- assign ctx_series_posts = site.posts | where: 'series', page.series | sort: 'series_order' -%}
+  {%- assign ctx_series_page = site.series_pages | where: 'series_id', page.series | first -%}
+  {%- assign ctx_part = 0 -%}
+  {%- for p in ctx_series_posts -%}{%- if p.url == page.url -%}{%- assign ctx_part = forloop.index -%}{%- endif -%}{%- endfor -%}
+  {%- if ctx_series_page and ctx_part > 0 -%}
+<a class="portfolio-context-series" href="{{ ctx_series_page.url | relative_url }}"><span class="portfolio-context-series-label">{{ site.data.locales[lang].post.series }}</span>{{ site.data.locales[lang].post.series_progress | replace: ':CURRENT', ctx_part | replace: ':TOTAL', ctx_series_posts.size }}<i class="fas fa-angle-right" aria-hidden="true"></i></a>
+    {%- assign portfolio_context_series_shown = true -%}
+  {%- endif -%}
+{%- endif -%}
 {%- if matched_item.repo -%}
 <a class="portfolio-context-repo" href="{{ matched_item.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i>GitHub</a>
 {%- endif -%}

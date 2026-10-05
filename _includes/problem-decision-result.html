@@ -23,10 +23,17 @@
       숨긴 칸은 hidden="until-found" 라서 브라우저 찾기가 그 안의 글자도 찾아내고, 찾으면
       beforematch 로 해당 탭이 열립니다. 지원하지 않는 브라우저는 보통 hidden 으로 읽습니다.
     {%- endcomment -%}
-    <section class="problem-decision-result" aria-labelledby="problem-decision-result-title" data-pdr>
-      <h2 id="problem-decision-result-title" class="problem-decision-result-eyebrow" data-toc-skip>
-        {{ site.data.locales[include.lang].pdr.eyebrow }}
-      </h2>
+    {%- comment -%}
+      Folded by default to one line - the label and the start of the
+      problem - so the body begins on the first screen. Opening it shows the
+      tabs below. Find-in-page still opens it (details is searchable).
+    {%- endcomment -%}
+    {% assign pdr_teaser = pdr.problem | default: pdr.decision | default: pdr.result | strip_html | truncate: 90 %}
+    <details class="problem-decision-result" data-pdr>
+      <summary class="problem-decision-result-summary">
+        <span id="problem-decision-result-title" class="problem-decision-result-eyebrow">{{ site.data.locales[include.lang].pdr.eyebrow }}</span>
+        <span class="problem-decision-result-teaser">{{ pdr_teaser }}</span>
+      </summary>
 
       <div class="problem-decision-result-tabs" role="tablist" data-pdr-tabs hidden>
         {% if has_problem %}<button type="button" role="tab" data-pdr-tab="problem" aria-controls="pdr-panel-problem" id="pdr-tab-problem">{{ site.data.locales[include.lang].pdr.problem }}</button>{% endif %}
@@ -56,7 +63,7 @@
           </article>
         {% endif %}
       </div>
-    </section>
+    </details>
 
     <script>
       (() => {
