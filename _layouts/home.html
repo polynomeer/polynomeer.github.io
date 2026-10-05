@@ -327,15 +327,21 @@ refactor: true
                     {% include datetime.html date=post.date lang=lang %}
                   </span>
 
-                  {% if post.categories.size > 0 %}
+                  {%- comment -%}
+                    Categories minus the one that only repeats the type badge
+                    (Notes on a note, TIL on a TIL).
+                  {%- endcomment -%}
+                  {% assign card_categories = '' | split: '' %}
+                  {% for category in post.categories %}
+                    {% assign category_key = category | downcase | remove: ' ' | remove: '-' %}
+                    {% unless category_key == post_content_type_id %}
+                      {% assign card_categories = card_categories | push: category %}
+                    {% endunless %}
+                  {% endfor %}
+                  {% if card_categories.size > 0 %}
                     <span class="post-meta-item">
                       <i class="far fa-folder-open fa-fw"></i>
-                      <span class="categories">
-                        {% for category in post.categories %}
-                          {{ category }}
-                          {%- unless forloop.last -%},{%- endunless -%}
-                        {% endfor %}
-                      </span>
+                      <span class="categories">{{ card_categories | join: ', ' }}</span>
                     </span>
                   {% endif %}
 
@@ -435,8 +441,13 @@ refactor: true
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 
-    const renderCategories = (categories = []) => {
-      if (!Array.isArray(categories) || categories.length === 0) return '';
+    const renderCategories = (categories = [], typeId = '') => {
+      if (!Array.isArray(categories)) return '';
+      // Same rule as the static cards: drop the category that repeats the type.
+      categories = categories.filter(
+        (category) => String(category).toLowerCase().replace(/[\s-]/g, '') !== typeId
+      );
+      if (categories.length === 0) return '';
 
       return `
         <span class="post-meta-item">
@@ -661,7 +672,7 @@ refactor: true
                         <i class="far fa-calendar fa-fw"></i>
                         ${escapeHtml(post.dateLabel)}
                       </span>
-                      ${renderCategories(post.categories)}
+                      ${renderCategories(post.categories, post.typeId)}
                     </div>
                   </div>
                 </div>
