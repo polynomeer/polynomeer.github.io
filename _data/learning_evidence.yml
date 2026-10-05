@@ -143,7 +143,7 @@ groups:
         source_posts:
           - _posts/book/fundamentals-of-software-architecture/2025-05-13-fundamentals-of-software-architecture-chap2.md
         related_posts:
-          - _posts/notes/common/2026-03-20-architectural-decisions.md
+          - _posts/notes/common/2026-01-14-architectural-decisions.md
 
       - id: troubleshooting-java
         type: book

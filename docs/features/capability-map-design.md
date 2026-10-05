@@ -117,7 +117,7 @@ nodes:
       ko-KR: "단순 기술 사용이 아니라 설계 판단의 질을 보여주는 중심 축입니다."
       en: "Acts as a central proof of design judgment rather than surface tool usage."
     representative_posts:
-      - "_posts/notes/common/2026-03-20-architectural-decisions.md"
+      - "_posts/notes/common/2026-01-14-architectural-decisions.md"
     related_series:
       - id: authentication-basics
 
