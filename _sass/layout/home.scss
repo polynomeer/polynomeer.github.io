@@ -842,12 +842,8 @@ nav.home-paginator {
   font-weight: 700;
   letter-spacing: 0.06em;
 
-  &::before {
-    content: '';
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 50%;
-    background: currentcolor;
+  i {
+    font-size: 0.72rem;
   }
 }
 

@@ -233,7 +233,7 @@ refactor: true
       {% unless til_box_shown %}
         <div class="til-group">
           <div class="til-group-head">
-            <span class="til-group-label">TIL</span>
+            <span class="til-group-label"><i class="{{ site.data.content_types.til.icon }}" aria-hidden="true"></i>TIL</span>
             <span class="til-group-count">{{ site.data.locales[lang].home.til_count | replace: ':N', page_tils.size }}</span>
             <a class="til-group-all" href="{{ '/types/til/' | relative_url }}">{{ site.data.locales[lang].home.til_all }}</a>
           </div>
@@ -434,6 +434,7 @@ refactor: true
     };
     const tilCountTemplate = {{ site.data.locales[lang].home.til_count | jsonify }};
     const tilAllLabel = {{ site.data.locales[lang].home.til_all | jsonify }};
+    const tilIcon = {{ site.data.content_types.til.icon | jsonify }};
     const tilAllUrl = {{ '/types/til/' | relative_url | jsonify }};
     const filterAllLabel = {{ site.data.locales[lang].home.filter_all | jsonify }};
     const selectedTagLabelTemplate = {{ site.data.locales[lang].home.tag_filter_selected | jsonify }};
@@ -715,7 +716,7 @@ refactor: true
       const renderTilBox = () => {
         out.push(`<div class="til-group">
           <div class="til-group-head">
-            <span class="til-group-label">TIL</span>
+            <span class="til-group-label"><i class="${escapeHtml(tilIcon)}" aria-hidden="true"></i>TIL</span>
             <span class="til-group-count">${escapeHtml(tilCountTemplate.replace(':N', tils.length))}</span>
             <a class="til-group-all" href="${escapeHtml(tilAllUrl)}">${escapeHtml(tilAllLabel)}</a>
           </div>${tils.map((post) => `
