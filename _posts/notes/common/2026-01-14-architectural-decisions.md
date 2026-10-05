@@ -1,12 +1,13 @@
 ---
 title: "키 생성 병목을 추적해 구조를 바꾼 기록: Part 2 - SELECT 안에서 UPDATE가 일어나고 있었다"
-date: 2026-03-20
+date: 2026-01-14
 categories: [Notes, Common]
 tags: [Sequence, Performance, Database, Lock]
 series: sequence-bottleneck
 series_title: 키 생성 병목을 추적해 구조를 바꾼 기록
 series_order: 2
 mermaid: true
+series_description: "MCP 계약 코드 채번이 2분 걸리던 원인을 추적해 SELECT 안에 숨은 UPDATE를 찾고, 채번을 INSERT 시점·범위 할당·별도 트랜잭션으로 옮겨 10초로 줄인 실무 기록."
 ---
 
 [1편](/posts/sequence-part1/)에서는 계약 생성 처리에 2분이 걸리고 동시 요청과 배치에서 대기가 커졌다는 증상, 그리고 그 원인이 계약 코드를 받아 오는 `SELECT next_seq('CONTRACT_CODE')` 한 줄 안의 시퀀스 증가였다는 데까지 적었다. 남은 질문은 메커니즘이었다. 이 글은 그 함수 안을 열어, 읽기처럼 보이는 문장이 어떤 락을 걸고 그 락이 왜 다른 요청을 기다리게 하는지 정리한다.

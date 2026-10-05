@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "a Producer로 가입한 A Creator가 정확한 경위를 알 수 없는 채로 b Producer에 재매핑됐다. A Creator 입장에서는 그동안 등록한 프로그램, 에피소드, 클립이 전부 사라진 것처럼 보였고 VoC가 접수됐다."
   decision: "DML로 DB를 직접 고치면 연관 검증이나 부수 효과 같은 비즈니스 로직을 건너뛸 위험이 있다고 판단했다. 운영팀 계정으로 B Creator를 만들어 b Producer에 매핑한 뒤, A Creator를 원래 a Producer로 다시 매핑하는 애플리케이션 흐름으로 복구했다."
   result: "A Creator의 콘텐츠 접근을 복구했다. 원인은 가입 여부 오판과 Producer 생성 시 producer_id 덮어쓰기라는 두 가설까지 좁혔지만 로그와 DB 조회로 확정하지는 못했다. 재발 방지 방향은 제안했고, 실제 구현 여부는 확인되지 않았다."
+series: creator-studio
+series_title: "크리에이터 스튜디오 개발"
+series_order: 6
+series_description: "크리에이터 스튜디오를 만들며 외부 연동 분리, 감사 로그, 인증·세션 구조, 매핑 장애 대응을 다룬 실무 기록."
 ---
 
 크리에이터 스튜디오에서 한 Creator의 콘텐츠가 전부 사라진 것처럼 보이는 VoC(Voice of Customer, 고객 문의)가 들어왔다. 실제로 콘텐츠가 지워진 것은 아니었다. Creator가 속한 Producer가 다른 Producer로 바뀌어 있었다.

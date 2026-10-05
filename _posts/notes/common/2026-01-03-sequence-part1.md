@@ -7,6 +7,7 @@ series: sequence-bottleneck
 series_title: 키 생성 병목을 추적해 구조를 바꾼 기록
 series_order: 1
 mermaid: true
+series_description: "MCP 계약 코드 채번이 2분 걸리던 원인을 추적해 SELECT 안에 숨은 UPDATE를 찾고, 채번을 INSERT 시점·범위 할당·별도 트랜잭션으로 옮겨 10초로 줄인 실무 기록."
 ---
 
 음원 플랫폼 회사에서 콘텐츠 플랫폼(MCP)을 전면 개편하던 2024년, 계약을 생성하는 처리가 2분씩 걸렸다. 이 시리즈는 그 2분의 원인이 된 채번 구조와, 그 구조를 바꾼 방법, 나중에 그 설계에 남은 결함까지 확인한 기록이다.

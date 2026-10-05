@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "신규 B2C 오디오 제작 플랫폼에서 외부 마케팅·분석 연동이 도메인 트랜잭션 안에 있었고, 감사 질문에 답할 표준 로그 체계가 없었다. access token 원문을 Redis key로 쓰는 세션 구조에는 refresh 이후 옛 token이 통과하는 빈틈이 있었고, 운영 중에는 Creator-Producer 매핑이 바뀌어 콘텐츠가 사라진 것처럼 보이는 장애가 났다."
   decision: "외부 연동은 @TransactionalEventListener 기반 Post-Commit 이벤트로 분리하고 재시도 3회 후 로그만 남기는 정책으로 정했다. 감사 로그는 포맷 표준화, Logback MDC, Filebeat·Elasticsearch·Kibana로 묶었다. 세션 빈틈은 해시 key와 현재 token 역인덱스로 개선안을 설계했고, 매핑 장애는 DML 대신 애플리케이션 흐름으로 복구했다."
   result: "외부 연동 실패가 핵심 저장에 번지지 않게 됐고, 감사 로그 체계는 ISMS 심사와 ITGC 감사 대응에 쓰였다. 세션 개선안은 설계까지만 했고 구현하지 않았다. 매핑 장애의 원인은 두 가설까지 좁혔지만 확정하지 못했다."
+series: creator-studio
+series_title: "크리에이터 스튜디오 개발"
+series_order: 1
+series_description: "크리에이터 스튜디오를 만들며 외부 연동 분리, 감사 로그, 인증·세션 구조, 매핑 장애 대응을 다룬 실무 기록."
 ---
 
 크리에이터 스튜디오는 누구나 오디오 콘텐츠를 만들어 음원 플랫폼에 배포할 수 있게 하는 B2C 제작 플랫폼이다. 2022년 4월에 새로 만들기 시작했고, 나는 초기 구축에 참여한 뒤 정담당자로 유지보수를 맡았다.

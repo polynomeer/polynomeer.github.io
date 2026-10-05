@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "감사 요구사항인 '누가, 언제, 무엇을 했는가'를 일관되게 추적할 표준화된 로그 체계가 없었다."
   decision: "Audit Log 포맷과 이벤트 구조를 표준화하고, Logback MDC로 요청 ID, 사용자 ID, 세션 정보를 공통 로그에 넣었다. 로그는 Filebeat로 수집해 Elasticsearch에 쌓고 Kibana로 검색했다."
   result: "운영 이슈 추적과 보안 감사 대응이 쉬워졌다. 회사는 ISMS 인증을 3회 연속 통과했고, 나는 그중 2023년과 2024년 두 차례 심사에 참여해 이 체계를 언급하고 시연했다. 같은 체계는 ITGC 회계 감사 대응에도 쓰였다."
+series: creator-studio
+series_title: "크리에이터 스튜디오 개발"
+series_order: 2
+series_description: "크리에이터 스튜디오를 만들며 외부 연동 분리, 감사 로그, 인증·세션 구조, 매핑 장애 대응을 다룬 실무 기록."
 ---
 
 크리에이터 스튜디오는 누구나 오디오 콘텐츠를 만들어 음원 플랫폼에 배포할 수 있게 하는 B2C 제작 플랫폼이다. 회사가 ISMS 인증을 받고 있었기 때문에, 새로 만드는 이 서비스도 감사 질문에 로그로 답할 수 있어야 했다.

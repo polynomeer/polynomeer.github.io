@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "크리에이터 스튜디오는 access token 원문을 Redis key로, JWT를 파싱한 값 전체를 value로 저장해 세션처럼 썼다. FE가 token을 refresh해 새 access token을 받아도 스튜디오는 그 사실을 알 수 없었고, 옛 access token의 exp가 남아 있는 동안에는 옛 token으로도 세션이 계속 통과될 수 있었다."
   decision: "Redis TTL을 exp에 맞추는 것만으로는 해결되지 않는다는 점을 짚고, sha256(access_token)을 key로 쓰면서 sub+device_id별로 현재 유효한 token 해시를 가리키는 역인덱스를 두는 개선안을 설계했다. 새 token이 쓰이면 이전 token의 세션을 즉시 지우고, 이후 옛 token 요청은 해시 불일치로 거절하는 방향이다."
   result: "문제 식별과 개선안 설계까지 진행했고, 실제 구현과 배포는 하지 않았다. 이후 개인 랩에서 개선안을 코드로 옮겨, refresh 직후 옛 token이 거절되는 것을 테스트로 확인했다."
+series: creator-studio
+series_title: "크리에이터 스튜디오 개발"
+series_order: 5
+series_description: "크리에이터 스튜디오를 만들며 외부 연동 분리, 감사 로그, 인증·세션 구조, 매핑 장애 대응을 다룬 실무 기록."
 ---
 
 이 글은 크리에이터 스튜디오의 인증·세션 구조에서 찾은 빈틈 하나를 다룬다. FE가 token을 refresh해 새 access token을 받은 뒤에도, 옛 access token으로 스튜디오 API가 계속 통과될 수 있었다.

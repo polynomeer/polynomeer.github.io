@@ -4,6 +4,10 @@ date: 2025-05-22
 categories: [Notes, Common]
 tags: [Excel, SQS, S3, Async Processing, Performance]
 mermaid: true
+series: excel-batch-optimization
+series_title: "대용량 배치·엑셀 처리 최적화"
+series_order: 4
+series_description: "대용량 엑셀 생성과 배치의 메모리 문제를 스트리밍과 청크 처리로 풀고, 무거운 다운로드 요청을 다루는 설계를 함께 정리한 실무 기록."
 ---
 
 대량 엑셀 다운로드를 API 서버가 요청 안에서 직접 만들면, 조회와 파일 생성이 끝날 때까지 요청 스레드와 DB 커넥션이 묶인다. 이 글은 그 작업을 [메시지 큐](/posts/message-queue/) 뒤의 워커로 넘기고, 조건 없는 전체 다운로드는 파일을 미리 만들어 S3에 두는 구조를 설계로 정리한다. 그리고 큐로 옮기는 순간 생기는 새 문제인 중복 처리를 어떻게 막는지 다룬다.

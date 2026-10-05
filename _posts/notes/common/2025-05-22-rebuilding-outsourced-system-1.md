@@ -4,6 +4,10 @@ date: 2025-05-22
 categories: [Notes, Common]
 tags: [Legacy, Refactoring, Reverse Engineering, Migration]
 mermaid: true
+series: mds-renewal
+series_title: "음원 유통 시스템(MDS) 리뉴얼"
+series_order: 1
+series_description: "외주로 만든 음원 유통 시스템을 리뉴얼하며 정산 중 수정 차단, 이벤트 파이프라인 전환, 계약 갱신 배치 자동화를 다룬 실무 기록."
 ---
 
 음원 플랫폼 회사에서 외주 개발사가 PHP로 만든 음원 유통 시스템을 새로 만든 프로젝트를 정리한다. 기존 시스템에서 넘겨받을 수 있었던 것은 테이블과 데이터뿐이었다. 그래서 이 프로젝트는 기존 코드를 옮기는 이관이 아니라, 기존 데이터에서 규칙을 읽어 스키마를 새로 설계하고 그 위에 시스템을 다시 세우는 리뉴얼이 되었다.

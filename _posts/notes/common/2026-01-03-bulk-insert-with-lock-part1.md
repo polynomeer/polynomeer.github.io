@@ -7,6 +7,7 @@ series: batch-structure-improvement
 series_title: 대량 배치 안정성을 높이기 위한 구조 개선
 series_order: 1
 mermaid: true
+series_description: "지분율 데이터의 대량 삭제를 2시간에서 5분으로, 등록을 40분에서 12분으로 줄이고, 분산락 재설계와 상태 전이로 삭제와 등록의 순서를 지킨 실무 기록."
 ---
 
 [Part 0](/posts/share-ratio-1/)에서는 지분율 삭제·재등록 작업이 예외 상황에서 무엇을 보장하지 못했는지 정리했다. 이 글은 그중 삭제 배치 하나에 집중한다. 2시간 넘게 걸리던 삭제가 어디서 시간을 쓰고 있었는지, 실행계획과 데이터 분포를 차례로 확인한 과정을 적는다.

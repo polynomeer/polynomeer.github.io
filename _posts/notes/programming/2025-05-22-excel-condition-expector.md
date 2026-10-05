@@ -4,6 +4,10 @@ date: 2025-05-22
 categories: [Notes, Programming]
 tags: [Excel, Query Planning, Performance, Async Processing]
 mermaid: true
+series: excel-batch-optimization
+series_title: "대용량 배치·엑셀 처리 최적화"
+series_order: 2
+series_description: "대용량 엑셀 생성과 배치의 메모리 문제를 스트리밍과 청크 처리로 풀고, 무거운 다운로드 요청을 다루는 설계를 함께 정리한 실무 기록."
 ---
 
 엑셀 다운로드 기능을 운영하다 보면 모든 요청을 같은 경로로 처리하기 어렵다. 어떤 요청은 수백 건이라 즉시 내려줘도 되지만, 어떤 요청은 수십만 건을 읽어야 해서 [비동기 경로](/posts/bulk-excel-performance/)로 넘기는 편이 낫다. 문제는 실행하기 전에는 그 차이가 보이지 않는다는 점이다.

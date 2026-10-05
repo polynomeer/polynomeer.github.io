@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "MyBatis 중심 구조에서 조회와 변경이 같은 매퍼와 SQL 계층에 섞여 있어 중복 SQL이 반복되고, 조회 최적화가 변경 로직에 영향을 줬다."
   decision: "변경은 기존 MyBatis에 두고, 조회는 JPA·QueryDSL 기반 별도 Query 모델로 분리했다. 라이선스 관리, 콘텐츠 관리처럼 중요도가 높은 기능은 기존 MyBatis 결과와 신규 QueryDSL 결과를 비교하는 Shadow Release와 통합 테스트를 거쳐 점진 전환했다."
   result: "조회와 변경의 책임이 분리되어 SQL 중복과 매퍼 복잡도가 줄고, 변경의 영향 범위를 파악하기 쉬워졌다. 두 기술이 같은 테이블을 다르게 해석하는 지점은 코드베이스에 남았다."
+series: mcp-revamp
+series_title: "음원 콘텐츠 플랫폼(MCP) 전면 개편"
+series_order: 3
+series_description: "8천만 곡 규모 음원 콘텐츠 플랫폼을 다시 설계하며 API, 입력 검증, 조회와 쓰기 분리, 아키텍처 가드레일, 권리이관과 입수 파이프라인을 다룬 실무 기록."
 ---
 
 [2편](/posts/legacy-jsp-system-refactoring-2/)까지는 음원 콘텐츠 플랫폼(MCP)의 입력과 채번을 다뤘다. 이 글은 데이터 접근 계층이다. MCP 개편에서는 변경을 MyBatis에 그대로 두고 조회만 [JPA](/posts/jpa-architecture/)와 [QueryDSL](/posts/querydsl/)로 옮겼다. 그 결과 한 시스템 안에서 두 기술이 같은 테이블을 읽게 됐다. 이 글은 왜 그렇게 나눴는지, 두 기술이 같은 데이터를 다르게 해석하는 지점이 어디인지, 그리고 다시 쓴 조회가 기존과 같은 결과를 내는지 어떻게 확인했는지 정리한다.

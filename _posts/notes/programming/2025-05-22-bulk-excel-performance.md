@@ -4,6 +4,10 @@ date: 2025-05-22
 categories: [Notes, Programming]
 tags: [Excel, Async Processing, Performance, Redis, S3]
 mermaid: true
+series: excel-batch-optimization
+series_title: "대용량 배치·엑셀 처리 최적화"
+series_order: 1
+series_description: "대용량 엑셀 생성과 배치의 메모리 문제를 스트리밍과 청크 처리로 풀고, 무거운 다운로드 요청을 다루는 설계를 함께 정리한 실무 기록."
 ---
 
 대용량 엑셀 다운로드는 처음에는 단순해 보인다. 쿼리를 실행하고, 결과로 파일을 만들고, 응답으로 내려주면 끝이다. 그런데 다운로드 건수가 수십만 건으로 커지고 같은 요청이 반복되면 이 기능 하나가 API 서버의 힙, DB 커넥션, 요청 스레드를 함께 붙잡는다.

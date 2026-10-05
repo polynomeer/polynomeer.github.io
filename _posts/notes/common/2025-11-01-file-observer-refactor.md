@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "음원 입수 파이프라인의 File Observer는 유통사마다 ObserverService 구현체를 두었는데, 구현체마다 ObserverHelper 위임 코드와 홈 디렉터리 조회 코드가 거의 그대로 반복됐다. 권리사 ID는 application.yml에 고정돼 있어 파트너가 추가될 때마다 설정 수정과 배포가 필요했다."
   decision: "공통 위임 코드를 BaseObserverService 추상 클래스로 옮기고 구현체는 getObserverType()만 남겼다. 처음 검토한 제네릭 Base는 실제로 달라지는 지점이 하나뿐이라 걷어냈다. 권리사 ID는 DB를 원천으로 삼아 기동 시 1회 조회해 RightsHolder enum에 캐싱하는 방향으로 바꿨다."
   result: "신규 유통사 구현체는 getObserverType() 하나만 작성하면 되는 구조가 됐고, 권리사 ID 추가가 설정 파일 수정과 재배포에 묶이지 않게 됐다. 줄어든 코드 양 같은 정량 지표는 남아 있지 않다."
+series: mcp-revamp
+series_title: "음원 콘텐츠 플랫폼(MCP) 전면 개편"
+series_order: 8
+series_description: "8천만 곡 규모 음원 콘텐츠 플랫폼을 다시 설계하며 API, 입력 검증, 조회와 쓰기 분리, 아키텍처 가드레일, 권리이관과 입수 파이프라인을 다룬 실무 기록."
 ---
 
 음원 콘텐츠 플랫폼(MCP)의 입수 파이프라인 앞단에는 File Observer라는 계층이 있었다. 유통사(소니, 워너, 유니버설, 카카오M, CD Baby 등)가 음원 원본 파일을 올리면, File Observer가 유통사별 디렉터리를 감시(observe)하다가 새 파일을 처리 대상으로 인식한다. 이 글은 그 계층의 구현체 쪽 중복을 내가 직접 정리한 기록이다. 무엇이 반복되고 있었는지, 처음 떠올린 설계를 왜 버렸는지, 권리사 ID를 설정 파일에서 DB로 옮기면서 무엇을 얻고 무엇을 남겼는지를 다룬다.

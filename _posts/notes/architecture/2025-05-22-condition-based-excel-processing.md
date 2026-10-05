@@ -4,6 +4,10 @@ date: 2025-05-22
 categories: [Notes, Architecture]
 tags: [Excel, Performance]
 mermaid: true
+series: excel-batch-optimization
+series_title: "대용량 배치·엑셀 처리 최적화"
+series_order: 3
+series_description: "대용량 엑셀 생성과 배치의 메모리 문제를 스트리밍과 청크 처리로 풀고, 무거운 다운로드 요청을 다루는 설계를 함께 정리한 실무 기록."
 ---
 
 전체 다운로드에 가까운 양을 요구하면서 조건이 조금씩 붙는 엑셀 요청은 미리 만들어 둘 수도 없고, 매번 처음부터 만들기에는 무겁다. 이 글은 그런 요청을 처리 비용으로 먼저 분류하고, 무거운 조건의 결과만 골라 재사용하는 구조를 설계로 정리한다.

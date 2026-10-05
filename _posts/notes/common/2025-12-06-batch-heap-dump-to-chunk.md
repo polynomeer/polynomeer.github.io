@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "대용량 배치와 Excel 생성에서 Full GC와 OOM이 반복됐다. Tasklet 하나가 단일 트랜잭션으로 대량 엔티티를 처리해 영속성 컨텍스트에 엔티티가 쌓였고, Excel은 조회 결과 전체를 메모리에 올린 뒤 파일을 만들었다."
   decision: "Eclipse MAT로 Heap Dump를 열고 GC 로그와 Thread Dump를 함께 확인해 원인을 특정했다. 배치는 Chunk 기반 트랜잭션으로 바꾸고 일정 건수마다 flush()와 clear()를 호출했다. Excel은 청크 단위로 조회해 SXSSF 스트리밍으로 파일을 만들었다."
   result: "배치 메모리 피크가 3.8GB에서 1.6GB(58% 감소), Excel 생성 메모리가 1.2GB에서 180MB(85% 감소)로 줄었고, 이후 Full GC와 OOM 없이 운영됐다. 실패한 배치는 Jenkins에서 같은 Job을 다시 실행하면 마지막 커밋 지점부터 이어서 처리됐다."
+series: excel-batch-optimization
+series_title: "대용량 배치·엑셀 처리 최적화"
+series_order: 5
+series_description: "대용량 엑셀 생성과 배치의 메모리 문제를 스트리밍과 청크 처리로 풀고, 무거운 다운로드 요청을 다루는 설계를 함께 정리한 실무 기록."
 ---
 
 배치가 OOM(OutOfMemoryError, 힙에 새 객체를 둘 공간이 없을 때 나는 오류)으로 죽었고, 죽지 않은 날에도 [Full GC](/posts/java-garbage-collection/)가 반복됐다. Excel 파일을 만드는 기능도 같은 증상을 보였다. 이 글은 2022년 9월부터 12월까지 음원 플랫폼 회사에서 혼자 맡았던 대용량 배치와 Excel 생성 최적화를 정리한 기록이다. 원인을 어떻게 특정했는지, 배치와 Excel을 각각 어떻게 바꿨는지, 그리고 퇴사 후 같은 구조를 랩에서 다시 만들어 재 보니 무엇이 보였는지까지 다룬다.

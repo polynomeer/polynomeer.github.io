@@ -8,6 +8,10 @@ problem_decision_result:
   problem: "MyBatis 중심 구조에서 조회와 변경이 같은 매퍼에 섞여 있어 중복 SQL이 반복되고, 조회 최적화가 변경 로직에 영향을 줬다. 조회를 QueryDSL로 분리하기로 했지만, 다시 쓴 조회가 기존과 같은 결과를 내는지 확인할 방법이 필요했다."
   decision: "변경은 MyBatis에 두고 조회만 JPA/QueryDSL 기반 Query 모델로 분리했다. 라이선스 관리, 콘텐츠 관리처럼 중요도가 높은 기능은 기존 MyBatis 결과와 신규 QueryDSL 결과를 비교하는 Shadow Release와 통합 테스트를 거쳐 점진 전환했다."
   result: "조회와 변경의 책임이 분리되어 SQL 중복과 매퍼 복잡도가 줄었고, 변경의 영향 범위를 파악하기 쉬워졌다. Shadow Release는 전체 조회가 아니라 중요 기능 위주로 적용했다."
+series: mcp-revamp
+series_title: "음원 콘텐츠 플랫폼(MCP) 전면 개편"
+series_order: 9
+series_description: "8천만 곡 규모 음원 콘텐츠 플랫폼을 다시 설계하며 API, 입력 검증, 조회와 쓰기 분리, 아키텍처 가드레일, 권리이관과 입수 파이프라인을 다룬 실무 기록."
 ---
 
 음원 콘텐츠 플랫폼(MCP) 재설계에서 데이터 접근 구조를 바꾼 방식은 "전부 JPA로 옮기기"가 아니었다. 변경은 MyBatis에 그대로 두고, 조회만 [QueryDSL](/posts/querydsl/)로 분리했다. 이 글은 왜 조회만 옮겼는지, 다시 쓴 조회가 기존과 같은 결과를 내는지 어떻게 확인했는지, 그리고 그 절차를 어디까지 적용했는지 정리한 기록이다.
