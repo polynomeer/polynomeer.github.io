@@ -487,6 +487,12 @@ refactor: true
     const updateResetButton = () => {
       const active = [];
 
+      // Mark each filter pill that narrows the feed, so the active ones read at a glance.
+      typeSelect?.closest('.post-filter-field')?.classList.toggle('is-active', typeSelect.value !== 'all');
+      extraSelects.forEach((select) => {
+        select.closest('.post-filter-field')?.classList.toggle('is-active', select.value !== 'all');
+      });
+
       if (typeSelect && typeSelect.value !== 'all' && typeFilterValue) {
         active.push(typeFilterValue.textContent.trim());
       }

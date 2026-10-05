@@ -1225,3 +1225,81 @@ summary.post-filter-summary {
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* Filter controls as one family of pills: label, value and a chevron inside a
+   rounded outline, whatever drives them (the custom type menu, a native
+   select, the tag dialog). A pill that narrows the feed turns the link colour. */
+section#home-discovery-filter {
+  .post-filter-row-inline {
+    gap: 0.55rem;
+  }
+
+  .post-filter-field-search {
+    flex: 1 1 100%;
+  }
+
+  .post-filter-field-compact,
+  .post-filter-field-tag {
+    flex: 0 0 auto;
+  }
+
+  .post-filter-field-select,
+  .post-filter-plain,
+  .post-filter-field-tag .post-filter-trigger,
+  .post-filter-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: auto;
+    height: 2.25rem;
+    min-height: 2.25rem;
+    padding: 0 0.85rem;
+    border: 1px solid rgba(98, 114, 164, 0.3);
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.84rem;
+  }
+
+  .post-filter-field-select .post-filter-trigger {
+    width: auto;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .post-filter-field-select .post-filter-trigger-value {
+    font-weight: 500;
+  }
+
+  .post-filter-visible-label,
+  .post-filter-trigger-label {
+    color: var(--text-muted-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .post-filter-plain-select {
+    width: auto;
+    height: auto;
+    padding: 0 1rem 0 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--text-color);
+    font-size: 0.84rem;
+  }
+
+  .post-filter-field.is-active,
+  .post-filter-field-tag .post-filter-trigger.is-active {
+    border-color: color-mix(in srgb, var(--link-color) 60%, transparent);
+    background: color-mix(in srgb, var(--link-color) 12%, transparent);
+
+    .post-filter-trigger-value,
+    .post-filter-plain-select {
+      color: var(--link-color);
+    }
+  }
+}
