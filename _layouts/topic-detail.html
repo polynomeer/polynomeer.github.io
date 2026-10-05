@@ -59,7 +59,7 @@ layout: page
 
   {% for section in sections %}
     {% assign label_key = 'section_' | append: section.key %}
-    <section class="topic-section topic-section-{{ section.key }}">
+    <section id="topic-section-{{ section.key }}" class="topic-section topic-section-{{ section.key }}">
       <header class="topic-section-header">
         <h3>{{ t[label_key] }}</h3>
         <span class="topic-section-count">{{ t.post_count | replace: ':COUNT', section.posts.size }}</span>

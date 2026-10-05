@@ -259,9 +259,9 @@ categories:
     plural: posts
 
 topic:
-  eyebrow: Topic hubs
-  directory_title: Read by topic
-  directory_description: My own posts, tech blog reviews and conference talk reviews that wrestle with the same question, gathered on one page each. Grouped by question, not by tag.
+  eyebrow: Topics
+  directory_title: Read by question
+  directory_description: Grouped by question, not by tag. Pick a question and read from the author's own measurements to how other teams solved the same problem, in a set order.
   post_count: ":COUNT posts"
   section_own: Built and measured myself
   section_review: Tech blog reviews
@@ -270,6 +270,20 @@ topic:
   start_from: Start here
   updated: Latest
   post_hubs: Topic hubs for this post
+  spotlight: Question of the day
+  path_title: Answered in three posts
+  path_first: Start here
+  path_next: Then
+  path_compare: How others answered
+  all_posts: "All :COUNT posts on this question"
+  reviews_only: Reviews only
+  others_title: Other questions
+  short_own: Own
+  short_review: Blogs
+  short_talk: Talks
+  start_short: Start
+  crossings_title: Where two questions meet
+  crossings_description: Posts that answer two questions at once. Done with one topic? Cross over to the next from here.
 
 series_directory:
   groups:

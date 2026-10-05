@@ -7,7 +7,17 @@ layout: page
 {% assign t = site.data.locales[lang].topic %}
 {% assign topics = site.topics | default: empty | sort: 'order' %}
 
-<section class="topic-directory">
+{%- comment -%}
+  The topic page reads as questions, not as a list of categories. One topic
+  leads as the question of the day: its question, how its posts split between
+  the author's own work and reviews of other teams, and three posts that
+  answer it in order (topic-hub.rb builds `topic_path`). The rest follow as
+  smaller question cards, then the posts where two questions meet.
+
+  Every topic gets a spotlight block; all but the first are hidden, and the
+  script below swaps in the day's topic, hiding its card from the grid.
+{%- endcomment -%}
+<section class="topic-directory" data-topic-directory>
   {% assign t_ko = site.data.locales['ko-KR'].topic %}
   {% assign t_en = site.data.locales.en.topic %}
   {% include page-hero.html
@@ -16,38 +26,133 @@ layout: page
     title_ko=t_ko.directory_title title_en=t_en.directory_title
     summary_ko=t_ko.directory_description summary_en=t_en.directory_description %}
 
-  <div class="topic-grid">
-    {% for topic in topics %}
-      {% assign first_featured = topic.topic_featured | first %}
-      <article class="topic-card">
-        <a class="topic-card-link" href="{{ topic.url | relative_url }}">
-          {% if topic.question %}
-            <span class="topic-card-question">{{ topic.question }}</span>
-          {% endif %}
-          <h3>{{ topic.title }}</h3>
-          {% if topic.description %}
-            <p class="topic-card-description">{{ topic.description }}</p>
-          {% endif %}
+  {% for topic in topics %}
+    {% assign counts = topic.topic_counts %}
+    {% assign own_count = counts.own | default: 0 %}
+    {% assign review_count = counts.review | default: 0 %}
+    {% assign talk_count = counts.talk | default: 0 %}
+    <section
+      class="topic-spotlight"
+      data-topic-id="{{ topic.topic_id }}"
+      style="--topic-tone: var(--accent-{{ topic.tone | default: 'purple' }})"
+      aria-label="{{ t.spotlight }}"
+      {% unless forloop.first %}hidden{% endunless %}
+    >
+      <div class="topic-spotlight-head">
+        <span class="topic-spotlight-kicker">{{ t.spotlight }}</span>
+        <a class="topic-tone-label" href="{{ topic.url | relative_url }}">{{ topic.title }}</a>
+        <span class="topic-spotlight-count">{{ t.post_count | replace: ':COUNT', topic.topic_post_count }}</span>
+      </div>
+      <h2 class="topic-spotlight-question">{{ topic.question | default: topic.title }}</h2>
 
-          <div class="topic-card-counts">
-            {% for section in topic.topic_sections %}
-              {% assign label_key = 'section_' | append: section.key %}
-              <span class="topic-card-count topic-card-count-{{ section.key }}">
-                <strong>{{ section.posts.size }}</strong> {{ t[label_key] }}
-              </span>
+      <div class="topic-mix">
+        <div class="topic-mix-bar" aria-hidden="true">
+          {% if own_count > 0 %}<span class="is-own" style="flex: {{ own_count }}"></span>{% endif %}
+          {% if review_count > 0 %}<span class="is-review" style="flex: {{ review_count }}"></span>{% endif %}
+          {% if talk_count > 0 %}<span class="is-talk" style="flex: {{ talk_count }}"></span>{% endif %}
+        </div>
+        <div class="topic-mix-legend">
+          <span class="is-own">{{ t.section_own }} {{ own_count }}</span>
+          <span class="is-review">{{ t.section_review }} {{ review_count }}</span>
+          <span class="is-talk">{{ t.section_talk }} {{ talk_count }}</span>
+        </div>
+      </div>
+
+      {% if topic.topic_path.size > 0 %}
+        <div class="topic-path">
+          <span class="topic-path-title">{{ t.path_title }}</span>
+          <ol class="topic-path-steps">
+            {% for step in topic.topic_path %}
+              {% assign step_key = 'path_' | append: step.step %}
+              <li>
+                <a class="topic-path-step is-{{ step.step }}" href="{{ step.post.url | relative_url }}">
+                  <span class="topic-path-step-label">{{ forloop.index | prepend: '0' }} · {{ t[step_key] }}</span>
+                  <span class="topic-path-step-title">{{ step.post.title }}</span>
+                  {% if step.post.series_title %}
+                    <span class="topic-path-step-meta">{{ step.post.series_title }}{% if step.post.series_order %} · {{ site.data.locales[lang].home.series_part | replace: ':N', step.post.series_order }}{% endif %}</span>
+                  {% endif %}
+                </a>
+              </li>
             {% endfor %}
-          </div>
+          </ol>
+        </div>
+      {% endif %}
 
-          {% if first_featured %}
-            <div class="topic-card-meta">
-              <span class="topic-card-start">
-                {{ t.start_from }}
-                <strong>{{ first_featured.title }}</strong>
-              </span>
-            </div>
+      <div class="topic-spotlight-actions">
+        <a class="topic-action is-primary" href="{{ topic.url | relative_url }}">{{ t.all_posts | replace: ':COUNT', topic.topic_post_count }}</a>
+        {% if review_count > 0 or talk_count > 0 %}
+          <a class="topic-action" href="{{ topic.url | relative_url }}#topic-section-{% if review_count > 0 %}review{% else %}talk{% endif %}">{{ t.reviews_only }}</a>
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
+
+  <section class="topic-others" aria-labelledby="topic-others-title">
+    <h2 id="topic-others-title" class="topic-subhead">{{ t.others_title }}</h2>
+    <div class="topic-grid">
+      {% for topic in topics %}
+        {% assign counts = topic.topic_counts %}
+        {% assign own_count = counts.own | default: 0 %}
+        {% assign review_count = counts.review | default: 0 %}
+        {% assign talk_count = counts.talk | default: 0 %}
+        {% assign first_step = topic.topic_path | first %}
+        <article
+          class="topic-card"
+          data-topic-id="{{ topic.topic_id }}"
+          style="--topic-tone: var(--accent-{{ topic.tone | default: 'purple' }})"
+          {% if forloop.first %}hidden{% endif %}
+        >
+          <a class="topic-tone-label" href="{{ topic.url | relative_url }}">{{ topic.title }}</a>
+          <h3 class="topic-card-question"><a href="{{ topic.url | relative_url }}">{{ topic.question | default: topic.title }}</a></h3>
+          <div class="topic-mix-bar is-thin" aria-hidden="true">
+            {% if own_count > 0 %}<span class="is-own" style="flex: {{ own_count }}"></span>{% endif %}
+            {% if review_count > 0 %}<span class="is-review" style="flex: {{ review_count }}"></span>{% endif %}
+            {% if talk_count > 0 %}<span class="is-talk" style="flex: {{ talk_count }}"></span>{% endif %}
+          </div>
+          <span class="topic-card-counts">{{ t.short_own }} {{ own_count }} · {{ t.short_review }} {{ review_count }} · {{ t.short_talk }} {{ talk_count }}</span>
+          {% if first_step %}
+            <a class="topic-card-start" href="{{ first_step.post.url | relative_url }}">{{ t.start_short }}: {{ first_step.post.title }}</a>
           {% endif %}
-        </a>
-      </article>
-    {% endfor %}
-  </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% assign crossings = site.data.topic_crossings %}
+  {% if crossings.size > 0 %}
+    <section class="topic-crossings" aria-labelledby="topic-crossings-title">
+      <h2 id="topic-crossings-title" class="topic-subhead">{{ t.crossings_title }}</h2>
+      <p class="topic-crossings-description">{{ t.crossings_description }}</p>
+      <ul class="topic-crossings-list">
+        {% for row in crossings %}
+          <li>
+            <a class="topic-crossing" href="{{ row.post.url | relative_url }}">
+              <span class="topic-crossing-pair">
+                {% for hub in row.topics %}
+                  <span class="topic-crossing-chip" style="--topic-tone: var(--accent-{{ hub.tone | default: 'purple' }})">{{ hub.title }}</span>
+                  {% unless forloop.last %}<span class="topic-crossing-x" aria-hidden="true">×</span>{% endunless %}
+                {% endfor %}
+              </span>
+              <span class="topic-crossing-title">{{ row.post.title }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
 </section>
+
+<script>
+  (() => {
+    // Question of the day: the same topic all day, a different one tomorrow.
+    const root = document.querySelector('[data-topic-directory]');
+    if (!root) return;
+    const spots = Array.from(root.querySelectorAll('.topic-spotlight'));
+    if (spots.length < 2) return;
+    const now = new Date();
+    const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    const pick = spots[day % spots.length].dataset.topicId;
+    spots.forEach((spot) => { spot.hidden = spot.dataset.topicId !== pick; });
+    root.querySelectorAll('.topic-card').forEach((card) => { card.hidden = card.dataset.topicId === pick; });
+  })();
+</script>

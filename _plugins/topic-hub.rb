@@ -51,6 +51,39 @@ module Jekyll
         end
       end
 
+      # Three posts that answer the topic's question in order: the first two
+      # of the author's own posts (featured first), then the first review or
+      # talk, so the reader ends on how another team answered it.
+      def answer_path(sections)
+        by_key = sections.to_h { |s| [s['key'], s['posts']] }
+        own = Array(by_key['own']).first(2)
+        other = (Array(by_key['review']) + Array(by_key['talk'])).min_by do |post|
+          sections.any? { |s| s['featured'].include?(post) } ? 0 : 1
+        end
+        steps = own.each_with_index.map { |post, i| { 'step' => i.zero? ? 'first' : 'next', 'post' => post } }
+        steps << { 'step' => 'compare', 'post' => other } if other
+        steps
+      end
+
+      # Featured posts that also belong to a second topic: where one post
+      # answers two questions. The topic that features it comes first.
+      def crossings(index)
+        seen = Set.new
+        rows = []
+        index.each do |topic, _m|
+          (topic.data['topic_featured'] || []).each do |post|
+            hubs = Array(post.data['topic_hubs'])
+            next if hubs.size < 2 || seen.include?(post.url)
+
+            seen << post.url
+            own = hubs.find { |h| h['id'] == topic.data['topic_id'] }
+            other = hubs.find { |h| h['id'] != topic.data['topic_id'] }
+            rows << { 'post' => post, 'topics' => [own, other] }
+          end
+        end
+        rows.sort_by { |r| -r['post'].date.to_i }.first(6)
+      end
+
       def build(site)
         return if site.data['topic_hubs_ready']
 
@@ -75,7 +108,7 @@ module Jekyll
             next unless m[:posts].include?(slug) || post_tags.any? { |t| m[:tags].include?(t) }
 
             buckets[topic][section_of(post)] << post
-            hubs << { 'id' => topic.data['topic_id'], 'title' => topic.data['title'], 'url' => topic.url }
+            hubs << { 'id' => topic.data['topic_id'], 'title' => topic.data['title'], 'url' => topic.url, 'tone' => topic.data['tone'] }
           end
 
           post.data['topic_hubs'] = hubs unless hubs.empty?
@@ -98,7 +131,10 @@ module Jekyll
           topic.data['topic_counts'] = sections.to_h { |s| [s['key'], s['posts'].size] }
           topic.data['topic_featured'] = sections.flat_map { |s| s['featured'] }
           topic.data['topic_last_date'] = sections.flat_map { |s| s['posts'] }.map(&:date).max
+          topic.data['topic_path'] = answer_path(sections)
         end
+
+        site.data['topic_crossings'] = crossings(index)
 
         site.data['topic_hubs_ready'] = true
       end
