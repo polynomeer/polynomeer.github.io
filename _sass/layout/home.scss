@@ -1174,3 +1174,54 @@ summary.post-filter-summary {
     font-size: 0.75em;
   }
 }
+
+/* TIL posts on the feed: one box of single-line rows per run of TILs. */
+.til-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+  padding: 0.35rem 1.25rem 0.4rem;
+  border: 1px solid rgba(98, 114, 164, 0.22);
+  border-radius: $radius-lg;
+  background: var(--card-bg);
+}
+
+.til-group-label {
+  padding: 0.45rem 0 0.25rem;
+  color: var(--type-til);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.til-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba(98, 114, 164, 0.16);
+  color: var(--text-color);
+
+  &:hover {
+    text-decoration: none;
+
+    .til-row-title {
+      color: var(--link-color);
+    }
+  }
+
+  .til-row-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  time {
+    flex: none;
+    color: var(--accent-date);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+  }
+}

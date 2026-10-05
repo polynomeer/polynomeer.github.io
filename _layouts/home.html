@@ -243,9 +243,30 @@ refactor: true
 
 <div id="post-list" class="flex-grow-1 px-xl-1">
   <div id="static-post-list">
+  {%- comment -%}
+    TIL posts are short daily notes; as full cards they crowded the feed and
+    pushed the notes and case studies down. Consecutive TILs collapse into one
+    box of single-line rows; every other post keeps its card.
+  {%- endcomment -%}
+  {% assign in_til_group = false %}
   {% for post in posts %}
     {% capture post_content_type_id %}{% include content-type-id.html post=post %}{% endcapture %}
     {% assign post_content_type_id = post_content_type_id | strip %}
+    {% if post_content_type_id == 'til' %}
+      {% unless in_til_group %}
+        <div class="til-group"><span class="til-group-label">TIL</span>
+        {% assign in_til_group = true %}
+      {% endunless %}
+      <a class="til-row" href="{{ post.url | relative_url }}" data-post-type="til">
+        <span class="til-row-title">{{ post.title }}</span>
+        {% include datetime.html date=post.date lang=lang %}
+      </a>
+      {% continue %}
+    {% endif %}
+    {% if in_til_group %}
+      </div>
+      {% assign in_til_group = false %}
+    {% endif %}
     {% assign post_search_blob = post.title | append: ' ' | append: post.content | strip_html | normalize_whitespace | downcase %}
     {% comment %} Case-study badge (notes only): career posts are "실무 사례", posts of a personal portfolio project are "개인 프로젝트". Reviews and conference notes carry a PDR card too but are not case studies. {% endcomment %}
     {% capture card_kind %}{% include post-case-kind.html post=post content_type_id=post_content_type_id %}{% endcapture %}
@@ -370,6 +391,7 @@ refactor: true
       </div>
     </article>
   {% endfor %}
+  {% if in_til_group %}</div>{% endif %}
   </div>
 
   <div id="filtered-post-list" hidden></div>
@@ -683,6 +705,31 @@ refactor: true
       `;
     };
 
+    // Same grouping as the static list: consecutive TILs become one box of rows.
+    const renderPosts = (posts) => {
+      const out = [];
+      let group = [];
+      const flush = () => {
+        if (!group.length) return;
+        out.push(`<div class="til-group"><span class="til-group-label">TIL</span>${group.map((post) => `
+          <a class="til-row" href="${escapeHtml(post.url)}" data-post-type="til">
+            <span class="til-row-title">${escapeHtml(post.title)}</span>
+            <time>${escapeHtml(post.dateLabel || '')}</time>
+          </a>`).join('')}</div>`);
+        group = [];
+      };
+      posts.forEach((post) => {
+        if (post.typeId === 'til') {
+          group.push(post);
+        } else {
+          flush();
+          out.push(renderCard(post));
+        }
+      });
+      flush();
+      return out.join('');
+    };
+
     const renderEmptyState = () => {
       filteredPostList.innerHTML = `<div class="post-filter-empty">${escapeHtml(noResultsMessage)}</div>`;
     };
@@ -870,7 +917,7 @@ refactor: true
 
       const start = (currentPage - 1) * perPage;
       const pagePosts = filteredPosts.slice(start, start + perPage);
-      filteredPostList.innerHTML = pagePosts.map(renderCard).join('');
+      filteredPostList.innerHTML = renderPosts(pagePosts);
       renderPagination(totalPages);
     };
 
