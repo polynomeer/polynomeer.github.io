@@ -8,6 +8,7 @@ intro:
 tiers:
   - id: three-min
     label: { ko-KR: 3분, en: 3 minutes }
+    hint: { ko-KR: 무엇을 하는 곳인지, en: What this blog does }
     goal: { ko-KR: 이 블로그가 무엇을 하는 곳인지 한 편으로 보기, en: One post that shows what this blog does }
     items:
       - slug: tomcat-thread-exhaustion
@@ -17,6 +18,7 @@ tiers:
 
   - id: fifteen-min
     label: { ko-KR: 15분, en: 15 minutes }
+    hint: { ko-KR: 추론을 측정으로, en: Inference into measurement }
     goal: { ko-KR: 추론을 측정으로 바꾸는 세 가지 방식 보기, en: Three ways of turning inference into measurement }
     items:
       - slug: parity-pay-lock-hold-time
@@ -34,6 +36,7 @@ tiers:
 
   - id: one-hour
     label: { ko-KR: 한 시간, en: An hour }
+    hint: { ko-KR: 한 시스템을 끝까지, en: One system, start to end }
     goal: { ko-KR: 하나의 시스템을 처음부터 끝까지 따라가기, en: Follow one system from beginning to end }
     items:
       - series: parity-pay
@@ -56,3 +59,19 @@ next:
     why:
       ko-KR: 다른 회사가 같은 문제를 어떻게 풀었는지가 궁금하다면 원문과 리뷰의 대응표가 있습니다.
       en: If you want to see how other companies solved the same problems, the source-to-review map is there.
+# The four steps most posts here follow, shown under the paths.
+method:
+  title: { ko-KR: 어떤 글을 읽게 되나, en: What the posts look like }
+  steps:
+    - label: { ko-KR: 재현, en: Reproduce }
+      detail: { ko-KR: 무너지는 조건을 만든다, en: Build the condition that breaks it }
+      tone: cyan
+    - label: { ko-KR: 계측, en: Measure }
+      detail: { ko-KR: thread dump와 백분위로 읽는다, en: Read it with thread dumps and percentiles }
+      tone: green
+    - label: { ko-KR: 조치, en: Fix }
+      detail: { ko-KR: 원인 하나를 고친다, en: Fix one cause }
+      tone: orange
+    - label: { ko-KR: 재측정, en: Measure again }
+      detail: { ko-KR: 같은 조건에서 다시 잰다, en: Measure again under the same condition }
+      tone: pink

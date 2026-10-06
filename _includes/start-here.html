@@ -1,66 +1,173 @@
 {%- comment -%}
 Reading paths for /start/, sized by how much time the reader has.
-Items point at posts by slug or at a series by id; anything hidden drops out rather than
-rendering a dead link, so a tier can go empty without breaking the page.
+
+The tiers sit behind a row of time tabs (3 min / 15 min / an hour / by
+topic); without the script every tier is shown in turn. Each item shows its
+read time and each tier how much of it this browser has read - the same `series-read-posts` store series-progress.js
+keeps - with the first unread item marked as next.
+
+Items point at posts by slug or at a series by id; anything hidden drops out
+rather than rendering a dead link, so a tier can go empty without breaking
+the page.
 {%- endcomment -%}
 {%- include lang.html -%}
 {%- assign data = site.data.start_here -%}
 {%- if data and data.enabled -%}
 {%- assign loc = site.data.locales[lang].start_here -%}
-<p class="start-intro" data-l10n-ko="{{ data.intro['ko-KR'] | escape }}" data-l10n-en="{{ data.intro.en | escape }}">{% include localized-value.html value=data.intro lang=lang %}</p>
-
-{%- for tier in data.tiers -%}
-<section class="start-tier" id="{{ tier.id }}">
-  <header class="start-tier-head">
-    <span class="start-tier-label" data-l10n-ko="{{ tier.label['ko-KR'] | escape }}" data-l10n-en="{{ tier.label.en | escape }}">{% include localized-value.html value=tier.label lang=lang %}</span>
-    <h2 data-l10n-ko="{{ tier.goal['ko-KR'] | escape }}" data-l10n-en="{{ tier.goal.en | escape }}">{% include localized-value.html value=tier.goal lang=lang %}</h2>
-  </header>
-
-  <ol class="start-item-list">
-    {%- for item in tier.items -%}
-    {%- if item.series -%}
-      {%- assign series_posts = site.posts | where: 'series', item.series | sort: 'series_order' -%}
-      {%- assign first_post = series_posts | first -%}
-      {%- if first_post -%}
-      {%- assign series_page = site.series_pages | where: 'series_id', item.series | first -%}
-      {%- assign target = series_page.url | default: first_post.url -%}
-      <li class="start-item">
-        <a class="start-item-title" href="{{ target | relative_url }}">{{ first_post.series_title | default: item.series }}</a>
-        <span class="start-item-count">{{ site.data.locales[lang].series_directory.post_count | replace: ':COUNT', series_posts.size }}</span>
-        <p class="start-item-why" data-l10n-ko="{{ item.why['ko-KR'] | escape }}" data-l10n-en="{{ item.why.en | escape }}">{% include localized-value.html value=item.why lang=lang %}</p>
-      </li>
-      {%- endif -%}
-    {%- else -%}
-      {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
-      {%- if post -%}
-      <li class="start-item">
-        <a class="start-item-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        <p class="start-item-why" data-l10n-ko="{{ item.why['ko-KR'] | escape }}" data-l10n-en="{{ item.why.en | escape }}">{% include localized-value.html value=item.why lang=lang %}</p>
-      </li>
-      {%- endif -%}
+<div class="start-here" data-start-here>
+  <div class="start-tabs" role="tablist" aria-label="{{ loc.tabs_label }}" hidden>
+    {%- for tier in data.tiers -%}
+      <button type="button" class="start-tab" role="tab" data-start-tab="{{ tier.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+        <b data-l10n-ko="{{ tier.label['ko-KR'] | escape }}" data-l10n-en="{{ tier.label.en | escape }}">{% include localized-value.html value=tier.label lang=lang %}</b>
+        <span data-l10n-ko="{{ tier.hint['ko-KR'] | escape }}" data-l10n-en="{{ tier.hint.en | escape }}">{% include localized-value.html value=tier.hint lang=lang %}</span>
+      </button>
+    {%- endfor -%}
+    {%- if data.next and data.next.size > 0 -%}
+      <button type="button" class="start-tab" role="tab" data-start-tab="start-next" aria-selected="false">
+        <b>{{ loc.topic_tab }}</b>
+        <span>{{ loc.topic_tab_hint }}</span>
+      </button>
     {%- endif -%}
-    {%- endfor -%}
-  </ol>
-</section>
-{%- endfor -%}
+  </div>
 
-{%- if data.next and data.next.size > 0 -%}
-<section class="start-next">
-  <h2 data-i18n="start_here.next_title">{{ loc.next_title }}</h2>
-  <ul class="start-next-list">
-    {%- for link in data.next -%}
-    <li>
-      {%- comment -%}
-        Both labels are inlined because the runtime locale JSON only carries a subset of the
-        tab strings; a data-i18n key that is missing there silently keeps the Korean label.
-      {%- endcomment -%}
-      <a href="{{ link.url | relative_url }}"
-        data-l10n-ko="{{ site.data.locales['ko-KR'].tabs[link.key] | escape }}"
-        data-l10n-en="{{ site.data.locales.en.tabs[link.key] | escape }}">{{ site.data.locales[lang].tabs[link.key] }}</a>
-      <span data-l10n-ko="{{ link.why['ko-KR'] | escape }}" data-l10n-en="{{ link.why.en | escape }}">{% include localized-value.html value=link.why lang=lang %}</span>
-    </li>
-    {%- endfor -%}
-  </ul>
-</section>
-{%- endif -%}
+  {%- for tier in data.tiers -%}
+    {%- assign tier_posts = 0 -%}
+    {%- capture items_html -%}
+      {%- for item in tier.items -%}
+        {%- if item.series -%}
+          {%- assign series_posts = site.posts | where: 'series', item.series | sort: 'series_order' -%}
+          {%- assign first_post = series_posts | first -%}
+          {%- if first_post -%}
+            {%- assign series_page = site.series_pages | where: 'series_id', item.series | first -%}
+            {%- assign target = series_page.url | default: first_post.url -%}
+            {%- assign item_minutes = 0 -%}
+            {%- for p in series_posts -%}
+              {%- assign words = p.content | strip_html | number_of_words: 'auto' -%}
+              {%- assign m = words | divided_by: 180 -%}{%- if m < 1 -%}{%- assign m = 1 -%}{%- endif -%}
+              {%- assign item_minutes = item_minutes | plus: m -%}
+            {%- endfor -%}
+            {%- assign tier_posts = tier_posts | plus: 1 -%}
+            <li class="start-item" data-start-item data-series-posts="{{ series_posts | map: 'url' | join: ',' }}">
+              <span class="start-item-mark" aria-hidden="true">{{ tier_posts }}</span>
+              <span class="start-item-body">
+                <a class="start-item-title" href="{{ target | relative_url }}">{{ series_page.title | default: first_post.series_title | default: item.series }}</a>
+                <span class="start-item-why" data-l10n-ko="{{ item.why['ko-KR'] | escape }}" data-l10n-en="{{ item.why.en | escape }}">{% include localized-value.html value=item.why lang=lang %}</span>
+                <span class="start-item-meta">{{ site.data.locales[lang].series_directory.post_count | replace: ':COUNT', series_posts.size }} · {{ loc.minutes | replace: ':N', item_minutes }}<span class="start-item-next">{{ loc.next_item }}</span></span>
+              </span>
+            </li>
+          {%- endif -%}
+        {%- else -%}
+          {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+          {%- if post -%}
+            {%- assign words = post.content | strip_html | number_of_words: 'auto' -%}
+            {%- assign item_minutes = words | divided_by: 180 -%}{%- if item_minutes < 1 -%}{%- assign item_minutes = 1 -%}{%- endif -%}
+            {%- assign tier_posts = tier_posts | plus: 1 -%}
+            <li class="start-item" data-start-item data-post-url="{{ post.url | relative_url }}">
+              <span class="start-item-mark" aria-hidden="true">{{ tier_posts }}</span>
+              <span class="start-item-body">
+                <a class="start-item-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <span class="start-item-why" data-l10n-ko="{{ item.why['ko-KR'] | escape }}" data-l10n-en="{{ item.why.en | escape }}">{% include localized-value.html value=item.why lang=lang %}</span>
+                <span class="start-item-meta">{% if post.series_title %}{{ post.series_title }}{% if post.series_order %} · {{ site.data.locales[lang].home.series_part | replace: ':N', post.series_order }}{% endif %} · {% endif %}{{ loc.minutes | replace: ':N', item_minutes }}<span class="start-item-next">{{ loc.next_item }}</span></span>
+              </span>
+            </li>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    <section class="start-tier" id="{{ tier.id }}" data-start-panel="{{ tier.id }}">
+      <header class="start-tier-head">
+        <span class="start-tier-label" data-l10n-ko="{{ tier.label['ko-KR'] | escape }}" data-l10n-en="{{ tier.label.en | escape }}">{% include localized-value.html value=tier.label lang=lang %}</span>
+        <h2 data-l10n-ko="{{ tier.goal['ko-KR'] | escape }}" data-l10n-en="{{ tier.goal.en | escape }}">{% include localized-value.html value=tier.goal lang=lang %}</h2>
+        <span class="start-tier-meta">
+          {{ loc.tier_meta | replace: ':COUNT', tier_posts }}
+          <span class="start-tier-read" data-start-read data-label="{{ loc.tier_read }}" hidden></span>
+        </span>
+      </header>
+      <ol class="start-item-list">{{ items_html }}</ol>
+    </section>
+  {%- endfor -%}
+
+  {%- if data.next and data.next.size > 0 -%}
+    <section class="start-next" id="start-next" data-start-panel="start-next">
+      <h2 data-i18n="start_here.next_title">{{ loc.next_title }}</h2>
+      <ul class="start-next-list">
+        {%- for link in data.next -%}
+        <li>
+          {%- comment -%}
+            Both labels are inlined because the runtime locale JSON only carries a subset of the
+            tab strings; a data-i18n key that is missing there silently keeps the Korean label.
+          {%- endcomment -%}
+          <a href="{{ link.url | relative_url }}">
+            <b data-l10n-ko="{{ site.data.locales['ko-KR'].tabs[link.key] | escape }}"
+              data-l10n-en="{{ site.data.locales.en.tabs[link.key] | escape }}">{{ site.data.locales[lang].tabs[link.key] }}</b>
+            <span data-l10n-ko="{{ link.why['ko-KR'] | escape }}" data-l10n-en="{{ link.why.en | escape }}">{% include localized-value.html value=link.why lang=lang %}</span>
+          </a>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </section>
+  {%- endif -%}
+
+  {%- if data.method -%}
+    <section class="start-method" aria-labelledby="start-method-title">
+      <h2 id="start-method-title" data-l10n-ko="{{ data.method.title['ko-KR'] | escape }}" data-l10n-en="{{ data.method.title.en | escape }}">{% include localized-value.html value=data.method.title lang=lang %}</h2>
+      <ol class="start-method-steps">
+        {%- for step in data.method.steps -%}
+          <li class="tone-{{ step.tone | default: 'cyan' }}">
+            <b>{{ forloop.index | prepend: '0' }} <span data-l10n-ko="{{ step.label['ko-KR'] | escape }}" data-l10n-en="{{ step.label.en | escape }}">{% include localized-value.html value=step.label lang=lang %}</span></b>
+            <span data-l10n-ko="{{ step.detail['ko-KR'] | escape }}" data-l10n-en="{{ step.detail.en | escape }}">{% include localized-value.html value=step.detail lang=lang %}</span>
+          </li>
+        {%- endfor -%}
+      </ol>
+    </section>
+  {%- endif -%}
+</div>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-start-here]');
+    if (!root) return;
+
+    // Read marks from the same store series-progress.js keeps.
+    let read = {};
+    try { read = JSON.parse(localStorage.getItem('series-read-posts') || '{}') || {}; } catch (_) { read = {}; }
+    const norm = (url) => { const p = new URL(url, location.origin).pathname; return p.endsWith('/') ? p : `${p}/`; };
+    const isRead = (item) => {
+      if (item.dataset.postUrl) return Boolean(read[norm(item.dataset.postUrl)]);
+      const urls = (item.dataset.seriesPosts || '').split(',').filter(Boolean);
+      return urls.length > 0 && urls.every((u) => read[norm(u)]);
+    };
+    root.querySelectorAll('.start-tier').forEach((tier) => {
+      const items = Array.from(tier.querySelectorAll('[data-start-item]'));
+      let done = 0;
+      let nextMarked = false;
+      items.forEach((item) => {
+        if (isRead(item)) {
+          item.classList.add('is-read');
+          done += 1;
+        } else if (!nextMarked) {
+          nextMarked = true;
+          if (done > 0) item.classList.add('is-next');
+        }
+      });
+      const label = tier.querySelector('[data-start-read]');
+      if (label && done > 0) {
+        label.textContent = label.dataset.label.replace(':READ', done).replace(':TOTAL', items.length);
+        label.hidden = false;
+      }
+    });
+
+    // Time tabs: one tier at a time.
+    const tabs = Array.from(root.querySelectorAll('[data-start-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-start-panel]'));
+    if (!tabs.length) return;
+    const show = (id) => {
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.startTab === id)));
+      panels.forEach((p) => { p.hidden = p.dataset.startPanel !== id; });
+    };
+    tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.startTab)));
+    root.querySelector('.start-tabs').hidden = false;
+    show(tabs[0].dataset.startTab);
+  })();
+</script>
 {%- endif -%}

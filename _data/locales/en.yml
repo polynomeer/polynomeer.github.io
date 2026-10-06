@@ -387,17 +387,24 @@ pdr:
 
 capability_map:
   eyebrow: Capability map
-  directory_title: Read the blog as a connected capability graph
-  directory_description: See which strengths anchor the map first, then inspect the supporting evidence and reasoning in the detail panel.
-  evidence: Representative Posts
+  directory_title: Claims and their evidence
+  directory_description: Each capability is one claim, with the production records, measured experiments and reviews that back it right beside it.
+  evidence: Evidence
   graph_title: Connected capability graph
   graph_description: Click a node to focus the graph and update the detail panel with evidence and explanation for that capability.
   detail_title: Selected capability
   why_it_matters: Why it matters
-  signal_points: What to look for
+  signal_points: What was done
   supporting_links: Follow-up paths
   connected_capabilities: Connected capabilities
   cluster_legend: Capability cluster legend
+  list_label: Capabilities
+  kinds:
+    career: Production work
+    experiment: Measured
+    project: Project
+    review: Review
+    note: Notes
 
 # Page heroes for the tabs whose headings were not in the locale files before
 # (see _includes/page-hero.html).
@@ -510,6 +517,13 @@ learning_evidence:
 
 start_here:
   next_title: If you know what you are after
+  tabs_label: Time you have
+  topic_tab: By topic
+  topic_tab_hint: If you know what you want
+  minutes: ":N min"
+  tier_meta: ":COUNT posts"
+  tier_read: "· :READ / :TOTAL read"
+  next_item: Next
 
 experiments:
   summary_labs: Repositories

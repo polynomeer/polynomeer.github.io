@@ -68,6 +68,11 @@ nodes:
         en: Cut deletion from 2 hours to 5 minutes with an index, a dedicated path, and chunked transactions, and registration from 40 to 12 minutes with a parallel pipeline.
       - ko-KR: 삭제중, 삭제완료, 등록중, 등록완료 상태를 명시해 운영자의 호출 순서가 아니라 시스템이 정합성을 강제하게 했습니다.
         en: Made the system enforce consistency through explicit states instead of relying on operators calling APIs in order.
+    figures:
+      - label: { ko-KR: 대량 삭제, en: Bulk delete }
+        value: 2시간 → 5분
+      - label: { ko-KR: 대량 등록, en: Bulk insert }
+        value: 40분 → 12분
     representative_posts:
       - _posts/notes/common/2026-01-03-bulk-insert-with-lock-part4.md
       - _posts/notes/common/2025-10-05-settlement-write-guard.md
@@ -102,6 +107,11 @@ nodes:
         en: Measured lock hold at statement level from 17 ms down to 1 ms and left unexplained measurements on the record.
       - ko-KR: 브로커를 죽이고 파티션 키를 흩어 acks와 파티션 키가 정확성의 일부임을 실측했고, 처리할 수 없는 레코드가 조용히 사라지는 경로를 찾아 DLT로 닫았습니다.
         en: Killed the broker and scattered partition keys to show that acks and partition keys are part of correctness, and closed the path where unprocessable records vanished silently with a dead-letter topic.
+    figures:
+      - label: { ko-KR: 잠금 보유, en: Lock hold }
+        value: 17ms → 1ms
+      - label: { ko-KR: 장애 실험, en: Failure experiments }
+        value: 41종 · 결함 14건
     representative_posts:
       - _posts/notes/parity-pay/2026-09-10-parity-pay-invariants.md
       - _posts/notes/parity-pay/2026-09-15-parity-pay-lock-hold-time.md
