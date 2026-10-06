@@ -3920,3 +3920,138 @@ html[data-mode='dark'] {
   color: var(--text-muted-color);
   font-size: 0.85rem;
 }
+
+/* --- Reference box (_plugins/post-references.rb) ---
+   The post's 참고 list, cut out of the reading flow and closed by default. It sits
+   inside .content so it shares the body width, so the body's list and heading
+   rules are reset here. */
+
+.content .post-references {
+  margin: 2.5rem 0 0;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.6rem;
+  font-size: 0.92rem;
+
+  > summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    color: var(--text-muted-color);
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:hover .post-references-title {
+      color: var(--link-color);
+    }
+  }
+
+  .post-references-title {
+    color: var(--text-color);
+    font-weight: 600;
+  }
+
+  .post-references-count {
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .post-references-chevron {
+    margin-left: auto;
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+  }
+
+  &[open] .post-references-chevron {
+    transform: rotate(180deg);
+  }
+
+  .post-references-body {
+    padding: 0 1rem 0.8rem;
+  }
+
+  .post-references-intro {
+    margin: 0.6rem 0 0;
+    color: var(--text-muted-color);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .post-references-group {
+    margin: 0.6rem 0 0.2rem;
+    color: var(--text-muted-color);
+    font-size: 0.78rem;
+  }
+
+  .post-references-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .post-references-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1rem;
+    margin: 0;
+    padding: 0.45rem 0;
+    border-top: 1px solid rgba(98, 114, 164, 0.16);
+    line-height: 1.5;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  .post-references-head {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    border-bottom: 0;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .post-references-extra {
+    margin-left: 0.4rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .post-references-meta {
+    grid-column: 2;
+    grid-row: 1;
+    color: var(--text-muted-color);
+    font-size: 0.82rem;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .post-references-note {
+    grid-column: 1 / -1;
+    color: var(--text-muted-color);
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 575.98px) {
+    .post-references-item {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .post-references-meta {
+      grid-column: 1;
+      grid-row: auto;
+      text-align: left;
+      white-space: normal;
+    }
+  }
+}

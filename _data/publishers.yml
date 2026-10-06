@@ -1,0 +1,127 @@
+# Publisher names for reference links that do not name one.
+#
+# The reference box at the end of a post (_plugins/post-references.rb) shows a
+# publisher next to every external link. The author's own text after ` — `
+# wins; then a registered source's `publisher` in _data/sources.yml; then the
+# longest host below that matches the link (a host also matches its
+# subdomains); then the bare host name.
+docs.spring.io: Spring Docs
+spring.io: Spring
+github.com: GitHub
+docs.github.com: GitHub Docs
+docs.oracle.com: Oracle Docs
+oracle.com: Oracle
+blogs.oracle.com: Oracle Blogs
+dev.mysql.com: MySQL Docs
+toss.im: 토스
+toss.tech: 토스 기술 블로그
+static.toss.im: 토스
+rfc-editor.org: IETF
+datatracker.ietf.org: IETF
+redis.io: Redis Docs
+youtube.com: YouTube
+youtu.be: YouTube
+openjdk.org: OpenJDK
+bugs.openjdk.org: OpenJDK
+docs.aws.amazon.com: AWS Docs
+aws.amazon.com: AWS
+postgresql.org: PostgreSQL Docs
+kafka.apache.org: Apache Kafka
+martinfowler.com: Martin Fowler
+en.wikipedia.org: Wikipedia
+ko.wikipedia.org: 위키백과
+developer.mozilla.org: MDN
+inflearn.com: 인프런
+rabbitmq.com: RabbitMQ
+man7.org: Linux man page
+kotlinlang.org: Kotlin Docs
+cheatsheetseries.owasp.org: OWASP Cheat Sheet Series
+git-scm.com: Git Docs
+learn.microsoft.com: Microsoft Learn
+poi.apache.org: Apache POI
+docs.docker.com: Docker Docs
+hub.docker.com: Docker Hub
+baeldung.com: Baeldung
+medium.com: Medium
+jakarta.ee: Jakarta EE
+tech.kakao.com: kakao tech
+tech.kakaopay.com: 카카오페이 기술 블로그
+tech.kakaobank.com: 카카오뱅크 기술블로그
+opentelemetry.io: OpenTelemetry
+microservices.io: microservices.io
+logback.qos.ch: Logback
+elastic.co: Elastic
+docs.hibernate.org: Hibernate Docs
+docs.jboss.org: Hibernate Docs
+resilience4j.readme.io: Resilience4j
+docs.gradle.org: Gradle Docs
+gradle.org: Gradle
+docs.datadoghq.com: Datadog Docs
+datadoghq.com: Datadog
+fasterxml.github.io: Jackson
+mybatis.org: MyBatis
+docs.kernel.org: Linux Kernel Docs
+nginx.org: nginx
+gnu.org: GNU
+go.dev: Go
+pkg.go.dev: Go Packages
+tomcat.apache.org: Apache Tomcat
+logging.apache.org: Apache Log4j
+maven.apache.org: Apache Maven
+grafana.com: Grafana Labs
+kubernetes.io: Kubernetes Docs
+debezium.io: Debezium
+mongodb.com: MongoDB Docs
+openid.net: OpenID Foundation
+netty.io: Netty
+developers.google.com: Google for Developers
+d2.naver.com: NAVER D2
+openai.com: OpenAI
+arxiv.org: arXiv
+valkey.io: Valkey
+slf4j.org: SLF4J
+en.cppreference.com: cppreference
+jaegertracing.io: Jaeger
+docs.newrelic.com: New Relic Docs
+jekyllrb.com: Jekyll Docs
+cwiki.apache.org: Apache Wiki
+zookeeper.apache.org: Apache ZooKeeper
+html.spec.whatwg.org: WHATWG
+docs.micrometer.io: Micrometer Docs
+prometheus.io: Prometheus
+grpc.io: gRPC
+graphql.org: GraphQL
+spec.graphql.org: GraphQL
+react.dev: React
+querydsl.com: Querydsl
+projectlombok.org: Project Lombok
+blog.google: Google
+istio.io: Istio
+pgbouncer.org: PgBouncer
+spec.openapis.org: OpenAPI Initiative
+blog.cloudflare.com: Cloudflare Blog
+developers.cloudflare.com: Cloudflare Docs
+mapstruct.org: MapStruct
+skywalking.apache.org: Apache SkyWalking
+signoz.io: SigNoz
+techblog.woowahan.com: 우아한형제들 기술블로그
+junit.org: JUnit
+anthropic.com: Anthropic
+velog.io: velog
+stackoverflow.com: Stack Overflow
+netflixtechblog.com: Netflix Technology Blog
+engineering.linecorp.com: LINE Engineering
+techblog.lycorp.co.jp: LY Corporation Tech Blog
+helloworld.kurly.com: 컬리 기술 블로그
+techblog.musinsa.com: MUSINSA techblog
+acmicpc.net: Baekjoon Online Judge
+school.programmers.co.kr: 프로그래머스
+swexpertacademy.com: SW Expert Academy
+w3.org: W3C
+web.dev: web.dev
+12factor.net: The Twelve-Factor App
+cncf.io: CNCF
+docs.confluent.io: Confluent Docs
+developer.confluent.io: Confluent Developer
+docs.python.org: Python Docs
+tistory.com: Tistory
