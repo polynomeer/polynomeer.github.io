@@ -1,4 +1,9 @@
-# Chapter 1. 앱에서 모호한 부분 밝히기
+---
+title: "Troubleshooting Java 1장: 앱에서 모호한 부분 밝히기"
+date: 2024-09-07
+categories: [Book, Troubleshooting Java]
+tags: [Java, Troubleshooting]
+---
 
 ```note
 일반적으로 소프트웨어 개발자는 새로운 기능 구현 or 에러 조치를 위한 코딩보다 소프트웨어의 작동 방식을 이해하는 데 더 많은 시간을 쓴다.

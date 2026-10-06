@@ -119,9 +119,10 @@ items:
       ko-KR: Spring 애플리케이션 구조와 실용적인 백엔드 개발 패턴에 대한 이해를 깊게 했습니다.
       en: Helped deepen understanding of Spring application structure and practical backend development patterns.
     source_posts:
-      - _posts/book/spring-in-action/chap1.md
-      - _posts/book/spring-in-action/chap2.md
-      - _posts/book/spring-in-action/chap3.md
+      - _posts/book/spring-in-action/2024-09-07-spring-in-action-chap1.md
+      - _posts/book/spring-in-action/2024-09-07-spring-in-action-chap2.md
+      - _posts/book/spring-in-action/2024-09-07-spring-in-action-chap3.md
+      - _posts/book/spring-in-action/2024-09-07-spring-in-action-chap4.md
     related_posts:
       - _posts/notes/spring/2025-06-30-spring-lifecycle.md
       - _posts/notes/spring/2025-08-07-spring-boot-application-annotation.md
@@ -150,7 +151,7 @@ items:
       ko-KR: 프로파일링, 장애 분석, 런타임 동작 이해를 중심으로 더 체계적인 디버깅 사고를 만들었습니다.
       en: Built a more systematic debugging mindset around profiling, failure analysis, and understanding runtime behavior.
     source_posts:
-      - _posts/book/troubleshooting-java/chap1.md
+      - _posts/book/troubleshooting-java/2024-09-07-troubleshooting-java-chap1.md
     related_posts:
       - _posts/notes/web/2026-02-25-netty.md
       - _posts/notes/programming/2025-09-03-unit-test-integration-test.md

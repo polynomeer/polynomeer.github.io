@@ -1,4 +1,10 @@
-
+---
+title: "Spring in Action 3장: 참고 자료"
+date: 2024-09-07
+status: draft
+categories: [Book, Spring in Action]
+tags: [Spring, Spring Boot]
+---
 
 - https://bgpark.tistory.com/78
 
