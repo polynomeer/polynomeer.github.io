@@ -1,20 +1,26 @@
 {%- comment -%}
-Review map for /tech-reviews/: one collapsible entry per source (company blog, personal blog, conference).
+Review map for /tech-reviews/: how much of what is worth reading has been
+read, and what was written about it.
+
+At the top, coverage (sources reviewed out of all sources) and the sources
+read most. Tabs pick a kind of source (Korean companies, global companies,
+personal blogs, conferences); another chip keeps only sources with reviews.
+Each reviewed source is a card with its first reviews and the rest folded;
+sources without a review collect in a "to read" list at the end.
+
 Parameters:
   `items`        array of source items (each with `id`, `kind`, `name`, `blog`, `focus`, optional `links`/`note`,
                  and either `category` or `tag`); defaults to the four _data source files concatenated
   `item_heading` heading tag for each source (defaults to h2)
-  `page_size`    reviews per page inside an expanded entry (defaults to 5)
+  `preview`      reviews shown before the fold (defaults to 3)
 Matching: an item with `category` collects [TechBlog, <category>] post reviews and [Conference, <category>]
 talk reviews; an item with `tag` (a conference) collects Conference posts carrying that tag.
-Sources with at least one review are listed first, in data order; sources without reviews follow.
-Every entry is a <details> element, so the page works without JavaScript; the pager and the
-expand-all controls are progressive enhancements from blog-map.js and series-pager.js.
+Cards keep the source id, so /tech-reviews/#kakao still lands on Kakao.
 {%- endcomment -%}
 {%- include lang.html -%}
 {%- assign loc = site.data.locales[lang].tech_blogs -%}
 {%- assign item_heading = include.item_heading | default: 'h2' -%}
-{%- assign page_size = include.page_size | default: 5 -%}
+{%- assign preview = include.preview | default: 3 -%}
 {%- if include.items -%}
 {%- assign items = include.items -%}
 {%- else -%}
@@ -23,7 +29,7 @@ expand-all controls are progressive enhancements from blog-map.js and series-pag
 {%- assign none = '' | split: ',' -%}
 {%- assign total_reviews = 0 -%}
 {%- assign covered = 0 -%}
-{%- assign reviewed_ids = '' -%}
+{%- capture counts -%}
 {%- for item in items -%}
 {%- if item.tag -%}
 {%- assign n = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.tags contains item.tag' | size -%}
@@ -33,78 +39,144 @@ expand-all controls are progressive enhancements from blog-map.js and series-pag
 {%- assign n = nb | plus: nt -%}
 {%- endif -%}
 {%- assign total_reviews = total_reviews | plus: n -%}
-{%- if n > 0 -%}
-{%- assign covered = covered | plus: 1 -%}
-{%- assign reviewed_ids = reviewed_ids | append: ',' | append: item.id | append: ',' -%}
+{%- if n > 0 -%}{%- assign covered = covered | plus: 1 -%}{%- endif -%}
+{{- n -}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign counts = counts | split: ',' -%}
+{%- assign coverage_pct = covered | times: 100 | divided_by: items.size -%}
+
+{%- comment -%} Top four sources by review count, as "count|index" sorted. {%- endcomment -%}
+{%- assign ranked = '' | split: '' -%}
+{%- for c in counts -%}
+{%- if c != '0' -%}
+{%- assign padded = c | prepend: '000' | slice: -3, 3 -%}
+{%- capture entry -%}{{ padded }}|{{ forloop.index0 }}{%- endcapture -%}
+{%- assign ranked = ranked | push: entry -%}
 {%- endif -%}
 {%- endfor -%}
-<section class="tech-blog-group" data-blog-map>
-<div class="tech-blog-toolbar">
-<p class="tech-blog-summary"><span data-i18n="tech_blogs.summary_sources">{{ loc.summary_sources }}</span> <strong>{{ items.size }}</strong> · <span data-i18n="tech_blogs.summary_reviews">{{ loc.summary_reviews }}</span> <strong>{{ total_reviews }}</strong> · <span data-i18n="tech_blogs.summary_covered">{{ loc.summary_covered }}</span> <strong>{{ covered }}</strong></p>
-<div class="tech-blog-toolbar-actions" hidden data-blog-map-actions>
-<button type="button" class="tech-blog-toggle-all" data-blog-map-expand data-i18n="tech_blogs.expand_all">{{ loc.expand_all }}</button>
-<button type="button" class="tech-blog-toggle-all" data-blog-map-collapse data-i18n="tech_blogs.collapse_all">{{ loc.collapse_all }}</button>
-</div>
-</div>
-{%- for pass in (1..2) -%}
-{%- if pass == 1 -%}<div class="tech-blog-toc">{%- else -%}<div class="tech-blog-list">{%- endif -%}
-{%- for order in (1..2) -%}
-{%- for item in items -%}
-{%- assign key = ',' | append: item.id | append: ',' -%}
-{%- if reviewed_ids contains key -%}{%- assign has_reviews = true -%}{%- else -%}{%- assign has_reviews = false -%}{%- endif -%}
-{%- if order == 1 and has_reviews == false -%}{%- continue -%}{%- endif -%}
-{%- if order == 2 and has_reviews == true -%}{%- continue -%}{%- endif -%}
-{%- if item.tag -%}
-{%- assign blog_reviews = none -%}
-{%- assign talk_reviews = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.tags contains item.tag' -%}
-{%- else -%}
-{%- assign blog_reviews = site.posts | where_exp: 'p', 'p.categories contains "TechBlog"' | where_exp: 'p', 'p.categories contains item.category' -%}
-{%- assign talk_reviews = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.categories contains item.category' -%}
-{%- endif -%}
-{%- assign n = blog_reviews.size | plus: talk_reviews.size -%}
-{%- assign kind_key = 'kind_' | append: item.kind -%}
-{%- if pass == 1 -%}
-<a href="#{{ item.id }}"{% if n == 0 %} class="is-empty"{% endif %}><span data-l10n-ko="{{ item.name['ko-KR'] | escape }}" data-l10n-en="{{ item.name.en | escape }}">{% include localized-value.html value=item.name lang=lang %}</span>{% if n > 0 %} <b>{{ n }}</b>{% endif %}</a>
-{%- else -%}
-<details class="tech-blog-item{% if n == 0 %} is-empty{% endif %}" id="{{ item.id }}">
-<summary class="tech-blog-item-head">
-<span class="tech-blog-item-title">
-<span class="tech-blog-item-name">
-<{{ item_heading }} data-l10n-ko="{{ item.name['ko-KR'] | escape }}" data-l10n-en="{{ item.name.en | escape }}">{% include localized-value.html value=item.name lang=lang %}</{{ item_heading }}>
-<span class="tech-blog-kind" data-i18n="tech_blogs.{{ kind_key }}">{{ loc[kind_key] }}</span>
-</span>
-<span class="tech-blog-focus" data-l10n-ko="{{ item.focus['ko-KR'] | escape }}" data-l10n-en="{{ item.focus.en | escape }}">{% include localized-value.html value=item.focus lang=lang %}</span>
-</span>
-<span class="tech-blog-count{% if n == 0 %} is-empty{% endif %}">{% if n > 0 %}{{ loc.review_count | replace: ':COUNT', n }}{% else %}{{ loc.no_review }}{% endif %}</span>
-<i class="fas fa-angle-down tech-blog-chevron" aria-hidden="true"></i>
-</summary>
-<div class="tech-blog-item-body">
-<div class="tech-blog-links">
-<a class="tech-blog-link is-primary" href="{{ item.blog }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-up-right-from-square"></i> {% if item.tag %}<span data-i18n="tech_blogs.event">{{ loc.event }}</span>{% else %}<span data-i18n="tech_blogs.original">{{ loc.original }}</span>{% endif %}</a>
-{%- for l in item.links -%}
-<a class="tech-blog-link" href="{{ l.url }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-link"></i> {{ l.title }}</a>
-{%- endfor -%}
-</div>
-{%- if item.note -%}
-<p class="tech-blog-note" data-l10n-ko="{{ item.note['ko-KR'] | escape }}" data-l10n-en="{{ item.note.en | escape }}">{% include localized-value.html value=item.note lang=lang %}</p>
-{%- endif -%}
-{%- if n > 0 -%}
-<ul class="tech-blog-reviews" data-series-pager="{{ page_size }}" data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}" data-label-next="{{ site.data.locales[lang].post.series_pager_next }}" data-label-nav="{{ loc.pager_nav }}">
-{%- for p in blog_reviews -%}
-<li data-pager-item><span class="tech-blog-review-kind" data-i18n="tech_blogs.kind_blog">{{ loc.kind_blog }}</span> <a href="{{ p.url | relative_url }}">{{ p.title }}</a>{% if p.source_url %} <a class="tech-blog-review-source" href="{{ p.source_url }}" target="_blank" rel="noopener noreferrer" data-i18n="tech_blogs.source">{{ loc.source }}</a>{% endif %}</li>
-{%- endfor -%}
-{%- for p in talk_reviews -%}
-<li data-pager-item><span class="tech-blog-review-kind" data-i18n="tech_blogs.kind_talk">{{ loc.kind_talk }}</span> <a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>
-{%- endfor -%}
-</ul>
-{%- else -%}
-<p class="tech-blog-note" data-i18n="tech_blogs.no_review_note">{{ loc.no_review_note }}</p>
-{%- endif -%}
-</div>
-</details>
-{%- endif -%}
-{%- endfor -%}
-{%- endfor -%}
-</div>
-{%- endfor -%}
+{%- assign ranked = ranked | sort | reverse -%}
+{%- assign top_count = ranked.first | split: '|' | first | plus: 0 -%}
+
+<section class="review-map" data-review-map>
+  <div class="review-coverage">
+    <div class="review-coverage-main">
+      <span class="review-coverage-label">{{ loc.coverage_label }}</span>
+      <span class="review-coverage-figure"><b>{{ covered }}</b> / {{ loc.coverage_total | replace: ':COUNT', items.size }}</span>
+      <span class="review-coverage-bar" aria-hidden="true"><span style="width: {{ coverage_pct }}%"></span></span>
+      {%- assign left_sources = items.size | minus: covered -%}
+      <span class="review-coverage-note">{{ loc.coverage_note | replace: ':REVIEWS', total_reviews | replace: ':LEFT', left_sources }}</span>
+    </div>
+    <div class="review-top">
+      <span class="review-coverage-label">{{ loc.top_label }}</span>
+      {%- for entry in ranked limit: 4 -%}
+        {%- assign parts = entry | split: '|' -%}
+        {%- assign idx = parts[1] | plus: 0 -%}
+        {%- assign top_item = items[idx] -%}
+        {%- assign n = parts[0] | plus: 0 -%}
+        {%- assign pct = n | times: 100 | divided_by: top_count -%}
+        <a class="review-top-row" href="#{{ top_item.id }}">
+          <span>{% include localized-value.html value=top_item.name lang=lang %}</span>
+          <span class="review-top-bar" aria-hidden="true"><span style="width: {{ pct }}%"></span></span>
+          <b>{{ n }}</b>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="review-filters" role="group" aria-label="{{ loc.filter_label }}">
+    <button type="button" class="review-chip" data-review-kind="all" aria-pressed="true">{{ loc.filter_all }}</button>
+    {%- assign kinds = 'korea,global,expert,conference' | split: ',' -%}
+    {%- for kind in kinds -%}
+      {%- assign kind_key = 'kind_' | append: kind -%}
+      <button type="button" class="review-chip" data-review-kind="{{ kind }}" aria-pressed="false">{{ loc[kind_key] }}</button>
+    {%- endfor -%}
+    <button type="button" class="review-chip is-toggle" data-review-only aria-pressed="false">{{ loc.only_reviewed }}</button>
+  </div>
+
+  <div class="review-sources">
+    {%- for item in items -%}
+      {%- assign n = counts[forloop.index0] | plus: 0 -%}
+      {%- if n == 0 -%}{%- continue -%}{%- endif -%}
+      {%- if item.tag -%}
+        {%- assign blog_reviews = none -%}
+        {%- assign talk_reviews = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.tags contains item.tag' -%}
+      {%- else -%}
+        {%- assign blog_reviews = site.posts | where_exp: 'p', 'p.categories contains "TechBlog"' | where_exp: 'p', 'p.categories contains item.category' -%}
+        {%- assign talk_reviews = site.posts | where_exp: 'p', 'p.categories contains "Conference"' | where_exp: 'p', 'p.categories contains item.category' -%}
+      {%- endif -%}
+      {%- assign kind_key = 'kind_' | append: item.kind -%}
+      <article class="review-source" id="{{ item.id }}" data-kind="{{ item.kind }}">
+        <header class="review-source-head">
+          <{{ item_heading }} data-l10n-ko="{{ item.name['ko-KR'] | escape }}" data-l10n-en="{{ item.name.en | escape }}">{% include localized-value.html value=item.name lang=lang %}</{{ item_heading }}>
+          <span class="review-source-kind">{{ loc[kind_key] }}</span>
+          <span class="review-source-count">{{ loc.review_count | replace: ':COUNT', n }}</span>
+        </header>
+        <p class="review-source-focus" data-l10n-ko="{{ item.focus['ko-KR'] | escape }}" data-l10n-en="{{ item.focus.en | escape }}">{% include localized-value.html value=item.focus lang=lang %}</p>
+        {%- capture rows -%}
+          {%- for p in blog_reviews -%}<li><span class="review-kind is-blog">{{ loc.kind_blog }}</span><a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>{%- endfor -%}
+          {%- for p in talk_reviews -%}<li><span class="review-kind is-talk">{{ loc.kind_talk }}</span><a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>{%- endfor -%}
+        {%- endcapture -%}
+        {%- assign row_list = rows | split: '</li>' -%}
+        <ul class="review-list">
+          {%- for row in row_list limit: preview -%}{%- if row != '' -%}{{ row }}</li>{%- endif -%}{%- endfor -%}
+        </ul>
+        {%- if n > preview -%}
+          <details class="review-more">
+            {%- assign more_count = n | minus: preview -%}
+            <summary>{{ loc.more_reviews | replace: ':COUNT', more_count }}</summary>
+            <ul class="review-list" data-series-pager="10" data-label-prev="{{ site.data.locales[lang].post.series_pager_prev }}" data-label-next="{{ site.data.locales[lang].post.series_pager_next }}" data-label-nav="{{ loc.pager_nav }}">
+              {%- for row in row_list offset: preview -%}{%- if row != '' -%}{{ row | replace_first: '<li>', '<li data-pager-item>' }}</li>{%- endif -%}{%- endfor -%}
+            </ul>
+          </details>
+        {%- endif -%}
+        <footer class="review-source-links">
+          <a href="{{ item.blog }}" target="_blank" rel="noopener noreferrer">{% if item.tag %}{{ loc.event }}{% else %}{{ loc.original }}{% endif %} ↗</a>
+          {%- for l in item.links -%}<a href="{{ l.url }}" target="_blank" rel="noopener noreferrer">{{ l.title }} ↗</a>{%- endfor -%}
+        </footer>
+      </article>
+    {%- endfor -%}
+  </div>
+
+  {%- assign left = items.size | minus: covered -%}
+  {%- if left > 0 -%}
+    <details class="review-todo" data-review-todo>
+      <summary>{{ loc.todo_title | replace: ':COUNT', left }}</summary>
+      <p>{{ loc.no_review_note }}</p>
+      <div class="review-todo-list">
+        {%- for item in items -%}
+          {%- if counts[forloop.index0] == '0' -%}
+            {%- capture focus_text -%}{% include localized-value.html value=item.focus lang=lang %}{%- endcapture -%}
+            <a href="{{ item.blog }}" id="{{ item.id }}" data-kind="{{ item.kind }}" target="_blank" rel="noopener noreferrer" title="{{ focus_text | strip | escape }}">{% include localized-value.html value=item.name lang=lang %}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </details>
+  {%- endif -%}
 </section>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-review-map]');
+    if (!root) return;
+    const chips = Array.from(root.querySelectorAll('[data-review-kind]'));
+    const only = root.querySelector('[data-review-only]');
+    const cards = Array.from(root.querySelectorAll('.review-source'));
+    const todo = root.querySelector('[data-review-todo]');
+    let kind = 'all';
+    let reviewedOnly = false;
+    const render = () => {
+      cards.forEach((c) => { c.hidden = kind !== 'all' && c.dataset.kind !== kind; });
+      todo?.querySelectorAll('[data-kind]').forEach((a) => { a.hidden = kind !== 'all' && a.dataset.kind !== kind; });
+      if (todo) todo.hidden = reviewedOnly;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.reviewKind === kind)));
+      only.setAttribute('aria-pressed', String(reviewedOnly));
+    };
+    chips.forEach((c) => c.addEventListener('click', () => { kind = c.dataset.reviewKind; render(); }));
+    only.addEventListener('click', () => { reviewedOnly = !reviewedOnly; render(); });
+    // A hash for an unreviewed source opens the to-read list.
+    const target = location.hash && root.querySelector(location.hash);
+    if (target && todo && todo.contains(target)) { reviewedOnly = false; todo.open = true; }
+    render();
+  })();
+</script>

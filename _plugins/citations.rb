@@ -323,7 +323,8 @@ module Jekyll
             next
           end
 
-          rows << row
+          # the /sources/ tab shows each source's citing posts beside the list
+          rows << row.merge('citation_groups' => groups)
           site.pages << page(site, "sources/#{id}", {
             'layout' => 'page',
             'title' => source['title'],

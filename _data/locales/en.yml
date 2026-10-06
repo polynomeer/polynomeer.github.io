@@ -417,10 +417,10 @@ page_hero:
     summary: "Reading picked to fit the time you have: what to read in fifteen minutes, and how far an hour gets you."
   experiments:
     eyebrow: Measured here
-    title: Measured experiments
+    title: One question, one number
   tech_reviews:
     eyebrow: Read and reviewed
-    title: Engineering blog and conference reviews
+    title: Holding other teams' decisions against my own measurements
   tags:
     eyebrow: Tag index
     summary: Every tag used on a post. The fastest route when you already know the subject.
@@ -529,9 +529,13 @@ experiments:
   summary_labs: Repositories
   summary_runs: Experiment posts
   repo: Repository and raw results
+  filter_label: Filter by repository
+  filter_all: All
+  filter_refuted: Only where the hypothesis was wrong
+  refuted: Hypothesis was wrong
 
 tech_blogs:
-  lead: A directory of engineering blogs from Korean and global tech companies, long-running personal blogs and engineering conferences, mapped to the reviews of their posts and talks written here. Each review compares the original's decisions against my own production and project measurements rather than summarizing it. Sources with reviews come first; expand an entry to see the source links and the review list.
+  lead: These are not summaries of big-tech posts and talks. Each review sets the team's decision beside measurements from my own work and projects, and notes where they agree and where they part.
   expand_all: Expand all
   collapse_all: Collapse all
   pager_nav: Review list pages
@@ -550,23 +554,40 @@ tech_blogs:
   source: source
   kind_blog: Post
   kind_talk: Talk
+  coverage_label: Sources read
+  coverage_total: ":COUNT sources"
+  coverage_note: ":REVIEWS reviews. The :LEFT sources not read yet are in the reading list below."
+  top_label: Read most
+  filter_label: Kind of source
+  filter_all: All
+  only_reviewed: Reviewed only
+  more_reviews: ":COUNT more"
+  todo_title: "Reading list · :COUNT sources without a review"
 
 citation:
   connections_link: See how posts link to each other on the connection map
   eyebrow: Evidence
-  index_title: Sources
+  index_title: What the posts lean on
   implicit: A review of the whole original
   note: Author's note
   more_from_source: More quotes from this source
   view_original: Read the original
   all_sources: All sources
-  index_description: Books, articles, documents and code the posts quote or list as references, grouped by source. Open a source to see which posts rely on it and which passages they took.
+  index_description: The RFCs, official docs, code and articles the posts quote or cite. Pick a source to see which posts took which passage from it.
   empty: No citations yet.
   count: ":COUNT citations"
   post_count: ":COUNT posts"
   quote_count: ":COUNT quotes"
   reference: Reference link
   single_title: ":COUNT sources listed by one post"
+  search_label: Search sources
+  search_placeholder: RFC, doc, repository name
+  type_filter: Kind of source
+  all_types: All
+  relied_on: ":COUNT posts rely on this source"
+  more_posts: ":COUNT more · see all on the source page ›"
+  source_page: Open the source page ›
+  no_match: No source matches.
   types:
     book: Book
     article: Article

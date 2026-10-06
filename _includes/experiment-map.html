@@ -1,48 +1,96 @@
 {%- comment -%}
-Experiment index for /experiments/.
-Entries come from _data/experiments.yml and are matched to posts by slug, so a post that is
-hidden (draft or archived) simply drops out instead of rendering a dead link.
+Experiment index for /experiments/: one question, one number.
+
+Every measured post is a row - the lab and what it studies, the question,
+the title, the headline - with its key figure (`key`: before → after, or a
+single value; `worse: true` when the change went the wrong way) in a box on
+the right. Chips filter by lab; another keeps only the experiments whose
+hypothesis turned out wrong (`refuted: true`).
+
+Entries come from _data/experiments.yml and are matched to posts by slug, so
+a post that is hidden (draft or archived) simply drops out instead of
+rendering a dead link.
 {%- endcomment -%}
 {%- include lang.html -%}
 {%- assign data = site.data.experiments -%}
 {%- if data and data.enabled -%}
 {%- assign loc = site.data.locales[lang].experiments -%}
 {%- assign total = 0 -%}
-{%- for lab in data.labs -%}
-{%- for item in lab.items -%}
-{%- assign matched = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
-{%- if matched -%}{%- assign total = total | plus: 1 -%}{%- endif -%}
-{%- endfor -%}
-{%- endfor -%}
-<p class="experiment-summary"><span data-i18n="experiments.summary_labs">{{ loc.summary_labs }}</span> <strong>{{ data.labs.size }}</strong> · <span data-i18n="experiments.summary_runs">{{ loc.summary_runs }}</span> <strong>{{ total }}</strong></p>
-
-{%- for lab in data.labs -%}
-{%- assign lab_posts = '' | split: '' -%}
-{%- for item in lab.items -%}
-{%- assign matched = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
-{%- if matched -%}{%- assign lab_posts = lab_posts | push: item.slug -%}{%- endif -%}
-{%- endfor -%}
-{%- if lab_posts.size > 0 -%}
-<section class="experiment-lab" id="{{ lab.id }}">
-  <header class="experiment-lab-head">
-    <h2 data-l10n-ko="{{ lab.name['ko-KR'] | escape }}" data-l10n-en="{{ lab.name.en | escape }}">{% include localized-value.html value=lab.name lang=lang %}</h2>
-    <a class="experiment-repo" href="{{ lab.repo }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> <span data-i18n="experiments.repo">{{ loc.repo }}</span></a>
-  </header>
-  <p class="experiment-lab-focus" data-l10n-ko="{{ lab.focus['ko-KR'] | escape }}" data-l10n-en="{{ lab.focus.en | escape }}">{% include localized-value.html value=lab.focus lang=lang %}</p>
-
-  <ol class="experiment-list">
+{%- capture lab_counts -%}
+  {%- for lab in data.labs -%}
+    {%- assign n = 0 -%}
     {%- for item in lab.items -%}
-    {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
-    {%- if post -%}
-    <li class="experiment-item">
-      <p class="experiment-question" data-l10n-ko="{{ item.question['ko-KR'] | escape }}" data-l10n-en="{{ item.question.en | escape }}">{% include localized-value.html value=item.question lang=lang %}</p>
-      <a class="experiment-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <p class="experiment-headline" data-l10n-ko="{{ item.headline['ko-KR'] | escape }}" data-l10n-en="{{ item.headline.en | escape }}">{% include localized-value.html value=item.headline lang=lang %}</p>
-    </li>
-    {%- endif -%}
+      {%- assign matched = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+      {%- if matched -%}{%- assign n = n | plus: 1 -%}{%- endif -%}
+    {%- endfor -%}
+    {%- assign total = total | plus: n -%}
+    {{- n -}}{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign lab_counts = lab_counts | split: ',' -%}
+
+<div class="experiment-index" data-experiments>
+  <div class="experiment-filters" role="group" aria-label="{{ loc.filter_label }}">
+    <button type="button" class="experiment-chip" data-lab-filter="all" aria-pressed="true">{{ loc.filter_all }} {{ total }}</button>
+    {%- for lab in data.labs -%}
+      {%- if lab_counts[forloop.index0] != '0' -%}
+        <button type="button" class="experiment-chip is-lab" data-lab-filter="{{ lab.id }}" aria-pressed="false">{% include localized-value.html value=lab.name lang=lang %} {{ lab_counts[forloop.index0] }}</button>
+      {%- endif -%}
+    {%- endfor -%}
+    <button type="button" class="experiment-chip is-refuted" data-refuted-filter aria-pressed="false">{{ loc.filter_refuted }}</button>
+  </div>
+
+  <ol class="experiment-rows">
+    {%- for lab in data.labs -%}
+      {%- for item in lab.items -%}
+        {%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}
+        {%- if post -%}
+          <li class="experiment-row" data-lab="{{ lab.id }}"{% if item.refuted %} data-refuted{% endif %}>
+            <div class="experiment-row-main">
+              <span class="experiment-row-lab">
+                <a href="{{ lab.repo }}" target="_blank" rel="noopener noreferrer" title="{{ loc.repo }}">{% include localized-value.html value=lab.name lang=lang %}</a>
+                <span data-l10n-ko="{{ lab.focus['ko-KR'] | escape }}" data-l10n-en="{{ lab.focus.en | escape }}">{% include localized-value.html value=lab.focus lang=lang %}</span>
+                {%- if item.refuted -%}<span class="experiment-refuted">{{ loc.refuted }}</span>{%- endif -%}
+              </span>
+              <a class="experiment-row-question" href="{{ post.url | relative_url }}" data-l10n-ko="{{ item.question['ko-KR'] | escape }}" data-l10n-en="{{ item.question.en | escape }}">{% include localized-value.html value=item.question lang=lang %}</a>
+              <span class="experiment-row-headline" data-l10n-ko="{{ item.headline['ko-KR'] | escape }}" data-l10n-en="{{ item.headline.en | escape }}">{% include localized-value.html value=item.headline lang=lang %}</span>
+              <span class="experiment-row-title">{{ post.title }}</span>
+            </div>
+            {%- if item.key -%}
+              <div class="experiment-key{% if item.key.worse %} is-worse{% endif %}">
+                <span class="experiment-key-label" data-l10n-ko="{{ item.key.label['ko-KR'] | escape }}" data-l10n-en="{{ item.key.label.en | escape }}">{% include localized-value.html value=item.key.label lang=lang %}</span>
+                {%- if item.key.before -%}
+                  <span class="experiment-key-value"><span class="is-before">{{ item.key.before }}</span> <span class="experiment-key-arrow" aria-hidden="true">→</span> <span class="is-after">{{ item.key.after }}</span></span>
+                {%- else -%}
+                  <span class="experiment-key-value is-single" data-l10n-ko="{{ item.key.value['ko-KR'] | escape }}" data-l10n-en="{{ item.key.value.en | escape }}">{% include localized-value.html value=item.key.value lang=lang %}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
     {%- endfor -%}
   </ol>
-</section>
-{%- endif -%}
-{%- endfor -%}
+</div>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-experiments]');
+    if (!root) return;
+    const labChips = Array.from(root.querySelectorAll('[data-lab-filter]'));
+    const refutedChip = root.querySelector('[data-refuted-filter]');
+    const rows = Array.from(root.querySelectorAll('.experiment-row'));
+    let lab = 'all';
+    let refutedOnly = false;
+    const render = () => {
+      rows.forEach((row) => {
+        row.hidden = (lab !== 'all' && row.dataset.lab !== lab) || (refutedOnly && !row.hasAttribute('data-refuted'));
+      });
+      labChips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.labFilter === lab)));
+      refutedChip?.setAttribute('aria-pressed', String(refutedOnly));
+    };
+    labChips.forEach((c) => c.addEventListener('click', () => { lab = c.dataset.labFilter; render(); }));
+    refutedChip?.addEventListener('click', () => { refutedOnly = !refutedOnly; render(); });
+  })();
+</script>
 {%- endif -%}

@@ -1,8 +1,13 @@
 <!--
-  Rows of the /sources/ tab: every source that has a page, most relied on
-  first (posts that list or quote it), then the sources only one post lists,
-  folded. The rows come from the generator in _plugins/citations.rb
-  (`site.data.citation_sources`, `site.data.single_post_sources`).
+  The /sources/ tab: what the posts lean on. A search box and type chips
+  narrow the list on the left (most relied-on first); picking a source shows,
+  on the right, which posts rely on it and the passage each one quotes,
+  without leaving the page. Each row still links to the source's own page
+  (/sources/<id>/) for readers without the script. Sources only one post
+  lists are folded below.
+  Rows come from the generator in _plugins/citations.rb
+  (`site.data.citation_sources`, with `citation_groups`, and
+  `site.data.single_post_sources`).
 -->
 
 {% assign l = site.data.locales[include.lang].citation %}
@@ -10,30 +15,131 @@
 {% assign single = site.data.single_post_sources %}
 
 {% if rows.size > 0 or single.size > 0 %}
-  <ul class="post-tail-list list-unstyled sources-list">
-    {% for s in rows %}
-      <li class="post-tail-item">
-        <a href="{{ s.page_url | relative_url }}" class="post-tail-link">
-          <span class="post-tail-title">{{ s.title }}</span>
-          <span class="post-tail-meta">{{ l.post_count | replace: ':COUNT', s.post_count }}{% if s.count > 0 %} · {{ l.quote_count | replace: ':COUNT', s.count }}{% endif %}</span>
-          <span class="sources-row-meta">
-            {{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}
-          </span>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+  {% assign types_present = rows | map: 'type' | uniq %}
+  <div class="source-browser" data-source-browser>
+    <div class="source-tools">
+      <label class="source-search">
+        <span class="visually-hidden">{{ l.search_label }}</span>
+        <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" placeholder="{{ l.search_placeholder }}" data-source-search>
+      </label>
+      <div class="source-type-chips" role="group" aria-label="{{ l.type_filter }}">
+        <button type="button" class="source-type-chip" data-source-type="all" aria-pressed="true">{{ l.all_types }} {{ rows.size }}</button>
+        {% for t in types_present %}
+          {% assign n = rows | where: 'type', t | size %}
+          <button type="button" class="source-type-chip" data-source-type="{{ t }}" aria-pressed="false">{{ l.types[t] | default: t }} {{ n }}</button>
+        {% endfor %}
+      </div>
+    </div>
 
-{%- if single.size > 0 -%}
-<details class="sources-single">
-<summary>{{ l.single_title | replace: ':COUNT', single.size }}</summary>
-<ul class="list-unstyled sources-single-list">
-{%- for s in single -%}
-<li><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.title }}</a><span class="sources-row-meta">{{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}</span><span class="sources-single-post"><a href="{{ s.post.url | relative_url }}">{{ s.post.title }}</a></span></li>
-{%- endfor -%}
-</ul>
-</details>
-{%- endif %}
+    <div class="source-split">
+      <ul class="source-rows list-unstyled">
+        {% for s in rows %}
+          {% assign host = s.url | split: '/' | slice: 2, 1 | first | remove_first: 'www.' %}
+          <li class="source-row" data-source-row="{{ forloop.index0 }}" data-type="{{ s.type }}" data-search="{{ s.title | append: ' ' | append: s.author | append: ' ' | append: s.publisher | append: ' ' | append: host | downcase | escape }}">
+            <a href="{{ s.page_url | relative_url }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+              <span class="source-row-type is-{{ s.type }}">{{ l.types[s.type] | default: s.type }}</span>
+              <span class="source-row-body">
+                <b>{{ s.title }}</b>
+                <span>{% if s.author %}{{ s.author }}{% elsif s.publisher %}{{ s.publisher }}{% else %}{{ host }}{% endif %}{% if s.count > 0 %} · {{ l.quote_count | replace: ':COUNT', s.count }}{% endif %}</span>
+              </span>
+              <span class="source-row-count">{{ s.post_count }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="source-panels">
+        {% for s in rows %}
+          {% assign host = s.url | split: '/' | slice: 2, 1 | first | remove_first: 'www.' %}
+          <section class="source-panel" data-source-panel="{{ forloop.index0 }}" {% unless forloop.first %}hidden{% endunless %}>
+            <span class="source-panel-kicker"><span class="source-row-type is-{{ s.type }}">{{ l.types[s.type] | default: s.type }}</span>{% if host %} {{ host }}{% endif %}</span>
+            <h2>{{ s.title }}</h2>
+            <span class="source-panel-meta">{{ l.relied_on | replace: ':COUNT', s.post_count }}{% if s.count > 0 %} · {{ l.quote_count | replace: ':COUNT', s.count }}{% endif %}</span>
+            <ul class="source-panel-posts list-unstyled">
+              {% for group in s.citation_groups limit: 5 %}
+                {% assign first_quote = nil %}
+                {% assign kind = nil %}
+                {% for item in group.items %}
+                  {% if item.quote %}{% assign first_quote = item %}{% break %}{% elsif item.implicit %}{% assign kind = l.implicit %}{% elsif item.reference %}{% assign kind = l.reference %}{% endif %}
+                {% endfor %}
+                <li>
+                  <a href="{{ group.post.url | relative_url }}{% if first_quote %}#{{ first_quote.anchor }}{% endif %}">
+                    <b>{{ group.post.title }}</b>
+                    {% if first_quote %}
+                      <span class="source-panel-quote">{{ first_quote.quote | markdownify | strip_html | strip | truncate: 140 }}</span>
+                    {% elsif kind %}
+                      <span class="source-panel-kind">{{ kind }}</span>
+                    {% endif %}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+            <div class="source-panel-links">
+              {% if s.citation_groups.size > 5 %}
+                {% assign more_posts = s.citation_groups.size | minus: 5 %}
+                <a href="{{ s.page_url | relative_url }}">{{ l.more_posts | replace: ':COUNT', more_posts }}</a>
+              {% else %}
+                <a href="{{ s.page_url | relative_url }}">{{ l.source_page }}</a>
+              {% endif %}
+              {% if s.url %}<a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ l.view_original }} ↗</a>{% endif %}
+            </div>
+          </section>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="source-empty" data-source-empty hidden>{{ l.no_match }}</p>
+  </div>
+
+  {%- if single.size > 0 -%}
+  <details class="sources-single">
+    <summary>{{ l.single_title | replace: ':COUNT', single.size }}</summary>
+    <ul class="list-unstyled sources-single-list">
+      {%- for s in single -%}
+      <li><a href="{{ s.url }}" target="_blank" rel="noopener noreferrer">{{ s.title }}</a><span class="sources-row-meta">{{ l.types[s.type] | default: s.type }}{% if s.author %} · {{ s.author }}{% elsif s.publisher %} · {{ s.publisher }}{% endif %}</span><span class="sources-single-post"><a href="{{ s.post.url | relative_url }}">{{ s.post.title }}</a></span></li>
+      {%- endfor -%}
+    </ul>
+  </details>
+  {%- endif %}
+
+  <script>
+    (() => {
+      const root = document.querySelector('[data-source-browser]');
+      if (!root) return;
+      const rows = Array.from(root.querySelectorAll('[data-source-row]'));
+      const panels = Array.from(root.querySelectorAll('[data-source-panel]'));
+      const chips = Array.from(root.querySelectorAll('[data-source-type]'));
+      const search = root.querySelector('[data-source-search]');
+      const empty = root.querySelector('[data-source-empty]');
+      let type = 'all';
+      const select = (id) => {
+        rows.forEach((r) => r.querySelector('a').setAttribute('aria-current', String(r.dataset.sourceRow === id)));
+        panels.forEach((p) => { p.hidden = p.dataset.sourcePanel !== id; });
+      };
+      const filter = () => {
+        const q = (search.value || '').trim().toLowerCase();
+        let firstVisible = null;
+        rows.forEach((r) => {
+          const show = (type === 'all' || r.dataset.type === type) && (!q || r.dataset.search.includes(q));
+          r.hidden = !show;
+          if (show && !firstVisible) firstVisible = r;
+        });
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.sourceType === type)));
+        const current = rows.find((r) => r.querySelector('a').getAttribute('aria-current') === 'true');
+        if (firstVisible && (!current || current.hidden)) select(firstVisible.dataset.sourceRow);
+        empty.hidden = Boolean(firstVisible);
+        root.querySelector('.source-split').hidden = !firstVisible;
+      };
+      rows.forEach((r) => r.querySelector('a').addEventListener('click', (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        select(r.dataset.sourceRow);
+        if (window.innerWidth < 768) root.querySelector(`[data-source-panel="${r.dataset.sourceRow}"]`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }));
+      chips.forEach((c) => c.addEventListener('click', () => { type = c.dataset.sourceType; filter(); }));
+      search.addEventListener('input', filter);
+    })();
+  </script>
 {% else %}
   <p>{{ l.empty }}</p>
 {% endif %}
