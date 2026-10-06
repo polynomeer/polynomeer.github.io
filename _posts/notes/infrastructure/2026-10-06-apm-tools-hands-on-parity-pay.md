@@ -3,6 +3,9 @@ title: "APM 도구를 직접 붙여 봤다: 에이전트를 켜자 처리량이 
 date: 2026-10-06
 categories: [Notes, Infrastructure]
 tags: [APM, Observability, OpenTelemetry, SkyWalking, jaeger, Tracing, Measurement, Experiment]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 7
 mermaid: true
 
 problem_decision_result:

@@ -3,6 +3,9 @@ title: "APM 용어 정리: Observability, Telemetry부터 Span, Exemplar까지"
 date: 2026-10-06
 categories: [Notes, Infrastructure]
 tags: [APM, Observability, OpenTelemetry, Tracing, Monitoring]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 5
 mermaid: true
 ---
 

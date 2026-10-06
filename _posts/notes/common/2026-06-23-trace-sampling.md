@@ -3,6 +3,9 @@ title: "트레이스 샘플링 - 헤드와 테일 샘플링의 선택 기준"
 date: 2026-06-23
 categories: [Notes, Common]
 tags: [Observability, Tracing, Sampling, OpenTelemetry, Distributed System, Cost]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 3
 ---
 
 분산 추적을 켜면 곧 비용 문제를 만난다. 요청 하나가 서비스 다섯 개를 지나면 스팬(트레이스를 이루는 작업 구간 하나)이 수십 개 생기고, 초당 수천 요청이면 저장해야 할 양이 로그를 넘어선다. 그래서 샘플링을 켜는데, 무엇을 버릴지 정하는 방식에 따라 정작 필요한 트레이스가 남기도 하고 사라지기도 한다.

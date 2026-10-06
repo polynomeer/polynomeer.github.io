@@ -3,6 +3,9 @@ title: "빅테크는 APM을 사지 않고 만들었다: Dapper에서 OpenTelemet
 date: 2026-10-06
 categories: [Notes, Infrastructure]
 tags: [APM, Observability, Distributed Tracing, OpenTelemetry, Dapper, jaeger, Zipkin, Pinpoint]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 6
 mermaid: true
 
 problem_decision_result:

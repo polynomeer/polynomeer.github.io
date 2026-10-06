@@ -1132,6 +1132,7 @@
     "_topics/realtime-streaming.md": {"collection":"topics","id":"realtime-streaming","title":"실시간 처리와 캐시"},
     "_topics/resilience-observability.md": {"collection":"topics","id":"resilience-observability","title":"장애 대응과 관측"},
     "_topics/spring-backend.md": {"collection":"topics","id":"spring-backend","title":"Spring과 JVM 백엔드"},
+    "_series_pages/apm-observability.md": {"collection":"series_pages","id":"apm-observability","title":"APM과 관측 가능성"},
     "_series_pages/authentication-basics.md": {"collection":"series_pages","id":"authentication-basics","title":"Authentication Basics"},
     "_series_pages/batch-structure-improvement.md": {"collection":"series_pages","id":"batch-structure-improvement","title":"대량 배치 안정성을 높이기 위한 구조 개선"},
     "_series_pages/bigtech-blog-reviews.md": {"collection":"series_pages","id":"bigtech-blog-reviews","title":"빅테크 기술 블로그 리뷰"},

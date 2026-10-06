@@ -3,6 +3,9 @@ title: "RED와 USE - 어디에 무엇을 붙이는가"
 date: 2026-05-09
 categories: [Notes, Common]
 tags: [Observability, Monitoring, Metrics, SRE, Alerting, Performance]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 2
 ---
 
 대시보드를 만들 때 가장 어려운 것은 그래프를 그리는 일이 아니라 무엇을 그릴지 정하는 일이다. 지표를 다 붙이면 화면이 넘치고 아무도 안 보며, 적게 붙이면 장애 때 필요한 것이 없다. RED와 USE는 그 선택을 규칙으로 만든 두 방법이고, 둘은 서로 다른 대상을 본다.

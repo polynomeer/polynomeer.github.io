@@ -3,6 +3,9 @@ title: "APM 도구 비교: Datadog부터 Pinpoint, OpenTelemetry까지"
 date: 2026-10-05
 categories: [Notes, Infrastructure]
 tags: [APM, Observability, Monitoring, Tracing, OpenTelemetry]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 4
 mermaid: true
 ---
 

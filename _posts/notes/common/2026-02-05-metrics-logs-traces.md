@@ -3,6 +3,10 @@ title: "메트릭, 로그, 트레이스 - 무엇을 어디에 남기고 카디�
 date: 2026-02-05
 categories: [Notes, Common]
 tags: [Observability, Monitoring, Metrics, Logging, Tracing, Prometheus, OpenTelemetry]
+series: apm-observability
+series_title: APM과 관측 가능성
+series_order: 1
+series_description: 메트릭, 로그, 트레이스라는 신호에서 출발해 APM 도구의 비교, 용어, 빅테크의 선택, 직접 측정한 오버헤드까지 이어지는 관측 가능성 시리즈.
 ---
 
 관측성의 세 기둥을 "메트릭, 로그, 트레이스"로 외우는 것은 쉽고, 어느 것에 무엇을 남길지 정하는 것은 어렵다. 세 가지는 취향의 문제가 아니라 비용 구조가 다른 저장소다. 그 차이를 알면 "이 값을 메트릭 라벨로 넣을까 로그 필드로 넣을까"에 답할 수 있다.
