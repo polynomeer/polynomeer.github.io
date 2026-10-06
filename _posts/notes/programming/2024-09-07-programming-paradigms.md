@@ -1,4 +1,9 @@
-# Programming Paradigm
+---
+title: Programming Paradigm
+date: 2024-09-05
+categories: [Notes, Programming]
+tags: [Programming Paradigm, OOP, Functional Programming]
+---
 
 ````
 패러다임(paradigm)은 어떤 한 시대 사람들의 견해나 사고를 근본적으로 규정하고 있는 테두리로서의 인식의 체계, 또는 사물에 대한 이론적인 틀이나 체계를 의미한다. - From.wikipedia -

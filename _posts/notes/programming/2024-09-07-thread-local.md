@@ -1,4 +1,9 @@
-# Thread Local
+---
+title: Thread Local
+date: 2024-09-05
+categories: [Notes, Programming]
+tags: [Java, ThreadLocal, Concurrency]
+---
 
 ## What is ThreadLocal?
 

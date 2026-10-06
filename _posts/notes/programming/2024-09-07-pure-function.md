@@ -1,4 +1,9 @@
-# Pure Function
+---
+title: Pure Function
+date: 2024-09-05
+categories: [Notes, Programming]
+tags: [Functional Programming]
+---
 
 컴퓨터 프로그래밍에서 순수함수(pure function)이란, 다음과 같은 속성을 갖는다.
 

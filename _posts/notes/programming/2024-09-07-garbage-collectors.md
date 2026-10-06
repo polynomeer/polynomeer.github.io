@@ -1,4 +1,9 @@
-# Garbage Collectors
+---
+title: Garbage Collectors
+date: 2024-09-05
+categories: [Notes, Programming]
+tags: [Java, JVM, GC]
+---
 
 자바 애플리케이션은 메모리를 할당하고 해제하는데 있어서 가비지 콜렉션(GC)의 알고리즘에 상당히 의존하고 있다. 올바른 GC 알고리즘의 선택은 명백하게 애플리케이션의 성능에 영향을 준다. 따라서 GC의 종류인 G1GC와 ZGC도 상황이나 환경에 따라서 서로 다른 성능향상을 보일 수 있으며 트레이드 오프가 있다.
 

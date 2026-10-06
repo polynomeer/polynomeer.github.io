@@ -1,4 +1,9 @@
-# Synchronous, Asynchronous, Bloking, Non-Blocking
+---
+title: Synchronous, Asynchronous, Blocking, Non-Blocking
+date: 2024-09-05
+categories: [Notes, Programming]
+tags: [Asynchronous, Blocking, Non-Blocking]
+---
 
 자바는 기본적으로 Sync/Block이고, 자바스크립트는 Async/NonBlock이다. 
 

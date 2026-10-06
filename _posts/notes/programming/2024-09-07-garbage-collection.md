@@ -1,4 +1,9 @@
-# Gabage Collection(GC)
+---
+title: Garbage Collection(GC)
+date: 2024-09-05
+categories: [Notes, Programming]
+tags: [Java, JVM, GC]
+---
 
 가비지 콜렉션은 메모리 관리 기법 중의 하나로, 프로그램이 동적으로 할당했던 메모리 영역 중에서 필요없게 된 영역을 해제하는 기능이다. 그렇다면 `필요없게 된`이라는 기준은 어떻게 결정할까? 그리고 어떻게 탐지할까?
 
