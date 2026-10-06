@@ -5,122 +5,399 @@ layout: page
 {% include lang.html %}
 
 {%- comment -%}
-  _data/learning_evidence.yml 의 groups 를 그대로 씁니다.
+  /learning-evidence/: courses and books, split only by type.
 
-  고치기 전에는 groups 를 무시하고 type(book/course)으로 다시 묶었습니다. 그래서 저자가 적어
-  둔 세 묶음의 제목과 설명이 한 번도 화면에 나오지 않았고, 대신 "책이냐 강의냐" 라는 덜
-  중요한 축으로 갈렸습니다. 무엇을 배웠는지는 묶음 이름이 말하지 형식이 말하지 않습니다.
+  The opening card stays the same height however many items are added: a
+  column of squares per year (one square per item, outlined while still in
+  progress), the totals, and a shelf of book spines. Below, one row per item
+  grouped by year - only the two latest years start open - and a panel that
+  shows the selected item's posts, so opening an item never lengthens the
+  list. A row links to the item's own page, which is where it goes without
+  JavaScript.
 
-  summary 도 13개 항목 전부에 적혀 있는데 목록에서는 버려지고 있었습니다. 이 페이지에서
-  가장 읽을 값어치가 있는 문장입니다.
+  _plugins/learning-evidence.rb resolves the post paths, the year, the bar
+  length and the totals.
 {%- endcomment -%}
 
 {% assign evidence = site.data.learning_evidence %}
 
-{% if evidence and evidence.enabled and evidence.groups and evidence.groups.size > 0 %}
-  {% assign le_ko = site.data.locales['ko-KR'].learning_evidence %}
-  {% assign le_en = site.data.locales.en.learning_evidence %}
-  {% assign loc = site.data.locales[lang].learning_evidence %}
-  {% assign meta = site.data.locales[lang].learning_evidence_meta %}
+{% if evidence and evidence.enabled and evidence.items and evidence.items.size > 0 %}
+  {%- assign loc = site.data.locales[lang].learning_evidence -%}
+  {%- assign le_ko = site.data.locales['ko-KR'].learning_evidence -%}
+  {%- assign le_en = site.data.locales.en.learning_evidence -%}
+  {%- assign meta = site.data.locales[lang].learning_evidence_meta -%}
+  {%- assign sum = evidence.learning_summary -%}
+  {%- assign eyebrow_ko = le_ko.eyebrow | replace: ':COURSES', sum.courses | replace: ':BOOKS', sum.books -%}
+  {%- assign eyebrow_en = le_en.eyebrow | replace: ':COURSES', sum.courses | replace: ':BOOKS', sum.books -%}
+  {%- assign spine_tones = 'purple,cyan,orange,pink,green,yellow,red' | split: ',' -%}
+  {%- assign spine_heights = '104,92,98,110,88,100,94' | split: ',' -%}
 
-  {%- assign total = 0 -%}
-  {%- assign completed = 0 -%}
-  {%- assign in_progress = 0 -%}
-  {%- assign linked = 0 -%}
-  {%- for group in evidence.groups -%}
-    {%- for item in group.items -%}
-      {%- assign total = total | plus: 1 -%}
-      {%- if item.status == 'completed' -%}{%- assign completed = completed | plus: 1 -%}{%- endif -%}
-      {%- if item.status == 'in_progress' -%}{%- assign in_progress = in_progress | plus: 1 -%}{%- endif -%}
-      {%- assign linked = linked | plus: item.source_posts.size | plus: item.related_posts.size -%}
-    {%- endfor -%}
-  {%- endfor -%}
-
-  <section class="learning-evidence-directory">
+  <section class="learning-page" data-learning>
     {% include page-hero.html
       lang=lang
-      eyebrow_ko=le_ko.eyebrow eyebrow_en=le_en.eyebrow
+      eyebrow_ko=eyebrow_ko eyebrow_en=eyebrow_en
       title_ko=le_ko.directory_title title_en=le_en.directory_title
       summary_ko=le_ko.directory_description summary_en=le_en.directory_description %}
 
-    <ul class="learning-evidence-counts">
-      <li><span class="learning-evidence-count-value">{{ total }}</span>
-        <span data-i18n="learning_evidence.count_items">{{ loc.count_items }}</span></li>
-      <li><span class="learning-evidence-count-value">{{ completed }}</span>
-        <span data-i18n="learning_evidence_meta.completed">{{ meta.completed }}</span></li>
-      {% if in_progress > 0 %}
-        <li><span class="learning-evidence-count-value">{{ in_progress }}</span>
-          <span data-i18n="learning_evidence_meta.in_progress">{{ meta.in_progress }}</span></li>
-      {% endif %}
-      <li><span class="learning-evidence-count-value">{{ linked }}</span>
-        <span data-i18n="learning_evidence.count_linked">{{ loc.count_linked }}</span></li>
-    </ul>
+    <section class="learning-overview" aria-label="{{ loc.chart_title }}">
+      <div class="learning-years">
+        <div class="learning-overview-head">
+          <b>{{ loc.chart_title }}</b>
+          <span class="learning-key is-course">{{ meta.course }}</span>
+          <span class="learning-key is-book">{{ meta.book }}</span>
+          <span class="learning-key is-open">{{ meta.in_progress }}</span>
+        </div>
+        <div class="learning-year-columns">
+          {%- for y in sum.years -%}
+            <div class="learning-year-column">
+              <div class="learning-year-stack">
+                {%- assign year_items = y.items | sort: 'sort_date' -%}
+                {%- for item in year_items -%}
+                  {%- capture item_title %}{% include localized-value.html value=item.title lang=lang %}{% endcapture -%}
+                  <button type="button" class="learning-square is-{{ item.type }}{% if item.status == 'in_progress' %} is-open{% endif %}" data-select="{{ item.id }}" title="{{ item_title | strip | escape }}" aria-label="{{ item_title | strip | escape }}"></button>
+                {%- endfor -%}
+              </div>
+              <span class="learning-year-label">{{ y.year }}</span>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
 
-    {% for group in evidence.groups %}
-      {% if group.items and group.items.size > 0 %}
-        <section class="learning-evidence-group">
-          {%- comment -%}
-            data-l10n-* 는 개수 칩 바깥의 span 에 답니다. lang-switch.js 가 textContent 를
-            통째로 갈아끼우므로 h2 에 달면 안의 칩이 지워집니다.
-          {%- endcomment -%}
-          <h2 class="learning-evidence-group-title" id="{{ group.id }}">
-            <span
-              data-l10n-ko="{{ group.title['ko-KR'] | escape }}"
-              data-l10n-en="{{ group.title.en | escape }}"
-            >{% include localized-value.html value=group.title lang=lang %}</span>
-            <span class="learning-evidence-group-count">{{ group.items.size }}</span>
-          </h2>
-          {% if group.description %}
-            <p class="learning-evidence-group-note"
-              data-l10n-ko="{{ group.description['ko-KR'] | escape }}"
-              data-l10n-en="{{ group.description.en | escape }}">
-              {% include localized-value.html value=group.description lang=lang %}
-            </p>
-          {% endif %}
+      <div class="learning-figures">
+        {%- if sum.lessons > 0 -%}
+          <div><b class="is-lessons">{{ sum.lessons }}</b><span>{{ loc.lessons_done }}</span></div>
+        {%- endif -%}
+        <div><b>{{ sum.posts }}</b><span>{{ loc.posts_written }}{% if sum.followups > 0 %} · <em>{{ loc.followups_short | replace: ':COUNT', sum.followups }}</em>{% endif %}</span></div>
+      </div>
 
-          <div class="learning-evidence-grid">
-            {% for item in group.items %}
-              {% assign detail_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
-              {% if detail_page %}
-                {% assign post_count = item.source_posts.size | plus: item.related_posts.size %}
-                <a class="learning-evidence-card" href="{{ detail_page.url | relative_url }}"
-                  data-learning-type="{{ item.type }}" data-learning-status="{{ item.status }}">
-                  <span class="learning-evidence-card-badges">
-                    <span class="learning-evidence-type-badge"
-                      data-i18n="learning_evidence_meta.{{ item.type }}">{{ meta[item.type] | default: item.type }}</span>
-                    {% if item.status %}
-                      <span class="learning-evidence-status-badge"
-                        data-i18n="learning_evidence_meta.{{ item.status }}">{{ meta[item.status] | default: item.status }}</span>
-                    {% endif %}
-                  </span>
-
-                  <span class="learning-evidence-card-title">
-                    {% include localized-value.html value=item.title lang=lang %}
-                  </span>
-
-                  {% if item.summary %}
-                    <span class="learning-evidence-card-summary"
-                      data-l10n-ko="{{ item.summary['ko-KR'] | escape }}"
-                      data-l10n-en="{{ item.summary.en | escape }}">
-                      {% include localized-value.html value=item.summary lang=lang %}
-                    </span>
-                  {% endif %}
-
-                  <span class="learning-evidence-card-foot">
-                    {% if item.provider %}<span>{{ item.provider }}</span>{% endif %}
-                    {% if item.period %}<span>{{ item.period }}</span>{% endif %}
-                    {% if post_count > 0 %}
-                      <span class="learning-evidence-card-posts">
-                        {{ loc.count_linked_short | replace: ':COUNT', post_count }}
-                      </span>
-                    {% endif %}
-                  </span>
-                </a>
-              {% endif %}
-            {% endfor %}
+      {%- if sum.books > 0 -%}
+        <div class="learning-shelf-box">
+          <div class="learning-overview-head">
+            <b>{{ loc.shelf }}</b>
+            <span>{{ loc.shelf_status | replace: ':DONE', sum.books_completed | replace: ':OPEN', sum.books_in_progress }}</span>
           </div>
-        </section>
-      {% endif %}
-    {% endfor %}
+          <div class="learning-shelf">
+            {%- assign spine_index = 0 -%}
+            {%- for item in evidence.items -%}
+              {%- if item.type != 'book' -%}{%- continue -%}{%- endif -%}
+              {%- assign tone_index = spine_index | modulo: spine_tones.size -%}
+              {%- assign height_index = spine_index | modulo: spine_heights.size -%}
+              {%- capture item_title %}{% include localized-value.html value=item.title lang=lang %}{% endcapture -%}
+              <button type="button" class="learning-spine" data-select="{{ item.id }}" title="{{ item_title | strip | escape }}" style="--tone: var(--accent-{{ spine_tones[tone_index] }}); height: {{ spine_heights[height_index] }}%">
+                {%- if item.status == 'in_progress' -%}<i class="learning-ribbon" aria-hidden="true"></i>{%- endif -%}
+                <span>{{ item_title | strip }}</span>
+              </button>
+              {%- assign spine_index = spine_index | plus: 1 -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </section>
+
+    <div class="learning-split">
+      <div class="learning-list">
+        <div class="learning-tools">
+          <div class="learning-type-chips" role="group" aria-label="{{ loc.filter_aria }}">
+            <button type="button" data-type-filter="all" aria-pressed="true">{{ loc.filter_all }} {{ evidence.items.size }}</button>
+            <button type="button" data-type-filter="course" aria-pressed="false">{{ meta.course }} {{ sum.courses }}</button>
+            <button type="button" data-type-filter="book" aria-pressed="false">{{ meta.book }} {{ sum.books }}</button>
+          </div>
+          <label class="learning-search">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input type="search" data-learning-search placeholder="{{ loc.search_placeholder }}" aria-label="{{ loc.search_placeholder }}">
+            <kbd>/</kbd>
+          </label>
+          <select class="learning-sort" data-learning-sort aria-label="{{ loc.sort_aria }}">
+            <option value="recent">{{ loc.sort_recent }}</option>
+            <option value="posts">{{ loc.sort_posts }}</option>
+            <option value="name">{{ loc.sort_name }}</option>
+          </select>
+        </div>
+
+        {%- assign years_desc = sum.years | reverse -%}
+        {%- assign open_years = 0 -%}
+        {%- for y in years_desc -%}
+          {%- if y.items.size == 0 -%}{%- continue -%}{%- endif -%}
+          {%- assign open_years = open_years | plus: 1 -%}
+          <section class="learning-year" data-year-group{% if open_years > 2 %} data-collapsible{% endif %}>
+            <button type="button" class="learning-year-head" data-year-toggle aria-expanded="true">
+              <b>{{ y.year }}</b>
+              <span class="learning-year-count">{{ y.items.size }}</span>
+              <span class="learning-year-collapsed">{{ loc.year_collapsed | replace: ':COUNT', y.items.size }}</span>
+              <hr>
+              <span class="learning-year-expand">{{ loc.year_expand }} <i class="fas fa-angle-down" aria-hidden="true"></i></span>
+            </button>
+            <ul class="learning-rows">
+              {%- assign year_items = y.items | sort: 'sort_date' | reverse -%}
+              {%- for item in year_items -%}
+                {%- capture item_title %}{% include localized-value.html value=item.title lang=lang %}{% endcapture -%}
+                {%- capture haystack -%}{{ item_title }} {{ item.provider }}{% for p in item.posts %} {{ p.title }}{% endfor %}{% for p in item.followups %} {{ p.title }}{% endfor %}{%- endcapture -%}
+                <li data-learning-row data-id="{{ item.id }}" data-type="{{ item.type }}" data-sort-date="{{ item.sort_date }}" data-posts="{{ item.posts.size }}" data-name="{{ item_title | strip | downcase | escape }}" data-haystack="{{ haystack | strip_newlines | downcase | escape }}">
+                  <a class="learning-row" href="{{ item.detail_url | default: '#' | relative_url }}" data-select="{{ item.id }}">
+                    <span class="learning-row-icon is-{{ item.type }}" aria-hidden="true"><i class="fas {% if item.type == 'book' %}fa-book{% else %}fa-play{% endif %}"></i></span>
+                    <span class="learning-row-title" data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}" data-l10n-en="{{ item.title.en | default: item.title | escape }}">{{ item_title | strip }}</span>
+                    <span class="learning-row-meter">
+                      <span class="learning-row-provider">{{ item.provider | default: meta[item.type] }}{% if item.status == 'in_progress' %} · {{ meta.in_progress }}{% endif %}</span>
+                      {%- if item.lessons -%}
+                        <span class="learning-bar"><i style="width: {{ item.lesson_share }}%"></i></span>{{ loc.lessons_unit | replace: ':COUNT', item.lessons }}
+                      {%- elsif item.type == 'book' and item.posts.size > 0 -%}
+                        <span class="learning-ticks">{% for p in item.posts limit: 10 %}<i></i>{% endfor %}</span>{{ loc.posts_unit | replace: ':COUNT', item.posts.size }}
+                      {%- elsif item.status == 'in_progress' -%}
+                        <span class="learning-bar"><i class="is-open"></i></span>
+                      {%- endif -%}
+                    </span>
+                    <span class="learning-row-count">{{ item.posts.size }}{% if item.followups.size > 0 %}<em>+{{ item.followups.size }}</em>{% endif %}</span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </section>
+        {%- endfor -%}
+
+        <ul class="learning-rows learning-rows-flat" data-flat-rows hidden></ul>
+        <p class="learning-empty" data-learning-empty hidden>{{ loc.empty }}</p>
+        <p class="learning-note">{{ loc.list_note }}</p>
+      </div>
+
+      <aside class="learning-panel" data-learning-panel aria-live="polite">
+        {%- for item in evidence.items -%}
+          {%- capture item_title %}{% include localized-value.html value=item.title lang=lang %}{% endcapture -%}
+          <section class="learning-panel-item" data-panel="{{ item.id }}" id="learning-{{ item.id }}"{% if item.id != sum.featured %} hidden{% endif %}>
+            <div class="learning-panel-head">
+              <span class="learning-ring is-{{ item.type }}{% if item.status == 'in_progress' %} is-open{% endif %}" aria-hidden="true">
+                <span>
+                  {%- if item.lessons -%}
+                    <b>{{ item.lessons }}</b><small>/{{ loc.lessons_unit | replace: ':COUNT', item.lessons }}</small>
+                  {%- else -%}
+                    <b class="is-word">{{ meta[item.status] | default: meta[item.type] }}</b>
+                  {%- endif -%}
+                </span>
+              </span>
+              <div class="learning-panel-title">
+                <span>{{ meta[item.type] }}{% if item.provider %} · {{ item.provider }}{% endif %}{% if item.year > 0 %} · {{ item.year }}{% endif %}</span>
+                <h2 data-l10n-ko="{{ item.title['ko-KR'] | default: item.title | escape }}" data-l10n-en="{{ item.title.en | default: item.title | escape }}">{{ item_title | strip }}</h2>
+              </div>
+            </div>
+
+            {%- if item.summary -%}
+              <p class="learning-panel-summary" data-l10n-ko="{{ item.summary['ko-KR'] | default: item.summary | escape }}" data-l10n-en="{{ item.summary.en | default: item.summary | escape }}">{% include localized-value.html value=item.summary lang=lang %}</p>
+            {%- endif -%}
+
+            {%- if item.posts.size > 0 -%}
+              <div class="learning-panel-block" data-panel-posts>
+                <div class="learning-panel-block-head">
+                  <b>{{ loc.panel_posts | replace: ':COUNT', item.posts.size }}</b>
+                  <span data-read-count data-label="{{ loc.panel_read }}"></span>
+                </div>
+                <ol class="learning-panel-posts">
+                  {%- for p in item.posts -%}
+                    <li data-post-url="{{ p.url | relative_url }}"{% if forloop.index > 6 %} data-extra{% endif %}>
+                      <a href="{{ p.url | relative_url }}">
+                        <span class="learning-panel-num">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+                        <span class="learning-panel-post-title" title="{{ p.title | escape }}">{{ p.short }}</span>
+                        <time datetime="{{ p.date | date_to_xmlschema }}" data-next-label="{{ loc.panel_next }}">{{ p.date | date: '%y.%m' }}</time>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ol>
+                {%- assign extra = item.posts.size | minus: 6 -%}
+                {%- if extra > 0 -%}
+                  <button type="button" class="learning-panel-more" data-show-extra hidden>{{ loc.panel_more | replace: ':COUNT', extra }}</button>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if item.followups.size > 0 -%}
+              <div class="learning-panel-block is-followups">
+                <div class="learning-panel-block-head"><b>{{ loc.panel_followups | replace: ':COUNT', item.followups.size }}</b></div>
+                <ul class="learning-panel-posts">
+                  {%- for p in item.followups -%}
+                    <li>
+                      <a href="{{ p.url | relative_url }}">
+                        <span class="learning-panel-num">→</span>
+                        <span class="learning-panel-post-title" title="{{ p.title | escape }}">{{ p.short }}</span>
+                        <time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: '%y.%m' }}</time>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+
+            <div class="learning-panel-actions">
+              {%- if item.posts.size > 0 -%}
+                <a class="learning-continue" href="{{ item.posts[0].url | relative_url }}" data-continue data-label-continue="{{ loc.continue_reading }}" data-label-done="{{ loc.all_read }}">{{ loc.start_reading }}</a>
+              {%- endif -%}
+              {%- if item.detail_url -%}
+                <a class="learning-detail" href="{{ item.detail_url | relative_url }}">{{ loc.detail_link }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+              {%- endif -%}
+            </div>
+          </section>
+        {%- endfor -%}
+      </aside>
+    </div>
   </section>
+
+  <script>
+    (() => {
+      const root = document.querySelector('[data-learning]');
+      if (!root) return;
+
+      const rows = Array.from(root.querySelectorAll('[data-learning-row]'));
+      const groups = Array.from(root.querySelectorAll('[data-year-group]'));
+      const panels = Array.from(root.querySelectorAll('[data-panel]'));
+      const panelBox = root.querySelector('[data-learning-panel]');
+      const flat = root.querySelector('[data-flat-rows]');
+      const empty = root.querySelector('[data-learning-empty]');
+      const search = root.querySelector('[data-learning-search]');
+      const sort = root.querySelector('[data-learning-sort]');
+      const chips = Array.from(root.querySelectorAll('[data-type-filter]'));
+      const homes = new Map(rows.map((row) => [row, row.parentElement]));
+      let type = 'all';
+
+      /* read state: the store series-progress.js keeps */
+      let read = {};
+      try { read = JSON.parse(localStorage.getItem('series-read-posts') || '{}') || {}; } catch (_) { read = {}; }
+      const norm = (url) => {
+        try {
+          const path = new URL(url, location.origin).pathname;
+          return path.endsWith('/') ? path : `${path}/`;
+        } catch (_) { return url; }
+      };
+
+      panels.forEach((panel) => {
+        const items = Array.from(panel.querySelectorAll('[data-panel-posts] [data-post-url]'));
+        if (!items.length) return;
+        let done = 0;
+        let next = null;
+        items.forEach((li, i) => {
+          if (read[norm(li.dataset.postUrl)]) {
+            li.classList.add('is-read');
+            done += 1;
+          } else if (next === null) {
+            next = i;
+          }
+        });
+        const count = panel.querySelector('[data-read-count]');
+        if (count && done > 0) count.textContent = count.dataset.label.replace(':COUNT', done);
+        const cont = panel.querySelector('[data-continue]');
+        if (done > 0 && cont) {
+          if (next === null) {
+            cont.textContent = cont.dataset.labelDone;
+            cont.classList.add('is-done');
+          } else {
+            const li = items[next];
+            li.classList.add('is-next');
+            const time = li.querySelector('time');
+            if (time) time.textContent = time.dataset.nextLabel;
+            cont.href = li.querySelector('a').href;
+            cont.textContent = cont.dataset.labelContinue.replace(':NUM', next + 1);
+          }
+        }
+        /* long lists start with six; a button shows the rest */
+        const extras = items.filter((li) => li.hasAttribute('data-extra'));
+        const more = panel.querySelector('[data-show-extra]');
+        if (extras.length && more) {
+          extras.forEach((li) => { li.hidden = !li.classList.contains('is-next'); });
+          more.hidden = false;
+          more.addEventListener('click', () => {
+            extras.forEach((li) => { li.hidden = false; });
+            more.hidden = true;
+          });
+        }
+      });
+
+      /* selection */
+      const stacked = () => panelBox && getComputedStyle(panelBox).position !== 'sticky';
+      const select = (id, scroll) => {
+        const panel = panels.find((p) => p.dataset.panel === id);
+        if (!panel) return;
+        panels.forEach((p) => { p.hidden = p !== panel; });
+        const row = rows.find((r) => r.dataset.id === id);
+        const group = row && row.closest('[data-year-group]');
+        if (group) {
+          group.classList.remove('is-collapsed');
+          group.querySelector('[data-year-toggle]').setAttribute('aria-expanded', 'true');
+        }
+        root.querySelectorAll('[data-select]').forEach((el) => {
+          el.toggleAttribute('aria-current', el.dataset.select === id);
+        });
+        try { history.replaceState(null, '', `#${id}`); } catch (_) { /* file:// */ }
+        if (scroll && stacked()) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+
+      root.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-select]');
+        if (!target || !root.contains(target)) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        select(target.dataset.select, true);
+      });
+
+      /* collapsed years */
+      groups.forEach((group) => {
+        const toggle = group.querySelector('[data-year-toggle]');
+        if (group.hasAttribute('data-collapsible')) group.classList.add('is-collapsed');
+        toggle.addEventListener('click', () => {
+          group.classList.toggle('is-collapsed');
+          toggle.setAttribute('aria-expanded', String(!group.classList.contains('is-collapsed')));
+        });
+        toggle.setAttribute('aria-expanded', String(!group.classList.contains('is-collapsed')));
+      });
+
+      /* filter and sort */
+      const apply = () => {
+        const q = (search.value || '').trim().toLowerCase();
+        const mode = sort.value;
+        const filtering = q !== '' || type !== 'all';
+        let shown = 0;
+        rows.forEach((row) => {
+          const ok = (type === 'all' || row.dataset.type === type) && (!q || row.dataset.haystack.includes(q));
+          row.hidden = !ok;
+          if (ok) shown += 1;
+        });
+
+        if (mode === 'recent') {
+          rows.forEach((row) => homes.get(row).appendChild(row));
+          const order = (a, b) => b.dataset.sortDate.localeCompare(a.dataset.sortDate);
+          homes.forEach((ul) => Array.from(ul.children).sort(order).forEach((li) => ul.appendChild(li)));
+          flat.hidden = true;
+          groups.forEach((group) => {
+            group.hidden = !group.querySelector('[data-learning-row]:not([hidden])');
+            group.classList.toggle('is-filtering', filtering);
+          });
+        } else {
+          const order = mode === 'posts'
+            ? (a, b) => (b.dataset.posts - a.dataset.posts) || a.dataset.name.localeCompare(b.dataset.name, 'ko')
+            : (a, b) => a.dataset.name.localeCompare(b.dataset.name, 'ko');
+          rows.slice().sort(order).forEach((row) => flat.appendChild(row));
+          flat.hidden = false;
+          groups.forEach((group) => { group.hidden = true; });
+        }
+        empty.hidden = shown > 0;
+      };
+
+      chips.forEach((chip) => chip.addEventListener('click', () => {
+        type = chip.dataset.typeFilter;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        apply();
+      }));
+      search.addEventListener('input', apply);
+      sort.addEventListener('change', apply);
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== '/' || event.target.closest('input, textarea, select, [contenteditable]')) return;
+        event.preventDefault();
+        search.focus();
+      });
+
+      const initial = decodeURIComponent(location.hash.slice(1));
+      if (initial && panels.some((p) => p.dataset.panel === initial)) {
+        select(initial, false);
+      } else {
+        const visible = panels.find((p) => !p.hidden);
+        if (visible) select(visible.dataset.panel, false);
+        try { history.replaceState(null, '', location.pathname + location.search); } catch (_) { /* file:// */ }
+      }
+    })();
+  </script>
 {% endif %}

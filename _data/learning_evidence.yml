@@ -1,210 +1,198 @@
 enabled: true
 
-groups:
-  - id: backend-and-web
-    title:
-      ko-KR: 백엔드와 웹 기초
-      en: Backend and Web Foundations
-    description:
-      ko-KR: 프로토콜 이해, 백엔드 기본기, 실용적인 웹 사고를 강화한 강의와 책입니다.
-      en: Courses and books that strengthened protocol understanding, backend fundamentals, and practical web reasoning.
-    items:
-      - id: inflearn-http-basics
-        type: course
-        title: 모든 개발자를 위한 HTTP 웹 기본 지식
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2024"
-        summary:
-          ko-KR: 41/41강 완강. 네트워크부터 헤더와 캐시까지 10개 섹션을 별도 글로 복습하고, 다이어그램과 독립적인 API 설계 예시를 연결했습니다.
-          en: Completed 41/41 lessons; organized ten section-based reviews with diagrams and independent API design examples, from networking to headers and caching.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-http-basics-review.md
-          - _posts/lecture/http/2026-10-02-http-basics-01-introduction.md
-          - _posts/lecture/http/2026-10-02-http-basics-02-network.md
-          - _posts/lecture/http/2026-10-02-http-basics-03-uri.md
-          - _posts/lecture/http/2026-10-02-http-basics-04-http.md
-          - _posts/lecture/http/2026-10-02-http-basics-05-methods.md
-          - _posts/lecture/http/2026-10-02-http-basics-06-api-design.md
-          - _posts/lecture/http/2026-10-02-http-basics-07-status-codes.md
-          - _posts/lecture/http/2026-10-02-http-basics-08-headers.md
-          - _posts/lecture/http/2026-10-02-http-basics-09-cache.md
-          - _posts/lecture/http/2026-10-02-http-basics-10-next-steps.md
-        related_posts:
-          - _posts/notes/web/2026-02-13-presigned-url.md
-          - _posts/notes/web/2026-02-25-netty.md
+# One flat list of courses and books. The page groups them by year (the
+# earliest source post, or the first year in `period`) and splits them only
+# by `type`; `lessons` is the course length that its bar is drawn from.
 
-      - id: inflearn-spring-core
-        type: course
-        title: 스프링 핵심 원리 - 기본편
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 65/65강 완강. 객체의 역할과 조립 책임, DI 컨테이너, 생명주기와 스코프를 복습했습니다.
-          en: Completed 65/65 lessons; reviewed object composition, dependency injection, lifecycle, and scopes.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-spring-core-review.md
+items:
+  - id: inflearn-http-basics
+    type: course
+    title: 모든 개발자를 위한 HTTP 웹 기본 지식
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 41
+    period: "2024"
+    summary:
+      ko-KR: 41/41강 완강. 네트워크부터 헤더와 캐시까지 10개 섹션을 별도 글로 복습하고, 다이어그램과 독립적인 API 설계 예시를 연결했습니다.
+      en: Completed 41/41 lessons; organized ten section-based reviews with diagrams and independent API design examples, from networking to headers and caching.
+    source_posts:
+      - _posts/lecture/kim-young-han/2022-10-28-inflearn-http-basics-review.md
+      - _posts/lecture/http/2022-09-03-http-basics-01-introduction.md
+      - _posts/lecture/http/2022-09-08-http-basics-02-network.md
+      - _posts/lecture/http/2022-09-14-http-basics-03-uri.md
+      - _posts/lecture/http/2022-09-19-http-basics-04-http.md
+      - _posts/lecture/http/2022-09-25-http-basics-05-methods.md
+      - _posts/lecture/http/2022-10-01-http-basics-06-api-design.md
+      - _posts/lecture/http/2022-10-07-http-basics-07-status-codes.md
+      - _posts/lecture/http/2022-10-13-http-basics-08-headers.md
+      - _posts/lecture/http/2022-10-19-http-basics-09-cache.md
+      - _posts/lecture/http/2022-10-26-http-basics-10-next-steps.md
+    related_posts:
+      - _posts/notes/web/2026-02-13-presigned-url.md
+      - _posts/notes/web/2026-02-25-netty.md
 
-      - id: inflearn-spring-mvc
-        type: course
-        title: 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 72/72강 완강. 서블릿에서 DispatcherServlet으로 이어지는 구조와 요청·응답 처리의 경계를 정리했습니다.
-          en: Completed 72/72 lessons; reviewed MVC structure and request-response processing boundaries.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-spring-mvc-review.md
+  - id: inflearn-spring-core
+    type: course
+    title: 스프링 핵심 원리 - 기본편
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 65
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 65/65강 완강. 객체의 역할과 조립 책임, DI 컨테이너, 생명주기와 스코프를 복습했습니다.
+      en: Completed 65/65 lessons; reviewed object composition, dependency injection, lifecycle, and scopes.
+    source_posts:
+      - _posts/lecture/kim-young-han/2021-07-10-inflearn-spring-core-review.md
 
-      - id: inflearn-database-intro
-        type: course
-        title: 김영한의 실전 데이터베이스 입문 - 모든 IT인을 위한 SQL 첫걸음(SQL부터 차근차근)
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 53/53강 완강. 테이블과 기본 SQL, 행 필터와 집계 조건의 차이를 논리적 처리 순서로 정리했습니다.
-          en: Completed 53/53 lessons; reviewed SQL fundamentals, row filtering, grouping, and logical query processing.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-database-intro-review.md
+  - id: inflearn-spring-mvc
+    type: course
+    title: 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 72
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 72/72강 완강. 서블릿에서 DispatcherServlet으로 이어지는 구조와 요청·응답 처리의 경계를 정리했습니다.
+      en: Completed 72/72 lessons; reviewed MVC structure and request-response processing boundaries.
+    source_posts:
+      - _posts/lecture/kim-young-han/2021-12-11-inflearn-spring-mvc-review.md
 
-      - id: inflearn-jpa-application-1
-        type: course
-        title: 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 36/36강 완강. 웹 계층, 서비스, 저장소의 책임과 도메인 변경의 경계를 복습했습니다.
-          en: Completed 36/36 lessons; reviewed application layers, domain changes, and transaction boundaries.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-jpa-application-1-review.md
+  - id: inflearn-database-intro
+    type: course
+    title: 김영한의 실전 데이터베이스 입문 - 모든 IT인을 위한 SQL 첫걸음(SQL부터 차근차근)
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 53
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 53/53강 완강. 테이블과 기본 SQL, 행 필터와 집계 조건의 차이를 논리적 처리 순서로 정리했습니다.
+      en: Completed 53/53 lessons; reviewed SQL fundamentals, row filtering, grouping, and logical query processing.
+    source_posts:
+      - _posts/lecture/kim-young-han/2025-09-20-inflearn-database-intro-review.md
 
-      - id: inflearn-jpa-application-2
-        type: course
-        title: 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 24/24강 완강. 응답 DTO와 조회 전략, 컬렉션 페치 조인과 페이징의 제약을 정리했습니다.
-          en: Completed 24/24 lessons; reviewed API DTOs, query strategies, collection fetch joins, and pagination.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-jpa-application-2-review.md
+  - id: inflearn-jpa-application-1
+    type: course
+    title: 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 36
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 36/36강 완강. 웹 계층, 서비스, 저장소의 책임과 도메인 변경의 경계를 복습했습니다.
+      en: Completed 36/36 lessons; reviewed application layers, domain changes, and transaction boundaries.
+    source_posts:
+      - _posts/lecture/kim-young-han/2024-05-18-inflearn-jpa-application-1-review.md
 
-      - id: inflearn-spring-data-jpa
-        type: course
-        title: 실전! 스프링 데이터 JPA
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 32/32강 완강. 공통 리포지토리와 쿼리 메서드, 명시적 쿼리의 역할과 조회 계약을 복습했습니다.
-          en: Completed 32/32 lessons; reviewed repository abstractions, query methods, and query contracts.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-spring-data-jpa-review.md
+  - id: inflearn-jpa-application-2
+    type: course
+    title: 실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 24
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 24/24강 완강. 응답 DTO와 조회 전략, 컬렉션 페치 조인과 페이징의 제약을 정리했습니다.
+      en: Completed 24/24 lessons; reviewed API DTOs, query strategies, collection fetch joins, and pagination.
+    source_posts:
+      - _posts/lecture/kim-young-han/2024-11-23-inflearn-jpa-application-2-review.md
 
-      - id: spring-in-action
-        type: book
-        title: Spring in Action
-        provider: Manning
-        status: completed
-        period: "2024-2025"
-        summary:
-          ko-KR: Spring 애플리케이션 구조와 실용적인 백엔드 개발 패턴에 대한 이해를 깊게 했습니다.
-          en: Helped deepen understanding of Spring application structure and practical backend development patterns.
-        source_posts:
-          - _posts/book/spring-in-action/chap1.md
-          - _posts/book/spring-in-action/chap2.md
-          - _posts/book/spring-in-action/chap3.md
-        related_posts:
-          - _posts/notes/spring/2025-06-30-spring-lifecycle.md
-          - _posts/notes/spring/2025-08-07-spring-boot-application-annotation.md
+  - id: inflearn-spring-data-jpa
+    type: course
+    title: 실전! 스프링 데이터 JPA
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 32
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 32/32강 완강. 공통 리포지토리와 쿼리 메서드, 명시적 쿼리의 역할과 조회 계약을 복습했습니다.
+      en: Completed 32/32 lessons; reviewed repository abstractions, query methods, and query contracts.
+    source_posts:
+      - _posts/lecture/kim-young-han/2025-01-25-inflearn-spring-data-jpa-review.md
 
-  - id: architecture-and-operations
-    title:
-      ko-KR: 아키텍처와 운영적 사고
-      en: Architecture and Operational Thinking
-    description:
-      ko-KR: 아키텍처 트레이드오프 판단과 트러블슈팅 중심 사고를 형성한 학습 입력입니다.
-      en: Learning inputs that shaped architectural tradeoff reasoning and troubleshooting-oriented thinking.
-    items:
-      - id: fundamentals-software-architecture
-        type: book
-        title: Fundamentals of Software Architecture
-        provider: O'Reilly
-        status: in_progress
-        period: "2025"
-        summary:
-          ko-KR: 아키텍처 사고, 트레이드오프 분석, 비즈니스 맥락과 기술 의사결정의 연결을 강화했습니다.
-          en: Reinforced architectural thinking, tradeoff analysis, and the connection between business context and technical decisions.
-        source_posts:
-          - _posts/book/fundamentals-of-software-architecture/2025-05-13-fundamentals-of-software-architecture-chap2.md
-        related_posts:
-          - _posts/notes/common/2026-01-14-architectural-decisions.md
+  - id: spring-in-action
+    type: book
+    title: Spring in Action
+    provider: Manning
+    status: completed
+    period: "2024-2025"
+    summary:
+      ko-KR: Spring 애플리케이션 구조와 실용적인 백엔드 개발 패턴에 대한 이해를 깊게 했습니다.
+      en: Helped deepen understanding of Spring application structure and practical backend development patterns.
+    source_posts:
+      - _posts/book/spring-in-action/chap1.md
+      - _posts/book/spring-in-action/chap2.md
+      - _posts/book/spring-in-action/chap3.md
+    related_posts:
+      - _posts/notes/spring/2025-06-30-spring-lifecycle.md
+      - _posts/notes/spring/2025-08-07-spring-boot-application-annotation.md
 
-      - id: troubleshooting-java
-        type: book
-        title: Troubleshooting Java
-        provider: Unknown
-        status: in_progress
-        period: "2025"
-        summary:
-          ko-KR: 프로파일링, 장애 분석, 런타임 동작 이해를 중심으로 더 체계적인 디버깅 사고를 만들었습니다.
-          en: Built a more systematic debugging mindset around profiling, failure analysis, and understanding runtime behavior.
-        source_posts:
-          - _posts/book/troubleshooting-java/chap1.md
-        related_posts:
-          - _posts/notes/web/2026-02-25-netty.md
-          - _posts/notes/programming/2025-09-03-unit-test-integration-test.md
+  - id: fundamentals-software-architecture
+    type: book
+    title: Fundamentals of Software Architecture
+    provider: O'Reilly
+    status: in_progress
+    period: "2025"
+    summary:
+      ko-KR: 아키텍처 사고, 트레이드오프 분석, 비즈니스 맥락과 기술 의사결정의 연결을 강화했습니다.
+      en: Reinforced architectural thinking, tradeoff analysis, and the connection between business context and technical decisions.
+    source_posts:
+      - _posts/book/fundamentals-of-software-architecture/2025-05-13-fundamentals-of-software-architecture-chap2.md
+    related_posts:
+      - _posts/notes/common/2026-01-14-architectural-decisions.md
 
-  - id: platform-and-career
-    title:
-      ko-KR: 플랫폼과 커리어 확장
-      en: Platform and Career Development
-    description:
-      ko-KR: 플랫폼 확장, 포트폴리오 작업, 채용 준비와 연결된 강의와 작성 결과입니다.
-      en: Courses and written outputs related to platform growth, portfolio work, and hiring readiness.
-    items:
-      - id: inflearn-kim-young-han-meetup
-        type: course
-        title: "[30만 수강생 기념] 1/31 김영한님 온라인 밋업 Live"
-        provider: Inflearn · 김영한
-        status: completed
-        period: "2026-10-02 완강 확인"
-        summary:
-          ko-KR: 18/18강 완강. 좋은 동료에 관한 답변을 복습하고 학습 이력과 검증 가능한 역량 증거를 구분했습니다.
-          en: Completed 18/18 sessions; reflected on collaboration and the distinction between learning history and verified skills.
-        source_posts:
-          - _posts/lecture/kim-young-han/2026-10-02-inflearn-kim-young-han-meetup-review.md
+  - id: troubleshooting-java
+    type: book
+    title: Troubleshooting Java
+    provider: Unknown
+    status: in_progress
+    period: "2025"
+    summary:
+      ko-KR: 프로파일링, 장애 분석, 런타임 동작 이해를 중심으로 더 체계적인 디버깅 사고를 만들었습니다.
+      en: Built a more systematic debugging mindset around profiling, failure analysis, and understanding runtime behavior.
+    source_posts:
+      - _posts/book/troubleshooting-java/chap1.md
+    related_posts:
+      - _posts/notes/web/2026-02-25-netty.md
+      - _posts/notes/programming/2025-09-03-unit-test-integration-test.md
 
-      - id: kubernetes-backend-course
-        type: course
-        title: Kubernetes for Backend Developer
-        provider: FastCampus
-        status: in_progress
-        period: "2025"
-        summary:
-          ko-KR: 애플리케이션 중심 백엔드를 넘어 인프라와 플랫폼 영역으로 시야를 넓혔습니다.
-          en: Expanded infrastructure and platform exposure beyond application-only backend work.
-        source_posts:
-          - _posts/lecture/kubernetes-for-backend-developer/ch1.md
-        related_posts:
-          - _posts/recruit/Interview/2025-08-05-system-design-interview-preparation.md
+  - id: inflearn-kim-young-han-meetup
+    type: course
+    title: "[30만 수강생 기념] 1/31 김영한님 온라인 밋업 Live"
+    provider: Inflearn · 김영한
+    status: completed
+    lessons: 18
+    period: "2026-10-02 완강 확인"
+    summary:
+      ko-KR: 18/18강 완강. 좋은 동료에 관한 답변을 복습하고 학습 이력과 검증 가능한 역량 증거를 구분했습니다.
+      en: Completed 18/18 sessions; reflected on collaboration and the distinction between learning history and verified skills.
+    source_posts:
+      - _posts/lecture/kim-young-han/2024-03-16-inflearn-kim-young-han-meetup-review.md
 
-      - id: backend-pass-portfolio
-        type: course
-        title: Backend Pass Portfolio
-        provider: Lecture
-        status: completed
-        period: "2025"
-        summary:
-          ko-KR: 백엔드 포지셔닝, 채용 준비도, 증거 제시에 대한 포트폴리오 사고를 구조화했습니다.
-          en: Structured portfolio thinking around backend positioning, hiring readiness, and evidence presentation.
-        source_posts:
-          - _posts/lecture/backend-pass-portfolio/2025-05-21-backend-pass-portfolio-index.md
-        related_posts:
-          - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
-          - _posts/recruit/Interview/2025-08-05-real-interview-questions.md
+  - id: kubernetes-backend-course
+    type: course
+    title: Kubernetes for Backend Developer
+    provider: FastCampus
+    status: in_progress
+    period: "2025"
+    summary:
+      ko-KR: 애플리케이션 중심 백엔드를 넘어 인프라와 플랫폼 영역으로 시야를 넓혔습니다.
+      en: Expanded infrastructure and platform exposure beyond application-only backend work.
+    source_posts:
+      - _posts/lecture/kubernetes-for-backend-developer/ch1.md
+    related_posts:
+      - _posts/recruit/Interview/2025-08-05-system-design-interview-preparation.md
+
+  - id: backend-pass-portfolio
+    type: course
+    title: Backend Pass Portfolio
+    provider: Lecture
+    status: completed
+    period: "2025"
+    summary:
+      ko-KR: 백엔드 포지셔닝, 채용 준비도, 증거 제시에 대한 포트폴리오 사고를 구조화했습니다.
+      en: Structured portfolio thinking around backend positioning, hiring readiness, and evidence presentation.
+    source_posts:
+      - _posts/lecture/backend-pass-portfolio/2025-05-21-backend-pass-portfolio-index.md
+    related_posts:
+      - _posts/recruit/Interview/2025-09-04-resume-based-interview-prepare.md
+      - _posts/recruit/Interview/2025-08-05-real-interview-questions.md

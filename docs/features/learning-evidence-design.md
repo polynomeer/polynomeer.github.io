@@ -60,31 +60,28 @@ The detail page is for understanding.
 
 Do not collapse those goals into one card layout again.
 
-## Recommended Overview UI
+## Overview UI
 
-The overview page should feel more like a curated shelf or editorial index than a stack of article cards.
+Items are split only by type (course or book). Topic groups were dropped: the
+list reads as one catalog, and the year shows how it grew.
 
-Preferred characteristics:
+- **Opening card**, the same height however many items there are: one column
+  of squares per year (a square per item, outlined while in progress), the
+  total lessons completed and post counts, and a shelf of book spines.
+- **List** grouped by year, newest first. Only the two latest years start
+  open. A row shows the title, the provider, and a size marker: a bar for a
+  course (its `lessons` against the longest course) or one tick per study post
+  for a book. The right column counts study posts and `+n` follow-ups.
+- **Panel** beside the list, sticky on wide screens and below the list on
+  narrow ones, showing the selected item: summary, study posts with this
+  browser's read state (the `series-read-posts` store), follow-up posts, a
+  continue link and the detail page link. Squares, spines and rows all select.
+- Type chips, a search over titles and post titles (`/` focuses it), and a
+  sort (recent, most posts, name).
 
-- smaller footprint per item
-- title-first presentation
-- visually differentiated labels by type or topic
-- low reading burden before click
-
-Recommended item contents on the overview page:
-
-- title
-- type badge
-- status badge
-- provider or period
-
-Do not show:
-
-- long summaries
-- source post lists
-- related post lists
-
-Those belong on the detail page only.
+A row is a link to the item's detail page, which is where it goes without
+JavaScript. `_plugins/learning-evidence.rb` resolves post paths (hidden or
+moved posts drop out), the year and the totals.
 
 ## Recommended Detail Page UI
 
@@ -94,7 +91,7 @@ Each learning item page should include:
 2. concise summary
 3. source study posts
 4. related result posts
-5. optional neighboring items from the same group
+5. previous and next items, in the overview's default (recent) order
 
 ### Hero
 
@@ -128,36 +125,28 @@ Typical results:
 
 ## Data Model
 
-Keep `_data/learning_evidence.yml` as the curated source of truth for grouped metadata.
+Keep `_data/learning_evidence.yml` as the curated source of truth: one flat `items` list.
 
 Recommended shape:
 
 ```yaml
 enabled: true
 
-groups:
-  - id: backend-and-web
-    title:
-      ko-KR: 백엔드와 웹 기초
-      en: Backend and Web Foundations
-    description:
-      ko-KR: 프로토콜 이해, 백엔드 기본기, 실용적인 웹 사고를 강화한 강의와 책입니다.
-      en: Courses and books that strengthened protocol understanding, backend fundamentals, and practical web reasoning.
-    items:
-      - id: inflearn-http-basics
-        type: course
-        title: 모든 개발자를 위한 HTTP 웹 기본 지식
-        provider: Inflearn
-        status: completed
-        period: "2024"
-        summary:
-          ko-KR: HTTP 의미 체계, 요청-응답 흐름, 백엔드 웹 통신의 기본 사고 모델을 강화했습니다.
-          en: Strengthened HTTP semantics, request-response flow understanding, and the mental model behind backend web communication.
-        source_posts:
-          - _posts/lecture/http/모든_개발자를_위한_HTTP_웹_기본_지식.md
-        related_posts:
-          - _posts/notes/web/2026-02-13-presigned-url.md
-          - _posts/notes/web/2026-02-25-netty.md
+items:
+  - id: inflearn-http-basics
+    type: course            # course or book
+    title: 모든 개발자를 위한 HTTP 웹 기본 지식
+    provider: Inflearn · 김영한
+    status: completed       # completed or in_progress
+    lessons: 41             # course length, optional
+    period: "2024"          # used for the year only when no source post is published
+    summary:
+      ko-KR: ...
+      en: ...
+    source_posts:           # notes written while studying it
+      - _posts/lecture/http/2022-09-03-http-basics-01-introduction.md
+    related_posts:          # posts written afterwards that use it
+      - _posts/notes/web/2026-02-13-presigned-url.md
 ```
 
 ## Routing Model

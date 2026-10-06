@@ -533,18 +533,41 @@ learning_evidence_meta:
   in_progress: In Progress
 
 learning_evidence:
-  eyebrow: Learning evidence
-  directory_title: Browse learning inputs through a compact overview
-  directory_description: Scan books and courses quickly, then open each item to see study notes and the posts that grew out of that learning.
-  count_items: items
-  count_linked: linked posts
-  count_linked_short: ":COUNT posts"
-  group_label: Group
-  source_posts: Source study posts
-  related_posts: Related output posts
-  back_to_directory: Back to learning overview
-  same_group: Others in this group
-  nav_aria: Previous or next item in the same format
+  eyebrow: "Courses :COURSES · Books :BOOKS"
+  directory_title: Learning
+  directory_description: Courses finished and books read, with the posts written from them.
+  chart_title: Finished by year
+  lessons_done: lessons completed
+  posts_written: study posts
+  followups_short: ":COUNT follow-ups"
+  shelf: Shelf
+  shelf_status: ":DONE finished · :OPEN reading"
+  filter_all: All
+  filter_aria: Format
+  search_placeholder: Search titles and posts
+  sort_aria: Sort
+  sort_recent: Recent
+  sort_posts: Most posts
+  sort_name: Name
+  lessons_unit: ":COUNT lessons"
+  posts_unit: ":COUNT posts"
+  year_collapsed: ":COUNT · collapsed"
+  year_expand: Expand
+  list_note: The bar is the course length against the longest course, each tick a study post, and +n the posts written after the learning. Only the two latest years start open.
+  empty: Nothing matches.
+  panel_posts: "Study posts :COUNT"
+  panel_read: ":COUNT read"
+  panel_more: "+ :COUNT more"
+  panel_followups: "Written afterwards :COUNT"
+  panel_next: next
+  start_reading: Start from the first post
+  continue_reading: "Continue from post :NUM"
+  all_read: All read
+  detail_link: Details
+  source_posts: Study posts
+  related_posts: Written afterwards
+  back_to_directory: Back to learning
+  nav_aria: Previous or next learning item
   previous_item: Previous
   next_item: Next
 

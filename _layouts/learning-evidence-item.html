@@ -5,28 +5,18 @@ layout: page
 {% include lang.html %}
 
 {% assign current_item = nil %}
-
-{% assign current_group = nil %}
-
-{% for group in site.data.learning_evidence.groups %}
-  {% for item in group.items %}
-    {% if item.id == page.item_id %}
-      {% assign current_item = item %}
-      {% assign current_group = group %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-  {% if current_item %}
+{% for item in site.data.learning_evidence.items %}
+  {% if item.id == page.item_id %}
+    {% assign current_item = item %}
     {% break %}
   {% endif %}
 {% endfor %}
 
 {% if current_item %}
   {%- comment -%}
-    이전·다음은 같은 묶음 안에서 걷습니다. 전에는 type(강의/책)으로 걸었는데, 목록 페이지가
-    묶음으로 나뉘어 있으므로 상세에서 다른 축으로 넘기면 읽는 사람이 어디에 있는지 잃습니다.
+    이전·다음은 목록 페이지의 기본 순서(최근순)를 그대로 따라 걷습니다.
   {%- endcomment -%}
-  {% assign siblings = current_group.items %}
+  {% assign siblings = site.data.learning_evidence.items | sort: 'sort_date' | reverse %}
   {% assign previous_item = nil %}
   {% assign next_item = nil %}
   {% assign found_current = false %}
@@ -79,13 +69,11 @@ layout: page
         {% if current_item.provider %}
           <span>{{ current_item.provider }}</span>
         {% endif %}
-        {% if current_item.period %}
-          <span>{{ current_item.period }}</span>
+        {% if current_item.lessons %}
+          <span>{{ site.data.locales[lang].learning_evidence.lessons_unit | replace: ':COUNT', current_item.lessons }}</span>
         {% endif %}
-        {% if current_group %}
-          <a href="{{ '/learning-evidence/' | relative_url }}#{{ current_group.id }}">
-            {% include localized-value.html value=current_group.title lang=lang %}
-          </a>
+        {% if current_item.year > 0 %}
+          <span>{{ current_item.year }}</span>
         {% endif %}
       </div>
 
@@ -125,68 +113,44 @@ layout: page
     {% endif %}
 
     <div class="learning-evidence-detail-sections">
-      {% assign source_posts = current_item.source_posts | default: empty %}
+      {% assign source_posts = current_item.posts | default: empty %}
       {% if source_posts and source_posts.size > 0 %}
         <section class="learning-evidence-detail-section">
           <h2 data-i18n="learning_evidence.source_posts">{{ site.data.locales[lang].learning_evidence.source_posts }}</h2>
           <ul class="learning-evidence-post-list">
-            {% for post_path in source_posts %}
-              {% assign matched_post = site.posts | where: 'path', post_path | first %}
-              {% if matched_post %}
-                <li class="learning-evidence-post-item">
-                  <a href="{{ matched_post.url | relative_url }}">
-                    <span class="learning-evidence-post-title">{{ matched_post.title }}</span>
-                    <span class="learning-evidence-post-date">
-                      {% include datetime.html date=matched_post.date lang=lang %}
-                    </span>
-                  </a>
-                </li>
-              {% endif %}
+            {% for matched_post in source_posts %}
+              <li class="learning-evidence-post-item">
+                <a href="{{ matched_post.url | relative_url }}">
+                  <span class="learning-evidence-post-title">{{ matched_post.title }}</span>
+                  <span class="learning-evidence-post-date">
+                    {% include datetime.html date=matched_post.date lang=lang %}
+                  </span>
+                </a>
+              </li>
             {% endfor %}
           </ul>
         </section>
       {% endif %}
 
-      {% assign related_posts = current_item.related_posts | default: empty %}
+      {% assign related_posts = current_item.followups | default: empty %}
       {% if related_posts and related_posts.size > 0 %}
         <section class="learning-evidence-detail-section">
           <h2 data-i18n="learning_evidence.related_posts">{{ site.data.locales[lang].learning_evidence.related_posts }}</h2>
           <ul class="learning-evidence-post-list">
-            {% for post_path in related_posts %}
-              {% assign matched_post = site.posts | where: 'path', post_path | first %}
-              {% if matched_post %}
-                <li class="learning-evidence-post-item">
-                  <a href="{{ matched_post.url | relative_url }}">
-                    <span class="learning-evidence-post-title">{{ matched_post.title }}</span>
-                    <span class="learning-evidence-post-date">
-                      {% include datetime.html date=matched_post.date lang=lang %}
-                    </span>
-                  </a>
-                </li>
-              {% endif %}
+            {% for matched_post in related_posts %}
+              <li class="learning-evidence-post-item">
+                <a href="{{ matched_post.url | relative_url }}">
+                  <span class="learning-evidence-post-title">{{ matched_post.title }}</span>
+                  <span class="learning-evidence-post-date">
+                    {% include datetime.html date=matched_post.date lang=lang %}
+                  </span>
+                </a>
+              </li>
             {% endfor %}
           </ul>
         </section>
       {% endif %}
 
-      {% assign sibling_count = siblings.size | minus: 1 %}
-      {% if sibling_count > 0 %}
-        <section class="learning-evidence-detail-section">
-          <h2 data-i18n="learning_evidence.same_group">{{ site.data.locales[lang].learning_evidence.same_group }}</h2>
-          <div class="learning-evidence-sibling-list">
-            {% for item in siblings %}
-              {% if item.id != current_item.id %}
-                {% assign sibling_page = site.learning_evidence_items | where: 'item_id', item.id | first %}
-                {% if sibling_page %}
-                  <a class="learning-evidence-sibling-link" href="{{ sibling_page.url | relative_url }}">
-                    {% include localized-value.html value=item.title lang=lang %}
-                  </a>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          </div>
-        </section>
-      {% endif %}
     </div>
   </article>
 {% endif %}

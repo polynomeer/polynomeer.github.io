@@ -528,18 +528,41 @@ learning_evidence_meta:
   in_progress: 진행 중
 
 learning_evidence:
-  eyebrow: 학습 성과
-  directory_title: 학습 입력을 개요 중심으로 빠르게 살펴보기
-  directory_description: 책과 강의를 먼저 가볍게 훑고, 각 항목 상세 페이지에서 학습 기록 글과 결과 글을 이어서 볼 수 있습니다.
-  count_items: 항목
-  count_linked: 이어진 글
-  count_linked_short: "글 :COUNT편"
-  group_label: 묶음
-  source_posts: 학습 기록 글
-  related_posts: 연결된 결과 글
-  back_to_directory: 학습 성과 개요로 돌아가기
-  same_group: 같은 묶음의 다른 학습 항목
-  nav_aria: 같은 형식의 이전 또는 다음 항목
+  eyebrow: "강의 :COURSES · 책 :BOOKS"
+  directory_title: 학습 성과
+  directory_description: 끝까지 들은 강의와 읽은 책, 그리고 그 내용을 정리한 글입니다.
+  chart_title: 해마다 끝낸 것
+  lessons_done: 강 완강
+  posts_written: 정리한 글
+  followups_short: "이어 쓴 글 :COUNT"
+  shelf: 서가
+  shelf_status: "완독 :DONE · 읽는 중 :OPEN"
+  filter_all: 전체
+  filter_aria: 형식
+  search_placeholder: 제목·글 검색
+  sort_aria: 정렬
+  sort_recent: 최근순
+  sort_posts: 글 많은 순
+  sort_name: 이름순
+  lessons_unit: ":COUNT강"
+  posts_unit: ":COUNT편"
+  year_collapsed: ":COUNT개 · 접힘"
+  year_expand: 펼치기
+  list_note: 막대 길이는 강의 수(가장 긴 강의 기준), 칸은 정리한 글, +n은 배운 뒤 이어 쓴 글입니다. 최근 두 해만 펼쳐 둡니다.
+  empty: 맞는 항목이 없습니다.
+  panel_posts: "정리한 글 :COUNT"
+  panel_read: ":COUNT편 읽음"
+  panel_more: "+ :COUNT편 더"
+  panel_followups: "배운 뒤 이어 쓴 글 :COUNT"
+  panel_next: 다음
+  start_reading: 첫 글부터 읽기
+  continue_reading: ":NUM번째 글부터 이어 읽기"
+  all_read: 모두 읽었습니다
+  detail_link: 상세
+  source_posts: 정리한 글
+  related_posts: 배운 뒤 이어 쓴 글
+  back_to_directory: 학습 성과로 돌아가기
+  nav_aria: 이전 또는 다음 학습 항목
   previous_item: 이전 학습
   next_item: 다음 학습
 
