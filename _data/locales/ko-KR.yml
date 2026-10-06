@@ -188,7 +188,7 @@ tx_lab:
 
 stats:
   eyebrow: 숫자로 본 기록
-  description: 공개된 글에서 직접 센 수치입니다. 손으로 적은 숫자는 없고, 초안과 보관된 글은 어디에도 들어가지 않습니다.
+  description: 손으로 적은 숫자는 없습니다. 빌드할 때 공개된 글에서 직접 세고, 초안과 보관한 글은 빼고 셉니다.
   unit_years: 년
   unit_posts: 편
   unit_hours: 시간
@@ -205,7 +205,7 @@ stats:
   legend_more: 많음
   what_title: 무엇을 썼는가
   what_note: 연도마다 글의 종류가 어떤 비율이었는지 봅니다. 띠의 길이가 그 해의 편수입니다.
-  topics_title: 주제별 글
+  topics_title: 어느 질문에 가장 많이 썼나
   tags_title: 자주 쓰는 태그
   tags_note: TIL과 문제 풀이를 뺀 글에서 셌습니다. 그 둘을 넣으면 태그 하나가 표를 덮습니다.
   depth_title: 얼마나 긴 글인가
@@ -225,6 +225,21 @@ stats:
   fact_citations: "인용 :COUNT건"
   fact_tags: 쓰인 태그
   footnote: 모든 수치는 사이트를 빌드할 때 계산합니다. 방문자 수나 조회 수는 포함하지 않습니다.
+  year_days: ":YEAR년에 쓴 날"
+  year_days_value: ":DAYS일 · :POSTS편"
+  days_value: ":N일"
+  streak: 가장 긴 연속
+  busiest_day: 가장 많이 쓴 날
+  busiest_month: 가장 많이 쓴 달
+  vs_last_year: "작년 :COUNT편보다"
+  month_day: ":M월 :D일"
+  month_name: ":M월"
+  calendar_hint: 칸을 누르면 그날의 기록으로
+  waffle_note: 한 칸 = 1%
+  donut_center: 전부 읽으면
+  treemap_note: 넓이 = 글 수 · 누르면 주제로
+  trend_title: ":COUNT년의 흐름"
+  trend_growth: "작년보다 :PCT%"
 
 on_this_day:
   eyebrow: 같은 날짜 다시 보기

@@ -51,8 +51,14 @@ module Jekyll
         'tags' => top_tags(posts),
         'lengths' => lengths(posts),
         'sources' => sources(posts),
-        'connections' => connections(posts)
+        'connections' => connections(posts),
+        'year' => year_summary(posts),
+        'days' => day_grid(posts),
+        'waffle' => waffle(types, posts.size),
+        'treemap' => treemap(topics(posts)),
+        'trend' => trend(posts)
       }
+      site.data['blog_stats']['lengths'] = with_arcs(site.data['blog_stats']['lengths'])
 
       return unless site.config['profile']
 
@@ -219,12 +225,141 @@ module Jekyll
       with_share(counts.sort_by { |name, count| [-count, name] }, reviews)
     end
 
+    # The latest year at a glance: posts, days with a post, the longest run of
+    # consecutive days, the busiest day and month, and the change on last year.
+    def year_summary(posts)
+      year = posts.map { |post| post.date.year }.max
+      this_year = posts.select { |post| post.date.year == year }
+      by_day = this_year.group_by { |post| post.date.to_date }.transform_values(&:size)
+      days = by_day.keys.sort
+      streak = best = days.empty? ? 0 : 1
+      days.each_cons(2) do |a, b|
+        streak = (b - a).to_i == 1 ? streak + 1 : 1
+        best = [best, streak].max
+      end
+      busiest_day, busiest_count = by_day.max_by { |day, count| [count, day] } || [nil, 0]
+      by_month = this_year.group_by { |post| post.date.month }.transform_values(&:size)
+      busiest_month, busiest_month_count = by_month.max_by { |month, count| [count, -month] } || [nil, 0]
+      last = posts.count { |post| post.date.year == year - 1 }
+      {
+        'year' => year,
+        'posts' => this_year.size,
+        'days' => days.size,
+        'streak' => best,
+        'busiest_day' => busiest_day && { 'month' => busiest_day.month, 'day' => busiest_day.day, 'key' => busiest_day.strftime('%m-%d'), 'count' => busiest_count },
+        'busiest_month' => busiest_month && { 'month' => busiest_month, 'count' => busiest_month_count },
+        'last_year' => last,
+        'growth' => last.zero? ? nil : ((this_year.size - last) * 100.0 / last).round
+      }
+    end
+
+    # The latest year as a calendar: one column per week (Monday first), one
+    # cell per day. Days after the build date and outside the year are marked
+    # so the grid keeps its shape.
+    def day_grid(posts)
+      year = posts.map { |post| post.date.year }.max
+      counts = posts.select { |post| post.date.year == year }
+                    .group_by { |post| post.date.to_date }.transform_values(&:size)
+      today = @site.time.to_date
+      first = Date.new(year, 1, 1)
+      start = first - ((first.wday + 6) % 7)
+      last = Date.new(year, 12, 31)
+      weeks = []
+      day = start
+      while day <= last
+        weeks << (0..6).map do |offset|
+          date = day + offset
+          next { 'blank' => true } unless date.year == year
+
+          count = counts[date] || 0
+          {
+            'key' => date.strftime('%m-%d'),
+            'month' => date.month,
+            'day' => date.day,
+            'count' => count,
+            'level' => day_level(count),
+            'future' => date > today
+          }
+        end
+        day += 7
+      end
+      # a month label over the week that holds its first day
+      months = weeks.each_with_index.filter_map do |week, index|
+        cell = week.find { |c| !c['blank'] && c['day'] == 1 }
+        { 'index' => index, 'month' => cell['month'] } if cell
+      end
+      { 'year' => year, 'weeks' => weeks, 'months' => months }
+    end
+
+    def day_level(count)
+      case count
+      when 0 then 0
+      when 1 then 1
+      when 2 then 2
+      when 3..4 then 3
+      when 5..6 then 4
+      else 5
+      end
+    end
+
+    # A hundred cells split by type (largest remainder, so they add up to 100).
+    def waffle(types, total)
+      return [] if total.zero?
+
+      exact = types.map { |type| [type['name'], type['count'] * 100.0 / total] }
+      cells = exact.map { |name, value| [name, value.floor, value - value.floor] }
+      left = 100 - cells.sum { |_, floor, _| floor }
+      cells.sort_by { |_, _, rest| -rest }.first(left).each { |cell| cell[1] += 1 }
+      order = types.map { |type| type['name'] }
+      cells.sort_by { |name, _, _| order.index(name) }
+           .reject { |_, n, _| n.zero? }
+           .map { |name, n, _| { 'name' => name, 'cells' => n } }
+    end
+
+    # Cumulative start and end percentages for the length donut.
+    def with_arcs(lengths)
+      total = lengths.sum { |entry| entry['count'] }
+      at = 0.0
+      lengths.map do |entry|
+        from = at
+        at += total.zero? ? 0 : entry['count'] * 100.0 / total
+        entry.merge('from' => from.round(2), 'to' => at.round(2))
+      end
+    end
+
+    # Topic counts as treemap rows: the two largest, the next three, the rest.
+    # Each row's height follows its total; each tile's width follows its count.
+    def treemap(topics)
+      sizes = [2, 3]
+      rows = []
+      rest = topics.dup
+      sizes.each { |n| rows << rest.shift(n) unless rest.empty? }
+      rows << rest unless rest.empty?
+      rows.map { |items| { 'weight' => items.sum { |item| item['count'] }, 'items' => items } }
+    end
+
+    # Posts per year as points on a 900x180 chart.
+    def trend(posts)
+      by_year = posts.group_by { |post| post.date.year }.transform_values(&:size).sort
+      max = by_year.map(&:last).max.to_f
+      step = by_year.size > 1 ? 798.0 / (by_year.size - 1) : 0
+      by_year.each_with_index.map do |(year, count), index|
+        {
+          'year' => year,
+          'count' => count,
+          'x' => (40 + index * step).round,
+          'y' => (150 - count / max * 130).round
+        }
+      end
+    end
+
     def connections(posts)
       {
         'revised_posts' => posts.count { |post| post.data['revisions_total'].to_i.positive? },
         'revisions' => posts.sum { |post| post.data['revisions_total'].to_i },
-        'cited_posts' => posts.count { |post| post.data['backlinks_total'].to_i.positive? },
-        'citations' => posts.sum { |post| post.data['backlinks_total'].to_i }
+        # post-backlinks.rb leaves the posts that link to a post in `backlinks`
+        'cited_posts' => posts.count { |post| Array(post.data['backlinks']).any? },
+        'citations' => posts.sum { |post| Array(post.data['backlinks']).size }
       }
     end
   end

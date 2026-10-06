@@ -205,7 +205,7 @@ stats:
   legend_more: More
   what_title: What was written
   what_note: The mix of kinds of post in each year. The length of a bar is that year's total.
-  topics_title: Posts per topic
+  topics_title: Which questions got the most posts
   tags_title: Most used tags
   tags_note: Counted without the TIL log and the problem-solving notes, which would otherwise put one tag on top of the chart.
   depth_title: How long the posts are
@@ -225,6 +225,21 @@ stats:
   fact_citations: ":COUNT citations"
   fact_tags: Tags in use
   footnote: Everything is computed when the site is built. Visits and page views are not part of it.
+  year_days: "Days written in :YEAR"
+  year_days_value: ":DAYS days · :POSTS posts"
+  days_value: ":N days"
+  streak: Longest streak
+  busiest_day: Busiest day
+  busiest_month: Busiest month
+  vs_last_year: "Against :COUNT last year"
+  month_day: ":M/:D"
+  month_name: "M:M"
+  calendar_hint: Pick a day to open it on On This Day
+  waffle_note: One cell = 1%
+  donut_center: to read it all
+  treemap_note: Area = posts · pick to open the topic
+  trend_title: ":COUNT years"
+  trend_growth: ":PCT% on last year"
 
 on_this_day:
   eyebrow: The same date, other years

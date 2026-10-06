@@ -16,184 +16,151 @@ layout: page
   {% assign totals = stats.totals %}
 
   <div id="blog-stats" class="pl-xl-3">
-    {% capture stats_cards %}
-      <div class="page-hero-stats">
-        {% capture year_span %}{{ totals.first_year }}&ndash;{{ totals.last_year }}{% endcapture %}
-        {% include page-hero-stat.html lang=lang value=totals.years
-          unit_ko=loc_ko.unit_years unit_en=loc_en.unit_years label=year_span %}
-        {% include page-hero-stat.html lang=lang value=totals.posts
-          unit_ko=loc_ko.unit_posts unit_en=loc_en.unit_posts
-          label_ko=loc_ko.card_posts label_en=loc_en.card_posts %}
-        {% include page-hero-stat.html lang=lang value=totals.hours
-          unit_ko=loc_ko.unit_hours unit_en=loc_en.unit_hours
-          label_ko=loc_ko.card_hours label_en=loc_en.card_hours %}
-        {% capture series_label_ko %}{{ loc_ko.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
-        {% capture series_label_en %}{{ loc_en.card_series | replace: ':COUNT', totals.in_series }}{% endcapture %}
-        {% include page-hero-stat.html lang=lang value=totals.series
-          unit_ko=loc_ko.unit_series unit_en=loc_en.unit_series
-          label_ko=series_label_ko label_en=series_label_en %}
-      </div>
-    {% endcapture %}
-
     {% include page-hero.html
       lang=lang
       eyebrow_ko=loc_ko.eyebrow eyebrow_en=loc_en.eyebrow
       title_ko=tabs_ko.stats title_en=tabs_en.stats
-      summary_ko=loc_ko.description summary_en=loc_en.description
-      extra=stats_cards %}
+      summary_ko=loc_ko.description summary_en=loc_en.description %}
 
-    <!-- when -->
-    <section class="stats-section">
-      <h2 class="stats-section-title"
-        data-l10n-ko="{{ loc_ko.when_title | escape }}"
-        data-l10n-en="{{ loc_en.when_title | escape }}"
-      >{{ loc.when_title }}</h2>
-      <p class="stats-section-note"
-        data-l10n-ko="{{ loc_ko.when_note | escape }}"
-        data-l10n-en="{{ loc_en.when_note | escape }}"
-      >{{ loc.when_note }}</p>
+    {%- comment -%}
+      The latest year as a calendar: one cell a day, shaded by posts, with the
+      year's headline facts above it. A cell opens that date on /on-this-day/.
+    {%- endcomment -%}
+    {% assign yr = stats.year %}
+    {% assign grid = stats.days %}
+    <section class="stats-year">
+      <div class="stats-year-head">
+        <div class="stats-year-total">
+          <span>{{ loc.year_days | replace: ':YEAR', yr.year }}</span>
+          <b>{{ loc.year_days_value | replace: ':DAYS', yr.days | replace: ':POSTS', yr.posts }}</b>
+        </div>
+        <dl class="stats-year-facts">
+          <div><dt>{{ loc.streak }}</dt><dd>{{ loc.days_value | replace: ':N', yr.streak }}</dd></div>
+          {% if yr.busiest_day %}
+            <div><dt>{{ loc.busiest_day }}</dt><dd><a class="is-accent" href="{{ '/on-this-day/' | relative_url }}#{{ yr.busiest_day.key }}">{{ loc.month_day | replace: ':M', yr.busiest_day.month | replace: ':D', yr.busiest_day.day }} · {{ loc.count | replace: ':COUNT', yr.busiest_day.count }}</a></dd></div>
+          {% endif %}
+          {% if yr.busiest_month %}
+            {% assign bm = yr.busiest_month.month | prepend: '0' | slice: -2, 2 %}
+            <div><dt>{{ loc.busiest_month }}</dt><dd><a href="{{ '/archives/' | relative_url }}#archive-{{ yr.year }}-{{ bm }}">{{ loc.month_name | replace: ':M', yr.busiest_month.month }} · {{ loc.count | replace: ':COUNT', yr.busiest_month.count }}</a></dd></div>
+          {% endif %}
+          {% if yr.growth %}
+            <div><dt>{{ loc.vs_last_year | replace: ':COUNT', yr.last_year }}</dt><dd class="{% if yr.growth >= 0 %}is-up{% else %}is-down{% endif %}">{% if yr.growth >= 0 %}+{% endif %}{{ yr.growth }}%</dd></div>
+          {% endif %}
+        </dl>
+      </div>
 
-      <div class="stats-heatmap">
-        {% for row in stats.weeks %}
-          <div class="stats-heatmap-row">
-            <span class="stats-heatmap-year">{{ row.year }}</span>
-            <div class="stats-heatmap-weeks">
-              {% for cell in row.cells %}
-                <i
-                  class="stats-heatmap-cell"
-                  data-level="{{ cell.level }}"
-                  title="{{ row.year }} · {{ loc.week | replace: ':WEEK', cell.week }} · {{ loc.count | replace: ':COUNT', cell.count }}"
-                ></i>
-              {% endfor %}
-            </div>
-            <span class="stats-heatmap-total">{{ row.total }}</span>
+      <div class="stats-calendar" role="img" aria-label="{{ loc.year_days | replace: ':YEAR', yr.year }} {{ loc.year_days_value | replace: ':DAYS', yr.days | replace: ':POSTS', yr.posts }}">
+          <div class="stats-calendar-months" aria-hidden="true" style="--weeks: {{ grid.weeks.size }}">
+            {% for m in grid.months %}<span style="grid-column: {{ m.index | plus: 1 }}">{{ loc.month_name | replace: ':M', m.month }}</span>{% endfor %}
           </div>
-        {% endfor %}
+          <div class="stats-calendar-grid" style="--weeks: {{ grid.weeks.size }}">
+            {% for week in grid.weeks %}
+              {% for cell in week %}
+                {% if cell.blank %}
+                  <span class="stats-day is-blank"></span>
+                {% elsif cell.future %}
+                  <span class="stats-day is-future"></span>
+                {% else %}
+                  <a class="stats-day{% if yr.busiest_day and cell.key == yr.busiest_day.key %} is-peak{% endif %}" data-level="{{ cell.level }}" href="{{ '/on-this-day/' | relative_url }}#{{ cell.key }}" title="{{ loc.month_day | replace: ':M', cell.month | replace: ':D', cell.day }} · {{ loc.count | replace: ':COUNT', cell.count }}"></a>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </div>
+      </div>
+      <div class="stats-legend">
+        <span>{{ loc.legend_less }}</span>
+        {% for level in (0..5) %}<i class="stats-day" data-level="{{ level }}"></i>{% endfor %}
+        <span>{{ loc.legend_more }}</span>
+        <span class="stats-legend-hint">{{ loc.calendar_hint }}</span>
+      </div>
+    </section>
 
-        <div class="stats-legend">
-          <span data-l10n-ko="{{ loc_ko.legend_less | escape }}" data-l10n-en="{{ loc_en.legend_less | escape }}">{{ loc.legend_less }}</span>
-          {% for level in (0..4) %}
-            <i class="stats-heatmap-cell" data-level="{{ level }}"></i>
-          {% endfor %}
-          <span data-l10n-ko="{{ loc_ko.legend_more | escape }}" data-l10n-en="{{ loc_en.legend_more | escape }}">{{ loc.legend_more }}</span>
+    <section class="stats-columns">
+      <div class="stats-panel">
+        <div class="stats-panel-head">
+          <h2 class="stats-section-title">{{ loc.what_title }}</h2>
+          <span class="stats-section-note">{{ loc.waffle_note }}</span>
+        </div>
+        <div class="stats-panel-body">
+          <div class="stats-waffle" aria-hidden="true">
+            {% for part in stats.waffle %}
+              {% for i in (1..part.cells) %}<span style="--type-color: var(--type-{{ part.name }}, var(--text-muted-color))"></span>{% endfor %}
+            {% endfor %}
+          </div>
+          <ul class="stats-keys">
+            {% for part in stats.waffle %}
+              {% assign type = site.data.content_types[part.name] %}
+              {% assign entry = stats.types | where: 'name', part.name | first %}
+              <li style="--type-color: var(--type-{{ part.name }}, var(--text-muted-color))">
+                <a href="{{ '/types/' | append: part.name | append: '/' | relative_url }}">{{ type.title[lang] | default: type.title.en | default: part.name }}</a>
+                <b>{{ entry.count }}</b>
+                <span>{{ part.cells }}%</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="stats-panel">
+        <div class="stats-panel-head">
+          <h2 class="stats-section-title">{{ loc.depth_title }}</h2>
+        </div>
+        <div class="stats-panel-body">
+          {% capture donut %}{% for entry in stats.lengths %}var(--bucket-{{ entry.name }}) {{ entry.from }}% {{ entry.to }}%{% unless forloop.last %}, {% endunless %}{% endfor %}{% endcapture %}
+          <div class="stats-donut" style="background: conic-gradient({{ donut | strip }})" role="img" aria-label="{{ loc.depth_title }}">
+            <div><b>{{ totals.hours }}h</b><span>{{ loc.donut_center }}</span></div>
+          </div>
+          <ul class="stats-keys">
+            {% for entry in stats.lengths %}
+              <li style="--type-color: var(--bucket-{{ entry.name }})">
+                <span class="stats-key-label">{{ loc.bucket[entry.name] }}</span>
+                <b>{{ entry.count }}</b>
+                <span>{{ entry.of_total }}%</span>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- what -->
-    <section class="stats-section">
-      <h2 class="stats-section-title"
-        data-l10n-ko="{{ loc_ko.what_title | escape }}"
-        data-l10n-en="{{ loc_en.what_title | escape }}"
-      >{{ loc.what_title }}</h2>
-      <p class="stats-section-note"
-        data-l10n-ko="{{ loc_ko.what_note | escape }}"
-        data-l10n-en="{{ loc_en.what_note | escape }}"
-      >{{ loc.what_note }}</p>
-
-      <div class="stats-stacks">
-        {% for row in stats.type_by_year %}
-          <div class="stats-stack-row">
-            <span class="stats-stack-year">{{ row.year }}</span>
-            <div class="stats-stack-track">
-            <div class="stats-stack" style="width: {{ row.share }}%">
-              {% for part in row.parts %}
-                {% assign type = site.data.content_types[part.name] %}
-                {% assign type_label = type.title[lang] | default: type.title.en | default: part.name %}
-                <span
-                  class="stats-stack-part"
-                  data-type="{{ part.name }}"
-                  style="flex-grow: {{ part.count }}"
-                  title="{{ row.year }} · {{ type_label }} · {{ loc.count | replace: ':COUNT', part.count }}"
-                ></span>
-              {% endfor %}
-            </div>
-            </div>
-            <span class="stats-stack-total">{{ row.total }}</span>
+    <section class="stats-panel">
+      <div class="stats-panel-head">
+        <h2 class="stats-section-title">{{ loc.topics_title }}</h2>
+        <span class="stats-section-note">{{ loc.treemap_note }}</span>
+      </div>
+      <div class="stats-treemap">
+        {% for row in stats.treemap %}
+          <div class="stats-treemap-row" style="flex: {{ row.weight }}">
+            {% for entry in row.items %}
+              {% assign topic = site.topics | where: 'topic_id', entry.name | first %}
+              <a class="stats-tile" style="flex: {{ entry.count }}; --tone: var(--accent-{{ topic.tone | default: 'purple' }})" href="{{ topic.url | default: '/topics/' | relative_url }}">
+                <b>{{ topic.title | default: entry.name }}</b>
+                <span>{{ entry.count }}</span>
+              </a>
+            {% endfor %}
           </div>
         {% endfor %}
-
-        <div class="stats-legend stats-legend-types">
-          {% for entry in stats.types %}
-            {% assign type = site.data.content_types[entry.name] %}
-            <span class="stats-legend-type">
-              <i class="stats-stack-part" data-type="{{ entry.name }}"></i>
-              <span
-                data-l10n-ko="{{ type.title['ko-KR'] | default: entry.name | escape }}"
-                data-l10n-en="{{ type.title.en | default: entry.name | escape }}"
-              >{{ type.title[lang] | default: type.title.en | default: entry.name }}</span>
-              <b>{{ entry.count }}</b>
-            </span>
-          {% endfor %}
-        </div>
       </div>
     </section>
 
-    <!-- subjects -->
-    <section class="stats-section stats-columns">
-      <div>
-        <h2 class="stats-section-title"
-          data-l10n-ko="{{ loc_ko.topics_title | escape }}"
-          data-l10n-en="{{ loc_en.topics_title | escape }}"
-        >{{ loc.topics_title }}</h2>
-        <ul class="stats-bars">
-          {% for entry in stats.topics %}
-            {% assign topic = site.topics | where: 'topic_id', entry.name | first %}
-            <li class="stats-bar-row">
-              <a class="stats-bar-label" href="{{ topic.permalink | default: '/topics/' | relative_url }}">{{ topic.title | default: entry.name }}</a>
-              <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
-              <span class="stats-bar-value">{{ entry.count }}</span>
-            </li>
-          {% endfor %}
-        </ul>
+    <section class="stats-panel">
+      <div class="stats-panel-head">
+        <h2 class="stats-section-title">{{ loc.trend_title | replace: ':COUNT', totals.years }}</h2>
+        {% if yr.growth %}<span class="stats-section-note {% if yr.growth >= 0 %}is-up{% else %}is-down{% endif %}">{% capture growth_text %}{% if yr.growth >= 0 %}+{% endif %}{{ yr.growth }}{% endcapture %}{{ loc.trend_growth | replace: ':PCT', growth_text }}</span>{% endif %}
       </div>
-
-      <div>
-        <h2 class="stats-section-title"
-          data-l10n-ko="{{ loc_ko.tags_title | escape }}"
-          data-l10n-en="{{ loc_en.tags_title | escape }}"
-        >{{ loc.tags_title }}</h2>
-        <p class="stats-section-note"
-          data-l10n-ko="{{ loc_ko.tags_note | escape }}"
-          data-l10n-en="{{ loc_en.tags_note | escape }}"
-        >{{ loc.tags_note }}</p>
-        <ul class="stats-bars">
-          {% for entry in stats.tags %}
-            {% assign tag_slug = entry.name | slugify %}
-            <li class="stats-bar-row">
-              <a class="stats-bar-label" href="{{ '/tags/' | append: tag_slug | append: '/' | relative_url }}">{{ entry.name }}</a>
-              <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
-              <span class="stats-bar-value">{{ entry.count }}</span>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </section>
-
-    <!-- depth -->
-    <section class="stats-section">
-      <h2 class="stats-section-title"
-        data-l10n-ko="{{ loc_ko.depth_title | escape }}"
-        data-l10n-en="{{ loc_en.depth_title | escape }}"
-      >{{ loc.depth_title }}</h2>
-      <p class="stats-section-note"
-        data-l10n-ko="{{ loc_ko.depth_note | escape }}"
-        data-l10n-en="{{ loc_en.depth_note | escape }}"
-      >{{ loc.depth_note }}</p>
-
-      <div class="stats-buckets">
-        {% for entry in stats.lengths %}
-          <article class="stats-bucket" data-bucket="{{ entry.name }}">
-            <strong>{{ entry.count }}</strong>
-            <span class="stats-bucket-name"
-              data-l10n-ko="{{ loc_ko.bucket[entry.name] | escape }}"
-              data-l10n-en="{{ loc_en.bucket[entry.name] | escape }}"
-            >{{ loc.bucket[entry.name] }}</span>
-            <span class="stats-bucket-share">{{ entry.of_total }}%</span>
-            <span class="stats-bar" style="--fill: {{ entry.share }}%"></span>
-          </article>
+      {% assign pts = '' %}
+      {% for p in stats.trend %}{% capture pts %}{{ pts }}{{ p.x }},{{ p.y }} {% endcapture %}{% endfor %}
+      {% assign first_pt = stats.trend | first %}
+      {% assign last_pt = stats.trend | last %}
+      <svg class="stats-trend" viewBox="0 0 900 180" role="img" aria-label="{% for p in stats.trend %}{{ p.year }} {{ p.count }}{% unless forloop.last %}, {% endunless %}{% endfor %}">
+        <polygon class="stats-trend-area" points="{{ first_pt.x }},150 {{ pts | strip }} {{ last_pt.x }},150"></polygon>
+        <polyline class="stats-trend-line" points="{{ pts | strip }}"></polyline>
+        {% for p in stats.trend %}
+          <circle class="stats-trend-dot{% if forloop.last %} is-last{% endif %}" cx="{{ p.x }}" cy="{{ p.y }}" r="{% if forloop.last %}7{% else %}5{% endif %}"></circle>
+          <text class="stats-trend-value{% if forloop.last %} is-last{% endif %}" x="{{ p.x }}" y="{{ p.y | minus: 12 }}">{{ p.count }}</text>
+          <text class="stats-trend-year" x="{{ p.x }}" y="174">{{ p.year }}</text>
         {% endfor %}
-      </div>
+      </svg>
     </section>
 
     <!-- read, revised, linked -->
@@ -243,6 +210,19 @@ layout: page
             <dd>{{ totals.tags }}<small>{{ loc.unit_tags }}</small></dd>
           </div>
         </dl>
+      </div>
+    </section>
+
+    <section class="stats-panel">
+      <div class="stats-panel-head">
+        <h2 class="stats-section-title">{{ loc.tags_title }}</h2>
+        <span class="stats-section-note">{{ loc.tags_note }}</span>
+      </div>
+      <div class="stats-tag-chips">
+        {% for entry in stats.tags %}
+          {% assign tag_slug = entry.name | slugify %}
+          <a href="{{ '/tags/' | append: tag_slug | append: '/' | relative_url }}">{{ entry.name }} <b>{{ entry.count }}</b></a>
+        {% endfor %}
       </div>
     </section>
 
