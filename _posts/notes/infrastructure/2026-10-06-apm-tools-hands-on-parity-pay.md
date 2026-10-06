@@ -74,7 +74,7 @@ flowchart TD
 
 ## 백엔드를 바꿔도 숫자가 안 움직이면 에이전트를 재고 있는 것이다
 
-같은 묶음에서 백엔드만 Tempo로 바꾼 팔을 하나 더 돌렸다. 에이전트는 그대로 OTel이고 컬렉터의 내보낼 곳만 다르다.
+처음 팔별로 몰아서 돌린 묶음에서 백엔드만 Tempo로 바꾼 팔을 하나 더 돌렸다. 그래서 아래 Jaeger 값은 앞 표의 첫 줄(54,269)과 같다. 에이전트는 그대로 OTel이고 컬렉터의 내보낼 곳만 다르다.
 
 | 팔 | 승인 건수 |
 | --- | ---: |
@@ -111,9 +111,9 @@ SkyWalking은 OTLP도 받지만, 자기 Java 에이전트를 썼을 때 보여 �
 
 컨테이너 수보다 막힌 횟수가 시간을 먹었다.
 
-**SkyWalking은 세 번 막혔다.** 먼저 `SW_STORAGE=h2`로 띄우자 `no provider found for module storage`로 종료했다. 10.x 이미지의 `oap-libs`에는 `storage-banyandb-plugin`만 들어 있다. 메모리나 임베디드 저장소로 가볍게 띄워 보는 경로가 없다. 다음으로 BanyanDB 최신 버전인 0.11.1을 붙이자 `Incompatible BanyanDB server API version: 0.11. But accepted versions: 0.10`으로 종료했다. 0.10.3으로 내리자 이번에는 앞 버전이 쓴 볼륨을 읽지 못해 `unknown field "created…"`로 종료했다. 볼륨을 지우고서야 떴다.
+SkyWalking은 세 번 막혔다. 먼저 `SW_STORAGE=h2`로 띄우자 `no provider found for module storage`로 종료했다. 10.x 이미지의 `oap-libs`에는 `storage-banyandb-plugin`만 들어 있다. 메모리나 임베디드 저장소로 가볍게 띄워 보는 경로가 없다. 다음으로 BanyanDB 최신 버전인 0.11.1을 붙이자 `Incompatible BanyanDB server API version: 0.11. But accepted versions: 0.10`으로 종료했다. 0.10.3으로 내리자 이번에는 앞 버전이 쓴 볼륨을 읽지 못해 `unknown field "created…"`로 종료했다. 볼륨을 지우고서야 떴다.
 
-**SigNoz는 한 번 막혔는데 그 한 번이 끝까지 안 풀렸다.** 2025년에 docker-compose 설치가 폐기되고 전용 설치기로 옮겨서, 공식 안내는 `curl … | bash`다. 이 실험은 같은 일을 단계로 나눠 했다. 공식 릴리스의 tarball과 checksums를 받아 sha256을 검증한 뒤 설치하는 방식이다. 컨테이너는 6개가 떴지만 ClickHouse 분산 DDL 스키마 마이그레이션이 10분 넘게 끝나지 않았고, 그동안 수집기가 OTLP를 받지 않아 트레이스가 한 건도 들어오지 않았다. 중간에 컨테이너를 recreate 했더니 클러스터 메타데이터에 죽은 복제본 호스트가 남아(`Cannot resolve host (a39b5c2f3c57)`) 마이그레이션이 영원히 끝나지 않는 상태가 됐다. 볼륨까지 지우고 한 번에 올려야 했다.
+SigNoz는 한 번 막혔는데 그 한 번이 끝까지 안 풀렸다. 2025년에 docker-compose 설치가 폐기되고 전용 설치기로 옮겨서, 공식 안내는 `curl … | bash`다. 이 실험은 같은 일을 단계로 나눠 했다. 공식 릴리스의 tarball과 checksums를 받아 sha256을 검증한 뒤 설치하는 방식이다. 컨테이너는 6개가 떴지만 ClickHouse 분산 DDL 스키마 마이그레이션이 10분 넘게 끝나지 않았고, 그동안 수집기가 OTLP를 받지 않아 트레이스가 한 건도 들어오지 않았다. 중간에 컨테이너를 recreate 했더니 클러스터 메타데이터에 죽은 복제본 호스트가 남아(`Cannot resolve host (a39b5c2f3c57)`) 마이그레이션이 영원히 끝나지 않는 상태가 됐다. 볼륨까지 지우고 한 번에 올려야 했다.
 
 Jaeger는 막히지 않았지만 기본값이 위험했다. all-in-one의 메모리 저장소는 상한이 없어서, 전량 샘플링 부하에서 자라다가 컨테이너가 두 번 OOM으로 죽었다(`Exited (137)`). `MEMORY_MAX_TRACES=20000`과 `mem_limit: 1g`로 묶자 이번에는 보관이 수 분으로 줄었다. 1시간 조회가 0건이고 방금 넣은 부하만 보인다. Outbox 발행기와 복구 작업, 불변조건 지표가 쉬지 않고 스팬 하나짜리 트레이스를 만들어 링버퍼를 밀어내기 때문이다. 배경 작업이 많은 애플리케이션에서는 "메모리 저장소로 일단 띄워 보기"가 생각보다 짧은 창만 준다.
 
