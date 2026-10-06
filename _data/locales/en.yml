@@ -494,6 +494,18 @@ about:
   activity_ai_sessions: sessions
   activity_ai_produced: tokens produced
   activity_ai_note: Only tokens the model generated. Cache reads are the same context read again, not work done, so they are left out.
+  hero_blog_line: This blog keeps the practical judgement and the experiment results that come out of breaking problems down.
+  jump_label: On this page
+  evidence_title: Capabilities and evidence
+  evidence_map: Capability map ›
+  evidence_col_capability: Capability
+  evidence_col_question: Question measured
+  evidence_col_result: Result
+  evidence_more: "All :COUNT measured experiments ›"
+  activity_totals: ":COMMITS commits · :TESTS test files"
+  activity_rest: Other repositories
+  activity_stack_cloud_note: Text size is how many projects used the technology.
+  activity_ai_share: Share of generated tokens
   technical_focus: Technical Focus
   profile_hub_eyebrow: Profile Hub
   profile_hub_title: Where to go next

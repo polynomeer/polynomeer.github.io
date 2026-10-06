@@ -22,6 +22,9 @@ clusters:
 
 nodes:
   - id: database-internals
+    # the About page colour and the measurement it pairs with this capability
+    accent: green
+    about_evidence: { experiment: isolation-anomalies-experiment }
     cluster: systems
     x: 18
     y: 58
@@ -47,6 +50,9 @@ nodes:
       - _posts/notes/database/2025-08-17-db-replication.md
 
   - id: settlement-consistency
+    # the About page colour and the measurement it pairs with this capability
+    accent: orange
+    about_evidence: { post: _posts/notes/common/2026-01-03-bulk-insert-with-lock-part4.md, figure: 0, label: { ko-KR: 실무 기록, en: Production record } }
     cluster: systems
     x: 50
     y: 70
@@ -84,6 +90,9 @@ nodes:
         url: /posts/bulk-insert-with-lock-part1/
 
   - id: payment-consistency
+    # the About page colour and the measurement it pairs with this capability
+    accent: pink
+    about_evidence: { experiment: parity-pay-model-checking }
     cluster: systems
     x: 80
     y: 82
@@ -130,6 +139,9 @@ nodes:
         url: https://github.com/polynomeer/parity-pay
 
   - id: spring-backend
+    # the About page colour and the measurement it pairs with this capability
+    accent: yellow
+    about_evidence: { experiment: tomcat-thread-exhaustion }
     cluster: application
     x: 28
     y: 20
@@ -155,6 +167,9 @@ nodes:
       - _posts/notes/spring/2025-05-13-transactional-event-listener.md
 
   - id: architecture-judgment
+    # the About page colour and the measurement it pairs with this capability
+    accent: purple
+    about_evidence: { experiment: monticker-partition-ordering }
     cluster: judgment
     x: 72
     y: 30

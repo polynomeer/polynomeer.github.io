@@ -1,0 +1,85 @@
+{%- comment -%}
+  역량과 근거: one row per capability - the capability, the measurement
+  question it was tested with, and the result.
+
+  Each capability in _data/capability_map.yml names its evidence in
+  `about_evidence`: an `experiment` slug (the question and the key figure come
+  from _data/experiments.yml, as on /experiments/), or a `post` path with the
+  index of one of its `figures`. `accent` is the row colour. A row whose post
+  is hidden drops out.
+{%- endcomment -%}
+{%- assign cmap = site.data.capability_map -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- assign exp_loc = site.data.locales[lang].experiments -%}
+{%- if cmap and cmap.enabled -%}
+<section class="about-evidence" id="about-evidence" aria-labelledby="about-evidence-title">
+  <div class="about-section-head">
+    <h2 id="about-evidence-title">{{ loc.evidence_title }}</h2>
+    <a href="{{ '/capabilities/' | relative_url }}">{{ loc.evidence_map }}</a>
+  </div>
+  <div class="about-evidence-labels" aria-hidden="true"><span>{{ loc.evidence_col_capability }}</span><span>{{ loc.evidence_col_question }}</span><span>{{ loc.evidence_col_result }}</span></div>
+
+  <ul class="about-evidence-rows">
+    {%- for node in cmap.nodes -%}
+      {%- assign ev = node.about_evidence -%}
+      {%- unless ev -%}{%- continue -%}{%- endunless -%}
+      {%- assign post = nil -%}
+      {%- assign item = nil -%}
+      {%- assign lab_id = nil -%}
+      {%- if ev.experiment -%}
+        {%- for lab in site.data.experiments.labs -%}
+          {%- for candidate in lab.items -%}
+            {%- if candidate.slug == ev.experiment -%}{%- assign item = candidate -%}{%- assign lab_id = lab.id -%}{%- break -%}{%- endif -%}
+          {%- endfor -%}
+          {%- if item -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+        {%- if item -%}{%- assign post = site.posts | where_exp: 'p', 'p.url contains item.slug' | first -%}{%- endif -%}
+      {%- elsif ev.post -%}
+        {%- assign post = site.posts | where: 'path', ev.post | first -%}
+      {%- endif -%}
+      {%- unless post -%}{%- continue -%}{%- endunless -%}
+      <li>
+        <a class="about-evidence-row" href="{{ post.url | relative_url }}" style="--tone: var(--accent-{{ node.accent | default: 'purple' }})">
+          <span class="about-evidence-capability">
+            <span class="about-evidence-icon" aria-hidden="true"><i class="{{ node.icon }}"></i></span>
+            <b data-l10n-ko="{{ node.title['ko-KR'] | escape }}" data-l10n-en="{{ node.title.en | escape }}">{% include localized-value.html value=node.title lang=lang %}</b>
+          </span>
+          <span class="about-evidence-question">
+            {%- if item -%}
+              <span class="about-evidence-source">{{ lab_id }}</span>
+              <span data-l10n-ko="{{ item.question['ko-KR'] | escape }}" data-l10n-en="{{ item.question.en | escape }}">{% include localized-value.html value=item.question lang=lang %}</span>
+            {%- else -%}
+              <span class="about-evidence-source" data-l10n-ko="{{ ev.label['ko-KR'] | escape }}" data-l10n-en="{{ ev.label.en | escape }}">{% include localized-value.html value=ev.label lang=lang %}</span>
+              <span>{{ post.title }}</span>
+            {%- endif -%}
+          </span>
+          <span class="about-evidence-result">
+            {%- if item and item.key -%}
+              <span class="about-evidence-result-label" data-l10n-ko="{{ item.key.label['ko-KR'] | escape }}" data-l10n-en="{{ item.key.label.en | escape }}">{% include localized-value.html value=item.key.label lang=lang %}</span>
+              {%- if item.key.before -%}
+                <span class="about-evidence-value{% if item.key.worse %} is-worse{% endif %}"><span class="is-before">{{ item.key.before }}</span> → <span class="is-after">{{ item.key.after }}</span></span>
+              {%- else -%}
+                <span class="about-evidence-value is-single">{% include localized-value.html value=item.key.value lang=lang %}</span>
+              {%- endif -%}
+            {%- elsif ev.figure != nil and node.figures -%}
+              {%- assign fig = node.figures[ev.figure] -%}
+              <span class="about-evidence-result-label">{% include localized-value.html value=fig.label lang=lang %}</span>
+              {%- assign parts = fig.value | split: ' → ' -%}
+              {%- if parts.size == 2 -%}
+                <span class="about-evidence-value"><span class="is-before">{{ parts[0] }}</span> → <span class="is-after">{{ parts[1] }}</span></span>
+              {%- else -%}
+                <span class="about-evidence-value is-single">{{ fig.value }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          </span>
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  {%- assign total = 0 -%}
+  {%- for lab in site.data.experiments.labs -%}{%- assign total = total | plus: lab.items.size -%}{%- endfor -%}
+  <a class="about-more" href="{{ '/experiments/' | relative_url }}">{{ loc.evidence_more | replace: ':COUNT', total }}</a>
+</section>
+{%- endif -%}

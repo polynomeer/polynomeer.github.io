@@ -1,22 +1,59 @@
+{%- comment -%}
+  대표 글 on About: the first representative post as a feature card (its
+  summary and, when it has one, its `figure`), then three more as small
+  cards. Posts already shown as evidence above (capability_map
+  `about_evidence.post`) are skipped so the page does not repeat itself.
+{%- endcomment -%}
 {%- assign representative = site.data.representative_posts -%}
 {%- assign lang = include.lang | default: site.lang -%}
+{%- assign tones = 'green,cyan,purple,red,orange,pink' | split: ',' -%}
 {%- if representative and representative.enabled and representative.items -%}
-<section class="about-representative" id="representative-posts">
-<h2 class="about-portfolio-eyebrow" data-i18n="panel.representative_posts">{{ site.data.locales[lang].panel.representative_posts }}</h2>
-<ul class="about-representative-list">
-{%- for item in representative.items limit: 6 -%}
-{%- assign matched = site.posts | where: 'path', item.path | first -%}
-{%- if matched -%}
-<li>
-<a href="{{ matched.url | relative_url }}">{{ matched.title }}</a>
-{%- if item.capability -%}
-<span class="about-representative-capability" data-l10n-ko="{{ item.capability['ko-KR'] | escape }}" data-l10n-en="{{ item.capability.en | escape }}">
-{%- include localized-value.html value=item.capability lang=lang -%}
-</span>
-{%- endif -%}
-</li>
-{%- endif -%}
-{%- endfor -%}
-</ul>
+  {%- assign shown_paths = site.data.capability_map.nodes | map: 'about_evidence' | map: 'post' | compact -%}
+  {%- assign picked = '' | split: '' -%}
+  {%- for item in representative.items -%}
+    {%- if shown_paths contains item.path -%}{%- continue -%}{%- endif -%}
+    {%- assign matched = site.posts | where: 'path', item.path | first -%}
+    {%- if matched -%}{%- assign picked = picked | push: item -%}{%- endif -%}
+    {%- if picked.size == 4 -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if picked.size > 0 -%}
+<section class="about-representative" id="representative-posts" aria-labelledby="about-representative-title">
+  <div class="about-section-head">
+    <h2 id="about-representative-title" data-i18n="panel.representative_posts">{{ site.data.locales[lang].panel.representative_posts }}</h2>
+  </div>
+  <div class="about-representative-grid">
+    {%- for item in picked -%}
+      {%- assign matched = site.posts | where: 'path', item.path | first -%}
+      {%- assign tone = tones[forloop.index0] -%}
+      {%- if forloop.first -%}
+        <a class="about-feature" href="{{ matched.url | relative_url }}" style="--tone: var(--accent-{{ tone }})">
+          <span class="about-feature-copy">
+            {%- if item.capability -%}<span class="about-feature-label" data-l10n-ko="{{ item.capability['ko-KR'] | escape }}" data-l10n-en="{{ item.capability.en | escape }}">{% include localized-value.html value=item.capability lang=lang %}</span>{%- endif -%}
+            <b>{{ matched.title }}</b>
+            {%- if item.summary -%}<span class="about-feature-summary" data-l10n-ko="{{ item.summary['ko-KR'] | escape }}" data-l10n-en="{{ item.summary.en | escape }}">{% include localized-value.html value=item.summary lang=lang %}</span>{%- endif -%}
+          </span>
+          {%- if item.figure -%}
+            {%- assign parts = item.figure.value | split: ' → ' -%}
+            <span class="about-feature-figure">
+              <span>{% include localized-value.html value=item.figure.label lang=lang %}</span>
+              <b>{% if parts.size == 2 %}<span class="is-before">{{ parts[0] }}</span> → <span class="is-after">{{ parts[1] }}</span>{% else %}{{ item.figure.value }}{% endif %}</b>
+            </span>
+          {%- endif -%}
+        </a>
+        <div class="about-representative-side">
+      {%- else -%}
+          <a class="about-side-card" href="{{ matched.url | relative_url }}" style="--tone: var(--accent-{{ tone }})">
+            <span class="about-side-strip" aria-hidden="true"></span>
+            <span class="about-side-copy">
+              {%- if item.capability -%}<span class="about-side-label" data-l10n-ko="{{ item.capability['ko-KR'] | escape }}" data-l10n-en="{{ item.capability.en | escape }}">{% include localized-value.html value=item.capability lang=lang %}</span>{%- endif -%}
+              <b>{{ matched.title }}</b>
+            </span>
+            {%- if item.figure -%}<span class="about-side-figure">{{ item.figure.value | replace: ' → ', '→' }}</span>{%- endif -%}
+          </a>
+      {%- endif -%}
+    {%- endfor -%}
+        </div>
+  </div>
 </section>
+  {%- endif -%}
 {%- endif -%}

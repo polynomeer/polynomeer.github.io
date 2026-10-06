@@ -5,6 +5,7 @@ description:
 
 items:
   - path: _posts/notes/parity-pay/2026-09-15-parity-pay-lock-hold-time.md
+    figure: { label: { ko-KR: 잠금 보유, en: Lock hold }, value: "17ms → 1ms" }
     summary:
       ko-KR: 동일 지갑 경합의 원인을 추론에서 측정으로 바꾸고, 잠금을 필요 이상으로 오래 쥐던 결함과 측정 방법의 실수까지 기록한 글입니다.
       en: Turns a same-wallet contention diagnosis from inference into measurement, and records the excess lock hold defect along with the measurement mistakes made on the way.
@@ -29,6 +30,7 @@ items:
       en: Consistency and state transition design
     surfaces: [recruit, panel]
   - path: _posts/notes/common/2026-01-25-sequence-part3.md
+    figure: { label: { ko-KR: 계약 생성, en: Contract creation }, value: "2분 → 10초" }
     summary:
       ko-KR: 시퀀스 채번을 INSERT 시점으로 옮기고 범위 단위로 받아 계약 생성 시간을 2분에서 10초로 줄인 구조 변경과, 결번을 허용한 판단을 다룹니다.
       en: Covers moving sequence allocation to INSERT time with range allocation, cutting contract creation from 2 minutes to 10 seconds, and the decision to accept gaps.

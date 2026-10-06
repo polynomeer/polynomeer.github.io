@@ -489,6 +489,18 @@ about:
   activity_ai_sessions: 세션
   activity_ai_produced: 생성 토큰
   activity_ai_note: 모델이 생성한 토큰만입니다. 캐시 재읽기는 같은 맥락을 다시 읽은 양이라 작업량이 아니어서 뺐습니다.
+  hero_blog_line: 이 블로그에는 그렇게 쪼개 가며 얻은 실무적 판단과 실험 결과를 남깁니다.
+  jump_label: 이 페이지
+  evidence_title: 역량과 근거
+  evidence_map: 역량 맵 ›
+  evidence_col_capability: 역량
+  evidence_col_question: 직접 재 본 질문
+  evidence_col_result: 결과
+  evidence_more: "실측 기록 :COUNT편 전부 ›"
+  activity_totals: "커밋 :COMMITS · 테스트 파일 :TESTS"
+  activity_rest: 그 밖의 저장소
+  activity_stack_cloud_note: 글자 크기는 그 기술을 쓴 프로젝트 수입니다.
+  activity_ai_share: 생성 토큰 비율
   technical_focus: 기술 집중 분야
   profile_hub_eyebrow: 프로필 허브
   profile_hub_title: 더 볼 곳

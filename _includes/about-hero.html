@@ -1,0 +1,100 @@
+{%- comment -%}
+  The About page's opening card: the motto and a sentence on what the blog
+  keeps, topic chips, and the terminal (the same lines as the GitHub profile
+  banner, with the job status as its last command). Below, the three figures
+  counted from site data, then contacts: the email first, the resume and
+  portfolio next to it, GitHub and LinkedIn as plain links.
+
+    {% include about-hero.html lang=lang title=... subtitle=... %}
+
+  Figures are counted here, never written into data: a written number stays
+  put while the posts grow and one day becomes untrue.
+{%- endcomment -%}
+{%- assign intro = site.data.about_intro -%}
+{%- assign lang = include.lang | default: site.lang -%}
+{%- assign loc = site.data.locales[lang].about -%}
+{%- assign term = intro.terminal -%}
+{%- assign title_words = include.title | split: ' ' -%}
+{%- assign last_word = title_words | last -%}
+{%- assign lead_words = title_words | pop | join: ' ' -%}
+
+<section class="about-hero" aria-labelledby="about-hero-title">
+  <div class="about-hero-top">
+    <div class="about-hero-copy">
+      <p class="about-hero-eyebrow">Backend Engineer</p>
+      <h1 id="about-hero-title" class="about-hero-title">{{ lead_words }}<br><span>{{ last_word }}</span></h1>
+      <p class="about-hero-summary">
+        <span data-l10n-ko="{{ include.subtitle_ko | escape }}" data-l10n-en="{{ include.subtitle_en | escape }}">{% if lang == 'en' %}{{ include.subtitle_en }}{% else %}{{ include.subtitle_ko }}{% endif %}</span>
+        <span data-i18n="about.hero_blog_line">{{ loc.hero_blog_line }}</span>
+      </p>
+      {%- assign topics = site.topics | sort: 'order' -%}
+      {%- if topics.size > 0 -%}
+        <div class="about-hero-topics">
+          {%- for topic in topics -%}
+            <a href="{{ topic.url | relative_url }}" style="--tone: var(--accent-{{ topic.tone | default: 'purple' }})">{{ topic.title }}</a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if term and term.lines -%}
+      <div class="about-terminal-window" role="img" aria-label="{% for l in term.lines %}{{ l.text | escape }}{% unless forloop.last %} · {% endunless %}{% endfor %}">
+        <div class="about-terminal-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="about-terminal-body" aria-hidden="true">
+          {%- for l in term.lines -%}
+            {%- if l.prompt -%}
+              <div><b>$</b>{{ l.text | remove_first: '$' }}</div>
+            {%- elsif forloop.last -%}
+              {%- comment -%} the interests, one colour each {%- endcomment -%}
+              {%- assign interests = l.text | split: ', ' -%}
+              <div class="about-terminal-interests">{% for word in interests %}<span class="tone-{{ forloop.index0 | modulo: 3 }}">{{ word }}</span>{% unless forloop.last %}, {% endunless %}{% endfor %}</div>
+            {%- else -%}
+              <div class="about-terminal-out">{{ l.text }}</div>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if intro.status -%}
+            <div><b>$</b> status</div>
+            <div class="about-terminal-status">● {% include localized-value.html value=intro.status lang=lang %}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="about-hero-bottom">
+    {%- assign experiment_count = 0 -%}
+    {%- for lab in site.data.experiments.labs -%}{%- assign experiment_count = experiment_count | plus: lab.items.size -%}{%- endfor -%}
+    {%- for s in intro.stats -%}
+      {%- case s.key -%}
+        {%- when 'experiments' -%}{%- assign value = experiment_count -%}{%- assign tone = 'green' -%}
+        {%- when 'posts' -%}{%- assign value = site.posts.size -%}{%- assign tone = 'purple' -%}
+        {%- when 'labs' -%}{%- assign value = site.data.experiments.labs.size -%}{%- assign tone = 'cyan' -%}
+        {%- else -%}{%- assign value = nil -%}
+      {%- endcase -%}
+      {%- if value -%}
+        <a class="about-figure" href="{{ s.url | relative_url }}" style="--tone: var(--accent-{{ tone }})">
+          <b>{{ value }}</b>
+          <span data-l10n-ko="{{ s.label['ko-KR'] | escape }}" data-l10n-en="{{ s.label.en | escape }}">{% include localized-value.html value=s.label lang=lang %}</span>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <div class="about-contacts">
+      {%- if intro.contact.email -%}
+        <a class="about-contact-primary" href="mailto:{{ intro.contact.email }}">{{ intro.contact.email }}</a>
+      {%- endif -%}
+      {%- assign docs = site.data.about_documents -%}
+      {%- if docs and docs.enabled -%}
+        {%- for d in docs.items -%}
+          {%- capture doc_title %}{% include localized-value.html value=d.title lang=lang %}{% endcapture -%}
+          <a class="about-contact-doc" href="{{ d.url | relative_url }}"><span data-l10n-ko="{{ d.title['ko-KR'] | escape }}" data-l10n-en="{{ d.title.en | escape }}">{{ doc_title | strip }}</span> ↗</a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="about-hero-links">
+    {%- if intro.contact.github -%}<a href="{{ intro.contact.github }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>{%- endif -%}
+    {%- if intro.contact.linkedin -%}<a href="{{ intro.contact.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>{%- endif -%}
+  </div>
+</section>
