@@ -105,6 +105,16 @@ OpenCensus(구글)와 OpenTracing(Lightstep의 Ben Sigelman이 시작했고, 그
 
 토스는 SLASH 23에서 Pinpoint를 쓰면서 코루틴 구간이 끊기는 문제를 코루틴 바이트코드를 읽어 플러그인으로 메운 과정을 발표했다([발표 리뷰](/posts/slash23-connected-observations/)). 도구를 고르는 일이 끝이 아니라, 고른 뒤에 자기 스택에 맞게 계측을 붙이는 일이 남는다는 사례다. 같은 행사에서 글로벌 trace ID와 TCP 전문에 문맥을 심는 이야기도 나왔다([발표 리뷰](/posts/slash23-observability-tracing-logs/)).
 
+## 이 계보를 실제로 붙여 봤다
+
+여기까지가 읽은 것이고, 그중 돌릴 수 있는 것은 돌려 봤다. 결제 서비스 하나에 Zipkin, Jaeger, Tempo, SkyWalking, SigNoz, Pinpoint를 차례로 붙이고 같은 부하를 걸었다. 자세한 수치와 원본은 [따로 적었고](/posts/apm-tools-hands-on-parity-pay/), 여기서는 이 글의 계보와 맞닿는 세 가지만 옮긴다.
+
+**Zipkin은 지금도 가장 쉬웠다.** 컨테이너 하나에 저장소는 메모리이고 한 번에 떴다. 특이한 점은 OTLP를 받지 않는다는 것이다. 2012년에 자기 형식으로 시작했고 그 자리를 지키고 있다. 그래서 OpenTelemetry Collector의 exporter만 `zipkin`으로 바꿨고, 애플리케이션은 한 줄도 바뀌지 않았다. 14년 차이를 수집기가 메운 셈인데, 이것이 OTel 합류가 실제로 사는 방식이다.
+
+**Pinpoint는 뜨지 않았다.** 다섯 군데에서 막혔고 넷은 뚫었는데 마지막을 못 뚫었다. HBase 이미지가 amd64 단일 아키텍처라서 Apple Silicon에서는 에뮬레이션으로 돌고, 테이블을 만들다가 ZooKeeper 세션이 만료되어 마스터가 죽는다. 같은 프로젝트의 collector와 web은 arm64 빌드가 있다. 저장소 하나가 막은 것이고, HBase를 쓰는 선택이 2015년과 2026년에 다른 비용을 갖는다는 뜻이기도 하다.
+
+**같은 트레이스는 어느 도구에서나 같았다.** 외부 기관이 2.5초를 붙잡는 조건에서 Jaeger와 Zipkin과 Tempo가 모두 같은 숫자를 보여 줬다. 2.52초짜리 요청, 스팬 20개, 그중 외부 호출 하나가 99.4%다. 계측이 같으면 백엔드는 **보이는 내용이 아니라 보이는 방식만** 바꾼다. Dapper가 계측과 저장을 갈라 둔 설계가 그대로 남아 있는 자리다.
+
 ## 그래서 이 목록이 작은 팀에 주는 것
 
 빅테크가 만든 것을 그대로 가져다 쓸 수는 없다. Canopy는 공개되지 않았고, Edgar는 Mantis와 넷플릭스의 저장소 운영 조직 위에 서 있다. 가져올 수 있는 것은 판단의 근거다.
@@ -113,7 +123,7 @@ OpenCensus(구글)와 OpenTracing(Lightstep의 Ben Sigelman이 시작했고, 그
 
 샘플링 방침은 저장 비용이 아니라 질문으로 정한다. "이 고객의 이 요청"을 답해야 한다면 아마존 쪽이고, "이 엔드포인트가 보통 어디서 느린가"면 구글 쪽이다. 넷플릭스처럼 핵심 경로만 전량으로 가져가는 중간도 있다.
 
-그리고 에이전트를 켜는 값은 자기 환경에서 직접 재야 한다. [직접 재 본 글](/posts/apm-tools-hands-on-parity-pay/)에서 OTel 자동계측 에이전트가 처리량을 18.7% 떨어뜨렸고 SkyWalking 자체 에이전트는 42.7%였다. 노트북 한 대에서 나온 숫자이므로 그대로 옮길 값은 아니지만, 벤더가 밝힌 한 자릿수 퍼센트와 자기 측정이 다를 수 있다는 것은 보여 준다.
+그리고 에이전트를 켜는 값은 자기 환경에서 직접 재야 한다. 위에서 말한 측정에서 OTel 자동계측 에이전트는 한 묶음에서 18.7%, 다른 날 다른 묶음에서 9.2%였고 SkyWalking 자체 에이전트는 42.7%였다. 노트북 한 대에서 나온 숫자이므로 그대로 옮길 값은 아니다. 다만 벤더가 밝힌 한 자릿수 퍼센트와 자기 측정이 다를 수 있다는 것, 그리고 같은 측정이 날마다 두 배 가까이 움직인다는 것은 보여 준다.
 
 ## 이 글이 재지 않은 것
 
@@ -121,18 +131,20 @@ OpenCensus(구글)와 OpenTracing(Lightstep의 Ben Sigelman이 시작했고, 그
 
 비교의 축도 공정하지 않다. 상용 APM은 구매 가능한 제품이고 Dapper와 Canopy는 사내 시스템이다. 둘을 같은 표에 넣으면 "어느 쪽이 낫다"는 결론이 나올 것 같지만 그런 결론은 이 자료들로 나오지 않는다. 이 글이 말할 수 있는 것은 큰 회사들이 어떤 문제를 만났고 어느 쪽으로 움직였는지까지다.
 
+실측 쪽의 한계는 [그 글](/posts/apm-tools-hands-on-parity-pay/)에 적어 뒀다. 요약하면 노트북 한 대이고, 다른 프로젝트 컨테이너가 20여 개 떠 있는 상태였으며, Pinpoint의 실패는 그 기계에 대한 것이지 Pinpoint에 대한 것이 아니다.
+
 빠진 회사도 많다. 마이크로소프트의 Application Insights, 알리바바의 ARMS, 링크드인과 핀터레스트와 쇼피파이의 사례는 확인하지 않았다. 국내도 네이버와 토스 외에는 공개 자료를 찾아보지 않았다.
 
 ## 참고
 
-- [Dapper, a Large-Scale Distributed Systems Tracing Infrastructure](https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/) — Sigelman 외, Google, 2010
+- [Dapper, a Large-Scale Distributed Systems Tracing Infrastructure](https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/) — Google Research: Sigelman 외, Google, 2010
 - [Distributed Systems Tracing with Zipkin](https://blog.x.com/engineering/en_us/a/2012/distributed-systems-tracing-with-zipkin) — Twitter Engineering, 2012-06-07
 - [Evolving Distributed Tracing at Uber Engineering](https://www.uber.com/blog/distributed-tracing/) — Uber Engineering, 2017-02-02
-- [Canopy: An End-to-End Performance Tracing And Analysis System](https://cs.brown.edu/~jcmace/papers/kaldor2017canopy.pdf) — Kaldor 외, SOSP '17
+- [Canopy: An End-to-End Performance Tracing And Analysis System](https://cs.brown.edu/~jcmace/papers/kaldor2017canopy.pdf) — cs.brown.edu: Kaldor 외, SOSP '17
 - [Building Netflix's Distributed Tracing Infrastructure](https://netflixtechblog.com/building-netflixs-distributed-tracing-infrastructure-bb856c319304) — Netflix Technology Blog, 2020-10-19
-- [Instrumenting distributed systems for operational visibility](https://builder.aws.com/content/3EuxPBdIiiUhB5IK47p3O3fxhy7/instrumenting-distributed-systems-for-operational-visibility) — David Yanacek, Amazon Builders' Library
+- [Instrumenting distributed systems for operational visibility](https://builder.aws.com/content/3EuxPBdIiiUhB5IK47p3O3fxhy7/instrumenting-distributed-systems-for-operational-visibility) — builder.aws.com: David Yanacek, Amazon Builders' Library
 - [OpenTelemetry: merger of OpenCensus and OpenTracing](https://opensource.googleblog.com/2019/05/opentelemetry-merger-of-opencensus-and.html) — Google Open Source Blog, 2019-05-21
 - [CNCF Announces OpenTelemetry's Graduation](https://www.cncf.io/announcements/2026/05/21/cloud-native-computing-foundation-announces-opentelemetrys-graduation-solidifying-status-as-the-de-facto-observability-standard/) — CNCF, 2026-05-21
 - [Migration to OpenTelemetry SDK](https://www.jaegertracing.io/sdk-migration/) — Jaeger
-- [Pinpoint README](https://github.com/pinpoint-apm/pinpoint) — pinpoint-apm
-- [Top APM Tools: Real-World Comparison](https://medium.com/@kaanberkozbek/top-apm-tools-real-world-comparison-of-pros-cons-cost-performance-and-use-cases-b7dc77f97102) — Kaan Berk ÖZBEK, 2025-05-14
+- [Pinpoint README](https://github.com/pinpoint-apm/pinpoint) — GitHub: pinpoint-apm
+- [Top APM Tools: Real-World Comparison](https://medium.com/@kaanberkozbek/top-apm-tools-real-world-comparison-of-pros-cons-cost-performance-and-use-cases-b7dc77f97102) — Medium: Kaan Berk ÖZBEK, 2025-05-14
