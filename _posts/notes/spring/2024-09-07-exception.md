@@ -99,5 +99,5 @@ Java는 이를 연쇄 예외(chained exception)로 지원한다. `Throwable(Stri
 
 ## 참고
 
-- [The Java Tutorials — Chained Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/chained.html)
-- [RFC 9110 — HTTP Semantics, 15. Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes)
+- [The Java Tutorials — Chained Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/chained.html) — Oracle Docs
+- [RFC 9110 — HTTP Semantics, 15. Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#name-status-codes) — IETF

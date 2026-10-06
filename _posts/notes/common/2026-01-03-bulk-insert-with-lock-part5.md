@@ -258,8 +258,8 @@ stateDiagram-v2
 
 ## 참고
 
-- [Redis: Distributed Locks with Redis](https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/) — `SET NX PX` 획득, 토큰 비교 해제 스크립트와 `DELEX`, lock validity time, fencing token 권고
-- [Redis: Scripting with Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — 스크립트의 원자적 실행
-- [랩 코드: SafeRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/SafeRedisLock.java)
-- [랩 코드: LegacyRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/LegacyRedisLock.java)
-- [랩 테스트: RedisLockRaceConditionTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/test/java/com/portfolio/equitylab/lock/RedisLockRaceConditionTest.java)
+- [Redis: Distributed Locks with Redis](https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/) — Redis Docs: `SET NX PX` 획득, 토큰 비교 해제 스크립트와 `DELEX`, lock validity time, fencing token 권고
+- [Redis: Scripting with Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — Redis Docs: 스크립트의 원자적 실행
+- [랩 코드: SafeRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/SafeRedisLock.java) — GitHub
+- [랩 코드: LegacyRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/LegacyRedisLock.java) — GitHub
+- [랩 테스트: RedisLockRaceConditionTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/test/java/com/portfolio/equitylab/lock/RedisLockRaceConditionTest.java) — GitHub

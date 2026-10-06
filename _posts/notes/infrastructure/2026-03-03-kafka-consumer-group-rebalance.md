@@ -84,7 +84,7 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 ## 참고
 
-- [Kafka: Consumer Group Protocol](https://kafka.apache.org/documentation/#design_consumergroup)
-- [Kafka 4.3 Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/)
-- [KIP-429: Incremental Cooperative Rebalancing](https://cwiki.apache.org/confluence/display/KAFKA/KIP-429%3A+Kafka+Consumer+Incremental+Rebalance+Protocol)
-- [KIP-345: Static Membership](https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances)
+- [Kafka: Consumer Group Protocol](https://kafka.apache.org/documentation/#design_consumergroup) — Apache Kafka
+- [Kafka 4.3 Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/) — Apache Kafka
+- [KIP-429: Incremental Cooperative Rebalancing](https://cwiki.apache.org/confluence/display/KAFKA/KIP-429%3A+Kafka+Consumer+Incremental+Rebalance+Protocol) — Apache Wiki
+- [KIP-345: Static Membership](https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances) — Apache Wiki

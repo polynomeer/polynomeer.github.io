@@ -161,9 +161,9 @@ serial에서 측정된 대기가 평균의 96.8%다. 남은 3.2%는 CPU와 1ms �
 
 ## 참고
 
-- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — 원본은 `reports/data/t6-*`, 표는 `reports/01-scenario-report.md`, 집계는 `scenarios/t6/aggregate.py`
+- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — GitHub: 원본은 `reports/data/t6-*`, 표는 `reports/01-scenario-report.md`, 집계는 `scenarios/t6/aggregate.py`
 - [가상 스레드가 캐리어를 놓지 못할 때](/posts/virtual-thread-pinning-experiment/) — 같은 저장소의 T4
 - [SLASH 23 리뷰 - 프로파일러로 시스템 성능 향상시키기](/posts/slash23-profiler-performance/)
-- [async-profiler](https://github.com/async-profiler/async-profiler)
-- [async-profiler v4.0: Profiling Modes](https://github.com/async-profiler/async-profiler/blob/v4.0/docs/ProfilingModes.md) — wall-clock 모드가 스레드 상태와 무관하게 샘플링한다는 설명
-- [Brendan Gregg, Off-CPU Analysis](https://www.brendangregg.com/offcpuanalysis.html) — off-CPU 분석의 정의
+- [async-profiler](https://github.com/async-profiler/async-profiler) — GitHub
+- [async-profiler v4.0: Profiling Modes](https://github.com/async-profiler/async-profiler/blob/v4.0/docs/ProfilingModes.md) — GitHub: wall-clock 모드가 스레드 상태와 무관하게 샘플링한다는 설명
+- [Off-CPU Analysis](https://www.brendangregg.com/offcpuanalysis.html) — Brendan Gregg: off-CPU 분석의 정의

@@ -99,8 +99,8 @@ Kubernetes 클러스터와 L7 HTTP 프록시 사이를 TCP 덤프로 봤다. hea
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-24/sessions/12)
-- [발표 영상](https://www.youtube.com/watch?v=ovGgdPPUZ2I)
-- [HTML Living Standard, Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html)
-- [Redis PUBLISH](https://redis.io/docs/latest/commands/publish/)
-- 같은 연사의 CQRS 답변: [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2) · [리뷰](/posts/toss-securities-cqrs-validator-vs-parity-pay/)
+- [세션 페이지](https://toss.im/slash-24/sessions/12) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=ovGgdPPUZ2I) — YouTube
+- [HTML Living Standard, Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html) — WHATWG
+- [Redis PUBLISH](https://redis.io/docs/latest/commands/publish/) — Redis Docs
+- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2) — 토스: 같은 연사의 CQRS 답변 · [리뷰](/posts/toss-securities-cqrs-validator-vs-parity-pay/)

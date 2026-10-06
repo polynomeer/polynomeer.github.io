@@ -176,36 +176,36 @@ public class ThreadLocalAwareThreadPool extends ThreadPoolExecutor {
 
 앞서 말했듯이, 스레드 풀 환경에서 ThreadLocal을 (스프링이 지원하는 클래스를 통하지 않고) 직접 사용하는 경우 ThreadLocal 변수에 저장된 데이터의 사용이 끝나면 반드시 `remove()`를 통해 수동으로 제거하거나, `afterExecute()`를 통해서 제거해 주어야 한다. 그렇지 않을 경우, 해당 스레드가 재사용될 때 남아있던 값에 의해 올바르지 않은 결과를 초래할 수 있다.
 
-## References
+## 참고
 
 ### ThreadLocal
 
-- https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html
-- https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ThreadLocal.html
-- https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-concurrency-advanced/src/main/java/com/baeldung/threadlocal
-- https://www.baeldung.com/java-threadlocal
-- https://www.baeldung.com/thread-pool-java-and-guava
-- https://www.digitalocean.com/community/tutorials/java-threadlocal-example
+- [ThreadLocal (Java Platform SE 7 )](https://docs.oracle.com/javase/7/docs/api/java/lang/ThreadLocal.html) — Oracle Docs
+- [ThreadLocal (Java SE 11 & JDK 11 )](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ThreadLocal.html) — Oracle Docs
+- [tutorials/core-java-modules/core-java-concurrency-advanced/src/main/java/com/baeldung/threadlocal at master · eugenp/tut](https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-concurrency-advanced/src/main/java/com/baeldung/threadlocal) — GitHub
+- [An Introduction to ThreadLocal in Java](https://www.baeldung.com/java-threadlocal) — Baeldung
+- [Introduction to Thread Pools in Java](https://www.baeldung.com/thread-pool-java-and-guava) — Baeldung
+- [Java ThreadLocal Example](https://www.digitalocean.com/community/tutorials/java-threadlocal-example) — DigitalOcean
 
 ### ThreadLocal in Spring
 
-- https://docs.spring.io/spring-framework/docs/3.2.4.RELEASE_to_4.0.0.M3/Spring%20Framework%203.2.4.RELEASE/org/springframework/web/context/request/RequestContextHolder.html
-- https://hwannny.tistory.com/95
-- https://velog.io/@dbsrud11/SpringBoot-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EC%93%B0%EB%A0%88%EB%93%9C-%EB%A1%9C%EC%BB%AC-ThreadLocal-2
-- https://javacan.tistory.com/entry/ThreadLocalUsage
-- https://madplay.github.io/post/java-threadlocal
-- http://www.enmalvi.com/2021/06/24/springsecurity-inheritablethreadlocal/
-- https://dzone.com/articles/an-alternative-approach-to-threadlocal-using-sprin-1
-- https://medium.com/@avocadi/what-is-threadlocal-and-test-with-spring-f3d04b7c3844
-- https://honeyinfo7.tistory.com/323
-- https://stackoverflow.com/questions/57917370/thread-local-behaviour-in-spring-boot
-- https://narusas.github.io/2019/07/17/Spring-Transaction-Note.html
+- [RequestContextHolder](https://docs.spring.io/spring-framework/docs/3.2.4.RELEASE_to_4.0.0.M3/Spring%20Framework%203.2.4.RELEASE/org/springframework/web/context/request/RequestContextHolder.html) — Spring Docs
+- [Thread Local 개념과 내부 구조](https://hwannny.tistory.com/95) — Tistory
+- [(SpringBoot 핵심 원리) 쓰레드 로컬 - ThreadLocal (2)](https://velog.io/@dbsrud11/SpringBoot-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EC%93%B0%EB%A0%88%EB%93%9C-%EB%A1%9C%EC%BB%AC-ThreadLocal-2) — velog
+- [ThreadLocal 사용법과 활용](https://javacan.tistory.com/entry/ThreadLocalUsage) — Tistory
+- [자바 ThreadLocal: 사용법과 주의사항](https://madplay.github.io/post/java-threadlocal) — madplay.github.io
+- [SpringSecurity—从子线程获取用户登录信息](http://www.enmalvi.com/2021/06/24/springsecurity-inheritablethreadlocal/) — Enmalvi
+- [An Alternative Approach to ThreadLocal Using Spring](https://dzone.com/articles/an-alternative-approach-to-threadlocal-using-sprin-1) — DZone
+- [medium.com/@avocadi/what-is-threadlocal-and-test-with-spring-f3d04b7c3844](https://medium.com/@avocadi/what-is-threadlocal-and-test-with-spring-f3d04b7c3844) — Medium
+- [ThreadLocal과 스프링의 트랜잭션 관리](https://honeyinfo7.tistory.com/323) — Tistory
+- [stackoverflow.com/questions/57917370/thread-local-behaviour-in-spring-boot](https://stackoverflow.com/questions/57917370/thread-local-behaviour-in-spring-boot) — Stack Overflow
+- [Spring Transaction에 대한 노트](https://narusas.github.io/2019/07/17/Spring-Transaction-Note.html) — narusas.github.io
 
 ### ThreadLocal and Spring Security
 
-- https://stackoverflow.com/questions/45725888/why-does-spring-security-store-securitycontext-in-thread-local-variable
-- https://docs.spring.io/spring-security/site/docs/3.0.x/reference/technical-overview.html
-- https://aaronryu.github.io/2021/03/14/thread-and-security-context-holder-mode/
-- https://binux.tistory.com/152
-- https://github.com/spring-projects/spring-security/blob/main/core/src/main/java/org/springframework/security/core/context/ThreadLocalSecurityContextHolderStrategy.java
-- https://github.com/spring-projects/spring-security/blob/main/core/src/main/java/org/springframework/security/core/context/SecurityContextHolder.java
+- [stackoverflow.com/questions/45725888/why-does-spring-security-store-securitycontext-in-thread-local-variable](https://stackoverflow.com/questions/45725888/why-does-spring-security-store-securitycontext-in-thread-local-variable) — Stack Overflow
+- [5. Technical Overview](https://docs.spring.io/spring-security/site/docs/3.0.x/reference/technical-overview.html) — Spring Docs
+- [aaronryu.github.io/2021/03/14/thread-and-security-context-holder-mode](https://aaronryu.github.io/2021/03/14/thread-and-security-context-holder-mode/) — aaronryu.github.io
+- [ThreadLocal 사용 시, remove를 잊지 맙시다](https://binux.tistory.com/152) — Tistory
+- [github.com/spring-projects/spring-security/blob/main/core/src/main/java/org/springframework/security/core/context/ThreadLocalSecurityContextHolderStrategy.java](https://github.com/spring-projects/spring-security/blob/main/core/src/main/java/org/springframework/security/core/context/ThreadLocalSecurityContextHolderStrategy.java) — GitHub
+- [spring-security/core/src/main/java/org/springframework/security/core/context/SecurityContextHolder.java at main · spring](https://github.com/spring-projects/spring-security/blob/main/core/src/main/java/org/springframework/security/core/context/SecurityContextHolder.java) — GitHub

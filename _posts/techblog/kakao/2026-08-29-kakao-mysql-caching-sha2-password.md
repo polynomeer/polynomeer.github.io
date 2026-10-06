@@ -78,4 +78,4 @@ Fast Authentication은 그다음이다. Full 인증에 성공하면 서버 메�
 ## 참고
 
 - [MySQL 인증 플러그인 caching_sha2_password에 대한 이해](https://tech.kakao.com/posts/712) — kakao tech, 2025-07-17
-- [MySQL 8.4 Reference Manual: Caching SHA-2 Pluggable Authentication](https://dev.mysql.com/doc/refman/8.4/en/caching-sha2-pluggable-authentication.html) — 캐시 동작, 안전한 연결의 범위
+- [MySQL 8.4 Reference Manual: Caching SHA-2 Pluggable Authentication](https://dev.mysql.com/doc/refman/8.4/en/caching-sha2-pluggable-authentication.html) — MySQL Docs: 캐시 동작, 안전한 연결의 범위

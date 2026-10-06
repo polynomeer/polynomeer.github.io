@@ -103,6 +103,6 @@ Kubeflow Pipelines 위에 만들었다. 데이터 수집 단계가 돌면 데이
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=VulWhToQUp8)
-- [TMC 25](https://toss.im/tmc-25)
-- 같은 팀의 GPU 운영 발표: [비싼 GPU, 낭비 없이 제대로 운영하는 법 리뷰](/posts/tmc25-gpu-cluster-efficiency/)
+- [발표 영상](https://www.youtube.com/watch?v=VulWhToQUp8) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스
+- [비싼 GPU, 낭비 없이 제대로 운영하는 법 리뷰](/posts/tmc25-gpu-cluster-efficiency/) — 같은 팀의 GPU 운영 발표

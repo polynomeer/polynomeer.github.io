@@ -148,5 +148,5 @@ problem_decision_result:
 
 ## 참고
 
-- [PostgreSQL Documentation - Overview (Managing Databases)](https://www.postgresql.org/docs/current/manage-ag-overview.html)
-- [Spring Framework Reference - Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
+- [Overview (Managing Databases)](https://www.postgresql.org/docs/current/manage-ag-overview.html) — PostgreSQL Documentation
+- [Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — Spring Framework Reference

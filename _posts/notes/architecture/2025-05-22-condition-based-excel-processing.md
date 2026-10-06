@@ -195,4 +195,4 @@ S3 객체는 Redis 키보다 오래 남겨 둔다. 사용자가 받은 링크가
 - [Redis: SET](https://redis.io/docs/latest/commands/set/) — Redis 문서
 - [Amazon S3: Managing the lifecycle of objects](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html) — AWS 문서
 - [Amazon S3: Sharing objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html) — AWS 문서
-- 랩 코드 (commit `d52297d`): [StreamingExcelExportService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/excel/StreamingExcelExportService.java), 생성 단계의 메모리를 묶은 구현. 이 글의 판별과 캐싱 로직은 랩에 없다.
+- [StreamingExcelExportService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/excel/StreamingExcelExportService.java) — GitHub: 랩 코드 (commit `d52297d`), 생성 단계의 메모리를 묶은 구현. 이 글의 판별과 캐싱 로직은 랩에 없다.

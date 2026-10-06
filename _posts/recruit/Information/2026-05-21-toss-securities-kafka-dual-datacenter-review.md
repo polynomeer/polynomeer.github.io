@@ -174,13 +174,17 @@ MM2를 버린 이유가 토픽명이었고, 그 대가로 Sink Connector, 루프
 
 - 플랫폼이 중복을 최소화해도 무해화는 소비자의 일이다. 이중화는 멱등 소비자를 대체하지 않는다.
 
-## 참고 자료
+## 참고
 
-- [Kafka 이중화로 다양한 장애 상황 완벽 대처하기 (SLASH 23 세션)](https://toss.im/slash-23/session-detail/B2-6)
-- [토스증권 Apache Kafka 데이터센터 이중화 구성 #1](https://toss.tech/article/kafka-distribution-1)
-- [#2: 데이터 미러링](https://toss.tech/article/kafka-distribution-2)
-- [#3: Offset Sync](https://toss.tech/article/kafka-distribution-3)
-- [Kafka Connect 사용자 가이드](https://kafka.apache.org/43/kafka-connect/user-guide/), [Kafka Connect 설정](https://kafka.apache.org/43/configuration/kafka-connect-configs/)
-- [KIP-458: Connector Client Config Override Policy](https://cwiki.apache.org/confluence/display/KAFKA/KIP-458%3A+Connector+Client+Config+Override+Policy)
-- ParityPay: [5편 Transactional Outbox](/posts/parity-pay-outbox/), [8편 Kafka 장애 실험](/posts/parity-pay-kafka-failures/)
-- 같은 주제의 앞선 글: [채용공고 분석](/posts/toss-securities-server-developer-job-analysis/), [시세·주문 아키텍처](/posts/toss-securities-market-data-and-order-architecture/), [CQRS와 검증기](/posts/toss-securities-cqrs-validator-vs-parity-pay/)
+- [Kafka 이중화로 다양한 장애 상황 완벽 대처하기 (SLASH 23 세션)](https://toss.im/slash-23/session-detail/B2-6) — 토스
+- [토스증권 Apache Kafka 데이터센터 이중화 구성 #1](https://toss.tech/article/kafka-distribution-1) — 토스 기술 블로그
+- [#2: 데이터 미러링](https://toss.tech/article/kafka-distribution-2) — 토스 기술 블로그
+- [#3: Offset Sync](https://toss.tech/article/kafka-distribution-3) — 토스 기술 블로그
+- [Kafka Connect 사용자 가이드](https://kafka.apache.org/43/kafka-connect/user-guide/) — Apache Kafka
+- [Kafka Connect 설정](https://kafka.apache.org/43/configuration/kafka-connect-configs/) — Apache Kafka
+- [KIP-458: Connector Client Config Override Policy](https://cwiki.apache.org/confluence/display/KAFKA/KIP-458%3A+Connector+Client+Config+Override+Policy) — Apache Wiki
+- [5편 Transactional Outbox](/posts/parity-pay-outbox/) — ParityPay
+- [8편 Kafka 장애 실험](/posts/parity-pay-kafka-failures/) — ParityPay
+- [채용공고 분석](/posts/toss-securities-server-developer-job-analysis/) — 같은 주제의 앞선 글
+- [시세·주문 아키텍처](/posts/toss-securities-market-data-and-order-architecture/) — 같은 주제의 앞선 글
+- [CQRS와 검증기](/posts/toss-securities-cqrs-validator-vs-parity-pay/) — 같은 주제의 앞선 글

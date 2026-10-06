@@ -58,4 +58,4 @@ DB가 `offset = 100000`을 받았다고 해서 100000개를 공짜로 건너뛰�
 
 ## 참고
 
-- [PostgreSQL Documentation: LIMIT and OFFSET](https://www.postgresql.org/docs/current/queries-limit.html)
+- [PostgreSQL Documentation: LIMIT and OFFSET](https://www.postgresql.org/docs/current/queries-limit.html) — PostgreSQL Docs

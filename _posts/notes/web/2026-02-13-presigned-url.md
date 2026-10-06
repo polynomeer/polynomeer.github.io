@@ -67,5 +67,5 @@ Presigned URL은 특정 객체 요청 하나에 가까운 제한된 권한을 �
 
 ## 참고
 
-- [Amazon S3 User Guide, Download and upload objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)
-- [Amazon S3 User Guide, Uploading and copying objects using multipart upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html)
+- [Amazon S3 User Guide, Download and upload objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html) — AWS Docs
+- [Amazon S3 User Guide, Uploading and copying objects using multipart upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html) — AWS Docs

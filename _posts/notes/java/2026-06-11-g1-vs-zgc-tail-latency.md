@@ -154,10 +154,10 @@ G1은 그 사이에 있다. 최장 pause가 최장 요청의 절반에서 1/3 �
 
 ## 참고
 
-- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — 원본은 `reports/data/t3-*`, 표는 `reports/01-scenario-report.md`, 집계는 `scenarios/t3/aggregate.py`
+- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — GitHub: 원본은 `reports/data/t3-*`, 표는 `reports/01-scenario-report.md`, 집계는 `scenarios/t3/aggregate.py`
 - [GC 알고리즘 비교](/posts/gc-algorithms-compared/) — 이 실험의 개념 짝
 - [백분위수 통계](/posts/percentile-statistics/) — max를 순위에 쓰지 않는 이유
 - [자바 메모리 모델](/posts/java-memory-model/)
-- [JEP 439: Generational ZGC](https://openjdk.org/jeps/439)
-- [HotSpot GC Tuning Guide 21: Garbage-First (G1) Garbage Collector](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-g1-garbage-collector1.html) — humongous 객체의 정의와 할당 방식
+- [JEP 439: Generational ZGC](https://openjdk.org/jeps/439) — OpenJDK
+- [HotSpot GC Tuning Guide 21: Garbage-First (G1) Garbage Collector](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-g1-garbage-collector1.html) — Oracle Docs: humongous 객체의 정의와 할당 방식
 - [CPU 프로파일러가 1순위로 지목한 코드를 고쳤더니](/posts/off-cpu-profiling-experiment/) — GC 밖의 대기를 쪼갠 T6

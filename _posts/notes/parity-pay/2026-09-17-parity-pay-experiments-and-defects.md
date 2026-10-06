@@ -119,7 +119,7 @@ G를 조사하다 결함 H가 나왔다. `spring.task.scheduling.pool.size`가 �
 
 ## 참고
 
-- [Spring Framework: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — 프록시 모드에서 self-invocation은 트랜잭션을 만들지 않음
-- [Spring Boot: Task Execution and Scheduling](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html) — `ThreadPoolTaskScheduler` 기본 스레드 수
-- [PostgreSQL: INSERT](https://www.postgresql.org/docs/current/sql-insert.html) — `ON CONFLICT DO NOTHING`
-- [PostgreSQL: SAVEPOINT](https://www.postgresql.org/docs/current/sql-savepoint.html) — 결함 E의 제약 위반 후 트랜잭션 상태
+- [Spring Framework: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — Spring Docs: 프록시 모드에서 self-invocation은 트랜잭션을 만들지 않음
+- [Spring Boot: Task Execution and Scheduling](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html) — Spring Docs: `ThreadPoolTaskScheduler` 기본 스레드 수
+- [PostgreSQL: INSERT](https://www.postgresql.org/docs/current/sql-insert.html) — PostgreSQL Docs: `ON CONFLICT DO NOTHING`
+- [PostgreSQL: SAVEPOINT](https://www.postgresql.org/docs/current/sql-savepoint.html) — PostgreSQL Docs: 결함 E의 제약 위반 후 트랜잭션 상태

@@ -141,8 +141,8 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=Zs3jVelp0L8)
-- [SLASH 23](https://toss.im/slash-23)
-- [Netflix - Edge Authentication and Token-Agnostic Identity Propagation](https://netflixtechblog.com/edge-authentication-and-token-agnostic-identity-propagation-514e47e0b602)
-- [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway)
-- [Spring Cloud Gateway Glossary](https://docs.spring.io/spring-cloud-gateway/reference/spring-cloud-gateway-server-webflux/glossary.html)
+- [발표 영상](https://www.youtube.com/watch?v=Zs3jVelp0L8) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [Edge Authentication and Token-Agnostic Identity Propagation](https://netflixtechblog.com/edge-authentication-and-token-agnostic-identity-propagation-514e47e0b602) — Netflix
+- [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway) — Spring
+- [Spring Cloud Gateway Glossary](https://docs.spring.io/spring-cloud-gateway/reference/spring-cloud-gateway-server-webflux/glossary.html) — Spring Docs

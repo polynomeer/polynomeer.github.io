@@ -106,10 +106,10 @@ Spring Data Redis의 ReactiveRedisTemplate을 썼는데, 기본 클라이언트 
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-23/session-detail/B1-7)
-- [발표 영상](https://www.youtube.com/watch?v=SF7eqlL0mjw)
-- 앞선 발표: [SLASH 22 실시간 시세 적용기 리뷰](/posts/slash22-realtime-quote-websocket/)
-- [Redis docs - Pub/Sub](https://redis.io/docs/latest/develop/interact/pubsub/)
-- [RFC 9293 - Transmission Control Protocol](https://www.rfc-editor.org/rfc/rfc9293.html)
-- [Javadoc - ThreadPoolExecutor.DiscardOldestPolicy](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.DiscardOldestPolicy.html)
-- 다른 자료와 함께 읽기: [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [세션 페이지](https://toss.im/slash-23/session-detail/B1-7) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=SF7eqlL0mjw) — YouTube
+- [SLASH 22 실시간 시세 적용기 리뷰](/posts/slash22-realtime-quote-websocket/) — 앞선 발표
+- [Pub/Sub](https://redis.io/docs/latest/develop/interact/pubsub/) — Redis docs
+- [RFC 9293 - Transmission Control Protocol](https://www.rfc-editor.org/rfc/rfc9293.html) — IETF
+- [Javadoc - ThreadPoolExecutor.DiscardOldestPolicy](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.DiscardOldestPolicy.html) — Oracle Docs
+- [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 다른 자료와 함께 읽기

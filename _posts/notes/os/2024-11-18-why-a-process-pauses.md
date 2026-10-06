@@ -77,7 +77,7 @@ if (lease.isValid()) {      // 이 줄은 참이었다
 ## 참고
 
 - [How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) — Martin Kleppmann, 2016-02-08. 멈춤 원인 목록과 검사-쓰기 틈
-- [signal(7) — Linux manual page](https://man7.org/linux/man-pages/man7/signal.7.html) — `SIGSTOP`, `SIGCONT`의 기본 동작
+- [signal(7) — Linux manual page](https://man7.org/linux/man-pages/man7/signal.7.html) — Linux man page: `SIGSTOP`, `SIGCONT`의 기본 동작
 - [Garbage-First (G1) Garbage Collector](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-g1-garbage-collector1.html) — JDK 21 GC Tuning Guide
 - [Available Collectors](https://docs.oracle.com/en/java/javase/21/gctuning/available-collectors.html) — JDK 21 GC Tuning Guide, ZGC 정지 시간
 - [Live migration process](https://docs.cloud.google.com/compute/docs/instances/live-migration-process) — Google Cloud Compute Engine 문서

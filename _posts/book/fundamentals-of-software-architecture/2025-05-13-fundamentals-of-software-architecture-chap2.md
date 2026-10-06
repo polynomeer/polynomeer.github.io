@@ -71,4 +71,4 @@ tags: [Fundamentals of Software Architecture]
 
 ## 참고
 
-- Mark Richards, Neal Ford, 『Fundamentals of Software Architecture』, O'Reilly, Chapter 2 "Architectural Thinking" ([책 소개 사이트](https://fundamentalsofsoftwarearchitecture.com/))
+- [책 소개 사이트](https://fundamentalsofsoftwarearchitecture.com/) — fundamentalsofsoftwarearchitecture.com: Mark Richards, Neal Ford, 『Fundamentals of Software Architecture』, O'Reilly, Chapter 2 "Architectural Thinking" (, )

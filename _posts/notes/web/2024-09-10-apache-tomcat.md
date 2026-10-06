@@ -34,6 +34,6 @@ Apache에는 프록시 모듈, 재작성 엔진, 로깅 시스템 및 필터링 
 - [x] 게다가 Apache는 Tomcat보다 구성 가능성이 뛰어나고 안정적입니다.
 - [x] Apache는 HTML 페이지와 같은 정적 콘텐츠만 제공하는 반면, 사이트에서 동적 콘텐츠를 제공하는 경우 두 서버 중에서 Tomcat은 유일한 옵션입니다.
 
-## References
+## 참고
 
-- (https://www.crestinfotech.com/difference-between-an-apache-server-and-a-tomcat-server/)
+- [(](https://www.crestinfotech.com/difference-between-an-apache-server-and-a-tomcat-server/) — crestinfotech.com

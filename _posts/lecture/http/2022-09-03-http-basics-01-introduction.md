@@ -59,5 +59,5 @@ flowchart LR
 
 ## 참고
 
-- [소개영상](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61388)
+- [소개영상](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61388) — 인프런
 - [시리즈 전체 목록](/series/http-web-basics/)

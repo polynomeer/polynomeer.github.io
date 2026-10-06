@@ -61,8 +61,8 @@ Spring Boot 스타터를 쓰면 기본 로깅 구현체가 Logback이다([Spring
 
 ## 참고
 
-- [SLF4J. *SLF4J user manual*](https://www.slf4j.org/manual.html)
-- [Logback. *Reasons to prefer logback over log4j 1.x*](https://logback.qos.ch/reasonsToSwitch.html)
-- [Apache Log4j. *Apache Log4j 1.x*](https://logging.apache.org/log4j/1.x/)
-- [Apache Log4j. *Asynchronous loggers*](https://logging.apache.org/log4j/2.x/manual/async.html)
-- [Spring Boot Reference. *Logging*](https://docs.spring.io/spring-boot/reference/features/logging.html)
+- [SLF4J. *SLF4J user manual](https://www.slf4j.org/manual.html) — SLF4J
+- [Logback. *Reasons to prefer logback over log4j 1.x](https://logback.qos.ch/reasonsToSwitch.html) — Logback
+- [Apache Log4j. *Apache Log4j 1.x](https://logging.apache.org/log4j/1.x/) — Apache Log4j
+- [Apache Log4j. *Asynchronous loggers](https://logging.apache.org/log4j/2.x/manual/async.html) — Apache Log4j
+- [Spring Boot Reference. *Logging](https://docs.spring.io/spring-boot/reference/features/logging.html) — Spring Docs

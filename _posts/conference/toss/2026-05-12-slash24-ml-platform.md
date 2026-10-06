@@ -102,7 +102,7 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=-im8Gzmf3TM)
-- [SLASH 24](https://toss.im/slash-24)
-- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
-- 2년 전 같은 팀의 출발점: [SLASH 22 물 흐르듯 자연스러운 ML 서비스 만들기 리뷰](/posts/slash22-ml-service-flow/)
+- [발표 영상](https://www.youtube.com/watch?v=-im8Gzmf3TM) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html) — MLflow Docs
+- [SLASH 22 물 흐르듯 자연스러운 ML 서비스 만들기 리뷰](/posts/slash22-ml-service-flow/) — 2년 전 같은 팀의 출발점

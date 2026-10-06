@@ -84,7 +84,7 @@ open model(도착률 고정)은 응답이 오든 말든 같은 속도로 보낸�
 
 ## 참고
 
-- [Prometheus: Histograms and summaries](https://prometheus.io/docs/practices/histograms/)
-- [Prometheus: Query functions, histogram_quantile](https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile)
-- Gil Tene, [How NOT to Measure Latency](https://www.infoq.com/presentations/latency-response-time/)
-- [k6: Open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)
+- [Prometheus: Histograms and summaries](https://prometheus.io/docs/practices/histograms/) — Prometheus
+- [histogram_quantile](https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile) — Prometheus: Query functions
+- [How NOT to Measure Latency](https://www.infoq.com/presentations/latency-response-time/) — Gil Tene
+- [k6: Open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/) — Grafana Labs

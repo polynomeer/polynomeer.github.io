@@ -105,8 +105,8 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=e8cEDhAPm-E)
-- [SLASH 24](https://toss.im/slash-24)
-- [Cloudflare ebpf_exporter](https://github.com/cloudflare/ebpf_exporter)
-- [BCC tools](https://github.com/iovisor/bcc)
-- 1년 전 같은 Redis 지연: [SLASH 23 프로파일러로 시스템 성능 향상시키기 리뷰](/posts/slash23-profiler-performance/)
+- [발표 영상](https://www.youtube.com/watch?v=e8cEDhAPm-E) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Cloudflare ebpf_exporter](https://github.com/cloudflare/ebpf_exporter) — GitHub
+- [BCC tools](https://github.com/iovisor/bcc) — GitHub
+- [SLASH 23 프로파일러로 시스템 성능 향상시키기 리뷰](/posts/slash23-profiler-performance/) — 1년 전 같은 Redis 지연

@@ -378,4 +378,4 @@ private Object instantiate(String name, BeanDefinition definition) {
 
 - [`BeanDefinition` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanDefinition.html) — Spring Framework API 문서
 - [`@Configuration` Javadoc, `proxyBeanMethods`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Configuration.html#proxyBeanMethods%28%29) — Spring Framework API 문서
-- [`ConfigurationClassBeanDefinitionReader` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java) — Spring Framework 소스
+- [`ConfigurationClassBeanDefinitionReader` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java) — GitHub: Spring Framework 소스

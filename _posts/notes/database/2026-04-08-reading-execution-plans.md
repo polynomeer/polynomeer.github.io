@@ -98,8 +98,8 @@ Nested Loop  (cost=0.43..8.48 rows=1 width=64) (actual time=0.05..0.06 rows=1 lo
 
 ## 참고
 
-- [PostgreSQL: Using EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html)
-- [PostgreSQL: Extended Statistics](https://www.postgresql.org/docs/current/planner-stats.html#PLANNER-STATS-EXTENDED)
-- [MySQL: EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.4/en/explain-output.html)
-- [MySQL 8.0: EXPLAIN Statement](https://dev.mysql.com/doc/refman/8.0/en/explain.html)
+- [PostgreSQL: Using EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) — PostgreSQL Documentation
+- [PostgreSQL: Extended Statistics](https://www.postgresql.org/docs/current/planner-stats.html#PLANNER-STATS-EXTENDED) — PostgreSQL Docs
+- [MySQL: EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.4/en/explain-output.html) — MySQL Docs
+- [MySQL 8.0: EXPLAIN Statement](https://dev.mysql.com/doc/refman/8.0/en/explain.html) — MySQL Docs
 - [DB 인덱스 정리](/posts/db-index/)

@@ -82,7 +82,7 @@ CI를 도입했다. 템플릿 수정은 develop 브랜치에서만 하고 검증
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=SRLeXvA-o-U)
-- [SLASH 23](https://toss.im/slash-23)
-- [GoCD YAML Config Plugin](https://github.com/tomzo/gocd-yaml-config-plugin)
-- [Helm Template](https://helm.sh/docs/chart_template_guide/)
+- [발표 영상](https://www.youtube.com/watch?v=SRLeXvA-o-U) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [GoCD YAML Config Plugin](https://github.com/tomzo/gocd-yaml-config-plugin) — GitHub
+- [Helm Template](https://helm.sh/docs/chart_template_guide/) — Helm Docs

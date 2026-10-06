@@ -65,5 +65,5 @@ Sentinel은 고가용성 중심, Cluster는 확장성 중심이다. 둘을 비�
 
 ## 참고
 
-- [Redis Sentinel](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)
-- [Scale with Redis Cluster](https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/)
+- [Redis Sentinel](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/) — Redis Docs
+- [Scale with Redis Cluster](https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/) — Redis Docs

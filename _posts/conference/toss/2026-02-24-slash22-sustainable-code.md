@@ -98,7 +98,7 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=RVO02Z1dLF8)
-- [SLASH 22](https://toss.im/slash-22)
-- [ArchUnit](https://www.archunit.org/)
-- [Gradle Java Plugin - dependency configurations](https://docs.gradle.org/current/userguide/java_plugin.html)
+- [발표 영상](https://www.youtube.com/watch?v=RVO02Z1dLF8) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [ArchUnit](https://www.archunit.org/) — ArchUnit
+- [dependency configurations](https://docs.gradle.org/current/userguide/java_plugin.html) — Gradle Java Plugin

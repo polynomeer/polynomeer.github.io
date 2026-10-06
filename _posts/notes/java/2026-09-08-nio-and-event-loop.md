@@ -141,15 +141,19 @@ monticker에서 `NioEventLoopGroup`으로 다수 연결에 시세를 뿌렸다. 
 
 ## 참고
 
-- [Java SE 21 API: Selector](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/Selector.html)
-- [Java SE 21 API: ByteBuffer - Direct vs. non-direct buffers](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html)
-- [Java SE 21 API: WritableByteChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/WritableByteChannel.html), [ReadableByteChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/ReadableByteChannel.html), [FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html)
-- [OpenJDK jdk21u: DefaultSelectorProvider (Linux)](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/linux/classes/sun/nio/ch/DefaultSelectorProvider.java)
-- [JDK-6670302: NIO selector wakes up with 0 selected keys infinitely](https://bugs.openjdk.org/browse/JDK-6670302)
-- [epoll_ctl(2)](https://man7.org/linux/man-pages/man2/epoll_ctl.2.html), [POSIX pselect/select](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pselect.html)
-- [Netty User Guide for 4.x](https://netty.io/wiki/user-guide-for-4.x.html)
-- [Netty API: EventLoop](https://netty.io/4.1/api/io/netty/channel/EventLoop.html), [ChannelPipeline](https://netty.io/4.1/api/io/netty/channel/ChannelPipeline.html)
-- [Netty source: NioEventLoop (netty-4.1.115.Final)](https://github.com/netty/netty/blob/netty-4.1.115.Final/transport/src/main/java/io/netty/channel/nio/NioEventLoop.java)
-- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
-- [Dan Kegel: The C10K problem](http://www.kegel.com/c10k.html)
+- [Java SE 21 API: Selector](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/Selector.html) — Oracle Docs
+- [Java SE 21 API: ByteBuffer - Direct vs. non-direct buffers](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html) — Oracle
+- [Java SE 21 API: WritableByteChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/WritableByteChannel.html) — Oracle Docs
+- [ReadableByteChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/ReadableByteChannel.html) — Oracle Docs
+- [FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html) — Oracle Docs
+- [OpenJDK jdk21u: DefaultSelectorProvider (Linux)](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/linux/classes/sun/nio/ch/DefaultSelectorProvider.java) — GitHub
+- [JDK-6670302: NIO selector wakes up with 0 selected keys infinitely](https://bugs.openjdk.org/browse/JDK-6670302) — OpenJDK
+- [epoll_ctl(2)](https://man7.org/linux/man-pages/man2/epoll_ctl.2.html) — Linux man page
+- [POSIX pselect/select](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pselect.html) — pubs.opengroup.org
+- [Netty User Guide for 4.x](https://netty.io/wiki/user-guide-for-4.x.html) — Netty
+- [Netty API: EventLoop](https://netty.io/4.1/api/io/netty/channel/EventLoop.html) — Netty
+- [ChannelPipeline](https://netty.io/4.1/api/io/netty/channel/ChannelPipeline.html) — Netty
+- [Netty source: NioEventLoop (netty-4.1.115.Final)](https://github.com/netty/netty/blob/netty-4.1.115.Final/transport/src/main/java/io/netty/channel/nio/NioEventLoop.java) — GitHub
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — OpenJDK
+- [Dan Kegel: The C10K problem](http://www.kegel.com/c10k.html) — Dan Kegel
 - [epoll 정리](/posts/epoll/), [멀티플렉싱 정리](/posts/multiplexing/)

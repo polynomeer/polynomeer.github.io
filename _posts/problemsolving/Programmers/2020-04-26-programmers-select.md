@@ -63,6 +63,6 @@ ORDER BY ANIMAL_ID;
 
 ## 참고
 
-- [프로그래머스, 모든 레코드 조회하기](https://school.programmers.co.kr/learn/courses/30/lessons/59034)
-- [MySQL 8.4 Reference Manual, SELECT Statement](https://dev.mysql.com/doc/refman/8.4/en/select.html)
-- [PostgreSQL Documentation, Sorting Rows (ORDER BY)](https://www.postgresql.org/docs/current/queries-order.html)
+- [모든 레코드 조회하기](https://school.programmers.co.kr/learn/courses/30/lessons/59034) — 프로그래머스
+- [SELECT Statement](https://dev.mysql.com/doc/refman/8.4/en/select.html) — MySQL 8.4 Reference Manual
+- [Sorting Rows (ORDER BY)](https://www.postgresql.org/docs/current/queries-order.html) — PostgreSQL Documentation

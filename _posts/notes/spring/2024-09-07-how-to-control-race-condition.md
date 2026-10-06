@@ -100,5 +100,5 @@ Race Condition 대응은 락을 쓸지보다 어디서 경쟁이 발생하고 �
 
 ## 참고
 
-- [Jakarta Persistence 3.1 — Version](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/version)
-- [Spring Data JPA Reference — Locking](https://docs.spring.io/spring-data/jpa/reference/jpa/locking.html)
+- [Jakarta Persistence 3.1 — Version](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/version) — Jakarta EE
+- [Spring Data JPA Reference — Locking](https://docs.spring.io/spring-data/jpa/reference/jpa/locking.html) — Spring Docs

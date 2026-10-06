@@ -117,7 +117,7 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=8ZhnUgylQgo)
-- [SLASH 21](https://toss.im/slash-21)
-- [Apache Impala](https://impala.apache.org/)
-- [Apache Kudu](https://kudu.apache.org/)
+- [발표 영상](https://www.youtube.com/watch?v=8ZhnUgylQgo) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [Apache Impala](https://impala.apache.org/) — Apache Impala
+- [Apache Kudu](https://kudu.apache.org/) — Apache Kudu

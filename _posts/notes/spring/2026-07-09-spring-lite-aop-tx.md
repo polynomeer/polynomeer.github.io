@@ -163,7 +163,7 @@ Spring의 `@Transactional`을 이해할 때 필요한 것은 "트랜잭션이 �
 
 ## 참고
 
-- [spring-lite `ProxyFactory` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-aop/src/main/java/lite/spring/aop/support/ProxyFactory.java)
-- [spring-lite `TransactionalBeanPostProcessor` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-tx/src/main/java/lite/spring/tx/support/TransactionalBeanPostProcessor.java)
-- [spring-lite `JdbcTemplate` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-jdbc/src/main/java/lite/spring/jdbc/JdbcTemplate.java)
-- [Spring: Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
+- [spring-lite `ProxyFactory` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-aop/src/main/java/lite/spring/aop/support/ProxyFactory.java) — GitHub
+- [spring-lite `TransactionalBeanPostProcessor` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-tx/src/main/java/lite/spring/tx/support/TransactionalBeanPostProcessor.java) — GitHub
+- [spring-lite `JdbcTemplate` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-jdbc/src/main/java/lite/spring/jdbc/JdbcTemplate.java) — GitHub
+- [Spring: Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html) — Spring Docs

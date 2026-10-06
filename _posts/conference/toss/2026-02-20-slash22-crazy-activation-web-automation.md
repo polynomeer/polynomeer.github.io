@@ -75,6 +75,6 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=ScZT51pZ5MQ)
-- [SLASH 22](https://toss.im/slash-22)
-- [RxJS](https://rxjs.dev/)
+- [발표 영상](https://www.youtube.com/watch?v=ScZT51pZ5MQ) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [RxJS](https://rxjs.dev/) — RxJS

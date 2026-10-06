@@ -105,6 +105,6 @@ Iceberg로 관리 효율을 올려도 5년 뒤 6배 이상의 데이터를 물�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=xae12xy3gC0)
-- [TMC 25](https://toss.im/tmc-25)
-- 같은 연사의 앞선 발표: [SLASH 23 Elasticsearch 클러스터 개선기 리뷰](/posts/slash23-elasticsearch-cluster/)
+- [발표 영상](https://www.youtube.com/watch?v=xae12xy3gC0) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스
+- [SLASH 23 Elasticsearch 클러스터 개선기 리뷰](/posts/slash23-elasticsearch-cluster/) — 같은 연사의 앞선 발표

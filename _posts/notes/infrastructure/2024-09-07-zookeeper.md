@@ -202,11 +202,11 @@ ZooKeeper 개체가 생성되면 IO 스레드와 이벤트 스레드라는 두 �
 4. 해당 트랜잭션 로그를 저장하는 위치에 주의하십시오. ZooKeeper에서 가장 성능이 중요한 부분은 트랜잭션 로그이다. ZooKeeper는 응답을 반환하기 전에 트랜잭션을 미디어와 동기화해야 한다. 전용 트랜잭션 로그 장치는 일관되고 우수한 성능의 핵심이다. 사용 중인 장치에 로그를 기록하면 성능이 저하된다. 저장 장치가 하나만 있는 경우 NFS에 추적 파일을 넣고 snapshotCount를 늘리십시오. 문제를 제거하지는 않지만 완화할 수 있다.
 5. Java 최대 힙 크기를 올바르게 설정하십시오. *교환을 피하는* 것이 매우 중요한다 . 불필요하게 디스크로 이동하면 거의 확실히 성능이 허용할 수 없을 정도로 저하된다. ZooKeeper에서는 모든 것이 순서가 지정되어 있으므로 하나의 요청이 디스크에 도달하면 대기 중인 다른 모든 요청이 디스크에 도달한다는 것을 기억하십시오. 스와핑을 방지하려면 힙 크기를 보유한 실제 메모리 양에서 OS 및 캐시에 필요한 양을 뺀 값으로 설정하십시오. 구성에 대한 최적의 힙 크기를 결정하는 가장 좋은 방법은 *부하 테스트를 실행하는 것* 이다. 어떤 이유로 할 수 없는 경우 추정치를 보수적으로 유지하고 컴퓨터를 교체할 수 있는 한계보다 훨씬 낮은 숫자를 선택하십시오. 예를 들어, 4G 머신에서 3G 힙은 처음부터 보수적인 추정치이다.
 
-## References
+## 참고
 
-- https://hub.docker.com/_/zookeeper
-- *[API Reference](https://zookeeper.apache.org/doc/current/apidocs/zookeeper-server/index.html)* : The complete reference to the ZooKeeper API
-- *[ZooKeeper Talk at the Hadoop Summit 2008](https://www.youtube.com/Watch?v=rXI9xiesUV8)* : A video introduction to ZooKeeper, by Benjamin Reed of Yahoo! Research
-- *[Barrier and Queue Tutorial](https://cwiki.apache.org/confluence/display/ZOOKEEPER/Tutorial)* : The excellent Java tutorial by Flavio Junqueira, implementing simple barriers and producer-consumer queues using ZooKeeper.
-- *[ZooKeeper - A Reliable, Scalable Distributed Coordination System](https://cwiki.apache.org/confluence/display/ZOOKEEPER/ZooKeeperArticles)* : An article by Todd Hoff (07/15/2008)
-- *[ZooKeeper Recipes](https://zookeeper.apache.org/doc/r3.8.0/recipes.html)* : Pseudo-level discussion of the implementation of various synchronization solutions with ZooKeeper: Event Handles, Queues, Locks, and Two-phase Commits.
+- [zookeeper](https://hub.docker.com/_/zookeeper) — Official Image | Docker Hub
+- [API Reference](https://zookeeper.apache.org/doc/current/apidocs/zookeeper-server/index.html) — Apache ZooKeeper: The complete reference to the ZooKeeper API
+- [ZooKeeper Talk at the Hadoop Summit 2008](https://www.youtube.com/Watch?v=rXI9xiesUV8) — YouTube: A video introduction to ZooKeeper, by Benjamin Reed of Yahoo! Research
+- [Barrier and Queue Tutorial](https://cwiki.apache.org/confluence/display/ZOOKEEPER/Tutorial) — Apache Wiki: The excellent Java tutorial by Flavio Junqueira, implementing simple barriers and producer-consumer queues using ZooKeeper.
+- [ZooKeeper - A Reliable, Scalable Distributed Coordination System](https://cwiki.apache.org/confluence/display/ZOOKEEPER/ZooKeeperArticles) — Apache Wiki: An article by Todd Hoff (07/15/2008)
+- [ZooKeeper Recipes](https://zookeeper.apache.org/doc/r3.8.0/recipes.html) — Apache ZooKeeper: Pseudo-level discussion of the implementation of various synchronization solutions with ZooKeeper: Event Handles, Queues, Locks, and Two-phase Commits.

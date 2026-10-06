@@ -147,5 +147,5 @@ RAISE EXCEPTION 'INV-006: ledger_transaction % is immutable once posted', OLD.tr
 
 ## 참고
 
-- [PostgreSQL Documentation - CREATE TRIGGER](https://www.postgresql.org/docs/current/sql-createtrigger.html)
-- [jqwik User Guide](https://jqwik.net/docs/current/user-guide.html) — Checking Coverage of Collected Statistics
+- [CREATE TRIGGER](https://www.postgresql.org/docs/current/sql-createtrigger.html) — PostgreSQL Documentation
+- [jqwik User Guide](https://jqwik.net/docs/current/user-guide.html) — jqwik.net: Checking Coverage of Collected Statistics

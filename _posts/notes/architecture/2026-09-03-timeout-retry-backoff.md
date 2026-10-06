@@ -113,11 +113,11 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 ## 참고
 
-- [AWS Builders' Library: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/)
-- [Marc Brooker, Exponential Backoff And Jitter (AWS Architecture Blog, 2015)](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
-- [Google SRE Book, Chapter 21: Handling Overload](https://sre.google/sre-book/handling-overload/)
-- [Google SRE Book, Chapter 22: Addressing Cascading Failures](https://sre.google/sre-book/addressing-cascading-failures/)
-- [gRPC: Deadlines](https://grpc.io/docs/guides/deadlines/)
-- [gRPC: Retry](https://grpc.io/docs/guides/retry/)
+- [AWS Builders' Library: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) — AWS
+- [Marc Brooker, Exponential Backoff And Jitter (AWS Architecture Blog, 2015)](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/) — AWS Architecture Blog
+- [Chapter 21: Handling Overload](https://sre.google/sre-book/handling-overload/) — Google SRE Book
+- [Chapter 22: Addressing Cascading Failures](https://sre.google/sre-book/addressing-cascading-failures/) — Google SRE Book
+- [gRPC: Deadlines](https://grpc.io/docs/guides/deadlines/) — gRPC
+- [gRPC: Retry](https://grpc.io/docs/guides/retry/) — gRPC
 - [ParityPay 9편 - 외부기관 장애 격리](/posts/parity-pay-external-isolation/)
 - [서킷 브레이커 정리](/posts/circuit-braker/)

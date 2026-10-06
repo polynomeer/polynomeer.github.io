@@ -99,8 +99,8 @@ sequenceDiagram
 
 ## 참고
 
-- [Spring: Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html)
-- [Spring: Rolling Back a Declarative Transaction](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html)
-- [Spring Framework v6.2.0 `JpaTransactionManager` 소스](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-orm/src/main/java/org/springframework/orm/jpa/JpaTransactionManager.java#L520-L542)
-- [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
+- [Spring: Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html) — Spring Docs
+- [Spring: Rolling Back a Declarative Transaction](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html) — Spring Docs
+- [Spring Framework v6.2.0 `JpaTransactionManager` 소스](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-orm/src/main/java/org/springframework/orm/jpa/JpaTransactionManager.java#L520-L542) — GitHub
+- [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing) — GitHub
 - [트랜잭션 정리](/posts/transaction/), [ACID 정리](/posts/acid/)

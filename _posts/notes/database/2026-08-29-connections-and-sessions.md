@@ -104,7 +104,8 @@ transaction 모드가 가장 널리 쓰이는데, 그 제약이 애플리케이�
 
 ## 참고
 
-- [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
-- [PostgreSQL: Connection pooling 고려사항](https://www.postgresql.org/docs/current/runtime-config-connection.html)
-- [PgBouncer: Pooling modes](https://www.pgbouncer.org/features.html)
-- [PgBouncer: Configuration](https://www.pgbouncer.org/config.html), [Changelog](https://www.pgbouncer.org/changelog.html) — `max_prepared_statements`
+- [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing) — GitHub
+- [PostgreSQL: Connection pooling 고려사항](https://www.postgresql.org/docs/current/runtime-config-connection.html) — PostgreSQL Docs
+- [PgBouncer: Pooling modes](https://www.pgbouncer.org/features.html) — PgBouncer
+- [PgBouncer: Configuration](https://www.pgbouncer.org/config.html) — PgBouncer
+- [Changelog](https://www.pgbouncer.org/changelog.html) — PgBouncer: `max_prepared_statements`

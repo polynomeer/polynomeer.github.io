@@ -85,5 +85,5 @@ HA 도구를 바꾸는 일의 절반은 도구 선정과 클러스터 구성이�
 
 - [MySQL Orchestrator 기반의 새로운 HA 표준 개발기](https://tech.kakao.com/posts/775) — kakao tech, 2025-09-30
 - [Orchestrator High Availability](https://github.com/openark/orchestrator/blob/master/docs/high-availability.md) — orchestrator 문서
-- [openark/orchestrator](https://github.com/openark/orchestrator) — 저장소 README(아카이브 안내)
+- [openark/orchestrator](https://github.com/openark/orchestrator) — GitHub: 저장소 README(아카이브 안내)
 - [Replica Server Options and Variables](https://dev.mysql.com/doc/refman/8.4/en/replication-options-replica.html) — MySQL 8.4 Reference Manual

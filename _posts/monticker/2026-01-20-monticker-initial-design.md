@@ -195,30 +195,30 @@ sequenceDiagram
 
 ## 참고
 
-- [polynomeer/monticker](https://github.com/polynomeer/monticker) — 저장소
-- [docs/product.md @a7e622e](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/product.md)
-- [docs/architecture.md @a7e622e](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/architecture.md)
-- [docs/external-apis.md @a7e622e](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/external-apis.md)
-- [ADR-001 Modular Monolith](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/001-modular-monolith.md)
-- [ADR-002 TimescaleDB](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/002-timescaledb.md)
-- [ADR-003 stock_events](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/003-stock-events-central.md)
-- [ADR-004 Redis Streams over Kafka](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/004-redis-streams-over-kafka.md)
-- [ADR-064 초기 기술 스택 선택 근거 (사후 재구성)](https://github.com/polynomeer/monticker/blob/477c1b422de93ca5193de75e66495a37d448889f/docs/decisions/064-initial-stack-rationale.md)
-- [Martin Fowler, MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html)
-- [PostgreSQL 16, Table Partitioning](https://www.postgresql.org/docs/16/ddl-partitioning.html)
-- [PostgreSQL 16, CREATE INDEX](https://www.postgresql.org/docs/16/sql-createindex.html)
-- [PostgreSQL 16, Date/Time Functions and Operators](https://www.postgresql.org/docs/16/functions-datetime.html)
-- [Tiger Data, Hypertables](https://www.tigerdata.com/docs/use-timescale/latest/hypertables)
-- [Tiger Data, About continuous aggregates](https://www.tigerdata.com/docs/use-timescale/latest/continuous-aggregates/about-continuous-aggregates)
-- [InfluxDB 3 Core](https://docs.influxdata.com/influxdb3/core/)
-- [Redis, Pub/Sub](https://redis.io/docs/latest/develop/pubsub/)
-- [Redis, Streams](https://redis.io/docs/latest/develop/data-types/streams/)
-- [Apache Kafka, Introduction](https://kafka.apache.org/intro)
-- [Kotlin, Null safety](https://kotlinlang.org/docs/null-safety.html)
-- [Spring Boot, Kotlin Support](https://docs.spring.io/spring-boot/reference/features/kotlin.html)
-- [Spring Framework, STOMP External Broker](https://docs.spring.io/spring-framework/reference/web/websocket/stomp/handle-broker-relay.html)
-- [Next.js Docs](https://nextjs.org/docs)
-- [Vite, Getting Started](https://vite.dev/guide/)
-- [TanStack Query, Overview](https://tanstack.com/query/latest/docs/framework/react/overview)
-- [TradingView, lightweight-charts](https://github.com/tradingview/lightweight-charts)
-- [Docker Compose, Using profiles](https://docs.docker.com/compose/how-tos/profiles/)
+- [polynomeer/monticker](https://github.com/polynomeer/monticker) — GitHub: 저장소
+- [docs/product.md @a7e622e](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/product.md) — GitHub
+- [docs/architecture.md @a7e622e](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/architecture.md) — GitHub
+- [docs/external-apis.md @a7e622e](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/external-apis.md) — GitHub
+- [ADR-001 Modular Monolith](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/001-modular-monolith.md) — GitHub
+- [ADR-002 TimescaleDB](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/002-timescaledb.md) — GitHub
+- [ADR-003 stock_events](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/003-stock-events-central.md) — GitHub
+- [ADR-004 Redis Streams over Kafka](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/004-redis-streams-over-kafka.md) — GitHub
+- [ADR-064 초기 기술 스택 선택 근거 (사후 재구성)](https://github.com/polynomeer/monticker/blob/477c1b422de93ca5193de75e66495a37d448889f/docs/decisions/064-initial-stack-rationale.md) — GitHub
+- [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) — Martin Fowler
+- [Table Partitioning](https://www.postgresql.org/docs/16/ddl-partitioning.html) — PostgreSQL 16
+- [CREATE INDEX](https://www.postgresql.org/docs/16/sql-createindex.html) — PostgreSQL 16
+- [Date/Time Functions and Operators](https://www.postgresql.org/docs/16/functions-datetime.html) — PostgreSQL 16
+- [Hypertables](https://www.tigerdata.com/docs/use-timescale/latest/hypertables) — Tiger Data
+- [About continuous aggregates](https://www.tigerdata.com/docs/use-timescale/latest/continuous-aggregates/about-continuous-aggregates) — Tiger Data
+- [InfluxDB 3 Core](https://docs.influxdata.com/influxdb3/core/) — InfluxData Docs
+- [Pub/Sub](https://redis.io/docs/latest/develop/pubsub/) — Redis
+- [Streams](https://redis.io/docs/latest/develop/data-types/streams/) — Redis
+- [Introduction](https://kafka.apache.org/intro) — Apache Kafka
+- [Null safety](https://kotlinlang.org/docs/null-safety.html) — Kotlin
+- [Kotlin Support](https://docs.spring.io/spring-boot/reference/features/kotlin.html) — Spring Boot
+- [STOMP External Broker](https://docs.spring.io/spring-framework/reference/web/websocket/stomp/handle-broker-relay.html) — Spring Framework
+- [Next.js Docs](https://nextjs.org/docs) — Next.js
+- [Getting Started](https://vite.dev/guide/) — Vite
+- [Overview](https://tanstack.com/query/latest/docs/framework/react/overview) — TanStack Query
+- [TradingView, lightweight-charts](https://github.com/tradingview/lightweight-charts) — GitHub
+- [Using profiles](https://docs.docker.com/compose/how-tos/profiles/) — Docker Compose

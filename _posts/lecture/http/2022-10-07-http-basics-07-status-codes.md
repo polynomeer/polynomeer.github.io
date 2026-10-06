@@ -105,7 +105,9 @@ PRG는 브라우저의 재제출 위험을 줄이는 화면 흐름이다. 사용
 
 ## 참고
 
-- [HTTP 상태코드 소개](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61370), [2xx - 성공](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61371)
-- [3xx - 리다이렉션1](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61372), [3xx - 리다이렉션2](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61780)
-- [4xx - 클라이언트 오류, 5xx - 서버 오류](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61373)
-- [RFC 9110, Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#section-15)
+- [HTTP 상태코드 소개](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61370) — 인프런
+- [2xx - 성공](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61371) — 인프런
+- [3xx - 리다이렉션1](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61372) — 인프런
+- [3xx - 리다이렉션2](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61780) — 인프런
+- [4xx - 클라이언트 오류, 5xx - 서버 오류](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61373) — 인프런
+- [RFC 9110, Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#section-15) — IETF

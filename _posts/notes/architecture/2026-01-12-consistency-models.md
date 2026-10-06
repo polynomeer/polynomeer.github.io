@@ -71,8 +71,12 @@ CAP를 "셋 중 둘"로 외우면 오해한다. 분할(P)은 고르는 것이 �
 
 ## 참고
 
-- Herlihy & Wing, [Linearizability: A Correctness Condition for Concurrent Objects](https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf) (1990)
-- Abadi, [Consistency Tradeoffs in Modern Distributed Database System Design](https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf) (PACELC)
-- [Jepsen: Consistency Models](https://jepsen.io/consistency) · [Linearizability](https://jepsen.io/consistency/models/linearizable) · [Sequential Consistency](https://jepsen.io/consistency/models/sequential)
-- [Kafka: Producer acks](https://kafka.apache.org/documentation/#producerconfigs_acks), [PostgreSQL: synchronous_commit](https://www.postgresql.org/docs/current/runtime-config-wal.html)
-- [Kafka 4.1 Producer Configs](https://kafka.apache.org/41/configuration/producer-configs/), [Redis: WAIT](https://redis.io/docs/latest/commands/wait/)
+- [Linearizability: A Correctness Condition for Concurrent Objects](https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf) — Herlihy & Wing: (1990)
+- [Consistency Tradeoffs in Modern Distributed Database System Design](https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf) — Abadi: (PACELC)
+- [Jepsen: Consistency Models](https://jepsen.io/consistency) — Jepsen
+- [Linearizability](https://jepsen.io/consistency/models/linearizable) — Jepsen
+- [Sequential Consistency](https://jepsen.io/consistency/models/sequential) — Jepsen
+- [Kafka: Producer acks](https://kafka.apache.org/documentation/#producerconfigs_acks) — Apache Kafka
+- [PostgreSQL: synchronous_commit](https://www.postgresql.org/docs/current/runtime-config-wal.html) — PostgreSQL Docs
+- [Kafka 4.1 Producer Configs](https://kafka.apache.org/41/configuration/producer-configs/) — Apache Kafka
+- [Redis: WAIT](https://redis.io/docs/latest/commands/wait/) — Redis Docs

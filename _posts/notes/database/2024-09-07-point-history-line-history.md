@@ -79,4 +79,4 @@ tags: [Database, History, Data Modeling]
 
 ## 참고
 
-- [PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html)
+- [PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html) — PostgreSQL Docs

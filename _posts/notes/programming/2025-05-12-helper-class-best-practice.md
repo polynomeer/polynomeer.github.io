@@ -208,17 +208,17 @@ public class DeliveryFeePolicyResolver {
 
 ---
 
-## 참고 자료
+## 참고
 
-1. [Helper class - Wikipedia](https://en.wikipedia.org/wiki/Helper_class)
-2. [Java Helper vs. Utility Classes](https://www.baeldung.com/java-helper-vs-utility-classes)
-3. [Helper class is evil](https://blog.itkonekt.com/2017/11/22/helper-class-is-evil-2/)
-4. [Helper classes considered bad OO](https://ernestmicklei.com/2006/03/helper-classes-considered-bad-oo/)
-5. [How to Avoid Static Helper Classes](https://www.bettercodebytes.com/how-to-avoid-static-helper-classes/)
-6. [OOP Alternative to Utility Classes](https://www.yegor256.com/2014/05/05/oop-alternative-to-utility-classes.html)
-7. [Utility and helper classes - a code smell?](https://lindbakk.com/blog/utility-and-helper-classes-a-code-smell)
-8. [Class Helpers: Good or Bad ?](https://blogs.conceptfirst.com/2006/05/08/class-helpers-good-or-bad.html)
-9. [Helper Classes Are Evil](https://saintgimp.org/2009/05/05/helper-classes-are-evil/)
-10. [Helper Classes in Android](https://medium.com/@kalpeshdoru/in-android-development-helper-classes-also-known-as-utility-classes-are-a-popular-approach-for-775b2b968a62)
-11. [Best Practices for Creating Utility Classes in Software Development](https://medium.com/@salmankhan_27014/best-practices-for-creating-utility-classes-in-software-development-6f9ad1e8d27a)
-12. [Helper class usage best practice](https://github.com/microsoft/playwright/issues/18285)
+- [Helper class](https://en.wikipedia.org/wiki/Helper_class) — Wikipedia
+- [Java Helper vs. Utility Classes](https://www.baeldung.com/java-helper-vs-utility-classes) — Baeldung
+- [Helper class is evil](https://blog.itkonekt.com/2017/11/22/helper-class-is-evil-2/) — blog.itkonekt.com
+- [Helper classes considered bad OO](https://ernestmicklei.com/2006/03/helper-classes-considered-bad-oo/) — ernestmicklei.com
+- [How to Avoid Static Helper Classes](https://www.bettercodebytes.com/how-to-avoid-static-helper-classes/) — bettercodebytes.com
+- [OOP Alternative to Utility Classes](https://www.yegor256.com/2014/05/05/oop-alternative-to-utility-classes.html) — yegor256.com
+- [Utility and helper classes - a code smell?](https://lindbakk.com/blog/utility-and-helper-classes-a-code-smell) — lindbakk.com
+- [Class Helpers: Good or Bad ?](https://blogs.conceptfirst.com/2006/05/08/class-helpers-good-or-bad.html) — blogs.conceptfirst.com
+- [Helper Classes Are Evil](https://saintgimp.org/2009/05/05/helper-classes-are-evil/) — saintgimp.org
+- [Helper Classes in Android](https://medium.com/@kalpeshdoru/in-android-development-helper-classes-also-known-as-utility-classes-are-a-popular-approach-for-775b2b968a62) — Medium
+- [Best Practices for Creating Utility Classes in Software Development](https://medium.com/@salmankhan_27014/best-practices-for-creating-utility-classes-in-software-development-6f9ad1e8d27a) — Medium
+- [Helper class usage best practice](https://github.com/microsoft/playwright/issues/18285) — GitHub

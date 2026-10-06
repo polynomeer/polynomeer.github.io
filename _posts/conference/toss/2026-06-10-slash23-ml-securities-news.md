@@ -84,5 +84,5 @@ flowchart LR
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-23/session-detail/B2-4)
-- [발표 영상](https://www.youtube.com/watch?v=dnxaTrKJr0c)
+- [세션 페이지](https://toss.im/slash-23/session-detail/B2-4) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=dnxaTrKJr0c) — YouTube

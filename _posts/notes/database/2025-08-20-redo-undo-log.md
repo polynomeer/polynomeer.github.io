@@ -57,5 +57,5 @@ tags: [Database, Redo Log, Undo Log]
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual: Undo Logs](https://dev.mysql.com/doc/refman/8.0/en/innodb-undo-logs.html)
-- [MySQL 8.0 Reference Manual: Redo Log](https://dev.mysql.com/doc/refman/8.0/en/innodb-redo-log.html)
+- [MySQL 8.0 Reference Manual: Undo Logs](https://dev.mysql.com/doc/refman/8.0/en/innodb-undo-logs.html) — MySQL Docs
+- [MySQL 8.0 Reference Manual: Redo Log](https://dev.mysql.com/doc/refman/8.0/en/innodb-redo-log.html) — MySQL Docs

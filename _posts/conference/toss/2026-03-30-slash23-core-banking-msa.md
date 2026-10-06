@@ -103,6 +103,6 @@ API를 한 번에 전환하면 문제 시 복구가 어려우므로 코어뱅킹
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=amTJyIE1wO0)
-- [SLASH 23](https://toss.im/slash-23)
-- 채널계 쪽 이야기: [SLASH 22 왜 은행은 무한스크롤이 안되나요 리뷰](/posts/slash22-bank-infinite-scroll/)
+- [발표 영상](https://www.youtube.com/watch?v=amTJyIE1wO0) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [SLASH 22 왜 은행은 무한스크롤이 안되나요 리뷰](/posts/slash22-bank-infinite-scroll/) — 채널계 쪽 이야기

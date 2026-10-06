@@ -129,7 +129,7 @@ Redis Pub/Sub을 쓰면 폴링 자원을 아낄 수 있다. 그런데 Pub/Sub은
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=eS9tukmYBLI)
-- [SLASH 23](https://toss.im/slash-23)
-- [Reflections 라이브러리](https://github.com/ronmamo/reflections)
-- [Redis Pub/Sub](https://redis.io/docs/latest/develop/pubsub/)
+- [발표 영상](https://www.youtube.com/watch?v=eS9tukmYBLI) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [Reflections 라이브러리](https://github.com/ronmamo/reflections) — GitHub
+- [Redis Pub/Sub](https://redis.io/docs/latest/develop/pubsub/) — Redis Docs

@@ -61,4 +61,4 @@ flowchart TD
 
 ## 참고
 
-- [JPA 활용1 - 웹 애플리케이션 개발](https://www.inflearn.com/course/스프링부트-JPA-활용-1/dashboard?cid=324119): 전체 커리큘럼과 「애플리케이션 아키텍처」의 명시한 구간. 책임표와 업무 시나리오는 자체 구성했다.
+- [JPA 활용1 - 웹 애플리케이션 개발](https://www.inflearn.com/course/스프링부트-JPA-활용-1/dashboard?cid=324119) — 인프런: 전체 커리큘럼과 「애플리케이션 아키텍처」의 명시한 구간. 책임표와 업무 시나리오는 자체 구성했다.

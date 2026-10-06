@@ -98,5 +98,5 @@ Interceptor는 스프링 MVC의 핸들러 실행 전후에 동작한다. 컨트�
 
 ## 참고
 
-- [Spring Framework Javadoc — HandlerInterceptor](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html)
-- [Spring Framework Reference — AOP Concepts](https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html)
+- [Spring Framework Javadoc — HandlerInterceptor](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html) — Spring Docs
+- [Spring Framework Reference — AOP Concepts](https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html) — Spring Docs

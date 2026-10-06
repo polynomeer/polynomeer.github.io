@@ -91,7 +91,7 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=RjsG-zKMuX8)
-- [SLASH 23](https://toss.im/slash-23)
-- [Apache Airflow ExternalTaskSensor](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/external_task_sensor.html)
-- [Apache Ranger](https://ranger.apache.org/)
+- [발표 영상](https://www.youtube.com/watch?v=RjsG-zKMuX8) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [Apache Airflow ExternalTaskSensor](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/external_task_sensor.html) — Apache Airflow
+- [Apache Ranger](https://ranger.apache.org/) — Apache Ranger

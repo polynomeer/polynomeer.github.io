@@ -77,14 +77,14 @@ RabbitMQ 문서에 따르면 수동 ack를 쓰는 경우, ack되지 않은 메�
 
 ## 참고
 
-- https://medium.com/free-code-camp/how-to-scale-microservices-with-message-queues-spring-boot-and-kubernetes-f691b7ba3acf
-- https://steady-snail.tistory.com/165
-- https://aws.amazon.com/ko/message-queue/
-- https://www.ibm.com/cloud/learn/message-queues
-- https://www.ibm.com/docs/en/ibm-mq/8.0?topic=overview-introduction-message-queuing
-- https://medium.com/must-know-computer-science/system-design-message-queues-245612428a22
-- https://www.cloudamqp.com/blog/what-is-message-queuing.html
-- https://medium.com/swlh/everything-you-need-to-know-about-message-queues-a-complete-guide-dbf190d001d7
+- [medium.com/free-code-camp/how-to-scale-microservices-with-message-queues-spring-boot-and-kubernetes-f691b7ba3acf](https://medium.com/free-code-camp/how-to-scale-microservices-with-message-queues-spring-boot-and-kubernetes-f691b7ba3acf) — Medium
+- [메시지 큐(Message Queue / MQ)](https://steady-snail.tistory.com/165) — Tistory
+- [메시지 대기열이란 무엇인가요?](https://aws.amazon.com/ko/message-queue/) — AWS
+- [ibm.com/cloud/learn/message-queues](https://www.ibm.com/cloud/learn/message-queues) — ibm.com
+- [ibm.com/docs/en/ibm-mq/8.0?topic=overview-introduction-message-queuing](https://www.ibm.com/docs/en/ibm-mq/8.0?topic=overview-introduction-message-queuing) — ibm.com
+- [System Design — Message Queues](https://medium.com/must-know-computer-science/system-design-message-queues-245612428a22) — Medium
+- [What is Message Queuing?](https://www.cloudamqp.com/blog/what-is-message-queuing.html) — CloudAMQP
+- [Everything You Need to Know About Message Queues: A Complete Guide](https://medium.com/swlh/everything-you-need-to-know-about-message-queues-a-complete-guide-dbf190d001d7) — Medium
 - [What is a Message Queue?](https://aws.amazon.com/message-queue/) — AWS
 - [Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms) — RabbitMQ Documentation
 - [Dead Letter Exchanges](https://www.rabbitmq.com/docs/dlx) — RabbitMQ Documentation

@@ -124,4 +124,5 @@ Redis 문서도 이 패턴의 약점을 짚는다. [`SET` 명령 문서](https:/
 - [SET](https://redis.io/docs/latest/commands/set/) — Redis 문서, Patterns 절의 `SET ... NX` 락과 해제 방식
 - [InnoDB: Locks Set by Different SQL Statements](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) — MySQL 8.0 Reference Manual
 - [대용량 지분율 데이터 처리 성능 개선과 동시성 제어 전략](/posts/bulk-insert-performacne/)
-- 랩 코드: [LegacyRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/LegacyRedisLock.java), [RedisLockRaceConditionTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/test/java/com/portfolio/equitylab/lock/RedisLockRaceConditionTest.java)
+- [LegacyRedisLock.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/main/java/com/portfolio/equitylab/lock/LegacyRedisLock.java) — GitHub: 랩 코드
+- [RedisLockRaceConditionTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/test/java/com/portfolio/equitylab/lock/RedisLockRaceConditionTest.java) — GitHub: 랩 코드

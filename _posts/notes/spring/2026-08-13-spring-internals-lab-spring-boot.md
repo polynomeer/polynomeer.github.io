@@ -190,6 +190,6 @@ Boot의 편리함은 순서에서 나온다. 초기 이벤트는 컨텍스트보
 
 ## 참고
 
-- [Spring Boot Reference: SpringApplication](https://docs.spring.io/spring-boot/reference/features/spring-application.html) — Application Events and Listeners
-- [Spring Boot Reference: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)
-- [DeferredImportSelector Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/DeferredImportSelector.html)
+- [Spring Boot Reference: SpringApplication](https://docs.spring.io/spring-boot/reference/features/spring-application.html) — Spring Docs: Application Events and Listeners
+- [Spring Boot Reference: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html) — Spring Docs
+- [DeferredImportSelector Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/DeferredImportSelector.html) — Spring Docs

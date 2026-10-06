@@ -337,16 +337,18 @@ T + X  ← TTL 만료 이후, DB 접근이 집중되는 시점
 
 ---
 
-## 참고자료
+## 참고
 
-1. *[Cache stampede](https://en.wikipedia.org/wiki/Cache_stampede)*, Wikipedia
-2. 김신 (2024), *[캐시 문제 해결 가이드 - DB 과부하 방지 실전 팁](https://toss.tech/article/cache-traffic-tip)*, Toss Tech
-3. 김가림 (2020), *[캐시 성능 향상기 (Improving Cache Speed at Scale)](https://meetup.nhncloud.com/posts/251)*, NHN Cloud
-4. taehee kim (2023), *[Hot key Cache Stampede와 Probabilistic Early Recomputation 적용](https://velog.io/@xogml951/Hot-key에서-Cache-Stampede와-Probabilistic-Early-Recomputation-적용)*, Velog
-5. [Vaibhav Singh](https://medium.com/@vaibhav0109) (2018), *[What is Cache Stampede?](https://medium.com/@vaibhav0109/cache-stampede-problem-5eba782a1a4f)*, Medium
-6. GeeksforGeeks (2023), [Cache Stampede or Dogpile Problem in System Design](https://www.geeksforgeeks.org/cache-stempede-or-dogpile-problem-in-system-design/), GeeksforGeeks
-7. Zohaib Sibte Hassan, DoorDash, TLM (2020), *[Improve Cache Speed at Scale - RedisConf 2020](https://youtu.be/mPg20ykAFU4?si=QRvN2BZbE8kN9om6)*, RedisConf 2020
-8. 이현재 (2024), *[캐시 스탬피드를 대응하는 성능 향상 전략, PER 알고리즘 구현](https://blog.hwahae.co.kr/all/tech/14003)*, 화해
-9. [Sid](https://medium.com/@_sidharth_m_) (2024), *[How to Avoid Cache Stampede or “Dogpile” Problem Upon Cache Expiry?](https://medium.com/@_sidharth_m_/how-to-avoid-cache-stampede-or-dogpile-problem-upon-cache-expiry-370ecc06b76c)*, Medium
-10. A. Vattani, F. Chierichetti, K. Lowenstein (2015), *[Optimal Probabilistic Cache Stampede Prevention](https://www.vldb.org/pvldb/vol8/p886-vattani.pdf)*, Proceedings of the VLDB Endowment 8(8)
-11. *[SET](https://redis.io/docs/latest/commands/set)*, Redis Docs
+- [Cache stampede](https://en.wikipedia.org/wiki/Cache_stampede) — Wikipedia
+- [캐시 문제 해결 가이드 - DB 과부하 방지 실전 팁](https://toss.tech/article/cache-traffic-tip) — Toss Tech: 김신 (2024)
+- [캐시 성능 향상기 (Improving Cache Speed at Scale)](https://meetup.nhncloud.com/posts/251) — 김가림 (2020): NHN Cloud
+- [Hot key Cache Stampede와 Probabilistic Early Recomputation 적용](https://velog.io/@xogml951/Hot-key에서-Cache-Stampede와-Probabilistic-Early-Recomputation-적용) — Velog: taehee kim (2023)
+- [Vaibhav Singh](https://medium.com/@vaibhav0109) — Medium: (2018),
+- [What is Cache Stampede?](https://medium.com/@vaibhav0109/cache-stampede-problem-5eba782a1a4f) — Medium
+- [Cache Stampede or Dogpile Problem in System Design](https://www.geeksforgeeks.org/cache-stempede-or-dogpile-problem-in-system-design/) — GeeksforGeeks: GeeksforGeeks (2023)
+- [Improve Cache Speed at Scale - RedisConf 2020](https://youtu.be/mPg20ykAFU4?si=QRvN2BZbE8kN9om6) — Zohaib Sibte Hassan, DoorDash, TLM (2020): RedisConf 2020
+- [캐시 스탬피드를 대응하는 성능 향상 전략, PER 알고리즘 구현](https://blog.hwahae.co.kr/all/tech/14003) — 이현재 (2024): 화해
+- [Sid](https://medium.com/@_sidharth_m_) — Medium: (2024),
+- [How to Avoid Cache Stampede or “Dogpile” Problem Upon Cache Expiry?](https://medium.com/@_sidharth_m_/how-to-avoid-cache-stampede-or-dogpile-problem-upon-cache-expiry-370ecc06b76c) — Medium
+- [Optimal Probabilistic Cache Stampede Prevention](https://www.vldb.org/pvldb/vol8/p886-vattani.pdf) — Proceedings of the VLDB Endowment 8(8): A. Vattani, F. Chierichetti, K. Lowenstein (2015)
+- [SET](https://redis.io/docs/latest/commands/set) — Redis Docs

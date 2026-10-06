@@ -82,6 +82,7 @@ Outbox의 실패 모드는 우리 테이블과 우리 발행기 안에 있다. �
 
 ## 참고
 
-- [PostgreSQL to ES: (1) Kafka Connect CDC 파이프라인 구성](https://tech.kakao.com/posts/776), [(2) Kafka Connect 트러블슈팅](https://tech.kakao.com/posts/777) — 카카오 기술블로그, 2025-10-10
-- [PostgreSQL Documentation: Logical Decoding Concepts](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html) — replication slot과 WAL 보존
-- [Debezium connector for PostgreSQL: WAL disk space consumption](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-wal-disk-space) — heartbeat, `snapshot.mode`
+- [PostgreSQL to ES: (1) Kafka Connect CDC 파이프라인 구성](https://tech.kakao.com/posts/776) — kakao tech
+- [(2) Kafka Connect 트러블슈팅](https://tech.kakao.com/posts/777) — 카카오 기술블로그, 2025-10-10
+- [PostgreSQL Documentation: Logical Decoding Concepts](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html) — PostgreSQL Documentation: replication slot과 WAL 보존
+- [Debezium connector for PostgreSQL: WAL disk space consumption](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-wal-disk-space) — Debezium: heartbeat, `snapshot.mode`

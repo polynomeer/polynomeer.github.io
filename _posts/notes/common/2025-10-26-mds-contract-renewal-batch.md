@@ -151,5 +151,5 @@ sequenceDiagram
 
 ## 참고
 
-- [Spring Batch Reference: Chunk-oriented Processing](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing.html)
-- [Spring Batch Reference: The Domain Language of Batch](https://docs.spring.io/spring-batch/reference/domain.html)
+- [Spring Batch Reference: Chunk-oriented Processing](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing.html) — Spring Docs
+- [Spring Batch Reference: The Domain Language of Batch](https://docs.spring.io/spring-batch/reference/domain.html) — Spring Docs

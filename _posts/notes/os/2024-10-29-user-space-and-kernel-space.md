@@ -72,9 +72,11 @@ TLS가 zero-copy를 깨는 이유는 레코드 암호화가 사용자 공간 라
 
 ## 참고
 
-- [syscalls(2)](https://man7.org/linux/man-pages/man2/syscalls.2.html), [syscall(2)](https://man7.org/linux/man-pages/man2/syscall.2.html)
-- [vdso(7)](https://man7.org/linux/man-pages/man7/vdso.7.html)
-- [sendfile(2)](https://man7.org/linux/man-pages/man2/sendfile.2.html)
-- [Linux kernel documentation: Kernel TLS](https://docs.kernel.org/networking/tls.html)
-- [Java SE 21 API: ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html), [FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html)
+- [syscalls(2)](https://man7.org/linux/man-pages/man2/syscalls.2.html) — Linux man page
+- [syscall(2)](https://man7.org/linux/man-pages/man2/syscall.2.html) — Linux man page
+- [vdso(7)](https://man7.org/linux/man-pages/man7/vdso.7.html) — Linux man page
+- [sendfile(2)](https://man7.org/linux/man-pages/man2/sendfile.2.html) — Linux man page
+- [Linux kernel documentation: Kernel TLS](https://docs.kernel.org/networking/tls.html) — Linux Kernel Docs
+- [Java SE 21 API: ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html) — Oracle
+- [FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html) — Oracle Docs
 - [Kafka의 저장 구조](/posts/kafka-storage-internals/), [페이지 캐시와 fsync](/posts/page-cache-and-fsync/), [epoll](/posts/epoll/)

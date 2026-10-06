@@ -80,4 +80,4 @@ flowchart TD
 
 ## 참고
 
-- [ISRC — IFPI](https://isrc.ifpi.org/en/)
+- [ISRC — IFPI](https://isrc.ifpi.org/en/) — isrc.ifpi.org

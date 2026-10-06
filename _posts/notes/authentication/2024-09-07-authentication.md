@@ -80,6 +80,6 @@ OWASP Authentication Cheat Sheet가 정리한 항목 중 서버 개발자가 직
 
 ## 참고
 
-- [RFC 9110, HTTP Semantics, Section 11 HTTP Authentication](https://www.rfc-editor.org/rfc/rfc9110.html#section-11)
-- [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)
-- [NIST SP 800-63B, Digital Identity Guidelines: Authentication and Authenticator Management](https://pages.nist.gov/800-63-4/sp800-63b.html)
+- [RFC 9110, HTTP Semantics, Section 11 HTTP Authentication](https://www.rfc-editor.org/rfc/rfc9110.html#section-11) — IETF
+- [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) — OWASP Cheat Sheet Series
+- [Digital Identity Guidelines: Authentication and Authenticator Management](https://pages.nist.gov/800-63-4/sp800-63b.html) — NIST SP 800-63B

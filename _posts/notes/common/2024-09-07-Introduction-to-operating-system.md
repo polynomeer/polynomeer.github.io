@@ -74,5 +74,5 @@ OSTEP의 역사 부분을 보면 위의 목적들이 어디서 나왔는지 이�
 
 ## 참고
 
-- [OSTEP, Chapter 2: Introduction to Operating Systems](https://pages.cs.wisc.edu/~remzi/OSTEP/intro.pdf)
-- [OSTEP, Chapter 6: Mechanism: Limited Direct Execution](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-mechanisms.pdf)
+- [OSTEP, Chapter 2: Introduction to Operating Systems](https://pages.cs.wisc.edu/~remzi/OSTEP/intro.pdf) — pages.cs.wisc.edu
+- [OSTEP, Chapter 6: Mechanism: Limited Direct Execution](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-mechanisms.pdf) — pages.cs.wisc.edu

@@ -115,6 +115,6 @@ do {
 
 ## 참고
 
-- [LinkedList (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html)
-- [ArrayDeque (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html)
-- [Linux kernel documentation, Linked Lists in Linux](https://docs.kernel.org/core-api/list.html)
+- [LinkedList (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html) — Oracle Docs
+- [ArrayDeque (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html) — Oracle Docs
+- [Linked Lists in Linux](https://docs.kernel.org/core-api/list.html) — Linux kernel documentation

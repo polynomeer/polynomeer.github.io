@@ -70,5 +70,5 @@ flowchart TD
 
 ## 참고
 
-- [JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/스프링부트-JPA-API개발-성능최적화/dashboard?cid=324214): 전체 커리큘럼과 「API 개발 고급 정리」의 명시한 구간.
-- [Hibernate 6.6: Limits and offsets](https://docs.hibernate.org/orm/6.6/querylanguage/html_single/#limits-and-offsets): 페치 조인과 페이징 제약 보충.
+- [JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/스프링부트-JPA-API개발-성능최적화/dashboard?cid=324214) — 인프런: 전체 커리큘럼과 「API 개발 고급 정리」의 명시한 구간.
+- [Hibernate 6.6: Limits and offsets](https://docs.hibernate.org/orm/6.6/querylanguage/html_single/#limits-and-offsets) — Hibernate Docs: 페치 조인과 페이징 제약 보충.

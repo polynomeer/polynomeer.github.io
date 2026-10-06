@@ -129,4 +129,4 @@ JOIN performance_schema.data_locks l
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual - The data_lock_waits Table](https://dev.mysql.com/doc/refman/8.0/en/performance-schema-data-lock-waits-table.html) — 대기 중인 락 요청과 그것을 막는 보유 락의 쌍
+- [The data_lock_waits Table](https://dev.mysql.com/doc/refman/8.0/en/performance-schema-data-lock-waits-table.html) — MySQL 8.0 Reference Manual: 대기 중인 락 요청과 그것을 막는 보유 락의 쌍

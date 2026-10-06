@@ -105,6 +105,6 @@ microservices.io가 꼽는 단점은 두 가지다.
 
 - [MSA 환경에서의 분산 트랜잭션 관리: 2PC & SAGA 패턴](https://velog.io/@ch200203/MSA-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C%EC%9D%98-%EB%B6%84%EC%82%B0-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98-%EA%B4%80%EB%A6%AC2PC-SAGA-%ED%8C%A8%ED%84%B4) — velog
 - [PREPARE TRANSACTION](https://www.postgresql.org/docs/current/sql-prepare-transaction.html) — PostgreSQL Documentation
-- [Sagas](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) — Hector Garcia-Molina, Kenneth Salem, SIGMOD 1987
+- [Sagas](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) — cs.cornell.edu: Hector Garcia-Molina, Kenneth Salem, SIGMOD 1987
 - [Pattern: Saga](https://microservices.io/patterns/data/saga.html) — microservices.io
 - [Pattern: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) — microservices.io

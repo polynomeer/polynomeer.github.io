@@ -80,7 +80,7 @@ AES-NI는 이 라운드를 CPU 명령어 하나로 처리하는 인텔의 명령
 
 ## 참고
 
-- [RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc8446) - 1.2절(1.2와의 차이), 2절과 2.2절(키 교환 모드와 PSK), 4.2.8절(key_share), 9.1절(필수 구현), 부록 B.4(암호 스위트)
-- [RFC 9325: Recommendations for Secure Use of TLS and DTLS](https://datatracker.ietf.org/doc/html/rfc9325) - 4.1절, 4.2절(권장 스위트), 7.3절(forward secrecy). RFC 7525를 대체한다.
-- [Intel: Advanced Encryption Standard Instructions (AES-NI)](https://www.intel.com/content/www/us/en/developer/articles/technical/advanced-encryption-standard-instructions-aes-ni.html)
+- [RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc8446) — IETF: 1.2절(1.2와의 차이), 2절과 2.2절(키 교환 모드와 PSK), 4.2.8절(key_share), 9.1절(필수 구현), 부록 B.4(암호 스위트)
+- [RFC 9325: Recommendations for Secure Use of TLS and DTLS](https://datatracker.ietf.org/doc/html/rfc9325) — IETF: 4.1절, 4.2절(권장 스위트), 7.3절(forward secrecy). RFC 7525를 대체한다.
+- [Intel: Advanced Encryption Standard Instructions (AES-NI)](https://www.intel.com/content/www/us/en/developer/articles/technical/advanced-encryption-standard-instructions-aes-ni.html) — Intel
 - [TLS 핸드셰이크의 비용](/posts/tls-handshake-cost/), [SSL/TLS 정리](/posts/ssl-tls/)

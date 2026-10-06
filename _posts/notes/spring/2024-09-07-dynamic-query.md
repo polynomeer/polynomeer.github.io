@@ -77,4 +77,4 @@ private BooleanExpression eqStatus(Status status) {
 
 ## 참고
 
-- [Spring Data JPA Reference — Specifications](https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html)
+- [Spring Data JPA Reference — Specifications](https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html) — Spring Docs

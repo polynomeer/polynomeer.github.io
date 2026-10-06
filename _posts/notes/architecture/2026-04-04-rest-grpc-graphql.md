@@ -93,8 +93,8 @@ HTTP를 그대로 쓰기 때문에 주변 생태계가 전부 동작한다.
 
 ## 참고
 
-- [gRPC: Introduction](https://grpc.io/docs/what-is-grpc/introduction/)
-- [gRPC Blog: gRPC Load Balancing](https://grpc.io/blog/grpc-load-balancing/)
-- [GraphQL: Best Practices](https://graphql.org/learn/best-practices/)
-- [GraphQL: Performance](https://graphql.org/learn/performance/)
-- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110)
+- [gRPC: Introduction](https://grpc.io/docs/what-is-grpc/introduction/) — gRPC
+- [gRPC Blog: gRPC Load Balancing](https://grpc.io/blog/grpc-load-balancing/) — gRPC
+- [GraphQL: Best Practices](https://graphql.org/learn/best-practices/) — GraphQL
+- [GraphQL: Performance](https://graphql.org/learn/performance/) — GraphQL
+- [RFC 9110: HTTP Semantics](https://datatracker.ietf.org/doc/html/rfc9110) — IETF

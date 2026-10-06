@@ -109,10 +109,10 @@ Spring Boot는 2.0부터 CGLIB을 기본으로 쓴다(`proxyTargetClass=true`). 
 
 ## 참고
 
-- [Spring: Understanding AOP Proxies](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
-- [Spring: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html)
-- [Spring: Advice Ordering](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html)
-- [Spring Boot: Application Properties](https://docs.spring.io/spring-boot/appendix/application-properties/index.html)
-- [Kotlin: All-open compiler plugin](https://kotlinlang.org/docs/all-open-plugin.html)
-- [Spring Boot: proxyTargetClass default](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html)
+- [Spring: Understanding AOP Proxies](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html) — Spring Docs
+- [Spring: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — Spring Docs
+- [Spring: Advice Ordering](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html) — Spring Docs
+- [Spring Boot: Application Properties](https://docs.spring.io/spring-boot/appendix/application-properties/index.html) — Spring Docs
+- [Kotlin: All-open compiler plugin](https://kotlinlang.org/docs/all-open-plugin.html) — Kotlin Docs
+- [Spring Boot: proxyTargetClass default](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html) — Spring Docs
 - [AOP 정리](/posts/aop/), [Filter, Interceptor, AOP 정리](/posts/filter-interceptor-aop/)

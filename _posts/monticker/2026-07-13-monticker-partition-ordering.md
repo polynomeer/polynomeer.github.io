@@ -178,5 +178,5 @@ P=6, C=6. 종목 하나(파티션 1에 고정)를 핫 종목으로 만들고, �
 
 ## 참고
 
-- [segmentio/kafka-go v0.4.51, writer.go](https://github.com/segmentio/kafka-go/blob/v0.4.51/writer.go) — `RequiredAcks` 기본값
-- [Apache Kafka 3.8, Consumer Configs](https://kafka.apache.org/38/generated/consumer_config.html) — `session.timeout.ms`, `heartbeat.interval.ms`, `partition.assignment.strategy`
+- [segmentio/kafka-go v0.4.51, writer.go](https://github.com/segmentio/kafka-go/blob/v0.4.51/writer.go) — GitHub: `RequiredAcks` 기본값
+- [Apache Kafka 3.8, Consumer Configs](https://kafka.apache.org/38/generated/consumer_config.html) — Apache Kafka: `session.timeout.ms`, `heartbeat.interval.ms`, `partition.assignment.strategy`

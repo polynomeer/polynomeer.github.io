@@ -178,5 +178,5 @@ fail-closed(락을 못 잡으면 요청을 거절)는 단절 20초 동안 잔액
 
 ## 참고
 
-- [Martin Kleppmann - How to do distributed locking (2016)](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)
-- [Redis - SET](https://redis.io/docs/latest/commands/set/)
+- [How to do distributed locking (2016)](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) — Martin Kleppmann
+- [SET](https://redis.io/docs/latest/commands/set/) — Redis

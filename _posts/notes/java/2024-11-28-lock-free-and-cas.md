@@ -67,10 +67,13 @@ CAS는 원자성만 주는 것이 아니다. CPU와 컴파일러는 성능을 �
 
 ## 참고
 
-- [Java SE 21 API: java.util.concurrent.atomic 패키지](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html), [AtomicInteger](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html), [AtomicStampedReference](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/AtomicStampedReference.html)
-- [Java SE 21 API: VarHandle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/VarHandle.html), 메모리 접근 모드와 fence 메서드
-- [OpenJDK jdk21u: Unsafe.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/jdk/internal/misc/Unsafe.java), `getAndAddInt`의 CAS 루프, [IntrinsicCandidate.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/jdk/internal/vm/annotation/IntrinsicCandidate.java)
-- [Java SE 21 API: ConcurrentLinkedQueue](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ConcurrentLinkedQueue.html), Michael & Scott 기반 non-blocking 구현
-- Maged M. Michael, Michael L. Scott, [Simple, Fast, and Practical Non-Blocking and Blocking Concurrent Queue Algorithms](https://www.cs.rochester.edu/~scott/papers/1996_PODC_queues.pdf), PODC 1996, 1절(non-blocking 정의, ABA 문제)
-- Maurice Herlihy, [Wait-Free Synchronization](https://cs.brown.edu/~mph/Herlihy91/p124-herlihy.pdf), ACM TOPLAS, 1991, 1절(wait-free 정의)
+- [Java SE 21 API: java.util.concurrent.atomic 패키지](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html) — Oracle Docs
+- [AtomicInteger](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html) — Oracle Docs
+- [AtomicStampedReference](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/AtomicStampedReference.html) — Oracle Docs
+- [Java SE 21 API: VarHandle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/VarHandle.html) — Oracle Docs: 메모리 접근 모드와 fence 메서드
+- [OpenJDK jdk21u: Unsafe.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/jdk/internal/misc/Unsafe.java) — GitHub: `getAndAddInt`의 CAS 루프
+- [IntrinsicCandidate.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/jdk/internal/vm/annotation/IntrinsicCandidate.java) — GitHub
+- [Java SE 21 API: ConcurrentLinkedQueue](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ConcurrentLinkedQueue.html) — Oracle Docs: Michael & Scott 기반 non-blocking 구현
+- [Simple, Fast, and Practical Non-Blocking and Blocking Concurrent Queue Algorithms](https://www.cs.rochester.edu/~scott/papers/1996_PODC_queues.pdf) — Maged M. Michael, Michael L. Scott: PODC 1996, 1절(non-blocking 정의, ABA 문제)
+- [Wait-Free Synchronization](https://cs.brown.edu/~mph/Herlihy91/p124-herlihy.pdf) — Maurice Herlihy: ACM TOPLAS, 1991, 1절(wait-free 정의)
 - [동시성 도구의 비용](/posts/concurrency-primitives-cost/), [자바 메모리 모델](/posts/java-memory-model/)

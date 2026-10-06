@@ -296,8 +296,8 @@ public class DailyReportJob {
 
 ## 참고
 
-* [Logback Manual, Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html)
-* [SLF4J FAQ](https://www.slf4j.org/faq.html)
-* [logstash-logback-encoder](https://github.com/logfellow/logstash-logback-encoder)
+- [Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html) — Logback Manual
+- [SLF4J FAQ](https://www.slf4j.org/faq.html) — SLF4J
+- [logstash-logback-encoder](https://github.com/logfellow/logstash-logback-encoder) — GitHub
 
 ---

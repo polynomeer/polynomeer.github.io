@@ -95,7 +95,7 @@ Content-Type: application/json
 
 ## 참고
 
-- [RFC 9110: HTTP Semantics - Method Properties](https://datatracker.ietf.org/doc/html/rfc9110#name-common-method-properties)
-- [IETF draft: The Idempotency-Key HTTP Header Field](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/) · [07판 본문](https://www.ietf.org/archive/id/draft-ietf-httpapi-idempotency-key-header-07.html)
-- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
+- [RFC 9110: HTTP Semantics - Method Properties](https://datatracker.ietf.org/doc/html/rfc9110#name-common-method-properties) — IETF
+- [IETF draft: The Idempotency-Key HTTP Header Field](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/) — IETF · [07판 본문](https://www.ietf.org/archive/id/draft-ietf-httpapi-idempotency-key-header-07.html)
+- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests) — docs.stripe.com
 - [Stateless와 멱등성 정리](/posts/stateless-and-idempotent/)

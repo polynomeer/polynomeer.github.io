@@ -109,5 +109,5 @@ sequenceDiagram
 
 ## 참고
 
-- [하루 N억 건의 알림 시스템 구축기 (1)](https://tech.kakaobank.com/posts/2609-new-notification-platform-1/), 카카오뱅크 기술블로그
-- [`ForkJoinPool` Javadoc (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html), 자원 중심 Work-Stealing의 정의
+- [하루 N억 건의 알림 시스템 구축기 (1)](https://tech.kakaobank.com/posts/2609-new-notification-platform-1/) — 카카오뱅크 기술블로그
+- [`ForkJoinPool` Javadoc (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html) — Oracle Docs: 자원 중심 Work-Stealing의 정의

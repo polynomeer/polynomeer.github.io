@@ -179,8 +179,8 @@ GROUP BY status;
 
 ## 참고
 
-- [Jakarta Persistence 3.1, EnumType](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/enumtype)
-- [Jakarta Persistence 3.1, AttributeConverter](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/attributeconverter)
-- [Java SE 21, Enum.valueOf](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html)
+- [Jakarta Persistence 3.1, EnumType](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/enumtype) — Jakarta EE
+- [Jakarta Persistence 3.1, AttributeConverter](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/attributeconverter) — Jakarta EE
+- [Java SE 21, Enum.valueOf](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html) — Oracle Docs
 - [Querydsl을 사용하는 이유와 기본 패턴](/posts/querydsl/)
-- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — 재현 범위와 제외 항목(MyBatis·QueryDSL 이원화 미재현)
+- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub: 재현 범위와 제외 항목(MyBatis·QueryDSL 이원화 미재현)

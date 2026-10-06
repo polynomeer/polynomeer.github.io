@@ -80,4 +80,4 @@ tags: [MSA, Microservice, Architecture]
 
 ## 참고
 
-- James Lewis, Martin Fowler, [Microservices](https://martinfowler.com/articles/microservices.html) (2014-03-25)
+- [Microservices](https://martinfowler.com/articles/microservices.html) — James Lewis, Martin Fowler: (2014-03-25)

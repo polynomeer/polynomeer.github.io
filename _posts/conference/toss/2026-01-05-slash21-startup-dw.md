@@ -90,6 +90,6 @@ Apache Griffin을 검토했다가 필요 기능과 맞지 않아 컨셉만 가�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=6CZwKUp1ozw)
-- [SLASH 21](https://toss.im/slash-21)
-- 3년 뒤의 같은 모델: [SLASH 24 전천후 데이터 분석을 위한 DW 설계 리뷰](/posts/slash24-dw-active-user-tables/)
+- [발표 영상](https://www.youtube.com/watch?v=6CZwKUp1ozw) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [SLASH 24 전천후 데이터 분석을 위한 DW 설계 리뷰](/posts/slash24-dw-active-user-tables/) — 3년 뒤의 같은 모델

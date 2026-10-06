@@ -75,5 +75,5 @@ flowchart TD
 
 ## 참고
 
-- [OSTEP, Chapter 10: Multiprocessor Scheduling (Advanced)](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-multi.pdf)
-- [sched_setaffinity(2)](https://man7.org/linux/man-pages/man2/sched_setaffinity.2.html)
+- [OSTEP, Chapter 10: Multiprocessor Scheduling (Advanced)](https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-multi.pdf) — pages.cs.wisc.edu
+- [sched_setaffinity(2)](https://man7.org/linux/man-pages/man2/sched_setaffinity.2.html) — Linux man page

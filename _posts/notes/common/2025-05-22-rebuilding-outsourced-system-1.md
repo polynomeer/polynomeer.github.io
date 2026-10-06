@@ -173,4 +173,4 @@ WHERE o.track_cnt <> n.track_cnt;
 
 - [DDEX](https://ddex.net/) — DDEX 공식 사이트
 - [ArchUnit User Guide](https://www.archunit.org/userguide/html/000_Index.html) — ArchUnit 공식 문서
-- 랩 코드 (commit `d52297d`): [career-lab/mds-distribution README](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md), 리뉴얼 이후의 정산 중 수정 차단과 메시지 멱등 처리를 다시 구현한 랩. 스키마 리뉴얼과 마이그레이션 과정은 랩에 없다.
+- [career-lab/mds-distribution README](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mds-distribution/README.md) — GitHub: 랩 코드 (commit `d52297d`), 리뉴얼 이후의 정산 중 수정 차단과 메시지 멱등 처리를 다시 구현한 랩. 스키마 리뉴얼과 마이그레이션 과정은 랩에 없다.

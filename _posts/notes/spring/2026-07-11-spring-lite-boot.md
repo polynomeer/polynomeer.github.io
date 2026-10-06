@@ -136,4 +136,4 @@ Boot가 편한 이유는 컨테이너 원리를 없애서가 아니라, 그 원�
 
 ## 참고
 
-- [Spring Boot Reference: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)
+- [Spring Boot Reference: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html) — Spring Docs

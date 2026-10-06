@@ -98,7 +98,7 @@ Read Verifier에 운영 환경 제어를 붙인 것도 눈여겨볼 만하다. A
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-24/sessions/3)
-- [발표 영상](https://www.youtube.com/watch?v=D3p-V5Sr7gk)
-- [P6Spy 문서](https://p6spy.readthedocs.io/en/latest/)
-- 같은 원장 시스템의 다른 면: [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [세션 페이지](https://toss.im/slash-24/sessions/3) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=D3p-V5Sr7gk) — YouTube
+- [P6Spy 문서](https://p6spy.readthedocs.io/en/latest/) — P6Spy Docs
+- [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 같은 원장 시스템의 다른 면

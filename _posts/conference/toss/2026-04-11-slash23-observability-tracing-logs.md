@@ -104,9 +104,9 @@ TCP 전문에 문맥을 심는 방법은 이 발표에서 가장 독창적인 �
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=Ifz0LsfAG94)
-- [SLASH 23](https://toss.im/slash-23)
-- [W3C Trace Context](https://www.w3.org/TR/trace-context/)
-- [OpenTelemetry](https://opentelemetry.io/)
-- [Dapper, a Large-Scale Distributed Systems Tracing Infrastructure](https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/)
-- [The PROXY protocol (HAProxy)](https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt)
+- [발표 영상](https://www.youtube.com/watch?v=Ifz0LsfAG94) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [W3C Trace Context](https://www.w3.org/TR/trace-context/) — W3C
+- [OpenTelemetry](https://opentelemetry.io/) — OpenTelemetry
+- [Dapper, a Large-Scale Distributed Systems Tracing Infrastructure](https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/) — Google Research
+- [The PROXY protocol (HAProxy)](https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt) — HAProxy

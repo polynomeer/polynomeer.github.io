@@ -177,9 +177,9 @@ Datadog 대시보드에서 재설계 전후 응답 시간을 관찰한 결과, �
 
 ## 참고
 
-- [Spring Framework Reference, Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — 프록시 모드에서 외부 호출만 트랜잭션이 적용되는 동작
-- [NGINX, ngx_http_mirror_module](https://nginx.org/en/docs/http/ngx_http_mirror_module.html) — 미러 요청의 응답 처리
-- [Martin Fowler, CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [랩 코드: ContractController.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/api/ContractController.java)
-- [랩 코드: ContractService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/application/ContractService.java)
-- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)
+- [Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — Spring Framework Reference: 프록시 모드에서 외부 호출만 트랜잭션이 적용되는 동작
+- [ngx_http_mirror_module](https://nginx.org/en/docs/http/ngx_http_mirror_module.html) — NGINX: 미러 요청의 응답 처리
+- [CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html) — Martin Fowler
+- [랩 코드: ContractController.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/api/ContractController.java) — GitHub
+- [랩 코드: ContractService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/application/ContractService.java) — GitHub
+- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub

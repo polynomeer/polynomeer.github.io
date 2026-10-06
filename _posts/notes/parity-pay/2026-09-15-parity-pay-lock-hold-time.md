@@ -154,7 +154,7 @@ flush가 보류 쓰기 네 개를 잠금 앞으로 내보낸 것이 한 번에 �
 
 ## 참고
 
-- [PostgreSQL: pg_stat_statements](https://www.postgresql.org/docs/current/pgstatstatements.html)
-- [PostgreSQL: The Cumulative Statistics System](https://www.postgresql.org/docs/current/monitoring-stats.html) — `ClientRead`, `transactionid`, `tuple` 대기 이벤트 정의
-- [PostgreSQL: Explicit Locking](https://www.postgresql.org/docs/current/explicit-locking.html) — 행 잠금은 트랜잭션 종료 시 해제
-- [Hibernate ORM 6.6 User Guide: Flushing](https://docs.jboss.org/hibernate/orm/6.6/userguide/html_single/Hibernate_User_Guide.html#flushing)
+- [PostgreSQL: pg_stat_statements](https://www.postgresql.org/docs/current/pgstatstatements.html) — PostgreSQL Docs
+- [PostgreSQL: The Cumulative Statistics System](https://www.postgresql.org/docs/current/monitoring-stats.html) — PostgreSQL Docs: `ClientRead`, `transactionid`, `tuple` 대기 이벤트 정의
+- [PostgreSQL: Explicit Locking](https://www.postgresql.org/docs/current/explicit-locking.html) — PostgreSQL Docs: 행 잠금은 트랜잭션 종료 시 해제
+- [Hibernate ORM 6.6 User Guide: Flushing](https://docs.jboss.org/hibernate/orm/6.6/userguide/html_single/Hibernate_User_Guide.html#flushing) — Hibernate Docs

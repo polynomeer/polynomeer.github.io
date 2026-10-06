@@ -90,6 +90,6 @@ WebSocket을 SharedWorker에 올리면 탭이 몇 개든 WebSocket 객체는 하
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-24/sessions/13)
-- [발표 영상](https://www.youtube.com/watch?v=SVt1-Opp3Wo)
-- 서버 쪽 시세 WebSocket 구조: [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [세션 페이지](https://toss.im/slash-24/sessions/13) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=SVt1-Opp3Wo) — YouTube
+- [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 서버 쪽 시세 WebSocket 구조

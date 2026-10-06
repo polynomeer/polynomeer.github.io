@@ -151,12 +151,12 @@ QUIC(HTTP/3)의 0-RTT도 같은 제약을 갖는다([RFC 9001, 9.2절](https://d
 
 ## 참고
 
-- [RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc8446) - 1.2절(1.2와의 차이), 2.1절(HelloRetryRequest), 2.2절(PSK 재개), 2.3절과 8절(0-RTT와 재전송)
-- [RFC 5246: TLS 1.2](https://datatracker.ietf.org/doc/html/rfc5246) - 7.3절, 전체 핸드셰이크와 세션 ID 재개
-- [RFC 5077: TLS Session Resumption without Server-Side State](https://datatracker.ietf.org/doc/html/rfc5077)
-- [RFC 8470: Using Early Data in HTTP](https://datatracker.ietf.org/doc/html/rfc8470)
-- [RFC 9001: Using TLS to Secure QUIC](https://datatracker.ietf.org/doc/html/rfc9001) - 9.2절
-- [RFC 6066: TLS Extensions](https://datatracker.ietf.org/doc/html/rfc6066) - 8절, Certificate Status Request
-- [Linux kernel documentation: Kernel TLS](https://docs.kernel.org/networking/tls.html)
-- [Cloudflare: Introducing Zero Round Trip Time Resumption (0-RTT)](https://blog.cloudflare.com/introducing-0-rtt/)
+- [RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc8446) — IETF: 1.2절(1.2와의 차이), 2.1절(HelloRetryRequest), 2.2절(PSK 재개), 2.3절과 8절(0-RTT와 재전송)
+- [RFC 5246: TLS 1.2](https://datatracker.ietf.org/doc/html/rfc5246) — IETF: 7.3절, 전체 핸드셰이크와 세션 ID 재개
+- [RFC 5077: TLS Session Resumption without Server-Side State](https://datatracker.ietf.org/doc/html/rfc5077) — IETF
+- [RFC 8470: Using Early Data in HTTP](https://datatracker.ietf.org/doc/html/rfc8470) — IETF
+- [RFC 9001: Using TLS to Secure QUIC](https://datatracker.ietf.org/doc/html/rfc9001) — IETF: 9.2절
+- [RFC 6066: TLS Extensions](https://datatracker.ietf.org/doc/html/rfc6066) — IETF: 8절, Certificate Status Request
+- [Linux kernel documentation: Kernel TLS](https://docs.kernel.org/networking/tls.html) — Linux Kernel Docs
+- [Cloudflare: Introducing Zero Round Trip Time Resumption (0-RTT)](https://blog.cloudflare.com/introducing-0-rtt/) — Cloudflare Blog
 - [SSL/TLS 정리](/posts/ssl-tls/)

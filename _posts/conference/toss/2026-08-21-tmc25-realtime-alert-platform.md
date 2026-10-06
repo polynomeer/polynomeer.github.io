@@ -101,6 +101,6 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=fcTPQAt7KkA)
-- [TMC 25](https://toss.im/tmc-25)
-- 같은 팀의 앞선 발표: [SLASH 24 ClickHouse 랭킹 리뷰](/posts/slash24-clickhouse-ranking/)
+- [발표 영상](https://www.youtube.com/watch?v=fcTPQAt7KkA) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스
+- [SLASH 24 ClickHouse 랭킹 리뷰](/posts/slash24-clickhouse-ranking/) — 같은 팀의 앞선 발표

@@ -90,6 +90,6 @@ private String fallback(String userId, Exception e) {
 
 ## 참고
 
-- [Martin Fowler, CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html)
-- [Resilience4j Documentation, CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker)
-- [Resilience4j Documentation, Getting Started with Spring Boot 3](https://resilience4j.readme.io/docs/getting-started-3)
+- [CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html) — Martin Fowler
+- [CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker) — Resilience4j Documentation
+- [Getting Started with Spring Boot 3](https://resilience4j.readme.io/docs/getting-started-3) — Resilience4j Documentation

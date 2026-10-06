@@ -33,10 +33,10 @@ sort: 9
 - https://github.com/rundocs/rundocs.io
 - https://jekyllrb.com/docs/themes
 
-## References
+## 참고
 
-- https://eblo.tistory.com/21
-- https://hermeslog.tistory.com/113
+- [개발 관련 유용한 사이트 링크](https://eblo.tistory.com/21) — Tistory
+- [Spring 참고 사이트 목록](https://hermeslog.tistory.com/113) — Tistory
 
 ## Java News
 

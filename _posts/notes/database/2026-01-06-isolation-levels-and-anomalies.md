@@ -108,7 +108,7 @@ WHERE id = 1 AND balance >= 1000;   -- 영향 행 수 0이면 거절
 
 ## 참고
 
-- [PostgreSQL: Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html)
-- [MySQL: InnoDB Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html)
-- Berenson et al., [A Critique of ANSI SQL Isolation Levels](https://arxiv.org/abs/cs/0701157) (1995)
+- [PostgreSQL: Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html) — PostgreSQL Documentation
+- [MySQL: InnoDB Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html) — MySQL Docs
+- [A Critique of ANSI SQL Isolation Levels](https://arxiv.org/abs/cs/0701157) — Berenson et al.: (1995)
 - [MVCC 정리](/posts/mvcc/), [Gap Lock 정리](/posts/gap-lock/)

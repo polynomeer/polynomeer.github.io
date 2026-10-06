@@ -61,5 +61,5 @@ flowchart LR
 
 ## 참고
 
-- [모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-웹-네트워크/dashboard?cid=326277)
+- [모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-웹-네트워크/dashboard?cid=326277) — 인프런
 - [학습성과](/learning-evidence/inflearn-http-basics/)

@@ -81,8 +81,8 @@ Kafka 자체가 이 기능을 쓴다. `__consumer_offsets`가 컴팩션 토픽�
 
 ## 참고
 
-- [Kafka: Log Compaction](https://kafka.apache.org/documentation/#compaction)
-- [Kafka: Topic Configs (cleanup.policy)](https://kafka.apache.org/documentation/#topicconfigs)
-- [Kafka 4.3 Design: Log Compaction](https://kafka.apache.org/43/design/design/)
-- [Kafka 4.3 Topic Configs](https://kafka.apache.org/43/configuration/topic-configs/)
+- [Kafka: Log Compaction](https://kafka.apache.org/documentation/#compaction) — Apache Kafka
+- [Kafka: Topic Configs (cleanup.policy)](https://kafka.apache.org/documentation/#topicconfigs) — Apache Kafka
+- [Kafka 4.3 Design: Log Compaction](https://kafka.apache.org/43/design/design/) — Apache Kafka
+- [Kafka 4.3 Topic Configs](https://kafka.apache.org/43/configuration/topic-configs/) — Apache Kafka
 - [Kafka의 저장 구조](/posts/kafka-storage-internals/)

@@ -74,5 +74,5 @@ flowchart TD
 
 ## 참고
 
-- [실전 데이터베이스 입문](https://www.inflearn.com/course/김영한-실전-데이터베이스-입문/dashboard?cid=338210): 전체 커리큘럼과 「SQL 실행 순서」의 명시한 구간.
-- [MySQL 8.4: SELECT Statement](https://dev.mysql.com/doc/refman/8.4/en/select.html): WHERE, HAVING, 별칭 사용 규칙 보충.
+- [실전 데이터베이스 입문](https://www.inflearn.com/course/김영한-실전-데이터베이스-입문/dashboard?cid=338210) — 인프런: 전체 커리큘럼과 「SQL 실행 순서」의 명시한 구간.
+- [MySQL 8.4: SELECT Statement](https://dev.mysql.com/doc/refman/8.4/en/select.html) — MySQL Docs: WHERE, HAVING, 별칭 사용 규칙 보충.

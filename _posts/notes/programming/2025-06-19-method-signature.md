@@ -164,12 +164,12 @@ Java 컴파일러는 우선 소스코드에서 메소드 시그니처를 보고 
 
 메소드 시그니처는 컴파일러가 판단할 수 있으면서도 코드 가독성을 최대한 지킬 수 있는 최소한의 기준이다. 이를 기준으로 컴파일러는 호출 시점에 정확히 어떤 메소드를 호출할지 결정할 수 있고, 오버로딩된 메소드까지 정확히 식별할 수 있다. 이를 통해 최소한의 가독성을 보장하면서 메소드 오버로딩을 통한 코드 확장성까지 보장할 수 있게 된다.
 
-## 참고자료
+## 참고
 
-- [Signature (functions)](https://developer.mozilla.org/en-US/docs/Glossary/Signature/Function)
-- [Type signature](https://en.wikipedia.org/wiki/Type_signature#Java)
-- [JVM Spec §4.3.3: Method Signature](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.2)
-- [Java Language Specification, §8.4.9: Overloading](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.9)
-- [JVM Specification, §4.3.3: MethodDescriptor](https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-4.html#jvms-4.3.3)
-- [Does a Method’s Signature Include the Return Type in Java?](https://www.baeldung.com/java-method-signature-return-type?utm_source=chatgpt.com)
-- [Function Signature — What is it?](https://mayowaobisesan.medium.com/function-signature-what-is-it-eeb16658e624)
+- [Signature (functions)](https://developer.mozilla.org/en-US/docs/Glossary/Signature/Function) — MDN
+- [Type signature](https://en.wikipedia.org/wiki/Type_signature#Java) — Wikipedia
+- [JVM Spec §4.3.3: Method Signature](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.2) — Oracle Docs
+- [Java Language Specification, §8.4.9: Overloading](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.9) — Oracle Docs
+- [JVM Specification, §4.3.3: MethodDescriptor](https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-4.html#jvms-4.3.3) — Oracle Docs
+- [Does a Method’s Signature Include the Return Type in Java?](https://www.baeldung.com/java-method-signature-return-type?utm_source=chatgpt.com) — Baeldung
+- [Function Signature — What is it?](https://mayowaobisesan.medium.com/function-signature-what-is-it-eeb16658e624) — Medium

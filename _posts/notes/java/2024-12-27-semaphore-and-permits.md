@@ -85,6 +85,6 @@ Resilience4j도 벌크헤드 구현 두 가지 중 하나로 세마포어 방식
 ## 참고
 
 - [무너지는 Spring 서버 1편](/posts/tomcat-thread-exhaustion/) — permit 20, 100ms 거절의 실험 결과
-- [Java SE 21 API - Semaphore](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Semaphore.html) — permit 개념, `tryAcquire`의 반환값, 공정성, 소유자가 없다는 설명
-- [Resilience4j - Bulkhead](https://resilience4j.readme.io/docs/bulkhead) — `SemaphoreBulkhead`와 `maxConcurrentCalls`, `maxWaitDuration`
-- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — `UpstreamClient.java`
+- [Java SE 21 API - Semaphore](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Semaphore.html) — Oracle Docs: permit 개념, `tryAcquire`의 반환값, 공정성, 소유자가 없다는 설명
+- [Bulkhead](https://resilience4j.readme.io/docs/bulkhead) — Resilience4j: `SemaphoreBulkhead`와 `maxConcurrentCalls`, `maxWaitDuration`
+- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — GitHub: `UpstreamClient.java`

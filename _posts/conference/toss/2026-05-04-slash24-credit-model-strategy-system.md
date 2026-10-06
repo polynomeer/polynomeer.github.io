@@ -87,7 +87,7 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=4fk3TxgQ9Ks)
-- [SLASH 24](https://toss.im/slash-24)
-- [Ray runtime environments](https://docs.ray.io/en/latest/ray-core/handling-dependencies.html)
-- 같은 팀의 앞선 발표: [SLASH 23 은행 데이터플랫폼 오픈소스로 전환하기 리뷰](/posts/slash23-bank-data-platform-opensource/)
+- [발표 영상](https://www.youtube.com/watch?v=4fk3TxgQ9Ks) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Ray runtime environments](https://docs.ray.io/en/latest/ray-core/handling-dependencies.html) — Ray Docs
+- [SLASH 23 은행 데이터플랫폼 오픈소스로 전환하기 리뷰](/posts/slash23-bank-data-platform-opensource/) — 같은 팀의 앞선 발표

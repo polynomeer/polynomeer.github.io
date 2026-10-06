@@ -90,9 +90,9 @@ Redis 240ms 사례는 "OS를 Rocky로 바꾸며 커널을 올리니 사라졌다
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=tZjjqhnwtYY)
-- [SLASH 23](https://toss.im/slash-23)
-- [async-profiler](https://github.com/async-profiler/async-profiler)
-- [Eclipse Memory Analyzer](https://eclipse.dev/mat/)
-- [jcmd (JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html)
-- [perf-c2c(1)](https://man7.org/linux/man-pages/man1/perf-c2c.1.html)
+- [발표 영상](https://www.youtube.com/watch?v=tZjjqhnwtYY) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [async-profiler](https://github.com/async-profiler/async-profiler) — GitHub
+- [Eclipse Memory Analyzer](https://eclipse.dev/mat/) — Eclipse Foundation
+- [jcmd (JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html) — Oracle Docs
+- [perf-c2c(1)](https://man7.org/linux/man-pages/man1/perf-c2c.1.html) — Linux man page

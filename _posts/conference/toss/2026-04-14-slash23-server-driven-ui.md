@@ -65,6 +65,6 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=EuDOn7255gI)
-- [SLASH 23](https://toss.im/slash-23)
-- [Airbnb - A Deep Dive into Airbnb's Server-Driven UI System](https://medium.com/airbnb-engineering/a-deep-dive-into-airbnbs-server-driven-ui-system-842244c5f5)
+- [발표 영상](https://www.youtube.com/watch?v=EuDOn7255gI) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [Airbnb - A Deep Dive into Airbnb's Server-Driven UI System](https://medium.com/airbnb-engineering/a-deep-dive-into-airbnbs-server-driven-ui-system-842244c5f5) — Medium

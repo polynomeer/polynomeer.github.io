@@ -165,10 +165,10 @@ ArchUnit은 의존 관계를 본다. 코드 스멜, 중복, 복잡도는 보지 
 
 ## 참고
 
-- [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html) — 클라이언트 검증의 한계
-- [ArchUnit User Guide](https://www.archunit.org/userguide/html/000_Index.html) — 레이어 규칙과 `FreezingArchRule`
-- [SonarQube Cloud, About new code](https://docs.sonarsource.com/sonarqube-cloud/standards/about-new-code/) — New Code 정의와 기본 Quality Gate의 적용 범위
-- [랩 코드: LayerArchitectureRules.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/LayerArchitectureRules.java)
-- [랩 코드: MainCodeArchitectureTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/MainCodeArchitectureTest.java)
-- [랩 코드: ArchitectureViolationDemoTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/ArchitectureViolationDemoTest.java)
-- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)
+- [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html) — OWASP Cheat Sheet Series: 클라이언트 검증의 한계
+- [ArchUnit User Guide](https://www.archunit.org/userguide/html/000_Index.html) — ArchUnit: 레이어 규칙과 `FreezingArchRule`
+- [SonarQube Cloud, About new code](https://docs.sonarsource.com/sonarqube-cloud/standards/about-new-code/) — docs.sonarsource.com: New Code 정의와 기본 Quality Gate의 적용 범위
+- [랩 코드: LayerArchitectureRules.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/LayerArchitectureRules.java) — GitHub
+- [랩 코드: MainCodeArchitectureTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/MainCodeArchitectureTest.java) — GitHub
+- [랩 코드: ArchitectureViolationDemoTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/ArchitectureViolationDemoTest.java) — GitHub
+- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub

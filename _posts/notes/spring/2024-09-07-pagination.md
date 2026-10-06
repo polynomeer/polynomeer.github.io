@@ -60,5 +60,5 @@ Spring에서 `Pageable`을 쉽게 붙일 수 있어도, 어떤 방식이 맞는�
 
 ## 참고
 
-- [Spring Data Commons Reference — Paging, Iterating Large Results, Sorting & Limiting](https://docs.spring.io/spring-data/commons/reference/repositories/query-methods-details.html)
-- [Spring Data Commons Reference — Scrolling](https://docs.spring.io/spring-data/commons/reference/repositories/scrolling.html)
+- [Spring Data Commons Reference — Paging, Iterating Large Results, Sorting & Limiting](https://docs.spring.io/spring-data/commons/reference/repositories/query-methods-details.html) — Spring Docs
+- [Spring Data Commons Reference — Scrolling](https://docs.spring.io/spring-data/commons/reference/repositories/scrolling.html) — Spring Docs

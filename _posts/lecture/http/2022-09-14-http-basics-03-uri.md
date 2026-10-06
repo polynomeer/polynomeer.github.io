@@ -85,6 +85,7 @@ sequenceDiagram
 
 ## 참고
 
-- [URI](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61357), [웹 브라우저 요청 흐름](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61358)
-- [RFC 3986: URI Generic Syntax](https://www.rfc-editor.org/rfc/rfc3986.html)
-- [RFC 9114: HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html)
+- [URI](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61357) — 인프런
+- [웹 브라우저 요청 흐름](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61358) — 인프런
+- [RFC 3986: URI Generic Syntax](https://www.rfc-editor.org/rfc/rfc3986.html) — IETF
+- [RFC 9114: HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html) — IETF

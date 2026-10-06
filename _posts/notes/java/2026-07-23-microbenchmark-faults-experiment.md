@@ -141,9 +141,10 @@ JMH는 반환값을 Blackhole(값을 소비한 것처럼 만드는 객체)에 �
 
 ## 참고
 
-- [jvm-bench-lab](https://github.com/polynomeer/jvm-bench-lab) — 원본은 `reports/data/t5-*`, 표는 `reports/01-benchmark-report.md`
+- [jvm-bench-lab](https://github.com/polynomeer/jvm-bench-lab) — GitHub: 원본은 `reports/data/t5-*`, 표는 `reports/01-benchmark-report.md`
 - [JIT 컴파일](/posts/jit-compilation/) — 이 실험의 개념 짝
 - [CPU 프로파일러가 1순위로 지목한 코드를 고쳤더니](/posts/off-cpu-profiling-experiment/) — 계측기가 틀리는 다른 방식
-- [JMH](https://github.com/openjdk/jmh)
-- [JMHSample_08_DeadCode](https://github.com/openjdk/jmh/blob/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_08_DeadCode.java), [JMHSample_10_ConstantFold](https://github.com/openjdk/jmh/blob/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_10_ConstantFold.java) — 죽은 코드 제거와 상수 접힘에 대한 JMH 1.37 샘플
-- [Aleksey Shipilev, Nanotrusting the Nanotime](https://shipilev.net/blog/2014/nanotrusting-nanotime/) — `System.nanoTime`의 지연과 해상도
+- [JMH](https://github.com/openjdk/jmh) — GitHub
+- [JMHSample_08_DeadCode](https://github.com/openjdk/jmh/blob/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_08_DeadCode.java) — GitHub
+- [JMHSample_10_ConstantFold](https://github.com/openjdk/jmh/blob/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples/JMHSample_10_ConstantFold.java) — GitHub: 죽은 코드 제거와 상수 접힘에 대한 JMH 1.37 샘플
+- [Nanotrusting the Nanotime](https://shipilev.net/blog/2014/nanotrusting-nanotime/) — Aleksey Shipilev: `System.nanoTime`의 지연과 해상도

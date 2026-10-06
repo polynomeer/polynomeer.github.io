@@ -99,5 +99,5 @@ Redo Log를 이해하려면 "트랜잭션"이 아니라 "MTR"로 내려가야 �
 ## 참고
 
 - [MySQL InnoDB Log에 대한 이해 - (1)](https://tech.kakao.com/posts/721) — kakao tech, 2025-08-11
-- [MySQL 8.0 Reference Manual: InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html) — `innodb_flush_log_at_trx_commit`
-- [MySQL 8.0: New Lock free, scalable WAL design](https://dev.mysql.com/blog-archive/mysql-8-0-new-lock-free-scalable-wal-design/) — Paweł Olchawa, MySQL Server Blog, 2018-06-18
+- [MySQL 8.0 Reference Manual: InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html) — MySQL Docs: `innodb_flush_log_at_trx_commit`
+- [scalable WAL design](https://dev.mysql.com/blog-archive/mysql-8-0-new-lock-free-scalable-wal-design/) — MySQL 8.0: New Lock free: Paweł Olchawa, MySQL Server Blog, 2018-06-18

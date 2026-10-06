@@ -98,7 +98,7 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=SLamxuykpnw)
-- [SLASH 22](https://toss.im/slash-22)
-- [Flyway](https://flywaydb.org/)
-- [Hibernate hbm2ddl validate](https://docs.jboss.org/hibernate/orm/6.2/userguide/html_single/Hibernate_User_Guide.html#configurations-hbmddl)
+- [발표 영상](https://www.youtube.com/watch?v=SLamxuykpnw) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [Flyway](https://flywaydb.org/) — Flyway
+- [Hibernate hbm2ddl validate](https://docs.jboss.org/hibernate/orm/6.2/userguide/html_single/Hibernate_User_Guide.html#configurations-hbmddl) — Hibernate Docs

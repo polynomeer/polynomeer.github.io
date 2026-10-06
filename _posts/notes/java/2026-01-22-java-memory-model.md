@@ -110,7 +110,7 @@ JMM 위반은 부하와 하드웨어에 따라 나타나므로 단위 테스트�
 
 ## 참고
 
-- [JLS 17.4: Memory Model](https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.4)
-- [JSR-133 FAQ](https://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html) — Jeremy Manson, Brian Goetz
-- [OpenJDK jcstress](https://github.com/openjdk/jcstress)
+- [JLS 17.4: Memory Model](https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.4) — Oracle Docs
+- [JSR-133 FAQ](https://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html) — cs.umd.edu: Jeremy Manson, Brian Goetz
+- [OpenJDK jcstress](https://github.com/openjdk/jcstress) — GitHub
 - [JVM 정리](/posts/jvm/)

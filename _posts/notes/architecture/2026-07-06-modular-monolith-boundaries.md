@@ -102,6 +102,7 @@ Spring Modulith는 같은 일을 스프링 관례 위에서 한다. [레퍼런�
 
 ## 참고
 
-- [ArchUnit: User Guide](https://www.archunit.org/userguide/html/000_Index.html)
-- [Spring Modulith](https://docs.spring.io/spring-modulith/reference/), [Fundamentals](https://docs.spring.io/spring-modulith/reference/fundamentals.html)
+- [ArchUnit: User Guide](https://www.archunit.org/userguide/html/000_Index.html) — ArchUnit
+- [Spring Modulith](https://docs.spring.io/spring-modulith/reference/) — Spring Docs
+- [Fundamentals](https://docs.spring.io/spring-modulith/reference/fundamentals.html) — Spring Docs
 - [ArchUnit을 480건 위반 위에 도입하기](/posts/archunit-guardrails-on-legacy/)

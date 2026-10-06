@@ -105,7 +105,7 @@ flowchart TD
 
 ## 참고
 
-- [PostgreSQL: Table Partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html)
-- [MySQL: Partitioning](https://dev.mysql.com/doc/refman/8.4/en/partitioning.html)
-- [Redis Cluster specification](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/)
+- [PostgreSQL: Table Partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html) — PostgreSQL Docs
+- [MySQL: Partitioning](https://dev.mysql.com/doc/refman/8.4/en/partitioning.html) — MySQL Docs
+- [Redis Cluster specification](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/) — Redis Docs
 - [B+Tree 인덱스의 내부](/posts/btree-index-internals/)

@@ -84,6 +84,6 @@ series_order: 3
 
 ## 참고
 
-- [OpenTelemetry: Sampling](https://opentelemetry.io/docs/concepts/sampling/)
-- [OpenTelemetry Collector: Tail Sampling Processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor)
-- [W3C Trace Context](https://www.w3.org/TR/trace-context/)
+- [OpenTelemetry: Sampling](https://opentelemetry.io/docs/concepts/sampling/) — OpenTelemetry
+- [OpenTelemetry Collector: Tail Sampling Processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor) — GitHub
+- [W3C Trace Context](https://www.w3.org/TR/trace-context/) — W3C

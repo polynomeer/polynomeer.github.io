@@ -89,5 +89,5 @@ ON CONFLICT (key) DO NOTHING;
 ## 참고
 
 - [Airbnb: Avoiding double payments (리뷰)](/posts/airbnb-orpheus-idempotency/)
-- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
+- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests) — docs.stripe.com
 - [ParityPay 3편 - UNKNOWN 상태](/posts/parity-pay-unknown-state/)

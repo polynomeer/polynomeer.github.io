@@ -237,29 +237,30 @@ Spring Boot Actuator는 트레이서 파사드인 Micrometer Tracing을 자동 �
 
 저장소 문서 (모두 커밋에 고정한 링크)
 
-- [docs/01 제품 기획서](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/01-product-plan.md) — 문제 정의, 원칙, 범위
-- [docs/05 기술 설계서](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/05-technical-design.md) — 스택 표, 모듈 의존성, 트랜잭션 경계, 관측성
-- [ADR-001 모듈러 모놀리스](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/001-modular-monolith.md)
-- [ADR-002 PostgreSQL 시스템 오브 레코드](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/002-postgresql-system-of-record.md)
-- [ADR-004 조건부 원자 업데이트](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/004-atomic-balance-update.md)
-- [ADR-005 Transactional Outbox](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/005-transactional-outbox.md)
-- [ADR-006 at-least-once와 멱등 소비자](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/006-at-least-once-idempotent-consumer.md)
-- [ADR-015 초기 기술 스택의 선택 근거 (재구성)](https://github.com/polynomeer/parity-pay/blob/c8f7dceadbb2919900044d864bef9c2b6b801123/docs/adr/015-initial-technology-stack.md) — 2026-10-05 작성
-- [build.gradle.kts](https://github.com/polynomeer/parity-pay/blob/0b340a244fd795871f6a9bbccbbd2454cfb9f397/build.gradle.kts), [docker-compose.yml](https://github.com/polynomeer/parity-pay/blob/0b340a244fd795871f6a9bbccbbd2454cfb9f397/docker-compose.yml) — 첫 빌드 구성
-- [V3__ledger_invariants.sql](https://github.com/polynomeer/parity-pay/blob/204143832d80e31fb5bce59bafab457613571046/apps/pay-api/src/main/resources/db/migration/V3__ledger_invariants.sql) — 원장 불변조건 트리거
+- [docs/01 제품 기획서](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/01-product-plan.md) — GitHub: 문제 정의, 원칙, 범위
+- [docs/05 기술 설계서](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/05-technical-design.md) — GitHub: 스택 표, 모듈 의존성, 트랜잭션 경계, 관측성
+- [ADR-001 모듈러 모놀리스](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/001-modular-monolith.md) — GitHub
+- [ADR-002 PostgreSQL 시스템 오브 레코드](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/002-postgresql-system-of-record.md) — GitHub
+- [ADR-004 조건부 원자 업데이트](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/004-atomic-balance-update.md) — GitHub
+- [ADR-005 Transactional Outbox](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/005-transactional-outbox.md) — GitHub
+- [ADR-006 at-least-once와 멱등 소비자](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/006-at-least-once-idempotent-consumer.md) — GitHub
+- [ADR-015 초기 기술 스택의 선택 근거 (재구성)](https://github.com/polynomeer/parity-pay/blob/c8f7dceadbb2919900044d864bef9c2b6b801123/docs/adr/015-initial-technology-stack.md) — GitHub: 2026-10-05 작성
+- [build.gradle.kts](https://github.com/polynomeer/parity-pay/blob/0b340a244fd795871f6a9bbccbbd2454cfb9f397/build.gradle.kts) — GitHub
+- [docker-compose.yml](https://github.com/polynomeer/parity-pay/blob/0b340a244fd795871f6a9bbccbbd2454cfb9f397/docker-compose.yml) — GitHub: 첫 빌드 구성
+- [V3__ledger_invariants.sql](https://github.com/polynomeer/parity-pay/blob/204143832d80e31fb5bce59bafab457613571046/apps/pay-api/src/main/resources/db/migration/V3__ledger_invariants.sql) — GitHub: 원장 불변조건 트리거
 
 1차 자료
 
-- [OpenJDK: JDK 21](https://openjdk.org/projects/jdk/21/) — GA 일자와 LTS 지정
-- [Spring Boot 3.5: System Requirements](https://docs.spring.io/spring-boot/3.5/system-requirements.html) — 지원 Java 버전
-- [Spring Framework: Declarative Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative.html) — AOP 기반 트랜잭션
-- [Spring Boot 3.5: Tracing](https://docs.spring.io/spring-boot/3.5/reference/actuator/tracing.html) — Micrometer Tracing, OTLP
-- [PostgreSQL 17: SELECT, The Locking Clause](https://www.postgresql.org/docs/17/sql-select.html) — `SKIP LOCKED`
-- [Flyway: Migrations](https://documentation.red-gate.com/fd/migrations-271585107.html) — 버전 마이그레이션 적용 순서
-- [Apache Kafka: Introduction](https://kafka.apache.org/43/getting-started/introduction/) — 키별 파티션 순서와 보존
-- [Apache Kafka: Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/) — `acks`, `enable.idempotence`
-- [Redpanda: Kafka Clients](https://docs.redpanda.com/current/develop/kafka-clients/) — Kafka 클라이언트 호환성과 비호환 항목
-- [RabbitMQ: Streams](https://www.rabbitmq.com/docs/streams) — 큐의 파괴적 소비와 재읽기
-- [Redis: Persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/) — RDB·AOF 내구성
-- [Testcontainers for Java](https://java.testcontainers.org/) — 일회용 컨테이너 테스트, Redpanda 모듈
-- [Jaeger 1.65: Getting Started](https://www.jaegertracing.io/docs/1.65/getting-started/) — all-in-one과 OTLP 포트
+- [OpenJDK: JDK 21](https://openjdk.org/projects/jdk/21/) — OpenJDK: GA 일자와 LTS 지정
+- [Spring Boot 3.5: System Requirements](https://docs.spring.io/spring-boot/3.5/system-requirements.html) — Spring Docs: 지원 Java 버전
+- [Spring Framework: Declarative Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative.html) — Spring Docs: AOP 기반 트랜잭션
+- [Spring Boot 3.5: Tracing](https://docs.spring.io/spring-boot/3.5/reference/actuator/tracing.html) — Spring Docs: Micrometer Tracing, OTLP
+- [The Locking Clause](https://www.postgresql.org/docs/17/sql-select.html) — PostgreSQL 17: SELECT: `SKIP LOCKED`
+- [Flyway: Migrations](https://documentation.red-gate.com/fd/migrations-271585107.html) — Redgate Flyway Docs: 버전 마이그레이션 적용 순서
+- [Apache Kafka: Introduction](https://kafka.apache.org/43/getting-started/introduction/) — Apache Kafka: 키별 파티션 순서와 보존
+- [Apache Kafka: Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/) — Apache Kafka: `acks`, `enable.idempotence`
+- [Redpanda: Kafka Clients](https://docs.redpanda.com/current/develop/kafka-clients/) — docs.redpanda.com: Kafka 클라이언트 호환성과 비호환 항목
+- [RabbitMQ: Streams](https://www.rabbitmq.com/docs/streams) — RabbitMQ: 큐의 파괴적 소비와 재읽기
+- [Redis: Persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/) — Redis Docs: RDB·AOF 내구성
+- [Testcontainers for Java](https://java.testcontainers.org/) — java.testcontainers.org: 일회용 컨테이너 테스트, Redpanda 모듈
+- [Jaeger 1.65: Getting Started](https://www.jaegertracing.io/docs/1.65/getting-started/) — Jaeger: all-in-one과 OTLP 포트

@@ -212,7 +212,7 @@ flowchart TD
 
 ## 참고
 
-- [Spring Framework Reference: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — `readOnly` 속성과 기본 전파 설정
+- [Spring Framework Reference: Using @Transactional](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html) — Spring Docs: `readOnly` 속성과 기본 전파 설정
 - [Querydsl을 사용하는 이유와 기본 패턴](/posts/querydsl/) — QueryDSL 기본 사용법
 - [MyBatis와 JPA 공존 환경의 데이터 정합성 전략](/posts/legacy-jsp-system-refactoring-3/) — 공존 시 불일치 유형
-- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — 재현 범위와 제외 항목
+- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub: 재현 범위와 제외 항목

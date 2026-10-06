@@ -139,4 +139,4 @@ README에도 정리돼 있지만, 실제로는 다음 순서가 제일 자연스
 
 ## 참고
 
-- [Spring Framework Reference — Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html)
+- [Spring Framework Reference — Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html) — Spring Docs

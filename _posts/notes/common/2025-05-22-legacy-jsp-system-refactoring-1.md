@@ -224,10 +224,10 @@ Bean Validation 실패와 도메인 예외를 각각 어떤 HTTP 상태 코드�
 
 ## 참고
 
-- [Jakarta Bean Validation 3.0](https://jakarta.ee/specifications/bean-validation/3.0/) — 명세 페이지
-- [MapStruct Reference Guide](https://mapstruct.org/documentation/stable/reference/html/) — 컴파일 시점 매핑 생성
+- [Jakarta Bean Validation 3.0](https://jakarta.ee/specifications/bean-validation/3.0/) — Jakarta EE: 명세 페이지
+- [MapStruct Reference Guide](https://mapstruct.org/documentation/stable/reference/html/) — MapStruct: 컴파일 시점 매핑 생성
 - [ISMS 대응을 위한 로그 수집 체계 개선](/posts/logsystem/) — 감사 로그 작업의 실제 범위(크리에이터 스튜디오)
-- [랩 코드: ContractCreateRequest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/api/dto/ContractCreateRequest.java)
-- [랩 코드: Contract.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/domain/Contract.java)
-- [랩 코드: ValidationPipelineTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/validation/ValidationPipelineTest.java)
-- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)
+- [랩 코드: ContractCreateRequest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/api/dto/ContractCreateRequest.java) — GitHub
+- [랩 코드: Contract.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/domain/Contract.java) — GitHub
+- [랩 코드: ValidationPipelineTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/validation/ValidationPipelineTest.java) — GitHub
+- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub

@@ -274,4 +274,4 @@ public class PriceQueryServiceImpl implements PriceQueryService {
 - [Refresh](https://github.com/ben-manes/caffeine/wiki/Refresh) — Caffeine wiki
 - [Transactions](https://redis.io/docs/latest/develop/using-commands/transactions/) — Redis Docs
 - [SET](https://redis.io/docs/latest/commands/set) — Redis Docs
-- [RFC 5861: HTTP Cache-Control Extensions for Stale Content](https://www.rfc-editor.org/rfc/rfc5861)
+- [RFC 5861: HTTP Cache-Control Extensions for Stale Content](https://www.rfc-editor.org/rfc/rfc5861) — IETF

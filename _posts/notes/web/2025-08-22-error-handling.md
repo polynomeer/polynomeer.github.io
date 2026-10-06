@@ -104,6 +104,6 @@ Spring Framework 6부터는 이 형식을 `ProblemDetail` 클래스로 지원한
 
 ## 참고
 
-- [RFC 9110, HTTP Semantics, Section 15 Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#section-15)
-- [RFC 9457, Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html)
-- [Spring Framework Reference, Error Responses](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html)
+- [RFC 9110, HTTP Semantics, Section 15 Status Codes](https://www.rfc-editor.org/rfc/rfc9110.html#section-15) — IETF
+- [RFC 9457, Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html) — IETF
+- [Error Responses](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html) — Spring Framework Reference

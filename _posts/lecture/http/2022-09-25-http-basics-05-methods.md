@@ -109,6 +109,8 @@ GET 응답이라도 민감한 개인정보를 담는다면 아무 공유 캐시�
 
 ## 참고
 
-- [HTTP API를 만들어보자](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61364), [GET, POST](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61365)
-- [PUT, PATCH, DELETE](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61366), [HTTP 메서드의 속성](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61367)
-- [RFC 9110, Common Method Properties](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2)
+- [HTTP API를 만들어보자](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61364) — 인프런
+- [GET, POST](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61365) — 인프런
+- [PUT, PATCH, DELETE](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61366) — 인프런
+- [HTTP 메서드의 속성](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61367) — 인프런
+- [RFC 9110, Common Method Properties](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2) — IETF

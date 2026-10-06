@@ -251,18 +251,18 @@ cron 환경은 로그인 쉘과 달리 `PATH`가 최소한으로 설정되어 �
 
 작성한 스크립트는 ShellCheck 같은 정적 분석 도구로 검사하면 위 실수 대부분을 미리 잡을 수 있다.
 
-## References
+## 참고
 
-- https://www.youtube.com/watch?v=RIKJVIcYNqE&list=PLYRfEO8DA8gikpkXw8wF8kJZDod2lFrML
-- https://mug896.github.io/bash-shell/index.html
-- https://blog.gaerae.com/2015/01/bash-hello-world.html
-- https://wiki.kldp.org/HOWTO/html/Adv-Bash-Scr-HOWTO/index.html
-- https://tldp.org/LDP/Bash-Beginners-Guide/html/
-- http://man.he.net/man1/HEAD
-- https://stackoverflow.com/questions/21789148/difference-between-cron-and-crontab
-- https://jhnyang.tistory.com/68
-- https://www.lesstif.com/lpt/bash-shell-script-programming-26083916.html
-- https://stackoverflow.com/questions/10929453/read-a-file-line-by-line-assigning-the-value-to-a-variable
-- https://mug896.github.io/bash-shell/readline.html#
-- https://jdm.kr/blog/2
-- [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
+- [youtube.com/watch?v=RIKJVIcYNqE&list=PLYRfEO8DA8gikpkXw8wF8kJZDod2lFrML](https://www.youtube.com/watch?v=RIKJVIcYNqE&list=PLYRfEO8DA8gikpkXw8wF8kJZDod2lFrML) — YouTube
+- [Introduction | Introduction](https://mug896.github.io/bash-shell/index.html) — mug896.github.io
+- [Bash 입문자를 위한 핵심 요약 정리 (Shell Script) – 개발자스럽다](https://blog.gaerae.com/2015/01/bash-hello-world.html) — blog.gaerae.com
+- [wiki.kldp.org/HOWTO/html/Adv-Bash-Scr-HOWTO/index.html](https://wiki.kldp.org/HOWTO/html/Adv-Bash-Scr-HOWTO/index.html) — wiki.kldp.org
+- [tldp.org/LDP/Bash-Beginners-Guide/html](https://tldp.org/LDP/Bash-Beginners-Guide/html/) — tldp.org
+- [man.he.net/man1/HEAD](http://man.he.net/man1/HEAD) — man.he.net
+- [stackoverflow.com/questions/21789148/difference-between-cron-and-crontab](https://stackoverflow.com/questions/21789148/difference-between-cron-and-crontab) — Stack Overflow
+- [jhnyang.tistory.com/68](https://jhnyang.tistory.com/68) — Tistory
+- [lesstif.com/lpt/bash-shell-script-programming-26083916.html](https://www.lesstif.com/lpt/bash-shell-script-programming-26083916.html) — lesstif.com
+- [stackoverflow.com/questions/10929453/read-a-file-line-by-line-assigning-the-value-to-a-variable](https://stackoverflow.com/questions/10929453/read-a-file-line-by-line-assigning-the-value-to-a-variable) — Stack Overflow
+- [Readline | Introduction](https://mug896.github.io/bash-shell/readline.html#) — mug896.github.io
+- [리눅스 크론탭(Linux Crontab) 사용법 :: JDM's Blog](https://jdm.kr/blog/2) — jdm.kr
+- [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html) — GNU

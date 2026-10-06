@@ -105,19 +105,19 @@ CalcThread B: 3.1415726535897894
 
 
 
-### References
+### 참고
 
 - Multithreading
-  - https://en.wikipedia.org/wiki/Multithreading_(computer_architecture)#:~:text=In%20computer%20architecture%2C%20multithreading%20is,This%20approach%20differs%20from%20multiprocessing.
-  - https://www.iitk.ac.in/esc101/05Aug/tutorial/essential/threads/priority.html
-  - https://www.tutorialspoint.com/operating_system/os_multi_threading.htm
-  - https://m.blog.naver.com/PostView.nhn?blogId=qbxlvnf11&logNo=220837131449&proxyReferer=https:%2F%2Fwww.google.com%2F
-  - https://www.perforce.com/blog/qac/multithreading-parallel-programming-c-cpp
-  - https://ko.wikipedia.org/wiki/%EC%8A%A4%EB%A0%88%EB%93%9C_(%EC%BB%B4%ED%93%A8%ED%8C%85)
-  - https://3dmpengines.tistory.com/2003
-  - https://byeongmoo.tistory.com/2
+  - [Multithreading (computer architecture)](https://en.wikipedia.org/wiki/Multithreading_(computer_architecture)#:~:text=In%20computer%20architecture%2C%20multithreading%20is,This%20approach%20differs%20from%20multiprocessing.) — Wikipedia
+  - [Thread Scheduling](https://www.iitk.ac.in/esc101/05Aug/tutorial/essential/threads/priority.html) — iitk.ac.in
+  - [Operating System - Multi-Threading](https://www.tutorialspoint.com/operating_system/os_multi_threading.htm) — Tutorialspoint
+  - [JAVA 멀티 스레드 스케줄링(multi thread scheduling)과 우선순위(priority)](https://m.blog.naver.com/PostView.nhn?blogId=qbxlvnf11&logNo=220837131449&proxyReferer=https:%2F%2Fwww.google.com%2F) — m.blog.naver.com
+  - [What Is Parallel Programming and Multithreading?](https://www.perforce.com/blog/qac/multithreading-parallel-programming-c-cpp) — Perforce Software
+  - [스레드 (컴퓨팅)](https://ko.wikipedia.org/wiki/%EC%8A%A4%EB%A0%88%EB%93%9C_(%EC%BB%B4%ED%93%A8%ED%8C%85)) — 위키백과, 우리 모두의 백과사전
+  - [프로세스&쓰레드와 메모리(스택, 레지스터)](https://3dmpengines.tistory.com/2003) — Tistory
+  - [프로세스(PROCESS) , 스레드(THREAD) #2](https://byeongmoo.tistory.com/2) — Tistory
 - Thead Scheduling in Java
-  - https://www.iitk.ac.in/esc101/05Aug/tutorial/essential/threads/priority.html#:~:text=Execution%20of%20multiple%20threads%20on,algorithm%20called%20fixed%2Dpriority%20scheduling.&text=If%20two%20threads%20of%20the,one%20of%20them%20to%20run
-  - http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.sys_arch%2Ftopic%2Fkernel_SCHEDULING.html
-  - https://www.geeksforgeeks.org/thread-scheduling/
-  - https://www.infoworld.com/article/2071214/java-101--understanding-java-threads--part-3--thread-scheduling-and-wait-notify.html
+  - [Thread Scheduling](https://www.iitk.ac.in/esc101/05Aug/tutorial/essential/threads/priority.html#:~:text=Execution%20of%20multiple%20threads%20on,algorithm%20called%20fixed%2Dpriority%20scheduling.&text=If%20two%20threads%20of%20the,one%20of%20them%20to%20run) — iitk.ac.in
+  - [qnx.com/developers/docs/qnxcar2/index.jsp?topic=/com.qnx.doc.neutrino.sys_arch/topic/kernel_SCHEDULING.html](http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.sys_arch%2Ftopic%2Fkernel_SCHEDULING.html) — qnx.com
+  - [Thread Scheduling](https://www.geeksforgeeks.org/thread-scheduling/) — GeeksforGeeks
+  - [Java 101: Understanding Java threads, Part 3: Thread scheduling and wait/notify](https://www.infoworld.com/article/2071214/java-101--understanding-java-threads--part-3--thread-scheduling-and-wait-notify.html) — infoworld.com

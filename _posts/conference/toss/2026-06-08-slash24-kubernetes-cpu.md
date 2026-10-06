@@ -100,8 +100,8 @@ CPU 워크로드가 많다 보니 사용량이 잘 분산되면 좋겠지만 안
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=WdikCm_CYms)
-- [SLASH 24](https://toss.im/slash-24)
-- [Kubernetes CFS quota와 스로틀링 이슈](https://github.com/kubernetes/kubernetes/issues/67577)
-- [Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
-- 같은 팀의 NUMA 최적화: [SLASH 24 Kernel까지 Observability 향상시키기 리뷰](/posts/slash24-kernel-observability-ebpf/)
+- [발표 영상](https://www.youtube.com/watch?v=WdikCm_CYms) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Kubernetes CFS quota와 스로틀링 이슈](https://github.com/kubernetes/kubernetes/issues/67577) — GitHub
+- [Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) — Kubernetes Docs
+- [SLASH 24 Kernel까지 Observability 향상시키기 리뷰](/posts/slash24-kernel-observability-ebpf/) — 같은 팀의 NUMA 최적화

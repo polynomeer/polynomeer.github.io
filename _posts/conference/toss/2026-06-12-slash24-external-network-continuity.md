@@ -100,7 +100,7 @@ DNS 기반으로 동작하며 상태 모니터링으로 서버가 정상일 때�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=TgHueXsfcPg)
-- [SLASH 24](https://toss.im/slash-24)
-- [MTR](https://github.com/traviscross/mtr)
-- 애플리케이션 계층의 대외기관 연동: [SLASH 23 토스뱅크의 모던 FEP 리뷰](/posts/slash23-bank-external-linkage/)
+- [발표 영상](https://www.youtube.com/watch?v=TgHueXsfcPg) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [MTR](https://github.com/traviscross/mtr) — GitHub
+- [SLASH 23 토스뱅크의 모던 FEP 리뷰](/posts/slash23-bank-external-linkage/) — 애플리케이션 계층의 대외기관 연동

@@ -147,14 +147,14 @@ flowchart TD
 
 ## 참고
 
-- [Debezium: Connector for PostgreSQL](https://debezium.io/documentation/reference/stable/connectors/postgresql.html)
-- [Debezium: Incremental snapshots](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-incremental-snapshots)
-- [Debezium: Connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html)
-- [PostgreSQL: Logical Decoding Concepts](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html)
-- [PostgreSQL: Replication 설정](https://www.postgresql.org/docs/current/runtime-config-replication.html)
-- [MySQL 8.4: The Binary Log](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html)
-- [DBLog: A Watermark Based Change-Data-Capture Framework (Netflix, 2020)](https://arxiv.org/abs/2010.12597)
-- [Incremental Snapshots in Debezium (2021)](https://debezium.io/blog/2021/10/07/incremental-snapshots/)
-- [Reliable Microservices Data Exchange With the Outbox Pattern (Debezium, 2019)](https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/)
-- [microservices.io: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html)
+- [Debezium: Connector for PostgreSQL](https://debezium.io/documentation/reference/stable/connectors/postgresql.html) — Debezium
+- [Debezium: Incremental snapshots](https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-incremental-snapshots) — Debezium
+- [Debezium: Connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html) — Debezium
+- [PostgreSQL: Logical Decoding Concepts](https://www.postgresql.org/docs/current/logicaldecoding-explanation.html) — PostgreSQL Documentation
+- [PostgreSQL: Replication 설정](https://www.postgresql.org/docs/current/runtime-config-replication.html) — PostgreSQL Docs
+- [MySQL 8.4: The Binary Log](https://dev.mysql.com/doc/refman/8.4/en/binary-log.html) — MySQL Docs
+- [DBLog: A Watermark Based Change-Data-Capture Framework (Netflix, 2020)](https://arxiv.org/abs/2010.12597) — arXiv
+- [Incremental Snapshots in Debezium (2021)](https://debezium.io/blog/2021/10/07/incremental-snapshots/) — Debezium
+- [Reliable Microservices Data Exchange With the Outbox Pattern (Debezium, 2019)](https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/) — Debezium Blog
+- [microservices.io: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) — microservices.io
 - [WAL과 체크포인트](/posts/wal-and-checkpoint/), [ParityPay 5편 - Transactional Outbox](/posts/parity-pay-outbox/)

@@ -140,9 +140,9 @@ sequenceDiagram
 
 ## 참고
 
-- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — 원본은 `reports/data/t12-ordering.json`, 표는 `reports/01-experiment-report.md`
+- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — GitHub: 원본은 `reports/data/t12-ordering.json`, 표는 `reports/01-experiment-report.md`
 - [카카오뱅크 알림 시스템 리뷰](/posts/kakaobank-notification-platform/) — 같은 긴장을 원문에서 본 글
 - [하루 N억 건의 알림 시스템 구축기 (1)](https://tech.kakaobank.com/posts/2609-new-notification-platform-1/) — 카카오뱅크 기술블로그, 2026-09-07
 - [monticker 파티션 × 컨슈머 격자](/posts/monticker-partition-ordering/) — 브로커 쪽에서 잰 같은 문제
 - [큐잉 이론 한 조각](/posts/queueing-theory-for-servers/)
-- [Apache Kafka: Introduction](https://kafka.apache.org/41/getting-started/introduction/) — 키, 파티션, 파티션 단위 순서 보장
+- [Apache Kafka: Introduction](https://kafka.apache.org/41/getting-started/introduction/) — Apache Kafka: 키, 파티션, 파티션 단위 순서 보장

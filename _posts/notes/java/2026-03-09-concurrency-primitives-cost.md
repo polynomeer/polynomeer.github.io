@@ -74,10 +74,10 @@ JMH로 스레드 수를 1, 2, 4, 8, 16으로 늘려 가며 같은 연산을 재�
 
 ## 참고
 
-- [Java: ReentrantLock](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html)
-- [Java: LongAdder](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/LongAdder.html)
-- [JEP 374: Deprecate and Disable Biased Locking](https://openjdk.org/jeps/374)
-- [JDK-8256425: Obsolete Biased Locking in JDK 18](https://bugs.openjdk.org/browse/JDK-8256425)
-- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491)
+- [Java: ReentrantLock](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html) — Oracle Docs
+- [Java: LongAdder](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/LongAdder.html) — Oracle Docs
+- [JEP 374: Deprecate and Disable Biased Locking](https://openjdk.org/jeps/374) — OpenJDK
+- [JDK-8256425: Obsolete Biased Locking in JDK 18](https://bugs.openjdk.org/browse/JDK-8256425) — OpenJDK
+- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) — OpenJDK
 - Goetz et al., *Java Concurrency in Practice*
 - [멀티스레딩 정리](/posts/multi-threading/)

@@ -280,25 +280,29 @@ gVisor 문서는 이 구조의 대가로 응용 호환성 저하와 시스템 �
 
 ## 참고
 
-- CodeDrill 저장소 — [github.com/polynomeer/code-drill](https://github.com/polynomeer/code-drill)
-- CodeDrill 기술 설계서 v1.2 — [`docs/specs/code_drill_technical_design.docx`](https://github.com/polynomeer/code-drill/blob/79a5a20/docs/specs/code_drill_technical_design.docx)
-- CodeDrill PRD v1.2 — [`docs/specs/code_drill_prd.docx`](https://github.com/polynomeer/code-drill/blob/79a5a20/docs/specs/code_drill_prd.docx)
-- CodeDrill 제품 맥락 — [`docs/project-context.md`](https://github.com/polynomeer/code-drill/blob/7d674eb/docs/project-context.md)
-- CodeDrill 기술 선택의 이유와 대안 — [`docs/tech-selection.md`](https://github.com/polynomeer/code-drill/blob/14b934c/docs/tech-selection.md)
-- RabbitMQ — [Quorum Queues](https://www.rabbitmq.com/docs/quorum-queues), [Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms)
-- Apache Kafka — [Introduction](https://kafka.apache.org/intro)
-- Redis — [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/), [Redis persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/)
-- PostgreSQL 17 — [SELECT](https://www.postgresql.org/docs/17/sql-select.html), [JSON Types](https://www.postgresql.org/docs/17/datatype-json.html)
-- MySQL 8.4 — [Locking Reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html)
-- MongoDB — [Transactions](https://www.mongodb.com/docs/manual/core/transactions/)
-- WHATWG — [Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html)
-- IETF — [RFC 6455 The WebSocket Protocol](https://datatracker.ietf.org/doc/html/rfc6455)
-- Spring Framework — [Kotlin](https://docs.spring.io/spring-framework/reference/languages/kotlin.html), [Asynchronous Requests](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html)
-- Kotlin — [Kotlin for server side](https://kotlinlang.org/docs/server-overview.html)
-- gVisor — [What is gVisor?](https://gvisor.dev/docs/)
-- Firecracker — [firecracker-microvm.github.io](https://firecracker-microvm.github.io/)
-- Docker — [Seccomp security profiles](https://docs.docker.com/engine/security/seccomp/)
-- Monaco Editor — [microsoft/monaco-editor](https://github.com/microsoft/monaco-editor)
-- CodeMirror — [codemirror.net](https://codemirror.net/)
-- OpenTelemetry — [What is OpenTelemetry?](https://opentelemetry.io/docs/what-is-opentelemetry/)
-- Chris Richardson — [Pattern: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html)
+- [github.com/polynomeer/code-drill](https://github.com/polynomeer/code-drill) — CodeDrill 저장소 —
+- [`docs/specs/code_drill_technical_design.docx`](https://github.com/polynomeer/code-drill/blob/79a5a20/docs/specs/code_drill_technical_design.docx) — CodeDrill 기술 설계서 v1.2 —
+- [`docs/specs/code_drill_prd.docx`](https://github.com/polynomeer/code-drill/blob/79a5a20/docs/specs/code_drill_prd.docx) — CodeDrill PRD v1.2 —
+- [`docs/project-context.md`](https://github.com/polynomeer/code-drill/blob/7d674eb/docs/project-context.md) — CodeDrill 제품 맥락 —
+- [`docs/tech-selection.md`](https://github.com/polynomeer/code-drill/blob/14b934c/docs/tech-selection.md) — CodeDrill 기술 선택의 이유와 대안 —
+- [Quorum Queues](https://www.rabbitmq.com/docs/quorum-queues) — RabbitMQ —
+- [Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms) — RabbitMQ
+- [Introduction](https://kafka.apache.org/intro) — Apache Kafka —
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/) — Redis —
+- [Redis persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/) — Redis Docs
+- [SELECT](https://www.postgresql.org/docs/17/sql-select.html) — PostgreSQL 17 —
+- [JSON Types](https://www.postgresql.org/docs/17/datatype-json.html) — PostgreSQL Docs
+- [Locking Reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html) — MySQL 8.4 —
+- [Transactions](https://www.mongodb.com/docs/manual/core/transactions/) — MongoDB —
+- [Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html) — WHATWG —
+- [RFC 6455 The WebSocket Protocol](https://datatracker.ietf.org/doc/html/rfc6455) — IETF —
+- [Kotlin](https://docs.spring.io/spring-framework/reference/languages/kotlin.html) — Spring Framework —
+- [Asynchronous Requests](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html) — Spring Docs
+- [Kotlin for server side](https://kotlinlang.org/docs/server-overview.html) — Kotlin —
+- [What is gVisor?](https://gvisor.dev/docs/) — gVisor —
+- [firecracker-microvm.github.io](https://firecracker-microvm.github.io/) — Firecracker —
+- [Seccomp security profiles](https://docs.docker.com/engine/security/seccomp/) — Docker —
+- [microsoft/monaco-editor](https://github.com/microsoft/monaco-editor) — Monaco Editor —
+- [codemirror.net](https://codemirror.net/) — CodeMirror —
+- [What is OpenTelemetry?](https://opentelemetry.io/docs/what-is-opentelemetry/) — OpenTelemetry —
+- [Pattern: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) — Chris Richardson —

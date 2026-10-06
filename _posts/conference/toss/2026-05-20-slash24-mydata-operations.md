@@ -92,9 +92,9 @@ sequenceDiagram
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=5I7ehDTvnWA)
-- [SLASH 24](https://toss.im/slash-24)
-- [Kotlin Coroutine Channels](https://kotlinlang.org/docs/channels.html)
-- [Kotlin - Coroutine scope and structured concurrency](https://kotlinlang.org/docs/coroutines-basics.html#coroutine-scope-and-structured-concurrency)
-- [Resilience4j CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker)
-- 같은 철학의 대외기관 제어: [SLASH 22 토스뱅크의 완전히 새로운 대출 시스템 리뷰](/posts/slash22-tossbank-loan-system/)
+- [발표 영상](https://www.youtube.com/watch?v=5I7ehDTvnWA) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Kotlin Coroutine Channels](https://kotlinlang.org/docs/channels.html) — Kotlin Docs
+- [Coroutine scope and structured concurrency](https://kotlinlang.org/docs/coroutines-basics.html#coroutine-scope-and-structured-concurrency) — Kotlin
+- [Resilience4j CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker) — Resilience4j
+- [SLASH 22 토스뱅크의 완전히 새로운 대출 시스템 리뷰](/posts/slash22-tossbank-loan-system/) — 같은 철학의 대외기관 제어

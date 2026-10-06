@@ -52,7 +52,7 @@ public class MyApplication {
 
 ## 참고
 
-- [Using the @SpringBootApplication Annotation](https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html)
-- [Structuring Your Code](https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html)
-- [Auto-configuration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html)
-- [Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)
+- [Using the @SpringBootApplication Annotation](https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html) — Spring Docs
+- [Structuring Your Code](https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html) — Spring Docs
+- [Auto-configuration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html) — Spring Docs
+- [Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html) — Spring Docs

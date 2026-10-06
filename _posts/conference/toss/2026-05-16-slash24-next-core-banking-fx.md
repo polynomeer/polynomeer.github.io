@@ -105,9 +105,9 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=uWnAVYgCd0k)
-- [SLASH 24](https://toss.im/slash-24)
-- 1년 전: [SLASH 23 은행 최초 코어뱅킹 MSA 전환기 리뷰](/posts/slash23-core-banking-msa/)
+- [발표 영상](https://www.youtube.com/watch?v=uWnAVYgCd0k) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [SLASH 23 은행 최초 코어뱅킹 MSA 전환기 리뷰](/posts/slash23-core-banking-msa/) — 1년 전
 - 같은 날 짝: SLASH 24 환전의 보상 트랜잭션 세션
-- [microservices.io - Pattern: Saga](https://microservices.io/patterns/data/saga.html)
-- [MySQL 8.0 Reference Manual - InnoDB Multi-Versioning](https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html)
+- [Pattern: Saga](https://microservices.io/patterns/data/saga.html) — microservices.io
+- [InnoDB Multi-Versioning](https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html) — MySQL 8.0 Reference Manual

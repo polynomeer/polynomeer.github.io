@@ -94,7 +94,7 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=ApNj9MZU7Ak)
-- [SLASH 24](https://toss.im/slash-24)
-- [Istio VirtualService HTTP match](https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPMatchRequest)
-- 카나리를 쓸 수 없는 경우: [SLASH 24 토스뱅크 신용 모형/전략 시스템 리뷰](/posts/slash24-credit-model-strategy-system/)
+- [발표 영상](https://www.youtube.com/watch?v=ApNj9MZU7Ak) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Istio VirtualService HTTP match](https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPMatchRequest) — Istio
+- [SLASH 24 토스뱅크 신용 모형/전략 시스템 리뷰](/posts/slash24-credit-model-strategy-system/) — 카나리를 쓸 수 없는 경우

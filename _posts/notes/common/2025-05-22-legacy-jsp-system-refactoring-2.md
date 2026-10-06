@@ -215,11 +215,11 @@ sequenceDiagram
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual, Locking Reads](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html) — 잠금 읽기가 거는 락과 해제 시점
-- [MySQL 8.0 Reference Manual, Information Functions](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html) — `LAST_INSERT_ID(expr)`로 시퀀스를 흉내 내는 예제
-- [Spring Framework Reference, Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html) — `REQUIRES_NEW`의 락 해제 시점과 커넥션 풀 경고
-- [랩 코드: NonAtomicContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/NonAtomicContractCodeAllocator.java)
-- [랩 코드: AtomicUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/AtomicUpdateContractCodeAllocator.java)
-- [랩 코드: SelectForUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/SelectForUpdateContractCodeAllocator.java)
-- [랩 코드: NonAtomicAllocatorConcurrencyTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/sequence/NonAtomicAllocatorConcurrencyTest.java)
-- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)
+- [Locking Reads](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html) — MySQL 8.0 Reference Manual: 잠금 읽기가 거는 락과 해제 시점
+- [Information Functions](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html) — MySQL 8.0 Reference Manual: `LAST_INSERT_ID(expr)`로 시퀀스를 흉내 내는 예제
+- [Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html) — Spring Framework Reference: `REQUIRES_NEW`의 락 해제 시점과 커넥션 풀 경고
+- [랩 코드: NonAtomicContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/NonAtomicContractCodeAllocator.java) — GitHub
+- [랩 코드: AtomicUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/AtomicUpdateContractCodeAllocator.java) — GitHub
+- [랩 코드: SelectForUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/SelectForUpdateContractCodeAllocator.java) — GitHub
+- [랩 코드: NonAtomicAllocatorConcurrencyTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/sequence/NonAtomicAllocatorConcurrencyTest.java) — GitHub
+- [랩 README: mcp-platform](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub

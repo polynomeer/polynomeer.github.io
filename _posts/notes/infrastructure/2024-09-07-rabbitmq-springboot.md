@@ -167,11 +167,11 @@ Spring Boot에서 RabbitMQ를 붙이는 일 자체는 스타터, 연결 설정, 
 
 ## 참고
 
-- [Spring Boot Reference, Messaging: AMQP](https://docs.spring.io/spring-boot/reference/messaging/amqp.html)
-- [Spring AMQP Reference, Annotation-driven Listener Endpoints](https://docs.spring.io/spring-amqp/reference/amqp/receiving-messages/async-annotation-driven.html)
-- [Spring AMQP Reference, Message Listener Container Configuration](https://docs.spring.io/spring-amqp/reference/amqp/containerAttributes.html)
-- [Spring AMQP Reference, Exception Handling](https://docs.spring.io/spring-amqp/reference/amqp/exception-handling.html)
-- [Spring AMQP Reference, Message Converters](https://docs.spring.io/spring-amqp/reference/amqp/message-converters.html)
-- [RabbitMQ, AMQP 0-9-1 Model Explained](https://www.rabbitmq.com/tutorials/amqp-concepts)
-- [RabbitMQ, Dead Letter Exchanges](https://www.rabbitmq.com/docs/dlx)
-- [RabbitMQ, Access Control](https://www.rabbitmq.com/docs/access-control)
+- [Messaging: AMQP](https://docs.spring.io/spring-boot/reference/messaging/amqp.html) — Spring Boot Reference
+- [Annotation-driven Listener Endpoints](https://docs.spring.io/spring-amqp/reference/amqp/receiving-messages/async-annotation-driven.html) — Spring AMQP Reference
+- [Message Listener Container Configuration](https://docs.spring.io/spring-amqp/reference/amqp/containerAttributes.html) — Spring AMQP Reference
+- [Exception Handling](https://docs.spring.io/spring-amqp/reference/amqp/exception-handling.html) — Spring AMQP Reference
+- [Message Converters](https://docs.spring.io/spring-amqp/reference/amqp/message-converters.html) — Spring AMQP Reference
+- [AMQP 0-9-1 Model Explained](https://www.rabbitmq.com/tutorials/amqp-concepts) — RabbitMQ
+- [Dead Letter Exchanges](https://www.rabbitmq.com/docs/dlx) — RabbitMQ
+- [Access Control](https://www.rabbitmq.com/docs/access-control) — RabbitMQ

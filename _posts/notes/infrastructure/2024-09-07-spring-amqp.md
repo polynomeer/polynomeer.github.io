@@ -134,7 +134,7 @@ public class OrderCreatedListener {
 ## 참고
 
 - [Spring AMQP](https://spring.io/projects/spring-amqp#overview) — spring.io
-- [Spring AMQP 맛보기 - 1. AMQP 개념](https://preamtree.tistory.com/172) — preamtree
+- [Spring AMQP 맛보기 - 1. AMQP 개념](https://preamtree.tistory.com/172) — Tistory: preamtree
 - [AMQP](https://docs.spring.io/spring-boot/reference/messaging/amqp.html) — Spring Boot Reference
 - [Using AmqpTemplate](https://docs.spring.io/spring-amqp/reference/amqp/template.html) — Spring AMQP Reference
 - [Annotation-driven Listener Endpoints](https://docs.spring.io/spring-amqp/reference/amqp/receiving-messages/async-annotation-driven.html) — Spring AMQP Reference

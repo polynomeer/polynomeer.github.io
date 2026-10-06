@@ -90,6 +90,6 @@ Git의 기본은 명령어 암기보다, 변경 이력을 어떻게 관리할지
 
 ## 참고
 
-- [Pro Git, 1.3 What is Git?](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
-- [Pro Git, 3.1 Branches in a Nutshell](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell)
-- [git-add Documentation](https://git-scm.com/docs/git-add)
+- [1.3 What is Git?](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F) — Pro Git
+- [3.1 Branches in a Nutshell](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell) — Pro Git
+- [git-add Documentation](https://git-scm.com/docs/git-add) — Git Docs

@@ -162,6 +162,6 @@ run 1은 달랐다. HALF_OPEN 프로브 3건이 기관 복구 순간과 겹쳐 +
 
 ## 참고
 
-- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
-- [Resilience4j - CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker)
-- [Marc Brooker - Exponential Backoff And Jitter (AWS Architecture Blog, 2015)](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — OpenJDK
+- [CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker) — Resilience4j
+- [Marc Brooker - Exponential Backoff And Jitter (AWS Architecture Blog, 2015)](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/) — AWS Architecture Blog

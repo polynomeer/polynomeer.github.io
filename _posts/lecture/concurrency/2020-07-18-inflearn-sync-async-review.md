@@ -89,5 +89,5 @@ flowchart LR
 
 ## 참고
 
-- [인프런 강의](https://www.inflearn.com/course/sync-async-%EA%B0%9C%EB%85%90-%EC%9D%B4%ED%95%B4/dashboard?cid=324755): 미리보기와 본편 한국어 스크립트. 시간 표시는 본편 기준이다.
-- [Concurrency is not parallelism](https://go.dev/blog/waza-talk): 강의 밖에서 동시성과 병렬성의 구분을 보충한 자료.
+- [인프런 강의](https://www.inflearn.com/course/sync-async-%EA%B0%9C%EB%85%90-%EC%9D%B4%ED%95%B4/dashboard?cid=324755) — 인프런: 미리보기와 본편 한국어 스크립트. 시간 표시는 본편 기준이다.
+- [Concurrency is not parallelism](https://go.dev/blog/waza-talk) — Go: 강의 밖에서 동시성과 병렬성의 구분을 보충한 자료.

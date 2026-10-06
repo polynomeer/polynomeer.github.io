@@ -105,8 +105,10 @@ Active-Standby를 거부한 논거는 기술이 아니라 운영이다. 발표�
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-23/session-detail/B2-6)
-- [발표 영상](https://www.youtube.com/watch?v=Pzkioe7Dvo4)
-- 발표를 글로 정리한 3부작: [#1 구성](https://toss.tech/article/kafka-distribution-1) · [#2 데이터 미러링](https://toss.tech/article/kafka-distribution-2) · [#3 Offset Sync](https://toss.tech/article/kafka-distribution-3)
-- 글 세 편을 근거로 한 리뷰: [토스증권 Kafka 데이터센터 이중화 리뷰](/posts/toss-securities-kafka-dual-datacenter-review/)
+- [세션 페이지](https://toss.im/slash-23/session-detail/B2-6) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=Pzkioe7Dvo4) — YouTube
+- [#1 구성](https://toss.tech/article/kafka-distribution-1) — 토스 기술 블로그: 발표를 글로 정리한 3부작
+- [#2 데이터 미러링](https://toss.tech/article/kafka-distribution-2) — 토스 기술 블로그: 발표를 글로 정리한 3부작
+- [#3 Offset Sync](https://toss.tech/article/kafka-distribution-3) — 토스 기술 블로그: 발표를 글로 정리한 3부작
+- [토스증권 Kafka 데이터센터 이중화 리뷰](/posts/toss-securities-kafka-dual-datacenter-review/) — 글 세 편을 근거로 한 리뷰
 - 같은 IDC 이중화의 다른 답: SLASH 23 Elasticsearch 클러스터 개선기 세션

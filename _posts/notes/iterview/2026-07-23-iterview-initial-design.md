@@ -231,37 +231,37 @@ CI는 GitHub Actions에서 JDK 21과 Node 20을 준비하고 `scripts/verify_all
 
 ## 참고
 
-- [iterview 저장소](https://github.com/polynomeer/iterview)
-- [ADR 0087 - Record the Initial Technology Selection](https://github.com/polynomeer/iterview/blob/bda27da3926d7c2a08545c3bd6d96449725a0792/docs/adr/0087-record-initial-technology-selection.md)
-- [apps/api/docs/01-product-overview.md (cf4c803)](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/docs/01-product-overview.md)
-- [apps/api/docs/02-backend-architecture.md (cf4c803)](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/docs/02-backend-architecture.md)
-- [apps/api/AGENTS.md (cf4c803)](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/AGENTS.md)
-- [apps/web/docs/02-frontend-architecture.md (e316471)](https://github.com/polynomeer/iterview/blob/e316471c23f7730b4c0aa01c5512710a7fbe220c/apps/web/docs/02-frontend-architecture.md)
-- [docs/monorepo-conventions.md (a753094)](https://github.com/polynomeer/iterview/blob/a75309473ef85c23953215885437d5859bb8ef54/docs/monorepo-conventions.md)
-- [docs/monorepo-status.md (a753094)](https://github.com/polynomeer/iterview/blob/a75309473ef85c23953215885437d5859bb8ef54/docs/monorepo-status.md)
-- [Spring Boot 3.3 System Requirements](https://docs.spring.io/spring-boot/3.3/system-requirements.html)
-- [Spring Boot 3.3 Kotlin Support](https://docs.spring.io/spring-boot/3.3/reference/features/kotlin.html)
-- [Kotlin All-open compiler plugin](https://kotlinlang.org/docs/all-open-plugin.html)
-- [Kotlin No-arg compiler plugin](https://kotlinlang.org/docs/no-arg-plugin.html)
-- [Ktor README](https://github.com/ktorio/ktor)
-- [Spring Modulith Reference](https://docs.spring.io/spring-modulith/reference/)
-- [Spring Modulith Events](https://docs.spring.io/spring-modulith/reference/events.html)
-- [Spring Framework, Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)
-- [MySQL 8.0, Statements That Cause an Implicit Commit](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html)
-- [PostgreSQL Wiki, Transactional DDL in PostgreSQL](https://wiki.postgresql.org/wiki/Transactional_DDL_in_PostgreSQL:_A_Competitive_Analysis)
-- [Testcontainers Postgres Module](https://java.testcontainers.org/modules/databases/postgres/)
-- [Spring Boot Testcontainers](https://docs.spring.io/spring-boot/3.3/reference/testing/testcontainers.html)
-- [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
-- [OpenAI Speech to text](https://developers.openai.com/api/docs/guides/speech-to-text)
-- [OpenAI Java SDK](https://github.com/openai/openai-java)
-- [whisper.cpp](https://github.com/ggml-org/whisper.cpp)
-- [Apache PDFBox](https://pdfbox.apache.org/)
-- [RFC 7519, JSON Web Token](https://www.rfc-editor.org/rfc/rfc7519)
-- [OWASP HTML5 Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html)
-- [npm Workspaces](https://docs.npmjs.com/cli/v10/using-npm/workspaces)
-- [Gradle Composite Builds](https://docs.gradle.org/current/userguide/composite_builds.html)
-- [React, Build a React app from Scratch](https://react.dev/learn/build-a-react-app-from-scratch)
-- [Next.js Docs](https://nextjs.org/docs)
-- [Vite, Why Vite](https://vite.dev/guide/why)
-- [TanStack Query Overview](https://tanstack.com/query/latest/docs/framework/react/overview)
-- [Feature-Sliced Design, Layers](https://feature-sliced.design/docs/reference/layers)
+- [iterview 저장소](https://github.com/polynomeer/iterview) — GitHub
+- [ADR 0087 - Record the Initial Technology Selection](https://github.com/polynomeer/iterview/blob/bda27da3926d7c2a08545c3bd6d96449725a0792/docs/adr/0087-record-initial-technology-selection.md) — GitHub
+- [apps/api/docs/01-product-overview.md (cf4c803)](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/docs/01-product-overview.md) — GitHub
+- [apps/api/docs/02-backend-architecture.md (cf4c803)](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/docs/02-backend-architecture.md) — GitHub
+- [apps/api/AGENTS.md (cf4c803)](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/AGENTS.md) — GitHub
+- [apps/web/docs/02-frontend-architecture.md (e316471)](https://github.com/polynomeer/iterview/blob/e316471c23f7730b4c0aa01c5512710a7fbe220c/apps/web/docs/02-frontend-architecture.md) — GitHub
+- [docs/monorepo-conventions.md (a753094)](https://github.com/polynomeer/iterview/blob/a75309473ef85c23953215885437d5859bb8ef54/docs/monorepo-conventions.md) — GitHub
+- [docs/monorepo-status.md (a753094)](https://github.com/polynomeer/iterview/blob/a75309473ef85c23953215885437d5859bb8ef54/docs/monorepo-status.md) — GitHub
+- [Spring Boot 3.3 System Requirements](https://docs.spring.io/spring-boot/3.3/system-requirements.html) — Spring Docs
+- [Spring Boot 3.3 Kotlin Support](https://docs.spring.io/spring-boot/3.3/reference/features/kotlin.html) — Spring Docs
+- [Kotlin All-open compiler plugin](https://kotlinlang.org/docs/all-open-plugin.html) — Kotlin Docs
+- [Kotlin No-arg compiler plugin](https://kotlinlang.org/docs/no-arg-plugin.html) — Kotlin Docs
+- [Ktor README](https://github.com/ktorio/ktor) — GitHub
+- [Spring Modulith Reference](https://docs.spring.io/spring-modulith/reference/) — Spring Docs
+- [Spring Modulith Events](https://docs.spring.io/spring-modulith/reference/events.html) — Spring Docs
+- [Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html) — Spring Framework
+- [MySQL 8.0, Statements That Cause an Implicit Commit](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html) — MySQL Docs
+- [Transactional DDL in PostgreSQL](https://wiki.postgresql.org/wiki/Transactional_DDL_in_PostgreSQL:_A_Competitive_Analysis) — PostgreSQL Wiki
+- [Testcontainers Postgres Module](https://java.testcontainers.org/modules/databases/postgres/) — java.testcontainers.org
+- [Spring Boot Testcontainers](https://docs.spring.io/spring-boot/3.3/reference/testing/testcontainers.html) — Spring Docs
+- [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) — OpenAI
+- [OpenAI Speech to text](https://developers.openai.com/api/docs/guides/speech-to-text) — OpenAI
+- [OpenAI Java SDK](https://github.com/openai/openai-java) — GitHub
+- [whisper.cpp](https://github.com/ggml-org/whisper.cpp) — GitHub
+- [Apache PDFBox](https://pdfbox.apache.org/) — Apache PDFBox
+- [RFC 7519, JSON Web Token](https://www.rfc-editor.org/rfc/rfc7519) — IETF
+- [OWASP HTML5 Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html) — OWASP Cheat Sheet Series
+- [npm Workspaces](https://docs.npmjs.com/cli/v10/using-npm/workspaces) — docs.npmjs.com
+- [Gradle Composite Builds](https://docs.gradle.org/current/userguide/composite_builds.html) — Gradle Docs
+- [Build a React app from Scratch](https://react.dev/learn/build-a-react-app-from-scratch) — React
+- [Next.js Docs](https://nextjs.org/docs) — Next.js
+- [Why Vite](https://vite.dev/guide/why) — Vite
+- [TanStack Query Overview](https://tanstack.com/query/latest/docs/framework/react/overview) — TanStack
+- [Layers](https://feature-sliced.design/docs/reference/layers) — Feature-Sliced Design

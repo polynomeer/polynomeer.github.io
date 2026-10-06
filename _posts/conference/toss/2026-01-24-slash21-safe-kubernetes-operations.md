@@ -107,7 +107,7 @@ Rego 예시는 특정 Docker 레지스트리 사용을 막는 것이다. 요청 
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=gF1wfTCDyI8)
-- [SLASH 21](https://toss.im/slash-21)
-- [Argo CD - App of Apps 패턴](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/)
-- [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/)
+- [발표 영상](https://www.youtube.com/watch?v=gF1wfTCDyI8) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [App of Apps 패턴](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/) — Argo CD
+- [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/) — Open Policy Agent

@@ -101,8 +101,8 @@ Pinpoint의 저장소는 HBase다. Hadoop HDFS 위의 분산 컬럼 기반 키-�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=MA7B9bJCwYk)
-- [SLASH 23](https://toss.im/slash-23)
-- [Pinpoint](https://github.com/pinpoint-apm/pinpoint)
-- [Kotlin 코루틴 설계 문서 (KEEP)](https://github.com/Kotlin/KEEP/blob/master/proposals/coroutines.md)
-- [Pinpoint kotlin-coroutines 플러그인 (v2.4.0)](https://github.com/pinpoint-apm/pinpoint/tree/v2.4.0/plugins/kotlin-coroutines)
+- [발표 영상](https://www.youtube.com/watch?v=MA7B9bJCwYk) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [Pinpoint](https://github.com/pinpoint-apm/pinpoint) — GitHub
+- [Kotlin 코루틴 설계 문서 (KEEP)](https://github.com/Kotlin/KEEP/blob/master/proposals/coroutines.md) — GitHub
+- [Pinpoint kotlin-coroutines 플러그인 (v2.4.0)](https://github.com/pinpoint-apm/pinpoint/tree/v2.4.0/plugins/kotlin-coroutines) — GitHub

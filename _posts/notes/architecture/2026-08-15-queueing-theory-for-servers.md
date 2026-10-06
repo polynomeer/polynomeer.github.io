@@ -111,7 +111,7 @@ W = 요청 하나가 시스템에 머무는 평균 시간
 
 ## 참고
 
-- [Little's Law](https://en.wikipedia.org/wiki/Little%27s_law)
-- [M/M/1 queue](https://en.wikipedia.org/wiki/M/M/1_queue)
+- [Little's Law](https://en.wikipedia.org/wiki/Little%27s_law) — Wikipedia
+- [M/M/1 queue](https://en.wikipedia.org/wiki/M/M/1_queue) — Wikipedia
 - Neil Gunther, *Guerrilla Capacity Planning*
 - [Tomcat 스레드 고갈 실험](/posts/tomcat-thread-exhaustion/)

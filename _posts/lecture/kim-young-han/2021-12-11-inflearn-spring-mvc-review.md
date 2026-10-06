@@ -76,5 +76,5 @@ sequenceDiagram
 
 ## 참고
 
-- [스프링 MVC 1편](https://www.inflearn.com/course/스프링-mvc-1/dashboard?cid=326674): 전체 커리큘럼과 「스프링 MVC 전체 구조」의 명시한 구간.
-- [Spring Framework: DispatcherServlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html): 프런트 컨트롤러와 위임 구조 보충.
+- [스프링 MVC 1편](https://www.inflearn.com/course/스프링-mvc-1/dashboard?cid=326674) — 인프런: 전체 커리큘럼과 「스프링 MVC 전체 구조」의 명시한 구간.
+- [Spring Framework: DispatcherServlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html) — Spring Docs: 프런트 컨트롤러와 위임 구조 보충.

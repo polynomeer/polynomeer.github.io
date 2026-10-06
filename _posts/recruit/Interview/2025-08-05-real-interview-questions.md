@@ -461,21 +461,26 @@ MQ 없이 DB를 이벤트 저장소로 쓰는 경우에는 이벤트 테이블�
 - [LDAP Authentication](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/ldap.html) — Spring Security Reference
 - [Non-Blocking Retries](https://docs.spring.io/spring-kafka/reference/retrytopic.html) — Spring for Apache Kafka
 - [Design](https://kafka.apache.org/41/design/design/) — Apache Kafka 4.1 Documentation
-- [Reliability Guide](https://www.rabbitmq.com/docs/reliability), [Dead Letter Exchanges](https://www.rabbitmq.com/docs/dlx), [Time-To-Live and Expiration](https://www.rabbitmq.com/docs/ttl) — RabbitMQ 공식 문서
-- [EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.4/en/explain-output.html), [Locking Reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html) — MySQL 8.4 Reference Manual
-- [Hibernate ORM 6.6 User Guide](https://docs.hibernate.org/orm/6.6/userguide/html_single/Hibernate_User_Guide.html) — Locking, Batching 장
+- [Reliability Guide](https://www.rabbitmq.com/docs/reliability) — RabbitMQ
+- [Dead Letter Exchanges](https://www.rabbitmq.com/docs/dlx) — RabbitMQ
+- [Time-To-Live and Expiration](https://www.rabbitmq.com/docs/ttl) — RabbitMQ 공식 문서
+- [EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.4/en/explain-output.html) — MySQL Docs
+- [Locking Reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html) — MySQL 8.4 Reference Manual
+- [Hibernate ORM 6.6 User Guide](https://docs.hibernate.org/orm/6.6/userguide/html_single/Hibernate_User_Guide.html) — Hibernate Docs: Locking, Batching 장
 - [Troubleshooting Memory Leaks](https://docs.oracle.com/en/java/javase/21/troubleshoot/troubleshooting-memory-leaks.html) — Oracle Java SE 21 Troubleshooting Guide
 - [Garbage-First (G1) Garbage Collector](https://docs.oracle.com/en/java/javase/21/gctuning/garbage-first-g1-garbage-collector1.html) — Oracle Java SE 21 GC Tuning Guide
-- [JEP 248: Make G1 the Default Garbage Collector](https://openjdk.org/jeps/248), [JEP 333: ZGC (Experimental)](https://openjdk.org/jeps/333), [JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production)](https://openjdk.org/jeps/377) — OpenJDK
+- [JEP 248: Make G1 the Default Garbage Collector](https://openjdk.org/jeps/248) — OpenJDK
+- [JEP 333: ZGC (Experimental)](https://openjdk.org/jeps/333) — OpenJDK
+- [JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production)](https://openjdk.org/jeps/377) — OpenJDK
 - [ZGC](https://wiki.openjdk.org/display/zgc/Main) — OpenJDK Wiki
 - [Efficiency](https://github.com/ben-manes/caffeine/wiki/Efficiency) — Caffeine Wiki
 - [CircuitBreaker](https://resilience4j.readme.io/docs/circuitbreaker) — Resilience4j 문서
-- [Hystrix README](https://github.com/Netflix/Hystrix) — Netflix
-- [HikariCP README](https://github.com/brettwooldridge/HikariCP) — 설정 항목
+- [Hystrix README](https://github.com/Netflix/Hystrix) — GitHub: Netflix
+- [HikariCP README](https://github.com/brettwooldridge/HikariCP) — GitHub: 설정 항목
 - [Role Based Access Control](https://csrc.nist.gov/projects/role-based-access-control) — NIST CSRC
 - [Cache-Aside pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside) — Azure Architecture Center
 - [Caching strategies](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html) — Amazon ElastiCache 문서
 - [Caching Data Sources](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/develop-applications/caching-data-sources.html) — Oracle Coherence 14.1.1 문서
 - [ZooKeeper Recipes and Solutions](https://zookeeper.apache.org/doc/current/recipes.html) — Apache ZooKeeper
-- [twitter-archive/snowflake](https://github.com/twitter-archive/snowflake) — Twitter
+- [twitter-archive/snowflake](https://github.com/twitter-archive/snowflake) — GitHub: Twitter
 - [RFC 9562: Universally Unique IDentifiers (UUIDs)](https://www.rfc-editor.org/rfc/rfc9562.html) — IETF

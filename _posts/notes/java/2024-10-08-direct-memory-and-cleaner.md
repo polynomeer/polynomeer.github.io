@@ -62,9 +62,11 @@ Netty는 이 불확실성을 받아들이지 않았다. Netty 위키는 GC와 �
 
 ## 참고
 
-- [Java SE 21 API: ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html), Direct vs. non-direct buffers
-- [Java SE 21 API: java.lang.ref.Cleaner](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ref/Cleaner.html)
-- [Java SE 21: java 명령](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html), `-XX:MaxDirectMemorySize`, `-XX:NativeMemoryTracking`
-- OpenJDK jdk21u 소스: [Direct-X-Buffer.java.template](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/java/nio/Direct-X-Buffer.java.template), [Bits.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/java/nio/Bits.java), [VM.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/jdk/internal/misc/VM.java)
-- [Netty wiki: Reference counted objects](https://netty.io/wiki/reference-counted-objects.html)
+- [Java SE 21 API: ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html) — Oracle: Direct vs. non-direct buffers
+- [Java SE 21 API: java.lang.ref.Cleaner](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ref/Cleaner.html) — Oracle Docs
+- [Java SE 21: java 명령](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html) — Oracle Docs: `-XX:MaxDirectMemorySize`, `-XX:NativeMemoryTracking`
+- [Direct-X-Buffer.java.template](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/java/nio/Direct-X-Buffer.java.template) — GitHub: OpenJDK jdk21u 소스
+- [Bits.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/java/nio/Bits.java) — GitHub: OpenJDK jdk21u 소스
+- [VM.java](https://github.com/openjdk/jdk21u/blob/jdk-21.0.4-ga/src/java.base/share/classes/jdk/internal/misc/VM.java) — GitHub: OpenJDK jdk21u 소스
+- [Netty wiki: Reference counted objects](https://netty.io/wiki/reference-counted-objects.html) — Netty
 - [NIO와 이벤트 루프](/posts/nio-and-event-loop/), [Java의 Garbage Collection](/posts/java-garbage-collection/), [Netty 정리](/posts/netty/)

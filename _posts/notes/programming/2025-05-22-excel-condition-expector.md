@@ -210,6 +210,6 @@ Route decide(ExportRequest req) {
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual: Aggregate Function Descriptions (COUNT)](https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html)
-- [MySQL 8.0 Reference Manual: EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.0/en/explain-output.html)
-- 랩 코드 (commit `d52297d`): [StreamingExcelExportService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/excel/StreamingExcelExportService.java), 생성 단계의 메모리를 묶은 구현. 이 글의 판별 로직은 랩에 없다.
+- [MySQL 8.0 Reference Manual: Aggregate Function Descriptions (COUNT)](https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html) — MySQL Docs
+- [MySQL 8.0 Reference Manual: EXPLAIN Output Format](https://dev.mysql.com/doc/refman/8.0/en/explain-output.html) — MySQL Docs
+- [StreamingExcelExportService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/excel/StreamingExcelExportService.java) — GitHub: 랩 코드 (commit `d52297d`), 생성 단계의 메모리를 묶은 구현. 이 글의 판별 로직은 랩에 없다.

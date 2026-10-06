@@ -155,7 +155,14 @@ Accept와 Content-Type, Authorization과 WWW-Authenticate, Cookie와 Set-Cookie�
 
 ## 참고
 
-- [HTTP 헤더 개요](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61374), [표현](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61375), [콘텐츠 협상](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61377)
-- [전송 방식](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61378), [일반 정보](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61379), [특별한 정보](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61380)
-- [인증](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61381), [쿠키](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61382)
-- [RFC 6265: Cookie](https://www.rfc-editor.org/rfc/rfc6265.html), [RFC 9112: HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112.html), [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)
+- [HTTP 헤더 개요](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61374) — 인프런
+- [표현](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61375) — 인프런
+- [콘텐츠 협상](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61377) — 인프런
+- [전송 방식](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61378) — 인프런
+- [일반 정보](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61379) — 인프런
+- [특별한 정보](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61380) — 인프런
+- [인증](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61381) — 인프런
+- [쿠키](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61382) — 인프런
+- [RFC 6265: Cookie](https://www.rfc-editor.org/rfc/rfc6265.html) — IETF
+- [RFC 9112: HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112.html) — IETF
+- [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) — MDN

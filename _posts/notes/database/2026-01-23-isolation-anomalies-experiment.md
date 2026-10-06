@@ -170,8 +170,9 @@ READ COMMITTED(PostgreSQL 기본값)와 MySQL의 세 수준 전부에서 거절 
 
 ## 참고
 
-- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — 실험 저장소. 원본은 `reports/data/t1-isolation.json`, 표는 `reports/01-experiment-report.md`
+- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — GitHub: 실험 저장소. 원본은 `reports/data/t1-isolation.json`, 표는 `reports/01-experiment-report.md`
 - [격리 수준과 이상 현상](/posts/isolation-levels-and-anomalies/) — 이 실험의 개념 짝
-- [PostgreSQL: Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html), [MySQL: InnoDB Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html)
-- [PostgreSQL 17: Transaction Isolation](https://www.postgresql.org/docs/17/transaction-iso.html) — RR의 `could not serialize access` 롤백, predicate lock이 막지 않는다는 설명
-- [MySQL 8.4: InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.4/en/innodb-parameters.html) — `innodb_lock_wait_timeout` 기본값 50초
+- [PostgreSQL: Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html) — PostgreSQL Documentation
+- [MySQL: InnoDB Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html) — MySQL Docs
+- [PostgreSQL 17: Transaction Isolation](https://www.postgresql.org/docs/17/transaction-iso.html) — PostgreSQL Docs: RR의 `could not serialize access` 롤백, predicate lock이 막지 않는다는 설명
+- [MySQL 8.4: InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.4/en/innodb-parameters.html) — MySQL Docs: `innodb_lock_wait_timeout` 기본값 50초

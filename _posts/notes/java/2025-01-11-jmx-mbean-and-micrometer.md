@@ -80,9 +80,9 @@ Gauge.builder("opslab.upstream.bulkhead.available", this, UpstreamClient::availa
 ## 참고
 
 - [무너지는 Spring 서버 1편](/posts/tomcat-thread-exhaustion/) — 지표가 비어 있던 실험
-- [Java SE 21 - Introduction to JMX Technology](https://docs.oracle.com/en/java/javase/21/jmx/introduction-jmx-technology.html) — MBean, MBean 서버, 커넥터
-- [Java SE 21 API - ManagementFactory](https://docs.oracle.com/en/java/javase/21/docs/api/java.management/java/lang/management/ManagementFactory.html) — 플랫폼 MBean 서버와 플랫폼 MXBean의 `ObjectName`
-- [Micrometer - JVM Metrics](https://docs.micrometer.io/micrometer/reference/reference/jvm.html) — JVM 바인더 목록
-- [Micrometer - Gauges](https://docs.micrometer.io/micrometer/reference/concepts/gauges.html) — 게이지는 관측 시점에 값을 읽는다
-- [Micrometer 소스 - TomcatMetrics.java](https://raw.githubusercontent.com/micrometer-metrics/micrometer/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/tomcat/TomcatMetrics.java) — `ThreadPool` MBean 조회와 속성 이름
-- [Spring Boot Reference - Metrics](https://docs.spring.io/spring-boot/reference/actuator/metrics.html) — `server.tomcat.mbeanregistry.enabled`
+- [Java SE 21 - Introduction to JMX Technology](https://docs.oracle.com/en/java/javase/21/jmx/introduction-jmx-technology.html) — Oracle Docs: MBean, MBean 서버, 커넥터
+- [Java SE 21 API - ManagementFactory](https://docs.oracle.com/en/java/javase/21/docs/api/java.management/java/lang/management/ManagementFactory.html) — Oracle Docs: 플랫폼 MBean 서버와 플랫폼 MXBean의 `ObjectName`
+- [JVM Metrics](https://docs.micrometer.io/micrometer/reference/reference/jvm.html) — Micrometer: JVM 바인더 목록
+- [Gauges](https://docs.micrometer.io/micrometer/reference/concepts/gauges.html) — Micrometer: 게이지는 관측 시점에 값을 읽는다
+- [Micrometer 소스 - TomcatMetrics.java](https://raw.githubusercontent.com/micrometer-metrics/micrometer/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/tomcat/TomcatMetrics.java) — raw.githubusercontent.com: `ThreadPool` MBean 조회와 속성 이름
+- [Metrics](https://docs.spring.io/spring-boot/reference/actuator/metrics.html) — Spring Boot Reference: `server.tomcat.mbeanregistry.enabled`

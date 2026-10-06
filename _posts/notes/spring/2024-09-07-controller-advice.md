@@ -97,4 +97,4 @@ public class ApiExceptionHandler {
 
 ## 참고
 
-- [Spring Framework Reference — Controller Advice](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html)
+- [Spring Framework Reference — Controller Advice](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html) — Spring Docs

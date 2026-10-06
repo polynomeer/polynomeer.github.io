@@ -123,7 +123,7 @@ problem_decision_result:
 
 ## 참고
 
-- [ParityPay](https://github.com/polynomeer/parity-pay) — 원본은 `reports/data/t11-retry-stampede/`, 표는 `reports/11-performance-failure-report.md`의 M-029
+- [ParityPay](https://github.com/polynomeer/parity-pay) — GitHub: 원본은 `reports/data/t11-retry-stampede/`, 표는 `reports/11-performance-failure-report.md`의 M-029
 - [9편 - 느린 기관 앞에서 결제 서버를 지키기](/posts/parity-pay-external-isolation/) — 이 실험이 이어받은 가설
 - [3편 - UNKNOWN 상태](/posts/parity-pay-unknown-state/)
-- [Marc Brooker - Exponential Backoff And Jitter (AWS Architecture Blog, 2015)](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+- [Marc Brooker - Exponential Backoff And Jitter (AWS Architecture Blog, 2015)](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/) — AWS Architecture Blog

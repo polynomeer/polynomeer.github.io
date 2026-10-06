@@ -70,5 +70,5 @@ GPU에서 컵을 줄이는 방법이 NVIDIA **MIG**(Multi-Instance GPU)다. GPU 
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=_g8hmmIL0EA)
-- [TMC 25](https://toss.im/tmc-25)
+- [발표 영상](https://www.youtube.com/watch?v=_g8hmmIL0EA) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스

@@ -300,16 +300,16 @@ README에는 두 번 연속 실행해 같은 감소율이 나왔다고 남아 �
 
 ## 참고
 
-- [Spring Batch Reference: Chunk-oriented Processing](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing.html)
-- [Spring Batch Reference: Configuring a Step for Restart](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/restart.html)
-- [Jakarta Persistence 3.1: EntityManager](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/entitymanager)
-- [MySQL 8.0 Reference Manual: Optimizing InnoDB Transaction Management](https://dev.mysql.com/doc/refman/8.0/en/optimizing-innodb-transaction-management.html)
-- [Apache POI: SXSSF (Streaming Usermodel API)](https://poi.apache.org/components/spreadsheet/how-to.html#sxssf)
-- [Apache POI: Spreadsheet Overview](https://poi.apache.org/components/spreadsheet/)
+- [Spring Batch Reference: Chunk-oriented Processing](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing.html) — Spring Docs
+- [Spring Batch Reference: Configuring a Step for Restart](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/restart.html) — Spring Docs
+- [Jakarta Persistence 3.1: EntityManager](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/entitymanager) — Jakarta EE
+- [MySQL 8.0 Reference Manual: Optimizing InnoDB Transaction Management](https://dev.mysql.com/doc/refman/8.0/en/optimizing-innodb-transaction-management.html) — MySQL Docs
+- [Apache POI: SXSSF (Streaming Usermodel API)](https://poi.apache.org/components/spreadsheet/how-to.html#sxssf) — Apache POI
+- [Apache POI: Spreadsheet Overview](https://poi.apache.org/components/spreadsheet/) — Apache POI
 - 랩 코드 (commit `d52297d`)
-  - [README: 측정 방식과 감소율 차이](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/README.md)
-  - [LegacyAggregationTasklet.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/batch/legacy/LegacyAggregationTasklet.java)
-  - [SettlementRecordChunkWriter.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/batch/chunk/SettlementRecordChunkWriter.java)
-  - [SettlementRecordKeysetReader.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/batch/chunk/SettlementRecordKeysetReader.java)
-  - [StreamingExcelExportService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/excel/StreamingExcelExportService.java)
-  - [MemoryUsageProbe.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/support/MemoryUsageProbe.java)
+  - [README: 측정 방식과 감소율 차이](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/README.md) — GitHub
+  - [LegacyAggregationTasklet.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/batch/legacy/LegacyAggregationTasklet.java) — GitHub
+  - [SettlementRecordChunkWriter.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/batch/chunk/SettlementRecordChunkWriter.java) — GitHub
+  - [SettlementRecordKeysetReader.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/batch/chunk/SettlementRecordKeysetReader.java) — GitHub
+  - [StreamingExcelExportService.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/excel/StreamingExcelExportService.java) — GitHub
+  - [MemoryUsageProbe.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/batch-excel/src/main/java/com/portfolio/batchlab/support/MemoryUsageProbe.java) — GitHub

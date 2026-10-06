@@ -54,6 +54,6 @@ Java 21은 Spring 프로젝트에 도입할 가치가 있다. 다만 가상 스�
 
 ## 참고
 
-- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
-- [JEP 395: Records](https://openjdk.org/jeps/395)
-- [Spring Boot: Task Execution and Scheduling](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html)
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — OpenJDK
+- [JEP 395: Records](https://openjdk.org/jeps/395) — OpenJDK
+- [Spring Boot: Task Execution and Scheduling](https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html) — Spring Docs

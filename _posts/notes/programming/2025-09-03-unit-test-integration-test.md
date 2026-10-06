@@ -141,5 +141,5 @@ Fowler는 목 사용 여부를 단위 테스트의 기준으로 보지 않는다
 
 ## 참고
 
-- [Martin Fowler — UnitTest](https://martinfowler.com/bliki/UnitTest.html)
-- [Martin Fowler — IntegrationTest](https://martinfowler.com/bliki/IntegrationTest.html)
+- [Martin Fowler — UnitTest](https://martinfowler.com/bliki/UnitTest.html) — Martin Fowler
+- [Martin Fowler — IntegrationTest](https://martinfowler.com/bliki/IntegrationTest.html) — martinfowler.com

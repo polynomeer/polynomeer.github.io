@@ -96,4 +96,4 @@ flowchart TD
 
 ## 참고
 
-- [About the migration strategies — AWS Prescriptive Guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html)
+- [About the migration strategies — AWS Prescriptive Guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html) — AWS Docs

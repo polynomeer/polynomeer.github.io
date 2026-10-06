@@ -120,8 +120,8 @@ Kafka 오프셋 싱크(와쿠와쿠)는 이 발표에서 이름만 나오지만,
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=YBXFRSAXScs)
-- [SLASH 21](https://toss.im/slash-21)
-- [Uber - uReplicator와 Kafka 멀티 DC](https://www.uber.com/blog/ureplicator-apache-kafka-replicator/)
-- [Uber - Building Reliable Reprocessing and Dead Letter Queues with Kafka](https://www.uber.com/blog/reliable-reprocessing/)
-- [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway)
+- [발표 영상](https://www.youtube.com/watch?v=YBXFRSAXScs) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [uReplicator와 Kafka 멀티 DC](https://www.uber.com/blog/ureplicator-apache-kafka-replicator/) — Uber
+- [Building Reliable Reprocessing and Dead Letter Queues with Kafka](https://www.uber.com/blog/reliable-reprocessing/) — Uber
+- [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway) — Spring

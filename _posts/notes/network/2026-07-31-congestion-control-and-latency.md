@@ -85,9 +85,10 @@ BDP = 대역폭 × RTT
 
 ## 참고
 
-- [Bufferbloat: Dark Buffers in the Internet (ACM Queue)](https://queue.acm.org/detail.cfm?id=2071893)
-- [BBR: Congestion-Based Congestion Control (ACM Queue)](https://queue.acm.org/detail.cfm?id=3022184)
-- [Linux man: tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html)
-- [RFC 9438: CUBIC for Fast and Long-Distance Networks](https://www.rfc-editor.org/rfc/rfc9438)
-- [draft-ietf-ccwg-bbr: BBR Congestion Control](https://datatracker.ietf.org/doc/draft-ietf-ccwg-bbr/)
-- [RFC 8289: Controlled Delay Active Queue Management](https://www.rfc-editor.org/rfc/rfc8289), [RFC 8290: FQ-CoDel](https://www.rfc-editor.org/rfc/rfc8290)
+- [Bufferbloat: Dark Buffers in the Internet (ACM Queue)](https://queue.acm.org/detail.cfm?id=2071893) — ACM Queue
+- [BBR: Congestion-Based Congestion Control (ACM Queue)](https://queue.acm.org/detail.cfm?id=3022184) — ACM Queue
+- [Linux man: tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html) — Linux man page
+- [RFC 9438: CUBIC for Fast and Long-Distance Networks](https://www.rfc-editor.org/rfc/rfc9438) — IETF
+- [draft-ietf-ccwg-bbr: BBR Congestion Control](https://datatracker.ietf.org/doc/draft-ietf-ccwg-bbr/) — IETF
+- [RFC 8289: Controlled Delay Active Queue Management](https://www.rfc-editor.org/rfc/rfc8289) — IETF
+- [RFC 8290: FQ-CoDel](https://www.rfc-editor.org/rfc/rfc8290) — IETF

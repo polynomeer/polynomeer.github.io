@@ -177,11 +177,11 @@ permit 20개를 각각 2초씩 쥐면 초당 10건이 통과한다. 도착은 �
 
 ## 참고
 
-- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — 이 글의 실험 저장소. 결과 원본은 `reports/data/`, 표는 `reports/01-scenario-report.md`
-- [ADR-001: 부하 모델의 기본은 open model](https://github.com/polynomeer/spring-ops-lab/blob/main/docs/adr/001-open-model-load-as-default.md)
+- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — GitHub: 이 글의 실험 저장소. 결과 원본은 `reports/data/`, 표는 `reports/01-scenario-report.md`
+- [ADR-001: 부하 모델의 기본은 open model](https://github.com/polynomeer/spring-ops-lab/blob/main/docs/adr/001-open-model-load-as-default.md) — GitHub
 - [ParityPay 9편 - 느린 기관 앞에서 결제 서버를 지키기](/posts/parity-pay-external-isolation/) — 같은 현상을 결제 도메인에서 본 글
 - [ParityPay 2편 - 잠금을 필요 이상으로 오래 쥐고 있었다](/posts/parity-pay-lock-hold-time/) — 자원을 쥔 시간을 재는 같은 방법
-- [Apache Tomcat 10.1 HTTP Connector](https://tomcat.apache.org/tomcat-10.1-doc/config/http.html) — `maxThreads`, `maxConnections`, `acceptCount`
-- [Spring Boot Reference - Metrics](https://docs.spring.io/spring-boot/reference/actuator/metrics.html) — Tomcat 계측과 `server.tomcat.mbeanregistry.enabled`
-- [k6 - Dropped iterations](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/dropped-iterations/)
-- [Toxiproxy](https://github.com/Shopify/toxiproxy) — `latency` toxic
+- [Apache Tomcat 10.1 HTTP Connector](https://tomcat.apache.org/tomcat-10.1-doc/config/http.html) — Apache Tomcat: `maxThreads`, `maxConnections`, `acceptCount`
+- [Metrics](https://docs.spring.io/spring-boot/reference/actuator/metrics.html) — Spring Boot Reference: Tomcat 계측과 `server.tomcat.mbeanregistry.enabled`
+- [k6 - Dropped iterations](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/dropped-iterations/) — Grafana Labs
+- [Toxiproxy](https://github.com/Shopify/toxiproxy) — GitHub: `latency` toxic

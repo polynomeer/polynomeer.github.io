@@ -73,6 +73,8 @@ flowchart TD
 
 ## 참고
 
-- [다음으로](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61412)
-- [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html), [RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html), [RFC 9112](https://www.rfc-editor.org/rfc/rfc9112.html)
+- [다음으로](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61412) — 인프런
+- [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) — IETF
+- [RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html) — IETF
+- [RFC 9112](https://www.rfc-editor.org/rfc/rfc9112.html) — IETF
 - [시리즈 전체 목록](/series/http-web-basics/)

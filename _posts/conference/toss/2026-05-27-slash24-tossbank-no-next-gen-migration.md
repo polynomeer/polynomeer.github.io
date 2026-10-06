@@ -111,8 +111,8 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=LwH9h8dG3PQ)
-- [SLASH 24](https://toss.im/slash-24)
-- [Martin Fowler - Strangler Fig Application](https://martinfowler.com/bliki/StranglerFigApplication.html)
-- [Mel Conway - Conway's Law](https://www.melconway.com/Home/Conways_Law.html)
-- 같은 계보의 검증: [SLASH 23 은행 최초 코어뱅킹 MSA 전환기 리뷰](/posts/slash23-core-banking-msa/)
+- [발표 영상](https://www.youtube.com/watch?v=LwH9h8dG3PQ) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Strangler Fig Application](https://martinfowler.com/bliki/StranglerFigApplication.html) — Martin Fowler
+- [Conway's Law](https://www.melconway.com/Home/Conways_Law.html) — Mel Conway
+- [SLASH 23 은행 최초 코어뱅킹 MSA 전환기 리뷰](/posts/slash23-core-banking-msa/) — 같은 계보의 검증

@@ -62,7 +62,7 @@ Oracle의 GC 튜토리얼은 자동 가비지 콜렉션을 다음 단계로 설�
 - [Java Reference와 GC](https://d2.naver.com/helloworld/329631) — NAVER D2
 - [[성능튜닝] 가비지 컬렉터(GC) 이해하기](https://12bme.tistory.com/57) — 12bme.tistory.com
 - [자바 메모리 관리 - 가비지 컬렉션](https://yaboong.github.io/java/2018/06/09/java-garbage-collection/) — yaboong.github.io
-- [Garbage Collection in Java: Best Practices](https://www.eginnovations.com/blog/what-is-garbage-collection-java/) — eG Innovations
+- [Garbage Collection in Java: Best Practices](https://www.eginnovations.com/blog/what-is-garbage-collection-java/) — eginnovations.com: eG Innovations
 - [JVM Garbage Collectors](https://www.baeldung.com/jvm-garbage-collectors) — Baeldung
 - [System (Java SE 21 & JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.html#gc()) — Oracle
 - [Garbage Collectors](/posts/garbage-collectors/)

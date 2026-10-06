@@ -87,7 +87,7 @@ PyTorch로 작성한 모델이든 Keras·TensorFlow로 작성한 모델이든 �
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=EEsYbiqqcc0)
-- [SLASH 22](https://toss.im/slash-22)
-- [ONNX Runtime](https://onnxruntime.ai/)
-- [MLflow](https://mlflow.org/)
+- [발표 영상](https://www.youtube.com/watch?v=EEsYbiqqcc0) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [ONNX Runtime](https://onnxruntime.ai/) — ONNX Runtime
+- [MLflow](https://mlflow.org/) — MLflow Docs

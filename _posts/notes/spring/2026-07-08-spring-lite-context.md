@@ -144,6 +144,6 @@ Boot 기능처럼 보이는 조건부 등록도 별도 장치가 아니다. **�
 
 ## 참고
 
-- [spring-lite `AnnotationConfigApplicationContext` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-context/src/main/java/lite/spring/context/support/AnnotationConfigApplicationContext.java)
-- [Spring: Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html)
-- [Spring: Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)
+- [spring-lite `AnnotationConfigApplicationContext` (bd8ea3f)](https://github.com/polynomeer/spring-lite/blob/bd8ea3fb4e3a4855bd912c450b67e30757a22924/spring-lite-context/src/main/java/lite/spring/context/support/AnnotationConfigApplicationContext.java) — GitHub
+- [Spring: Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html) — Spring Docs
+- [Spring: Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html) — Spring Docs

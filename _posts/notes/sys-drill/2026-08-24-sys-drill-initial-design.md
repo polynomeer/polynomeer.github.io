@@ -220,29 +220,34 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 
 저장소 문서 (커밋 고정)
 
-- [SysDrill 저장소](https://github.com/polynomeer/sys-drill)
-- [docs/ARCHITECTURE.md @ aeb3029](https://github.com/polynomeer/sys-drill/blob/aeb30292af87f8198428e95ce4e4eead8b2582f5/docs/ARCHITECTURE.md) — 시스템 아키텍처 설계서 초판
-- [docs/PRD.md @ f672f7d](https://github.com/polynomeer/sys-drill/blob/f672f7df97e9a45d22a1a45c3f14f8051698333c/docs/PRD.md) — 제품 요구사항 정의서 초판
-- [PLAN.md @ a70cab2](https://github.com/polynomeer/sys-drill/blob/a70cab2a9d6ebc81679dfa3eaa563aa144215eb0/PLAN.md) — 0~7단계 완료 시점의 작업계획서와 결정 기록
-- [docs/archive @ 92f932a](https://github.com/polynomeer/sys-drill/tree/92f932a38e46243c0813f76d4c556653d8313ea4/docs/archive) — 원본 기획서 10건
-- [docs/adr @ 2c8e7eb](https://github.com/polynomeer/sys-drill/tree/2c8e7eb984ea1beb668b827f644e81809138238e/docs/adr) — ADR-0001, 0004, 0007, 0010 (2026-08-25 회고 작성)
-- [ADR-0053 @ 175f61a](https://github.com/polynomeer/sys-drill/blob/175f61a39d05fb4346c0076aee408821ed23c6a2/docs/adr/0053-initial-tech-selection-reconstructed.md) — 초기 기술 선택의 이유와 대안 (2026-10-05 재구성)
+- [SysDrill 저장소](https://github.com/polynomeer/sys-drill) — GitHub
+- [docs/ARCHITECTURE.md @ aeb3029](https://github.com/polynomeer/sys-drill/blob/aeb30292af87f8198428e95ce4e4eead8b2582f5/docs/ARCHITECTURE.md) — GitHub: 시스템 아키텍처 설계서 초판
+- [docs/PRD.md @ f672f7d](https://github.com/polynomeer/sys-drill/blob/f672f7df97e9a45d22a1a45c3f14f8051698333c/docs/PRD.md) — GitHub: 제품 요구사항 정의서 초판
+- [PLAN.md @ a70cab2](https://github.com/polynomeer/sys-drill/blob/a70cab2a9d6ebc81679dfa3eaa563aa144215eb0/PLAN.md) — GitHub: 0~7단계 완료 시점의 작업계획서와 결정 기록
+- [docs/archive @ 92f932a](https://github.com/polynomeer/sys-drill/tree/92f932a38e46243c0813f76d4c556653d8313ea4/docs/archive) — GitHub: 원본 기획서 10건
+- [docs/adr @ 2c8e7eb](https://github.com/polynomeer/sys-drill/tree/2c8e7eb984ea1beb668b827f644e81809138238e/docs/adr) — GitHub: ADR-0001, 0004, 0007, 0010 (2026-08-25 회고 작성)
+- [ADR-0053 @ 175f61a](https://github.com/polynomeer/sys-drill/blob/175f61a39d05fb4346c0076aee408821ed23c6a2/docs/adr/0053-initial-tech-selection-reconstructed.md) — GitHub: 초기 기술 선택의 이유와 대안 (2026-10-05 재구성)
 
 1차 출처
 
-- Spring Boot, [System Requirements (4.1.1)](https://docs.spring.io/spring-boot/system-requirements.html)
-- Spring Framework, [Kotlin Null-safety](https://docs.spring.io/spring-framework/reference/languages/kotlin/null-safety.html)
-- Spring Framework, [Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)
-- Kotlin, [All-open compiler plugin](https://kotlinlang.org/docs/all-open-plugin.html), [No-arg compiler plugin](https://kotlinlang.org/docs/no-arg-plugin.html)
-- NestJS, [Documentation](https://docs.nestjs.com/)
-- Martin Fowler, [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) (2015)
-- PostgreSQL 16, [JSON Types](https://www.postgresql.org/docs/16/datatype-json.html), [Partial Indexes](https://www.postgresql.org/docs/16/indexes-partial.html)
-- Redis, [BLPOP](https://redis.io/docs/latest/commands/blpop/), [LMOVE](https://redis.io/docs/latest/commands/lmove/), [Streams](https://redis.io/docs/latest/develop/data-types/streams/)
-- AWS, [Amazon SQS visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
-- Apache Kafka, [Introduction](https://kafka.apache.org/intro)
-- Docker, [Resource constraints](https://docs.docker.com/engine/containers/resource_constraints/), [None network driver](https://docs.docker.com/engine/network/drivers/none/)
-- [gVisor documentation](https://gvisor.dev/docs/)
-- [Firecracker](https://firecracker-microvm.github.io/)
-- React, [Creating a React App](https://react.dev/learn/creating-a-react-app)
-- Next.js, [Next.js 16](https://nextjs.org/blog/next-16)
-- MDN, [Using server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
+- [System Requirements (4.1.1)](https://docs.spring.io/spring-boot/system-requirements.html) — Spring Boot
+- [Kotlin Null-safety](https://docs.spring.io/spring-framework/reference/languages/kotlin/null-safety.html) — Spring Framework
+- [Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html) — Spring Framework
+- [All-open compiler plugin](https://kotlinlang.org/docs/all-open-plugin.html) — Kotlin
+- [No-arg compiler plugin](https://kotlinlang.org/docs/no-arg-plugin.html) — Kotlin Docs
+- [Documentation](https://docs.nestjs.com/) — NestJS
+- [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) — Martin Fowler: (2015)
+- [JSON Types](https://www.postgresql.org/docs/16/datatype-json.html) — PostgreSQL 16
+- [Partial Indexes](https://www.postgresql.org/docs/16/indexes-partial.html) — PostgreSQL Docs
+- [BLPOP](https://redis.io/docs/latest/commands/blpop/) — Redis
+- [LMOVE](https://redis.io/docs/latest/commands/lmove/) — Redis Docs
+- [Streams](https://redis.io/docs/latest/develop/data-types/streams/) — Redis Docs
+- [Amazon SQS visibility timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) — AWS
+- [Introduction](https://kafka.apache.org/intro) — Apache Kafka
+- [Resource constraints](https://docs.docker.com/engine/containers/resource_constraints/) — Docker
+- [None network driver](https://docs.docker.com/engine/network/drivers/none/) — Docker Docs
+- [gVisor documentation](https://gvisor.dev/docs/) — gVisor
+- [Firecracker](https://firecracker-microvm.github.io/) — Firecracker
+- [Creating a React App](https://react.dev/learn/creating-a-react-app) — React
+- [Next.js 16](https://nextjs.org/blog/next-16) — Next.js
+- [Using server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) — MDN

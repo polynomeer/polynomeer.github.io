@@ -145,6 +145,6 @@ beta는 재계산 비용과 짝지어 정할 값이다. 비싼 원본에 작은 
 
 ## 참고
 
-- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — 원본은 `reports/data/t9-stampede.json`, 표는 `reports/01-experiment-report.md`
+- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — GitHub: 원본은 `reports/data/t9-stampede.json`, 표는 `reports/01-experiment-report.md`
 - [캐시 스탬피드 정리](/posts/cache-stampede/) — 이 실험의 개념 짝
-- Vattani, Chierichetti & Lowenstein, [Optimal Probabilistic Cache Stampede Prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf) (XFetch). Figure 3에 조건식과 β 기본값이 있다.
+- [Optimal Probabilistic Cache Stampede Prevention](https://cseweb.ucsd.edu/~avattani/papers/cache_stampede.pdf) — Vattani, Chierichetti & Lowenstein: (XFetch). Figure 3에 조건식과 β 기본값이 있다.

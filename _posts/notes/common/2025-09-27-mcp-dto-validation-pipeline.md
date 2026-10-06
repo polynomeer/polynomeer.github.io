@@ -187,9 +187,9 @@ sequenceDiagram
 
 ## 참고
 
-- [Spring Framework Reference: Java Bean Validation](https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html) — Bean Validation의 제약 선언 방식
-- [Spring Framework Reference: Validation (Spring MVC)](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html) — `@Valid @RequestBody` 검증과 `MethodArgumentNotValidException`
-- [MapStruct Reference Guide](https://mapstruct.org/documentation/stable/reference/html/) — 컴파일 시점 매핑 생성과 `unmappedTargetPolicy`
-- [랩 코드: ContractCreateRequest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/api/dto/ContractCreateRequest.java)
-- [랩 코드: Contract.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/domain/Contract.java)
-- [랩 코드: ValidationPipelineTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/validation/ValidationPipelineTest.java)
+- [Spring Framework Reference: Java Bean Validation](https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html) — Spring Docs: Bean Validation의 제약 선언 방식
+- [Spring Framework Reference: Validation (Spring MVC)](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html) — Spring Docs: `@Valid @RequestBody` 검증과 `MethodArgumentNotValidException`
+- [MapStruct Reference Guide](https://mapstruct.org/documentation/stable/reference/html/) — MapStruct: 컴파일 시점 매핑 생성과 `unmappedTargetPolicy`
+- [랩 코드: ContractCreateRequest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/api/dto/ContractCreateRequest.java) — GitHub
+- [랩 코드: Contract.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/contract/domain/Contract.java) — GitHub
+- [랩 코드: ValidationPipelineTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/validation/ValidationPipelineTest.java) — GitHub

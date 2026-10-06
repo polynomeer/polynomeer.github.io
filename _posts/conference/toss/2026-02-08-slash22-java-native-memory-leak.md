@@ -81,8 +81,8 @@ JIT 컴파일러가 메모리를 누수한다는 것이 애매해서 찾아보�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=w4fWgLgop5U)
-- [SLASH 22](https://toss.im/slash-22)
-- [JVM Native Memory Tracking](https://docs.oracle.com/en/java/javase/17/vm/native-memory-tracking.html)
-- [jemalloc heap profiling](https://github.com/jemalloc/jemalloc/wiki/Use-Case%3A-Heap-Profiling)
-- [JEP 317: Experimental Java-Based JIT Compiler](https://openjdk.org/jeps/317)
+- [발표 영상](https://www.youtube.com/watch?v=w4fWgLgop5U) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [JVM Native Memory Tracking](https://docs.oracle.com/en/java/javase/17/vm/native-memory-tracking.html) — Oracle Docs
+- [jemalloc heap profiling](https://github.com/jemalloc/jemalloc/wiki/Use-Case%3A-Heap-Profiling) — GitHub
+- [JEP 317: Experimental Java-Based JIT Compiler](https://openjdk.org/jeps/317) — OpenJDK

@@ -144,7 +144,7 @@ flowchart TD
 
 ## 참고
 
-- [Apache Tomcat 10.1, The HTTP Connector](https://tomcat.apache.org/tomcat-10.1-doc/config/http.html) — `maxConnections`, `acceptCount`
-- [Spring Framework, STOMP Performance](https://docs.spring.io/spring-framework/reference/web/websocket/stomp/configuration-performance.html)
-- [Spring Framework v6.2.8, `TaskExecutorRegistration`](https://github.com/spring-projects/spring-framework/blob/v6.2.8/spring-messaging/src/main/java/org/springframework/messaging/simp/config/TaskExecutorRegistration.java)
-- [Spring Framework v6.2.8, `WebSocketTransportRegistration`](https://github.com/spring-projects/spring-framework/blob/v6.2.8/spring-websocket/src/main/java/org/springframework/web/socket/config/annotation/WebSocketTransportRegistration.java)
+- [Apache Tomcat 10.1, The HTTP Connector](https://tomcat.apache.org/tomcat-10.1-doc/config/http.html) — Apache Tomcat: `maxConnections`, `acceptCount`
+- [STOMP Performance](https://docs.spring.io/spring-framework/reference/web/websocket/stomp/configuration-performance.html) — Spring Framework
+- [Spring Framework v6.2.8, `TaskExecutorRegistration`](https://github.com/spring-projects/spring-framework/blob/v6.2.8/spring-messaging/src/main/java/org/springframework/messaging/simp/config/TaskExecutorRegistration.java) — GitHub
+- [Spring Framework v6.2.8, `WebSocketTransportRegistration`](https://github.com/spring-projects/spring-framework/blob/v6.2.8/spring-websocket/src/main/java/org/springframework/web/socket/config/annotation/WebSocketTransportRegistration.java) — GitHub

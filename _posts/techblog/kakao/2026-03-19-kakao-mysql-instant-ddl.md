@@ -88,4 +88,4 @@ Instant DDL은 "지금 바꾸는 것"을 "읽을 때 해석하는 것"으로 미
 ## 참고
 
 - [MySQL Ver. 8.0 New Feature: Instant DDL Algorithm에 대한 이해](https://tech.kakao.com/posts/731) — kakao tech, 2025-09-02
-- [MySQL 8.0 INSTANT ADD and DROP Column(s)](https://dev.mysql.com/blog-archive/mysql-8-0-instant-add-and-drop-columns/) — Mayank Prasad, MySQL Blog Archive, 2023-03-09
+- [MySQL 8.0 INSTANT ADD and DROP Column(s)](https://dev.mysql.com/blog-archive/mysql-8-0-instant-add-and-drop-columns/) — MySQL Docs: Mayank Prasad, MySQL Blog Archive, 2023-03-09

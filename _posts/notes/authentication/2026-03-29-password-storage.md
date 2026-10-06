@@ -83,7 +83,7 @@ bcrypt에는 알아 둘 제약이 둘 있다.
 
 ## 참고
 
-- [OWASP: Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
-- [RFC 9106: Argon2](https://datatracker.ietf.org/doc/html/rfc9106)
-- [NIST SP 800-63B: Digital Identity Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html)
+- [OWASP: Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) — OWASP Cheat Sheet Series
+- [RFC 9106: Argon2](https://datatracker.ietf.org/doc/html/rfc9106) — IETF
+- [NIST SP 800-63B: Digital Identity Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html) — NIST
 - [인증 정리](/posts/authentication/)

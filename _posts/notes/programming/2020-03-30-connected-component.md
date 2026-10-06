@@ -100,5 +100,5 @@ int main() {
 
 ## 참고
 
-- [BOJ 11724. 연결 요소의 개수](https://www.acmicpc.net/problem/11724)
+- [BOJ 11724. 연결 요소의 개수](https://www.acmicpc.net/problem/11724) — Baekjoon Online Judge
 - 같은 원리로 격자 위의 덩어리를 세는 문제로 [BOJ 2667. 단지번호붙이기](/posts/boj-2667/)가 있다.

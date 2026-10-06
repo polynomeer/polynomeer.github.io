@@ -225,9 +225,9 @@ return issue(memberId, deviceId); // 새 세션만 추가될 뿐, 이전 access 
 
 ## 참고
 
-- [RFC 6750 1.2절: Bearer Token 정의](https://datatracker.ietf.org/doc/html/rfc6750#section-1.2) — 가진 사람이면 누구나 쓸 수 있는 token
-- [RFC 9700 4.14.2절: Refresh Token Protection 권고](https://www.rfc-editor.org/rfc/rfc9700.html#section-4.14.2) — refresh token rotation과 재사용 탐지
-- [Redis Docs: Scripting with Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — 스크립트의 원자적 실행, key 이름을 인자로 넘기라는 권고
-- 랩 코드 [`LegacySessionManager.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/session/LegacySessionManager.java)
-- 랩 코드 [`ImprovedSessionManager.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/session/ImprovedSessionManager.java)
-- 랩 테스트 [`SessionRotationRaceConditionTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/session/SessionRotationRaceConditionTest.java)
+- [RFC 6750 1.2절: Bearer Token 정의](https://datatracker.ietf.org/doc/html/rfc6750#section-1.2) — IETF: 가진 사람이면 누구나 쓸 수 있는 token
+- [RFC 9700 4.14.2절: Refresh Token Protection 권고](https://www.rfc-editor.org/rfc/rfc9700.html#section-4.14.2) — IETF: refresh token rotation과 재사용 탐지
+- [Redis Docs: Scripting with Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/) — Redis Docs: 스크립트의 원자적 실행, key 이름을 인자로 넘기라는 권고
+- [`LegacySessionManager.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/session/LegacySessionManager.java) — 랩 코드
+- [`ImprovedSessionManager.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/session/ImprovedSessionManager.java) — 랩 코드
+- [`SessionRotationRaceConditionTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/session/SessionRotationRaceConditionTest.java) — 랩 테스트

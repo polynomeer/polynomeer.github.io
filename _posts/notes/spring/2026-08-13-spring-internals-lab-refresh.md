@@ -232,8 +232,8 @@ Spring은 등록 즉시 객체를 만들지 않는다. 정의 단계와 인스�
 
 ## 참고
 
-- [AbstractApplicationContext.java (v6.1.14)](https://github.com/spring-projects/spring-framework/blob/v6.1.14/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java) — `refresh()` 단계와 `assertBeanFactoryActive()`
-- [ConfigurableApplicationContext Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ConfigurableApplicationContext.html)
-- [GenericApplicationContext Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/GenericApplicationContext.html)
-- [Spring Framework Reference: Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)
-- [Spring Framework Reference: Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)
+- [AbstractApplicationContext.java (v6.1.14)](https://github.com/spring-projects/spring-framework/blob/v6.1.14/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java) — GitHub: `refresh()` 단계와 `assertBeanFactoryActive()`
+- [ConfigurableApplicationContext Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ConfigurableApplicationContext.html) — Spring Docs
+- [GenericApplicationContext Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/GenericApplicationContext.html) — Spring Docs
+- [Spring Framework Reference: Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html) — Spring Docs
+- [Spring Framework Reference: Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html) — Spring Docs

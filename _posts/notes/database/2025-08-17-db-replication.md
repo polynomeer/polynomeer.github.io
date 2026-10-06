@@ -68,4 +68,4 @@ primary 장애 시 replica 승격이 필요하고, 이 과정에서 split-brain(
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual: Replication](https://dev.mysql.com/doc/refman/8.0/en/replication.html)
+- [MySQL 8.0 Reference Manual: Replication](https://dev.mysql.com/doc/refman/8.0/en/replication.html) — MySQL Docs

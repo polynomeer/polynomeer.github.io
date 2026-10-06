@@ -139,9 +139,9 @@ Body: { "item_id": 1, "quantity": 2 }
 
 ---
 
-## 참고자료
+## 참고
 
-- [Roy T. Fielding. *Architectural Styles and the Design of Network-based Software Architectures*, 5.1.3 Stateless](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_1_3)
-- [RFC 9110. *HTTP Semantics*, 9.2.2 Idempotent Methods](https://www.rfc-editor.org/rfc/rfc9110.html#idempotent.methods)
-- [Wiki C2 (June 17, 2005). *Does Being Stateless Imply Being Idempotent*](https://wiki.c2.com/?DoesBeingStatelessImplyBeingIdempotent)
-- [Steef-Jan Wiggers. *Write Stateless and Idempotent Functions*](https://www.serverlessnotes.com/docs/azure-functions-write-stateless-functions)
+- [Roy T. Fielding. *Architectural Styles and the Design of Network-based Software Architectures*, 5.1.3 Stateless](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_1_3) — ics.uci.edu
+- [RFC 9110. *HTTP Semantics*, 9.2.2 Idempotent Methods](https://www.rfc-editor.org/rfc/rfc9110.html#idempotent.methods) — IETF
+- [Wiki C2 (June 17, 2005). *Does Being Stateless Imply Being Idempotent](https://wiki.c2.com/?DoesBeingStatelessImplyBeingIdempotent) — WikiWikiWeb
+- [Steef-Jan Wiggers. *Write Stateless and Idempotent Functions](https://www.serverlessnotes.com/docs/azure-functions-write-stateless-functions) — serverlessnotes.com

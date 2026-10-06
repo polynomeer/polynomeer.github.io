@@ -87,7 +87,7 @@ JEP 491은 JDK 24 이후에도 남는 경우를 더 적는다. 클래스 로딩 
 
 ## 참고
 
-- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
-- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491)
-- [JEP 446: Scoped Values](https://openjdk.org/jeps/446)
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — OpenJDK
+- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) — OpenJDK
+- [JEP 446: Scoped Values](https://openjdk.org/jeps/446) — OpenJDK
 - [Spring과 Java 21](/posts/spring-with-java-21/)

@@ -86,7 +86,7 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=oakvibIKToc)
-- [SLASH 22](https://toss.im/slash-22)
-- [Spring Boot layered JAR](https://docs.spring.io/spring-boot/reference/packaging/container-images/efficient-images.html)
-- [Docker BuildKit](https://docs.docker.com/build/buildkit/)
+- [발표 영상](https://www.youtube.com/watch?v=oakvibIKToc) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [Spring Boot layered JAR](https://docs.spring.io/spring-boot/reference/packaging/container-images/efficient-images.html) — Spring Docs
+- [Docker BuildKit](https://docs.docker.com/build/buildkit/) — Docker Docs

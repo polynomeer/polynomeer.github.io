@@ -117,4 +117,4 @@ flowchart LR
 
 ## 참고
 
-- [PostgreSQL: CREATE TRIGGER](https://www.postgresql.org/docs/current/sql-createtrigger.html) — `CONSTRAINT` 트리거와 `DEFERRABLE INITIALLY DEFERRED`
+- [PostgreSQL: CREATE TRIGGER](https://www.postgresql.org/docs/current/sql-createtrigger.html) — PostgreSQL Docs: `CONSTRAINT` 트리거와 `DEFERRABLE INITIALLY DEFERRED`

@@ -117,5 +117,5 @@ API 검토에서는 “동사가 URI에 있느냐”보다 “클라이언트가
 
 ## 참고
 
-- [클라이언트에서 서버로 데이터 전송](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61368)
-- [HTTP API 설계 예시](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61369)
+- [클라이언트에서 서버로 데이터 전송](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61368) — 인프런
+- [HTTP API 설계 예시](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61369) — 인프런

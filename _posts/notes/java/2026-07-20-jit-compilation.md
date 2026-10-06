@@ -99,9 +99,10 @@ JMH(Java Microbenchmark Harness)가 이 셋을 다룬다. 워밍업 반복을 �
 
 ## 참고
 
-- [OpenJDK: HotSpot Runtime Overview](https://openjdk.org/groups/hotspot/docs/RuntimeOverview.html)
-- [Oracle: Java HotSpot VM Performance Enhancements — Tiered Compilation](https://docs.oracle.com/en/java/javase/21/vm/java-hotspot-virtual-machine-performance-enhancements.html)
-- [Oracle: The java Command (JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html)
-- [JMH: Java Microbenchmark Harness](https://github.com/openjdk/jmh), [JMH samples 1.37](https://github.com/openjdk/jmh/tree/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples)
-- Aleksey Shipilëv, [JVM Anatomy Quarks](https://shipilev.net/jvm/anatomy-quarks/)
+- [OpenJDK: HotSpot Runtime Overview](https://openjdk.org/groups/hotspot/docs/RuntimeOverview.html) — OpenJDK
+- [Oracle: Java HotSpot VM Performance Enhancements — Tiered Compilation](https://docs.oracle.com/en/java/javase/21/vm/java-hotspot-virtual-machine-performance-enhancements.html) — Oracle Docs
+- [Oracle: The java Command (JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html) — Oracle Docs
+- [JMH: Java Microbenchmark Harness](https://github.com/openjdk/jmh) — GitHub
+- [JMH samples 1.37](https://github.com/openjdk/jmh/tree/1.37/jmh-samples/src/main/java/org/openjdk/jmh/samples) — GitHub
+- [JVM Anatomy Quarks](https://shipilev.net/jvm/anatomy-quarks/) — Aleksey Shipilëv
 - [JVM 정리](/posts/jvm/)

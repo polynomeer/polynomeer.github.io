@@ -68,10 +68,10 @@ topic-0/
 
 ## 참고
 
-- [Kafka Documentation: Persistence](https://kafka.apache.org/documentation/#persistence)
-- [Kafka 4.3 Design](https://kafka.apache.org/43/design/design/)
-- [Kafka 4.3 Operations: Hardware and OS](https://kafka.apache.org/43/operations/hardware-and-os/)
-- [Kafka 4.3 Operations: Java Version](https://kafka.apache.org/43/operations/java-version/)
-- [Kafka 4.3 Topic Configs](https://kafka.apache.org/43/configuration/topic-configs/)
-- [Kafka: Efficiency](https://kafka.apache.org/documentation/#maximizingefficiency)
-- Jay Kreps, [The Log: What every software engineer should know about real-time data's unifying abstraction](https://web.archive.org/web/20240105095933/https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)
+- [Kafka Documentation: Persistence](https://kafka.apache.org/documentation/#persistence) — Apache Kafka
+- [Kafka 4.3 Design](https://kafka.apache.org/43/design/design/) — Apache Kafka
+- [Kafka 4.3 Operations: Hardware and OS](https://kafka.apache.org/43/operations/hardware-and-os/) — Apache Kafka
+- [Kafka 4.3 Operations: Java Version](https://kafka.apache.org/43/operations/java-version/) — Apache Kafka
+- [Kafka 4.3 Topic Configs](https://kafka.apache.org/43/configuration/topic-configs/) — Apache Kafka
+- [Kafka: Efficiency](https://kafka.apache.org/documentation/#maximizingefficiency) — Apache Kafka
+- [The Log: What every software engineer should know about real-time data's unifying abstraction](https://web.archive.org/web/20240105095933/https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying) — Jay Kreps

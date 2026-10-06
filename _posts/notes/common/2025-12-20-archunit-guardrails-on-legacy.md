@@ -222,9 +222,9 @@ MDS에서는 시니어가 만든 규칙 안에서 개발했고, MCP에서는 그
 
 ## 참고
 
-- [ArchUnit User Guide](https://www.archunit.org/userguide/html/000_Index.html) — layered architecture, slice 순환 검사, Freezing Arch Rules의 저장소 설정과 위반 감소 동작
-- [SonarQube Cloud: About new code](https://docs.sonarsource.com/sonarqube-cloud/standards/about-new-code/) — New Code 정의와 Sonar way Quality Gate의 적용 범위
-- [랩 코드: LayerArchitectureRules.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/LayerArchitectureRules.java)
-- [랩 코드: MainCodeArchitectureTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/MainCodeArchitectureTest.java)
-- [랩 코드: ArchitectureViolationDemoTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/ArchitectureViolationDemoTest.java)
-- [랩 코드: BadContractController.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/badexample/api/BadContractController.java)
+- [ArchUnit User Guide](https://www.archunit.org/userguide/html/000_Index.html) — ArchUnit: layered architecture, slice 순환 검사, Freezing Arch Rules의 저장소 설정과 위반 감소 동작
+- [SonarQube Cloud: About new code](https://docs.sonarsource.com/sonarqube-cloud/standards/about-new-code/) — docs.sonarsource.com: New Code 정의와 Sonar way Quality Gate의 적용 범위
+- [랩 코드: LayerArchitectureRules.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/LayerArchitectureRules.java) — GitHub
+- [랩 코드: MainCodeArchitectureTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/MainCodeArchitectureTest.java) — GitHub
+- [랩 코드: ArchitectureViolationDemoTest.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/archrule/ArchitectureViolationDemoTest.java) — GitHub
+- [랩 코드: BadContractController.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/badexample/api/BadContractController.java) — GitHub

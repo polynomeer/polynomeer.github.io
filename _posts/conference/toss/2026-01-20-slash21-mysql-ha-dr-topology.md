@@ -132,8 +132,8 @@ MMM 소스를 고쳐 쓰는 것이 자연스러운 조직으로 보인다. 업�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=t96l6ry_qmw)
-- [SLASH 21](https://toss.im/slash-21)
-- [MySQL Multi-Source Replication](https://dev.mysql.com/doc/refman/8.0/en/replication-multi-source.html)
-- [MySQL super_read_only](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_super_read_only)
-- [MySQL log_replica_updates](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_log_replica_updates)
+- [발표 영상](https://www.youtube.com/watch?v=t96l6ry_qmw) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [MySQL Multi-Source Replication](https://dev.mysql.com/doc/refman/8.0/en/replication-multi-source.html) — MySQL Docs
+- [MySQL super_read_only](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_super_read_only) — MySQL Docs
+- [MySQL log_replica_updates](https://dev.mysql.com/doc/refman/8.0/en/replication-options-binary-log.html#sysvar_log_replica_updates) — MySQL Docs

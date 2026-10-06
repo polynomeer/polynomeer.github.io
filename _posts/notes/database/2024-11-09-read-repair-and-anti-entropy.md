@@ -78,7 +78,7 @@ Airbnb 글의 비동기 수리는 더 넓은 뜻이다. 테이블 스캔, 람다
 
 ## 참고
 
-- [Dynamo: Amazon's Highly Available Key-value Store](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) — DeCandia et al., SOSP 2007. 4.6절 hinted handoff, 4.7절 Merkle 트리 anti-entropy, 5절 read repair
+- [Dynamo: Amazon's Highly Available Key-value Store](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) — allthingsdistributed.com: DeCandia et al., SOSP 2007. 4.6절 hinted handoff, 4.7절 Merkle 트리 anti-entropy, 5절 read repair
 - [Read repair](https://cassandra.apache.org/doc/latest/cassandra/managing/operating/read_repair.html) — Apache Cassandra 문서
 - [Repair](https://cassandra.apache.org/doc/latest/cassandra/managing/operating/repair.html) — Apache Cassandra 문서
 - [Avoiding double payments in a distributed payments system](https://medium.com/airbnb-engineering/avoiding-double-payments-in-a-distributed-payments-system-2981f6b070bb) — The Airbnb Tech Blog, 2019-04-17

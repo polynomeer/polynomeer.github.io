@@ -119,7 +119,7 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=rxurfKT2lD8)
-- [SLASH 21](https://toss.im/slash-21)
-- [Brendan Gregg - The USE Method](https://www.brendangregg.com/usemethod.html)
-- [Envoy response flags](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#config-access-log-format-response-flags)
+- [발표 영상](https://www.youtube.com/watch?v=rxurfKT2lD8) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [The USE Method](https://www.brendangregg.com/usemethod.html) — Brendan Gregg
+- [Envoy response flags](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#config-access-log-format-response-flags) — Envoy Docs

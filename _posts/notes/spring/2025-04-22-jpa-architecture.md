@@ -61,5 +61,5 @@ Spring Data JPA의 편의 뒤에서 SQL을 만들고 미루는 쪽은 Hibernate�
 
 ## 참고
 
-- [Hibernate ORM 6.6: An Introduction to Hibernate 6](https://docs.hibernate.org/orm/6.6/introduction/html_single/Hibernate_Introduction.html)
-- [Spring Data JPA: Persisting Entities](https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html)
+- [Hibernate ORM 6.6: An Introduction to Hibernate 6](https://docs.hibernate.org/orm/6.6/introduction/html_single/Hibernate_Introduction.html) — Hibernate Docs
+- [Spring Data JPA: Persisting Entities](https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html) — Spring Docs

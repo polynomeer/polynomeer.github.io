@@ -183,6 +183,6 @@ Kibana 대시보드를 어떤 화면으로 구성했는지는 기록이 없다.
 
 ## 참고
 
-- [Logback Manual, Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html) — 스레드 단위 관리, 자식 스레드 비상속, 컨텍스트 복사 방법
-- [Filebeat Reference: filestream input](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-filestream.html) — 줄 단위 처리와 JSON 디코딩 조건
-- 랩 [creator-studio README](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/README.md) — 감사 로그(MDC/ELK)는 아직 랩 범위 밖
+- [Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html) — Logback Manual: 스레드 단위 관리, 자식 스레드 비상속, 컨텍스트 복사 방법
+- [Filebeat Reference: filestream input](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-filestream.html) — Elastic: 줄 단위 처리와 JSON 디코딩 조건
+- [creator-studio README](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/README.md) — 랩: 감사 로그(MDC/ELK)는 아직 랩 범위 밖

@@ -128,6 +128,6 @@ GC를 이해한다는 것은 알고리즘 이름을 외우는 것보다 내 애�
 
 ## 참고
 
-- [Oracle Java SE 17 GC Tuning Guide: Garbage Collector Implementation](https://docs.oracle.com/en/java/javase/17/gctuning/garbage-collector-implementation.html)
-- [Oracle Java SE 21 GC Tuning Guide: Available Collectors](https://docs.oracle.com/en/java/javase/21/gctuning/available-collectors.html)
-- [JEP 248: Make G1 the Default Garbage Collector](https://openjdk.org/jeps/248)
+- [Oracle Java SE 17 GC Tuning Guide: Garbage Collector Implementation](https://docs.oracle.com/en/java/javase/17/gctuning/garbage-collector-implementation.html) — Oracle Docs
+- [Oracle Java SE 21 GC Tuning Guide: Available Collectors](https://docs.oracle.com/en/java/javase/21/gctuning/available-collectors.html) — Oracle Docs
+- [JEP 248: Make G1 the Default Garbage Collector](https://openjdk.org/jeps/248) — OpenJDK

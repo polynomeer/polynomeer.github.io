@@ -76,8 +76,8 @@ Last-Write-Wins(타임스탬프가 큰 쓰기를 채택하는 충돌 해소)가 
 
 ## 참고
 
-- Lamport, [Time, Clocks, and the Ordering of Events in a Distributed System](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) (1978)
-- [Java SE 21: `System.nanoTime()`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.html#nanoTime())
-- Corbett et al., [Spanner: Google's Globally-Distributed Database](https://static.googleusercontent.com/media/research.google.com/en//archive/spanner-osdi2012.pdf) (OSDI 2012)
-- Kulkarni et al., [Logical Physical Clocks (HLC)](https://cse.buffalo.edu/tech-reports/2014-04.pdf)
-- [Spanner: TrueTime and external consistency](https://cloud.google.com/spanner/docs/true-time-external-consistency)
+- [Time, Clocks, and the Ordering of Events in a Distributed System](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) — Lamport: (1978)
+- [Java SE 21: `System.nanoTime()`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.html#nanoTime()) — Oracle Docs
+- [Spanner: Google's Globally-Distributed Database](https://static.googleusercontent.com/media/research.google.com/en//archive/spanner-osdi2012.pdf) — Corbett et al.: (OSDI 2012)
+- [Logical Physical Clocks (HLC)](https://cse.buffalo.edu/tech-reports/2014-04.pdf) — Kulkarni et al.
+- [Spanner: TrueTime and external consistency](https://cloud.google.com/spanner/docs/true-time-external-consistency) — Google Cloud

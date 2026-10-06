@@ -241,12 +241,12 @@ Outbox는 이벤트를 메모리에서 바로 리스너로 넘기지 않고, 도
 
 ## 참고
 
-- [Spring Framework Javadoc: `@TransactionalEventListener`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html) — 기본 phase, 트랜잭션 밖 이벤트 폐기, AFTER_COMMIT 시점 데이터 접근 경고
-- [Spring Retry Javadoc: `@Retryable`](https://docs.spring.io/spring-retry/docs/api/current/org/springframework/retry/annotation/Retryable.html) — `maxAttempts`의 의미와 기본값
-- [Spring Retry README](https://github.com/spring-projects/spring-retry/blob/main/README.md) — `@Recover` 복구 메서드
-- [Logback Manual, Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html) — MDC의 스레드 단위 관리
-- 랩 코드 [`BrazeEventListener.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/BrazeEventListener.java)
-- 랩 코드 [`MixpanelEventListener.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/MixpanelEventListener.java)
-- 랩 코드 [`ProgramCreationService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/ProgramCreationService.java)
-- 랩 코드 [`AsyncIntegrationConfig.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/AsyncIntegrationConfig.java)
-- 랩 테스트 [`PostCommitEventListenerTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/integration/PostCommitEventListenerTest.java)
+- [Spring Framework Javadoc: `@TransactionalEventListener`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html) — Spring Docs: 기본 phase, 트랜잭션 밖 이벤트 폐기, AFTER_COMMIT 시점 데이터 접근 경고
+- [Spring Retry Javadoc: `@Retryable`](https://docs.spring.io/spring-retry/docs/api/current/org/springframework/retry/annotation/Retryable.html) — Spring Docs: `maxAttempts`의 의미와 기본값
+- [Spring Retry README](https://github.com/spring-projects/spring-retry/blob/main/README.md) — GitHub: `@Recover` 복구 메서드
+- [Chapter 8: Mapped Diagnostic Context](https://logback.qos.ch/manual/mdc.html) — Logback Manual: MDC의 스레드 단위 관리
+- [`BrazeEventListener.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/BrazeEventListener.java) — 랩 코드
+- [`MixpanelEventListener.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/MixpanelEventListener.java) — 랩 코드
+- [`ProgramCreationService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/ProgramCreationService.java) — 랩 코드
+- [`AsyncIntegrationConfig.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/integration/AsyncIntegrationConfig.java) — 랩 코드
+- [`PostCommitEventListenerTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/integration/PostCommitEventListenerTest.java) — 랩 테스트

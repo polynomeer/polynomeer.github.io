@@ -188,10 +188,10 @@ SXSSF로 바꿔도 원본 데이터를 리스트 하나로 다 받아 두면 메
 
 ## 참고
 
-- [Apache POI](https://poi.apache.org/)
-- [Apache POI: Component Overview](https://poi.apache.org/components/)
-- [Apache POI: Spreadsheet (HSSF, XSSF, SXSSF)](https://poi.apache.org/components/spreadsheet/)
-- [Apache POI: SXSSF (Streaming Usermodel API)](https://poi.apache.org/components/spreadsheet/how-to.html#sxssf)
-- [Apache POI: Busy Developers' Guide to HSSF and XSSF Features](https://poi.apache.org/components/spreadsheet/quick-guide.html)
-- [Apache POI Javadoc: SXSSFWorkbook](https://poi.apache.org/apidocs/dev/org/apache/poi/xssf/streaming/SXSSFWorkbook.html)
-- [Apache POI Javadoc: SpreadsheetVersion](https://poi.apache.org/apidocs/dev/org/apache/poi/ss/SpreadsheetVersion.html)
+- [Apache POI](https://poi.apache.org/) — Apache POI
+- [Apache POI: Component Overview](https://poi.apache.org/components/) — Apache POI
+- [XSSF, SXSSF)](https://poi.apache.org/components/spreadsheet/) — Apache POI: Spreadsheet (HSSF
+- [Apache POI: SXSSF (Streaming Usermodel API)](https://poi.apache.org/components/spreadsheet/how-to.html#sxssf) — Apache POI
+- [Apache POI: Busy Developers' Guide to HSSF and XSSF Features](https://poi.apache.org/components/spreadsheet/quick-guide.html) — Apache POI
+- [Apache POI Javadoc: SXSSFWorkbook](https://poi.apache.org/apidocs/dev/org/apache/poi/xssf/streaming/SXSSFWorkbook.html) — Apache POI
+- [Apache POI Javadoc: SpreadsheetVersion](https://poi.apache.org/apidocs/dev/org/apache/poi/ss/SpreadsheetVersion.html) — Apache POI

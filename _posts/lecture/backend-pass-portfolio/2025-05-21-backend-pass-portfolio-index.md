@@ -90,5 +90,5 @@ B-Tree 는 다음과 같은 특징이 있다.
 
 ## 참고
 
-- [MySQL 8.4 Reference Manual, Multiple-Column Indexes](https://dev.mysql.com/doc/refman/8.4/en/multiple-column-indexes.html)
-- [MySQL 8.4 Reference Manual, The Physical Structure of an InnoDB Index](https://dev.mysql.com/doc/refman/8.4/en/innodb-physical-structure.html)
+- [Multiple-Column Indexes](https://dev.mysql.com/doc/refman/8.4/en/multiple-column-indexes.html) — MySQL 8.4 Reference Manual
+- [The Physical Structure of an InnoDB Index](https://dev.mysql.com/doc/refman/8.4/en/innodb-physical-structure.html) — MySQL 8.4 Reference Manual

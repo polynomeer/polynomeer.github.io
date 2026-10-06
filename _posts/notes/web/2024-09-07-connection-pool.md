@@ -58,5 +58,5 @@ Connection Pool은 단순 캐시가 아니라 DB 연결을 제한된 자원으�
 
 ## 참고
 
-- [HikariCP README](https://github.com/brettwooldridge/HikariCP) — Configuration
+- [HikariCP README](https://github.com/brettwooldridge/HikariCP) — GitHub: Configuration
 - [About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing) — HikariCP Wiki

@@ -254,10 +254,10 @@ Thread-0 result: 결과 from thread-0
 
 ---
 
-## 참고자료
+## 참고
 
-- [Understanding Singleflight in Go: A Solution for Eliminating Redundant Work](https://www.codingexplorations.com/blog/understanding-singleflight-in-golang-a-solution-for-eliminating-redundant-work)
-- [Go Singleflight Melts in Your Code, Not in Your DB](https://victoriametrics.com/blog/go-singleflight/?utm_source=chatgpt.com)
-- [Singleflight in Go : A Clean Solution to Cache Stampede](https://medium.com/pickme-engineering-blog/singleflight-in-go-a-clean-solution-to-cache-stampede-02acaf5818e3)
-- [singleflight](https://pkg.go.dev/golang.org/x/sync/singleflight)
-- [동시성 패턴: Fail-fast와 Single Flight 패턴 비교](https://dataportal.kr/동시성-패턴-Fail-fast와-Single-Flight-패턴-비교/)
+- [Understanding Singleflight in Go: A Solution for Eliminating Redundant Work](https://www.codingexplorations.com/blog/understanding-singleflight-in-golang-a-solution-for-eliminating-redundant-work) — codingexplorations.com
+- [Go Singleflight Melts in Your Code, Not in Your DB](https://victoriametrics.com/blog/go-singleflight/?utm_source=chatgpt.com) — victoriametrics.com
+- [Singleflight in Go : A Clean Solution to Cache Stampede](https://medium.com/pickme-engineering-blog/singleflight-in-go-a-clean-solution-to-cache-stampede-02acaf5818e3) — Medium
+- [singleflight](https://pkg.go.dev/golang.org/x/sync/singleflight) — Go Packages
+- [동시성 패턴: Fail-fast와 Single Flight 패턴 비교](https://dataportal.kr/동시성-패턴-Fail-fast와-Single-Flight-패턴-비교/) — dataportal.kr

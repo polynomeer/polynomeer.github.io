@@ -151,6 +151,11 @@ flowchart LR
 
 ## 참고
 
-- [캐시 기본 동작](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61383), [검증 헤더와 조건부 요청1](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61384), [검증 헤더와 조건부 요청2](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61385)
-- [캐시와 조건부 요청 헤더](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61386), [프록시 캐시](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61387), [캐시 무효화](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=62171)
-- [RFC 9111: HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111.html), [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
+- [캐시 기본 동작](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61383) — 인프런
+- [검증 헤더와 조건부 요청1](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61384) — 인프런
+- [검증 헤더와 조건부 요청2](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61385) — 인프런
+- [캐시와 조건부 요청 헤더](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61386) — 인프런
+- [프록시 캐시](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61387) — 인프런
+- [캐시 무효화](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=62171) — 인프런
+- [RFC 9111: HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111.html) — IETF
+- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html) — IETF

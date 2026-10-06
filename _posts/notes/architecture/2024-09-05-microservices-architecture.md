@@ -77,50 +77,50 @@ _출처: https://www.instana.com/blog/cloud-native-seeing-through-hype/_
 
 반면 클라우드 네이티브 애플리케이션은 협업 접근 방식을 사용하며 다양한 플랫폼에서 확장성이 뛰어나다. 개발자는 소프트웨어 도구를 사용하여 클라우드 네이티브 애플리케이션의 프로시저를 구축, 테스트 및 배포하는 작업을 대폭 자동화한다. 마이크로서비스를 단시간에 설정, 배포 또는 복제할 수 있는데, 이는 기존 애플리케이션에서는 불가능하다. 
 
-## References
+## 참고
 
 ### Antifragile Software
 
-- https://developers.redhat.com/blog/2016/07/20/from-fragile-to-antifragile-software
-- https://www.oreilly.com/library/view/hands-on-software-architecture/9781788622592/bdde195b-2a5e-4ca6-a297-9aa85e0fbc81.xhtml
-- https://entrepreneurshandbook.co/antifragility-how-to-turn-your-business-into-an-immortal-hydra-77b1054c6b48
+- [developers.redhat.com/blog/2016/07/20/from-fragile-to-antifragile-software](https://developers.redhat.com/blog/2016/07/20/from-fragile-to-antifragile-software) — developers.redhat.com
+- [oreilly.com/library/view/hands-on-software-architecture/9781788622592/bdde195b-2a5e-4ca6-a297-9aa85e0fbc81.xhtml](https://www.oreilly.com/library/view/hands-on-software-architecture/9781788622592/bdde195b-2a5e-4ca6-a297-9aa85e0fbc81.xhtml) — O'Reilly
+- [entrepreneurshandbook.co/antifragility-how-to-turn-your-business-into-an-immortal-hydra-77b1054c6b48](https://entrepreneurshandbook.co/antifragility-how-to-turn-your-business-into-an-immortal-hydra-77b1054c6b48) — entrepreneurshandbook.co
 
 ### Cloud Native
 
-- https://www.cncf.io/
-- https://github.com/cncf/toc/blob/main/DEFINITION.md
-- https://github.com/cncf/foundation/blob/main/charter.md
-- https://en.wikipedia.org/wiki/Cloud_native_computing
-- https://www.oracle.com/cloud/cloud-native/what-is-cloud-native/
-- https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition
-- https://aws.amazon.com/what-is/cloud-native/
-- https://medium.com/velotio-perspectives/cloud-native-applications-the-why-the-what-the-how-9b2d31897496
-- https://www.instana.com/blog/cloud-native-seeing-through-hype/
-- https://tanzu.vmware.com/cloud-native
+- [Cloud Native Computing Foundation](https://www.cncf.io/) — CNCF
+- [github.com/cncf/toc/blob/main/DEFINITION.md](https://github.com/cncf/toc/blob/main/DEFINITION.md) — GitHub
+- [foundation/charter.md at main · cncf/foundation](https://github.com/cncf/foundation/blob/main/charter.md) — GitHub
+- [Cloud-native computing](https://en.wikipedia.org/wiki/Cloud_native_computing) — Wikipedia
+- [How Cloud Native Is Building Faster, More Resilient Businesses](https://www.oracle.com/cloud/cloud-native/what-is-cloud-native/) — Oracle
+- [What is Cloud Native? - .NET](https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition) — Microsoft Learn
+- [클라우드 네이티브란 무엇인가요?](https://aws.amazon.com/what-is/cloud-native/) — 클라우드 네이티브 아키텍처 설명 - AWS
+- [medium.com/velotio-perspectives/cloud-native-applications-the-why-the-what-the-how-9b2d31897496](https://medium.com/velotio-perspectives/cloud-native-applications-the-why-the-what-the-how-9b2d31897496) — Medium
+- [instana.com/blog/cloud-native-seeing-through-hype](https://www.instana.com/blog/cloud-native-seeing-through-hype/) — instana.com
+- [What is Cloud Native?](https://tanzu.vmware.com/cloud-native) — VMware
 
 ### Cloud Native Architecture
 
-- https://www.clickittech.com/devops/cloud-native-architecture/
-- https://hazelcast.com/glossary/cloud-native-architecture/
-- https://cloud.google.com/blog/products/application-development/5-principles-for-cloud-native-architecture-what-it-is-and-how-to-master-it
-- https://www.appdynamics.com/topics/what-is-cloud-native-architecture
-- https://medium.com/walmartglobaltech/cloud-native-application-architecture-a84ddf378f82
-- https://www.aquasec.com/cloud-native-academy/cloud-native-applications/cloud-native-architecture/
-- https://www.tigera.io/learn/guides/cloud-native-security/cloud-native-architecture/
-- https://www.samsungsds.com/kr/insights/101917_rd_cloudnative.html
+- [What is Cloud Native Architecture: Patterns and Diagram | Video](https://www.clickittech.com/devops/cloud-native-architecture/) — clickittech.com
+- [What is a Cloud-Native Architecture?](https://hazelcast.com/glossary/cloud-native-architecture/) — Hazelcast
+- [5 principles for cloud-native architecture—what it is and how to master it | Google Cloud Blog](https://cloud.google.com/blog/products/application-development/5-principles-for-cloud-native-architecture-what-it-is-and-how-to-master-it) — Google Cloud
+- [appdynamics.com/topics/what-is-cloud-native-architecture](https://www.appdynamics.com/topics/what-is-cloud-native-architecture) — appdynamics.com
+- [medium.com/walmartglobaltech/cloud-native-application-architecture-a84ddf378f82](https://medium.com/walmartglobaltech/cloud-native-application-architecture-a84ddf378f82) — Medium
+- [Cloud Native Architecture: 6 Principles for Success](https://www.aquasec.com/cloud-native-academy/cloud-native-applications/cloud-native-architecture/) — aquasec.com
+- [Cloud Native Architecture](https://www.tigera.io/learn/guides/cloud-native-security/cloud-native-architecture/) — tigera.io
+- [최신 개발기술 트렌드 - 클라우드 네이티브 Cloud Native Architecture | 인사이트리포트 | 삼성SDS](https://www.samsungsds.com/kr/insights/101917_rd_cloudnative.html) — samsungsds.com
 
 ### Microservices Architecture
 
-- https://inf.run/RwpY
+- [Spring Cloud로 개발하는 마이크로서비스 애플리케이션(MSA)| Dowon Lee - 인프런 강의](https://inf.run/RwpY) — inf.run
 
 ### Stress Testing
 
-- http://www.ktword.co.kr/test/view/view.php?no=4223
-- https://www.guru99.com/stress-testing-tutorial.html
-- https://www.geeksforgeeks.org/stress-testing-software-testing/
+- [응력](http://www.ktword.co.kr/test/view/view.php?no=4223) — ktword.co.kr
+- [What is STRESS Testing in Software Testing?](https://www.guru99.com/stress-testing-tutorial.html) — guru99.com
+- [Stress Testing](https://www.geeksforgeeks.org/stress-testing-software-testing/) — GeeksforGeeks
 
 ### English Words
 
-- https://en.dict.naver.com/#/entry/enko/ece8f24b3b1f4c43a459bb1579cb9ad0
-- https://en.dict.naver.com/#/entry/enko/a80173d96a3a41c680b281f9e8b7365c
+- [en.dict.naver.com/#/entry/enko/ece8f24b3b1f4c43a459bb1579cb9ad0](https://en.dict.naver.com/#/entry/enko/ece8f24b3b1f4c43a459bb1579cb9ad0) — en.dict.naver.com
+- [en.dict.naver.com/#/entry/enko/a80173d96a3a41c680b281f9e8b7365c](https://en.dict.naver.com/#/entry/enko/a80173d96a3a41c680b281f9e8b7365c) — en.dict.naver.com
 

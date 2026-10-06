@@ -190,9 +190,9 @@ close 시점 소멸 순서는 다음과 같았다.
 
 ## 참고
 
-- [`BeanFactory` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html) — 초기화와 소멸 메서드의 표준 순서
+- [`BeanFactory` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html) — Spring Docs: 초기화와 소멸 메서드의 표준 순서
 - [`InstantiationAwareBeanPostProcessor` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/config/InstantiationAwareBeanPostProcessor.html) — Spring Framework API 문서
 - [`SmartInitializingSingleton` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/SmartInitializingSingleton.html) — Spring Framework API 문서
-- [`AbstractAutowireCapableBeanFactory` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java) — Spring Framework 소스
-- [`PostProcessorRegistrationDelegate` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java) — Spring Framework 소스
-- [`DisposableBeanAdapter` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-beans/src/main/java/org/springframework/beans/factory/support/DisposableBeanAdapter.java) — Spring Framework 소스
+- [`AbstractAutowireCapableBeanFactory` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java) — GitHub: Spring Framework 소스
+- [`PostProcessorRegistrationDelegate` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-context/src/main/java/org/springframework/context/support/PostProcessorRegistrationDelegate.java) — GitHub: Spring Framework 소스
+- [`DisposableBeanAdapter` (v6.2.0)](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-beans/src/main/java/org/springframework/beans/factory/support/DisposableBeanAdapter.java) — GitHub: Spring Framework 소스

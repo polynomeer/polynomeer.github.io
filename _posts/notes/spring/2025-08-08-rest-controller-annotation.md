@@ -60,4 +60,4 @@ public class HelloController {
 
 ## 참고
 
-- [Spring Framework: @ResponseBody](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responsebody.html)
+- [Spring Framework: @ResponseBody](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responsebody.html) — Spring Docs

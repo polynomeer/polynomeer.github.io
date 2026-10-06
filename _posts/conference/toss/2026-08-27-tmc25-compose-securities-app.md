@@ -82,6 +82,6 @@ Compose를 고른 이유는 둘이다. 증권에는 커스텀 UI가 많은데, V
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=KnGFJ6Byd7U)
-- [TMC 25](https://toss.im/tmc-25)
-- 같은 연사의 앞선 발표: [SLASH 24 Compose 안착기 리뷰](/posts/slash24-compose-adoption/)
+- [발표 영상](https://www.youtube.com/watch?v=KnGFJ6Byd7U) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스
+- [SLASH 24 Compose 안착기 리뷰](/posts/slash24-compose-adoption/) — 같은 연사의 앞선 발표

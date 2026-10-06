@@ -92,5 +92,5 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=eVtoW-S6hV0)
-- [SLASH 22](https://toss.im/slash-22)
+- [발표 영상](https://www.youtube.com/watch?v=eVtoW-S6hV0) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스

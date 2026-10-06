@@ -95,6 +95,7 @@ tags: [Architecture, Event Sourcing, CQRS, Event Driven, Ledger, Design]
 
 ## 참고
 
-- Martin Fowler, [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html), [CQRS](https://martinfowler.com/bliki/CQRS.html)
+- [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) — Martin Fowler
+- [CQRS](https://martinfowler.com/bliki/CQRS.html) — Martin Fowler
 - [ParityPay 7편 - 이중부기 원장](/posts/parity-pay-ledger/)
 - [monticker - 이벤트 중심 설계](/posts/monticker-event-centric-design/)

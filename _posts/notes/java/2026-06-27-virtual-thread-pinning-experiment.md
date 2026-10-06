@@ -167,9 +167,9 @@ flowchart TD
 
 ## 참고
 
-- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — 원본은 `reports/data/t4a-*`·`t4b-*`, 표는 `reports/01-scenario-report.md`, 집계는 `scenarios/t4/aggregate.py`
+- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — GitHub: 원본은 `reports/data/t4a-*`·`t4b-*`, 표는 `reports/01-scenario-report.md`, 집계는 `scenarios/t4/aggregate.py`
 - [가상 스레드의 내부](/posts/virtual-threads-internals/) — 이 실험의 개념 짝
 - [Bulkhead Pattern](/posts/bulkhead/) — 2부가 넣은 것이 이것이다
 - [커넥션 풀](/posts/connection-pool/)
-- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — 핀닝이 생기는 두 경우, `jdk.VirtualThreadPinned`의 기본 임계값 20ms, 스케줄러 병렬성의 기본값
-- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491)
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — OpenJDK: 핀닝이 생기는 두 경우, `jdk.VirtualThreadPinned`의 기본 임계값 20ms, 스케줄러 병렬성의 기본값
+- [JEP 491: Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) — OpenJDK

@@ -71,7 +71,7 @@ Nygard 형식 말고도 MADR, Y-statement 같은 템플릿이 있다([adr.github
 
 ## 참고
 
-- [Michael Nygard, Documenting Architecture Decisions (2011)](https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
-- [Architectural Decision Records (adr.github.io)](https://adr.github.io/)
-- [spring-ops-lab ADR-001: 부하 모델의 기본은 open model](https://github.com/polynomeer/spring-ops-lab/blob/main/docs/adr/001-open-model-load-as-default.md)
+- [Michael Nygard, Documenting Architecture Decisions (2011)](https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions) — cognitect.com
+- [Architectural Decision Records (adr.github.io)](https://adr.github.io/) — adr.github.io
+- [spring-ops-lab ADR-001: 부하 모델의 기본은 open model](https://github.com/polynomeer/spring-ops-lab/blob/main/docs/adr/001-open-model-load-as-default.md) — GitHub
 - [무너지는 Spring 서버 1 - Tomcat 스레드 고갈](/posts/tomcat-thread-exhaustion/)

@@ -225,8 +225,8 @@ CREATE INDEX idx_user ON orders(user_id);
 
 ## 참고
 
-- [MySQL: InnoDB Locking](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html)
-- [MySQL: Deadlocks in InnoDB](https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlocks.html)
-- [MySQL: Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html)
-- [PostgreSQL: Explicit Locking](https://www.postgresql.org/docs/current/explicit-locking.html)
+- [MySQL: InnoDB Locking](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html) — MySQL Docs
+- [MySQL: Deadlocks in InnoDB](https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlocks.html) — MySQL Docs
+- [MySQL: Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html) — MySQL Docs
+- [PostgreSQL: Explicit Locking](https://www.postgresql.org/docs/current/explicit-locking.html) — PostgreSQL Docs
 - [Gap Lock 정리](/posts/gap-lock/), [MVCC 정리](/posts/mvcc/)

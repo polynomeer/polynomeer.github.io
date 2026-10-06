@@ -207,8 +207,8 @@ fun onFillCompleted(event: FillCompletedEvent) {
 
 ## 참고
 
-- [Martin Fowler, MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html)
-- [Kotlin, Visibility modifiers](https://kotlinlang.org/docs/visibility-modifiers.html)
-- [Spring Framework, Standard and Custom Events](https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html)
-- [Spring Boot 3.5, Introducing GraalVM Native Images](https://docs.spring.io/spring-boot/3.5/reference/packaging/native-image/introducing-graalvm-native-images.html)
-- [The Twelve-Factor App, Config](https://12factor.net/config)
+- [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) — Martin Fowler
+- [Visibility modifiers](https://kotlinlang.org/docs/visibility-modifiers.html) — Kotlin
+- [Standard and Custom Events](https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html) — Spring Framework
+- [Spring Boot 3.5, Introducing GraalVM Native Images](https://docs.spring.io/spring-boot/3.5/reference/packaging/native-image/introducing-graalvm-native-images.html) — Spring Docs
+- [Config](https://12factor.net/config) — The Twelve-Factor App

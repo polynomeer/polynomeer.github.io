@@ -76,9 +76,9 @@ GC 옵션을 바꾸기 전에 확인할 것이 있다.
 
 ## 참고
 
-- [JEP 248: Make G1 the Default Garbage Collector](https://openjdk.org/jeps/248)
-- [JEP 439: Generational ZGC](https://openjdk.org/jeps/439)
-- [JEP 474: ZGC: Generational Mode by Default](https://openjdk.org/jeps/474)
-- [Oracle Java SE 21 GC Tuning Guide: Available Collectors](https://docs.oracle.com/en/java/javase/21/gctuning/available-collectors.html)
-- [Oracle: Garbage Collection Tuning Guide](https://docs.oracle.com/en/java/javase/21/gctuning/)
+- [JEP 248: Make G1 the Default Garbage Collector](https://openjdk.org/jeps/248) — OpenJDK
+- [JEP 439: Generational ZGC](https://openjdk.org/jeps/439) — OpenJDK
+- [JEP 474: ZGC: Generational Mode by Default](https://openjdk.org/jeps/474) — OpenJDK
+- [Oracle Java SE 21 GC Tuning Guide: Available Collectors](https://docs.oracle.com/en/java/javase/21/gctuning/available-collectors.html) — Oracle Docs
+- [Oracle: Garbage Collection Tuning Guide](https://docs.oracle.com/en/java/javase/21/gctuning/) — Oracle Docs
 - [Java Garbage Collection 정리](/posts/java-garbage-collection/)

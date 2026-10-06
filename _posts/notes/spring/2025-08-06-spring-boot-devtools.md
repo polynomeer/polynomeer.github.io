@@ -55,4 +55,4 @@ DevTools는 필수 도구는 아니지만 로컬 생산성을 올려준다. 다�
 
 ## 참고
 
-- [Spring Boot Reference: Developer Tools](https://docs.spring.io/spring-boot/reference/using/devtools.html)
+- [Spring Boot Reference: Developer Tools](https://docs.spring.io/spring-boot/reference/using/devtools.html) — Spring Docs

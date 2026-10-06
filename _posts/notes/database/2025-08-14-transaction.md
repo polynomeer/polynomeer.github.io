@@ -64,4 +64,4 @@ MySQL은 새 커넥션의 세션을 autocommit이 켜진 상태로 시작하고,
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual: autocommit, Commit, and Rollback](https://dev.mysql.com/doc/refman/8.0/en/innodb-autocommit-commit-rollback.html)
+- [MySQL 8.0 Reference Manual: autocommit, Commit, and Rollback](https://dev.mysql.com/doc/refman/8.0/en/innodb-autocommit-commit-rollback.html) — MySQL Docs

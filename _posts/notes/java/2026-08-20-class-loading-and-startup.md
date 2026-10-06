@@ -103,10 +103,11 @@ CDS(Class Data Sharing)는 중간 지점이다. 클래스 메타데이터를 미
 
 ## 참고
 
-- [JVMS SE 21, Chapter 5: Loading, Linking, and Initializing](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html)
-- [Java SE 21 API: ClassLoader](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ClassLoader.html)
-- [Spring Boot: SpringApplication — Lazy Initialization, Application Startup Tracking](https://docs.spring.io/spring-boot/reference/features/spring-application.html)
-- [Spring Boot: Class Data Sharing / AOT](https://docs.spring.io/spring-boot/how-to/class-data-sharing.html)
-- [JEP 350: Dynamic CDS Archives](https://openjdk.org/jeps/350), [JEP 483: Ahead-of-Time Class Loading & Linking](https://openjdk.org/jeps/483)
-- [GraalVM Native Image: Reachability Metadata](https://www.graalvm.org/latest/reference-manual/native-image/metadata/)
+- [JVMS SE 21, Chapter 5: Loading, Linking, and Initializing](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html) — Oracle Docs
+- [Java SE 21 API: ClassLoader](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ClassLoader.html) — Oracle Docs
+- [Spring Boot: SpringApplication — Lazy Initialization, Application Startup Tracking](https://docs.spring.io/spring-boot/reference/features/spring-application.html) — Spring Docs
+- [Spring Boot: Class Data Sharing / AOT](https://docs.spring.io/spring-boot/how-to/class-data-sharing.html) — Spring Docs
+- [JEP 350: Dynamic CDS Archives](https://openjdk.org/jeps/350) — OpenJDK
+- [JEP 483: Ahead-of-Time Class Loading & Linking](https://openjdk.org/jeps/483) — OpenJDK
+- [GraalVM Native Image: Reachability Metadata](https://www.graalvm.org/latest/reference-manual/native-image/metadata/) — graalvm.org
 - [Spring Bean 생명주기 정리](/posts/spring-lifecycle/)

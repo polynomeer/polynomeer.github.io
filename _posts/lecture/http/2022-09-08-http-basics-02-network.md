@@ -103,6 +103,10 @@ HTTP 상태 코드를 받았다면 적어도 그 응답을 만든 HTTP 서버나
 
 ## 참고
 
-- [인터넷 통신](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61344), [IP](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61353), [TCP, UDP](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61354)
-- [PORT](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61355), [DNS](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61356)
-- [RFC 9293: TCP](https://www.rfc-editor.org/rfc/rfc9293.html), [RFC 9114: HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html)
+- [인터넷 통신](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61344) — 인프런
+- [IP](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61353) — 인프런
+- [TCP, UDP](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61354) — 인프런
+- [PORT](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61355) — 인프런
+- [DNS](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61356) — 인프런
+- [RFC 9293: TCP](https://www.rfc-editor.org/rfc/rfc9293.html) — IETF
+- [RFC 9114: HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html) — IETF

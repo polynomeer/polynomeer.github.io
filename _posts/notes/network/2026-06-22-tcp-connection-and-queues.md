@@ -93,6 +93,7 @@ netstat -s | grep -i listen   # overflow와 drop 누적
 
 ## 참고
 
-- [Linux man: listen(2)](https://man7.org/linux/man-pages/man2/listen.2.html), [tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html)
-- [Cloudflare: SYN packet handling in the wild](https://blog.cloudflare.com/syn-packet-handling-in-the-wild/)
+- [Linux man: listen(2)](https://man7.org/linux/man-pages/man2/listen.2.html) — Linux man page
+- [tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html) — Linux man page
+- [Cloudflare: SYN packet handling in the wild](https://blog.cloudflare.com/syn-packet-handling-in-the-wild/) — Cloudflare Blog
 - [keep-alive 정리](/posts/keep-alive/)

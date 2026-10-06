@@ -227,18 +227,33 @@ API 엔드포인트, 화면, AI 호출은 이 뼈대 위에 같은 날 오전부
 
 ## 참고
 
-- 저장소: [polynomeer/proofu](https://github.com/polynomeer/proofu) — 이 글의 코드와 문서 링크는 커밋 `5d6874b`, `0ffce5d`, `a3620d5`, `f9df540`, `47f019c`, `587d8f3`에 고정
-- 재구성한 대안 비교: [docs/architecture/tech-selection.md](https://github.com/polynomeer/proofu/blob/f1c18f6fe78fd7862f6f1499101747b9521f9ca8/docs/architecture/tech-selection.md)
-- 초기 ADR: [0001](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0001-modular-monolith.md), [0002](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0002-postgresql-primary-store.md), [0003](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0003-rest-and-openapi.md), [0004](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0004-async-jobs.md), [0005](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0005-provider-neutral-ai-gateway.md), [0006](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0006-immutable-submission-snapshot.md), [0007](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0007-kotlin-spring-boot-and-nextjs.md)
-- 초기 스키마: [`migrations/V1__initial_schema.sql`](https://github.com/polynomeer/proofu/blob/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b/migrations/V1__initial_schema.sql), CI: [`.github/workflows/ci.yml`](https://github.com/polynomeer/proofu/blob/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b/.github/workflows/ci.yml)
-- PostgreSQL 16 문서: [SELECT Locking Clause](https://www.postgresql.org/docs/16/sql-select.html), [Text Search Indexes](https://www.postgresql.org/docs/16/textsearch-indexes.html), [Text Search Dictionaries](https://www.postgresql.org/docs/16/textsearch-dictionaries.html), [JSON Types](https://www.postgresql.org/docs/16/datatype-json.html), [CREATE TRIGGER](https://www.postgresql.org/docs/16/sql-createtrigger.html)
-- [pgvector](https://github.com/pgvector/pgvector)
-- [MySQL 8.4 ngram Full-Text Parser](https://dev.mysql.com/doc/refman/8.4/en/fulltext-search-ngram.html)
-- [MongoDB Transactions](https://www.mongodb.com/docs/manual/core/transactions/)
-- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/), [Redis persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/)
-- [RabbitMQ Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms)
-- [OpenAPI Specification 3.1.0](https://spec.openapis.org/oas/v3.1.0.html), [openapi-typescript](https://openapi-ts.dev/introduction)
-- [RFC 9457 Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html)
-- [GraphQL Specification (October 2021)](https://spec.graphql.org/October2021/), [gRPC-Web basics](https://grpc.io/docs/platforms/web/basics/)
-- [Spring AI ChatClient](https://docs.spring.io/spring-ai/reference/api/chatclient.html)
-- Martin Fowler, [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) (2015), [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) (2005)
+- [polynomeer/proofu](https://github.com/polynomeer/proofu) — 이 글의 코드와 문서 링크는 커밋 `5d6874b`, `0ffce5d`, `a3620d5`, `f9df540`, `47f019c`, `587d8f3`에 고정: 저장소
+- [docs/architecture/tech-selection.md](https://github.com/polynomeer/proofu/blob/f1c18f6fe78fd7862f6f1499101747b9521f9ca8/docs/architecture/tech-selection.md) — GitHub: 재구성한 대안 비교
+- [0001](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0001-modular-monolith.md) — GitHub: 초기 ADR
+- [0002](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0002-postgresql-primary-store.md) — GitHub: 초기 ADR
+- [0003](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0003-rest-and-openapi.md) — GitHub: 초기 ADR
+- [0004](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0004-async-jobs.md) — GitHub: 초기 ADR
+- [0005](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0005-provider-neutral-ai-gateway.md) — GitHub: 초기 ADR
+- [0006](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0006-immutable-submission-snapshot.md) — GitHub: 초기 ADR
+- [0007](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/adr/0007-kotlin-spring-boot-and-nextjs.md) — GitHub: 초기 ADR
+- [`migrations/V1__initial_schema.sql`](https://github.com/polynomeer/proofu/blob/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b/migrations/V1__initial_schema.sql) — GitHub: 초기 스키마, CI:
+- [`.github/workflows/ci.yml`](https://github.com/polynomeer/proofu/blob/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b/.github/workflows/ci.yml) — GitHub: 초기 스키마
+- [SELECT Locking Clause](https://www.postgresql.org/docs/16/sql-select.html) — PostgreSQL Docs: PostgreSQL 16 문서
+- [Text Search Indexes](https://www.postgresql.org/docs/16/textsearch-indexes.html) — PostgreSQL Docs: PostgreSQL 16 문서
+- [Text Search Dictionaries](https://www.postgresql.org/docs/16/textsearch-dictionaries.html) — PostgreSQL Docs: PostgreSQL 16 문서
+- [JSON Types](https://www.postgresql.org/docs/16/datatype-json.html) — PostgreSQL Docs: PostgreSQL 16 문서
+- [CREATE TRIGGER](https://www.postgresql.org/docs/16/sql-createtrigger.html) — PostgreSQL Docs: PostgreSQL 16 문서
+- [pgvector](https://github.com/pgvector/pgvector) — GitHub
+- [MySQL 8.4 ngram Full-Text Parser](https://dev.mysql.com/doc/refman/8.4/en/fulltext-search-ngram.html) — MySQL Docs
+- [MongoDB Transactions](https://www.mongodb.com/docs/manual/core/transactions/) — MongoDB Docs
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/) — Redis Docs
+- [Redis persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/) — Redis Docs
+- [RabbitMQ Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms) — RabbitMQ
+- [OpenAPI Specification 3.1.0](https://spec.openapis.org/oas/v3.1.0.html) — OpenAPI Initiative
+- [openapi-typescript](https://openapi-ts.dev/introduction) — openapi-ts.dev
+- [RFC 9457 Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html) — IETF
+- [GraphQL Specification (October 2021)](https://spec.graphql.org/October2021/) — GraphQL
+- [gRPC-Web basics](https://grpc.io/docs/platforms/web/basics/) — gRPC
+- [Spring AI ChatClient](https://docs.spring.io/spring-ai/reference/api/chatclient.html) — Spring Docs
+- [MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html) — Martin Fowler: (2015)
+- [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) — Martin Fowler: (2005)

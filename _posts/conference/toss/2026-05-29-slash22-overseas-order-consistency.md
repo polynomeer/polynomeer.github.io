@@ -100,9 +100,10 @@ sequenceDiagram
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-22/sessions/2-7)
-- [발표 영상](https://www.youtube.com/watch?v=UOWy6zdsD-c)
-- [발표 자료 (PDF)](https://static.toss.im/assets/homepage/slash22/pt-session/SLASH22_%EC%9D%B4%EC%8A%B9%EC%B2%9C%EB%8B%98.pdf)
-- [Martin Kleppmann - How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)
-- 후속: [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738), [TMC 25 주식모으기 대용량 트래픽 리뷰](/posts/tmc25-stock-collecting-traffic/)
-- 다른 자료와 함께 읽기: [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [세션 페이지](https://toss.im/slash-22/sessions/2-7) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=UOWy6zdsD-c) — YouTube
+- [발표 자료 (PDF)](https://static.toss.im/assets/homepage/slash22/pt-session/SLASH22_%EC%9D%B4%EC%8A%B9%EC%B2%9C%EB%8B%98.pdf) — 토스
+- [How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) — Martin Kleppmann
+- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738) — 토스 기술 블로그: 후속
+- [TMC 25 주식모으기 대용량 트래픽 리뷰](/posts/tmc25-stock-collecting-traffic/) — 후속
+- [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 다른 자료와 함께 읽기

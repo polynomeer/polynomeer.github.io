@@ -89,7 +89,7 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=2V2xYeqUsWw)
-- [SLASH 23](https://toss.im/slash-23)
-- [NIST SP 800-207 Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
-- 서비스 간 통신의 Zero Trust: [SLASH 23 토스의 Istio Zero Trust 리뷰](/posts/slash23-istio-zero-trust/)
+- [발표 영상](https://www.youtube.com/watch?v=2V2xYeqUsWw) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [NIST SP 800-207 Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final) — NIST CSRC
+- [SLASH 23 토스의 Istio Zero Trust 리뷰](/posts/slash23-istio-zero-trust/) — 서비스 간 통신의 Zero Trust

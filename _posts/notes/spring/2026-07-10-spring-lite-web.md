@@ -153,4 +153,4 @@ Spring MVC의 `HandlerMethodArgumentResolver`를 공부할 때도 이 작은 구
 
 ## 참고
 
-- [Spring Framework Reference: Special Bean Types](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html)
+- [Spring Framework Reference: Special Bean Types](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html) — Spring Docs

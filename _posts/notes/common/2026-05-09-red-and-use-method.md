@@ -94,6 +94,6 @@ RED와 USE가 전부 정상인데 업무가 실패하는 경우가 있다. 결�
 
 ## 참고
 
-- Brendan Gregg, [The USE Method](https://www.brendangregg.com/usemethod.html)
-- Tom Wilkie, [The RED Method](https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/)
-- [Google SRE: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/)
+- [The USE Method](https://www.brendangregg.com/usemethod.html) — Brendan Gregg
+- [The RED Method](https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/) — Tom Wilkie
+- [Google SRE: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) — Google, O'Reilly

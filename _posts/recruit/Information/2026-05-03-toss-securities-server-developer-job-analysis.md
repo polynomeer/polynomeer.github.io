@@ -232,15 +232,15 @@ CS 퀴즈보다 본인의 프로젝트를 깊게 파는 방식이다. 다음 꼬
 
 한 가지 단서를 남겨 둔다. SLASH 22·23 자료는 당시 아키텍처의 스냅샷이므로 세부 구현이 지금도 같다고 단정할 수 없다. 다만 2025~2026년 자료에서도 MSA, 실시간 대용량 처리, 정합성, Kafka·Redis, 장애 대응 자동화라는 방향은 일관되게 확인된다.
 
-## 참고 자료
+## 참고
 
-- [Server Developer (Product) 채용공고](https://toss.im/career/job-detail?job_id=4076140003)
-- [2026년 토스증권 서버 개발자 인터뷰](https://toss.im/career/article/sec_server_2602)
-- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2)
-- [토스증권 실시간 시세 적용기 (SLASH 22)](https://toss.im/slash-22/sessions/2-6)
-- [실시간 시세 데이터 안전하고 빠르게 처리하기 (SLASH 23)](https://toss.im/slash-23/session-detail/B1-7)
-- [애플 한 주가 고객에게 전달되기까지 (SLASH 22)](https://toss.im/slash-22/sessions/2-7)
-- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738)
-- [미국 옵션 실시간 시세 파이프라인 (AWS)](https://aws.amazon.com/ko/blogs/tech/toss-securities-nasdaq-options-realtime-pipeline/)
-- [토스증권 마진 트레이딩 서버 개발자 인터뷰](https://toss.tech/article/tosspeople-jimin)
-- [Kafka IDC 이중화 (SLASH 23)](https://toss.im/slash-23/session-detail/B2-6)
+- [Server Developer (Product) 채용공고](https://toss.im/career/job-detail?job_id=4076140003) — 토스
+- [2026년 토스증권 서버 개발자 인터뷰](https://toss.im/career/article/sec_server_2602) — 토스
+- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2) — 토스
+- [토스증권 실시간 시세 적용기 (SLASH 22)](https://toss.im/slash-22/sessions/2-6) — 토스
+- [실시간 시세 데이터 안전하고 빠르게 처리하기 (SLASH 23)](https://toss.im/slash-23/session-detail/B1-7) — 토스
+- [애플 한 주가 고객에게 전달되기까지 (SLASH 22)](https://toss.im/slash-22/sessions/2-7) — 토스
+- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738) — 토스 기술 블로그
+- [미국 옵션 실시간 시세 파이프라인 (AWS)](https://aws.amazon.com/ko/blogs/tech/toss-securities-nasdaq-options-realtime-pipeline/) — AWS
+- [토스증권 마진 트레이딩 서버 개발자 인터뷰](https://toss.tech/article/tosspeople-jimin) — 토스 기술 블로그
+- [Kafka IDC 이중화 (SLASH 23)](https://toss.im/slash-23/session-detail/B2-6) — 토스

@@ -99,6 +99,9 @@ HTTP/1.1의 텍스트 메시지는 개념을 배우기 좋다. 다만 HTTP/2와 
 
 ## 참고
 
-- [모든 것이 HTTP](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61359), [클라이언트 서버 구조](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61360)
-- [Stateful, Stateless](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61361), [비 연결성](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61362), [HTTP 메시지](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61363)
-- [RFC 9112: HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112.html)
+- [모든 것이 HTTP](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61359) — 인프런
+- [클라이언트 서버 구조](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61360) — 인프런
+- [Stateful, Stateless](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61361) — 인프런
+- [비 연결성](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61362) — 인프런
+- [HTTP 메시지](https://www.inflearn.com/courses/lecture?courseId=326277&unitId=61363) — 인프런
+- [RFC 9112: HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112.html) — IETF

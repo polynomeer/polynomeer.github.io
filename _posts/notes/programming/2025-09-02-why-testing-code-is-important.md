@@ -69,10 +69,10 @@ tags: [Testing, Test Code]
 
 특히 단위테스트는 게임에서의 메인 세이브 포인트 외에 수동으로 저장하는 것과 같다. 좀 더 잘게 쪼갤수록 문제가 되는 지점이나 리팩터링 범위를 더 정밀하게 잡을 수 있다. 따라서 단위테스트를 중심으로 테스트를 견고하게 작성하는 것이 소프트웨어 전체에 아주 좋은 가치를 줄 수 있다.
 
-## 참고자료
+## 참고
 
-- [테스트 코드를 왜 그리고 어떻게 작성해야 할까?](https://tech.inflab.com/20230404-test-code/)
-- [테스트 코드는 왜 만들까?](https://yozm.wishket.com/magazine/detail/1964/)
-- [5 simple reasons why testing code is important](https://dev.to/evybauer/5-simple-reasons-why-testing-code-is-important-3707)
-- [Kakao Entertainment - Test Code Why? What? How?](https://kakaoentertainment-tech.tistory.com/78)
-- [5 reasons why testing code is great](https://how.dev/answers/5-reasons-why-testing-code-is-great)
+- [테스트 코드를 왜 그리고 어떻게 작성해야 할까?](https://tech.inflab.com/20230404-test-code/) — tech.inflab.com
+- [테스트 코드는 왜 만들까?](https://yozm.wishket.com/magazine/detail/1964/) — yozm.wishket.com
+- [5 simple reasons why testing code is important](https://dev.to/evybauer/5-simple-reasons-why-testing-code-is-important-3707) — DEV Community
+- [Kakao Entertainment - Test Code Why? What? How?](https://kakaoentertainment-tech.tistory.com/78) — Tistory
+- [5 reasons why testing code is great](https://how.dev/answers/5-reasons-why-testing-code-is-great) — how.dev

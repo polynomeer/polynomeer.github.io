@@ -99,7 +99,7 @@ istiod는 컨트롤 플레인으로 메시의 Envoy들에게 변하는 라우팅
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=ftFHZwyUN38)
-- [SLASH 22](https://toss.im/slash-22)
-- [Envoy gRPC Access Log Service](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/access_loggers/grpc/v3/als.proto)
-- [Istio ServiceEntry](https://istio.io/latest/docs/reference/config/networking/service-entry/)
+- [발표 영상](https://www.youtube.com/watch?v=ftFHZwyUN38) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [Envoy gRPC Access Log Service](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/access_loggers/grpc/v3/als.proto) — Envoy Docs
+- [Istio ServiceEntry](https://istio.io/latest/docs/reference/config/networking/service-entry/) — Istio

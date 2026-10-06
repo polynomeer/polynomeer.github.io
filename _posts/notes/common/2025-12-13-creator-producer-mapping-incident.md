@@ -226,9 +226,9 @@ historyRepository.save(
 
 ## 참고
 
-- [MySQL 8.4 Reference Manual: CREATE INDEX, Unique Indexes](https://dev.mysql.com/doc/refman/8.4/en/create-index.html) — UNIQUE 인덱스 제약
-- 랩 코드 [`LegacyProducerCreationService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/LegacyProducerCreationService.java)
-- 랩 코드 [`CreatorOnboardingService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/CreatorOnboardingService.java)
-- 랩 코드 [`ProducerMappingAdminService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/ProducerMappingAdminService.java)
-- 랩 스키마 [`V1__init_schema.sql`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/resources/db/migration/V1__init_schema.sql)
-- 랩 테스트 [`CreatorProducerMappingIntegrationTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/onboarding/CreatorProducerMappingIntegrationTest.java)
+- [MySQL 8.4 Reference Manual: CREATE INDEX, Unique Indexes](https://dev.mysql.com/doc/refman/8.4/en/create-index.html) — MySQL Docs: UNIQUE 인덱스 제약
+- [`LegacyProducerCreationService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/LegacyProducerCreationService.java) — 랩 코드
+- [`CreatorOnboardingService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/CreatorOnboardingService.java) — 랩 코드
+- [`ProducerMappingAdminService.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/java/com/portfolio/creatorlab/onboarding/ProducerMappingAdminService.java) — 랩 코드
+- [`V1__init_schema.sql`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/main/resources/db/migration/V1__init_schema.sql) — 랩 스키마
+- [`CreatorProducerMappingIntegrationTest.java`](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/creator-studio/src/test/java/com/portfolio/creatorlab/onboarding/CreatorProducerMappingIntegrationTest.java) — 랩 테스트

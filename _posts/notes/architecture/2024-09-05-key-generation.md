@@ -88,9 +88,9 @@ flowchart TD
 
 ## 참고
 
-- https://blog.devtrovert.com/p/how-to-generate-unique-ids-in-distributed
-- https://medium.com/@sandeep4.verma/system-design-distributed-global-unique-id-generation-d6a440cc8e5
-- [RFC 9562, Universally Unique IDentifiers (UUIDs)](https://www.rfc-editor.org/rfc/rfc9562.html)
-- [twitter/snowflake README (snowflake-2010 태그)](https://github.com/twitter-archive/snowflake/tree/snowflake-2010)
-- [Flickr Engineering, Ticket Servers: Distributed Unique Primary Keys on the Cheap](https://code.flickr.net/2010/02/08/ticket-servers-distributed-unique-primary-keys-on-the-cheap/)
-- [MySQL 8.4 Reference Manual, Replication Source Options and Variables](https://dev.mysql.com/doc/refman/8.4/en/replication-options-source.html)
+- [How to Generate Unique IDs in Distributed Systems: 6 Key Strategies](https://blog.devtrovert.com/p/how-to-generate-unique-ids-in-distributed) — blog.devtrovert.com
+- [medium.com/@sandeep4.verma/system-design-distributed-global-unique-id-generation-d6a440cc8e5](https://medium.com/@sandeep4.verma/system-design-distributed-global-unique-id-generation-d6a440cc8e5) — Medium
+- [RFC 9562, Universally Unique IDentifiers (UUIDs)](https://www.rfc-editor.org/rfc/rfc9562.html) — IETF
+- [twitter/snowflake README (snowflake-2010 태그)](https://github.com/twitter-archive/snowflake/tree/snowflake-2010) — GitHub
+- [Ticket Servers: Distributed Unique Primary Keys on the Cheap](https://code.flickr.net/2010/02/08/ticket-servers-distributed-unique-primary-keys-on-the-cheap/) — Flickr Engineering
+- [Replication Source Options and Variables](https://dev.mysql.com/doc/refman/8.4/en/replication-options-source.html) — MySQL 8.4 Reference Manual

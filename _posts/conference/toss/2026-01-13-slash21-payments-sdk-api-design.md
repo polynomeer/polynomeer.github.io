@@ -100,7 +100,7 @@ GET/POST 의미 규칙은 HTTP 명세가 GET에 부여한 성질과 같은 선�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=E4_0WWqmF3M)
-- [SLASH 21](https://toss.im/slash-21)
-- [토스페이먼츠 개발자 문서](https://docs.tosspayments.com/)
-- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110) — 9.2.1 Safe Methods, 12.5.4 Accept-Language
+- [발표 영상](https://www.youtube.com/watch?v=E4_0WWqmF3M) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [토스페이먼츠 개발자 문서](https://docs.tosspayments.com/) — 토스페이먼츠 개발자센터
+- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110) — IETF: 9.2.1 Safe Methods, 12.5.4 Accept-Language

@@ -109,9 +109,9 @@ API는 요청-응답이라 양쪽이 살아 있지만, 이벤트는 저장된다
 
 ## 참고
 
-- [Confluent: Schema Evolution and Compatibility](https://docs.confluent.io/platform/current/schema-registry/fundamentals/avro.html)
-- [Protocol Buffers: Updating a Message Type](https://protobuf.dev/programming-guides/proto3/#updating)
-- [RFC 8594: The Sunset HTTP Header Field](https://datatracker.ietf.org/doc/html/rfc8594)
-- [Jackson `DeserializationFeature` Javadoc (2.17)](https://javadoc.io/static/com.fasterxml.jackson.core/jackson-databind/2.17.0/com/fasterxml/jackson/databind/DeserializationFeature.html)
-- [Spring Framework: `Jackson2ObjectMapperBuilder`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/converter/json/Jackson2ObjectMapperBuilder.html)
-- Martin Fowler, [Tolerant Reader](https://martinfowler.com/bliki/TolerantReader.html)
+- [Confluent: Schema Evolution and Compatibility](https://docs.confluent.io/platform/current/schema-registry/fundamentals/avro.html) — Confluent Docs
+- [Protocol Buffers: Updating a Message Type](https://protobuf.dev/programming-guides/proto3/#updating) — Protocol Buffers Docs
+- [RFC 8594: The Sunset HTTP Header Field](https://datatracker.ietf.org/doc/html/rfc8594) — IETF
+- [Jackson `DeserializationFeature` Javadoc (2.17)](https://javadoc.io/static/com.fasterxml.jackson.core/jackson-databind/2.17.0/com/fasterxml/jackson/databind/DeserializationFeature.html) — javadoc.io
+- [Spring Framework: `Jackson2ObjectMapperBuilder`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/converter/json/Jackson2ObjectMapperBuilder.html) — Spring Docs
+- [Tolerant Reader](https://martinfowler.com/bliki/TolerantReader.html) — Martin Fowler

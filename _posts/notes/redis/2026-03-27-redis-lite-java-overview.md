@@ -169,5 +169,5 @@ Redis의 명령형 인터페이스가 코드로 드러나는 부분이다. Redis
 
 ## 참고
 
-- [redis-lite-java](https://github.com/polynomeer/redis-lite-java)
+- [redis-lite-java](https://github.com/polynomeer/redis-lite-java) — GitHub
 - [Redis: Diagnosing latency issues](https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/) — Single threaded nature of Redis

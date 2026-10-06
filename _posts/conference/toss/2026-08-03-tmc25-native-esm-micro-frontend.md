@@ -101,6 +101,6 @@ HTML에는 두 가지가 실린다. **라우팅 테이블**은 각 URL 경로가
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=6g49EaSKZHg)
-- [TMC 25](https://toss.im/tmc-25)
-- 같은 연사의 앞선 발표: [SLASH 24 SharedWorker 리뷰](/posts/slash24-sharedworker-one-websocket/)
+- [발표 영상](https://www.youtube.com/watch?v=6g49EaSKZHg) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스
+- [SLASH 24 SharedWorker 리뷰](/posts/slash24-sharedworker-one-websocket/) — 같은 연사의 앞선 발표

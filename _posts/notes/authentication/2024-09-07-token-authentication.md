@@ -84,8 +84,8 @@ Auth0의 토큰 모범 사례 문서가 정리한 항목 중 핵심은 다음과
 
 ## 참고
 
-- https://www.okta.com/identity-101/what-is-token-based-authentication/
-- https://auth0.com/docs/secure/tokens/token-best-practices
-- [RFC 6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://www.rfc-editor.org/rfc/rfc6750.html)
-- [RFC 6749, The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html)
-- [RFC 7519, JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519.html)
+- [What Is Token-Based Authentication?](https://www.okta.com/identity-101/what-is-token-based-authentication/) — Okta
+- [Token Best Practices](https://auth0.com/docs/secure/tokens/token-best-practices) — Auth0 Docs
+- [RFC 6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://www.rfc-editor.org/rfc/rfc6750.html) — IETF
+- [RFC 6749, The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html) — IETF
+- [RFC 7519, JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519.html) — IETF

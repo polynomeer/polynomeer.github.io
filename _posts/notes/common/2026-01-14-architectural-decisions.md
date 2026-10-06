@@ -122,8 +122,8 @@ SQL 문장을 다듬는 것으로는 이 셋 중 어느 것도 바뀌지 않는�
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual - Consistent Nonlocking Reads](https://dev.mysql.com/doc/refman/8.0/en/innodb-consistent-read.html) — 평범한 SELECT는 락을 걸지 않는다
-- [MySQL 8.0 Reference Manual - InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html) — X 락과 레코드 락, 락 요청이 대기하는 조건
-- [MySQL 8.0 Reference Manual - Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) — 유일 인덱스 UPDATE의 레코드 락, 커밋·롤백 시 락 해제
-- [MySQL 8.0 Reference Manual - InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_lock_wait_timeout) — `innodb_lock_wait_timeout`
-- [MySQL 8.0 Reference Manual - The data_lock_waits Table](https://dev.mysql.com/doc/refman/8.0/en/performance-schema-data-lock-waits-table.html)
+- [Consistent Nonlocking Reads](https://dev.mysql.com/doc/refman/8.0/en/innodb-consistent-read.html) — MySQL 8.0 Reference Manual: 평범한 SELECT는 락을 걸지 않는다
+- [InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html) — MySQL 8.0 Reference Manual: X 락과 레코드 락, 락 요청이 대기하는 조건
+- [Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) — MySQL 8.0 Reference Manual: 유일 인덱스 UPDATE의 레코드 락, 커밋·롤백 시 락 해제
+- [InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_lock_wait_timeout) — MySQL 8.0 Reference Manual: `innodb_lock_wait_timeout`
+- [The data_lock_waits Table](https://dev.mysql.com/doc/refman/8.0/en/performance-schema-data-lock-waits-table.html) — MySQL 8.0 Reference Manual

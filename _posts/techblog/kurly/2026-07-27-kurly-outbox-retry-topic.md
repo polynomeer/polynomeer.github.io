@@ -64,4 +64,5 @@ parity-pay는 외부 승인 요청을 재시도하지 않는다([ADR-007](https:
 ## 참고
 
 - [컬리의 입고 시스템이 외부 인입 데이터를 안전하게 동기화하는 방법](https://helloworld.kurly.com/blog/2026-outbox-pattern-and-retry-topic/) — 컬리 기술 블로그, 2026-01-12
-- [Non-Blocking Retries](https://docs.spring.io/spring-kafka/reference/retrytopic.html), [How the Pattern Works](https://docs.spring.io/spring-kafka/reference/retrytopic/how-the-pattern-works.html) — Spring for Apache Kafka 공식 문서
+- [Non-Blocking Retries](https://docs.spring.io/spring-kafka/reference/retrytopic.html) — Spring Docs
+- [How the Pattern Works](https://docs.spring.io/spring-kafka/reference/retrytopic/how-the-pattern-works.html) — Spring for Apache Kafka 공식 문서

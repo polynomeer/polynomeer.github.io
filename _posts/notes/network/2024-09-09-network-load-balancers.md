@@ -27,9 +27,9 @@ UDP는 연결 없는 방식이지만, Network Load Balancer는 소스 및 대상
 
 EC2 인스턴스는 반환 경로를 설정하기 위해 30초 이내에 새 요청에 응답해야 한다.
 
-## References
+## 참고
 
-- [Network Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/network-load-balancers.html)
+- [Network Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/network-load-balancers.html) — AWS Docs
 
 ## Recently
 

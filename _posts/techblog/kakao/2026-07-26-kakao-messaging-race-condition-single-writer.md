@@ -96,5 +96,5 @@ Replayer가 먼저 REPORTED로 바꿔 버리면 Report 서버의 전이가 가�
 ## 참고
 
 - [잃어버린 리포트를 찾아서: 카카오 메시징 시스템의 경쟁 조건 문제와 안티 패턴 제거 과정](https://tech.kakao.com/posts/810) — kakao tech, 2026-02-09
-- [Hibernate ORM 6.5 User Guide: Flushing](https://docs.hibernate.org/orm/6.5/userguide/html_single/#flushing)
+- [Hibernate ORM 6.5 User Guide: Flushing](https://docs.hibernate.org/orm/6.5/userguide/html_single/#flushing) — Hibernate Docs
 - [Single Writer Principle](https://mechanical-sympathy.blogspot.com/2011/09/single-writer-principle.html) — Martin Thompson, Mechanical Sympathy, 2011-09-22

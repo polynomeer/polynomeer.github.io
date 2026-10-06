@@ -95,6 +95,6 @@ Materialized View는 소스 테이블에 insert가 일어날 때 트리거되어
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-24/sessions/29)
-- [발표 영상](https://www.youtube.com/watch?v=8P2OL7cwFEU)
+- [세션 페이지](https://toss.im/slash-24/sessions/29) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=8P2OL7cwFEU) — YouTube
 - 같은 연사의 후속 발표: TMC 25 "증권사 실시간 alert 플랫폼 고군분투기" (이 시리즈에서 따로 다룬다)

@@ -148,9 +148,10 @@ Redis 문서에 따르면 능동 만료는 100ms마다(초당 10회, `hz 10`) TT
 
 ## 참고
 
-- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — 원본은 `reports/data/t8-redis.json`, 표는 `reports/01-experiment-report.md`
-- [Redis: Keyspace - SCAN guarantees](https://redis.io/docs/latest/commands/scan/)
-- [Redis: Lazy freeing](https://redis.io/docs/latest/operate/oss_and_stack/management/config/)
-- [Redis: Diagnosing latency issues](https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/) — 단일 스레드와 느린 명령, 능동 만료
-- Redis 7.4.0 소스: [redis.conf](https://github.com/redis/redis/blob/7.4.0/redis.conf), [lazyfree.c](https://github.com/redis/redis/blob/7.4.0/src/lazyfree.c)
+- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — GitHub: 원본은 `reports/data/t8-redis.json`, 표는 `reports/01-experiment-report.md`
+- [SCAN guarantees](https://redis.io/docs/latest/commands/scan/) — Redis: Keyspace
+- [Redis: Lazy freeing](https://redis.io/docs/latest/operate/oss_and_stack/management/config/) — Redis Docs
+- [Redis: Diagnosing latency issues](https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/) — Redis Docs: 단일 스레드와 느린 명령, 능동 만료
+- [redis.conf](https://github.com/redis/redis/blob/7.4.0/redis.conf) — GitHub: Redis 7.4.0 소스
+- [lazyfree.c](https://github.com/redis/redis/blob/7.4.0/src/lazyfree.c) — GitHub: Redis 7.4.0 소스
 - [백분위 통계](/posts/percentile-statistics/), [캐시 스탬피드 실험](/posts/cache-stampede-experiment/)

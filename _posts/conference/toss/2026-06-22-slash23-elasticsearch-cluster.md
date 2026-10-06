@@ -107,6 +107,6 @@ DCI가 끊기면 한쪽 IDC가 투표로 마스터를 뽑고 그쪽 노드만 �
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-23/session-detail/B2-7)
-- [발표 영상](https://www.youtube.com/watch?v=_SJYU4lHa28)
+- [세션 페이지](https://toss.im/slash-23/session-detail/B2-7) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=_SJYU4lHa28) — YouTube
 - 같은 연사의 후속 발표: TMC 25 "급증하는 데이터를 위한 온프레미스 인프라 개선" (이 시리즈에서 따로 다룬다)

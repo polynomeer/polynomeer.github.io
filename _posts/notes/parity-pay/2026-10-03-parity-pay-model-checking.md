@@ -169,8 +169,8 @@ sequenceDiagram
 
 ## 참고
 
-- [ParityPay](https://github.com/polynomeer/parity-pay) — 명세는 `formal/`, 결과는 `reports/11-performance-failure-report.md`의 M-030, 원본은 `reports/data/t7-model-checking/`
+- [ParityPay](https://github.com/polynomeer/parity-pay) — GitHub: 명세는 `formal/`, 결과는 `reports/11-performance-failure-report.md`의 M-030, 원본은 `reports/data/t7-model-checking/`
 - [3편 - UNKNOWN 상태](/posts/parity-pay-unknown-state/) — 이 규칙을 설계한 글
 - [9편 - 느린 기관 앞에서 결제 서버를 지키기](/posts/parity-pay-external-isolation/)
 - [The TLA+ Home Page](https://lamport.azurewebsites.net/tla/tla.html) — Leslie Lamport
-- [TLA+ Tools](https://lamport.azurewebsites.net/tla/tools.html) — TLC 모델 검사기 소개
+- [TLA+ Tools](https://lamport.azurewebsites.net/tla/tools.html) — Leslie Lamport: TLC 모델 검사기 소개

@@ -134,9 +134,10 @@ problem_decision_result:
 
 ## 참고
 
-- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — 원본은 `reports/data/t10-connection.json`, 표는 `reports/01-experiment-report.md`
+- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — GitHub: 원본은 `reports/data/t10-connection.json`, 표는 `reports/01-experiment-report.md`
 - [커넥션과 세션](/posts/connections-and-sessions/) — 이 실험의 개념 짝
 - [큐잉 이론 한 조각](/posts/queueing-theory-for-servers/)
-- [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
-- [PostgreSQL: How Connections Are Established](https://www.postgresql.org/docs/current/connect-estab.html)
-- [PgBouncer: Configuration](https://www.pgbouncer.org/config.html), [Changelog](https://www.pgbouncer.org/changelog.html) — `max_prepared_statements`
+- [HikariCP: About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing) — GitHub
+- [PostgreSQL: How Connections Are Established](https://www.postgresql.org/docs/current/connect-estab.html) — PostgreSQL Docs
+- [PgBouncer: Configuration](https://www.pgbouncer.org/config.html) — PgBouncer
+- [Changelog](https://www.pgbouncer.org/changelog.html) — PgBouncer: `max_prepared_statements`

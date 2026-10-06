@@ -142,4 +142,4 @@ tags: [Database, Modeling, Array, Normalization]
 
 ## 참고
 
-- [PostgreSQL: Arrays](https://www.postgresql.org/docs/current/arrays.html)
+- [PostgreSQL: Arrays](https://www.postgresql.org/docs/current/arrays.html) — PostgreSQL Docs

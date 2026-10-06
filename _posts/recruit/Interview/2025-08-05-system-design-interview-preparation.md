@@ -187,7 +187,7 @@ Apache POI에서 쓰기 쪽 스트리밍은 SXSSF로, 슬라이딩 윈도우 안
 
 ## 참고
 
-- [MySQL 8.4 Reference Manual, Locking Reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html)
-- [Martin Fowler, CQRS](https://martinfowler.com/bliki/CQRS.html)
-- [Spring Framework Reference, Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)
-- [Apache POI, Spreadsheet How-To](https://poi.apache.org/components/spreadsheet/how-to.html)
+- [Locking Reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html) — MySQL 8.4 Reference Manual
+- [CQRS](https://martinfowler.com/bliki/CQRS.html) — Martin Fowler
+- [Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html) — Spring Framework Reference
+- [Spreadsheet How-To](https://poi.apache.org/components/spreadsheet/how-to.html) — Apache POI

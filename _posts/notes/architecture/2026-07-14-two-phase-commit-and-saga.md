@@ -110,6 +110,6 @@ Saga를 조율하는 방식이 둘이다.
 
 ## 참고
 
-- [Microservices.io: Saga pattern](https://microservices.io/patterns/data/saga.html)
-- Garcia-Molina & Salem, [Sagas](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) (1987)
+- [Microservices.io: Saga pattern](https://microservices.io/patterns/data/saga.html) — microservices.io
+- [Sagas](https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) — Garcia-Molina & Salem: (1987)
 - [ParityPay 3편 - UNKNOWN 상태](/posts/parity-pay-unknown-state/)

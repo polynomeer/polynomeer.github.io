@@ -69,9 +69,9 @@ tags: [OS, Scheduling, Context Switch, cgroup, Container, Performance, Kubernete
 
 ## 참고
 
-- [Linux: CFS Scheduler](https://docs.kernel.org/scheduler/sched-design-CFS.html)
-- [Linux: EEVDF Scheduler](https://docs.kernel.org/scheduler/sched-eevdf.html)
-- [Control Group v2: CPU Interface Files](https://docs.kernel.org/admin-guide/cgroup-v2.html#cpu-interface-files)
-- [Kubernetes: CPU limits and throttling](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
-- [OpenJDK jdk-21+35: cgroupSubsystem_linux.cpp](https://github.com/openjdk/jdk/blob/jdk-21%2B35/src/hotspot/os/linux/cgroupSubsystem_linux.cpp)
+- [Linux: CFS Scheduler](https://docs.kernel.org/scheduler/sched-design-CFS.html) — Linux Kernel Docs
+- [Linux: EEVDF Scheduler](https://docs.kernel.org/scheduler/sched-eevdf.html) — Linux Kernel Docs
+- [Control Group v2: CPU Interface Files](https://docs.kernel.org/admin-guide/cgroup-v2.html#cpu-interface-files) — Linux Kernel Docs
+- [Kubernetes: CPU limits and throttling](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) — Kubernetes Docs
+- [OpenJDK jdk-21+35: cgroupSubsystem_linux.cpp](https://github.com/openjdk/jdk/blob/jdk-21%2B35/src/hotspot/os/linux/cgroupSubsystem_linux.cpp) — GitHub
 - [프로세스와 스레드 정리](/posts/process-and-thread/), [멀티스레딩 정리](/posts/multi-threading/)

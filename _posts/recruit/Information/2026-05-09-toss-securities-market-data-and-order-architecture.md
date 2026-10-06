@@ -190,15 +190,16 @@ fun consume(record: ConsumerRecord<String, String>) {
 
 이 질문들은 자료를 비판하기 위한 것이 아니다. 발표 한 편이 답할 수 있는 범위 밖의 일이고, 실제로 그 시스템을 운영하는 사람이 매일 답하고 있을 질문이다. 지원자로서 이 질문에 내 경험으로 답을 붙일 수 있는지가 준비의 척도가 된다.
 
-## 참고 자료
+## 참고
 
-- [토스증권 실시간 시세 적용기 (SLASH 22)](https://toss.im/slash-22/sessions/2-6) · [영상](https://www.youtube.com/watch?v=WKYE-QtzO6g)
-- [애플 한 주가 고객에게 전달되기까지 (SLASH 22)](https://toss.im/slash-22/sessions/2-7) · [영상](https://www.youtube.com/watch?v=UOWy6zdsD-c) · [발표 자료](https://static.toss.im/assets/homepage/slash22/pt-session/SLASH22_%EC%9D%B4%EC%8A%B9%EC%B2%9C%EB%8B%98.pdf)
-- [실시간 시세 데이터 안전하고 빠르게 처리하기 (SLASH 23)](https://toss.im/slash-23/session-detail/B1-7) · [영상](https://www.youtube.com/watch?v=SF7eqlL0mjw)
-- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738)
-- [미국 옵션 실시간 시세 파이프라인 (AWS 기술 블로그)](https://aws.amazon.com/ko/blogs/tech/toss-securities-nasdaq-options-realtime-pipeline/)
-- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2)
-- [Kafka producer 설정: `acks`](https://kafka.apache.org/43/configuration/producer-configs/)
-- [Redis Pub/Sub: Delivery semantics](https://redis.io/docs/latest/develop/pubsub/)
-- [Java 21 `ThreadPoolExecutor.DiscardOldestPolicy`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.DiscardOldestPolicy.html)
-- 참석 후기: [SLASH 22 실시간 시세 적용기](https://velog.io/@rosencrantz96/%ED%86%A0%EC%8A%A4%EC%A6%9D%EA%B6%8C-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EC%8B%9C%EC%84%B8-%EC%A0%81%EC%9A%A9%EA%B8%B0), [SLASH 23 실시간 데이터 처리](https://velog.io/@ddonghyeo_/SLASH23-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC)
+- [토스증권 실시간 시세 적용기 (SLASH 22)](https://toss.im/slash-22/sessions/2-6) — 토스 · [영상](https://www.youtube.com/watch?v=WKYE-QtzO6g)
+- [애플 한 주가 고객에게 전달되기까지 (SLASH 22)](https://toss.im/slash-22/sessions/2-7) — 토스 · [영상](https://www.youtube.com/watch?v=UOWy6zdsD-c) · [발표 자료](https://static.toss.im/assets/homepage/slash22/pt-session/SLASH22_%EC%9D%B4%EC%8A%B9%EC%B2%9C%EB%8B%98.pdf)
+- [실시간 시세 데이터 안전하고 빠르게 처리하기 (SLASH 23)](https://toss.im/slash-23/session-detail/B1-7) — 토스 · [영상](https://www.youtube.com/watch?v=SF7eqlL0mjw)
+- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738) — 토스 기술 블로그
+- [미국 옵션 실시간 시세 파이프라인 (AWS 기술 블로그)](https://aws.amazon.com/ko/blogs/tech/toss-securities-nasdaq-options-realtime-pipeline/) — AWS
+- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2) — 토스
+- [Kafka producer 설정: `acks`](https://kafka.apache.org/43/configuration/producer-configs/) — Apache Kafka
+- [Redis Pub/Sub: Delivery semantics](https://redis.io/docs/latest/develop/pubsub/) — Redis Docs
+- [Java 21 `ThreadPoolExecutor.DiscardOldestPolicy`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.DiscardOldestPolicy.html) — Oracle Docs
+- [SLASH 22 실시간 시세 적용기](https://velog.io/@rosencrantz96/%ED%86%A0%EC%8A%A4%EC%A6%9D%EA%B6%8C-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EC%8B%9C%EC%84%B8-%EC%A0%81%EC%9A%A9%EA%B8%B0) — velog: 참석 후기
+- [SLASH 23 실시간 데이터 처리](https://velog.io/@ddonghyeo_/SLASH23-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC) — velog: 참석 후기

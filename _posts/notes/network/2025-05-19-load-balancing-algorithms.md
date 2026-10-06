@@ -267,9 +267,9 @@ S3 → 마지막 요청 처리 시각: 09:59:30 (30초 유휴)
 
 ---
 
-## 참고자료
+## 참고
 
-- [Cloudflare. *Types of load balancing algorithms*](https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/)
-- [Kim Jaewook (July 15, 2021). *로드 밸런싱(Load balancing) 종류와 알고리즘*](https://dev.classmethod.jp/articles/load-balancing-types-and-algorithm/)
-- [GeeksforGeeks (November 11, 2024). *Load Balancing Algorithms*](https://www.geeksforgeeks.org/load-balancing-algorithms/)
-- [AWS. *What is load balancing?*](https://aws.amazon.com/what-is/load-balancing/)
+- [Cloudflare. *Types of load balancing algorithms](https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/) — Cloudflare
+- [Kim Jaewook (July 15, 2021). *로드 밸런싱(Load balancing) 종류와 알고리즘](https://dev.classmethod.jp/articles/load-balancing-types-and-algorithm/) — dev.classmethod.jp
+- [2024). *Load Balancing Algorithms](https://www.geeksforgeeks.org/load-balancing-algorithms/) — GeeksforGeeks (November 11
+- [AWS. *What is load balancing?](https://aws.amazon.com/what-is/load-balancing/) — AWS

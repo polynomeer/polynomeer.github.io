@@ -71,7 +71,7 @@ NoFalseFailure == ~(payStatus = "FAILED" /\ pgState = "approved")
 ## 참고
 
 - [The TLA+ Home Page](https://lamport.azurewebsites.net/tla/tla.html) — Leslie Lamport
-- [TLA+ Tools](https://lamport.azurewebsites.net/tla/tools.html) — TLC 소개
+- [TLA+ Tools](https://lamport.azurewebsites.net/tla/tools.html) — Leslie Lamport: TLC 소개
 - [Specifying Systems](https://lamport.azurewebsites.net/tla/book.html) — Leslie Lamport, 14장 "The TLC Model Checker"
 - [Learn TLA+: Conceptual Overview](https://learntla.com/intro/conceptual-overview.html) — Hillel Wayne
 - [Learn TLA+: Invariants](https://learntla.com/core/invariants.html) — Hillel Wayne

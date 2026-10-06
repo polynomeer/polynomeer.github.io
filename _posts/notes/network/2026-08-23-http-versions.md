@@ -87,9 +87,12 @@ HTTP/3    HOL 해소               → CPU와 운영 도구를 대가로
 
 ## 참고
 
-- [RFC 9113: HTTP/2](https://datatracker.ietf.org/doc/html/rfc9113)
-- [RFC 9114: HTTP/3](https://datatracker.ietf.org/doc/html/rfc9114), [RFC 9000: QUIC](https://datatracker.ietf.org/doc/html/rfc9000)
-- [RFC 9112: HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112), [RFC 9218: Extensible Prioritization Scheme for HTTP](https://www.rfc-editor.org/rfc/rfc9218), [RFC 8446: TLS 1.3](https://www.rfc-editor.org/rfc/rfc8446)
-- [Chrome for Developers: Remove HTTP/2 Server Push from Chrome](https://developer.chrome.com/blog/removing-push)
-- [Cloudflare: HTTP/3 from A to Z](https://blog.cloudflare.com/http3-the-past-present-and-future/)
+- [RFC 9113: HTTP/2](https://datatracker.ietf.org/doc/html/rfc9113) — IETF
+- [RFC 9114: HTTP/3](https://datatracker.ietf.org/doc/html/rfc9114) — IETF
+- [RFC 9000: QUIC](https://datatracker.ietf.org/doc/html/rfc9000) — IETF
+- [RFC 9112: HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112) — IETF
+- [RFC 9218: Extensible Prioritization Scheme for HTTP](https://www.rfc-editor.org/rfc/rfc9218) — IETF
+- [RFC 8446: TLS 1.3](https://www.rfc-editor.org/rfc/rfc8446) — IETF
+- [Chrome for Developers: Remove HTTP/2 Server Push from Chrome](https://developer.chrome.com/blog/removing-push) — developer.chrome.com
+- [Cloudflare: HTTP/3 from A to Z](https://blog.cloudflare.com/http3-the-past-present-and-future/) — Cloudflare Blog
 - [혼잡 제어와 지연](/posts/congestion-control-and-latency/)

@@ -73,7 +73,8 @@ http_requests_total{method="GET", path="/api/orders/12345"}           → 주문
 
 ## 참고
 
-- [Prometheus: Naming and labels](https://prometheus.io/docs/practices/naming/), [Cardinality](https://prometheus.io/docs/practices/instrumentation/#do-not-overuse-labels)
-- [Prometheus: Exemplars storage](https://prometheus.io/docs/prometheus/latest/feature_flags/)
-- [OpenTelemetry: Signals](https://opentelemetry.io/docs/concepts/signals/)
-- Cindy Sridharan, [Distributed Systems Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/)
+- [Prometheus: Naming and labels](https://prometheus.io/docs/practices/naming/) — Prometheus
+- [Cardinality](https://prometheus.io/docs/practices/instrumentation/#do-not-overuse-labels) — Prometheus
+- [Prometheus: Exemplars storage](https://prometheus.io/docs/prometheus/latest/feature_flags/) — Prometheus
+- [OpenTelemetry: Signals](https://opentelemetry.io/docs/concepts/signals/) — OpenTelemetry
+- [Distributed Systems Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/) — Cindy Sridharan

@@ -90,7 +90,7 @@ RS256/ES256은 비대칭키다. 발급자만 개인키를 갖고 검증자는 �
 
 ## 참고
 
-- [RFC 7519: JSON Web Token](https://datatracker.ietf.org/doc/html/rfc7519)
-- [RFC 8725: JWT Best Current Practices](https://datatracker.ietf.org/doc/html/rfc8725)
-- [OWASP: JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html)
+- [RFC 7519: JSON Web Token](https://datatracker.ietf.org/doc/html/rfc7519) — IETF
+- [RFC 8725: JWT Best Current Practices](https://datatracker.ietf.org/doc/html/rfc8725) — IETF
+- [OWASP: JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html) — OWASP Cheat Sheet Series
 - [인증 정리](/posts/authentication/), [인가 정리](/posts/authorization/)

@@ -76,5 +76,5 @@ MCP의 Shadow Release는 기존 조회와 신규 조회를 같은 요청에 대�
 ## 참고
 
 - [일 3,000만 건의 네이버페이 주문 메시지를 처리하는 Kafka 시스템의 무중단 전환 사례](https://d2.naver.com/helloworld/9581727) — NAVER D2 원문
-- [Pattern: Transaction log tailing](https://microservices.io/patterns/data/transaction-log-tailing.html) — Chris Richardson, microservices.io
-- [Apache Kafka 3.9 docs, Operations: Geo-Replication](https://github.com/apache/kafka/blob/3.9.0/docs/ops.html) — MirrorMaker의 컨슈머 그룹·오프셋 복제
+- [Pattern: Transaction log tailing](https://microservices.io/patterns/data/transaction-log-tailing.html) — microservices.io: Chris Richardson, microservices.io
+- [Apache Kafka 3.9 docs, Operations: Geo-Replication](https://github.com/apache/kafka/blob/3.9.0/docs/ops.html) — GitHub: MirrorMaker의 컨슈머 그룹·오프셋 복제

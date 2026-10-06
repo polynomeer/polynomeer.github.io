@@ -107,9 +107,10 @@ MTS 트래픽은 장 시작과 동시에 3분 안에 그날 최대치가 나오�
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-22/sessions/2-6)
-- [발표 영상](https://www.youtube.com/watch?v=WKYE-QtzO6g)
-- [Apache Kafka 4.3 Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/)
-- [RFC 6455 7.4.1 Defined Status Codes](https://www.rfc-editor.org/rfc/rfc6455#section-7.4.1)
-- 후속 발표: [SLASH 23 실시간 시세 데이터 처리](/posts/slash23-realtime-quote-platform/), [SLASH 24 SSE 이벤트 푸시](/posts/slash24-sse-event-push/)
-- 다른 자료와 함께 읽기: [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [세션 페이지](https://toss.im/slash-22/sessions/2-6) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=WKYE-QtzO6g) — YouTube
+- [Apache Kafka 4.3 Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/) — Apache Kafka
+- [RFC 6455 7.4.1 Defined Status Codes](https://www.rfc-editor.org/rfc/rfc6455#section-7.4.1) — IETF
+- [SLASH 23 실시간 시세 데이터 처리](/posts/slash23-realtime-quote-platform/) — 후속 발표
+- [SLASH 24 SSE 이벤트 푸시](/posts/slash24-sse-event-push/) — 후속 발표
+- [토스증권 시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 다른 자료와 함께 읽기

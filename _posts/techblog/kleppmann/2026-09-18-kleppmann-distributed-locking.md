@@ -163,7 +163,7 @@ c-2에는 대가가 있었다. lease가 항상 작업보다 짧으면 1,159건 �
 ## 참고
 
 - [How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) — Martin Kleppmann, 2016-02-08
-- [Is Redlock safe?](http://antirez.com/news/101) — Salvatore Sanfilippo의 반론, 2016
+- [Is Redlock safe?](http://antirez.com/news/101) — antirez.com: Salvatore Sanfilippo의 반론, 2016
 - [Distributed Locks with Redis](https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/) — Redis 문서의 Redlock 설명
-- [ZooKeeper Javadoc: `ZooKeeper.setData`](https://zookeeper.apache.org/doc/current/apidocs/zookeeper-server/org/apache/zookeeper/ZooKeeper.html) — 버전 조건부 쓰기
+- [ZooKeeper Javadoc: `ZooKeeper.setData`](https://zookeeper.apache.org/doc/current/apidocs/zookeeper-server/org/apache/zookeeper/ZooKeeper.html) — Apache ZooKeeper: 버전 조건부 쓰기
 - [ParityPay 10편 - 락 lease가 트랜잭션보다 먼저 끝나면 정말 정합성이 깨지는가](/posts/parity-pay-lock-lease/)

@@ -92,7 +92,7 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=8xhVvn7Q8-I)
-- [SLASH 24](https://toss.im/slash-24)
-- [Brendan Gregg - CPU Utilization is Wrong](https://www.brendangregg.com/blog/2017-05-09/cpu-utilization-is-wrong.html)
-- [pmu-tools (toplev)](https://github.com/andikleen/pmu-tools)
+- [발표 영상](https://www.youtube.com/watch?v=8xhVvn7Q8-I) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [CPU Utilization is Wrong](https://www.brendangregg.com/blog/2017-05-09/cpu-utilization-is-wrong.html) — Brendan Gregg
+- [pmu-tools (toplev)](https://github.com/andikleen/pmu-tools) — GitHub

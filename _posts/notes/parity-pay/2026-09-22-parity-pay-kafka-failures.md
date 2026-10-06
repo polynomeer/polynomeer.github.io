@@ -163,7 +163,7 @@ DLT(dead-letter topic)도 재시도 토픽도 없다. 그 상태에서 파싱할
 
 ## 참고
 
-- [Apache Kafka - KafkaConsumer Javadoc (3.7)](https://kafka.apache.org/37/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html)
-- [Apache Kafka - Producer Configs (3.7)](https://kafka.apache.org/37/generated/producer_config.html)
-- [Redpanda - Configure Producers](https://docs.redpanda.com/current/develop/produce-data/configure-producers/)
-- [Spring for Apache Kafka - Handling Exceptions](https://docs.spring.io/spring-kafka/reference/kafka/annotation-error-handling.html)
+- [KafkaConsumer Javadoc (3.7)](https://kafka.apache.org/37/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html) — Apache Kafka
+- [Producer Configs (3.7)](https://kafka.apache.org/37/generated/producer_config.html) — Apache Kafka
+- [Configure Producers](https://docs.redpanda.com/current/develop/produce-data/configure-producers/) — Redpanda
+- [Handling Exceptions](https://docs.spring.io/spring-kafka/reference/kafka/annotation-error-handling.html) — Spring for Apache Kafka

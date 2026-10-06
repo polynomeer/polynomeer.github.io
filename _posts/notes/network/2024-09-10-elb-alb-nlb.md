@@ -110,12 +110,12 @@ AWS는 로드 밸런싱과 관련하여 다양한 옵션을 제공한다. 또한
 
 그들의 가격은 매우 비슷하므로 가격보다는 용도나 환경에 맞게 선택하면 된다. 일반적으로, 7계층(애플리케이션 계층) 로드 밸런싱에는 ALB를 사용하고 다른 모든 것에는 NLB를 사용하는것이 보편적이다.
 
-## References
+## 참고
 
-- [ELB vs. ALB vs. NLB: Choosing the Best AWS Load Balancer for Your Needs](https://iamondemand.com/blog/elb-vs-alb-vs-nlb-choosing-the-best-aws-load-balancer-for-your-needs/)
-- [Differences: ALB vs. NLB vs. CLB](https://nidhiashtikar.medium.com/differences-alb-vs-nlb-vs-clb-29f25fc1033b)
-- [What’s the difference between application, network, and gateway load balancing?](https://aws.amazon.com/compare/the-difference-between-the-difference-between-application-network-and-gateway-load-balancing/)
-- [CLB vs. ALB vs. NLB—Which AWS load balancer is right for you?](https://www.site24x7.com/learn/clb-vs-alb-vs-nlb.html)
+- [ELB vs. ALB vs. NLB: Choosing the Best AWS Load Balancer for Your Needs](https://iamondemand.com/blog/elb-vs-alb-vs-nlb-choosing-the-best-aws-load-balancer-for-your-needs/) — iamondemand.com
+- [Differences: ALB vs. NLB vs. CLB](https://nidhiashtikar.medium.com/differences-alb-vs-nlb-vs-clb-29f25fc1033b) — Medium
+- [What’s the difference between application, network, and gateway load balancing?](https://aws.amazon.com/compare/the-difference-between-the-difference-between-application-network-and-gateway-load-balancing/) — AWS
+- [CLB vs. ALB vs. NLB—Which AWS load balancer is right for you?](https://www.site24x7.com/learn/clb-vs-alb-vs-nlb.html) — site24x7.com
 
 ---
 

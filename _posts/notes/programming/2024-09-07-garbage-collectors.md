@@ -110,18 +110,18 @@ JDK 11에 실험적 수집기로 도입된 Epsilon 가비지 수집기는 메모
 
 일반적으로 직렬 수집기는 소형 장치에 사용되거나 GC가 다른 응용 프로그램이나 CPU에 영향을 주지 않도록 하려는 경우 병렬 수집기는 배치 응용 프로그램에 가장 적합하며 CMS 수집기는 일반 응용 프로그램에 사용되며 G1 수집기는 예측 가능한 대기 시간과 Shenandoah 수집기는 G1보다 개선된 기능으로 몇 가지 Java 버전(Java 12부터)에서 기본 수집기로 사용할 수 있습니다. Epsilon 및 ZGC 수집기는 JDK 11에서 도입된 새로운 실험적 수집기이며 여전히 릴리스마다 많은 변경을 겪고 있습니다.
 
-## References
+## 참고
 
 ### JVM Architecture
 
-- https://betterprogramming.pub/understanding-the-jvm-memory-model-heap-vs-non-heap-c14aa6fa703e
-- https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html
-- https://www.geeksforgeeks.org/jvm-works-jvm-architecture/
-- https://dzone.com/articles/jvm-architecture-explained
-- https://inpa.tistory.com/entry/JAVA-%E2%98%95-JVM-%EB%82%B4%EB%B6%80-%EA%B5%AC%EC%A1%B0-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EC%98%81%EC%97%AD-%EC%8B%AC%ED%99%94%ED%8E%B8
-- https://dzone.com/articles/java-memory-architecture-model-garbage-collection
+- [betterprogramming.pub/understanding-the-jvm-memory-model-heap-vs-non-heap-c14aa6fa703e](https://betterprogramming.pub/understanding-the-jvm-memory-model-heap-vs-non-heap-c14aa6fa703e) — betterprogramming.pub
+- [Chapter 2. The Structure of the Java Virtual Machine](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html) — Oracle Docs
+- [How JVM Works](https://www.geeksforgeeks.org/jvm-works-jvm-architecture/) — JVM Architecture - GeeksforGeeks
+- [The JVM Architecture Explained](https://dzone.com/articles/jvm-architecture-explained) — DZone
+- [☕ JVM 내부 구조 & 메모리 영역 💯 총정리](https://inpa.tistory.com/entry/JAVA-%E2%98%95-JVM-%EB%82%B4%EB%B6%80-%EA%B5%AC%EC%A1%B0-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EC%98%81%EC%97%AD-%EC%8B%AC%ED%99%94%ED%8E%B8) — Tistory
+- [Java Memory Architecture Cheat Sheet](https://dzone.com/articles/java-memory-architecture-model-garbage-collection) — DZone
 
 ### Garbage Collection
 
-- https://mangkyu.tistory.com/118
-- https://www.baeldung.com/jvm-garbage-collectors
+- [(Java) Garbage Collection(가비지 컬렉션)의 개념 및 동작 원리 (1/2)](https://mangkyu.tistory.com/118) — Tistory
+- [JVM Garbage Collectors](https://www.baeldung.com/jvm-garbage-collectors) — Baeldung

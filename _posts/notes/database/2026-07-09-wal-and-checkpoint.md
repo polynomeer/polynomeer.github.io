@@ -122,10 +122,10 @@ PostgreSQL의 `synchronous_commit=off`가 특이하다. 유실은 가능하지�
 
 ## 참고
 
-- [PostgreSQL: Write-Ahead Logging (WAL)](https://www.postgresql.org/docs/current/wal-intro.html)
-- [PostgreSQL: WAL Configuration](https://www.postgresql.org/docs/current/wal-configuration.html)
-- [PostgreSQL: Asynchronous Commit](https://www.postgresql.org/docs/current/wal-async-commit.html)
-- [MySQL: InnoDB Redo Log](https://dev.mysql.com/doc/refman/8.4/en/innodb-redo-log.html)
-- [MySQL: Doublewrite Buffer](https://dev.mysql.com/doc/refman/8.4/en/innodb-doublewrite-buffer.html)
-- [MySQL: innodb_flush_log_at_trx_commit](https://dev.mysql.com/doc/refman/8.4/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit)
+- [PostgreSQL: Write-Ahead Logging (WAL)](https://www.postgresql.org/docs/current/wal-intro.html) — PostgreSQL Docs
+- [PostgreSQL: WAL Configuration](https://www.postgresql.org/docs/current/wal-configuration.html) — PostgreSQL Docs
+- [PostgreSQL: Asynchronous Commit](https://www.postgresql.org/docs/current/wal-async-commit.html) — PostgreSQL Documentation
+- [MySQL: InnoDB Redo Log](https://dev.mysql.com/doc/refman/8.4/en/innodb-redo-log.html) — MySQL Docs
+- [MySQL: Doublewrite Buffer](https://dev.mysql.com/doc/refman/8.4/en/innodb-doublewrite-buffer.html) — MySQL Docs
+- [MySQL: innodb_flush_log_at_trx_commit](https://dev.mysql.com/doc/refman/8.4/en/innodb-parameters.html#sysvar_innodb_flush_log_at_trx_commit) — MySQL Docs
 - [Redo·Undo 로그 정리](/posts/redo-undo-log/), [ACID 정리](/posts/acid/)

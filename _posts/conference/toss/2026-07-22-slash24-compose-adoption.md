@@ -91,5 +91,5 @@ View로 된 TDS 컴포넌트를 Compose에서 쓰게 만드는 방법은 둘이�
 
 ## 참고
 
-- [세션 페이지](https://toss.im/slash-24/sessions/19)
-- [발표 영상](https://www.youtube.com/watch?v=AN89tT3IppI)
+- [세션 페이지](https://toss.im/slash-24/sessions/19) — 토스
+- [발표 영상](https://www.youtube.com/watch?v=AN89tT3IppI) — YouTube

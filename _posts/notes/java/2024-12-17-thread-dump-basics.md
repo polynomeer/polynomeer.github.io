@@ -89,7 +89,7 @@ jcmd 12345 Thread.print -l    # java.util.concurrent 락 정보까지
 ## 참고
 
 - [무너지는 Spring 서버 1편](/posts/tomcat-thread-exhaustion/) — 이 글의 dump가 나온 실험
-- [Java SE 21 API - Thread.State](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.State.html) — 여섯 상태와 각 상태로 들어가는 메서드, OS 상태를 반영하지 않는다는 설명
-- [JDK 21 Tool Specifications - jcmd](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html) — `Thread.print`와 `-l`, `-e` 옵션
-- [JDK 21 Tool Specifications - jstack](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstack.html) — 지원 대상이 아니라는 안내
-- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — 원본 dump는 `reports/data/s1-*/threads-*.txt`
+- [Java SE 21 API - Thread.State](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.State.html) — Oracle Docs: 여섯 상태와 각 상태로 들어가는 메서드, OS 상태를 반영하지 않는다는 설명
+- [JDK 21 Tool Specifications - jcmd](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html) — Oracle Docs: `Thread.print`와 `-l`, `-e` 옵션
+- [JDK 21 Tool Specifications - jstack](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstack.html) — Oracle Docs: 지원 대상이 아니라는 안내
+- [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab) — GitHub: 원본 dump는 `reports/data/s1-*/threads-*.txt`

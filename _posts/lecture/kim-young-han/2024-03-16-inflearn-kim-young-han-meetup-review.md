@@ -64,4 +64,4 @@ flowchart TD
 
 ## 참고
 
-- [김영한님 온라인 밋업 Live](https://www.inflearn.com/course/30만-김영한-라이브세션/dashboard?cid=332034): 전체 세션 목록과 「좋은 동료 개발자의 특징」의 명시한 구간. 후반의 학습 기록 제안은 자체 해석이다.
+- [김영한님 온라인 밋업 Live](https://www.inflearn.com/course/30만-김영한-라이브세션/dashboard?cid=332034) — 인프런: 전체 세션 목록과 「좋은 동료 개발자의 특징」의 명시한 구간. 후반의 학습 기록 제안은 자체 해석이다.

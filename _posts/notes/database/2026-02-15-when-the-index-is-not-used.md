@@ -128,10 +128,10 @@ P(country='kr') = 2/8      (kr에 도시가 둘)
 
 ## 참고
 
-- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — 원본은 `reports/data/t2-index.json`, 표는 `reports/01-experiment-report.md`
+- [data-ops-lab](https://github.com/polynomeer/data-ops-lab) — GitHub: 원본은 `reports/data/t2-index.json`, 표는 `reports/01-experiment-report.md`
 - [실행 계획을 읽는 법](/posts/reading-execution-plans/) — 이 실험의 개념 짝
 - [B+Tree 인덱스의 내부](/posts/btree-index-internals/)
-- [PostgreSQL: Extended Statistics](https://www.postgresql.org/docs/current/planner-stats.html#PLANNER-STATS-EXTENDED)
-- [PostgreSQL: Indexes on Expressions](https://www.postgresql.org/docs/current/indexes-expressional.html)
-- [PostgreSQL: Using EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) — `loops`와 실행당 평균
-- [PostgreSQL 소스: selfuncs.h (REL_17_0)](https://github.com/postgres/postgres/blob/REL_17_0/src/include/utils/selfuncs.h) — `DEFAULT_EQ_SEL`
+- [PostgreSQL: Extended Statistics](https://www.postgresql.org/docs/current/planner-stats.html#PLANNER-STATS-EXTENDED) — PostgreSQL Docs
+- [PostgreSQL: Indexes on Expressions](https://www.postgresql.org/docs/current/indexes-expressional.html) — PostgreSQL Docs
+- [PostgreSQL: Using EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) — PostgreSQL Documentation: `loops`와 실행당 평균
+- [PostgreSQL 소스: selfuncs.h (REL_17_0)](https://github.com/postgres/postgres/blob/REL_17_0/src/include/utils/selfuncs.h) — GitHub: `DEFAULT_EQ_SEL`

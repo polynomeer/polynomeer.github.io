@@ -95,8 +95,8 @@ Multi-threaded Step은 버전에 따라 주의할 대상이 다르다. Spring Ba
 
 ## 참고
 
-- [Spring Batch: Domain Language](https://docs.spring.io/spring-batch/reference/domain.html)
-- [Spring Batch: Scaling and Parallel Processing](https://docs.spring.io/spring-batch/reference/scalability.html)
-- [Spring Batch 5.2: Scaling and Parallel Processing](https://docs.spring.io/spring-batch/reference/5.2/scalability.html)
-- [Spring Batch: Configuring Skip Logic](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/configuring-skip.html)
+- [Spring Batch: Domain Language](https://docs.spring.io/spring-batch/reference/domain.html) — Spring Docs
+- [Spring Batch: Scaling and Parallel Processing](https://docs.spring.io/spring-batch/reference/scalability.html) — Spring Docs
+- [Spring Batch 5.2: Scaling and Parallel Processing](https://docs.spring.io/spring-batch/reference/5.2/scalability.html) — Spring Docs
+- [Spring Batch: Configuring Skip Logic](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/configuring-skip.html) — Spring Docs
 - [Heap Dump가 가리킨 곳](/posts/batch-heap-dump-to-chunk/)

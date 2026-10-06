@@ -85,6 +85,6 @@ DB 비밀번호, API 키, 토큰 서명 키, 암호화 키, 외부 기관 인증
 
 ## 참고
 
-- [OWASP: Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
-- [Kubernetes: Secrets - Security considerations](https://kubernetes.io/docs/concepts/configuration/secret/)
-- [12 Factor App: Config](https://12factor.net/config)
+- [OWASP: Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html) — OWASP Cheat Sheet Series
+- [Security considerations](https://kubernetes.io/docs/concepts/configuration/secret/) — Kubernetes: Secrets
+- [12 Factor App: Config](https://12factor.net/config) — The Twelve-Factor App

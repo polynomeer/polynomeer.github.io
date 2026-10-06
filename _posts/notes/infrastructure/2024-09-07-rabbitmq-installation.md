@@ -59,8 +59,8 @@ export PATH=$PATH:/usr/local/sbin
 
 Admin 탭에서 새로운 계정을 생성할 수 있다.
 
-## References
-- https://www.rabbitmq.com/install-homebrew.html
-- https://www.rabbitmq.com/tutorials/tutorial-one-java.html
-- https://www.rabbitmq.com/docs/management
-- https://www.rabbitmq.com/docs/access-control
+## 참고
+- [The Homebrew RabbitMQ Formula](https://www.rabbitmq.com/install-homebrew.html) — RabbitMQ
+- [RabbitMQ tutorial - "Hello World!" | RabbitMQ](https://www.rabbitmq.com/tutorials/tutorial-one-java.html) — RabbitMQ
+- [Management Plugin](https://www.rabbitmq.com/docs/management) — RabbitMQ
+- [Authentication, Authorisation, Access Control](https://www.rabbitmq.com/docs/access-control) — RabbitMQ

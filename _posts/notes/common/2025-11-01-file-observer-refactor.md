@@ -169,7 +169,7 @@ flowchart TD
 
 ## 참고
 
-- [Using @Autowired — Spring Framework Reference](https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html)
-- [Using @PostConstruct and @PreDestroy — Spring Framework Reference](https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/postconstruct-and-predestroy-annotations.html)
-- [Externalized Configuration: Type-safe Configuration Properties — Spring Boot Reference](https://docs.spring.io/spring-boot/reference/features/external-config.html)
-- [EnumMap — Java SE 17 API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumMap.html)
+- [Using @Autowired — Spring Framework Reference](https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html) — Spring Docs
+- [Using @PostConstruct and @PreDestroy — Spring Framework Reference](https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/postconstruct-and-predestroy-annotations.html) — Spring Docs
+- [Externalized Configuration: Type-safe Configuration Properties — Spring Boot Reference](https://docs.spring.io/spring-boot/reference/features/external-config.html) — Spring Docs
+- [EnumMap — Java SE 17 API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumMap.html) — Oracle Docs

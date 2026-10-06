@@ -273,14 +273,14 @@ flowchart TD
 - [Get started with log management](https://docs.newrelic.com/docs/logs/get-started/get-started-log-management/) — New Relic
 - [OpenTelemetry OTLP endpoint](https://docs.newrelic.com/docs/opentelemetry/best-practices/opentelemetry-otlp/) — New Relic
 - [Manage data retention](https://docs.newrelic.com/docs/data-apis/manage-data/manage-data-retention/) — New Relic
-- [New Relic Pricing](https://newrelic.com/pricing) — New Relic
+- [New Relic Pricing](https://newrelic.com/pricing) — newrelic.com: New Relic
 - [OneAgent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent) — Dynatrace
 - [OpenTelemetry and Dynatrace](https://docs.dynatrace.com/docs/ingest-from/opentelemetry) — Dynatrace
 - [Real User Monitoring Classic concepts](https://docs.dynatrace.com/docs/observe/digital-experience/rum-concepts) — Dynatrace
 - [Dynatrace Managed](https://docs.dynatrace.com/managed) — Dynatrace
 - [Dynatrace Pricing](https://www.dynatrace.com/pricing/) — Dynatrace
 - [Introduction to Splunk APM](https://docs.splunk.com/observability/en/apm/intro-to-apm.html) — Splunk
-- [Splunk Distribution of OpenTelemetry Java](https://github.com/signalfx/splunk-otel-java) — Splunk
+- [Splunk Distribution of OpenTelemetry Java](https://github.com/signalfx/splunk-otel-java) — GitHub: Splunk
 - [Splunk Observability Cloud Pricing](https://www.splunk.com/en_us/products/pricing/observability.html) — Splunk
 - [Splunk AppDynamics](https://www.splunk.com/en_us/products/splunk-appdynamics.html) — Splunk
 - [AppDynamics On-Premises](https://help.splunk.com/en/appdynamics-on-premises) — Splunk Docs
@@ -293,26 +293,26 @@ flowchart TD
 - [WhaTap Java 모니터링 소개](https://docs.whatap.io/java/introduction) — WhaTap
 - [WhaTap OpenTelemetry](https://docs.whatap.io/en/opentelemetry/introduction) — WhaTap
 - [WhaTap 요금](https://www.whatap.io/pricing) — WhaTap
-- [제니퍼소프트](https://jennifersoft.com/ko/) — 제니퍼소프트
-- [제니퍼 주요 기능](https://jennifersoft.com/ko/product/apm/features?feat=transaction) — 제니퍼소프트
-- [제니퍼 지원 플랫폼](https://jennifersoft.com/ko/product/apm/platform?env=java) — 제니퍼소프트
-- [제니퍼 라이센스키 신청](https://jennifersoft.com/ko/jennifer-trial/) — 제니퍼소프트
-- [Scouter README (한국어)](https://github.com/scouter-project/scouter/blob/master/README_kr.md) — scouter-project
-- [Scouter Releases](https://github.com/scouter-project/scouter/releases/) — scouter-project
-- [Pinpoint README](https://github.com/pinpoint-apm/pinpoint) — pinpoint-apm
-- [Pinpoint v3.1.0 release](https://github.com/pinpoint-apm/pinpoint/releases/tag/v3.1.0) — pinpoint-apm
-- [Pinpoint v3.1.1 release](https://github.com/pinpoint-apm/pinpoint/releases/tag/v3.1.1) — pinpoint-apm
-- [pinpoint-root.config (v3.1.1)](https://github.com/pinpoint-apm/pinpoint/blob/v3.1.1/agent-module/agent/src/main/resources/pinpoint-root.config) — pinpoint-apm
-- [release pinpoint.config (v3.1.1)](https://github.com/pinpoint-apm/pinpoint/blob/v3.1.1/agent-module/agent/src/main/resources/profiles/release/pinpoint.config) — pinpoint-apm
+- [제니퍼소프트](https://jennifersoft.com/ko/) — jennifersoft.com: 제니퍼소프트
+- [제니퍼 주요 기능](https://jennifersoft.com/ko/product/apm/features?feat=transaction) — jennifersoft.com: 제니퍼소프트
+- [제니퍼 지원 플랫폼](https://jennifersoft.com/ko/product/apm/platform?env=java) — jennifersoft.com: 제니퍼소프트
+- [제니퍼 라이센스키 신청](https://jennifersoft.com/ko/jennifer-trial/) — jennifersoft.com: 제니퍼소프트
+- [Scouter README (한국어)](https://github.com/scouter-project/scouter/blob/master/README_kr.md) — GitHub: scouter-project
+- [Scouter Releases](https://github.com/scouter-project/scouter/releases/) — GitHub: scouter-project
+- [Pinpoint README](https://github.com/pinpoint-apm/pinpoint) — GitHub: pinpoint-apm
+- [Pinpoint v3.1.0 release](https://github.com/pinpoint-apm/pinpoint/releases/tag/v3.1.0) — GitHub: pinpoint-apm
+- [Pinpoint v3.1.1 release](https://github.com/pinpoint-apm/pinpoint/releases/tag/v3.1.1) — GitHub: pinpoint-apm
+- [pinpoint-root.config (v3.1.1)](https://github.com/pinpoint-apm/pinpoint/blob/v3.1.1/agent-module/agent/src/main/resources/pinpoint-root.config) — GitHub: pinpoint-apm
+- [release pinpoint.config (v3.1.1)](https://github.com/pinpoint-apm/pinpoint/blob/v3.1.1/agent-module/agent/src/main/resources/profiles/release/pinpoint.config) — GitHub: pinpoint-apm
 - [SkyWalking Overview](https://skywalking.apache.org/docs/main/latest/readme/) — Apache SkyWalking
 - [Backend Storage](https://skywalking.apache.org/docs/main/latest/en/setup/backend/backend-storage/) — Apache SkyWalking
 - [agent.config (skywalking-java v9.7.0)](https://github.com/apache/skywalking-java/blob/v9.7.0/apm-sniffer/config/agent.config) — Apache SkyWalking
 - [application.yml (skywalking v11.0.0)](https://github.com/apache/skywalking/blob/v11.0.0/oap-server/server-starter/src/main/resources/application.yml) — Apache SkyWalking
 - [Jaeger Introduction](https://www.jaegertracing.io/docs/latest/) — Jaeger
 - [Jaeger Architecture](https://www.jaegertracing.io/docs/latest/architecture/) — Jaeger
-- [Zipkin](https://zipkin.io/) — OpenZipkin
-- [Zipkin README](https://github.com/openzipkin/zipkin) — OpenZipkin
-- [Zipkin Releases](https://github.com/openzipkin/zipkin/releases) — OpenZipkin
+- [Zipkin](https://zipkin.io/) — zipkin.io: OpenZipkin
+- [Zipkin README](https://github.com/openzipkin/zipkin) — GitHub: OpenZipkin
+- [Zipkin Releases](https://github.com/openzipkin/zipkin/releases) — GitHub: OpenZipkin
 - [Tempo README](https://github.com/grafana/tempo) — Grafana Labs
 - [Tempo documentation](https://grafana.com/docs/tempo/latest/) — Grafana Labs
 - [Tempo configuration](https://grafana.com/docs/tempo/latest/configuration/) — Grafana Labs

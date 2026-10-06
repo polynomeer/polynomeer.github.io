@@ -99,8 +99,8 @@ Forwarded: for=192.0.2.43, for=198.51.100.17;by=203.0.113.60;proto=http;host=exa
 
 ## 참고
 
-- [RFC 9110, HTTP Semantics, Section 3.7 Intermediaries](https://www.rfc-editor.org/rfc/rfc9110.html#section-3.7)
-- [RFC 7239, Forwarded HTTP Extension](https://www.rfc-editor.org/rfc/rfc7239.html)
-- [Nginx, Module ngx_http_proxy_module](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)
-- [Nginx, Module ngx_http_upstream_module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)
-- [Spring Boot How-to, Embedded Web Servers: Running Behind a Front-end Proxy Server](https://docs.spring.io/spring-boot/how-to/webserver.html)
+- [RFC 9110, HTTP Semantics, Section 3.7 Intermediaries](https://www.rfc-editor.org/rfc/rfc9110.html#section-3.7) — IETF
+- [RFC 7239, Forwarded HTTP Extension](https://www.rfc-editor.org/rfc/rfc7239.html) — IETF
+- [Module ngx_http_proxy_module](https://nginx.org/en/docs/http/ngx_http_proxy_module.html) — Nginx
+- [Module ngx_http_upstream_module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html) — Nginx
+- [Embedded Web Servers: Running Behind a Front-end Proxy Server](https://docs.spring.io/spring-boot/how-to/webserver.html) — Spring Boot How-to

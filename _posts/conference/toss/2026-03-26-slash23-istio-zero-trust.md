@@ -101,7 +101,7 @@ mTLS와 인가 정책이 없던 환경에서 어떻게 안정적으로 옮겼나
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=4sJd6PIkP_s)
-- [SLASH 23](https://toss.im/slash-23)
-- [Istio Sidecar 리소스](https://istio.io/latest/docs/reference/config/networking/sidecar/)
-- [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt)
+- [발표 영상](https://www.youtube.com/watch?v=4sJd6PIkP_s) — YouTube
+- [SLASH 23](https://toss.im/slash-23) — 토스
+- [Istio Sidecar 리소스](https://istio.io/latest/docs/reference/config/networking/sidecar/) — Istio
+- [PROXY protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) — HAProxy

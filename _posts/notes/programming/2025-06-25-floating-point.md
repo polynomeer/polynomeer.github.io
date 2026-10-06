@@ -151,9 +151,9 @@ mantissa = 1.570796...
 
 ---
 
-## 참고자료
+## 참고
 
-- [IEEE 754 - Wikipedia](https://en.wikipedia.org/wiki/IEEE_754)
-- [Floating-point arithmetic - Wikipedia](https://en.wikipedia.org/wiki/Floating-point_arithmetic)
-- [Fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic)
-- [IEEE Standard 754 Floating Point Numbers](https://www.geeksforgeeks.org/ieee-standard-754-floating-point-numbers/)
+- [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) — Wikipedia
+- [Floating-point arithmetic](https://en.wikipedia.org/wiki/Floating-point_arithmetic) — Wikipedia
+- [Fixed-point arithmetic](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) — Wikipedia
+- [IEEE Standard 754 Floating Point Numbers](https://www.geeksforgeeks.org/ieee-standard-754-floating-point-numbers/) — GeeksforGeeks

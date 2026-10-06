@@ -76,7 +76,7 @@ const fastSquare = memoize(slowSquare); // slowSquare가 순수하기 때문에 
 - [What Is a Pure Function in JavaScript?](https://www.freecodecamp.org/news/what-is-a-pure-function-in-javascript-acb887375dfe/) — freeCodeCamp
 - [Functional Programming: Pure Functions](https://www.sitepoint.com/functional-programming-pure-functions/) — SitePoint
 - [Basics of JavaScript Pure Functions](https://blog.bitsrc.io/basics-of-javascript-pure-functions-3e6f3437066) — blog.bitsrc.io
-- [What are Pure Functions?](https://programmingwithmosh.com/javascript/what-are-pure-functions/) — Programming with Mosh
+- [What are Pure Functions?](https://programmingwithmosh.com/javascript/what-are-pure-functions/) — programmingwithmosh.com: Programming with Mosh
 - [Is this a pure function?](https://stackoverflow.com/questions/58744557/is-this-a-pure-function) — Stack Overflow
-- [Pure Functions](https://elmprogramming.com/pure-functions.html) — Beginning Elm
+- [Pure Functions](https://elmprogramming.com/pure-functions.html) — elmprogramming.com: Beginning Elm
 - [Higher-order Function](/posts/higher-order-function/)

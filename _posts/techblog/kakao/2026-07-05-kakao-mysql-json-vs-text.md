@@ -81,4 +81,4 @@ JSON 타입의 비용은 저장할 때 파싱해 오프셋 테이블을 만들�
 ## 참고
 
 - [MySQL Json 데이터 타입의 저장 구조와 성능 비교](https://tech.kakao.com/posts/774) — kakao tech, 2025-09-18
-- [MySQL 8.0 Reference Manual: The JSON Data Type](https://dev.mysql.com/doc/refman/8.0/en/json.html) — 바이너리 저장 형식, 부분 업데이트
+- [MySQL 8.0 Reference Manual: The JSON Data Type](https://dev.mysql.com/doc/refman/8.0/en/json.html) — MySQL Docs: 바이너리 저장 형식, 부분 업데이트

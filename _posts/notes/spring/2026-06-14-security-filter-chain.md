@@ -99,11 +99,11 @@ POST만 403. CSRF다. 세션 쿠키 기반이면 토큰을 보내야 하고, `Au
 
 ## 참고
 
-- [Spring Security: Architecture](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
-- [Spring Security: Authorize HttpServletRequests](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html)
-- [Spring Security: Method Security](https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html)
-- [Spring Security: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
-- [Spring Security: CSRF](https://docs.spring.io/spring-security/reference/features/exploits/csrf.html)
-- [Spring Security: Servlet Authentication Architecture](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html)
-- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
+- [Spring Security: Architecture](https://docs.spring.io/spring-security/reference/servlet/architecture.html) — Spring Docs
+- [Spring Security: Authorize HttpServletRequests](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html) — Spring Docs
+- [Spring Security: Method Security](https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html) — Spring Docs
+- [Spring Security: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html) — Spring Docs
+- [Spring Security: CSRF](https://docs.spring.io/spring-security/reference/features/exploits/csrf.html) — Spring Docs
+- [Spring Security: Servlet Authentication Architecture](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html) — Spring Docs
+- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html) — IETF
 - [인증 정리](/posts/authentication/), [인가 정리](/posts/authorization/)

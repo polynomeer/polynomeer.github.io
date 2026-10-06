@@ -107,7 +107,7 @@ Java 21의 가상 스레드는 리액티브가 풀던 문제의 상당 부분을
 
 ## 참고
 
-- [Reactive Streams 명세](https://www.reactive-streams.org/)
-- [Reactive Streams JVM 1.0.4 README](https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.4/README.md)
-- [Spring WebFlux 문서](https://docs.spring.io/spring-framework/reference/web/webflux.html)
-- [Project Reactor: Debugging](https://projectreactor.io/docs/core/release/reference/debugging.html)
+- [Reactive Streams 명세](https://www.reactive-streams.org/) — Reactive Streams
+- [Reactive Streams JVM 1.0.4 README](https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.4/README.md) — GitHub
+- [Spring WebFlux 문서](https://docs.spring.io/spring-framework/reference/web/webflux.html) — Spring Docs
+- [Project Reactor: Debugging](https://projectreactor.io/docs/core/release/reference/debugging.html) — Project Reactor

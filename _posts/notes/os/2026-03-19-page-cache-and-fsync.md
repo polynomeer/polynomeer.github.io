@@ -80,9 +80,9 @@ Kafka가 `fsync`를 기본으로 하지 않는 것은 내구성을 포기한 것
 
 ## 참고
 
-- [Linux man: fsync(2)](https://man7.org/linux/man-pages/man2/fsync.2.html)
-- [PostgreSQL: Reliability and the Write-Ahead Log](https://www.postgresql.org/docs/current/wal-reliability.html)
-- [PostgreSQL: Error Handling (`data_sync_retry`)](https://www.postgresql.org/docs/current/runtime-config-error-handling.html)
-- [MySQL: InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)
-- [Kafka Operations: Hardware and OS](https://kafka.apache.org/43/operations/hardware-and-os/)
-- [PostgreSQL fsync() surprise (LWN, 2018)](https://lwn.net/Articles/752063/)
+- [Linux man: fsync(2)](https://man7.org/linux/man-pages/man2/fsync.2.html) — Linux man page
+- [PostgreSQL: Reliability and the Write-Ahead Log](https://www.postgresql.org/docs/current/wal-reliability.html) — PostgreSQL Docs
+- [PostgreSQL: Error Handling (`data_sync_retry`)](https://www.postgresql.org/docs/current/runtime-config-error-handling.html) — PostgreSQL Docs
+- [MySQL: InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html) — MySQL Docs
+- [Kafka Operations: Hardware and OS](https://kafka.apache.org/43/operations/hardware-and-os/) — Apache Kafka
+- [PostgreSQL fsync() surprise (LWN, 2018)](https://lwn.net/Articles/752063/) — LWN.net

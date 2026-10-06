@@ -98,6 +98,6 @@ flowchart TB
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=dP8S3kIQysk)
-- [SLASH 22](https://toss.im/slash-22)
-- 같은 챕터의 구조 설명: [SLASH 22 Toss Crazy Activation 리뷰](/posts/slash22-crazy-activation-web-automation/)
+- [발표 영상](https://www.youtube.com/watch?v=dP8S3kIQysk) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [SLASH 22 Toss Crazy Activation 리뷰](/posts/slash22-crazy-activation-web-automation/) — 같은 챕터의 구조 설명

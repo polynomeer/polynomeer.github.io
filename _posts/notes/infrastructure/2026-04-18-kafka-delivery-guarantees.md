@@ -83,9 +83,9 @@ Transactional Outbox가 이것을 푼다. 발행할 이벤트를 같은 트랜�
 
 ## 참고
 
-- [Kafka: Message Delivery Semantics](https://kafka.apache.org/documentation/#semantics)
-- [Kafka 4.3 Design](https://kafka.apache.org/43/design/design/)
-- [Kafka 4.3 Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/)
-- [Kafka 4.3 Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/)
-- [KIP-98: Exactly Once Delivery and Transactional Messaging](https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging)
-- [Transactional Outbox 패턴](https://microservices.io/patterns/data/transactional-outbox.html)
+- [Kafka: Message Delivery Semantics](https://kafka.apache.org/documentation/#semantics) — Apache Kafka
+- [Kafka 4.3 Design](https://kafka.apache.org/43/design/design/) — Apache Kafka
+- [Kafka 4.3 Producer Configs](https://kafka.apache.org/43/configuration/producer-configs/) — Apache Kafka
+- [Kafka 4.3 Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/) — Apache Kafka
+- [KIP-98: Exactly Once Delivery and Transactional Messaging](https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging) — Apache Wiki
+- [Transactional Outbox 패턴](https://microservices.io/patterns/data/transactional-outbox.html) — microservices.io

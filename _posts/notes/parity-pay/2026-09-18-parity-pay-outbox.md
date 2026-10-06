@@ -240,6 +240,6 @@ Outbox의 대가로 폴링 지연을 예상했다. 실제로 먼저 나타난 �
 
 ## 참고
 
-- [microservices.io: Pattern: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html)
-- [PostgreSQL: SELECT, The Locking Clause](https://www.postgresql.org/docs/current/sql-select.html) — `SKIP LOCKED`
-- [PostgreSQL: INSERT](https://www.postgresql.org/docs/current/sql-insert.html) — `ON CONFLICT DO NOTHING`, 유니크 인덱스에서의 대기
+- [microservices.io: Pattern: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) — microservices.io
+- [The Locking Clause](https://www.postgresql.org/docs/current/sql-select.html) — PostgreSQL: SELECT: `SKIP LOCKED`
+- [PostgreSQL: INSERT](https://www.postgresql.org/docs/current/sql-insert.html) — PostgreSQL Docs: `ON CONFLICT DO NOTHING`, 유니크 인덱스에서의 대기

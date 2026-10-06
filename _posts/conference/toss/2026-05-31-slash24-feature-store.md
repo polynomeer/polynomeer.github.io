@@ -112,7 +112,7 @@ sequenceDiagram
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=-u3rhd7k2JQ)
-- [SLASH 24](https://toss.im/slash-24)
-- [Feast](https://feast.dev/) (비교 대상으로 언급된 오픈소스)
-- 짝이 되는 발표: [SLASH 24 ML 플랫폼으로 개발 속도와 안정성 높이기 리뷰](/posts/slash24-ml-platform/)
+- [발표 영상](https://www.youtube.com/watch?v=-u3rhd7k2JQ) — YouTube
+- [SLASH 24](https://toss.im/slash-24) — 토스
+- [Feast](https://feast.dev/) — Feast: (비교 대상으로 언급된 오픈소스)
+- [SLASH 24 ML 플랫폼으로 개발 속도와 안정성 높이기 리뷰](/posts/slash24-ml-platform/) — 짝이 되는 발표

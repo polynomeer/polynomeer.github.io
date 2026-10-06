@@ -115,7 +115,7 @@ Java 9부터 쓸 수 있는 `List.of`는 또 다르다. `List` Javadoc의 "Unmod
 
 ## 참고
 
-- [The Java Language Specification, Java SE 21, Chapter 10. Arrays](https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html)
-- [ArrayList (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html)
-- [List (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html)
-- [Arrays.asList (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#asList%28T...%29)
+- [The Java Language Specification, Java SE 21, Chapter 10. Arrays](https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html) — Oracle Docs
+- [ArrayList (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html) — Oracle Docs
+- [List (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html) — Oracle Docs
+- [Arrays.asList (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#asList%28T...%29) — Oracle Docs

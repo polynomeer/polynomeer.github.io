@@ -111,7 +111,8 @@ lag(컨슈머가 아직 처리하지 못한 메시지 수) 그래프의 읽는 �
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=I_PEfXDRDX4)
-- [TMC 25](https://toss.im/tmc-25)
-- [Apache Kafka Consumer Configs, max.poll.interval.ms](https://kafka.apache.org/41/configuration/consumer-configs/)
-- 같은 시스템의 다른 면: [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738) · [시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [발표 영상](https://www.youtube.com/watch?v=I_PEfXDRDX4) — YouTube
+- [TMC 25](https://toss.im/tmc-25) — 토스
+- [max.poll.interval.ms](https://kafka.apache.org/41/configuration/consumer-configs/) — Apache Kafka Consumer Configs
+- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738) — 토스 기술 블로그: 같은 시스템의 다른 면
+- [시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 같은 시스템의 다른 면

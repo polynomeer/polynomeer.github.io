@@ -96,6 +96,6 @@ stateDiagram-v2
 
 ## 참고
 
-- Ongaro & Ousterhout, [In Search of an Understandable Consensus Algorithm](https://raft.github.io/raft.pdf) (2014)
-- [The Raft Consensus Algorithm](https://raft.github.io/) — 시각화 포함
-- [KRaft: Apache Kafka Without ZooKeeper](https://developer.confluent.io/learn/kraft/)
+- [In Search of an Understandable Consensus Algorithm](https://raft.github.io/raft.pdf) — Ongaro & Ousterhout: (2014)
+- [The Raft Consensus Algorithm](https://raft.github.io/) — Raft: 시각화 포함
+- [KRaft: Apache Kafka Without ZooKeeper](https://developer.confluent.io/learn/kraft/) — Confluent Developer

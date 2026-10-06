@@ -78,5 +78,5 @@ flowchart TD
 
 ## 참고
 
-- [스프링 핵심 원리 - 기본편](https://www.inflearn.com/course/스프링-핵심-원리-기본편/dashboard?cid=325969): 전체 커리큘럼과 「비즈니스 요구사항과 설계」의 명시한 구간.
-- [Spring Framework: Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html): 의존성 주입 개념 보충. 현재 문서의 버전과 강의 환경은 다를 수 있다.
+- [스프링 핵심 원리 - 기본편](https://www.inflearn.com/course/스프링-핵심-원리-기본편/dashboard?cid=325969) — 인프런: 전체 커리큘럼과 「비즈니스 요구사항과 설계」의 명시한 구간.
+- [Spring Framework: Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html) — Spring Docs: 의존성 주입 개념 보충. 현재 문서의 버전과 강의 환경은 다를 수 있다.

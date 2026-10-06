@@ -89,18 +89,18 @@ MySQL 8.0 레퍼런스 매뉴얼의 새 기능 목록([What Is New in MySQL 8.0]
 - [JDK 11](https://openjdk.org/projects/jdk/11/) — OpenJDK
 - [JDK 17](https://openjdk.org/projects/jdk/17/) — OpenJDK
 - [JDK 21](https://openjdk.org/projects/jdk/21/) — OpenJDK
-- [JEP 286: Local-Variable Type Inference](https://openjdk.org/jeps/286)
-- [JEP 291: Deprecate the Concurrent Mark Sweep (CMS) Garbage Collector](https://openjdk.org/jeps/291)
-- [JEP 320: Remove the Java EE and CORBA Modules](https://openjdk.org/jeps/320)
-- [JEP 361: Switch Expressions](https://openjdk.org/jeps/361)
-- [JEP 363: Remove the Concurrent Mark Sweep (CMS) Garbage Collector](https://openjdk.org/jeps/363)
-- [JEP 394: Pattern Matching for instanceof](https://openjdk.org/jeps/394)
-- [JEP 395: Records](https://openjdk.org/jeps/395)
-- [JEP 421: Deprecate Finalization for Removal](https://openjdk.org/jeps/421)
-- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
+- [JEP 286: Local-Variable Type Inference](https://openjdk.org/jeps/286) — OpenJDK
+- [JEP 291: Deprecate the Concurrent Mark Sweep (CMS) Garbage Collector](https://openjdk.org/jeps/291) — OpenJDK
+- [JEP 320: Remove the Java EE and CORBA Modules](https://openjdk.org/jeps/320) — OpenJDK
+- [JEP 361: Switch Expressions](https://openjdk.org/jeps/361) — OpenJDK
+- [JEP 363: Remove the Concurrent Mark Sweep (CMS) Garbage Collector](https://openjdk.org/jeps/363) — OpenJDK
+- [JEP 394: Pattern Matching for instanceof](https://openjdk.org/jeps/394) — OpenJDK
+- [JEP 395: Records](https://openjdk.org/jeps/395) — OpenJDK
+- [JEP 421: Deprecate Finalization for Removal](https://openjdk.org/jeps/421) — OpenJDK
+- [JEP 444: Virtual Threads](https://openjdk.org/jeps/444) — OpenJDK
 - [JDK 11 Release Notes](https://www.oracle.com/java/technologies/javase/11-relnote-issues.html) — Oracle
-- [Spring Boot 3.0 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Release-Notes)
-- [Spring Boot 3.2 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.2-Release-Notes)
+- [Spring Boot 3.0 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Release-Notes) — GitHub
+- [Spring Boot 3.2 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.2-Release-Notes) — GitHub
 - [What Is New in MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html) — MySQL 8.0 Reference Manual
 - [Changes in MySQL 8.0](https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/upgrading-from-previous-series.html) — MySQL 8.0 Reference Manual
 - [Server Character Set and Collation (8.0)](https://dev.mysql.com/doc/refman/8.0/en/charset-server.html) — MySQL 8.0 Reference Manual

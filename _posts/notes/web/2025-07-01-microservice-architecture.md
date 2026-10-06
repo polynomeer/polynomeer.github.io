@@ -150,11 +150,11 @@ SOA는 더 오래된 방식이고 더 이상 사용되지 않는 방식일까? �
 
 ---
 
-## 참고자료
+## 참고
 
-- [James Lewis, Martin Fowler (2014.03.25). *Microservices*](https://martinfowler.com/articles/microservices.html)
-- [Wikipedia. *Microservices*](https://en.wikipedia.org/wiki/Microservices)
-- [AWS. *마이크로서비스란 무엇입니까?*](https://aws.amazon.com/ko/microservices/)
-- [IBM. *마이크로서비스란?*](https://www.ibm.com/kr-ko/topics/microservices)
-- [RedHat. *마이크로서비스란?*](https://www.redhat.com/ko/topics/microservices/what-are-microservices)
-- [John Grib (2022.12.22). *콘웨이의 법칙(Conway's law)*](https://johngrib.github.io/wiki/Conway-s-law/)
+- [James Lewis, Martin Fowler (2014.03.25). *Microservices](https://martinfowler.com/articles/microservices.html) — martinfowler.com
+- [Wikipedia. *Microservices](https://en.wikipedia.org/wiki/Microservices) — Wikipedia
+- [AWS. *마이크로서비스란 무엇입니까?](https://aws.amazon.com/ko/microservices/) — AWS
+- [IBM. *마이크로서비스란?](https://www.ibm.com/kr-ko/topics/microservices) — ibm.com
+- [RedHat. *마이크로서비스란?](https://www.redhat.com/ko/topics/microservices/what-are-microservices) — redhat.com
+- [John Grib (2022.12.22). *콘웨이의 법칙(Conway's law)](https://johngrib.github.io/wiki/Conway-s-law/) — johngrib

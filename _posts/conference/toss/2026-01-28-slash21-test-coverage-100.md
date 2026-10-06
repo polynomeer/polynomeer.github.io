@@ -99,9 +99,9 @@ MockK를 쓰면 안 된다고 생각하는 것은 아니지만 얼마나 개선�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=jdlBu2vFv58)
-- [SLASH 21](https://toss.im/slash-21)
-- [PIT Mutation Testing](https://pitest.org/)
-- [Pact](https://docs.pact.io/)
-- [PIT FAQ](https://pitest.org/faq/)
-- [JaCoCo Coverage Counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html)
+- [발표 영상](https://www.youtube.com/watch?v=jdlBu2vFv58) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [PIT Mutation Testing](https://pitest.org/) — PIT
+- [Pact](https://docs.pact.io/) — Pact Docs
+- [PIT FAQ](https://pitest.org/faq/) — PIT
+- [JaCoCo Coverage Counters](https://www.jacoco.org/jacoco/trunk/doc/counters.html) — JaCoCo

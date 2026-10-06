@@ -159,10 +159,15 @@ ParityPay의 숫자는 지갑 87개, 원장 항목 200만 건, 개발 노트북�
 - 원본-사본 잔차와 우리-외부 잔차는 다른 문제다. 전자는 재구축할 수 있고 후자는 사람이 봐야 한다. 같은 단어로 부르지만 같은 결정을 내리면 안 된다.
 - 나중에 ParityPay에서 잰 실측 중 토스증권의 문장을 다르게 읽게 만든 것은 둘이다. 유실·중복 0에서도 순서가 역전됐다는 것, 그리고 검증기가 먼저 무너졌다는 것.
 
-## 참고 자료
+## 참고
 
-- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2) (2025-07-17)
-- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738)
-- [Vitess Resharding (v22 문서)](https://vitess.io/docs/22.0/user-guides/configuration-advanced/resharding/)
-- ParityPay 시리즈: [1편 불변조건](/posts/parity-pay-invariants/), [4편 실험과 결함](/posts/parity-pay-experiments-and-defects/), [5편 Transactional Outbox](/posts/parity-pay-outbox/), [6편 대사](/posts/parity-pay-reconciliation/), [8편 Kafka 장애 실험](/posts/parity-pay-kafka-failures/)
-- 같은 주제의 앞선 글: [채용공고 분석](/posts/toss-securities-server-developer-job-analysis/), [시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/)
+- [토스증권 서버 개발자가 많이 듣는 질문 4가지](https://toss.im/career/article/secu_server-chapter-2) — 토스: (2025-07-17)
+- [해외주식 서비스 안정화 사례 (Toss Tech)](https://toss.tech/article/28738) — 토스 기술 블로그
+- [Vitess Resharding (v22 문서)](https://vitess.io/docs/22.0/user-guides/configuration-advanced/resharding/) — Vitess Docs
+- [1편 불변조건](/posts/parity-pay-invariants/) — ParityPay 시리즈
+- [4편 실험과 결함](/posts/parity-pay-experiments-and-defects/) — ParityPay 시리즈
+- [5편 Transactional Outbox](/posts/parity-pay-outbox/) — ParityPay 시리즈
+- [6편 대사](/posts/parity-pay-reconciliation/) — ParityPay 시리즈
+- [8편 Kafka 장애 실험](/posts/parity-pay-kafka-failures/) — ParityPay 시리즈
+- [채용공고 분석](/posts/toss-securities-server-developer-job-analysis/) — 같은 주제의 앞선 글
+- [시세·주문 아키텍처 리뷰](/posts/toss-securities-market-data-and-order-architecture/) — 같은 주제의 앞선 글

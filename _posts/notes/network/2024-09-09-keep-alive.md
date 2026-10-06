@@ -91,8 +91,8 @@ sequenceDiagram
 
 - [TCP keepalive Recommended Settings and Best Practices](https://webhostinggeeks.com/howto/tcp-keepalive-recommended-settings-and-best-practices/)
 
-## References
+## 참고
 
-- [Linux man: tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html)
-- [RFC 9112 §9.3 Persistence](https://www.rfc-editor.org/rfc/rfc9112#section-9.3)
-- [Keepalive 설정으로 NGINX HTTP 성능 향상](https://nginxstore.com/blog/nginx/keepalive-%EC%84%A4%EC%A0%95%EC%9C%BC%EB%A1%9C-nginx-http-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81/)
+- [Linux man: tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html) — Linux man page
+- [RFC 9112 §9.3 Persistence](https://www.rfc-editor.org/rfc/rfc9112#section-9.3) — IETF
+- [Keepalive 설정으로 NGINX HTTP 성능 향상](https://nginxstore.com/blog/nginx/keepalive-%EC%84%A4%EC%A0%95%EC%9C%BC%EB%A1%9C-nginx-http-%EC%84%B1%EB%8A%A5-%ED%96%A5%EC%83%81/) — nginxstore.com

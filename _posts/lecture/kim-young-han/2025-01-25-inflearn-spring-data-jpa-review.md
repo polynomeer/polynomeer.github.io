@@ -77,5 +77,5 @@ flowchart TD
 
 ## 참고
 
-- [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/스프링-데이터-JPA-실전/dashboard?cid=324474): 전체 커리큘럼과 「@Query, 리포지토리 메소드에 쿼리 정의하기」의 명시한 구간.
-- [Spring Data JPA: JPA Query Methods](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html): `@Query` 사용 방식 보충.
+- [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/스프링-데이터-JPA-실전/dashboard?cid=324474) — 인프런: 전체 커리큘럼과 「@Query, 리포지토리 메소드에 쿼리 정의하기」의 명시한 구간.
+- [Spring Data JPA: JPA Query Methods](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html) — Spring Docs: `@Query` 사용 방식 보충.

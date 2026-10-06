@@ -82,6 +82,6 @@ KMS에서는 토픽 오너가 키 쌍을 만들어 등록한다. 새 컨슈머�
 
 ## 참고
 
-- [Apache Kafka Documentation: Security Overview](https://kafka.apache.org/39/security/security-overview/)
-- [Kafka Javadoc: `ProducerInterceptor`](https://kafka.apache.org/39/javadoc/org/apache/kafka/clients/producer/ProducerInterceptor.html)
-- [NIST SP 800-38D: Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf), 8절
+- [Apache Kafka Documentation: Security Overview](https://kafka.apache.org/39/security/security-overview/) — Apache Kafka
+- [Kafka Javadoc: `ProducerInterceptor`](https://kafka.apache.org/39/javadoc/org/apache/kafka/clients/producer/ProducerInterceptor.html) — Apache Kafka
+- [NIST SP 800-38D: Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf) — NIST: 8절

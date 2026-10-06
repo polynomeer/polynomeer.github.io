@@ -81,9 +81,9 @@ Stateless 시스템에서 상태는 저장하지 않으며, 클라이언트가 �
 
 ---
 
-## 참고 자료
+## 참고
 
-- [Understanding State: The Foundation for Building Dynamic Programs](https://www.linkedin.com/pulse/understanding-state-foundation-building-dynamic-programs-moni-keo-cjgfc/)
-- [Stateful vs. stateless applications](https://www.redhat.com/en/topics/cloud-native-apps/stateful-vs-stateless)
-- [Stateful vs Stateless Architectures Explained](https://www.youtube.com/watch?v=20tpk8A_xa0)
-- [Stateful vs. Stateless: Understanding the Key Differences](https://www.spiceworks.com/tech/cloud/articles/stateful-vs-stateless/)
+- [Understanding State: The Foundation for Building Dynamic Programs](https://www.linkedin.com/pulse/understanding-state-foundation-building-dynamic-programs-moni-keo-cjgfc/) — LinkedIn
+- [Stateful vs. stateless applications](https://www.redhat.com/en/topics/cloud-native-apps/stateful-vs-stateless) — redhat.com
+- [Stateful vs Stateless Architectures Explained](https://www.youtube.com/watch?v=20tpk8A_xa0) — YouTube
+- [Stateful vs. Stateless: Understanding the Key Differences](https://www.spiceworks.com/tech/cloud/articles/stateful-vs-stateless/) — spiceworks.com

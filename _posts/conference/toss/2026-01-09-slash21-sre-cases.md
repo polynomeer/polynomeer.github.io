@@ -115,9 +115,10 @@ Prometheus 사례는 관측 도구가 관측 대상을 바꾼 경우다. 메트�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=Tu0MMBgdyTw)
-- [SLASH 21](https://toss.im/slash-21)
-- [Redis Cluster 사양 - ASK 리다이렉션](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/)
-- Lettuce 릴리스 노트 [5.2.2](https://github.com/lettuce-io/lettuce-core/releases/tag/5.2.2.RELEASE), [5.3.1](https://github.com/lettuce-io/lettuce-core/releases/tag/5.3.1.RELEASE)
-- [spymemcached 2.12.3 KetamaNodeLocator.java](https://github.com/couchbase/spymemcached/blob/2.12.3/src/main/java/net/spy/memcached/KetamaNodeLocator.java)
-- [G1 GC humongous objects](https://docs.oracle.com/en/java/javase/17/gctuning/garbage-first-g1-garbage-collector1.html)
+- [발표 영상](https://www.youtube.com/watch?v=Tu0MMBgdyTw) — YouTube
+- [SLASH 21](https://toss.im/slash-21) — 토스
+- [ASK 리다이렉션](https://redis.io/docs/latest/operate/oss_and_stack/reference/cluster-spec/) — Redis Cluster 사양
+- [5.2.2](https://github.com/lettuce-io/lettuce-core/releases/tag/5.2.2.RELEASE) — Lettuce 릴리스 노트
+- [5.3.1](https://github.com/lettuce-io/lettuce-core/releases/tag/5.3.1.RELEASE) — GitHub
+- [spymemcached 2.12.3 KetamaNodeLocator.java](https://github.com/couchbase/spymemcached/blob/2.12.3/src/main/java/net/spy/memcached/KetamaNodeLocator.java) — GitHub
+- [G1 GC humongous objects](https://docs.oracle.com/en/java/javase/17/gctuning/garbage-first-g1-garbage-collector1.html) — Oracle Docs

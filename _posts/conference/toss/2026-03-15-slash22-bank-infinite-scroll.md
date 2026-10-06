@@ -129,9 +129,9 @@ Kafka는 토픽을 파티션으로 나눠 여러 컨슈머가 처리하게 한�
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=v9rcKpUZw4o)
-- [SLASH 22](https://toss.im/slash-22)
-- [Apache Kafka - Introduction](https://kafka.apache.org/39/getting-started/introduction/)
-- [Apache Kafka - Basic Kafka Operations](https://kafka.apache.org/39/operations/basic-kafka-operations/)
-- [Martin Fowler - CQRS](https://martinfowler.com/bliki/CQRS.html)
-- 계정계 쪽 이야기: [SLASH 23 토스뱅크 코어뱅킹 MSA 전환 리뷰](/posts/slash23-core-banking-msa/)
+- [발표 영상](https://www.youtube.com/watch?v=v9rcKpUZw4o) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [Introduction](https://kafka.apache.org/39/getting-started/introduction/) — Apache Kafka
+- [Basic Kafka Operations](https://kafka.apache.org/39/operations/basic-kafka-operations/) — Apache Kafka
+- [CQRS](https://martinfowler.com/bliki/CQRS.html) — Martin Fowler
+- [SLASH 23 토스뱅크 코어뱅킹 MSA 전환 리뷰](/posts/slash23-core-banking-msa/) — 계정계 쪽 이야기

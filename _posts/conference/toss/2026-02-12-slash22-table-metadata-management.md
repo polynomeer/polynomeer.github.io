@@ -92,6 +92,6 @@ flowchart LR
 
 ## 참고
 
-- [발표 영상](https://www.youtube.com/watch?v=KUskYwqtPZM)
-- [SLASH 22](https://toss.im/slash-22)
-- 1년 전 테이블 센터의 예고: [SLASH 21 빠르게 성장하는 스타트업의 DW 리뷰](/posts/slash21-startup-dw/)
+- [발표 영상](https://www.youtube.com/watch?v=KUskYwqtPZM) — YouTube
+- [SLASH 22](https://toss.im/slash-22) — 토스
+- [SLASH 21 빠르게 성장하는 스타트업의 DW 리뷰](/posts/slash21-startup-dw/) — 1년 전 테이블 센터의 예고

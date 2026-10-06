@@ -259,14 +259,14 @@ sequenceDiagram
 
 ## 참고
 
-- [MySQL 8.0 Reference Manual - Information Functions, LAST_INSERT_ID()](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_last-insert-id) — `LAST_INSERT_ID(expr)`로 시퀀스를 흉내 내는 예제와 커넥션 단위 동작
-- [MySQL 8.0 Reference Manual - Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) — UPDATE의 레코드 락과 커밋 시 해제
-- [Spring Framework Reference - Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html) — `REQUIRES_NEW`의 독립 트랜잭션, 락 해제 시점, 커넥션 풀 경고
-- [Jakarta Persistence 3.1 - SequenceGenerator](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/sequencegenerator) — `allocationSize` 정의와 기본값 50
+- [Information Functions, LAST_INSERT_ID()](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_last-insert-id) — MySQL 8.0 Reference Manual: `LAST_INSERT_ID(expr)`로 시퀀스를 흉내 내는 예제와 커넥션 단위 동작
+- [Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) — MySQL 8.0 Reference Manual: UPDATE의 레코드 락과 커밋 시 해제
+- [Transaction Propagation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html) — Spring Framework Reference: `REQUIRES_NEW`의 독립 트랜잭션, 락 해제 시점, 커넥션 풀 경고
+- [SequenceGenerator](https://jakarta.ee/specifications/persistence/3.1/apidocs/jakarta.persistence/jakarta/persistence/sequencegenerator) — Jakarta Persistence 3.1: `allocationSize` 정의와 기본값 50
 - 랩 코드(engineering-lab, 커밋 `d52297d`)
-  - [README - 시나리오 1 계약 코드 채번 동시성](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md)
-  - [NonAtomicContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/NonAtomicContractCodeAllocator.java) — 재현용 변경 전 구조
-  - [AtomicUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/AtomicUpdateContractCodeAllocator.java) — 원자적 UPDATE
-  - [SelectForUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/SelectForUpdateContractCodeAllocator.java) — SELECT ... FOR UPDATE
-  - [ConcurrentAllocationHarness.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/sequence/ConcurrentAllocationHarness.java) — 10개 스레드 동시 출발 하네스
-  - [V1__init.sql](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/resources/db/migration/V1__init.sql) — `contract_sequence` 스키마
+  - [README - 시나리오 1 계약 코드 채번 동시성](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/README.md) — GitHub
+  - [NonAtomicContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/NonAtomicContractCodeAllocator.java) — GitHub: 재현용 변경 전 구조
+  - [AtomicUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/AtomicUpdateContractCodeAllocator.java) — GitHub: 원자적 UPDATE
+  - [SelectForUpdateContractCodeAllocator.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/java/com/portfolio/mcplab/sequence/SelectForUpdateContractCodeAllocator.java) — GitHub: SELECT ... FOR UPDATE
+  - [ConcurrentAllocationHarness.java](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/test/java/com/portfolio/mcplab/sequence/ConcurrentAllocationHarness.java) — GitHub: 10개 스레드 동시 출발 하네스
+  - [V1__init.sql](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/mcp-platform/src/main/resources/db/migration/V1__init.sql) — GitHub: `contract_sequence` 스키마
