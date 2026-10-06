@@ -235,6 +235,8 @@ on_this_day:
   empty: Nothing was written on this date.
   nearest: Jump to the nearest date with posts
   error: The archive could not be loaded.
+  random: Open a random day
+  busiest: The day with the most posts
 
 archives:
   eyebrow: Time archive
@@ -563,6 +565,21 @@ tech_blogs:
   only_reviewed: Reviewed only
   more_reviews: ":COUNT more"
   todo_title: "Reading list · :COUNT sources without a review"
+
+tag_index:
+  search_label: Search tags
+  search_placeholder: Tag name
+  picked: Picked
+  post_count: ":COUNT posts"
+  related: Tags that come with it · pick to narrow
+  more: ":COUNT more"
+  all_title: "All :COUNT tags"
+  sort_label: Sort
+  sort_count: Most used
+  sort_name: A–Z
+  tag_page: Tag page ›
+  til_note: "The TIL tag (:COUNT posts) is left out here; the TIL type page lists them."
+  til_link: All TIL ›
 
 citation:
   connections_link: See how posts link to each other on the connection map

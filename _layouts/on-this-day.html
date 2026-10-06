@@ -45,6 +45,15 @@ layout: page
 
   <div id="otd-results" aria-live="polite"></div>
 
+  <div class="otd-jumps" hidden>
+    <button type="button" data-otd-random
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.random | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.random | escape }}">{{ site.data.locales[lang].on_this_day.random }}</button>
+    <button type="button" data-otd-busiest
+      data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.busiest | escape }}"
+      data-l10n-en="{{ site.data.locales.en.on_this_day.busiest | escape }}">{{ site.data.locales[lang].on_this_day.busiest }}</button>
+  </div>
+
   <p class="otd-notice" id="otd-empty" hidden>
     <span
       data-l10n-ko="{{ site.data.locales['ko-KR'].on_this_day.empty | escape }}"
@@ -120,6 +129,7 @@ layout: page
     const keyOf = (date) => `${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
     let archive = null;
+    let firstYear = new Date().getFullYear();
     // a fixed leap year, so 02-29 stays reachable while stepping
     let cursor = new Date(2024, new Date().getMonth(), new Date().getDate());
 
@@ -167,56 +177,77 @@ layout: page
         byYear.get(year).push(entry);
       });
 
-      [...byYear.keys()]
-        .sort((a, b) => b - a)
-        .forEach((year) => {
-          const section = document.createElement('section');
-          section.className = 'otd-year';
+      // A timeline over every year the blog has run, newest first. Years
+      // without a post on this date fold into one quiet line.
+      const thisYear = new Date().getFullYear();
+      const timeline = document.createElement('ol');
+      timeline.className = 'otd-timeline list-unstyled';
+      let emptyRun = [];
+      const flushEmpty = () => {
+        if (!emptyRun.length) return;
+        const item = document.createElement('li');
+        item.className = 'otd-year is-empty';
+        const label = document.createElement('span');
+        label.className = 'otd-year-title';
+        const years = emptyRun.join(' · ');
+        setLocalized(label, `${years} · 쓴 글 없음`, `${years} · nothing written`);
+        item.appendChild(label);
+        timeline.appendChild(item);
+        emptyRun = [];
+      };
 
-          const heading = document.createElement('h2');
-          heading.className = 'otd-year-title';
+      for (let year = thisYear; year >= firstYear; year -= 1) {
+        if (!byYear.has(year)) {
+          emptyRun.push(year);
+          continue;
+        }
+        flushEmpty();
+        const item = document.createElement('li');
+        item.className = `otd-year${year === thisYear ? ' is-current' : ''}`;
 
-          // the year sits in its own span: lang-switch.js rewrites the
-          // textContent of every [data-l10n-ko] node, badge included
-          const yearLabel = document.createElement('span');
-          setLocalized(yearLabel, text['ko-KR'].year(year), text.en.year(year));
-          heading.appendChild(yearLabel);
+        const heading = document.createElement('h2');
+        heading.className = 'otd-year-title';
+        const ago = thisYear - year;
+        setLocalized(
+          heading,
+          `${year} · ${ago === 0 ? '올해' : `${ago}년 전`}`,
+          `${year} · ${ago === 0 ? 'this year' : ago === 1 ? 'a year ago' : `${ago} years ago`}`
+        );
 
-          const ago = new Date().getFullYear() - year;
-          if (ago > 0) {
+        const list = document.createElement('ul');
+        list.className = 'otd-post-list list-unstyled';
+        byYear.get(year).forEach(([, title, slug, type]) => {
+          const li = document.createElement('li');
+          li.className = `otd-post${type === 'til' ? ' is-quiet' : ''}`;
+          const link = document.createElement('a');
+          link.className = 'otd-post-link';
+          link.href = `{{ '/posts/' | relative_url }}${slug}/`;
+          const label = typeLabels[type];
+          if (label) {
             const badge = document.createElement('span');
-            badge.className = 'otd-year-ago';
-            setLocalized(badge, `${ago}년 전`, ago === 1 ? 'a year ago' : `${ago} years ago`);
-            heading.appendChild(badge);
+            badge.className = `otd-post-type is-${type}`;
+            setLocalized(badge, label.ko, label.en);
+            link.appendChild(badge);
           }
-
-          const list = document.createElement('ul');
-          list.className = 'otd-post-list list-unstyled';
-
-          byYear.get(year).forEach(([, title, slug, type]) => {
-            const item = document.createElement('li');
-            item.className = 'otd-post';
-
-            const link = document.createElement('a');
-            link.className = 'otd-post-link';
-            link.href = `{{ '/posts/' | relative_url }}${slug}/`;
-            link.textContent = title;
-            item.appendChild(link);
-
-            const label = typeLabels[type];
-            if (label) {
-              const badge = document.createElement('span');
-              badge.className = 'otd-post-type';
-              setLocalized(badge, label.ko, label.en);
-              item.appendChild(badge);
-            }
-
-            list.appendChild(item);
-          });
-
-          section.append(heading, list);
-          results.appendChild(section);
+          const name = document.createElement('span');
+          name.textContent = title;
+          link.appendChild(name);
+          li.appendChild(link);
+          list.appendChild(li);
         });
+
+        item.append(heading, list);
+        timeline.appendChild(item);
+      }
+      flushEmpty();
+      results.appendChild(timeline);
+    };
+
+    const goTo = (key) => {
+      const [month, day] = key.split('-').map(Number);
+      cursor = new Date(2024, month - 1, day);
+      window.history.replaceState({}, '', `#${key}`);
+      renderDay();
     };
 
     const step = (days) => {
@@ -255,6 +286,18 @@ layout: page
 
     nearestButton.addEventListener('click', goToNearest);
 
+    // Jumps: a random date that has posts, and the date with the most.
+    root.querySelector('[data-otd-random]').addEventListener('click', () => {
+      if (!archive) return;
+      const keys = Object.keys(archive);
+      goTo(keys[Math.floor(Math.random() * keys.length)]);
+    });
+    root.querySelector('[data-otd-busiest]').addEventListener('click', () => {
+      if (!archive) return;
+      const [key] = Object.entries(archive).sort((a, b) => b[1].length - a[1].length)[0];
+      goTo(key);
+    });
+
     const requested = window.location.hash.replace('#', '');
     if (/^\d{2}-\d{2}$/.test(requested)) {
       const [month, day] = requested.split('-').map(Number);
@@ -283,7 +326,9 @@ layout: page
       })
       .then((data) => {
         archive = data;
+        Object.values(data).forEach((rows) => rows.forEach(([year]) => { if (year < firstYear) firstYear = year; }));
         errorNotice.hidden = true;
+        root.querySelector('.otd-jumps').hidden = false;
         renderDay();
       })
       .catch(() => {

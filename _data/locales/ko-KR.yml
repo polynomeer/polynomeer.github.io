@@ -235,6 +235,8 @@ on_this_day:
   empty: 이 날짜에 쓴 글이 없습니다.
   nearest: 글이 있는 가장 가까운 날짜로
   error: 기록을 불러오지 못했습니다.
+  random: 아무 날이나 열어 보기
+  busiest: 글이 가장 많았던 날
 
 archives:
   eyebrow: 시간순 아카이브
@@ -558,6 +560,21 @@ tech_blogs:
   only_reviewed: 리뷰 있는 곳만
   more_reviews: ":COUNT편 더 보기"
   todo_title: "읽을 목록 · 아직 리뷰가 없는 :COUNT곳"
+
+tag_index:
+  search_label: 태그 검색
+  search_placeholder: 태그 이름
+  picked: 고른 태그
+  post_count: ":COUNT편"
+  related: 함께 붙는 태그 · 눌러서 좁히기
+  more: ":COUNT편 더 보기"
+  all_title: "모든 태그 :COUNT개"
+  sort_label: 정렬
+  sort_count: 많은 순
+  sort_name: 가나다·ABC
+  tag_page: 태그 페이지 ›
+  til_note: "TIL 태그(:COUNT편)는 이 목록에서 빼고 TIL 유형 페이지에서 봅니다."
+  til_link: TIL 모아 보기 ›
 
 citation:
   connections_link: 연결 지도에서 글 사이의 링크 보기

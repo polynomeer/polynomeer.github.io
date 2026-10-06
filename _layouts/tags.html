@@ -9,6 +9,7 @@ layout: page
 {% assign hero_en = site.data.locales.en.page_hero.tags %}
 {% assign tabs_ko = site.data.locales['ko-KR'].tabs %}
 {% assign tabs_en = site.data.locales.en.tabs %}
+{% assign tl = site.data.locales[lang].tag_index %}
 
 {% include page-hero.html
   lang=lang
@@ -17,33 +18,155 @@ layout: page
   summary_ko=hero_ko.summary summary_en=hero_en.summary %}
 
 {% comment %}
-  Most-used tags first (ties alphabetical). The key inverts the count so a
-  plain ascending sort gives count-descending, name-ascending order.
+  The tag page narrows: search for a tag, pick it, and the panel shows the
+  posts carrying it, the tags that most often come with it (pick one to
+  require both) and a link to the tag's own page. Post data is the home feed
+  JSON, fetched on the first pick. Without the script every tag is a plain
+  link to its page.
+
+  Most-used tags first (ties alphabetical); the key inverts the count so a
+  plain ascending sort gives count-descending, name-ascending order. The TIL
+  tag sits on nearly every daily note and would top the list, so it is left
+  to the TIL type page.
 {% endcomment %}
 {% assign tag_keys = '' | split: '' %}
+{% assign max_count = 0 %}
 {% for t in site.tags %}
+  {% if t[0] == 'TIL' %}{% continue %}{% endif %}
+  {% if t[1].size > max_count %}{% assign max_count = t[1].size %}{% endif %}
   {% assign inverted = 99999 | minus: t[1].size | prepend: '00000' | slice: -5, 5 %}
   {% capture tag_key %}{{ inverted }}::{{ t[0] }}{% endcapture %}
   {% assign tag_keys = tag_keys | push: tag_key %}
 {% endfor %}
-
 {% assign tag_keys = tag_keys | sort_natural %}
 
-<div id="tags" class="d-flex flex-wrap mx-xl-2">
-  {% for key in tag_keys %}
-    {% assign t = key | split: '::' | last %}
-    {% assign count = site.tags[t].size %}
-    {% assign tier = '' %}
-    {% if count >= 10 %}
-      {% assign tier = ' tag-major' %}
-    {% elsif count == 1 %}
-      {% assign tier = ' tag-minor' %}
-    {% endif %}
-    <div>
-      <a class="tag{{ tier }}" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
-        {{ t -}}
-        <span class="text-muted">{{ count }}</span>
-      </a>
+<div class="tag-index" data-tag-index data-feed="{{ '/assets/js/data/home-feed.json' | relative_url }}" data-tag-base="{{ '/tags/' | relative_url }}" data-page-label="{{ tl.tag_page }}">
+  <label class="tag-index-search">
+    <span class="visually-hidden">{{ tl.search_label }}</span>
+    <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" placeholder="{{ tl.search_placeholder }}" data-tag-search>
+  </label>
+
+  <section class="tag-index-picked" data-tag-picked hidden aria-live="polite">
+    <div class="tag-index-picked-head">
+      <span class="tag-index-label">{{ tl.picked }}</span>
+      <span class="tag-index-chips" data-tag-chips></span>
+      <span class="tag-index-count" data-tag-count data-label="{{ tl.post_count }}"></span>
     </div>
-  {% endfor %}
+    <div class="tag-index-related" data-tag-related-wrap hidden>
+      <span class="tag-index-label">{{ tl.related }}</span>
+      <span class="tag-index-related-list" data-tag-related></span>
+    </div>
+    <ol class="tag-index-posts list-unstyled" data-tag-posts></ol>
+    <button type="button" class="tag-index-more" data-tag-more data-label="{{ tl.more }}" hidden></button>
+  </section>
+
+  <section class="tag-index-all" aria-labelledby="tag-index-all-title">
+    <div class="tag-index-all-head">
+      <h2 id="tag-index-all-title">{{ tl.all_title | replace: ':COUNT', tag_keys.size }}</h2>
+      <div class="tag-index-sort" role="group" aria-label="{{ tl.sort_label }}">
+        <button type="button" data-tag-sort="count" aria-pressed="true">{{ tl.sort_count }}</button>
+        <button type="button" data-tag-sort="name" aria-pressed="false">{{ tl.sort_name }}</button>
+      </div>
+    </div>
+    <div id="tags" class="tag-index-grid" data-tag-grid>
+      {% for key in tag_keys %}
+        {% assign t = key | split: '::' | last %}
+        {% assign count = site.tags[t].size %}
+        {% assign pct = count | times: 100 | divided_by: max_count %}
+        {% if pct < 2 %}{% assign pct = 2 %}{% endif %}
+        <a class="tag-index-row" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}" data-tag="{{ t | escape }}" data-count="{{ count }}">
+          <span class="tag-index-name">{{ t }}</span>
+          <span class="tag-index-bar" aria-hidden="true"><span style="width: {{ pct }}%"></span></span>
+          <span class="tag-index-num">{{ count }}</span>
+        </a>
+      {% endfor %}
+    </div>
+    {% if site.tags['TIL'] %}
+      <p class="tag-index-note">{{ tl.til_note | replace: ':COUNT', site.tags['TIL'].size }} <a href="{{ '/types/til/' | relative_url }}">{{ tl.til_link }}</a></p>
+    {% endif %}
+  </section>
 </div>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-tag-index]');
+    if (!root) return;
+    const grid = root.querySelector('[data-tag-grid]');
+    const rows = Array.from(grid.querySelectorAll('[data-tag]'));
+    const search = root.querySelector('[data-tag-search]');
+    const picked = root.querySelector('[data-tag-picked]');
+    const chipsEl = root.querySelector('[data-tag-chips]');
+    const countEl = root.querySelector('[data-tag-count]');
+    const relatedWrap = root.querySelector('[data-tag-related-wrap]');
+    const relatedEl = root.querySelector('[data-tag-related]');
+    const postsEl = root.querySelector('[data-tag-posts]');
+    const moreBtn = root.querySelector('[data-tag-more]');
+    const pageSize = 20;
+    let feed = null;
+    let selected = [];
+    let shown = pageSize;
+
+    const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const tagPage = (t) => rows.find((r) => r.dataset.tag === t)?.getAttribute('href') || '#';
+
+    const loadFeed = async () => {
+      if (feed) return feed;
+      try { feed = await (await fetch(root.dataset.feed)).json(); } catch (_) { feed = []; }
+      return feed;
+    };
+
+    const render = async () => {
+      picked.hidden = selected.length === 0;
+      rows.forEach((r) => r.classList.toggle('is-picked', selected.includes(r.dataset.tag)));
+      if (!selected.length) return;
+      const posts = (await loadFeed()).filter((p) => selected.every((t) => (p.tags || []).includes(t)));
+      chipsEl.innerHTML = selected.map((t) => `<button type="button" class="tag-index-chip" data-unpick="${esc(t)}">${esc(t)} <span aria-hidden="true">×</span></button>`).join('')
+        + (selected.length === 1 ? ` <a class="tag-index-page" href="${tagPage(selected[0])}">${esc(root.dataset.pageLabel || '')}</a>` : '');
+      countEl.textContent = countEl.dataset.label.replace(':COUNT', posts.length);
+
+      const co = {};
+      posts.forEach((p) => (p.tags || []).forEach((t) => { if (!selected.includes(t) && t !== 'TIL') co[t] = (co[t] || 0) + 1; }));
+      const top = Object.entries(co).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 8);
+      relatedWrap.hidden = top.length === 0;
+      relatedEl.innerHTML = top.map(([t, n]) => `<button type="button" class="tag-index-related-tag" data-pick="${esc(t)}">${esc(t)} <b>${n}</b></button>`).join('');
+
+      postsEl.innerHTML = posts.slice(0, shown).map((p) => `<li><a href="${esc(p.url)}"><time>${esc(p.dateLabel || '')}</time><span>${esc(p.title)}</span></a></li>`).join('');
+      moreBtn.hidden = posts.length <= shown;
+      moreBtn.textContent = moreBtn.dataset.label.replace(':COUNT', posts.length - shown);
+    };
+
+    const pick = (t) => { if (!selected.includes(t)) selected.push(t); shown = pageSize; render(); picked.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
+    const unpick = (t) => { selected = selected.filter((s) => s !== t); shown = pageSize; render(); };
+
+    grid.addEventListener('click', (event) => {
+      const row = event.target.closest('[data-tag]');
+      if (!row || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      event.preventDefault();
+      if (selected.includes(row.dataset.tag)) unpick(row.dataset.tag); else pick(row.dataset.tag);
+    });
+    picked.addEventListener('click', (event) => {
+      const un = event.target.closest('[data-unpick]');
+      const add = event.target.closest('[data-pick]');
+      if (un) unpick(un.dataset.unpick);
+      if (add) pick(add.dataset.pick);
+    });
+    moreBtn.addEventListener('click', () => { shown += pageSize; render(); });
+
+    search.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      rows.forEach((r) => { r.hidden = q !== '' && !r.dataset.tag.toLowerCase().includes(q); });
+    });
+
+    root.querySelectorAll('[data-tag-sort]').forEach((btn) => btn.addEventListener('click', () => {
+      const byName = btn.dataset.tagSort === 'name';
+      root.querySelectorAll('[data-tag-sort]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      rows.sort((a, b) => (byName ? a.dataset.tag.localeCompare(b.dataset.tag) : (b.dataset.count - a.dataset.count) || a.dataset.tag.localeCompare(b.dataset.tag)))
+        .forEach((r) => grid.appendChild(r));
+    }));
+
+    // /tags/?tag=Kafka opens with that tag picked.
+    const initial = new URLSearchParams(location.search).get('tag');
+    if (initial && rows.some((r) => r.dataset.tag === initial)) pick(initial);
+  })();
+</script>

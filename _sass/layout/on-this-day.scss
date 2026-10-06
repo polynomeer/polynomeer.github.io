@@ -1,5 +1,7 @@
 /*
-  Style for On This Day
+  Style for On This Day: a date stepper, a timeline over every year the blog
+  has run (years without a post fold into one line), and jumps to a random
+  day or the busiest one.
 */
 
 @use 'variables-hook' as *;
@@ -8,114 +10,208 @@
 #on-this-day {
   display: grid;
   gap: 1.25rem;
-  letter-spacing: 0.03rem;
+}
+
+.content #on-this-day a:not(.img-link) {
+  border-bottom: none;
 }
 
 .otd-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid var(--main-border-color, rgba(120, 130, 160, 0.25));
-  border-radius: 999px;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 1.1rem;
+  background: var(--card-bg);
 }
 
-.otd-step,
-.otd-today {
-  padding: 0.3rem 0.8rem;
-  border: 1px solid rgba(98, 114, 164, 0.24);
-  border-radius: 999px;
-  background: none;
-  color: var(--text-muted-color);
-  font-size: 0.82rem;
-  line-height: 1.6;
+.otd-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.8rem;
+  background: transparent;
+  color: var(--text-color);
 
   &:hover {
-    border-color: rgba(139, 233, 253, 0.45);
-    color: var(--text-color);
+    border-color: var(--link-color);
+    color: var(--link-color);
   }
-}
-
-.otd-today {
-  margin-left: auto;
 }
 
 .otd-date {
   display: flex;
+  flex: 1 1 10rem;
   flex-direction: column;
-  min-width: 0;
+  align-items: center;
+  gap: 0.1rem;
 }
 
 .otd-date-label {
-  font-size: 1.05rem;
   color: var(--heading-color);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .otd-date-meta {
   color: var(--text-muted-color);
-  font-size: 0.8rem;
+  font-size: 0.84rem;
+}
+
+.otd-today {
+  flex-basis: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link-color);
+  font-size: 0.84rem;
+  text-align: center;
+}
+
+.otd-timeline {
+  margin: 0 0 0 0.6rem;
+  border-left: 2px solid var(--btn-border-color);
 }
 
 .otd-year {
-  margin-bottom: 1.75rem;
-}
-
-.otd-year-title {
+  position: relative;
   display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin: 0 0 0.75rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--heading-color);
-}
-
-.otd-year-ago {
-  color: var(--text-muted-color);
-  font-size: 0.8rem;
-  font-weight: 400;
-}
-
-.otd-post-list {
-  display: grid;
+  flex-direction: column;
   gap: 0.5rem;
-  margin: 0;
-}
+  padding: 0 0 1.5rem 1.5rem;
 
-.otd-post {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.65rem 0.9rem;
-  border: 1px solid rgba(98, 114, 164, 0.16);
-  border-left-width: 3px;
-  border-left-color: rgba(139, 233, 253, 0.45);
-  border-radius: 0.8rem;
-  background: rgba(68, 71, 90, 0.12);
-  transition: border-color 0.2s ease;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0.45rem;
+    left: -0.45rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--text-muted-color);
+  }
 
-  &:hover {
-    border-color: rgba(139, 233, 253, 0.42);
-    border-left-color: rgba(139, 233, 253, 0.75);
+  &.is-current::before {
+    left: -0.55rem;
+    width: 1rem;
+    height: 1rem;
+    background: var(--link-color);
+  }
+
+  &.is-empty::before {
+    top: 0.55rem;
+    left: -0.33rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border: 2px solid var(--btn-border-color);
+    background: var(--main-bg);
+  }
+
+  &:last-child {
+    padding-bottom: 0;
   }
 }
 
+.otd-year-title {
+  margin: 0;
+  color: var(--text-muted-highlight-color, var(--text-color));
+  font-family: var(--bs-font-monospace, monospace);
+  font-size: 0.86rem;
+  font-weight: 500;
+
+  .is-current & {
+    color: var(--link-color);
+  }
+
+  .is-empty & {
+    color: var(--text-muted-color);
+  }
+}
+
+.otd-post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+}
+
 .otd-post-link {
-  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--btn-border-color);
+  border-radius: 0.9rem;
+  background: var(--card-bg);
   color: var(--text-color);
-  word-break: break-word;
+  line-height: 1.5;
 
   &:hover {
-    color: var(--link-color);
+    border-color: var(--link-color);
+    color: var(--text-color);
     text-decoration: none;
+  }
+
+  .is-quiet & {
+    background: none;
+    color: var(--text-muted-highlight-color, var(--text-color));
   }
 }
 
 .otd-post-type {
-  margin-left: auto;
-  color: var(--text-muted-color);
-  font-size: 0.76rem;
-  white-space: nowrap;
+  --chip: var(--accent-cyan);
+
+  flex: none;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--chip) 16%, transparent);
+  color: var(--chip);
+  font-size: 0.7rem;
+
+  &.is-til {
+    --chip: var(--accent-green);
+  }
+
+  &.is-techblog,
+  &.is-conference {
+    --chip: var(--accent-pink);
+  }
+
+  &.is-book,
+  &.is-lecture {
+    --chip: var(--accent-yellow);
+  }
+}
+
+.otd-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  &[hidden] {
+    display: none;
+  }
+
+  button {
+    height: 2.5rem;
+    padding: 0 1rem;
+    border: 1px solid var(--btn-border-color);
+    border-radius: 0.7rem;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.86rem;
+
+    &:hover {
+      border-color: var(--link-color);
+      color: var(--link-color);
+    }
+  }
 }
 
 .otd-notice {
