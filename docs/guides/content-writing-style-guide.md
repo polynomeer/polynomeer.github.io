@@ -168,6 +168,13 @@ Concept posts should rest on primary sources: official documentation, RFCs and s
 - quote at most one or two sentences per post, in the original language and in quotation marks, followed by a Korean gloss when the source is not Korean
 - dates and numbers taken from a source must match the source as rendered (for example the date Medium displays, not a reader proxy's timestamp)
 
+The `## 참고` section is rendered as a closed box after the body, with external sources and posts on this blog in separate groups (see `docs/features/post-references-design.md`). Write one source per line:
+
+- external: `- [제목](URL) — 발행처`, with `: 메모` after the publisher when the reader needs to know which part the post relies on; `저자, [제목](URL)` for a book or a personal essay
+- internal: `- [제목](/posts/slug/)`, optionally with a lead-in such as `같은 연사의 앞선 발표: `
+- keep the link text to the page's own title; put the publisher after ` — `, not inside the brackets
+- use the heading `## 참고` rather than `참고 자료`, `References` or `출처`
+
 ## Reviews of External Articles
 
 Tech blog reviews (`_posts/techblog/`) must keep the original and the author's reading apart.
