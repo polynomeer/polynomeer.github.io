@@ -125,3 +125,100 @@ docs.confluent.io: Confluent Docs
 developer.confluent.io: Confluent Developer
 docs.python.org: Python Docs
 tistory.com: Tistory
+tigerdata.com: Tiger Data Docs
+mlflow.org: MLflow Docs
+haproxy.org: HAProxy
+pitest.org: PIT
+brendangregg.com: Brendan Gregg
+envoyproxy.io: Envoy Docs
+uber.com: Uber Engineering
+docs.influxdata.com: InfluxData Docs
+nextjs.org: Next.js
+vite.dev: Vite
+tanstack.com: TanStack
+vitess.io: Vitess Docs
+argo-cd.readthedocs.io: Argo CD Docs
+open-policy-agent.github.io: Open Policy Agent
+eclipse.dev: Eclipse Foundation
+p6spy.readthedocs.io: P6Spy Docs
+research.google: Google Research
+martin.kleppmann.com: Martin Kleppmann
+onnxruntime.ai: ONNX Runtime
+docs.pact.io: Pact Docs
+jacoco.org: JaCoCo
+csrc.nist.gov: NIST CSRC
+nvlpubs.nist.gov: NIST
+nvd.nist.gov: NIST NVD
+pages.nist.gov: NIST
+rxjs.dev: RxJS
+feast.dev: Feast
+airflow.apache.org: Apache Airflow
+ranger.apache.org: Apache Ranger
+impala.apache.org: Apache Impala
+kudu.apache.org: Apache Kudu
+shardingsphere.apache.org: Apache ShardingSphere
+cassandra.apache.org: Apache Cassandra
+commons.apache.org: Apache Commons
+pdfbox.apache.org: Apache PDFBox
+httpd.apache.org: Apache HTTP Server
+nightlies.apache.org: Apache Flink
+helm.sh: Helm Docs
+melconway.com: Mel Conway
+flywaydb.org: Flyway
+documentation.red-gate.com: Redgate Flyway Docs
+docs.tosspayments.com: 토스페이먼츠 개발자센터
+archunit.org: ArchUnit
+docs.ray.io: Ray Docs
+antirez.com: Salvatore Sanfilippo
+queue.acm.org: ACM Queue
+oreilly.com: O'Reilly
+infoq.com: InfoQ
+dev.to: DEV Community
+freecodecamp.org: freeCodeCamp
+geeksforgeeks.org: GeeksforGeeks
+javadoc.io: javadoc.io
+istio.io: Istio
+protobuf.dev: Protocol Buffers Docs
+semver.org: Semantic Versioning
+agilemanifesto.org: Agile Manifesto
+reactivemanifesto.org: The Reactive Manifesto
+reactive-streams.org: Reactive Streams
+projectreactor.io: Project Reactor
+spec.openapis.org: OpenAPI Initiative
+swagger.io: Swagger
+auth0.com: Auth0
+jsoup.org: jsoup
+instancio.org: Instancio
+springdoc.org: springdoc-openapi
+micronaut.io: Micronaut
+ktor.io: Ktor
+gvisor.dev: gVisor
+firecracker-microvm.github.io: Firecracker
+lwn.net: LWN.net
+jepsen.io: Jepsen
+cloud.google.com: Google Cloud
+docs.cloud.google.com: Google Cloud
+cloudflare.com: Cloudflare
+intel.com: Intel
+learntla.com: Hillel Wayne
+lamport.azurewebsites.net: Leslie Lamport
+raft.github.io: Raft
+use-the-index-luke.com: Use The Index, Luke
+kegel.com: Dan Kegel
+shipilev.net: Aleksey Shipilev
+mechanical-sympathy.blogspot.com: Martin Thompson
+wiki.c2.com: WikiWikiWeb
+johngrib.github.io: johngrib
+news.hada.io: GeekNews
+linkedin.com: LinkedIn
+programmers.co.kr: 프로그래머스
+yes24.com: YES24
+quora.com: Quora
+reddit.com: Reddit
+dzone.com: DZone
+codementor.io: Codementor
+javatpoint.com: Javatpoint
+tutorialspoint.com: Tutorialspoint
+w3schools.com: W3Schools
+mvnrepository.com: Maven Repository
+zdnet.co.kr: ZDNet Korea

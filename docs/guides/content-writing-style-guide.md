@@ -171,7 +171,7 @@ Concept posts should rest on primary sources: official documentation, RFCs and s
 The `## 참고` section is rendered as a closed box after the body, with external sources and posts on this blog in separate groups (see `docs/features/post-references-design.md`). Write one source per line:
 
 - external: `- [제목](URL) — 발행처`, with `: 메모` after the publisher when the reader needs to know which part the post relies on; `저자, [제목](URL)` for a book or a personal essay
-- internal: `- [제목](/posts/slug/)`, optionally with a lead-in such as `같은 연사의 앞선 발표: `
+- internal: `- [제목](/posts/slug/)`, optionally followed by ` — 관계` (for example ` — 같은 연사의 앞선 발표`); one post per line
 - keep the link text to the page's own title; put the publisher after ` — `, not inside the brackets
 - use the heading `## 참고` rather than `참고 자료`, `References` or `출처`
 
