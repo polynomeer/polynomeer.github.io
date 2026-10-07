@@ -1353,27 +1353,6 @@ header {
   font-variant-numeric: tabular-nums;
 }
 
-.portfolio-context-series {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: var(--link-color);
-  font-size: 0.84rem;
-
-  i {
-    font-size: 0.75em;
-  }
-
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-.portfolio-context-series-label {
-  color: var(--text-muted-color);
-  font-size: 0.78rem;
-}
-
 .portfolio-context-repo {
   display: inline-flex;
   align-items: center;

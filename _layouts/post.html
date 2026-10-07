@@ -131,7 +131,6 @@ tail_includes:
       </div>
 
       {%- comment -%} Which project or job the post belongs to, right under the dates. {%- endcomment -%}
-      {% assign portfolio_context_series_shown = false %}
       {% include portfolio-context.html lang=lang %}
 
       {% if page.image %}
@@ -154,10 +153,7 @@ tail_includes:
     </div>
   </header>
 
-  {%- comment -%} Already in the project row when the post belongs to one. {%- endcomment -%}
-  {% unless portfolio_context_series_shown %}
-    {% include series-navigation.html lang=lang %}
-  {% endunless %}
+  {% include series-navigation.html lang=lang %}
 
   {% include problem-decision-result.html lang=lang %}
 
