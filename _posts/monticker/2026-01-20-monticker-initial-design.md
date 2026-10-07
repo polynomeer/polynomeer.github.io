@@ -10,6 +10,8 @@ mermaid: true
 
 저장소의 첫 커밋 [`2bac5c1`](https://github.com/polynomeer/monticker/commit/2bac5c13f5362d854e43363cda816c35e4a2d3ef)은 MIT `LICENSE` 파일 하나다. 설계 문서와 코드 골격은 그다음 커밋 묶음에 들어왔다. 이 글이 말하는 "초기 설계"는 그 묶음, 즉 설계 문서 커밋 [`a7e622e`](https://github.com/polynomeer/monticker/commit/a7e622e5d8886e8fe9120ef2d73286e421924773)부터 [`8cdcd5a`](https://github.com/polynomeer/monticker/commit/8cdcd5a858609e1162369bd79d71f9e1ebc31a5a)까지의 상태다. 이후에 바뀐 구조는 다루지 않는다.
 
+---
+
 ## 풀려던 문제와 조건
 
 보통의 주식 앱은 가격, 차트, 뉴스 목록을 따로 보여 준다. 가격이 튄 시각과 뉴스가 나온 시각을 맞춰 보는 일은 사용자 몫이다. 초기 제품 문서 [`docs/product.md`](https://github.com/polynomeer/monticker/blob/a7e622e5d8886e8fe9120ef2d73286e421924773/docs/product.md)는 이것을 뒤집어, 중심 객체를 가격이 아니라 이벤트로 두었다.
@@ -33,6 +35,8 @@ MVP(최소 기능 제품)에서 가장 중요한 화면은 "종목 상세 = 차�
 | 대상 시장 | KOSPI/KOSDAQ 필수, 미국 시장은 선택 |
 
 트래픽 수치가 없다는 점이 중요하다. 아래의 선택은 부하를 재서 고른 것이 아니라, 1~2명이 운영할 수 있는 부품 수를 기준으로 고른 것이다.
+
+---
 
 ## 초기 아키텍처
 
@@ -59,6 +63,8 @@ flowchart TD
 
 실시간 파이프라인은 문서에서 이렇게 설계되었다. 수집기 하나가 Redis 최신가 캐시와 TimescaleDB에 쓰고, Redis Stream을 통해 Candle Aggregator, Event Detector, WebSocket Broadcaster에 같은 틱을 나눠 준다. 규모가 커지면 Kafka, 더 커지면 Kafka + Flink로 바꾼다는 단계도 함께 적혀 있다.
 
+---
+
 ## 모듈식 모놀리스와 worker 분리
 
 [ADR-001](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/001-modular-monolith.md)은 처음부터 [마이크로서비스](/posts/MicroServiceArchitecture/)로 나눌지를 다룬다. 시세 수집, 이벤트 탐지, 뉴스, 공시, 알림, 포트폴리오, AI 요약까지 도메인이 많아서 나눌 이유처럼 보였다.
@@ -73,6 +79,8 @@ ADR-001은 세 번째를 골랐다. 이유는 팀 규모, 패키지와 인터페
 
 치르는 비용도 ADR에 적혀 있다. 모든 모듈이 커넥션 풀 하나를 같이 쓰고, 다른 모듈의 Repository를 직접 부르지 않는다는 규칙은 사람이 지켜야 한다. 재검토 조건은 "한 모듈(예: WebSocket broadcaster, Event Detector)이 다른 모듈은 한가한데 혼자 자원을 다 쓸 때"다.
 
+---
+
 ## stock_events를 중심 테이블로
 
 [ADR-003](https://github.com/polynomeer/monticker/blob/098febe4289691d2ea929328496a2cf26b096393/docs/decisions/003-stock-events-central.md)은 타임라인을 어떻게 만들지를 두 안으로 비교한다.
@@ -83,6 +91,8 @@ ADR-001은 세 번째를 골랐다. 이유는 팀 규모, 패키지와 인터페
 2번을 골랐다. 그래서 타임라인 조회는 `WHERE stock_id = ? AND event_time BETWEEN ? AND ? ORDER BY event_time` 하나로 끝난다. 중요도 점수, 감성 점수, 중복 제거를 읽을 때마다가 아니라 쓸 때 한 번만 계산한다. 새 이벤트 소스가 생겨도 타임라인 API는 바뀌지 않는다.
 
 대가는 쓰기 쪽으로 옮겨 간다. 모든 수집기가 `stock_events`에 쓰는 책임을 지고, 원본으로 돌아가는 연결은 `source_type`과 `source_id`로 유지해야 한다. 같은 이벤트가 두 번 들어가지 않도록 `stock_id + event_type + 시간 버킷` 기준으로 쓰기 시점에 중복을 막아야 한다. 소스마다 다른 부가 정보는 `metadata_json`(JSONB 컬럼)에 둔다.
+
+---
 
 ## 시계열 저장소: TimescaleDB
 
@@ -97,6 +107,8 @@ ADR-001은 세 번째를 골랐다. 이유는 팀 규모, 패키지와 인터페
 ADR-002는 TimescaleDB를 골랐다. 근거는 hypertable(시간 기준으로 자동 분할되는 테이블)의 자동 분할, PostgreSQL과 같은 연결과 마이그레이션 도구, 그리고 `time_bucket`과 continuous aggregate 같은 시계열 함수다. continuous aggregate는 새 데이터가 들어오면 백그라운드에서 갱신되는 집계용 hypertable이다([About continuous aggregates](https://www.tigerdata.com/docs/use-timescale/latest/continuous-aggregates/about-continuous-aggregates)). 캔들 집계를 이것으로 처리할 수 있다는 기대가 있었다.
 
 비용은 이미지와 마이그레이션에 남았다. Docker Compose는 `postgres` 대신 `timescale/timescaledb` 이미지를 써야 하고, 테이블을 만든 뒤 `create_hypertable()`을 불러야 한다. 재검토 조건은 단일 TimescaleDB 노드가 쓰기량을 감당하지 못할 때다.
+
+---
 
 ## 캐시와 메시지 버스: Redis와 Redis Streams
 
@@ -115,6 +127,8 @@ consumer group은 여러 소비자가 한 스트림을 나눠 읽는 단위이�
 ADR-004는 Redis Streams를 골랐다. Redis가 이미 스택에 있으니 새 인프라가 없고, consumer group과 ACK가 MVP 수준의 신뢰성에는 충분하며, 적은 처리량에서 Kafka의 운영 부담은 정당화되지 않는다는 이유다. Kafka의 저장 구조는 [Kafka의 저장 구조](/posts/kafka-storage-internals/)에 따로 정리했다.
 
 ADR이 적은 대가는 두 가지다. Redis가 캐시와 스트림을 함께 맡으므로 단일 장애 지점이 된다. 그리고 Streams는 장기 재처리(replay)에 쓰지 않으므로 이벤트 이력은 스트림이 아니라 `stock_events`에 남긴다. Kafka로 옮길 조건도 적혀 있다. 틱 처리량이 Redis 단일 스레드 쓰기 한계를 넘을 때, 백필이나 감사를 위해 재처리가 필요할 때, 서로 다른 처리 로직을 가진 소비 애플리케이션이 여럿 생길 때다.
+
+---
 
 ## 백엔드와 프론트엔드 스택
 
@@ -147,6 +161,8 @@ Spring Boot는 문서에서 이미 정해져 있었다. JPA, Flyway, Spring Secu
 api는 [`bdc136b`](https://github.com/polynomeer/monticker/commit/bdc136bb489bc2eecf192a3a401ac36e9d7ce4c3)에서 STOMP over SockJS 엔드포인트 `/ws`를 열고 Spring 내장 simple broker를 켰다. 외부 브로커(RabbitMQ 등) relay를 쓰면 인프라가 하나 늘어난다. Spring 문서는 simple broker가 STOMP 명령의 일부만 지원하고 클러스터링에는 적합하지 않다고 적는다([Spring STOMP External Broker](https://docs.spring.io/spring-framework/reference/web/websocket/stomp/handle-broker-relay.html)). api가 한 대인 동안에는 이 한계가 드러나지 않는다.
 
 로컬과 1단계 배포는 Docker Compose다([`d996f80`](https://github.com/polynomeer/monticker/commit/d996f8042c718ce195a0bd1e14f1fd646a2601b9)). `timescale/timescaledb:latest-pg16`과 `redis:7-alpine`만 기본으로 뜨고, api와 web은 `full` 프로필에 묶었다. Compose는 `profiles`가 없는 서비스만 기본으로 띄운다([Docker Compose profiles](https://docs.docker.com/compose/how-tos/profiles/)). 그래서 개발 중에는 DB와 Redis만 컨테이너로 띄우고 애플리케이션은 IDE에서 돌린다. Kubernetes는 문서상 3단계로 미뤄 두었다.
+
+---
 
 ## 첫 커밋들이 실제로 만든 것
 
@@ -181,6 +197,8 @@ sequenceDiagram
 - MVP에서 뺀다고 적은 네이티브 앱도 Expo 골격으로 먼저 들어왔다([`04218d6`](https://github.com/polynomeer/monticker/commit/04218d6f7229c9fe422af535a924717aed5b2053)). 관심종목 조회와 푸시 토큰 등록 정도다.
 
 정리하면 첫 커밋들은 설계의 저장 구조(`stock_events`, TimescaleDB 스키마, Redis 키)는 그대로 만들었고, 실시간 경로는 Streams 없이 한 프로세스 안의 직접 호출로 시작했다.
+
+---
 
 ## 설계가 남겨 둔 질문
 

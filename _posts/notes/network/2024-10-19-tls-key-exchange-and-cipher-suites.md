@@ -8,6 +8,8 @@ tags: [Network, TLS, Security, Cryptography, Handshake]
 
 [TLS 핸드셰이크의 비용](/posts/tls-handshake-cost/)에는 몇 개의 용어가 설명 없이 나온다. TLS 1.3 클라이언트는 ClientHello에 "키 공유 추정값"을 미리 싣고, 1.3은 "정적 RSA 스위트를 제거"했고, 재개는 "PSK 교환"으로 바뀌었고, 대칭 암호는 "AES-NI 덕분에 거의 공짜"라고 했다. 이 글은 그 네 가지를 처음부터 설명한다.
 
+---
+
 ## 두 단계로 나뉘는 암호화
 
 TLS 연결은 두 단계로 일한다.
@@ -16,6 +18,8 @@ TLS 연결은 두 단계로 일한다.
 2. **레코드 보호.** 핸드셰이크에서 얻은 비밀로 대칭 키를 만들고, 이후 모든 데이터를 그 키로 암호화한다. 대칭 암호는 비대칭 암호보다 훨씬 빠르다.
 
 비대칭 연산은 연결당 한 번이고, 대칭 연산은 바이트마다 일어난다. 그래서 대칭 쪽이 빨라야 전체가 빠르다.
+
+---
 
 ## 암호 스위트가 정하는 것
 
@@ -33,6 +37,8 @@ TLS 1.3은 이것을 쪼갰다. 암호 스위트는 레코드 보호 알고리�
 
 목록은 [RFC 8446 B.4절](https://datatracker.ietf.org/doc/html/rfc8446#appendix-B.4)에 있고, 그중 `TLS_AES_128_GCM_SHA256`은 반드시 구현해야 한다([9.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-9.1)). 선택지가 적으니 운영자가 약한 조합을 고를 여지도 줄었다.
 
+---
+
 ## (EC)DHE와 key share
 
 Diffie-Hellman(DH) 키 교환은 양쪽이 각자 비밀 값을 하나씩 만들고, 거기서 계산한 공개 값만 서로 보낸다. 상대의 공개 값과 자신의 비밀 값을 조합하면 양쪽이 같은 결과를 얻는다. 중간에서 공개 값 두 개를 모두 본 사람은 그 결과를 계산할 수 없다. 타원 곡선 위에서 같은 일을 하면 ECDH다.
@@ -40,6 +46,8 @@ Diffie-Hellman(DH) 키 교환은 양쪽이 각자 비밀 값을 하나씩 만들
 끝의 E(ephemeral, 임시)가 중요하다. DHE와 ECDHE는 연결마다 새 비밀 값을 만들고, 연결이 끝나면 버린다.
 
 TLS 1.3에서 클라이언트가 보내는 공개 값이 `key_share` 확장이다([4.2.8절](https://datatracker.ietf.org/doc/html/rfc8446#section-4.2.8)). 클라이언트는 서버가 어떤 곡선(그룹)을 고를지 모르는 상태에서, 고를 것 같은 그룹의 공개 값을 ClientHello에 미리 담는다. 서버가 그중 하나로 응답하면 첫 왕복에서 키 교환이 끝난다. 이것이 1.3이 1-RTT인 이유이고, 추정이 빗나가면 서버가 HelloRetryRequest로 다른 그룹을 요청해 왕복이 하나 늘어난다([2.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.1)). 필수 구현 그룹은 secp256r1이다([9.1절](https://datatracker.ietf.org/doc/html/rfc8446#section-9.1)).
+
+---
 
 ## forward secrecy와 정적 RSA
 
@@ -50,6 +58,8 @@ TLS 1.2까지 흔했던 정적 RSA 키 교환은 다르게 동작했다. 클라�
 forward secrecy(전방 비밀성)는 이 문제를 막는 성질이다. (EC)DHE는 연결마다 임시 비밀 값을 쓰고 버리므로, 나중에 서버 개인키가 유출되어도 지난 세션의 키를 다시 계산할 수 없다. 서버 개인키는 "이 서버가 진짜인가"를 증명하는 서명에만 쓰인다.
 
 그래서 TLS 1.3은 정적 RSA와 정적 DH 스위트를 제거했고, 남은 공개키 기반 키 교환은 모두 forward secrecy를 제공한다([RFC 8446, 1.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-1.2)). TLS 1.2를 쓰는 곳에도 RFC 9325는 정적 RSA를 협상하지 말라고(SHOULD NOT) 하고, ECDHE와 AES-GCM 조합의 스위트 넷을 권한다([4.1절](https://datatracker.ietf.org/doc/html/rfc9325#section-4.1), [4.2절](https://datatracker.ietf.org/doc/html/rfc9325#section-4.2)).
+
+---
 
 ## PSK
 
@@ -63,6 +73,8 @@ TLS 1.3의 키 교환 모드는 셋이다([2절](https://datatracker.ietf.org/do
 
 둘째와 셋째의 차이가 forward secrecy다. PSK만 쓰면 비대칭 연산이 빠지는 대신, 그 PSK가 유출되면 해당 애플리케이션 데이터의 forward secrecy를 잃는다([2.2절](https://datatracker.ietf.org/doc/html/rfc8446#section-2.2)). 재개 때도 (EC)DHE를 함께 돌리면 이 손해가 없다. [0-RTT](/posts/tls-handshake-cost/)의 early data는 이 PSK에서 유도한 키로 암호화된다.
 
+---
+
 ## AES-NI
 
 핸드셰이크가 끝나면 남는 일은 대칭 암호, 대부분 AES-GCM이다. AES는 한 블록을 여러 라운드에 걸쳐 섞는다. 소프트웨어로 구현하면 라운드마다 테이블 조회와 비트 연산이 반복된다.
@@ -70,6 +82,8 @@ TLS 1.3의 키 교환 모드는 셋이다([2절](https://datatracker.ietf.org/do
 AES-NI는 이 라운드를 CPU 명령어 하나로 처리하는 인텔의 명령어 집합이다. 암호화 라운드(`AESENC`, `AESENCLAST`), 복호화 라운드(`AESDEC`, `AESDECLAST`), 키 확장 보조(`AESKEYGENASSIST`, `AESIMC`)의 여섯 명령으로 되어 있다. 인텔 문서는 순차 모드에서 소프트웨어 구현 대비 2~3배, 병렬화 가능한 모드에서 10배까지의 개선을 제시한다. 테이블 조회가 없으므로 캐시 타이밍을 노리는 부채널 공격에도 강하다([Intel AES-NI](https://www.intel.com/content/www/us/en/developer/articles/technical/advanced-encryption-standard-instructions-aes-ni.html)).
 
 [핸드셰이크 비용 글](/posts/tls-handshake-cost/)에서 대칭 암복호를 "거의 무시 가능"이라고 한 근거가 이것이다. 1.3의 스위트 목록에는 AES 계열 외에 ChaCha20-Poly1305도 있어서, AES 가속이 없는 환경에서는 이쪽을 고를 수 있다.
+
+---
 
 ## 정리
 

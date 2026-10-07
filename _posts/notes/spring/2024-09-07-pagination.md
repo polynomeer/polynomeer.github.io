@@ -9,6 +9,8 @@ tags: [Spring, Pagination, Query]
 
 목록 조회를 만들 때 페이지네이션은 거의 필수다. 하지만 단순히 `Pageable`을 받는 것만으로 끝나지 않는다. 성능, 정렬 안정성, 카운트 쿼리 비용까지 함께 봐야 한다.
 
+---
+
 ## 가장 흔한 방식 두 가지
 
 ### Offset Pagination
@@ -29,6 +31,8 @@ tags: [Spring, Pagination, Query]
 - 단점: 임의 페이지 이동은 어렵다.
 - 단점: 정렬 기준이 명확해야 한다.
 
+---
+
 ## Spring Data JPA에서 자주 쓰는 타입
 
 - `Page`: 전체 카운트 포함
@@ -36,6 +40,8 @@ tags: [Spring, Pagination, Query]
 - `List`: 직접 제어
 
 `Page`는 전체 개수를 알기 위해 카운트 쿼리를 추가로 실행하고, `Slice`는 다음 페이지가 있는지만 안다. 그래서 카운트 쿼리가 비싸다면 `Page`보다 `Slice`가 더 적절할 수 있다([Paging, Iterating Large Results, Sorting & Limiting](https://docs.spring.io/spring-data/commons/reference/repositories/query-methods-details.html)).
+
+---
 
 ## 실무에서 중요한 판단 포인트
 
@@ -46,6 +52,8 @@ tags: [Spring, Pagination, Query]
 
 예를 들어 최신순 피드는 cursor pagination이 잘 맞고, 관리자 검색 화면은 offset pagination이 더 현실적일 수 있다.
 
+---
+
 ## 주의할 점
 
 - 정렬 기준이 모호하면 페이지가 겹치거나 누락될 수 있다.
@@ -53,6 +61,8 @@ tags: [Spring, Pagination, Query]
 - count 쿼리가 본 조회보다 더 비싸질 수 있다.
 
 정렬 기준에는 보통 `createdAt desc, id desc`처럼 tie-breaker(값이 같을 때 순서를 정하는 보조 키)를 두는 편이 안전하다. 유일한 `id`를 덧붙이면 같은 `createdAt` 안에서도 순서가 하나로 정해진다.
+
+---
 
 ## 정리
 

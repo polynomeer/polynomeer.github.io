@@ -12,13 +12,19 @@ mermaid: true
 
 원문: [MySQL ALTER DDL 수행 방식에 대한 이해](https://tech.kakao.com/posts/703) — kakao tech, 2025-05-14
 
+---
+
 ## 한 줄 요약
 
 MySQL의 ALTER는 세 알고리즘으로 돈다. Copy(새 테이블에 전부 복사, 쓰기 차단), In-Place(5.6+, 임시 구조와 DML 로그로 읽기·쓰기 허용, 필요 시 리빌드), Instant(8.0+, 메타데이터만 수정)다. 원문은 소스 코드 수준에서 ALTER의 3단계(Initialization → Execution → Final)와 세 핵심 함수(`ha_prepare_inplace_alter_table`, `ha_inplace_alter_table`, `ha_commit_inplace_alter_table`)를 따라가며 어느 시점에 어떤 [메타데이터 락](/posts/lock-types-and-waits/)(MDL, 테이블 구조를 보호하는 락)을 잡는지를 비교한다. 원문이 확인한 것은 In-Place가 prepare 전과 commit 전 두 번 Exclusive 락을 잡고, Instant는 commit 전 한 번만 잡는다는 것, 그리고 메타데이터만 바꾸는 작업이라도 In-Place로 지정하면 두 번 잡는다는 것이다. 원문의 결론은 두 가지 습관이다. `ALGORITHM`을 명시하라, 실행 전 장기 트랜잭션을 확인하라.
 
+---
+
 ## 배경
 
 MySQL은 서비스가 커질수록 운영이 어려웠고, 그중 하나가 서비스 중 Online DDL이다. 5.6에서 In-Place가 추가돼 가용성이 올라갔지만, 시작과 끝에 메타 락이 필요하고 작업에 따라 임시 테이블과 복사도 필요해 편하지는 않았다. 그래서 8.0에서 Instant가 추가됐고, 원문은 이 세 알고리즘의 내부 동작을 비교해 운영에 도움을 주려 한다.
+
+---
 
 ## ALTER의 3단계
 
@@ -37,11 +43,15 @@ MySQL은 서비스가 커질수록 운영이 어려웠고, 그중 하나가 서�
 
 **Final.** Data Dictionary 갱신과 커밋. atomic DDL을 지원하는 엔진은 테이블 이름 교체를 먼저 하고 DD를 갱신·커밋하며, 아닌 엔진은 반대다. 마지막에 `MDL_SHARED_READ`로 메타데이터를 확인하고 정리한다.
 
+---
+
 ## 세 함수
 
 - **prepare**: 인덱스 이름·컬럼 이름 제약을 검사하고 인덱스·외래키 메타데이터를 갱신. Instant는 아무것도 안 하고 빠져나온다.
 - **inplace_alter**: 테이블 리빌드, DML 로그 적용, 인덱스 구성. Instant이거나, In-Place라도 인덱스 구성이 아니고 리빌드도 필요 없으면 아무것도 안 한다.
 - **commit**: 임시 이름 생성, 통계 스레드 접근 차단, 원본과 새 테이블 메타데이터 동기화. Instant는 `dd_add_instant_columns`로 `row_version`을 올리고 DEFAULT 값을 설정한다.
+
+---
 
 ## 세 알고리즘
 
@@ -58,6 +68,8 @@ MySQL은 서비스가 커질수록 운영이 어려웠고, 그중 하나가 서�
 | 디스크 오버헤드 | 높음 | 중간(임시 파일·로그) | 매우 낮음 |
 | 시간 | 가장 느림 | 작업·크기에 따라 | 가장 빠름 |
 | 버전 | 모두 | 5.6+ | 8.0.12+ |
+
+---
 
 ## 핵심: 메타 락 비교
 
@@ -88,15 +100,21 @@ flowchart TD
 
 그리고 궁금할 만한 실험 하나. In-Place로도 메타데이터만 수정하는 작업이 있는데, 그러면 Instant와 같지 않을까? 원문이 디버깅해 보니 아니었다. 소스가 알고리즘만 보고 승격을 결정하므로 메타데이터만 바꾸는 작업이라도 In-Place면 prepare 전에 `MDL_EXCLUSIVE`를 잡는다. 즉 **Exclusive 락 횟수는 작업 내용이 아니라 지정한 알고리즘이 정한다.**
 
+---
+
 ## 결론: 두 가지 습관
 
 작업에 따라 쓸 수 있는 알고리즘이 정해져 있어 선택의 폭은 좁다. 그래도 어떤 경우든 `ALGORITHM` 구문을 명시하라는 것이 원문의 첫 권고다. 그래야 예기치 않게 느린 알고리즘으로 대체되는 것을 막는다. 원문은 이를 방어적 수행 방식이라고 부른다. 공식 문서에 따르면 ALGORITHM을 지정했는데 그 알고리즘을 지원하지 않는 작업이면 오류로 실패한다([ALTER TABLE Statement](https://dev.mysql.com/doc/refman/8.4/en/alter-table.html)). 두 번째 권고는 실행 전 장기 실행 트랜잭션이 없는지 확인하라는 것이다. 어떤 DDL이든 Exclusive 메타 락이 짧게라도 들어가기 때문이다. 공식 문서는 그 결과를 이렇게 적는다. "Additionally, a pending exclusive metadata lock requested by an online DDL operation blocks subsequent transactions on the table."(Online DDL이 요청해 대기 중인 Exclusive 메타데이터 락은 그 테이블의 뒤이은 트랜잭션을 막는다.) ([Online DDL Performance and Concurrency](https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-performance.html)) 그래서 긴 트랜잭션 하나가 있으면 그 뒤의 세션이 줄줄이 대기한다.
+
+---
 
 ## 읽고 남는 질문
 
 - Instant의 64회 제한이 실제 운영에서 얼마나 빨리 닿는지, 닿았을 때의 리빌드를 어떻게 스케줄하는지가 궁금하다. 컬럼 추가가 잦은 테이블은 생각보다 빨리 닿을 수 있다.
 - In-Place의 "임시 테이블 작업이 Copy의 전체 복사와 다른 것으로 추정"은 추정에 그친다. 크기가 큰 테이블에서 실제 소요 시간과 디스크 사용량을 비교한 수치가 있으면 좋겠다.
 - `LOCK=NONE`을 명시하는 것도 `ALGORITHM` 명시만큼 중요한 방어인데(공식 문서상 지원 안 되면 오류로 멈춤), 결론에 같이 언급됐으면 완결성이 있었을 것이다.
+
+---
 
 ## 한 줄로 가져가기
 

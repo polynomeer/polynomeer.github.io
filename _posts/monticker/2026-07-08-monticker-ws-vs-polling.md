@@ -24,6 +24,8 @@ monticker의 시세 경로는 Go `market-gateway`가 틱을 Kafka `market.ticks`
 
 이 저장소는 페이퍼 트레이딩 규모의 개인 프로젝트다. 숫자는 로컬 한 대(호스트 JVM/Go + k6 + Docker VM 안의 Kafka/Redis/Postgres)에서 잰 것이고 운영 트래픽 검증이 아니다. 절대값보다 조건 간 비교로 읽어야 한다.
 
+---
+
 ## 방법
 
 | 항목 | WebSocket | Polling |
@@ -34,6 +36,8 @@ monticker의 시세 경로는 Go `market-gateway`가 틱을 Kafka `market.ticks`
 | 서버 | api `-Xmx2g`, Tomcat 기본값(max-connections 8,192, max-threads 200), Hikari 10 | 같음. IP당 레이트리밋은 벤치 헤더로 우회 |
 
 같은 머신이라 시계가 같다. k6·api·worker·게이트웨이·Kafka가 CPU를 나눠 썼다.
+
+---
 
 ## WebSocket vs polling: 클라이언트 수를 늘리면
 
@@ -57,11 +61,15 @@ monticker의 시세 경로는 Go `market-gateway`가 틱을 Kafka `market.ticks`
 
 신선도도 갈린다. WS tick→client p50은 N=1,000 48ms → 10,000 229ms(conflation 100ms 포함)이고, 폴링 staleness p50은 간격과 무관하게 약 540ms다. 간격/2 + 처리다. 1초 폴링과 비교해도 WS가 항상 최신이고 더 싸다. 결론은 저장소의 기존 결정을 지지한다. 다만 이 실험 전에는 "지지한다"가 아니라 "그럴 것이다"였다.
 
+---
+
 ## 한 서버의 두 벽: 8,192와 140KB
 
 WS N=10,000에서 연결 실패가 7,248~14,823회(재시도 포함) 났다. `netstat`로 센 ESTABLISHED 소켓이 16,584개, localhost라 양끝이 잡히므로 8,292 연결이다. Tomcat `max-connections` 기본값 8,192다. [Tomcat 문서](https://tomcat.apache.org/tomcat-10.1-doc/config/http.html)에 따르면 이 한도에 이르면 Tomcat은 연결을 하나 더 받되 처리하지 않고, 그 뒤 연결은 운영체제의 accept 큐(`acceptCount`, 기본 100)에 머문다([accept 큐](/posts/tcp-connection-and-queues/)). 8,192보다 약 100개 많은 수치는 이 설명과 어긋나지 않는다. 넘친 클라이언트는 조용히 처리되지 못하고 k6가 재시도했다. 서버 로그에는 아무것도 없다.
 
 `server.tomcat.max-connections=20000`으로 바꾸자 3회 모두 실패 0, 초당 8만 9천 메시지. 그런데 이 값은 공짜가 아니다. 연결당 api 힙 약 140KB로, N=1,000 730MB → 5,000 1,340MB → 8,200 1,760~1,960MB(`-Xmx2g` 근처)다. 그래서 `-Xmx3g`와 함께 올렸다. `max-connections`는 반드시 힙과 같이 정해야 하고, 진짜 확장은 세로가 아니라 api pod를 늘리는 것이다. 그것은 [ADR-038](https://github.com/polynomeer/monticker/blob/main/docs/decisions/038-broadcast-consumer-partition-assignment.md)이 풀어 둔 문제다(브로드캐스트 컨슈머가 [컨슈머 그룹](/posts/kafka-consumer-group-rebalance/) 없이 전 파티션을 받으므로 pod를 늘려도 모든 pod가 모든 틱을 받는다). 이 실험이 못 박은 것은 **한 pod의 현실적 상한이 약 8,000 동시 연결**이라는 숫자다.
+
+---
 
 ## Kafka가 30초 죽으면 사용자는 무엇을 보는가
 
@@ -78,6 +86,8 @@ WS 1,000연결 + 관측 연결 1개. Kafka를 `docker kill`, 30초 뒤 `docker s
 유실은 1,010건이고 세 숫자가 정확히 일치한다. 게이트웨이의 발행 실패 1,010(connection refused 606·reset 263·EOF 141) = worker의 시퀀스 gap 1,010. 이것이 인지된 유실(발행 측이 실패를 알고 센 유실)인 이유는 [다음 글](/posts/monticker-partition-ordering/)에서 다룰 결함 D-M2-01을 먼저 고쳤기 때문이다. 게이트웨이의 kafka-go Writer가 `acks=0`([브로커 확인을 기다리지 않는 발행](/posts/kafka-delivery-guarantees/))이었고, 그 상태였다면 발행 실패를 게이트웨이가 알지 못해 유실이 조용했을 것이다. 지금은 알되 재시도 큐잉이나 로컬 버퍼가 없어 그대로 버린다. 페이퍼 트레이딩·mock 틱에서는 다음 틱이 1초 뒤 오므로 감수하고, 실제 체결가라면 게이트웨이에 버퍼와 복구 후 재발행이 있어야 한다.
 
 자동 복구는 확인됐다. worker의 `@KafkaListener`와 api의 브로드캐스트 컨슈머(10초 재시도 루프) 모두 재기동 없이 스스로 다시 붙었다.
+
+---
 
 ## 읽지 않는 클라이언트 25개가 나머지 1,000개를 멈춘다
 
@@ -111,6 +121,8 @@ flowchart TD
 
 완전한 격리는 아니다. 풀이 느린 소비자 수보다 크다는 전제 위에 있고, 풀 크기는 "느린 소비자 예산"으로 운영에서 잡아야 한다. 근본 격리는 세션별 send 비동기화와 이미 있는 종목 conflation의 조합이다. 이후 [parity-pay 9편](/posts/parity-pay-external-isolation/)에서 다룬 [벌크헤드](/posts/bulkhead/)와 같은 모양의 문제다. 느린 상대 때문에 잃는 것을 일부로 한정하고 나머지를 지키려면, 공유 자원에 상한이 있어야 한다.
 
+---
+
 ## 결함과 기본값 변경
 
 이 실험과 다음 글의 실험이 바꾼 기본값 다섯 개(게이트웨이 acks, worker 세션 타임아웃·어사이너, Tomcat `max-connections`, WS outbound 풀)는 [ADR-050](https://github.com/polynomeer/monticker/blob/main/docs/decisions/050-realtime-pipeline-defaults-from-load-tests.md)로 묶여 있다.
@@ -121,6 +133,8 @@ flowchart TD
 | D-M1-02 | 한 pod의 동시 WS 연결이 `max-connections` 8,192에서 조용히 막힘 | 설정화(기본 20,000), `-Xmx`와 함께 조정 |
 | D-M1-04 | 느린 연결이 발행 풀(코어 수)보다 많으면 전체가 p99 19초 | send 한도 2s/256KB + `outbound-core-pool-size` 설정 |
 
+---
+
 ## 한계
 
 - 같은 머신에서 k6가 부하를 만들었다. 폴링 조건에서는 k6가 5,000 req/s를 만드느라 CPU를 많이 썼다. 절대값이 아니라 조건 간 비교로 읽어야 한다.
@@ -129,11 +143,15 @@ flowchart TD
 - 단일 pod, SimpleBroker다. 외부 브로커 릴레이나 다중 pod 구성은 재지 않았다.
 - Kafka 정지 실험의 유실은 게이트웨이 버퍼가 없는 현재 구조의 값이다. 버퍼를 붙이면 유실 0이 되겠지만, 그 대신 45초치 틱이 한꺼번에 밀려오는 다른 문제가 생긴다.
 
+---
+
 ## 이 실험이 시리즈에 대해 말하는 것
 
 이 시리즈의 [Kafka 파이프라인 글과 Netty 브로드캐스트 글](https://github.com/polynomeer/monticker/blob/main/docs/decisions/005-kafka-go-gateway-netty-broadcast.md)은 지금 공개 목록에 없다. 아키텍처를 설명했을 뿐 측정이 없었고, 그중 일부(Netty 게이트웨이)는 이후 제거됐기 때문이다. 이 글은 그 반대다. 설계 배경은 ADR 링크로만 두고, 실제로 남아 있는 구조에서 잰 숫자만 적었다.
 
 실험 전에 "STOMP push가 맞다"는 것은 상식이었다. 실험 뒤에 알게 된 것은 그 상식 안에 있던 세 개의 빈칸이다. 한 서버의 상한(8,192, 140KB/연결), 브로커 장애 시 사용자가 보는 것(연결은 됐는데 45초 침묵), 그리고 느린 클라이언트가 공유 자원을 통해 전체를 끌어내리는 경로(풀 10 < 느린 연결 25). 셋 다 기본값 하나씩이었고, 셋 다 부하를 걸기 전에는 보이지 않았다.
+
+---
 
 ## 정리
 

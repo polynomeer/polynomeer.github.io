@@ -17,6 +17,8 @@ API를 설계할 때 성공 응답만 정의하고 에러 응답을 나중으로
 
 세 역할은 서로 다른 독자를 향한다. 재시도 판단은 클라이언트 코드가, 원인 구분은 클라이언트 개발자와 사용자가, 원인 추적은 운영자가 읽는다. 그래서 에러 응답 하나에 기계가 읽을 정보와 사람이 읽을 정보, 그리고 서버 로그로 이어지는 연결 고리가 함께 들어가야 한다.
 
+---
+
 ## 최소한 맞춰야 할 것
 
 - 적절한 HTTP 상태 코드
@@ -24,6 +26,8 @@ API를 설계할 때 성공 응답만 정의하고 에러 응답을 나중으로
 - 사람이 읽을 수 있는 메시지
 - 기계가 분기할 수 있는 에러 코드
 - 요청 추적용 식별자
+
+---
 
 ## 상태 코드를 어떻게 쓸까
 
@@ -47,6 +51,8 @@ API를 설계할 때 성공 응답만 정의하고 에러 응답을 나중으로
 
 상태 코드는 클라이언트의 다음 행동을 정한다. 대략 4xx는 "요청을 고치지 않으면 다시 보내도 실패한다", 5xx는 "같은 요청이 나중에는 성공할 수 있다"로 읽힌다. 그래서 재시도 로직은 보통 5xx와 네트워크 오류만 대상으로 삼는다. 다만 `500`을 재시도하는 것은 그 요청이 여러 번 실행되어도 안전할 때만 의미가 있다. 상태 코드 분류 전반은 [HTTP 웹 기본 지식 7](/posts/http-basics-07-status-codes/)에, 재시도와 멱등성의 관계는 [Stateless와 Idempotent](/posts/stateless-and-idempotent/)에 정리했다.
 
+---
+
 ## 실무에서 중요한 포인트
 
 ### 검증 오류와 시스템 오류를 분리
@@ -66,6 +72,8 @@ RFC 9457의 보안 고려 사항도 같은 점을 짚는다. 에러 응답을 �
 성공 응답만 API 계약이 아니다. 프론트엔드나 외부 연동 시스템은 실패 응답도 계약으로 소비한다.
 
 클라이언트가 `"재고가 부족합니다"`라는 메시지 문자열로 분기하고 있다면, 서버에서 문구를 바꾸는 순간 클라이언트가 깨진다. 분기는 변하지 않는 에러 코드로 하고, 메시지는 사람에게 보여 주는 용도로만 쓰게 해야 한다. 에러 코드 목록도 API 문서에 성공 응답과 같은 수준으로 적어 두고, 코드를 없애거나 의미를 바꾸는 일은 응답 필드를 없애는 것과 같은 호환성 변경으로 다뤄야 한다.
+
+---
 
 ## Problem Details 같은 표준
 
@@ -97,6 +105,8 @@ Content-Type: application/problem+json
 ```
 
 Spring Framework 6부터는 이 형식을 `ProblemDetail` 클래스로 지원한다. `@ExceptionHandler`에서 `ProblemDetail`을 반환하면 `application/problem+json`으로 직렬화되고, `ResponseEntityExceptionHandler`를 상속하면 Spring MVC가 던지는 내장 예외도 같은 형식으로 응답한다. Spring Boot에서는 `spring.mvc.problemdetails.enabled=true`로 이를 켤 수 있다([Spring Framework Reference, Error Responses](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html)). 필드별 설명과 Spring 적용 예는 [Problem Details for HTTP APIs](/posts/problem-detail/)에, 예외 처리 구조는 [Spring 예외 처리 전략 정리](/posts/spring-exception-handling/)에 정리했다.
+
+---
 
 ## 정리
 

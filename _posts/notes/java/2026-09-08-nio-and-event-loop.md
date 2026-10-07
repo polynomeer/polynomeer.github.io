@@ -8,6 +8,8 @@ mermaid: true
 
 자바에서 소켓을 다루는 방법은 둘이다. `InputStream.read()`로 블로킹하거나, `Selector`로 준비된 채널만 골라 처리하거나. 후자가 NIO이고 [Netty](/posts/netty/)가 그 위에 있다. 무엇이 달라지고 무엇을 직접 해야 하는지 보면, 프레임워크가 감춘 것이 드러난다.
 
+---
+
 ## 블로킹 IO와 NIO
 
 블로킹 모델은 단순하다. `read()`를 부르면 데이터가 올 때까지 스레드가 멈춘다. 연결마다 스레드가 필요하고, 연결이 많아지면 스레드가 감당이 안 된다. [C10K(동시 연결 1만 개 문제) 문서](http://www.kegel.com/c10k.html)가 구분한 "스레드당 클라이언트 하나, 블로킹 IO"와 "스레드당 여러 클라이언트, 논블로킹 IO"의 차이다.
@@ -48,6 +50,8 @@ while (true) {
 
 마지막 줄이 필요한 것은 셀렉터가 selected-key 집합에 키를 넣기만 하고 빼지는 않기 때문이다([Selector](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/Selector.html)).
 
+---
+
 ## 다이렉트 버퍼
 
 `ByteBuffer.allocate()`는 힙 안에, `allocateDirect()`는 [힙 밖(네이티브 메모리)](/posts/direct-memory-and-cleaner/)에 잡는다.
@@ -68,6 +72,8 @@ Javadoc의 권고도 같은 방향이다.
 
 네이티브 IO에 쓰이는 크고 오래 사는 버퍼에 주로 할당하라는 뜻이다.
 
+---
+
 ## 직접 쓰면 만나는 것들
 
 NIO를 그대로 쓰면 프로토콜 처리를 전부 직접 해야 한다.
@@ -79,6 +85,8 @@ NIO를 그대로 쓰면 프로토콜 처리를 전부 직접 해야 한다.
 epoll 버그 우회. 특정 JDK·커널 조합에서 `select()`가 준비된 채널 없이 즉시 반환해 CPU 100%가 되는 문제가 알려져 있다. OpenJDK에는 셀렉터가 선택된 키 0개로 끝없이 깨어나는 버그가 Won't Fix로 닫혀 있다([JDK-6670302](https://bugs.openjdk.org/browse/JDK-6670302)). 셀렉터를 다시 만드는 우회가 필요하다.
 
 Netty는 이 셋을 전부 다룬다. `LengthFieldBasedFrameDecoder` 같은 코덱이 경계를, `ChannelOutboundBuffer`가 부분 쓰기를 맡는다. epoll 버그는 셀렉터를 새로 만들어 우회한다. `NioEventLoop`는 `select()`가 준비된 채널 없이 일찍 반환한 횟수를 세고, 이것이 기본 512번 연속 이어지면 셀렉터를 다시 만든다(`io.netty.selectorAutoRebuildThreshold`, [NioEventLoop, netty-4.1.115.Final](https://github.com/netty/netty/blob/netty-4.1.115.Final/transport/src/main/java/io/netty/channel/nio/NioEventLoop.java)). **Netty를 쓰는 이유는 성능보다 이 정확성에 있다.**
+
+---
 
 ## 이벤트 루프의 규칙
 
@@ -99,6 +107,8 @@ pipeline.addLast(group, "handler", new MyBusinessLogicHandler()); // group의 �
 
 이 점에서 [스레드 기반 모델](/posts/tomcat-thread-exhaustion/)과 교환 관계가 갈린다. 스레드 모델에서 느린 호출 하나는 스레드 하나를 묶고, 그런 호출이 쌓여 풀이 마를 때 무너진다. 이벤트 루프에서는 느린 호출 하나가 그 루프의 모든 연결을 즉시 묶는다. 앞쪽은 상한에 닿아야 무너지고, 뒤쪽은 한 번에 무너진다.
 
+---
+
 ## 가상 스레드가 바꾼 것
 
 Java 21 이후 "높은 동시성"만이 목적이라면 가상 스레드로 블로킹 코드를 그대로 쓰면서 같은 효과를 얻는다([가상 스레드의 내부](/posts/virtual-threads-internals/)). [JEP 444](https://openjdk.org/jeps/444)가 목표로 내건 것도 요청당 스레드 방식 그대로의 확장이다. 스택 트레이스와 디버거가 정상 동작하고, 버퍼 상태 관리나 부분 읽기 처리를 직접 할 필요가 없다.
@@ -111,12 +121,16 @@ Java 21 이후 "높은 동시성"만이 목적이라면 가상 스레드로 블�
 
 요청-응답 HTTP 서버를 NIO로 직접 만들 이유는 거의 없다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - **NIO가 항상 빠른 것은 아니다.** 연결이 적고 처리량 위주면 블로킹 IO가 단순하고 빠를 수 있다.
 - **파일 IO는 이 모델 밖이다.** 셀렉터에 등록하려면 `SelectableChannel`이어야 하는데, 자바의 `FileChannel`은 그렇지 않다([FileChannel](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html)). OS 수준에서도 마찬가지다. POSIX `select()`는 일반 파일을 언제나 '준비됨'으로 보고하므로 기다리는 의미가 없다([POSIX pselect](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pselect.html)). 리눅스 `epoll_ctl()`은 일반 파일 등록을 아예 `EPERM` 오류로 거부한다([epoll_ctl(2)](https://man7.org/linux/man-pages/man2/epoll_ctl.2.html)).
 - **`SelectionKey` 관리가 누수 지점이다.** 채널을 닫거나 키를 취소해도 실제 등록 해제는 다음 선택 연산에서 일어난다([Selector](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/Selector.html)). 그 전까지 키는 셀렉터에 남는다.
 - **Netty의 `ByteBuf`는 [참조 카운팅](/posts/direct-memory-and-cleaner/)을 쓴다.** 핸들러에 도착한 `ByteBuf`는 그 핸들러가 해제할 책임을 진다([Netty User Guide](https://netty.io/wiki/user-guide-for-4.x.html)). `release()`를 잊으면 다이렉트 메모리가 새고, 이 누수는 [힙 덤프](/posts/batch-heap-dump-to-chunk/)에 안 보인다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -127,9 +141,13 @@ Java 21 이후 "높은 동시성"만이 목적이라면 가상 스레드로 블�
 
 이 모델의 성질을 가장 빨리 보여주는 것은 2번이다.
 
+---
+
 ## 실무와의 접점
 
 monticker에서 `NioEventLoopGroup`으로 다수 연결에 시세를 뿌렸다. 그때 정리한 것은 리액터 패턴의 구조였고, 이 글은 그 아래에서 JVM이 하는 일이다. [WebSocket과 폴링 비교](/posts/monticker-ws-vs-polling/)에서 잰 수치도 결국 연결 유지 비용을 어느 층이 감당하는가의 결과였다. 다만 같은 머신에서 쟀으므로 네트워크 층의 영향은 그 수치에 들어 있지 않다.
+
+---
 
 ## 정리
 

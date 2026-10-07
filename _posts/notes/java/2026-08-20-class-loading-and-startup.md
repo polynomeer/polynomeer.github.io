@@ -7,6 +7,8 @@ tags: [Java, JVM, Class Loading, Reflection, Spring Boot, Startup Time, AOT]
 
 Spring Boot 애플리케이션이 뜨는 데 몇 초가 걸린다. 로컬에서는 불편 정도지만, 오토스케일링으로 인스턴스를 급히 늘려야 할 때나 서버리스에서는 그 몇 초가 설계 제약이 된다. 그 시간이 어디로 가는지 보면 무엇을 줄일 수 있는지가 갈린다.
 
+---
+
 ## 클래스 로딩의 세 단계
 
 JVM 명세 5장은 클래스가 쓰이기까지를 세 단계로 나눈다([JVMS §5](https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html)).
@@ -18,6 +20,8 @@ JVM 명세 5장은 클래스가 쓰이기까지를 세 단계로 나눈다([JVMS
 마지막이 중요하다. 명세는 초기화가 `new`, `getstatic`, `putstatic`, `invokestatic` 같은 명령이 그 클래스를 처음 참조할 때 일어난다고 정한다(§5.5). JVM은 **게으르다.** 클래스는 실제로 쓰일 때 로드되고 초기화된다. 그래서 기동 시간이 짧아 보여도 첫 요청이 느린 경우가 생긴다. 로딩이 그때로 미뤄진 것이다.
 
 위임 모델도 알아 둘 값이 있다. 클래스로더는 먼저 부모에게 묻고, 부모가 못 찾으면 자기가 찾는다([ClassLoader Javadoc](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ClassLoader.html)). 같은 이름의 클래스가 여러 JAR에 있을 때 어느 것이 로드되는지가 클래스패스 순서로 정해지는 이유이고, `NoSuchMethodError`처럼 "컴파일은 됐는데 런타임에 없다"는 오류의 배경이다.
+
+---
 
 ## Spring Boot의 기동 시간이 가는 곳
 
@@ -39,6 +43,8 @@ JVM 명세 5장은 클래스가 쓰이기까지를 세 단계로 나눈다([JVMS
 
 측정이 먼저다. `-Ddebug=true`로 자동 설정 평가 리포트를 보고, `ApplicationStartup`(`BufferingApplicationStartup`)으로 단계별 시간을 뽑을 수 있다. 어디가 느린지 모른 채 최적화하면 대개 엉뚱한 곳을 건드린다.
 
+---
+
 ## 리플렉션의 비용
 
 리플렉션은 세 가지 비용을 낸다.
@@ -50,6 +56,8 @@ JVM 명세 5장은 클래스가 쓰이기까지를 세 단계로 나눈다([JVMS
 기동 시간에 영향을 주는 것은 주로 1번이다. 반복 호출의 비용은 JIT가 상당 부분 완화한다(`MethodHandle`과 `invokedynamic`은 더 낫다).
 
 프레임워크가 리플렉션을 쓰는 이유는 컴파일 시점에 모르는 것을 런타임에 알아내기 위해서다. 애노테이션을 읽고, 생성자를 고르고, 필드를 주입한다. 그 유연성의 대가가 기동 시간이다.
+
+---
 
 ## AOT와 native-image가 바꾸는 것
 
@@ -66,6 +74,8 @@ GraalVM native-image는 더 나간다. 빌드 시점의 정적 분석으로 도�
 
 CDS(Class Data Sharing)는 중간 지점이다. 클래스 메타데이터를 미리 만들어 아카이브로 공유한다. 코드 변경 없이 기동을 일부 줄이고, AOT만큼의 제약이 없다. JDK 13에 들어온 동적 CDS([JEP 350](https://openjdk.org/jeps/350))는 애플리케이션 종료 시점에 로드된 클래스를 아카이브로 남기고, Project Leyden에서 나온 JDK 24의 [JEP 483](https://openjdk.org/jeps/483)은 클래스 로딩과 링킹까지 미리 해 둔다. 방향이 이쪽이다.
 
+---
+
 ## 고르는 기준
 
 | 상황 | 선택 |
@@ -77,12 +87,16 @@ CDS(Class Data Sharing)는 중간 지점이다. 클래스 메타데이터를 미
 
 대부분의 상시 서버는 첫 줄이다. 기동 시간을 줄이는 작업은 그것이 실제 제약일 때 한다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - 기동 시간과 워밍업은 다르다. 뜨는 데 3초, 최고 성능에 도달하는 데 수 분일 수 있다. 후자는 JIT의 영역이다.
 - 컨테이너 CPU 제한이 기동을 늦춘다. 코어가 적으면 클래스 로딩과 컴파일이 직렬화된다([컨테이너 CPU 상한](/posts/context-switching-and-cgroup/)).
 - 지연 초기화는 문제를 옮긴다. 기동 지표는 좋아지고 첫 요청 [p99](/posts/percentile-statistics/)가 나빠진다. 어느 쪽이 중요한지는 서비스가 정한다.
 - readiness 프로브가 기동 시간에 맞춰져 있어야 한다. 짧으면 재시작 루프가 돈다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -91,9 +105,13 @@ CDS(Class Data Sharing)는 중간 지점이다. 클래스 메타데이터를 미
 3. 컴포넌트 스캔 범위를 좁히기 전후를 비교한다.
 4. 컨테이너 CPU 제한을 바꿔 가며 기동 시간을 잰다.
 
+---
+
 ## 실무와의 접점
 
 [Spring Bean 생명주기](/posts/spring-lifecycle/)와 [spring-internals-lab](/posts/spring-internals-lab-bean-lifecycle/)에서 빈이 만들어지는 과정을 따라갔다. 기동 시간은 대부분 그 과정에 쓰인다. 그래서 그 구조를 모르면 "기동이 느리다"에 손댈 곳을 찾지 못한다.
+
+---
 
 ## 정리
 

@@ -18,6 +18,8 @@ class User {
 
 웹 개발에서의 상태도 특정 공간(서버 메모리 or DB, 캐시 등)에 저장된 값이다. 사용자가 로그인했는가? 장바구니에 몇 개의 상품이 담겼는가? 마지막으로 본 페이지는 어디인가? 와 같은 정보의 값이 모두 상태이다. *[State (computer science) - Wikipedia](https://en.wikipedia.org/wiki/State_(computer_science))*
 
+---
+
 ## Stateful
 
 Stateful(상태 유지형)은 시스템이나 컴포넌트가 이전의 상호작용(상태)을 기억하고, 그 상태에 기반하여 다음 동작을 결정하는 방식을 말한다. 즉, 시스템이 이전 요청의 상태를 저장하고, 그에 따라 다음 동작을 결정하는 것이다.

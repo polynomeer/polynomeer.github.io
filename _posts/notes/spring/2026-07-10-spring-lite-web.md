@@ -12,6 +12,8 @@ series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, A
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lite)
 
+---
+
 ## 웹 프레임워크를 다시 보니 결국 디스패치 문제였다
 
 Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼저 눈에 들어온다. 그런데 `spring-lite-web`을 구현하고 따라가다 보면 시선이 조금 바뀐다. 핵심은 문법보다 먼저 디스패치였다.
@@ -23,6 +25,8 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 - 예외는 어떻게 응답으로 바꿀 것인가
 
 이 흐름의 중심에 `DispatcherServlet`이 있다. 같은 클래스를 실제 Spring 쪽에서 따라간 기록은 [spring-internals-lab 8편](/posts/spring-internals-lab-dispatcher-servlet/)에 있다.
+
+---
 
 ## `DispatcherServlet`은 생각보다 얇다
 
@@ -46,6 +50,8 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 
 그래서 MVC는 별도 마법이라기보다 핸들러 탐색, 인자 해석, 반환값 직렬화, 예외 변환으로 이어지는 파이프라인에 더 가깝다.
 
+---
+
 ## `HandlerMapping`이 먼저 보이기 시작했다
 
 `RequestMappingHandlerMapping`은 `ApplicationContext`에서 `@RestController` Bean을 가져와서 메서드 수준의 `@GetMapping`, `@PostMapping`을 확인한다.
@@ -61,6 +67,8 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 
 마지막 정렬은 변수 path가 적고 더 구체적인 route가 먼저 오게 만든다. `"/orders/{id}"`와 `"/orders/search"`가 함께 있으면 `/orders/search` 요청은 두 패턴에 모두 맞는다. 변수 route가 먼저 검사되면 `search`가 `{id}` 값으로 잡히므로, 구체적인 route를 앞에 두는 규칙이 필요하다.
 
+---
+
 ## path matching도 결국 문자열 문제로 내려온다
 
 `RequestMappingHandlerMapping`은 template path를 정규식으로 바꿔서 매칭한다.
@@ -69,6 +77,8 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 - match 성공 시 `{id}` 값을 path variable map에 저장
 
 실제 Spring MVC는 더 복잡한 path pattern parser를 쓰지만, 여기서는 핵심만 남아 있다. route matching은 문자열 패턴을 요청 path에 대응시키는 문제로 내려온다.
+
+---
 
 ## `HandlerAdapter`를 따로 두는 이유가 확실히 보였다
 
@@ -80,6 +90,8 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 - `HandlerAdapter`: 어떻게 호출할지 결정
 
 처음엔 약간 과한 추상화처럼 보였다. 그런데 매핑 방식과 호출 방식은 생각보다 독립적으로 바뀐다. 그래서 웹 프레임워크가 유연해지려면 여기서 역할이 갈라져야 한다. Spring 문서도 `HandlerAdapter`의 목적을 핸들러 호출 방식의 세부(예: 애노테이션 해석)로부터 `DispatcherServlet`을 가려 주는 것이라고 설명한다([Special Bean Types](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html)).
+
+---
 
 ## argument resolver 체인이 꽤 마음에 들었다
 
@@ -100,6 +112,8 @@ Spring MVC를 쓸 때는 `@RestController`, `@GetMapping`, `@RequestBody`가 먼
 
 Spring MVC의 `HandlerMethodArgumentResolver`를 공부할 때도 이 작은 구현을 먼저 보고 가면 덜 부담스럽다.
 
+---
+
 ## `@RequestBody`가 왜 별도 resolver인지도 이해가 갔다
 
 `RequestBodyArgumentResolver`는 그냥 문자열 읽기가 아니다.
@@ -110,6 +124,8 @@ Spring MVC의 `HandlerMethodArgumentResolver`를 공부할 때도 이 작은 구
 
 이걸 보고 나면 웹 요청이 결국 문자열/바이트에서 시작하지만, 컨트롤러는 도메인 타입을 받고 싶어 한다는 사실이 더 선명해진다. 그래서 message conversion이 왜 중요한지도 같이 연결된다.
 
+---
+
 ## 반환값도 따로 다루는 게 맞았다
 
 `JsonReturnValueHandler`는 컨트롤러 반환값을 JSON 응답으로 바꾼다.
@@ -118,11 +134,15 @@ Spring MVC의 `HandlerMethodArgumentResolver`를 공부할 때도 이 작은 구
 
 현재 `spring-lite`는 JSON API 중심이라 뷰 렌더링이 섞이지 않는다. 그래서 파이프라인이 더 선명하게 보인다.
 
+---
+
 ## 예외 처리도 결국 별도 전략이다
 
 `DispatcherServlet`은 예외가 나면 직접 JSON을 쓰지 않는다. `DefaultExceptionResolver`에 넘겨서 결과를 받고, 그것을 다시 return value handler 쪽 흐름과 연결한다.
 
 예외 처리도 또 하나의 전략 계층이라는 뜻이다. 실제 Spring의 `@ExceptionHandler`, [`@ControllerAdvice`](/posts/controller-advice/)도 같은 문제를 더 풍부하게 푸는 구조다. Spring 문서는 이 계층을 `HandlerExceptionResolver`라는 예외 해석 전략으로 둔다([Special Bean Types](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html)).
+
+---
 
 ## 이 구현으로 다시 보면 MVC는 꽤 단순하다
 
@@ -137,6 +157,8 @@ Spring MVC의 `HandlerMethodArgumentResolver`를 공부할 때도 이 작은 구
 7. 예외는 별도 resolver로 응답 모델로 바꾼다.
 
 그래서 MVC는 애노테이션 문법 모음이라기보다, **HTTP 요청을 애플리케이션 메서드 호출로 번역하는 파이프라인**이라고 보는 편이 더 잘 맞았다.
+
+---
 
 ## 정리
 

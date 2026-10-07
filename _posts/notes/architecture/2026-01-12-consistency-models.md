@@ -7,6 +7,8 @@ tags: [Distributed System, Consistency, CAP, Linearizability, Eventual Consisten
 
 "강한 일관성"과 "최종 일관성" 두 단어로 분산 시스템의 일관성을 이야기하면, 정작 설정 파일 앞에서 막힌다. Kafka의 `acks`, PostgreSQL의 `synchronous_commit`, MongoDB의 `writeConcern`·`readConcern`은 전부 일관성 모델을 값으로 고르는 자리인데, 두 단어짜리 어휘로는 그 값을 고를 수 없다. 이 글은 모델의 이름을 설정값과 연결하는 것이 목적이다.
 
+---
+
 ## 세 모델의 차이는 "무엇이 보이지 않는가"
 
 선형화(linearizability)는 가장 강하다. 모든 연산이 어느 한 시점에 원자적으로 일어난 것처럼 보이고, 그 순서는 실제 시간 순서를 지킨다. A의 쓰기가 끝난 뒤 시작한 B의 읽기는 반드시 A의 값을 본다. 단일 객체에 대한 성질이다. Jepsen의 정리도 "Linearizability is a single-object model, but the scope of 'an object' varies."라고 적는다(선형화는 단일 객체 모델이지만, 무엇을 한 객체로 보는지는 시스템마다 다르다, [Jepsen: Linearizability](https://jepsen.io/consistency/models/linearizable)).
@@ -18,6 +20,8 @@ tags: [Distributed System, Consistency, CAP, Linearizability, Eventual Consisten
 최종(eventual)은 쓰기가 멈추면 언젠가 수렴한다는 것만 보장한다. "언젠가"에 상한이 없다.
 
 실무에서 쓰는 어휘도 여기 붙는다. read-your-writes(내가 쓴 것은 내가 읽는다), monotonic reads(한 번 본 값보다 과거로 돌아가지 않는다)는 최종 일관성 위에 얹는 세션 보장이고, 대부분의 "[복제](/posts/db-replication/) 지연 때문에 방금 쓴 게 안 보여요" 버그는 이 두 보장의 부재다.
+
+---
 
 ## 설정값으로 번역하기
 
@@ -33,6 +37,8 @@ tags: [Distributed System, Consistency, CAP, Linearizability, Eventual Consisten
 
 그래서 일관성은 시스템의 성질이라기보다 호출마다 고르는 값이다. 같은 MongoDB에서 결제 경로는 `majority`, 조회 경로는 `local`을 쓸 수 있다. "우리는 최종 일관성 시스템입니다"라는 문장은 대개 기본값을 말한 것이다.
 
+---
+
 ## CAP는 선택지가 아니라 장애 중의 동작이다
 
 CAP를 "셋 중 둘"로 외우면 오해한다. 분할(P)은 고르는 것이 아니라 일어나는 일이다. 네트워크가 끊긴 순간, 시스템은 둘 중 하나를 한다.
@@ -42,12 +48,16 @@ CAP를 "셋 중 둘"로 외우면 오해한다. 분할(P)은 고르는 것이 �
 
 그리고 분할이 없는 평시에도 선택이 있다. PACELC가 그 확장이다. 분할 시(P)에는 A와 C 중에, 그 외(E)에는 지연(L)과 일관성(C) 중에 고른다. 실무에서 더 자주 만나는 것은 후자다. 분할은 드물고, 동기 복제의 지연은 매일이다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - 선형화는 단일 객체 성질이고, [직렬화](/posts/isolation-levels-and-anomalies/)는 트랜잭션 성질이다. 둘은 다른 축이다. 두 개를 합친 것이 strict serializable이고(Jepsen도 여러 객체에 걸친 선형화가 필요하면 strict serializability를 보라고 안내한다), 대부분의 DB는 둘 중 하나만 말한다.
 - "강한 일관성"이라는 말은 표준 용어가 아니다. 제품 문서마다 가리키는 것이 다르므로, 벤더 문서에서 이 단어를 보면 어떤 보장인지 따로 확인해야 한다.
 - [합의 알고리즘](/posts/consensus-raft/)이 있어도 클라이언트가 옛 리더에게 말하면 옛 값을 읽을 수 있다. 읽기를 어디로 보내는지가 보장의 일부다.
 - 일관성 모델은 지연을 말해 주지 않는다. `acks=all`이 얼마나 느린지는 모델이 아니라 토폴로지가 정한다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -59,9 +69,13 @@ CAP를 "셋 중 둘"로 외우면 오해한다. 분할(P)은 고르는 것이 �
 
 이후 [ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 1번을 쟀다. `acks=all`은 브로커가 죽어 있던 7초 동안 유실 0건이었고, `acks=1`과 `0`은 배치 단위로 잃었다. 다만 단일 노드였으므로 ISR 축소와 리더 교체는 재지 못했고, 그것이 그 글의 한계로 남아 있다.
 
+---
+
 ## 실무와의 접점
 
 [SQS 파이프라인 전환](/posts/polling-to-sqs-pipeline/)에서 순서 역전을 상태 전이로 다뤘다. 그때는 "최종 일관성"이라는 말을 쓰지 않았지만, 실제로 한 일은 인과 순서를 메시지 순서에 의존하지 않고 상태로 복원하는 것이었다. 일관성 모델의 어휘로 다시 쓰면, 약한 모델 위에서 필요한 보장만 애플리케이션이 만들어 쓴 것이다.
+
+---
 
 ## 정리
 

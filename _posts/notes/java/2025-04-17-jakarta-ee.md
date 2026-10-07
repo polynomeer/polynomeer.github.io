@@ -11,6 +11,8 @@ tags: [Java, Jakarta EE]
 
 **Jakarta EE**는 단순히 Java EE의 새로운 이름 그 이상이다. Jakarta EE는 **기업용 Java 기술의 차세대 플랫폼**이며, Java 생태계의 역사, 오픈소스 전환, 그리고 기술적 혁신의 상징이다. 아래에서 Jakarta EE의 **역사**, **구성**, **차이점**, **실무 적용**까지 체계적으로 설명한다.
 
+---
+
 ## 1. Jakarta EE란 무엇인가?
 
 > **Jakarta EE는 Java EE의 후속 오픈소스 플랫폼으로, Eclipse Foundation에서 운영하는 엔터프라이즈 Java 표준입니다.**

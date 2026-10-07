@@ -8,9 +8,13 @@ tags: [Java, JVM, Thread Dump, Thread Pool, Concurrency, Observability]
 
 [무너지는 Spring 서버 1편](/posts/tomcat-thread-exhaustion/)에서 업스트림 하나가 느려지자 그것을 호출하지도 않는 `/api/fast`가 죽었다. CPU 사용률은 낮았다. 지표만 보면 서버는 한가했다. 원인을 확정한 것은 thread dump였다. 요청 스레드 200개 전부가 `sun.nio.ch.Net.poll`에 멈춰 있었다. 이 글은 그 한 줄을 읽기 위해 필요한 것을 처음부터 정리한다.
 
+---
+
 ## thread dump는 한 시점의 스냅샷이다
 
 thread dump는 JVM 안의 모든 스레드가 **그 순간** 어떤 상태로 어떤 메서드를 실행하고 있는지 적은 텍스트다. 사진 한 장과 같다. 한 장으로는 "지금 많이 기다린다"까지만 알 수 있다. 몇 초 간격으로 여러 장을 떠서 같은 스레드가 같은 자리에 계속 있는지를 봐야 "막혀 있다"고 말할 수 있다. 1편에서 부하 전, 부하 중 두 번, 종료 후까지 시점별로 뜬 이유가 이것이다.
+
+---
 
 ## jcmd로 뜬다
 
@@ -23,6 +27,8 @@ jcmd 12345 Thread.print -l    # java.util.concurrent 락 정보까지
 ```
 
 1편의 실험 저장소는 컨테이너 안에서 `jcmd 1 Thread.print`를 실행해 파일로 받는다. 오래된 글에서 자주 보이는 `jstack`도 같은 일을 하지만, JDK 문서는 이 명령이 지원 대상이 아니고 이후 릴리스에서 빠질 수 있다고 적는다([jstack](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstack.html)). 새로 스크립트를 짠다면 `jcmd`를 쓰는 편이 낫다.
+
+---
 
 ## 스레드 하나의 항목을 읽는 법
 
@@ -49,6 +55,8 @@ jcmd 12345 Thread.print -l    # java.util.concurrent 락 정보까지
 
 1편에서 "최상위 프레임"이라고 부른 것이 이 맨 윗줄이다. 스레드 수백 개를 최상위 프레임별로 세면 서버가 무엇에 시간을 쓰는지가 표 한 장으로 나온다.
 
+---
+
 ## 스레드 상태 여섯 가지
 
 `java.lang.Thread.State`에는 상태가 여섯 개 있다([Thread.State](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.State.html)). dump에서 자주 보는 것은 가운데 넷이다.
@@ -64,6 +72,8 @@ jcmd 12345 Thread.print -l    # java.util.concurrent 락 정보까지
 
 `Unsafe.park`라는 프레임은 `LockSupport.park` 계열이 바닥에서 부르는 자리다. 1편의 부하 전 dump에서 요청 스레드 10개가 `WAITING (parking)`으로 `Unsafe.park`에 있었는데, 아래 프레임을 보면 Tomcat의 `TaskQueue.take`다. 일감 큐가 비어 쉬고 있다는 뜻이다. 같은 `Unsafe.park`라도 아래 프레임이 [`Semaphore.tryAcquire`](/posts/semaphore-and-permits/)라면 permit을 기다리는 중이다. 최상위 프레임만이 아니라 그 아래 몇 줄을 같이 봐야 하는 이유다.
 
+---
+
 ## RUNNABLE은 CPU를 쓰고 있다는 뜻이 아니다
 
 1편에서 가장 헷갈리는 지점이 여기다. 스레드 200개가 `RUNNABLE`인데 CPU는 놀고 있었다.
@@ -78,6 +88,8 @@ jcmd 12345 Thread.print -l    # java.util.concurrent 락 정보까지
 | 종료 후 | 98.10s | 108.68ms |
 
 80초가 지나는 동안 CPU를 9ms 남짓 썼다. 스레드는 `RUNNABLE`로 표시됐지만 거의 내내 잠들어 있었다. 그래서 dump에서 `RUNNABLE`을 보면 상태 이름보다 최상위 프레임을 먼저 본다. `Net.poll`, `socketRead`, `epollWait` 같은 자리라면 I/O를 기다리는 중이다. CPU 시간이 어디로 가는지 따로 재는 방법은 [off-CPU 프로파일링 실험](/posts/off-cpu-profiling-experiment/)에서 다뤘다.
+
+---
 
 ## 정리
 

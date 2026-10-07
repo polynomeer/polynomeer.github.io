@@ -11,6 +11,8 @@ tags: [Algorithm, Graph, DFS, Recursion]
 
 여기서 **'마지막에'** 방문했던 곳으로 돌아간다는 것이 익숙한 표현이다. 바로 **스택(Stack)** 자료구조의 동작방식과 유사하다. 따라서 DFS는 스택을 통해 구현할 수 있다. 스택을 이용하여 간선 정보를 Push하면서 방문하다가 더이상 방문할 노드가 없다면 Pop하면서 다시 방문할 노드를 탐색해가면 될 것이다. 대부분의 언어에서는 **재귀함수**가 내부적으로는 스택으로 구현되어있으므로, DFS의 구현은 재귀함수의 형태로 많이 구현된다.
 
+---
+
 ## 1. DFS 동작원리
 
 ![](https://images.velog.io/images/polynomeer/post/6650af50-f2f2-44bb-8a2d-55a2ea616ffb/DFS.gif)
@@ -31,6 +33,8 @@ tags: [Algorithm, Graph, DFS, Recursion]
 - 1번 정점에서 더이상 방문할 곳이 없으므로, 스택에서 1을 꺼내고, 탐색이 끝난다.
 
 <br><hr />
+
+---
 
 ## 2. DFS 구현
 
@@ -66,6 +70,8 @@ void dfs(int x) {
 ```
 
 <br><hr />
+
+---
 
 ## 3. DFS를 활용한 문제풀이
 

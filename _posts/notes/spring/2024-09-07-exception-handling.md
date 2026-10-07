@@ -16,6 +16,8 @@ tags: [Spring, Exception Handling, ControllerAdvice]
 - 서버가 추적할 수 있는 로그
 - 도메인 규칙과 시스템 장애의 구분
 
+---
+
 ## Checked Exception vs Unchecked Exception
 
 자바 기준으로는 다음처럼 나눌 수 있다.
@@ -28,6 +30,8 @@ tags: [Spring, Exception Handling, ControllerAdvice]
 
 스프링 애플리케이션에서는 대부분 런타임 예외 기반으로 설계하는 편이 일반적이다. 트랜잭션 롤백, 계층 간 전달, 예외 분류가 더 단순해지기 때문이다.
 
+---
+
 ## Spring에서 주로 사용하는 처리 지점
 
 - 컨트롤러 내부 `@ExceptionHandler`
@@ -36,6 +40,8 @@ tags: [Spring, Exception Handling, ControllerAdvice]
 - 서블릿 컨테이너 기본 에러 처리
 
 API 서버라면 전역 `@RestControllerAdvice` 중심으로 정리하는 것이 가장 유지보수에 유리하다.
+
+---
 
 ## 설계 기준
 
@@ -65,6 +71,8 @@ DB 연결 실패, 외부 API 타임아웃, 메시지 브로커 장애 같은 것
 }
 ```
 
+---
+
 ## 자주 놓치는 포인트
 
 - `MethodArgumentNotValidException` 처리 누락
@@ -72,12 +80,16 @@ DB 연결 실패, 외부 API 타임아웃, 메시지 브로커 장애 같은 것
 - 모든 예외를 500으로 내려버림
 - 내부 구현 예외 메시지를 그대로 외부에 노출
 
+---
+
 ## 추천 원칙
 
 - 예외는 비즈니스 의미 중심으로 설계한다.
 - 핸들러는 HTTP 응답으로 변환하는 역할만 맡긴다.
 - 로그는 운영자가 문제를 재현할 수 있을 정도의 맥락을 남긴다.
 - 외부로는 필요한 정보만 공개한다.
+
+---
 
 ## 정리
 

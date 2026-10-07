@@ -15,6 +15,8 @@ Java 로깅 생태계에서는 API와 구현체를 구분해서 본다. 보통 �
 
 Log4j 1.x는 레거시다. Apache Logging Services PMC는 2015년 8월 5일에 Log4j 1.x의 지원 종료(end of life)를 발표했다([Log4j 1.x 페이지](https://logging.apache.org/log4j/1.x/)).
 
+---
+
 ## Log4j 1.x
 
 과거에는 널리 쓰였지만 지금은 유지보수 관점에서 추천하기 어렵다.
@@ -25,6 +27,8 @@ Log4j 1.x는 레거시다. Apache Logging Services PMC는 2015년 8월 5일에 L
 
 같은 페이지는 Log4j 1의 취약점이 더 이상 고쳐지지 않는다고 밝힌다. 그래서 신규 프로젝트에서 선택할 이유는 거의 없다([Log4j Vulnerability](/posts/log4j-vulnerability/) 참고).
 
+---
+
 ## Logback
 
 Spring Boot 스타터를 쓰면 기본 로깅 구현체가 Logback이다([Spring Boot Logging 문서](https://docs.spring.io/spring-boot/reference/features/logging.html)). 설정이 비교적 단순하고, SLF4J와의 궁합이 좋다.
@@ -34,6 +38,8 @@ Spring Boot 스타터를 쓰면 기본 로깅 구현체가 Logback이다([Spring
 - Spring 생태계와 친숙함
 - 설정이 비교적 단순함
 - 일반적인 웹 애플리케이션에는 충분함
+
+---
 
 ## Log4j2
 
@@ -46,6 +52,8 @@ Spring Boot 스타터를 쓰면 기본 로깅 구현체가 Logback이다([Spring
 - 고성능 로그 처리에 유리
 
 고트래픽 환경이나 로깅 처리량이 중요한 시스템에서 더 자주 검토된다.
+
+---
 
 ## 무엇을 선택할까
 

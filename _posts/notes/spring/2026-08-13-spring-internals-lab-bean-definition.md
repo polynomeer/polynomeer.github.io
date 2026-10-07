@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## 이번 글의 질문
 
 Spring에서 빈을 등록하는 경로는 하나가 아니다.
@@ -27,6 +29,8 @@ Spring에서 빈을 등록하는 경로는 하나가 아니다.
 > 등록 경로가 다르면 `BeanDefinition` 메타데이터는 어떻게 달라지는가?
 
 [IoC 컨테이너](/posts/ioc-di/)로서 Spring은 빈 인스턴스를 바로 저장하지 않는다. 먼저 "어떻게 만들 것인가"를 메타데이터로 저장한다. 등록 경로의 차이는 바로 이 메타데이터에 남는다.
+
+---
 
 ## `BeanDefinition`은 객체가 아니라 생성 계획이다
 
@@ -53,6 +57,8 @@ Spring에서 빈을 등록하는 경로는 하나가 아니다.
 | 어떤 종류의 빈인가 | `role` |
 
 그래서 Spring은 `getBean()`을 호출하기 전에도 이미 많은 정보를 알고 있다. 아직 객체는 없어도, 그 객체를 만드는 규칙은 알고 있다.
+
+---
 
 ## 이번 글에서 사용하는 실험 코드
 
@@ -89,6 +95,8 @@ context.refresh();
 
 이 상태에서 컨텍스트의 `BeanDefinition`만 읽어 보면, 같은 "빈 등록"이라도 내부 모양이 다르다는 사실이 드러난다.
 
+---
+
 ## 실험을 보는 도구
 
 이 모듈의 `BeanDefinitionInspector`는 `ConfigurableListableBeanFactory`에서 메타데이터만 읽는다.
@@ -103,6 +111,8 @@ for (String beanName : beanFactory.getBeanDefinitionNames()) {
 ```
 
 이 도구는 어떤 빈도 인스턴스화하지 않는다. `getBean()`을 호출하지 않고 `getBeanDefinition()`만 읽는다. 그래서 아래 결과는 생성된 객체가 아니라 생성 전에 준비된 메타데이터를 보여 준다.
+
+---
 
 ## 등록 경로별 처리 시점
 
@@ -131,6 +141,8 @@ sequenceDiagram
 
 그래서 Spring의 등록 단계는 `put(name, beanDefinition)` 한 번으로 끝나지 않는다.
 
+---
+
 ## 실제 관찰 결과
 
 실험 결과를 요약하면 아래 표와 같다.
@@ -149,6 +161,8 @@ sequenceDiagram
 1. `@Bean` instance 메서드는 `beanClass`가 비어 있을 수 있다.
 2. `@Configuration` 클래스의 `beanClass`는 원본이 아니라 강화된 CGLIB 서브클래스로 바뀔 수 있다.
 3. `Supplier` 기반 등록은 팩토리 메서드 없이도 별도 생성 전략을 담을 수 있다.
+
+---
 
 ## 왜 `@Bean`은 `beanClass`가 `null`일 수 있는가
 
@@ -173,6 +187,8 @@ static 메서드는 설정 클래스 자체를 `beanClass`로 기록한다. inst
 - `factoryMethodName=paymentService`
 
 컨테이너 입장에서 이 빈은 `appConfig.paymentService()`를 호출한 결과로 만들어지는 객체다.
+
+---
 
 ## 정적 팩토리 메서드는 왜 다르게 보이는가
 
@@ -202,6 +218,8 @@ legacyClientDefinition.setFactoryMethodName("create");
 
 같은 `@Bean`이라도 메서드가 instance인지 static인지에 따라 `BeanDefinition` 모양이 갈린다.
 
+---
+
 ## `Supplier` 기반 등록은 무엇을 보여주는가
 
 `Supplier` 방식은 아예 "생성 함수"를 메타데이터에 심어 두는 경우다.
@@ -222,6 +240,8 @@ context.registerBeanDefinition("supplierBean",
 - 공급 함수 기반 등록
 
 이 네 가지가 모두 최종적으로는 `BeanDefinition`이라는 같은 축으로 모인다.
+
+---
 
 ## `@Configuration` 클래스가 왜 CGLIB 클래스로 바뀌는가
 
@@ -261,6 +281,8 @@ class AppConfig {
 
 그래서 Spring은 `AppConfig` 자체를 서브클래스로 바꿔서 `notificationService()` 호출을 가로채고, 이미 등록된 싱글턴이 있으면 그 객체를 돌려준다. 이 작업은 만들어진 인스턴스를 감싸는 것이 아니라, 인스턴스화할 클래스 자체를 바꾸는 것이다.
 
+---
+
 ## 인프라 빈도 `BeanDefinition`으로 등록된다
 
 실험 테스트는 애플리케이션 빈만 보지 않는다. 내부 인프라 빈도 함께 본다.
@@ -275,6 +297,8 @@ class AppConfig {
 이들의 `role`은 `ROLE_INFRASTRUCTURE`다. [Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanDefinition.html#ROLE_INFRASTRUCTURE)은 이 값을 내부 동작에만 쓰이고 사용자와는 관계없는 빈을 표시하는 힌트로 설명한다.
 
 Spring 내부 확장 포인트도 컨테이너 밖에서 따로 돌지 않고, registry 안의 `BeanDefinition`으로 관리된다. 그래서 Spring은 "애플리케이션 빈 + 보이지 않는 프레임워크 로직"으로 나뉘어 있다기보다, 프레임워크 자신도 일부를 빈으로 등록해 동작한다고 보는 편이 실제 구조에 맞다.
+
+---
 
 ## mini-spring의 `BeanDefinition`은 어디까지 줄여 놓았는가
 
@@ -311,6 +335,8 @@ public record BeanDefinition(
 | parent/child definition | 없음 |
 
 `mini-spring`은 `BeanDefinition`의 모든 기능을 복제하려는 것이 아니라, 생성 전략을 설명하는 데 필요한 핵심 축만 남긴 상태다.
+
+---
 
 ## `SimpleBeanFactory`를 보면 메타데이터가 실제 생성으로 이어지는 방식이 보인다
 
@@ -357,6 +383,8 @@ private Object instantiate(String name, BeanDefinition definition) {
 
 그래서 컨테이너는 `Map<String, Object>`만으로는 만들 수 없고, 그 앞단에 `Map<String, BeanDefinition>`이 있어야 한다.
 
+---
+
 ## 이후 주제와 이어지는 지점
 
 다음 질문들은 모두 `BeanDefinition`을 전제로 한다.
@@ -367,6 +395,8 @@ private Object instantiate(String name, BeanDefinition definition) {
 - 자동 설정이 왜 결국 BeanDefinition 후보를 더 넣는 문제인지
 
 그래서 `BeanDefinition`은 Spring 초반부에 한 번 보고 지나가는 개념이 아니라, 이후 글에서도 계속 다시 등장한다.
+
+---
 
 ## 정리
 

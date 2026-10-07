@@ -11,6 +11,8 @@ tags: [Operating System, Thread, Concurrency]
 
 즉 멀티스레딩은 "작업을 나눈다"는 의미이기도 하고, "같은 주소 공간 안에서 여러 실행 흐름을 운영한다"는 의미이기도 하다.
 
+---
+
 ## 왜 쓰는가
 
 멀티스레딩이 필요한 대표 이유는 다음과 같다.
@@ -20,6 +22,8 @@ tags: [Operating System, Thread, Concurrency]
 - 같은 프로세스 내부에서 자원 공유 비용을 줄이기 위해
 
 예를 들어 서버에서는 요청 처리, 백그라운드 작업, 로그 전송이 각기 다른 스레드에서 돌 수 있다.
+
+---
 
 ## 장점
 
@@ -35,6 +39,8 @@ tags: [Operating System, Thread, Concurrency]
 
 하나의 작업이 오래 걸려도 다른 작업이 별도 스레드에서 계속 진행될 수 있다.
 
+---
+
 ## 단점
 
 ### 1. 동기화가 어렵다
@@ -49,6 +55,8 @@ tags: [Operating System, Thread, Concurrency]
 
 멀티스레드 버그는 항상 재현되지 않고, 타이밍에 따라 나타났다 사라지기 쉽다.
 
+---
+
 ## 멀티스레딩을 쓴다고 항상 병렬적인 것은 아니다
 
 스레드가 여러 개라고 해서 항상 CPU 병렬성이 얻어지는 것은 아니다. 실제로는 다음을 구분해야 한다.
@@ -58,6 +66,8 @@ tags: [Operating System, Thread, Concurrency]
 
 멀티스레딩은 concurrency를 위한 도구이고, 멀티코어 환경에서는 parallelism까지 이어질 수 있다.
 
+---
+
 ## 실무에서 중요한 질문
 
 - 이 작업은 CPU bound인가, I/O bound인가
@@ -66,6 +76,8 @@ tags: [Operating System, Thread, Concurrency]
 - 스레드 수를 늘리면 정말 처리량이 오르는가
 
 멀티스레딩의 성능은 스레드 수 자체보다 작업 성격과 동기화 비용에 더 크게 좌우된다.
+
+---
 
 ## 정리
 

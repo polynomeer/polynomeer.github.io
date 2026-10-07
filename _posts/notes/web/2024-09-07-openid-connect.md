@@ -20,6 +20,8 @@ OpenID Connect, 줄여서 `OIDC`는 OAuth 2.0 위에 사용자 인증 계층을 
 - RP(Relying Party): OP의 인증 결과를 믿고 사용자를 로그인시키는 애플리케이션이다. OAuth 2.0의 클라이언트에 해당한다.
 - End-User: 로그인하는 사람이다.
 
+---
+
 ## OAuth 2.0만으로는 부족한 이유
 
 OAuth 2.0 토큰만으로는 리소스 접근 권한 위임은 가능하지만, 그 토큰이 누구를 의미하는지 애플리케이션이 일관된 방식으로 해석하기 어렵다.
@@ -31,6 +33,8 @@ OIDC는 이를 위해 다음을 표준화했다.
 - `ID Token`
 - `UserInfo Endpoint`
 - 인증 요청 파라미터와 응답 규약
+
+---
 
 ## 핵심 요소
 
@@ -62,6 +66,8 @@ RP는 토큰 응답으로 받은 Access Token을 이 엔드포인트에 보내�
 
 `openid` 스코프가 반드시 포함돼야 OIDC 흐름으로 간주된다. 추가로 `profile`, `email` 같은 스코프를 통해 필요한 사용자 정보를 요청할 수 있다.
 
+---
+
 ## Authorization Code Flow
 
 명세는 인증 경로를 세 가지로 나눈다. Authorization Code Flow(`response_type=code`), Implicit Flow(`response_type=id_token token` 또는 `id_token`), 그리고 다른 응답 타입을 조합하는 Hybrid Flow다. 서버를 가진 웹 애플리케이션에서 가장 흔히 쓰는 것은 Authorization Code Flow다.
@@ -83,6 +89,8 @@ sequenceDiagram
 
 이 흐름에서 토큰은 브라우저를 거치지 않고 RP 서버와 OP 사이에서 직접 오간다. 브라우저 주소창에 남는 것은 한 번 쓰고 버리는 `code`뿐이다.
 
+---
+
 ## ID Token 검증
 
 RP는 받은 ID Token을 그대로 믿지 않고 검증해야 한다. 명세 3.1.3.7절의 검증 단계 중 핵심은 다음과 같다.
@@ -95,6 +103,8 @@ RP는 받은 ID Token을 그대로 믿지 않고 검증해야 한다. 명세 3.1
 
 OP의 발급자 식별자, 토큰 엔드포인트, 서명 키 위치(`jwks_uri`) 같은 정보는 보통 `/.well-known/openid-configuration` 문서에서 얻는다([OpenID Connect Discovery 1.0](https://openid.net/specs/openid-connect-discovery-1_0.html)).
 
+---
+
 ## 어디에 쓰이나
 
 - 소셜 로그인
@@ -104,12 +114,16 @@ OP의 발급자 식별자, 토큰 엔드포인트, 서명 키 위치(`jwks_uri`)
 
 즉 인증 서버와 애플리케이션을 분리하는 구조에서 자주 등장한다. 여러 애플리케이션이 같은 OP를 쓰면 한 번 로그인으로 모두 이용하는 [Single Sign-On](/posts/single-sign-on/)이 된다.
 
+---
+
 ## 자주 하는 실수
 
 - Access Token을 로그인 증명으로 쓰기: Access Token은 API 호출용이다. 로그인 여부는 ID Token으로 판단한다.
 - ID Token을 API 호출에 쓰기: 반대 방향의 실수다. ID Token의 `aud`는 RP 자신이므로 다른 API 서버가 받아들일 토큰이 아니다.
 - `state`와 `nonce` 생략: 명세는 `state`를 요청과 콜백 사이의 상태를 유지하는 값으로, 보통 브라우저 쿠키와 묶어 CSRF를 막는 데 쓴다고 설명한다. `nonce`는 ID Token 재전송 공격을 완화하는 값이다. 둘 다 요청마다 새로 만들어 세션에 보관했다가 응답과 비교한다.
 - 로그인 이후의 상태: ID Token 검증이 끝나면 RP는 자체 세션이나 토큰으로 로그인 상태를 유지한다. ID Token의 만료 시각은 RP와 OP 사이의 로그인 세션 수명과 무관하다고 명세가 따로 적어 둔다. 세션과 토큰의 차이는 [Session and JWT](/posts/session-and-jwt/)에 정리했다.
+
+---
 
 ## 정리
 

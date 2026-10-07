@@ -16,6 +16,8 @@ tags: [Recruit, Interview, Reflection]
 
 여러 면접에서 반복해서 나온 주제(채번 병목, `@TransactionalEventListener`, 대량 처리와 트랜잭션 범위, 메시지와 이벤트 유실)는 회사별로 나누지 않고 뒤쪽의 [여러 면접에서 반복된 주제](#여러-면접에서-반복된-주제)에 한 번만 정리했다.
 
+---
+
 ## W사 면접
 
 ### 코딩 테스트 관련 질문
@@ -96,6 +98,8 @@ LDAP 사용 경험을 묻는 질문에 "LDAP을 직접 운영한 주체는 인�
 
 세미나를 통해 구조를 설득한 경험을 언급했지만 구체적인 예시나 성과는 말하지 못했다. "설득력이 있었다고 생각한다"는 내 판단만 있었고, 상대방의 피드백이나 결과는 제시하지 못했다.
 
+---
+
 ## 엔라이즈 면접
 
 ### 경력과 이직 관련 질문
@@ -163,6 +167,8 @@ TTL은 요청의 평균 처리 시간에 여유를 더해 잡는다. 예를 들�
 다시 정리하면 이렇다. MySQL `EXPLAIN`에서 인덱스 풀 스캔은 `type`이 `index`로 나타난다. 테이블 풀 스캔(`ALL`)과 같지만 인덱스 트리를 처음부터 끝까지 읽는다는 점이 다르다. 이때 인덱스가 쿼리에 필요한 컬럼을 모두 담은 커버링 인덱스면 인덱스 트리만 읽고 `Extra`에 `Using index`가 표시된다. 그렇지 않으면 인덱스 순서대로 행을 찾아가며 테이블 전체를 읽는다. `Using index condition`은 풀 스캔 여부와는 다른 표시로, 인덱스 튜플로 조건을 먼저 확인해 테이블 행 읽기를 미루는 Index Condition Pushdown이 적용됐다는 뜻이다([MySQL 8.4 EXPLAIN 출력 형식](https://dev.mysql.com/doc/refman/8.4/en/explain-output.html)). 그래서 풀 스캔을 판단할 때는 `type`과 `rows`를 먼저 보고, 필터 컬럼에 맞는 복합 인덱스를 추가하거나 조회 컬럼을 줄여 커버링 인덱스로 만들 수 있는지 검토한다. 개선 전후는 실행 시간과 읽은 행 수로 비교한다.
 
 엔라이즈에서는 계약 코드 채번과 `@TransactionalEventListener`도 질문받았고, 이 내용은 아래의 [채번 병목과 키 생성 전략](#채번-병목과-키-생성-전략), [@TransactionalEventListener를 쓴 이유](#transactionaleventlistener를-쓴-이유)에 정리했다.
+
+---
 
 ## 뤼이드 면접
 
@@ -241,6 +247,8 @@ TTL은 요청의 평균 처리 시간에 여유를 더해 잡는다. 예를 들�
 다시 정리하면 이렇다. 기존 시스템은 MyBatis로 구현돼 있었고, 신규 도메인은 생산성과 유지보수성을 위해 JPA로 도입했다. DAO(MyBatis)와 Repository(JPA) 계층을 분리해 책임을 나눴다. 두 기술을 같은 트랜잭션에서 쓸 때 핵심은 같은 DataSource를 하나의 트랜잭션 매니저가 관리하게 하는 것이다. `JpaTransactionManager`는 같은 DataSource를 쓰는 일반 JDBC 코드도 같은 트랜잭션 안에서 지원하고([JpaTransactionManager Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/JpaTransactionManager.html)), MyBatis-Spring은 Spring 트랜잭션에 참여하되 트랜잭션 매니저와 `SqlSessionFactoryBean`이 같은 DataSource를 써야 한다([MyBatis-Spring Transactions](https://mybatis.org/spring/transactions.html)). 처음 보완안에서는 `ChainedTransactionManager`로 트랜잭션 매니저를 묶는다고 적었는데, 이 클래스는 Spring Data Commons 2.5부터 deprecated다([ChainedTransactionManager Javadoc](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/transaction/ChainedTransactionManager.html)). 정합성은 통합 테스트로 검증했다.
 
 뤼이드에서 나온 `@TransactionalEventListener`, 정산 배치 메모리 누수, 이벤트 유실 질문은 아래 [여러 면접에서 반복된 주제](#여러-면접에서-반복된-주제)에 정리했다.
+
+---
 
 ## Toss 면접
 
@@ -321,6 +329,8 @@ retry에만 초점을 맞춰 답했고, 부하 전파와 서비스 격리는 고
 
 Toss에서 나온 시퀀스 점유, JPA 배치, RabbitMQ DLQ 질문은 아래 [여러 면접에서 반복된 주제](#여러-면접에서-반복된-주제)에 정리했다.
 
+---
+
 ## 두들린 면접
 
 대부분 기술 면접이었고, 백엔드 시스템의 설계, 운영, 성능 개선, 트랜잭션 관리, 캐시 전략에 대한 질문이 많았다.
@@ -385,6 +395,8 @@ Toss에서 나온 시퀀스 점유, JPA 배치, RabbitMQ DLQ 질문은 아래 [�
 실무에서는 읽기 위주 서비스에 Cache-aside를, 쓰기 직후 일관성이 중요한 경우에는 Write-through를 주로 사용했다.
 
 두들린에서 나온 시퀀스 테이블, 메시지 유실, 대량 인서트 질문은 아래 [여러 면접에서 반복된 주제](#여러-면접에서-반복된-주제)에 정리했다.
+
+---
 
 ## 여러 면접에서 반복된 주제
 

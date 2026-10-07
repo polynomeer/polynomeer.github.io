@@ -16,6 +16,8 @@ tags: [Spring, JPA, Dynamic Query, Querydsl]
 
 이때 if문으로 문자열을 이어 붙이기 시작하면 유지보수가 급격히 어려워진다.
 
+---
+
 ## 대표적인 선택지
 
 - 메서드 이름 쿼리
@@ -24,6 +26,8 @@ tags: [Spring, JPA, Dynamic Query, Querydsl]
 - Querydsl
 
 `Specification`은 조건(predicate)을 하나씩 정의해 두고 조합하는 방식이다. Spring Data JPA 문서는 이 방식이 필요한 조합마다 쿼리 메서드를 선언하는 일을 없앤다고 설명한다([Specifications](https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html)). 간단한 조회는 앞의 방법으로도 충분하지만, 조건 조합이 많아질수록 [Querydsl](/posts/querydsl/) 쪽이 읽기와 리팩터링에 유리하다.
+
+---
 
 ## 가장 흔한 안티패턴
 
@@ -38,6 +42,8 @@ tags: [Spring, JPA, Dynamic Query, Querydsl]
 - `findByStatusAndKeywordAndCreatedAtBetween`
 
 선택 조건이 하나 늘 때마다 그 조건이 있는 경우와 없는 경우의 조합이 모두 메서드가 되므로, 메서드 수가 조건 수보다 훨씬 빠르게 늘어난다.
+
+---
 
 ## Querydsl이 좋은 이유
 
@@ -54,6 +60,8 @@ private BooleanExpression eqStatus(Status status) {
 }
 ```
 
+---
+
 ## 실무에서 추천하는 구조
 
 - Controller: 검색 조건 DTO 수집
@@ -61,6 +69,8 @@ private BooleanExpression eqStatus(Status status) {
 - Query Repository: Querydsl로 실제 조회 구현
 
 즉, "검색 조건 해석"과 "쿼리 작성"을 분리하는 편이 낫다.
+
+---
 
 ## 고민해야 할 포인트
 
@@ -70,6 +80,8 @@ private BooleanExpression eqStatus(Status status) {
 - 조건이 늘어날수록 인덱스 전략이 맞는가 ([인덱스](/posts/db-index/))
 
 조건 조합이 늘면 실행되는 SQL의 모양도 늘어난다. 그래서 문법을 정리한 뒤에도 조합별로 카운트 비용과 인덱스 사용 여부를 따로 확인해야 한다.
+
+---
 
 ## 정리
 

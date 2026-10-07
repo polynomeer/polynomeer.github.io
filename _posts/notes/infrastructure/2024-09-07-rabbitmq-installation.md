@@ -10,6 +10,8 @@ tags: [Message Queue, RabbitMQ]
 - OS: macOS
 - 설치도구: homebrew
 
+---
+
 ## RabbitMQ 설치
 
 설치하기 전에 brew가 최신버전인지 확실히 한다.
@@ -53,6 +55,8 @@ export PATH=$PATH:/usr/local/sbin
   Starting broker... completed with 7 plugins.
 
 ```
+
+---
 
 ## RabbitMQ 실행
 `rabbitmq-server` 명령어로 서버를 실행했다면 `http://localhost:15672`로 접속해 관리 UI를 볼 수 있다. 관리 UI는 관리 플러그인이 켜져 있어야 뜨고, `rabbitmq-plugins enable rabbitmq_management`로 켠다([Management Plugin](https://www.rabbitmq.com/docs/management)). 기본 계정과 비밀번호는 `guest/guest`이다. 이 기본 계정은 원격 호스트에서는 접속할 수 없고 `localhost`로만 접속된다([RabbitMQ: Access Control](https://www.rabbitmq.com/docs/access-control)).

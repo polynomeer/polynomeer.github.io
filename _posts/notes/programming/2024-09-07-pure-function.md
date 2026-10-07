@@ -10,6 +10,8 @@ tags: [Functional Programming]
 1. 함수가 같은 아규먼트(입력)에 대해서 항상 같은 리턴값(결과)을 낸다.
 2. 함수의 평가는 [사이드 이펙트](https://en.wikipedia.org/wiki/Side_effect_(computer_science))가 없다.
 
+---
+
 ## 두 조건의 의미
 
 첫 번째 조건은 결과가 인자 외의 것에 의존하지 않는다는 뜻이다. Wikipedia는 지역 static 변수, 비지역 변수, 가변 참조 인자, 입력 스트림에 따라 결과가 달라지면 안 된다고 정리한다. 두 번째 조건은 함수가 바깥에 흔적을 남기지 않는다는 뜻이다. 비지역 변수나 가변 참조 인자를 바꾸거나 입출력 스트림을 건드리면 사이드 이펙트다 ([Wikipedia](https://en.wikipedia.org/wiki/Pure_function)).
@@ -40,6 +42,8 @@ function addItemPure(cart, item) {
 
 `Math.random()`, `Date.now()`, `console.log()`, 네트워크 요청을 호출하는 함수도 같은 이유로 순수하지 않다.
 
+---
+
 ## 왜 중요한가
 
 순수함수의 호출은 그 결과값으로 바꿔 써도 프로그램의 동작이 바뀌지 않는다. 이 성질을 참조 투명성(referential transparency)이라고 한다. 여기서 몇 가지 이점이 따라온다.
@@ -60,6 +64,8 @@ function memoize(fn) {
 const slowSquare = (n) => n * n;
 const fastSquare = memoize(slowSquare); // slowSquare가 순수하기 때문에 안전하다
 ```
+
+---
 
 ## 주의할 점
 

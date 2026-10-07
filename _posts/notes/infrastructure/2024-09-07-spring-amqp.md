@@ -12,6 +12,8 @@ tags: [AMQP]
 
 Spring AMQP는 AMQP 기반 메시징에 Spring의 핵심 개념을 적용한 프로젝트다. 프로젝트 소개 페이지는 메시지를 보내고 받는 고수준 추상화와 메시지 기반 POJO 지원을 제공한다고 설명한다. 두 번째 링크는 AMQP의 개념(생산자, 소비자, exchange, queue, binding)과 exchange 타입을 정리한 글이다. 이 개념 자체는 [RabbitMQ](/posts/rabbitmq/) 노트에 정리했으므로, 여기서는 Spring 쪽에서 무엇을 대신해 주는지를 중심으로 본다.
 
+---
+
 ## 두 모듈
 
 프로젝트는 두 부분으로 나뉜다.
@@ -20,6 +22,8 @@ Spring AMQP는 AMQP 기반 메시징에 Spring의 핵심 개념을 적용한 프
 - `spring-rabbit`: 그 추상화의 RabbitMQ 구현
 
 프로젝트 페이지가 꼽는 주요 기능은 세 가지다. 들어오는 메시지를 비동기로 처리하는 리스너 컨테이너, 메시지를 보내고 받는 `RabbitTemplate`, 큐와 exchange와 바인딩을 자동으로 선언하는 `RabbitAdmin`이다. 구조는 Spring Framework의 JMS 지원과 비슷하다.
+
+---
 
 ## Spring Boot에서 시작하기
 
@@ -33,6 +37,8 @@ spring.rabbitmq.password=secret
 ```
 
 로컬에 브로커를 띄우는 방법은 [RabbitMQ Installation](/posts/rabbitmq-installation/)에 있다.
+
+---
 
 ## 큐, exchange, 바인딩 선언
 
@@ -61,6 +67,8 @@ public class OrderMessagingConfig {
 
 애플리케이션이 브로커에 연결될 때 `RabbitAdmin`이 이 빈들을 찾아 선언한다. 이미 같은 설정으로 존재하면 그대로 두고, 이름은 같은데 속성이 다르면 브로커가 채널 수준 예외(406 `PRECONDITION_FAILED`)로 선언을 거부한다([RabbitMQ: Queues](https://www.rabbitmq.com/docs/queues)). 운영 중인 큐의 속성을 바꿔야 한다면 코드만 고쳐서는 안 되고 큐를 새로 만드는 절차가 필요하다.
 
+---
+
 ## 보내기: RabbitTemplate
 
 ```java
@@ -88,6 +96,8 @@ public MessageConverter messageConverter() {
 }
 ```
 
+---
+
 ## 받기: @RabbitListener
 
 ```java
@@ -103,12 +113,16 @@ public class OrderCreatedListener {
 
 `@RabbitListener`를 붙이면 그 뒤에서 메시지 리스너 컨테이너가 만들어져 큐를 구독한다. 일반 Spring에서는 `@EnableRabbit`이 필요하지만 Spring Boot는 이를 자동 구성한다([Annotation-driven Listener Endpoints](https://docs.spring.io/spring-amqp/reference/amqp/receiving-messages/async-annotation-driven.html)). `@QueueBinding`을 쓰면 리스너 선언 안에서 큐, exchange, 바인딩을 함께 선언할 수도 있다.
 
+---
+
 ## 리스너 컨테이너의 기본값
 
 리스너 컨테이너가 대신 해 주는 일 중 꼭 알아야 할 두 가지 기본값이 있다([Message Listener Container Configuration](https://docs.spring.io/spring-amqp/reference/amqp/containerAttributes.html)).
 
 - ack 모드는 `AUTO`가 기본이다. 리스너 메서드가 예외 없이 끝나면 컨테이너가 ack를 보내고, 예외를 던지면 ack하지 않는다. `MANUAL`로 바꾸면 리스너가 `Channel.basicAck()`를 직접 호출해야 하고, `NONE`은 브로커가 전달 즉시 ack된 것으로 보는 RabbitMQ의 autoack에 해당한다.
 - prefetch는 2.0부터 250이 기본이다. 소비자 하나가 ack하지 않은 채 받아 둘 수 있는 메시지 수다.
+
+---
 
 ## 예외가 나면 메시지는 어떻게 되는가
 
@@ -121,6 +135,8 @@ public class OrderCreatedListener {
 - 특정 예외에서만 재전달을 막고 싶다면 리스너에서 `AmqpRejectAndDontRequeueException`을 던진다.
 
 버려지는 메시지가 없게 하려면 큐에 dead letter exchange를 설정해 두고, 그 큐를 따로 모니터링한다.
+
+---
 
 ## 보낸 메시지가 도착했는지 확인하기
 

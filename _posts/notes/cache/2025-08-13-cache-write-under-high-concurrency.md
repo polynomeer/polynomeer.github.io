@@ -27,6 +27,8 @@ public class PriceQueryServiceImpl implements PriceQueryService {
 
 위 코드에서 수많은 요청 n개가 동시에 `or` 블록에 진입하게 되면, 불필요한 중복 쓰기가 redis에 다수 발생할 것이다. 이 문제를 해결할 방법은 어떤게 있을까? 상황/트래픽 패턴에 따라 아래 전략들을 조합하면 서로 다른 축에서 증폭을 줄일 수 있다. 이 현상의 일반적인 형태는 [캐시 스탬피드(Cache Stampede)](/posts/cache-stampede/)에서 정리했다.
 
+---
+
 ## 전제: 지금 문제의 본질
 
 이 문제의 핵심 원인을 파악해보자. 우선, 문제의 흐름은 다음과 같다.

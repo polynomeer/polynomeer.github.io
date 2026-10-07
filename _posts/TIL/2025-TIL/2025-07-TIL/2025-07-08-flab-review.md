@@ -18,6 +18,8 @@ tags: [TIL]
 
 마지막으로, 개인 **프로젝트**를 다시 해보고 싶어졌다. 애프랩의 GitHub 프로젝트 레포지토리를 종종 살펴보았는데, 수준 높은 결과물과 깊이 있는 기술적 고민이 인상적이었다. 나는 혼자 프로젝트를 진행할 때마다 실행력과 추진력이 부족해 끝맺지 못하고 흐지부지되는 경우가 많았다. 이번 기회를 통해 기술적 고민을 담은 완성도 높은 나만의 프로젝트를 개발해보고 싶었다. 실무와는 무관하게, 순수한 열정만으로 무언가를 만들어보는 건 정말 오랜만인 것 같다.
 
+---
+
 ## F-Lab 온보딩 
 
 첫 멘토링 시작 전에 간단한 온보딩을 진행하였다. 약 40분간 진행되었고, 먼저 멘토님의 소개를 들은 뒤 나도 나에 대해 소개하는 시간을 가졌다. 나의 3년 조금 넘는 경력, 부족하다고 생각하는 부분, 원하는 멘토링 방향과 목표에 대해 이야기했다.
@@ -29,6 +31,8 @@ tags: [TIL]
 ------
 
 ![img](https://blog.kakaocdn.net/dna/Ij2Pp/btsO8Uw237T/AAAAAAAAAAAAAAAAAAAAAKacYcBTMwDrrdVhp7B5rAFgspW28GmYrzEk-0i_jskf/img.jpg?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1753973999&allow_ip=&allow_referer=&signature=XpXh1AcrKHS9Fnrhr60I3U8f0Og%3D)
+
+---
 
 ## 한달 회고
 

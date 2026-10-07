@@ -12,6 +12,8 @@ series_description: spring-lite 프로젝트를 바탕으로 IoC 컨테이너, A
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lite)
 
+---
+
 ## 마지막에 다시 보니 Boot는 "조립 담당"에 가까웠다
 
 Spring Boot를 오래 쓰다 보면 `SpringApplication.run()` 한 줄이 너무 익숙해진다.
@@ -23,6 +25,8 @@ public static void main(String[] args) {
 ```
 
 그래서 어느 순간부터는 Boot를 별도 거대한 기술처럼 느끼게 된다. 그런데 `spring-lite`의 마지막 모듈을 구현하고 흐름을 따라가 보니 오히려 반대로 보였다. Boot는 컨테이너, 웹, 트랜잭션, JDBC 같은 인프라를 적절한 순서로 등록하고 실행하는 조립 계층에 더 가까웠다.
+
+---
 
 ## `MiniSpringApplication.run()`이 정말 짧다
 
@@ -41,6 +45,8 @@ public static void main(String[] args) {
 
 그래서 Boot는 Spring의 대체물이 아니라, **컨테이너를 언제 무엇으로 채울지 결정하는 초기화 레이어**다. 실제 Spring Boot에서 `@SpringBootApplication`이 무엇을 켜는지는 [별도 글](/posts/spring-boot-application-annotation/)에서 다뤘다.
 
+---
+
 ## `BootInfrastructureRegistrar`가 의외로 많은 걸 말해 준다
 
 `BootInfrastructureRegistrar.registerDefaults()`는 다음 자동 설정 클래스들을 등록한다.
@@ -53,6 +59,8 @@ public static void main(String[] args) {
 이 구조에서는 Boot의 핵심이 "자동 설정 클래스 목록을 컨테이너에 넣는다"는 것이 직접 드러난다. 실제 Spring Boot는 이 목록을 코드에 고정하지 않고 jar 안의 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 파일에서 찾는다([Spring Boot: Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)).
 
 실제 Spring Boot가 복잡해지는 것도 결국 여기서 시작한다. 스타터와 자동 설정이 늘어날수록 "어떤 조건에서 어떤 Bean을 만들지" 조합이 커진다.
+
+---
 
 ## 자동 설정도 결국 컨테이너 규칙의 확장이다
 
@@ -67,6 +75,8 @@ public static void main(String[] args) {
 
 실제 Boot를 공부할 때도 기능 목록보다 "어떤 Bean들이 어떤 조건으로 조립되는가"를 보는 편이 덜 헷갈린다.
 
+---
+
 ## 웹 서버도 결국 Bean이라는 점이 좋았다
 
 `spring-lite-boot`는 `WebServer`, `WebServerFactory`, `JdkWebServer` 같은 타입을 둔다.
@@ -78,6 +88,8 @@ public static void main(String[] args) {
 - 시작과 종료 책임을 컨테이너 lifecycle과 연결하기 쉽다
 
 Boot는 서버를 "밖에서 띄운다"보다 "애플리케이션 내부 조립 요소로 끌고 들어온다"에 더 가깝다.
+
+---
 
 ## `example-app`이 있어서 마지막까지 감이 끊기지 않았다
 
@@ -93,6 +105,8 @@ Boot는 서버를 "밖에서 띄운다"보다 "애플리케이션 내부 조립 
 - 서비스 계층 트랜잭션 적용
 
 그래서 Boot 계층이 잘 설계됐는지는 자동 설정 클래스만으로는 판단할 수 없다. 실제 사용자 애플리케이션이 얼마나 적은 코드로 인프라를 끌어올 수 있는지로 봐야 한다.
+
+---
 
 ## 결국 Boot의 가치는 세 가지였다
 
@@ -110,6 +124,8 @@ Boot는 서버를 "밖에서 띄운다"보다 "애플리케이션 내부 조립 
 
 Boot가 편한 이유는 컨테이너 원리를 없애서가 아니라, 그 원리를 더 자동화해서다. 그래서 Boot를 깊게 이해하려면 오히려 컨테이너와 조건부 등록을 더 잘 봐야 한다.
 
+---
+
 ## 물론 이 구현이 일부러 줄여 둔 것도 많다
 
 `spring-lite-boot`는 학습용으로는 충분하지만, 실제 Spring Boot와 비교하면 축소된 부분이 분명하다.
@@ -120,6 +136,8 @@ Boot가 편한 이유는 컨테이너 원리를 없애서가 아니라, 그 원�
 - starter 생태계처럼 모듈 조합이 풍부하지 않다.
 
 그런데 이 단순함 덕분에 "자동 설정이 컨테이너 조립을 얼마나 대신해 주는가"라는 질문만 또렷하게 남았다. 실제 Spring Boot가 같은 일을 어떻게 하는지는 [spring-internals-lab 9편](/posts/spring-internals-lab-spring-boot/)에서 비교할 수 있다.
+
+---
 
 ## 시리즈를 마치며
 

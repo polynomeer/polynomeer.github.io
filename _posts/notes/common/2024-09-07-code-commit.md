@@ -11,11 +11,15 @@ AWS CodeCommit은 AWS가 운영하는 비공개 Git 저장소 서비스다. 공�
 
 > 덧붙임: AWS는 2024년 7월 CodeCommit의 비중을 줄이겠다고 발표했다가, 2025년 11월 24일 CodeCommit이 정식 서비스(General Availability)로 돌아온다고 다시 발표했다([AWS DevOps Blog](https://aws.amazon.com/blogs/devops/aws-codecommit-returns-to-general-availability/)). 새로 도입을 검토한다면 현재 서비스 상태를 먼저 확인하는 편이 안전하다.
 
+---
+
 ## User guide
 - https://docs.aws.amazon.com/ko_kr/codecommit/latest/userguide/getting-started.html#getting-started-create-commit
 - https://ap-northeast-2.console.aws.amazon.com/codesuite/codedeploy/start?region=ap-northeast-2
 
 첫 번째 링크는 커밋을 만들고 푸시하는 시작 가이드이고, 두 번째는 서울 리전(`ap-northeast-2`)의 CodeSuite 콘솔에서 CodeDeploy 시작 화면으로 가는 링크다.
+
+---
 
 ## 기본 흐름
 
@@ -27,6 +31,8 @@ AWS CodeCommit은 AWS가 운영하는 비공개 Git 저장소 서비스다. 공�
 4. 다른 사람의 변경은 `git pull`로 받는다.
 
 저장소는 리전 단위로 존재한다. 콘솔에서 저장소가 보이지 않으면 리전 선택부터 확인한다.
+
+---
 
 ## 연결 방식 세 가지
 
@@ -93,6 +99,8 @@ ssh git-codecommit.ap-northeast-2.amazonaws.com
 ```bash
 git clone ssh://git-codecommit.ap-northeast-2.amazonaws.com/v1/repos/MyDemoRepo my-demo-repo
 ```
+
+---
 
 ## 저장소 이벤트를 다른 시스템에 알리기
 

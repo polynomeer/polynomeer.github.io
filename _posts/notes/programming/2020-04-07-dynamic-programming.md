@@ -11,6 +11,8 @@ tags: [Algorithm, Dynamic Programming, Memoization]
 
 ![](https://images.velog.io/images/polynomeer/post/031441af-5c78-479b-8517-751c0e19217f/DP.png)
 
+---
+
 ## 1. 동적 계획법의 조건
 
 • 두 가지 속성을 만족해야 동적 계획법으로 문제를 풀 수 있다.
@@ -87,6 +89,8 @@ A) 대전->**울산**->부산 : 가장 빠른 경로
 
 **이처럼 같은 값을 매번 구하는 것은 매우 비효율적이다.** 이때 이를 해결할 수 있는 방법이 바로 메모이제이션(Memoization)이다.
 
+---
+
 ## 2. 메모이제이션(Memoization)
 
 동적 계획법에서 각 문제는 **한 번만** 풀어야 한다. 중복되는 부분 문제를 여러번 풀지 않는다는 뜻이다. Optimal Substructure를 만족하기 때문에 같은 문제는 구할 때마다 정답이 같다. 따라서 정답을 한 번 구했으면 그 정답을 캐시에 메모해놓는다. 이렇게 메모하는 것을 코드의 구현에서는 배열에 저장하는 것으로 할 수 있다. 이를 메모이제이션(Memoization)이라고 한다.
@@ -136,6 +140,8 @@ int fibonacci(int n) {
 ```
 
 ![](https://images.velog.io/images/polynomeer/post/89080f0b-64a6-4740-9e73-110e3641331e/fibo_memo.png)
+
+---
 
 ## 3. 동적 계획법 구현 방식
 
@@ -213,6 +219,8 @@ int fibonacci(int n) {
     return d[n];
 }
 ```
+
+---
 
 ## 4. 동적 계획법을 통한 문제풀이
 

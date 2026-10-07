@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## 이번 글의 질문
 
 [Spring AOP](/posts/aop/)를 이해할 때 가장 먼저 잡아야 하는 건 `@Aspect` 문법이 아니다. 그보다 더 아래 질문이 있다.
@@ -22,6 +24,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 - 수동 `ProxyFactory`와 자동 프록시 생성기는 어떻게 연결되는가
 
 이번 글은 `proxy-playground`, `method-timing-post-processor`, `mini-aop`, `mini-auto-proxy`를 묶어서 **AOP의 실체는 프록시 + 인터셉터 체인**이라는 점을 확인한다.
+
+---
 
 ## 프록시 선택 규칙은 생각보다 단순하다
 
@@ -44,6 +48,8 @@ ProxyFactory pf2 = new ProxyFactory(new PlainGreeter());  // 인터페이스 없
 - JDK 프록시는 원본 클래스로 캐스팅할 수 없다.
 - CGLIB 프록시는 서브클래스이므로 원본 타입처럼 보일 수 있다.
 - `final` 클래스와 `final` 메서드는 CGLIB에서도 제약이 생긴다.
+
+---
 
 ## 인터셉터 체인은 양파 구조다
 
@@ -74,6 +80,8 @@ flowchart LR
 
 트랜잭션도, 측정도, 예외 변환도 이 구조 위에서 target 호출 앞뒤를 감싸는 인터셉터로 구현된다.
 
+---
+
 ## `final`과 `private`는 왜 우회되는가
 
 실험 결과는 다음과 같다.
@@ -88,6 +96,8 @@ flowchart LR
 - `private`는 서브클래스 입장에서 보이지도 않는다.
 
 공식 문서도 `final` 메서드와 `private` 메서드를 같은 이유로 묶는다. 둘 다 "cannot be advised, because they cannot be overridden"(오버라이드할 수 없으므로 어드바이스를 적용할 수 없다)([Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)). 그래서 이 제약은 Spring의 정책이라기보다 서브클래스 기반 프록시라는 구현 방식에서 나온다.
+
+---
 
 ## self-invocation이 안 되는 이유도 결국 객체가 둘이기 때문이다
 
@@ -115,6 +125,8 @@ sequenceDiagram
 
 어느 쪽이든 결과가 프록시 객체와 원본 객체 두 개로 나뉜다면 self-invocation 문제는 그대로 남는다.
 
+---
+
 ## 자동 프록시 생성기는 새 알고리즘이 아니라 타이밍 자동화다
 
 `MethodTimingBeanPostProcessor`와 `DefaultAdvisorAutoProxyCreator`를 비교해 보면 둘이 같은 일을 한다는 것이 보인다.
@@ -135,6 +147,8 @@ return proxyFactory.getProxy();
 
 자동 프록시 생성기는 새로운 AOP 원리를 추가하지 않는다. 같은 판정과 같은 프록시 생성을 컨테이너 파이프라인의 정해진 시점에서 대신 수행한다.
 
+---
+
 ## `BeanPostProcessor`로 만든 AOP와 자동 프록시의 공통점
 
 두 방식을 나란히 놓으면 다음과 같다.
@@ -147,6 +161,8 @@ return proxyFactory.getProxy();
 | self-invocation 한계 | 있음 | 있음 |
 
 결과는 같고, 차이는 누가 wiring(프록시를 만들어 Bean 자리에 끼워 넣는 일)을 담당하느냐에 있다.
+
+---
 
 ## `BeanPostProcessor`를 `@Bean`으로 만들 때 `static`이 안전한 이유
 
@@ -161,6 +177,8 @@ return proxyFactory.getProxy();
 `@Bean` Javadoc에 따르면 non-static 메서드가 `BeanPostProcessor`를 반환하면 `@Configuration` 클래스가 일찍 초기화되고, `static`으로 두면 설정 클래스를 인스턴스화하지 않고 호출할 수 있다([Bean Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Bean.html)).
 
 그래서 `static @Bean`은 스타일 차이가 아니라, 후처리기를 만들 때 설정 클래스를 끌어오지 않기 위한 선택이다.
+
+---
 
 ## mini-spring은 AOP의 핵심만 남긴다
 
@@ -181,6 +199,8 @@ Bean 생성 완료
 → 조건 맞으면 프록시로 교체
 → 이후 모든 외부 호출은 인터셉터 체인 경유
 ```
+
+---
 
 ## 정리
 

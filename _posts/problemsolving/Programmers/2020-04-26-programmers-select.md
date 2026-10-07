@@ -7,6 +7,8 @@ tags: [SQL, Programmers, SELECT]
 
 프로그래머스 SQL 문제를 풀기 시작하면 가장 먼저 만나는 유형이 기본 `SELECT` 문이다. 문법 자체는 단순하지만, 어떤 컬럼을 어떤 기준으로 조회할지 문제 요구사항을 정확히 읽는 연습이 중요하다.
 
+---
+
 ## 이 문제 유형에서 먼저 볼 것
 
 - 어떤 테이블을 조회하는가
@@ -17,6 +19,8 @@ tags: [SQL, Programmers, SELECT]
 기본 문제에서는 SQL 난이도보다 요구사항 해석이 더 중요하다.
 
 아래 풀이는 SELECT 유형의 첫 문제인 [모든 레코드 조회하기](https://school.programmers.co.kr/learn/courses/30/lessons/59034)를 기준으로 한다. 동물 보호소에 들어온 동물 정보가 담긴 `ANIMAL_INS` 테이블에서 모든 동물의 정보를 `ANIMAL_ID` 순으로 조회하는 문제다. 테이블의 컬럼은 `ANIMAL_ID`, `ANIMAL_TYPE`, `DATETIME`, `INTAKE_CONDITION`, `NAME`, `SEX_UPON_INTAKE` 여섯 개다.
+
+---
 
 ## 핵심 포인트
 
@@ -34,6 +38,8 @@ PostgreSQL 문서는 이 점을 분명히 적어 둔다. 정렬을 지정하지 
 
 정렬 방향을 적지 않으면 오름차순(`ASC`)이 기본이다. MySQL 문서도 기본은 오름차순이고 역순이 필요하면 `DESC`를 붙이라고 설명한다. 그래서 `ORDER BY ANIMAL_ID`와 `ORDER BY ANIMAL_ID ASC`는 같다.
 
+---
+
 ## 풀이 방향
 
 이 문제의 본질은 복잡한 조인이나 집계가 아니라:
@@ -50,6 +56,8 @@ ORDER BY ANIMAL_ID;
 ```
 
 쿼리는 작성 순서와 다르게 해석된다. `FROM ANIMAL_INS`로 대상 테이블을 정하고, `SELECT`로 출력할 컬럼을 고르고, 마지막으로 `ORDER BY ANIMAL_ID`가 결과 행을 `ANIMAL_ID` 오름차순으로 정렬한다. `WHERE`가 없으므로 모든 행이 결과에 포함된다.
+
+---
 
 ## 정리
 

@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## Bean lifecycle은 한 줄로 끝나지 않는다
 
 Spring에서 [Bean 생명주기](/posts/spring-lifecycle/)를 단순하게 설명하면 보통 이렇게 말한다.
@@ -27,6 +29,8 @@ Spring에서 [Bean 생명주기](/posts/spring-lifecycle/)를 단순하게 설�
 그래서 이번 글은 다음 질문을 실험으로 확인한다.
 
 > 빈 하나는 생성자 호출부터 소멸까지 어떤 순서로 콜백을 거치는가?
+
+---
 
 ## 실험용 Bean은 콜백을 거의 다 붙여 둔다
 
@@ -58,6 +62,8 @@ public class LifecycleTarget implements
 
 생명주기에서 눈에 띄는 거의 모든 훅을 한 Bean에 몰아 넣었기 때문에, 훅 사이의 상대 순서를 한 번의 실행으로 볼 수 있다.
 
+---
+
 ## 실제 관찰 순서
 
 실험 결과는 다음과 같았다.
@@ -85,6 +91,8 @@ customDestroyMethod
 
 [`BeanFactory` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html)이 "The full set of initialization methods and their standard order"로 제시하는 목록(초기화 메서드 전체와 그 표준 순서)도 같은 순서다. 이 목록에 `@PostConstruct`는 따로 없다. 아래에서 보듯 `postProcessBeforeInitialization` 안에서 처리되기 때문이다.
 
+---
+
 ## `Aware`도 다 같은 `Aware`가 아니다
 
 처음 보기엔 `BeanNameAware`, `BeanFactoryAware`, `ApplicationContextAware`가 같은 성격처럼 보인다. 실제로는 처리 위치가 다르다.
@@ -93,6 +101,8 @@ customDestroyMethod
 - `ApplicationContextAware`는 `ApplicationContextAwareProcessor`라는 `BeanPostProcessor`가 처리한다.
 
 `BeanFactory` Javadoc도 `ApplicationContextAware`에는 application context에서 실행될 때만 적용된다는 단서를 붙인다. 같은 "Aware 콜백"이라도 처리 계층이 나뉘어 있다. `ApplicationContextAware`는 `BeanFactory`가 아니라 `ApplicationContext` 개념에 속하므로, 더 상위 계층의 후처리기로 처리하는 편이 구조적으로 맞다고 본다.
+
+---
 
 ## `@PostConstruct`는 왜 `afterPropertiesSet()`보다 먼저일까
 
@@ -121,6 +131,8 @@ flowchart TD
 
 `@PostConstruct`가 먼저인 이유는 애노테이션이라서가 아니라, 그 처리를 담당하는 컴포넌트가 파이프라인의 더 앞단에 있기 때문이다.
 
+---
+
 ## 커스텀 `BeanPostProcessor`가 `@PostConstruct`보다 먼저 실행될 수도 있다
 
 직관적으로는 Spring 내부의 `CommonAnnotationBeanPostProcessor`가 사용자가 만든 평범한 `BeanPostProcessor`보다 먼저 실행될 것 같지만, 실제 관찰은 반대였다.
@@ -132,6 +144,8 @@ flowchart TD
 - `PriorityOrdered`, `Ordered`, 일반 후처리기를 차례로 등록한 뒤, 마지막에 `internalPostProcessors`를 다시 등록한다. `addBeanPostProcessor()`는 이미 있는 후처리기를 기존 위치에서 지우고 목록 끝에 붙이므로, 이 재등록이 내부 후처리기를 맨 뒤로 민다.
 
 결과적으로 순서 없는 일반 커스텀 `BeanPostProcessor`가 앞쪽에 남고, `@PostConstruct` 처리기는 뒤로 밀린다. `PriorityOrdered` 같은 우선순위 인터페이스만 보고 실제 실행 순서를 단정하면 틀릴 수 있다.
+
+---
 
 ## `InstantiationAwareBeanPostProcessor`는 더 앞단에 있다
 
@@ -145,6 +159,8 @@ flowchart TD
 
 같은 문서는 이 인터페이스의 대표 용도로 특정 빈의 기본 인스턴스화를 막고 특별한 `TargetSource`를 쓰는 프록시를 만드는 경우를 든다. 그래서 [AOP 프록시](/posts/spring-internals-lab-proxy-aop/)는 원본 객체를 만든 뒤 감싸는 방식 말고도, 이보다 이른 지점에서 개입할 수 있다.
 
+---
+
 ## 소멸 단계도 나름의 순서가 있다
 
 close 시점 소멸 순서는 다음과 같았다.
@@ -155,6 +171,8 @@ close 시점 소멸 순서는 다음과 같았다.
 
 이 순서는 `DisposableBeanAdapter.destroy()`가 정한다([v6.2.0 소스](https://github.com/spring-projects/spring-framework/blob/v6.2.0/spring-beans/src/main/java/org/springframework/beans/factory/support/DisposableBeanAdapter.java#L198-L260)). `DestructionAwareBeanPostProcessor.postProcessBeforeDestruction()`, `DisposableBean.destroy()`, custom destroy method 순으로 부르고, `@PreDestroy`는 이 첫 단계에서 처리된다. Spring은 종료 훅을 하나의 어댑터에 모아 순서를 고정한다.
 
+---
+
 ## `SmartInitializingSingleton`은 개별 Bean 초기화와 다른 층이다
 
 `SmartInitializingSingleton.afterSingletonsInstantiated()`는 앞의 콜백들과 성격이 다르다.
@@ -163,6 +181,8 @@ close 시점 소멸 순서는 다음과 같았다.
 - 모든 singleton 선생성이 끝난 뒤 한 번 호출된다.
 
 [Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/SmartInitializingSingleton.html)은 이 콜백이 singleton 선생성 단계가 끝나는 시점에 호출되며, 그때는 모든 일반 singleton 빈이 이미 생성되어 있음을 보장한다고 적는다. 그래서 이 인터페이스는 "이 Bean이 준비됐다"보다 "컨테이너 전체가 준비됐다"에 가깝고, 실험에서도 `ContextRefreshedEvent` 바로 앞에 찍혔다.
+
+---
 
 ## mini-spring은 왜 아직 이 주제를 충분히 재현하지 않았는가
 
@@ -181,6 +201,8 @@ close 시점 소멸 순서는 다음과 같았다.
 - `SmartInitializingSingleton`
 
 빠진 항목들은 모두 컨테이너가 외부 코드를 끼워 넣는 확장 포인트다. Bean lifecycle은 부가기능 모음이라기보다 이 확장 포인트의 집합이다.
+
+---
 
 ## 정리
 

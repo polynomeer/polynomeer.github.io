@@ -19,12 +19,16 @@ Presigned URL은 서버가 스토리지 접근 권한만 짧게 위임하고, �
 4. 클라이언트가 그 URL로 스토리지에 직접 업로드한다.
 5. 서버는 메타데이터와 업로드 상태만 관리한다.
 
+---
+
 ## 어떤 점이 좋은가
 
 - 서버가 파일 바이트를 중계하지 않는다.
 - 대용량 업로드에서 API 서버 부담이 크게 줄어든다.
 - 모바일, 브라우저, 외부 클라이언트에서도 구조가 단순하다.
 - 업로드 권한을 짧은 시간 동안만 제한적으로 위임할 수 있다.
+
+---
 
 ## 설계할 때 중요한 포인트
 
@@ -46,6 +50,8 @@ S3 문서는 presigned URL을 "bearer tokens that grant access to those who poss
 
 파일이 커질수록 단일 PUT보다 multipart upload(파일을 파트로 나눠 올리고 S3가 합치는 방식)가 더 안정적이다. 실패한 파트만 다시 보내면 되므로 네트워크가 불안정할 때도 유리하다. S3 문서는 100MB 이상 객체에 이 방식을 권장한다([S3 문서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html)).
 
+---
+
 ## 자주 하는 실수
 
 - 업로드 URL만 발급하고 이후 검증 절차가 없다.
@@ -55,11 +61,15 @@ S3 문서는 presigned URL을 "bearer tokens that grant access to those who poss
 
 Presigned URL은 전송 경로를 서버 밖으로 옮길 뿐, 업로드 정책은 여전히 서버의 몫이다.
 
+---
+
 ## Presigned URL과 STS의 차이
 
 Presigned URL은 특정 객체 요청 하나에 가까운 제한된 권한을 위임한다. 반면 STS 임시 자격 증명은 더 넓은 권한 범위를 일정 시간 부여하는 방식이다.
 
 일반적인 웹 업로드에서는 Presigned URL이 단순하고 통제하기 쉽다. 여러 객체 조작이나 SDK 기반 복합 작업이 필요할 때는 STS가 더 맞을 수 있다.
+
+---
 
 ## 정리
 

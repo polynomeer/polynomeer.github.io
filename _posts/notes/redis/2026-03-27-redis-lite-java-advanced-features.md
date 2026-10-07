@@ -23,6 +23,8 @@ mermaid: true
 
 이 글에서는 기능 자체보다, 왜 이런 방식으로 구현했는지를 본다.
 
+---
+
 ## 1. Redis 트랜잭션은 RDBMS 트랜잭션과 다르다
 
 관계형 DB를 먼저 배운 입장에서는 `MULTI/EXEC`를 보고 rollback, undo log, [isolation](/posts/isolation-levels-and-anomalies/)을 떠올리기 쉽다. 하지만 Redis 트랜잭션은 명령을 큐에 쌓아 두었다가 `EXEC`에서 한꺼번에 실행하는 모델에 가깝다. Redis 문서는 롤백을 지원하지 않으며, 그 이유로 단순성과 성능에 주는 영향을 든다([Transactions](https://redis.io/docs/latest/develop/using-commands/transactions/)).
@@ -64,6 +66,8 @@ for (List<String> a : queued) {
 
 두 번째 항목은 Redis 문서의 보장과 같다. 트랜잭션 실행 도중에는 다른 클라이언트의 요청이 처리되지 않는다([Transactions](https://redis.io/docs/latest/develop/using-commands/transactions/)).
 
+---
+
 ## 2. txnDirty가 의미하는 것
 
 트랜잭션 도중 알 수 없는 커맨드가 들어오면 `txnDirty`를 표시한다.
@@ -103,6 +107,8 @@ stateDiagram-v2
     Dirty --> Normal: EXEC / EXECABORT
 ```
 
+---
+
 ## 3. Pub/Sub는 broker 하나로 풀 수 있다
 
 Pub/Sub는 이 프로젝트에서 가장 직관적인 구조를 가진다.
@@ -127,6 +133,8 @@ for (ClientConn c : targets) {
 
 이 구조는 Redis pub/sub의 전달 방식과 그대로 맞닿아 있다. 메시지를 저장하지 않고 지금 연결된 구독자에게만 밀어 넣는 메모리 기반 fan-out(한 메시지를 여러 수신자에게 복제)이다. Redis 문서는 이를 [at-most-once](/posts/kafka-delivery-guarantees/) 전달이라고 부른다. 구독자가 처리하지 못한 메시지는 다시 오지 않는다([Redis Pub/sub](https://redis.io/docs/latest/develop/pubsub/)).
 
+---
+
 ## 4. 왜 push queue가 필요한가
 
 Pub/Sub 메시지는 요청-응답과 다르게, 클라이언트가 어떤 명령을 보내지 않아도 서버가 먼저 내려보내야 한다.
@@ -144,6 +152,8 @@ public void push(ByteBuffer response) {
 
 요청이 와야 응답하는 일반 HTTP API 서버와 다른 점이 여기다.
 
+---
+
 ## 5. Lua는 "서버 안에서 명령을 조합하는 방식"이다
 
 Lua 지원은 이 프로젝트에서 가장 흥미로운 부분 중 하나다. 구현은 `luaj` 라이브러리를 붙였다. 눈여겨볼 부분은 스크립트 실행 자체보다, `redis.call()`로 서버 내부 명령을 스크립트 안에서 조합하게 한 것이다.
@@ -158,6 +168,8 @@ g.set("redis", redis);
 ```
 
 따라서 Lua는 별도의 외부 스크립트 엔진이라기보다, Redis 명령 실행기 위에 얹힌 서버 내 제어 계층으로 보는 편이 맞다.
+
+---
 
 ## 6. 왜 sandbox와 limit이 필요한가
 
@@ -176,6 +188,8 @@ this.lua = new LuaEngine(db, broker, 5_000L, 10_000, 1_000);
 - 호출 횟수
 
 실제 Redis에서도 오래 도는 스크립트는 데이터를 바꾸지 않았을 때만 `SCRIPT KILL`로 중단할 수 있다([Scripting with Lua](https://redis.io/docs/latest/develop/programmability/eval-intro/)). Redis가 단일 스레드 실행 모델인 이상, 서버 안에서 도는 코드가 길어지면 그만큼 다른 클라이언트의 응답이 늦어진다. 이 문제는 [Redis 단일 스레드가 멈추는 순간](/posts/redis-single-thread-stalls/)에서 따로 다룬다.
+
+---
 
 ## 7. 왜 지원 명령을 제한했는가
 
@@ -196,6 +210,8 @@ switch (cmd) {
 
 이 제한은 기능 부족으로도 볼 수 있지만, 교육용 구현에서는 의미 있는 선택이다. 스크립팅으로 "무엇이든 할 수 있게" 만드는 것보다, 스크립트가 서버 내부 명령 모델과 어떻게 연결되는지를 보여주는 것이 먼저이기 때문이다.
 
+---
+
 ## 8. 구현 과정에서 드러나는 설계 철학
 
 이 프로젝트의 고급 기능 구현을 보면 공통된 철학이 있다.
@@ -213,6 +229,8 @@ rollback을 정교하게 만들기보다, Redis답게 queue + exec 모델을 택
 진짜 임베디드 스크립팅 엔진의 힘을 보여주되, 안전장치와 지원 범위를 명시적으로 둠
 
 세 기능 모두 범위를 넓히기보다 Redis가 왜 이런 실행 모델을 택했는지를 드러내는 쪽을 골랐다.
+
+---
 
 ## 시리즈 정리
 

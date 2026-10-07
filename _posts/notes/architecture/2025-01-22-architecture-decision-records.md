@@ -10,11 +10,15 @@ tags: [Architecture, ADR, Decision Making, Documentation]
 
 이 글은 ADR이 무엇이고, 어떤 형식으로 쓰고, 언제 쓰는지를 정리한다. 예시로 그 ADR-001을 그대로 쓴다.
 
+---
+
 ## ADR은 결정 하나를 적은 짧은 문서다
 
 ADR은 Architecture Decision Record의 줄임말이다. adr.github.io는 ADR을 아키텍처상 중요한 결정 하나를 그 근거, 트레이드오프, 결과와 함께 적은 문서로 정의한다. 그리고 ADR을 모은 것이 프로젝트의 결정 로그(decision log)가 된다고 설명한다([adr.github.io](https://adr.github.io/)).
 
 핵심은 "하나"다. 설계 문서 한 권에 여러 결정을 섞지 않는다. 결정 하나에 문서 하나를 쓰고 번호를 붙인다.
+
+---
 
 ## 왜 남기는가
 
@@ -24,6 +28,8 @@ ADR은 Architecture Decision Record의 줄임말이다. adr.github.io는 ADR을 
 - **그냥 바꾼다.** 그 결정이 지키던 것을 모르는 채 바꿔 프로젝트의 가치를 깎는다.
 
 ADR은 세 번째 선택지를 만든다. 결정할 때의 맥락을 읽고, 그 맥락이 아직 유효한지 보고 나서 따르거나 바꾼다.
+
+---
 
 ## Nygard의 형식: 제목, 상태, 맥락, 결정, 결과
 
@@ -41,6 +47,8 @@ Nygard가 제안한 항목은 다섯이다.
 
 Nygard 형식 말고도 MADR, Y-statement 같은 템플릿이 있다([adr.github.io](https://adr.github.io/)). 항목 이름은 달라도 "맥락 → 결정 → 결과"의 뼈대는 같다.
 
+---
+
 ## 예시: spring-ops-lab ADR-001
 
 [ADR-001: 부하 모델의 기본은 open model](https://github.com/polynomeer/spring-ops-lab/blob/main/docs/adr/001-open-model-load-as-default.md)을 항목별로 줄이면 다음과 같다.
@@ -52,6 +60,8 @@ Nygard 형식 말고도 MADR, Y-statement 같은 템플릿이 있다([adr.github
 
 결과 항목이 이 ADR에서 가장 쓸모 있는 부분이다. 결정 자체는 한 줄이지만, 그 결정 때문에 앞으로 모든 실험 글이 지켜야 할 규칙 세 가지가 생겼다. 나중에 누군가 "결과 표에 실제 RPS 열은 왜 있나"라고 물으면 답이 이 문서에 있다. Nygard도 한 ADR의 결과가 다음 ADR의 맥락이 되기 쉽다고 적었다.
 
+---
+
 ## 언제 쓰는가
 
 모든 결정에 쓰지는 않는다. adr.github.io는 대상을 아키텍처상 중요한 요구, 즉 시스템의 구조나 품질에 측정 가능한 영향을 주는 요구에 대한 결정으로 한정한다. 실무에서 쓸 만한 기준은 다음 정도다.
@@ -61,6 +71,8 @@ Nygard 형식 말고도 MADR, Y-statement 같은 템플릿이 있다([adr.github
 - 다른 선택지가 그럴듯해서, 나중에 누군가 다시 물을 것이 뻔하다.
 
 코드 리뷰에서 같은 질문이 두 번 나오면 ADR로 옮길 때가 된 것이다.
+
+---
 
 ## 정리
 

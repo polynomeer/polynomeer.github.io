@@ -7,6 +7,8 @@ tags: [Java Features, Java Versions]
 
 Java는 버전이 업그레이드되면서 성능 개선, 문법 추가, 새로운 API 도입, 보안 강화 등 다양한 변화가 있었다.
 
+---
+
 ## Java 7 (2011)
 
 **코드 가독성과 예외 처리 개선**

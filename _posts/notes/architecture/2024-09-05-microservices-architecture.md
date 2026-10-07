@@ -19,6 +19,8 @@ tags: [Architecture]
   - Flow of value의 지속적인 개선
   - 일단 만들고 고객의 피드백에 의해 자주 변경하는 형태로, 주로 애자일 프로세스로 개발
 
+---
+
 ## From Fragile to Antifragile Software
 
 소프트웨어는 진화를 거듭해왔으며 앞으로의 방향은 Anti-Fragile 시스템이다. Anti-Fragile이란 Fragile의 반대 개념으로, 와인 잔 패키지와 같은 Fragile 물건은 떨어뜨리면 쉽게 깨지겠지만, Anti-Fragile 물건은 그러면 스트레스(변형력)에 대한 이점이 있다. 참고로 [Anti-Fragile](https://terms.naver.com/entry.naver?docId=2067682&cid=42107&categoryId=42107)은 Resilient(탄력적인)나 Robust(견고한)와는 다르며 충격을 받으면 오히려 단단해진다는 의미를 담고있다. 아래의 그림은 다양한 종류의 소프트웨어 시스템 특성을 시각화하고 요약한 그래프이다. Bilgin Ibryam은 [From Fragile to Antifragile Software](https://developers.redhat.com/blog/2016/07/20/from-fragile-to-antifragile-software)에서 네 성질을 한 문장씩으로 구분한다. 예를 들어 견고함은 "Robustness is enduring to stress with no harm nor gain."이다(스트레스를 손해도 이득도 없이 견디는 것).
@@ -45,6 +47,8 @@ _출처: https://developers.redhat.com/blog/2016/07/20/from-fragile-to-antifragi
 **Chaos engineering** 카오스에서 살아남기 위해 시스템을 진화시켜 Anti-Fragile을 만드는 기술이다. 가능한 최악의 시간에 문제가 해결되기를 기다리는 것과는 다르게, 카오스 엔지니어링의 아이디어는 재난이 닥쳤을 때 대비하기 위해 사전에 오류(failures)를 주입하는 것이다. [Netflix의 Simian Army](http://techblog.netflix.com/2011/07/netflix-simian-army.html)는 오류를 생성하고 시스템의 약점을 격리하는 데 도움이 되도록 설계된 이 기술을 매우 훌륭하게 구현한 것이다.
 
 **Continuous deployments**: 지속적인 부분 시스템 오류를 생성하고 조직이 중복, 롤링 업그레이드, 롤백 및 단일 실패 지점 방지를 통해 오류에 더 잘 대응하도록 한다. 카나리아 릴리스, 블루-그린 배포와 같은 다른 기술은 프로덕션 환경에 새 소프트웨어를 도입하는 위험을 줄이는 데 사용된다. A/B 테스트와 같은 일부 다른 방법은 변경을 통해 이익을 얻기 위해 변경을 실험하고 그 효과를 측정할 수도 있다.
+
+---
 
 ## Cloud Native
 

@@ -93,6 +93,8 @@ MSA의 단점도 명확한데, 복잡하고 어렵다는 것이다. 우선 1) �
 | 장애 격리, 자율적 팀 운영    | 분산 트랜잭션 및 데이터 일관성 문제 |
 | 기술 스택 다양성 허용        | 운영, 모니터링, 디버깅 난이도 ↑     |
 
+---
+
 ## Microservice Architecture vs Service-Oriented Architecture
 
 MSA (Microservices Architecture)와 SOA (Service-Oriented Architecture)는 모두 서비스 단위로 시스템을 구성한다는 점에서 유사하지만, **설계 철학, 범위, 기술 스택, 조직 구조 측면에서 본질적인 차이**가 있다.

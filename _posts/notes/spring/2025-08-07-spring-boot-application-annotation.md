@@ -18,6 +18,8 @@ public class MyApplication {
 
 `@SpringBootApplication`은 단순히 "부트 앱 시작 표시"가 아니라, 설정 클래스 선언, 자동 설정 활성화, 컴포넌트 스캔 시작점을 한 번에 묶은 복합 애너테이션이다([Spring Boot 레퍼런스](https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html)).
 
+---
+
 ## 세 가지 역할을 합친다
 
 - `@SpringBootConfiguration`
@@ -26,17 +28,23 @@ public class MyApplication {
 
 이 애너테이션 하나로 "이 클래스는 설정 클래스이고, 여기 패키지를 기준으로 빈을 스캔하고, 클래스패스 상황에 맞는 자동 설정도 켜라"는 의미가 된다.
 
+---
+
 ## 왜 메인 클래스 위치가 중요한가
 
 `@ComponentScan`의 기본 기준점이 이 클래스의 패키지이기 때문이다. 메인 클래스가 너무 하위 패키지에 있으면 필요한 빈을 스캔하지 못할 수 있다.
 
 보통 애플리케이션 루트 패키지 최상단에 두는 이유가 여기에 있고, 레퍼런스도 이 배치를 권한다([Structuring Your Code](https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html)).
 
+---
+
 ## 자동 설정은 어떻게 동작하는가
 
 자동 설정은 클래스패스에 어떤 라이브러리가 있는지, 어떤 프로퍼티가 설정됐는지, 이미 어떤 빈이 등록됐는지를 보고 조건부로 설정 클래스를 적용하는 방식이다. 이 조건은 `@ConditionalOnClass`, `@ConditionalOnMissingBean` 같은 `@Conditional` 애너테이션으로 표현된다([Creating Your Own Auto-configuration](https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html)). 조건 평가 과정은 [spring-internals-lab 9편](/posts/spring-internals-lab-spring-boot/)에서 따라갔다.
 
 그래서 Spring Boot는 "있으면 알아서 붙여주는" 것이 아니라, 조건이 맞을 때만 설정을 가져온다.
+
+---
 
 ## 자주 하는 오해
 
@@ -45,6 +53,8 @@ public class MyApplication {
 - 필요한 설정까지 자동 설정에 전부 맡겨버림
 
 실제로는 조건이 맞아야 적용되고, 필요하면 exclude하거나 명시 설정으로 덮어야 한다. 직접 등록한 빈이 있으면 해당 자동 설정은 물러난다([Auto-configuration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html)).
+
+---
 
 ## 정리
 

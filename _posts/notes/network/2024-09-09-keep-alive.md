@@ -16,11 +16,15 @@ Keep-Alive가 켜져 있으면 클라이언트와 서버는 이후에 요청이�
 
 - [Keep-Alive: How Does It Improves Website Performance](https://www.hostinger.com/tutorials/improving-website-performance-enabling-keep-alive)
 
+---
+
 ## Understand the TCP keepalive parameters
 
 TCP Keepalive는 3개의 파라미터로 제어된다([tcp(7)](https://man7.org/linux/man-pages/man7/tcp.7.html)). keepalive time은 연결이 조용해진 뒤 첫 keepalive 패킷을 보내기까지의 시간이다(기본 7200초, `SO_KEEPALIVE`가 켜진 소켓만 해당). keepalive interval은 keepalive 패킷 사이의 간격이다. keepalive probes는 응답이 없을 때 연결을 끊기 전까지 보내는 keepalive 패킷의 최대 개수다.
 
 - [What are the best practices for implementing TCP keepalive?](https://www.linkedin.com/advice/1/what-best-practices-implementing-tcp-keepalive)
+
+---
 
 ## Keep-Alive Best Practices
 
@@ -31,6 +35,8 @@ TCP Keepalive는 3개의 파라미터로 제어된다([tcp(7)](https://man7.org/
 HTTP KeepAlive의 주요 목적은 정적인 자원을 같은 커넥션으로 전송하는 것이다. 이를 너무 짧게 설정하면 클라이언트는 정적 자원마다 연결을 새로 맺어야 한다. 그러면 어떻게 설정하는것이 가장 Best Practices일까?
 
 - [Is It Better to set KeepAlive to 1 second rather than turning it off all together?](https://serverfault.com/questions/355717/is-it-better-to-set-keepalive-to-1-second-rather-than-turning-it-off-all-togethe)
+
+---
 
 ### Best Practices for TCP Keepalive Settings
 

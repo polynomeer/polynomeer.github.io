@@ -12,6 +12,8 @@ SysDrill 저장소의 첫 커밋은 2026-08-24이다. 이 글은 그날의 커�
 
 근거는 두 갈래다. 첫날 오후에 쓴 설계 문서([`ARCHITECTURE.md`](https://github.com/polynomeer/sys-drill/blob/aeb30292af87f8198428e95ce4e4eead8b2582f5/docs/ARCHITECTURE.md), [`PRD.md`](https://github.com/polynomeer/sys-drill/blob/f672f7df97e9a45d22a1a45c3f14f8051698333c/docs/PRD.md))와 그 근거가 된 원본 기획서([`docs/archive`](https://github.com/polynomeer/sys-drill/tree/92f932a38e46243c0813f76d4c556653d8313ea4/docs/archive))에는 모듈러 모놀리스, Kafka 미도입, Polling, 규칙 기반 시뮬레이션의 이유가 적혀 있다. 반면 Kotlin, PostgreSQL, Next.js, Redis 리스트 큐를 어떤 대안과 비교했는지는 적혀 있지 않았다. 이 글을 쓰면서 그 비교를 첫 커밋과 기존 문서를 근거로 재구성해 [ADR-0053](https://github.com/polynomeer/sys-drill/blob/175f61a39d05fb4346c0076aee408821ed23c6a2/docs/adr/0053-initial-tech-selection-reconstructed.md)(ADR은 Architecture Decision Record, 결정의 맥락·대안·결과를 남기는 짧은 문서)으로 저장소에 남겼다. 아래에서 그 ADR을 인용할 때는 재구성이라는 점을 밝혀 둔다.
 
+---
+
 ## 무엇을 풀려고 했는가
 
 [PRD](https://github.com/polynomeer/sys-drill/blob/f672f7df97e9a45d22a1a45c3f14f8051698333c/docs/PRD.md)는 문제를 "백엔드 개발자의 실무 경험 공백"으로 적었다. CRUD와 API는 만들어 봤지만 대용량 트래픽, 분산 시스템 운영, 장애 대응을 겪어 보지 못한 개발자가 많다. 예를 들어 Redis를 "캐시로 쓰면 빠르다" 수준으로 아는 것과, hit ratio가 떨어질 때 부하가 DB로 옮겨 가는 것을 판단할 수 있는 것 사이에 간격이 있다. 실제 장애는 조직이 일부러 재현할 수 없으니, 이 간격은 책이나 강의로 메우기 어렵다.
@@ -25,6 +27,8 @@ SysDrill 저장소의 첫 커밋은 2026-08-24이다. 이 글은 그날의 커�
 - 사용자마다 실제 인프라를 띄우지 않는다. 아키텍처 문서의 원칙 7은 "100% digital twin을 약속하지 않는다"이다.
 - 로컬 실행 환경은 한 대의 개발 기계 위 docker-compose(PostgreSQL 16, Redis 7)다. 실제 사용자 트래픽은 없다.
 - AI 평가는 외부 LLM API를 쓰고, 수초에서 수십 초가 걸릴 수 있다고 가정했다.
+
+---
 
 ## 초기 아키텍처
 
@@ -90,6 +94,8 @@ sequenceDiagram
     API-->>FE: FEEDBACK_READY와 피드백
 ```
 
+---
+
 ## 언어와 프레임워크: Kotlin과 Spring Boot 4.1
 
 첫날 스캐폴딩 커밋([`c077f21`](https://github.com/polynomeer/sys-drill/blob/c077f2164b0882d9228064b7e505530ccd58f3bc/backend/build.gradle.kts))은 Spring Boot 4.1.1, Kotlin 2.3.21, Java 21 툴체인을 썼다. 원본 기획서 중 하나는 Kotlin + Spring Boot를 "도메인 상태와 비동기 작업, 운영 안정성에 적합"하다고 적었고, 이 서비스가 상태 전이·멱등성·재처리를 가르치므로 애플리케이션 구조도 그것을 드러내는 편이 좋다고 했다. 다른 기획서는 TypeScript + NestJS를 함께 후보로 올렸지만, 왜 버렸는지는 남아 있지 않다. 아래 비교는 ADR-0053의 재구성이다.
@@ -104,6 +110,8 @@ Spring Boot 4.1.1은 Java 17 이상을 요구하고 Java 26까지 호환된다�
 
 대가는 두 가지였다. 하나는 설정이다. Kotlin 공식 문서는 클래스와 멤버가 기본적으로 `final`이라 Spring AOP처럼 `open` 클래스가 필요한 프레임워크에서 불편하다고 설명한다([all-open plugin](https://kotlinlang.org/docs/all-open-plugin.html)). JPA는 인자 없는 생성자가 필요해서 `kotlin-jpa`(no-arg 플러그인 래퍼)를 쓴다([no-arg plugin](https://kotlinlang.org/docs/no-arg-plugin.html)). 실제로 `build.gradle.kts`에는 `@Entity`·`@MappedSuperclass`·`@Embeddable`을 여는 `allOpen` 블록이 있다. 다른 하나는 메이저 버전 전환기의 함정이다. [`PLAN.md`](https://github.com/polynomeer/sys-drill/blob/a70cab2a9d6ebc81679dfa3eaa563aa144215eb0/PLAN.md)의 첫날 기록에는 테스트 자동구성 패키지 이동, `@Transactional`과 `@TransactionalEventListener`를 한 메서드에 함께 쓸 수 없는 제약, `@Modifying(clearAutomatically = true)`가 flush 없이 영속성 컨텍스트를 비워 직전 `save()`가 유실되는 문제가 적혀 있다.
 
+---
+
 ## 아키텍처 형태: 모듈러 모놀리스와 분리된 워커
 
 이 선택은 저장소에 이유가 적혀 있다. 원본 설계 문서는 [모듈러 모놀리스](/posts/modular-monolith-boundaries/)를 고른 이유를 네 가지로 들었다. 제품 도메인과 학습 UX가 빨리 바뀔 수 있으니 서비스 경계보다 실험 속도가 중요하다. 세션·답안·평가 상태를 하나의 트랜잭션 모델로 다루기 쉽다. 처음부터 마이크로서비스로 가면 배포·네트워크·분산 추적·데이터 일관성 비용이 생긴다. 모듈 경계를 유지하면 나중에 평가·리포트를 떼어내기 쉽다. 그리고 부하와 보안 특성이 다른 두 영역, 즉 지연이 큰 AI 평가와 사용자 코드를 실행하는 Build Runner만 워커로 분리한다.
@@ -112,6 +120,8 @@ Martin Fowler도 같은 방향을 권한다. 그는 "you shouldn't start a new p
 
 첫날 스캐폴딩은 `identity`, `content`, `scenario`, `session`, `submission`, `evaluation`, `simulation`, `reporting` 여덟 개 패키지를 빈 채로 먼저 만들었다. 대가는 경계를 컴파일러가 강제하지 않는다는 점이다. 그래서 1단계에서 집계 사이의 참조는 JPA 연관관계 대신 UUID 필드로만 둔다는 규칙을 세웠다(`Session.userId: UUID`). 한 세션 객체가 사용자 객체 그래프를 지연 로딩하거나 cascade 저장하는 일을 구조적으로 막기 위한 것이다. 이 규칙은 다음 날 ADR-0001로 정리됐다.
 
+---
+
 ## 주 저장소: PostgreSQL과 JSONB
 
 아키텍처 문서는 사용자·시나리오 버전·세션·제출·평가처럼 정합성이 필요한 데이터를 PostgreSQL에 둔다고 적었다. ERD 원칙은 이렇다. 조회와 필터링에 쓰는 타입·상태·점수·시간은 정규 컬럼으로 둔다. 자주 바뀌는 시나리오 규칙, 시뮬레이션 효과, AI 구조화 결과는 JSONB로 둔다. 평가 결과의 모양이 프롬프트를 고칠 때마다 바뀔 수 있으니, 그 부분만 스키마 변경 없이 받겠다는 뜻이다.
@@ -119,6 +129,8 @@ Martin Fowler도 같은 방향을 권한다. 그는 "you shouldn't start a new p
 PostgreSQL 문서에 따르면 `jsonb`는 분해된 바이너리 형식으로 저장된다. 그래서 입력은 조금 느리지만 처리할 때 다시 파싱하지 않고, 인덱스를 지원한다. 문서는 대부분의 애플리케이션에 `jsonb`를 권한다([JSON Types](https://www.postgresql.org/docs/16/datatype-json.html)). 첫날 밤에는 부분 유니크 인덱스도 썼다. 제출의 [멱등성 키](/posts/idempotency-key-design/)인 `client_request_id`가 처음에는 전역 UNIQUE였는데, 서로 다른 세션이 우연히 같은 문자열을 쓰면 충돌한다. 그래서 `V3` 마이그레이션에서 `(session_id, client_request_id) WHERE client_request_id IS NOT NULL` 인덱스로 범위를 좁혔다. 부분 인덱스는 조건식을 만족하는 행만 담는 인덱스이고, 일부 행에만 유일성을 강제하는 용도가 문서 예제로 나와 있다([Partial Indexes](https://www.postgresql.org/docs/16/indexes-partial.html)).
 
 MySQL이나 문서형 DB와의 비교는 당시 문서에 없었다. ADR-0053도 그 비교를 새로 하지 않고 공백으로 남겼다. 이 글에서 말할 수 있는 것은 이 프로젝트가 관계형 정합성, JSON 컬럼, 부분 유니크 인덱스를 한 엔진에서 쓰려 했다는 데까지다. 대가로 JSONB는 Kotlin에서 원시 JSON 문자열(`String?`)로 다루기로 했고, 타입 안전한 접근은 뒤로 미뤘다.
+
+---
 
 ## 작업 큐: Redis 리스트, 그리고 Kafka를 쓰지 않은 이유
 
@@ -140,6 +152,8 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 
 같은 날 큐 자체와 별개로 순서 문제를 하나 겪었다. 트랜잭션 안에서 바로 enqueue하면, 워커가 다른 트랜잭션에서 커밋되기 전의 Submission을 조회해 찾지 못하고 job을 버린다. 그래서 트랜잭션 안에서는 Spring 이벤트만 발행하고, 실제 enqueue는 [`@TransactionalEventListener`](/posts/transactional-event-listener-checklist/)의 `AFTER_COMMIT` 단계에서 한다. Spring 문서는 이 리스너가 기본적으로 트랜잭션의 커밋 단계에 묶인다고 설명한다([Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)). 이 규칙은 다음 날 Build 파이프라인에서 같은 버그를 다시 만난 뒤 ADR-0004가 됐다. DB 커밋과 메시지 발행 사이의 더 일반적인 해법인 Outbox는 이후 [ParityPay 5편](/posts/parity-pay-outbox/)에서 다뤘다. 아키텍처 문서도 "같은 트랜잭션 또는 Outbox Pattern"을 적었지만, 첫 구현은 커밋 후 리스너 쪽을 택했다. 커밋 직후 enqueue 전에 프로세스가 죽으면 job이 빠진다는 점은 Outbox와 다른 대가다.
 
+---
+
 ## 시뮬레이션: 실제 인프라 대신 규칙 기반 상태 계산
 
 이 선택도 이유가 적혀 있다. 원본 제품 기획서는 처음부터 사용자마다 실제 Kubernetes·Kafka·Redis 클러스터를 만들면 비용과 운영 복잡도가 급증한다고 적었다. PRD의 리스크 표에도 "실제 인프라 비용 폭증"이 있고, 대응은 "MVP는 규칙 기반 상태 시뮬레이션"이다. 로드맵은 컨테이너 기반 의존성, k6 부하 생성, Toxiproxy 네트워크 장애 주입을 Phase 3로 두고, Phase 1~2에서 학습 가치를 확인한 뒤에만 투자한다고 했다.
@@ -156,6 +170,8 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 
 대가는 PRD가 스스로 적어 둔 "장난감처럼 보임" 리스크다. 수치가 실제 시스템에서 나온 것이 아니므로, 훈련에서 얻은 감각이 실제로 옮겨지는지는 이 설계만으로 보장되지 않는다.
 
+---
+
 ## 평가: Rule과 LLM의 하이브리드
 
 아키텍처 문서는 평가를 두 층으로 나눴다. 요구사항 누락이나 임계값 위반처럼 결정 가능한 사실은 규칙 엔진이 판정한다. 트레이드오프의 타당성, 설명 품질, 꼬리질문 생성은 LLM이 맡는다. LLM 출력은 자유 텍스트가 아니라 `top_risks`, `missed_points`, `followup_questions` 같은 구조화 JSON으로 강제하고, 검증을 통과한 결과만 저장한다. 프롬프트를 바꿨을 때 회귀 테스트를 할 수 있게 하려는 것이다.
@@ -167,6 +183,8 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 | 규칙 단독 | 트레이드오프 설명과 꼬리질문을 만들 수 없다 |
 
 첫날 구현([`8728376`](https://github.com/polynomeer/sys-drill/commit/8728376afeef79ec3e760fcf862c8b53de2555f2))은 Anthropic Claude API를 Spring의 `RestClient`로 호출했다. 점수는 모델이 보고한 합계를 믿지 않고 루브릭(100점) 차원별로 다시 계산해 범위 안으로 자른다. API 키가 없으면 예외 대신 오프라인 고정 응답을 돌려줘서, 키 없이도 파이프라인 전체를 테스트할 수 있게 했다. 대가는 외부 API 의존과 비용이다. 아키텍처 문서가 저장하라고 한 토큰 수·비용 메타데이터는 첫날에는 모델 이름과 지연 시간만 저장하고 뒤로 미뤘다.
+
+---
 
 ## 코드 실행 격리: Docker 컨테이너, 다음 단계로 gVisor·Firecracker
 
@@ -180,11 +198,15 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 
 출처는 Docker의 [resource constraints](https://docs.docker.com/engine/containers/resource_constraints/)와 [none network driver](https://docs.docker.com/engine/network/drivers/none/), [gVisor](https://gvisor.dev/docs/), [Firecracker](https://firecracker-microvm.github.io/) 문서다. 컨테이너는 호스트 커널을 공유한다. ADR-0053은 이 위험을 받아들인 이유를 다음처럼 재구성했다. MVP는 개발 기계에서도 돌아야 하므로 KVM 요구를 지지 않고, 업그레이드 경로만 문서에 남겼다. 실행 형태(제출·단계마다 컨테이너 하나)는 격리 기술을 바꿔도 그대로 둘 수 있다.
 
+---
+
 ## 프론트엔드와 실시간 갱신: Next.js와 Polling
 
 프론트엔드는 `create-next-app`으로 만든 Next.js 16.3.2, React 19.2.8, TypeScript, Tailwind CSS, App Router 구성이었다([`4f430ec`](https://github.com/polynomeer/sys-drill/commit/4f430ecd667272d83fb490d1ee02746049329fe3)). 원본 기획서가 남긴 이유는 "데스크톱 중심 설계 인터페이스와 관리 콘솔"이라는 한 줄뿐이다. React 문서는 새 앱을 Next.js App Router 같은 프레임워크로 시작하길 권하고, Vite 등으로 처음부터 만들면 라우팅과 데이터 페칭 도구를 직접 골라야 한다고 설명한다([Creating a React App](https://react.dev/learn/creating-a-react-app)). 첫날 화면들은 클라이언트 컴포넌트에서 백엔드 API를 호출하는 구조였고, 서버 렌더링이 필요하다는 근거는 문서에 없다. 그래서 ADR-0053은 Next.js를 고른 이유를 라우팅·TypeScript·Tailwind가 갖춰진 기본 구성으로 재구성했고, Vite 기반 SPA로도 같은 MVP를 만들 수 있었다고 적었다. Next.js 16은 2025-10-21에 나왔고 Turbopack을 기본 번들러로 바꿨으며 `params` 접근을 비동기로 바꿨다([Next.js 16](https://nextjs.org/blog/next-16)). 최신 메이저를 쓴 대가로 이런 변경을 따라가야 한다.
 
 실시간 갱신은 저장소에 이유가 있다. 평가는 수초에서 수십 초가 걸리므로 "제출 완료"와 "평가 완료"를 나눠 보여 준다. 원본 설계 문서는 Polling이 가장 단순해 MVP에 맞고, SSE는 평가 진행 단계를 알려 줄 필요가 생길 때, WebSocket은 공동 세션이나 실시간 멀티플레이 전에는 필요성이 낮다고 적었다. MDN은 SSE가 서버에서 클라이언트로만 가는 단방향 연결이고, HTTP/2가 아니면 브라우저·도메인당 동시 연결이 6개로 제한된다고 설명한다([Using server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)). Wargame 화면도 같은 Polling으로 시뮬레이션 상태를 갱신했다.
+
+---
 
 ## 첫날 커밋이 실제로 만든 것
 
@@ -204,6 +226,8 @@ Kafka를 쓰지 않은 이유는 저장소에 적혀 있다. 아키텍처 문서
 | 7 | `e7f72fc` (8/25 00:05) | 꼬리설계 배너, Wargame Live 콘솔 |
 
 설계와 구현이 달라진 곳도 기록에 남아 있다. PRD의 MVP 범위에는 회원가입·로그인이 있었지만 어느 단계에도 배정되지 않았고, 6단계는 닉네임만 있는 게스트 프로필로 대신했다. 설계 워크스페이스의 구조화 입력 8개 항목은 단일 textarea와 체크리스트가 됐다. 평가기가 아직 원문 텍스트 하나만 읽으므로 구조화 폼을 먼저 만들 이유가 없다는 판단이었다. 자동저장은 서버 draft API 없이 localStorage에만 한다.
+
+---
 
 ## 설계가 열어 둔 질문
 

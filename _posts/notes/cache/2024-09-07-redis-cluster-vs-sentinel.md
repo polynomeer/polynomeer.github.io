@@ -14,6 +14,8 @@ tags: [Redis, Cluster, Sentinel]
 
 즉 Sentinel은 같은 데이터를 더 안전하게 운영하는 구조이고, Cluster는 데이터를 여러 노드에 나눠 담아 확장하는 구조에 가깝다.
 
+---
+
 ## Redis Sentinel
 
 Sentinel 구조에서는 보통 하나의 master와 여러 [replica](/posts/redis-sentinel-replication/)를 둔다. Sentinel 프로세스들이 master 상태를 감시하다가 장애를 감지하면 replica 중 하나를 새 master로 승격한다. 클라이언트는 Sentinel에 현재 master 주소를 묻는다([Redis Sentinel](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)).
@@ -29,6 +31,8 @@ Sentinel 구조에서는 보통 하나의 master와 여러 [replica](/posts/redi
 - 기본적으로 master 한 대의 메모리 한계를 가진다.
 - 쓰기 확장은 되지 않는다.
 - 샤딩이 필요한 규모에는 맞지 않는다.
+
+---
 
 ## Redis Cluster
 
@@ -46,6 +50,8 @@ Cluster는 데이터를 hash slot 단위로 여러 master에 분산 저장한다
 - multi-key 연산은 키가 모두 같은 slot에 있어야 한다(hash tag로 묶는다).
 - 클라이언트가 cluster topology를 이해해야 하는 경우가 많다.
 
+---
+
 ## 무엇을 선택할까
 
 Sentinel이 잘 맞는 경우:
@@ -58,6 +64,8 @@ Cluster가 잘 맞는 경우:
 - 데이터 크기가 한 노드 한계를 넘는다.
 - 쓰기 트래픽도 수평 분산이 필요하다.
 - 샤딩 제약을 감수할 수 있다.
+
+---
 
 ## 정리
 

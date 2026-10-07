@@ -7,6 +7,8 @@ tags: [OS, Page Cache, File IO, fsync, Durability, Storage, Performance]
 
 `write()`가 성공으로 돌아왔다고 데이터가 디스크에 있는 것은 아니다. 데이터베이스의 [커밋 설계](/posts/wal-and-checkpoint/), [Kafka의 내구성 모델](/posts/kafka-storage-internals/), 로그 유실 사고가 모두 이 사실에서 출발한다. 커널이 파일 쓰기를 어떻게 다루는지 보면 그 이유가 나온다.
 
+---
+
 ## write()가 끝나는 곳은 메모리다
 
 일반적인 `write()`는 페이지 캐시(커널이 파일 내용을 메모리에 들고 있는 영역)에 데이터를 복사하고 그 페이지를 dirty로 표시한 뒤 돌아온다. 디스크에는 나중에 커널의 writeback 스레드가 쓴다. 언제 쓰는지는 `dirty_ratio`, `dirty_expire_centisecs` 같은 커널 파라미터가 정한다.
@@ -18,6 +20,8 @@ tags: [OS, Page Cache, File IO, fsync, Durability, Storage, Performance]
 - 작은 쓰기가 병합된다. 커널이 모아서 순차로 내보낸다.
 
 잃는 것 하나. **전원이 나가면 페이지 캐시의 dirty 페이지는 사라진다.** 프로세스가 죽는 것은 괜찮다. 페이지 캐시는 커널에 있으므로 프로세스가 죽어도 남고, 결국 디스크에 쓰인다. 사라지는 것은 커널이 함께 죽을 때(전원, 커널 패닉)다.
+
+---
 
 ## fsync가 보장하는 것과 못 하는 것
 
@@ -33,6 +37,8 @@ tags: [OS, Page Cache, File IO, fsync, Durability, Storage, Performance]
 
 장치가 거짓말할 수 있다. 쓰기 캐시가 write-back인 디스크는 캐시에 담고 성공을 돌려준다. `fsync`는 디스크 캐시를 비우도록 되어 있지만, 오래된 커널과 일부 파일시스템은 디스크 캐시를 비우는 법을 모른다(fsync(2)). 이때 배터리 백업이 없으면 그 데이터도 전원과 함께 사라진다. 소비자용 SATA 드라이브와 상당수 SSD가 이런 캐시를 가진다([PostgreSQL: Reliability and the Write-Ahead Log](https://www.postgresql.org/docs/current/wal-reliability.html)).
 
+---
+
 ## O_DIRECT: 캐시를 건너뛴다
 
 `O_DIRECT`는 페이지 캐시를 우회해 사용자 버퍼에서 장치로 직접 보낸다. 데이터베이스가 쓰는 이유는 속도가 아니라 이중 캐싱을 피하고 자기가 캐시를 통제하기 위해서다. DB는 이미 자기 버퍼 풀을 갖고 있고, 어떤 페이지를 언제 내보낼지 자기가 안다. 커널이 그 위에서 또 캐싱하면 메모리만 두 배로 쓴다.
@@ -40,6 +46,8 @@ tags: [OS, Page Cache, File IO, fsync, Durability, Storage, Performance]
 대가가 크다. 정렬 요구(블록 크기 배수), 캐시 없음, 작은 IO에 매우 불리. 일반 애플리케이션이 쓸 도구는 아니다.
 
 `O_DIRECT`도 `fsync`를 대신하지 않는다. 장치 캐시는 여전히 남아 있다.
+
+---
 
 ## 세 가지 정책
 
@@ -53,12 +61,16 @@ tags: [OS, Page Cache, File IO, fsync, Durability, Storage, Performance]
 
 Kafka가 `fsync`를 기본으로 하지 않는 것은 내구성을 포기한 것이 아니라 다른 곳에서 얻기 때문이다. [`acks=all` + `min.insync.replicas`](/posts/kafka-delivery-guarantees/)로 여러 노드의 페이지 캐시에 들어간 것을 확인한다. 노드 하나의 전원이 나가도 다른 노드에 있다. 운영 문서도 장애 난 노드는 복제본에서 복구된다는 이유로 fsync를 끈 기본 설정을 권한다([Kafka Operations](https://kafka.apache.org/43/operations/hardware-and-os/)). **복제를 내구성의 수단으로 쓰는 설계**이고, 그래서 단일 노드 Kafka는 이 전제가 빠진 상태다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - 컨테이너와 가상화가 한 겹 더 있다. 호스트의 페이지 캐시, 하이퍼바이저의 캐시 정책, 네트워크 스토리지의 캐시까지 겹치면 `fsync`의 의미가 층마다 달라진다.
 - 클라우드 블록 스토리지는 자체 복제를 한다. 로컬 디스크의 `fsync` 모델과 다르고, 지연 특성도 다르다.
 - [그룹 커밋](/posts/wal-and-checkpoint/)이 fsync 비용을 나눈다. 여러 트랜잭션의 커밋을 모아 한 번에 `fsync`하므로, 동시성이 높을수록 커밋당 비용이 준다. "fsync는 N ms"라는 단일 수치는 부하에 따라 달라진다.
 - 페이지 캐시가 크다고 항상 좋은 것은 아니다. 큰 순차 읽기 한 번이 캐시를 밀어내(cache pollution) 다른 워크로드를 느리게 만들 수 있다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -68,9 +80,13 @@ Kafka가 `fsync`를 기본으로 하지 않는 것은 내구성을 포기한 것
 
 이후 [ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 `acks`별 유실을 쟀지만 단일 노드였고, 프로세스를 죽였지 커널을 죽이지는 않았다. 프로세스 종료로는 페이지 캐시 유실을 재현할 수 없다는 것이 이 글을 쓰며 정리된 한계다.
 
+---
+
 ## 실무와의 접점
 
 [ISMS 대응 로그 수집](/posts/polling-to-sqs-pipeline/) 같은 작업에서 "로그가 유실되지 않는다"를 어떻게 보장했는지 지금 다시 보면, 대부분 애플리케이션 버퍼와 네트워크 전송까지만 보고 있었다. 수집기가 `fsync`를 하는지, 컨테이너가 죽을 때와 노드가 죽을 때가 어떻게 다른지는 묻지 않았다. **"유실되지 않는다"는 문장은 어느 층까지의 보장인지를 적어야 검증 가능한 문장이 된다.**
+
+---
 
 ## 정리
 

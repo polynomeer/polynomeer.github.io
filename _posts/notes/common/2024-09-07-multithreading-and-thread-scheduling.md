@@ -12,7 +12,7 @@ tags: [Thread, Scheduling, Operating System]
 - 멀티스레드 (by OS) : 운영체제가  소프트웨어적으로 프로세스를 작은 단위의 스레드로 분할하려 운영하는 기법
 - CPU 멀티스레드 : 하드웨어적인 방법으로 하나의 CPU에서 여러 스레드를 동시에 처리하는 병렬 처리 기법
 
-
+---
 
 ## Thread Scheduling in Java
 

@@ -15,6 +15,8 @@ tags: [Spring, Spring MVC, REST, "@RestController"]
 @RestController = @Controller + @ResponseBody
 ```
 
+---
+
 ## 그래서 어떤 차이가 생기나
 
 `@Controller`는 보통 뷰 이름을 반환한다. 반면 `@RestController`는 메서드 반환값을 HTTP response body에 직접 담는다. 그 결과는 다음과 같다.
@@ -23,15 +25,21 @@ tags: [Spring, Spring MVC, REST, "@RestController"]
 - 객체를 반환하면 JSON 등으로 직렬화
 - 별도 `@ResponseBody`를 매번 붙일 필요 없음
 
+---
+
 ## 왜 REST API에 적합한가
 
 요즘 백엔드 애플리케이션은 서버 렌더링보다 JSON API를 중심으로 동작하는 경우가 많다. 이때 `@RestController`는 의도를 가장 직접적으로 드러낸다.
+
+---
 
 ## 내부적으로는 무엇이 동작하나
 
 반환값은 `HttpMessageConverter`가 직렬화한다. 보통 Spring Boot에서는 Jackson이 기본으로 연결되어 있어 객체를 JSON으로 변환해준다.
 
 `@ResponseBody`는 클래스 레벨에 붙으면 모든 컨트롤러 메서드가 이를 상속한다. 그래서 `@RestController`를 붙인 클래스의 모든 메서드 반환값은 뷰 이름이 아니라 응답 본문으로 처리된다. 요청이 컨트롤러에 도달하고 반환값이 처리되는 전체 흐름은 [DispatcherServlet과 MVC 요청 흐름](/posts/spring-internals-lab-dispatcher-servlet/)에 정리했다.
+
+---
 
 ## 예시
 
@@ -48,11 +56,15 @@ public class HelloController {
 
 이 경우 뷰를 찾지 않고 JSON 응답을 생성한다.
 
+---
+
 ## 자주 헷갈리는 지점
 
 - `@Controller`에 `@ResponseBody`를 붙여도 같은 규칙이 적용된다.
 - 파일 다운로드, 스트리밍, 커스텀 헤더처럼 응답 제어가 필요하면 `ResponseEntity`가 더 적합할 수 있다.
 - 단순히 `@RestController`를 붙였다고 REST 설계가 좋은 것은 아니다.
+
+---
 
 ## 정리
 

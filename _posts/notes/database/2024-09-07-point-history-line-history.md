@@ -16,6 +16,8 @@ tags: [Database, History, Data Modeling]
 
 이때 흔히 생각하는 방식이 점 이력과 선분 이력이다.
 
+---
+
 ## 점 이력
 
 점 이력은 특정 시점의 상태를 개별 레코드로 기록하는 방식이다.
@@ -32,6 +34,8 @@ tags: [Database, History, Data Modeling]
 
 - 특정 기간에 유효한 값을 조회하려면 추가 계산이 필요하다.
 - 이전/다음 이력을 비교하는 쿼리가 다소 번거롭다.
+
+---
 
 ## 선분 이력
 
@@ -52,6 +56,8 @@ tags: [Database, History, Data Modeling]
 - 상태 변경 시 이전 구간 종료 처리를 잘해야 한다.
 - 겹치는 구간이나 비는 구간을 막는 제약 설계가 필요하다. PostgreSQL은 범위 타입과 exclusion constraint로 겹치는 구간을 DB 수준에서 막을 수 있다([PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html)).
 
+---
+
 ## 언제 무엇을 쓰는가
 
 ### 점 이력이 잘 맞는 경우
@@ -66,12 +72,16 @@ tags: [Database, History, Data Modeling]
 - 유효 기간 기반 계산이 중요함
 - 운영 쿼리에서 바로 기간 조건을 써야 함
 
+---
+
 ## 실무에서 흔한 실수
 
 - 현재 상태와 이력 테이블의 책임을 섞음
 - 선분 이력인데 종료 시점 갱신을 누락함
 - 기간 겹침 방지 제약이 없음
 - 점 이력인데 최신 상태 조회 전략이 없음
+
+---
 
 ## 정리
 

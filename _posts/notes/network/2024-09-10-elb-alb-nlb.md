@@ -11,6 +11,8 @@ tags: [AWS, ELB, ALB, NLB]
 
 AWS는 다양한 시나리오에 맞게 적용된 세 가지 유형의 로드 밸런서를 제공한다. 바로 Elastic Load Balancer(ELB), Application Load Balancer(ALB), Network Load Balancer(NLB)이다.
 
+---
+
 ## Common Features
 
 먼저, 세 가지 유형의 로드 밸런서에 공통적인 사항은 다음과 같다. 
@@ -24,6 +26,8 @@ TLS 종료는 세 가지 모두에 사용 가능한 기능이며, 모두 인터�
 유의해야 할 점은 트래픽이 갑자기 급증할 것으로 예상하는 경우(이벤트, 판매, 테스트 등) AWS 지원에 연락하여 **로드 밸런서를 "사전 워밍업(pre-warm)"** 하는 것이 좋다. 그렇지 않으면 로드 밸런서가 유입 트래픽 급증에 적응하는 데 너무 오래 걸릴 수 있다.
 
 먼저, 첫 번째(그리고 가장 오래된) 로드 밸런서 유형인 클래식 로드 밸런서(또는 ELB)부터 자세히 살펴본다.
+
+---
 
 ## Classic Load Balancer (Elastic Load Balancer, ELB)
 
@@ -39,6 +43,8 @@ us-east-1 지역에서 ELB를 실행하려면 ELB 시간당 $0.025와 트래픽 
 
 AWS는 새로운 로드 밸런서를 선호하여 **ELB 사용을 권장하지 않는다.** 단언컨대, ELB를 사용하는 것이 더 바람직한 시나리오는 거의 없다. 일반적으로 이는 선택의 여지가 없는 경우이다. 예를 들어, 워크로드가 여전히 EC2-Classic 에서 실행 되거나 로드 밸런서가 고유한 스티키 세션 쿠키를 사용해야 하는 경우 ELB가 사용 가능한 유일한 옵션이다.
 
+---
+
 ## The Next Step in Load Balancing
 
 2016년 AWS는 Elastic Load Balancing 버전 2를 출시했는데, 이는 Application Load Balancer(ALB)와 Network Load Balancer(NLB)의 두 가지 오퍼로 구성되어 있다. 둘 다 유사한 아키텍처와 개념을 사용합니다. 
@@ -46,6 +52,8 @@ AWS는 새로운 로드 밸런서를 선호하여 **ELB 사용을 권장하지 �
 가장 중요한 점은 둘 다 "대상 그룹(Target Groups)"이라는 개념을 사용한다는 것이다. 이는 리디렉션의 한 단계이며, 이런 방식으로 개념화할 수 있다: 리스너는 요청을 수신하고 (다양한 규칙에 따라) 요청을 전달할 대상 그룹을 결정한다. -> 그런 다음 대상 그룹은 요청을 인스턴스, 컨테이너 또는 IP 주소로 라우팅한다. -> 대상 그룹은 트래픽을 분할하는 방법을 결정하고 대상에 대한 health check를 수행하여 대상을 관리한다.
 
 ALB와 NLB는 모두 IP 주소로 트래픽을 전달할 수 있으므로 AWS 클라우드 외부의 대상(예: 온프레미스 서버 또는 다른 클라우드 공급자에 호스팅된 인스턴스)도 대상으로 삼을 수 있다.
+
+---
 
 ## Application Load Balancer(ALB)
 
@@ -61,6 +69,8 @@ ALB 가격은 ELB보다 약간 더 복잡합니다. us-east-1 지역의 경우 A
 
 ALB는 일반적으로 **웹 애플리케이션**에 사용됩니다. 마이크로서비스 아키텍처가 있는 경우 ALB를 주어진 서비스를 구현하는 EC2 인스턴스 또는 Docker 컨테이너 앞에서 내부 로드 밸런서로 사용할 수 있습니다. REST API를 구현하는 애플리케이션 앞에서도 사용할 수 있지만, **AWS API Gateway가 일반적으로 더 나은 선택입니다.**
 
+---
+
 ## Network Load Balancer(NLB)
 
 네트워크 로드 밸런서(NLB)는 4계층에서만 작동하며 TCP와 UDP를 모두 처리할 수 있으며 TLS로 암호화된 TCP 연결도 처리할 수 있다. 주요 특징은 성능이 매우 높다는 것이다. 또한 정적 IP 주소를 사용하고 ALB 및 ELB에서는 불가능한 **Elastic IP**를 할당할 수 있다.
@@ -70,6 +80,8 @@ NLB는 기본적으로 TCP/UDP 패킷의 소스 IP 주소를 보존한다. 반�
 us-east-1 지역의 NLB 가격은 NLB 시간당 $0.0225 + LCU 시간당 $0.006입니다. NLB의 LCU 정의는 ALB의 정의와 매우 유사하며 자세한 내용은 [여기에서](https://aws.amazon.com/ko/elasticloadbalancing/pricing/) 확인할 수 있다. 전반적으로 가격은 ELB 및 ALB와 거의 동일하다.
 
 NLB는 ALB가 다루지 않는 모든 것에 사용된다. 일반적인 사용 사례는 거의 실시간 데이터 스트리밍 서비스(비디오, 주식 시세 등)이다. 또 다른 일반적인 사례는 애플리케이션이 **HTTP가 아닌 프로토콜을 사용하는 경우** NLB를 사용해야 한다는 것이다.
+
+---
 
 ## Comparison Table
 
@@ -103,6 +115,8 @@ Advanced load balancing features
 | Supports targets outside AWS                        | Yes  | Yes  | No      |
 | Supports websockets                                 | Yes  | N/A  | No      |
 | Can route to many ports on a given target           | Yes  | Yes  | No      |
+
+---
 
 ## Conclusion
 
@@ -148,6 +162,8 @@ AWS는 로드 밸런싱과 관련하여 다양한 옵션을 제공한다. 또한
 - **NLB**: 매우 낮은 레이턴시가 요구되거나 HTTP 이외의 트래픽을 처리해야 할 때는 NLB를 고려할 수 있지만, 일반적인 웹 프론트엔드 상황에서는 필요하지 않을 가능성이 큽니다.
 
 따라서 **프론트엔드의 Nginx 서버**에는 **ALB**가 더 나은 선택이 될 가능성이 높습니다.
+
+---
 
 ## REST API Server: ALB vs NLB
 

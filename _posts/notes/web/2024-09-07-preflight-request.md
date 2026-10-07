@@ -17,6 +17,8 @@ Preflight Request는 브라우저가 실제 cross-origin 요청을 보내기 전
 
 즉 브라우저가 "이 출처에서 이 메서드와 이 헤더를 써도 되는가"를 먼저 묻는 과정이다.
 
+---
+
 ## 언제 발생하나
 
 모든 CORS 요청에 항상 preflight가 붙는 것은 아니다. 단순 요청(simple request)이 아니면 preflight가 발생한다.
@@ -29,6 +31,8 @@ Preflight Request는 브라우저가 실제 cross-origin 요청을 보내기 전
 
 그래서 프런트엔드에서 JSON 요청을 보냈는데 `OPTIONS`가 하나 더 보이는 상황이 흔하다.
 
+---
+
 ## 왜 중요한가
 
 Preflight는 보안과 성능 둘 다에 영향을 준다.
@@ -38,6 +42,8 @@ Preflight는 보안과 성능 둘 다에 영향을 준다.
 - 설정이 잘못되면 본 요청 전에 막힌다.
 
 즉 CORS 장애를 볼 때는 실제 API가 아니라 preflight가 먼저 실패하는 경우를 의심해야 한다.
+
+---
 
 ## Spring에서 볼 포인트
 
@@ -51,6 +57,8 @@ Spring Boot에서는 `@CrossOrigin`이나 전역 `CorsRegistry` 설정으로 처
 - `maxAge`를 통한 캐시 시간
 
 이 네 가지를 함께 봐야 한다.
+
+---
 
 ## 정리
 

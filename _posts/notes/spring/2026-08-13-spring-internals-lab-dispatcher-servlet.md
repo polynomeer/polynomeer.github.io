@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## 이번 글의 질문
 
 Spring MVC를 처음 배울 때는 `@GetMapping`과 `@RequestBody`부터 보게 된다. 하지만 이 시점에는 아직 가장 중요한 질문이 비어 있다.
@@ -22,6 +24,8 @@ Spring MVC를 처음 배울 때는 `@GetMapping`과 `@RequestBody`부터 보게 
 - [인터셉터](/posts/filter-interceptor-aop/)는 어디서 실행되고, 예외나 차단 상황에서는 무엇이 생략되는가
 
 이번 글은 `dispatcher-servlet-trace`와 `mini-webmvc`를 바탕으로, MVC를 Front Controller(모든 요청을 한 진입점에서 받는 구조)와 책임 분리 파이프라인으로 읽는다.
+
+---
 
 ## `DispatcherServlet` 자체는 의외로 단순하다
 
@@ -48,6 +52,8 @@ flowchart TD
 
 공식 문서도 같은 구조로 설명한다. `DispatcherServlet`은 "provides a shared algorithm for request processing, while actual work is performed by configurable delegate components"(요청 처리의 공통 알고리즘만 제공하고, 실제 일은 설정 가능한 위임 컴포넌트가 한다)([DispatcherServlet](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html)).
 
+---
+
 ## `HandlerMapping`과 `HandlerAdapter`를 왜 굳이 나눌까
 
 | 타입 | 질문 |
@@ -64,6 +70,8 @@ flowchart TD
 - 레거시 `Controller`
 
 같은 요청 매핑 시스템 안에서 서로 다른 "호출 방식"을 공존시킬 수 있다. 그래서 MVC의 유연성은 애노테이션 문법보다 찾기와 실행을 나눈 설계에서 나온다.
+
+---
 
 ## 실제 관찰에서 드러난 세 가지 포인트
 
@@ -86,6 +94,8 @@ Spring은 대신 "더 구체적인 패턴이 이긴다"는 고정 규칙을 쓴�
 컨트롤러가 던진 모든 예외가 자동으로 정돈된 HTTP 응답이 되는 건 아니다. 적절한 `ExceptionResolver`가 처리하지 못하면 예외는 그대로 밖으로 나간다.
 
 공식 문서에 따르면 resolver가 `null`을 돌려주면 다음 resolver가 시도하고, 끝까지 처리되지 않은 예외는 서블릿 컨테이너까지 올라간다([Exceptions](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/exceptionhandlers.html)). 그래서 MVC의 예외 처리는 "무조건 500 응답 생성"보다 변환 시도에 가깝다.
+
+---
 
 ## 인터셉터는 양파 구조지만, 예외가 나면 일부 단계는 생략된다
 
@@ -119,6 +129,8 @@ flowchart TD
     F -- yes --> H
 ```
 
+---
+
 ## JSON 응답도 자동이 아니라 협력 객체 덕분이다
 
 실험에서 실제로 겪은 함정이 있다. Jackson이 없으면 [`@RestController`](/posts/rest-controller-annotation/)가 있다고 해서 JSON 응답이 저절로 만들어지지 않는다.
@@ -130,6 +142,8 @@ flowchart TD
 - `ResponseEntity` 처리
 
 그래서 `@RestController`는 그 자체로 기능이라기보다, 여러 메시지 변환기와 반환값 처리기가 함께 동작한 결과에 가깝다.
+
+---
 
 ## mini-webmvc는 구조의 핵심만 남긴다
 
@@ -148,6 +162,8 @@ for (HandlerMapping mapping : handlerMappings) {
 - 복잡성은 handler mapping, adapter, argument resolution, return value handling 쪽에 쌓인다.
 
 `DispatcherServlet`은 흐름을 조율하는 coordinator다.
+
+---
 
 ## 정리
 

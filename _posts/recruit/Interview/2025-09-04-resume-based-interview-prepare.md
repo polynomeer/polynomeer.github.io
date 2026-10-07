@@ -39,6 +39,8 @@ JDK 21의 GA는 2023년 9월 19일이다([JDK 21](https://openjdk.org/projects/j
 - finalization은 JDK 18에서 제거 예정으로 지정되었다([JEP 421](https://openjdk.org/jeps/421)). JDK 21에서 새로 생긴 변화는 아니다. JEP 421은 대안으로 try-with-resources와 Cleaner API를 제시한다.
 - Spring Boot 3.2부터는 Java 21에서 `spring.threads.virtual.enabled`를 `true`로 설정해 가상 스레드를 쓸 수 있다([Spring Boot 3.2 Release Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.2-Release-Notes)).
 
+---
+
 ## MySQL 5.7과 8.0의 차이
 
 MySQL 8.0 레퍼런스 매뉴얼의 새 기능 목록([What Is New in MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html))과 업그레이드 문서([Changes in MySQL 8.0](https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/upgrading-from-previous-series.html))를 기준으로 정리했다.
@@ -74,6 +76,8 @@ MySQL 8.0 레퍼런스 매뉴얼의 새 기능 목록([What Is New in MySQL 8.0]
 - 쿼리 캐시: 5.7에서 쿼리 캐시에 기대고 있었다면 8.0에는 없으므로 대안을 검토해야 한다.
 - 문자셋과 정렬 규칙: 문자셋과 콜레이션을 명시하지 않으면 새로 만드는 데이터베이스와 테이블 등의 기본값이 이전과 달라진다([Changes in MySQL 8.0](https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/upgrading-from-previous-series.html)).
 - 실행 계획: 내림차순 인덱스와 히스토그램은 옵티마이저의 판단에 쓰이므로, 업그레이드 후 주요 쿼리의 실행 계획을 다시 확인한다.
+
+---
 
 ## 쿼리 튜닝 답변에서 다시 생각해 볼 것
 

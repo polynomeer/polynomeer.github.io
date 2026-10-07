@@ -9,6 +9,8 @@ tags: [Database, Modeling, Array, Normalization]
 
 그래서 "배열을 저장할 수 있느냐"보다 그 배열을 나중에 어떻게 조회하고 수정할 것인가를 먼저 봐야 한다.
 
+---
+
 ## 가장 먼저 볼 질문
 
 배열을 DB에 저장할 때는 먼저 이 질문부터 해야 한다.
@@ -19,6 +21,8 @@ tags: [Database, Modeling, Array, Normalization]
 - 조건 검색이 필요한가
 
 이 질문에 따라 모델링 방식이 달라진다.
+
+---
 
 ## 1. 정규화해서 별도 테이블로 분리하는 방식
 
@@ -44,6 +48,8 @@ tags: [Database, Modeling, Array, Normalization]
 
 대부분의 관계형 DB 실무에서는 이 방식이 기본값에 가깝다.
 
+---
+
 ## 2. 문자열이나 JSON으로 한 컬럼에 넣는 방식
 
 배열을 콤마 구분 문자열이나 JSON 배열로 넣을 수도 있다.
@@ -67,6 +73,8 @@ tags: [Database, Modeling, Array, Normalization]
 
 그래서 보여주기용 속성이나 단순 캐시성 데이터가 아니라면 장기적으로는 불리한 경우가 많다. MySQL의 JSON과 TEXT 비교는 [이 리뷰](/posts/kakao-mysql-json-vs-text/)에 있다.
 
+---
+
 ## 3. DB가 배열 타입을 지원하는 경우
 
 일부 데이터베이스는 배열 타입이나 JSON 타입을 더 적극적으로 지원한다. 예를 들어 PostgreSQL은 배열과 JSONB를 다룰 수 있다.
@@ -85,6 +93,8 @@ tags: [Database, Modeling, Array, Normalization]
 
 를 함께 봐야 한다.
 
+---
+
 ## 언제 별도 테이블이 유리한가
 
 다음 조건이면 보통 별도 테이블이 낫다.
@@ -101,6 +111,8 @@ tags: [Database, Modeling, Array, Normalization]
 - 상품 옵션
 
 이런 경우는 배열처럼 보여도 사실상 독립 엔티티에 가깝다.
+
+---
 
 ## 언제 한 컬럼 저장이 허용될 수 있는가
 
@@ -119,6 +131,8 @@ tags: [Database, Modeling, Array, Normalization]
 
 다만 이 경우에도 "나중에 검색이 필요해질 가능성"을 한 번은 점검해야 한다.
 
+---
+
 ## ORM 관점에서 생기는 문제
 
 [JPA](/posts/jpa-architecture/) 같은 ORM에서는 컬렉션 매핑을 쉽게 느낄 수 있지만, 실제 저장 구조와 쿼리 비용은 여전히 DB 모델링의 문제다.
@@ -129,6 +143,8 @@ tags: [Database, Modeling, Array, Normalization]
 - 객체 구조와 테이블 구조를 구분해서 봐야 한다
 
 배열이 객체에서는 자연스러워도, 테이블에서는 분리된 행이 더 자연스러운 경우가 많다.
+
+---
 
 ## 정리
 

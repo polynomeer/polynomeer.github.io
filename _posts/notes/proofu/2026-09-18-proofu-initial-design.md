@@ -10,6 +10,8 @@ mermaid: true
 
 저장소의 첫 커밋은 2026-09-18이다. 이 글은 그날 새벽 첫 16개 커밋([`5d6874b`](https://github.com/polynomeer/proofu/commit/5d6874b3813fa54adceabdb51cf264734801271f)부터 [`a3620d5`](https://github.com/polynomeer/proofu/tree/a3620d5d5c67ede37bd46b825cb0e3c0eed0be1b)까지)이 세운 설계를 정리한다. 그 뒤에 붙은 기능은 설계가 어떻게 시험받았는지 보여 줄 때만 날짜와 함께 언급한다.
 
+---
+
 ## 출발 조건
 
 결론을 읽기 전에 조건부터 적는다.
@@ -18,6 +20,8 @@ mermaid: true
 - 출시 전이라 트래픽과 데이터는 없다. 수치로 된 기준은 문서의 목표값뿐이다. 일반 읽기 p95(요청 95%가 이 시간 안에 끝난다는 뜻) 500ms 이하, 생성 요청 접수 1초 이하, 큐 지연 p95 2분 이하, 월간 API 가용성 99.5%가 그것이다([non-functional.md](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/architecture/non-functional.md), [monitoring.md](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/operations/monitoring.md)).
 - 코드보다 문서가 먼저 있었다. 2026-09-16자 통합 개발 문서 v0.1과 디자인 기획서 v1.0(docx)을 두 번째 커밋 [`0ffce5d`](https://github.com/polynomeer/proofu/commit/0ffce5dda30aba50eaad5cfe872004f0df2db9df)에서 영역별 Markdown으로 나눴고, 초기 ADR 6개도 여기서 들어갔다.
 - 사용자 데이터가 개인 경력이다. 개인정보 최소 수집, 삭제 가능성, 외부 AI 전송 통제가 처음부터 요구사항에 들어 있다.
+
+---
 
 ## 풀려는 문제와 제약
 
@@ -29,6 +33,8 @@ mermaid: true
 - 재현 가능성: 공고 원문, 원천 데이터의 revision, 프롬프트, 모델을 스냅샷으로 남겨 과거 제출 상태를 그대로 다시 열 수 있어야 한다.
 
 이 두 원칙 때문에 Evidence 모델에는 강한 불변식이 붙었다. 승인된 지원 문장의 사실 주장은 최소 하나의 Claim(주장)을 참조해야 한다. Evidence가 없는 Claim은 `UNSUPPORTED` 상태가 된다. AI는 Evidence의 검증 상태를 올릴 수 없다([evidence-model.md](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/domain/evidence-model.md)). 생성 문서의 각 블록은 `SUPPORTED`, `INFERRED`, `UNSUPPORTED` 중 하나의 확실성 등급을 갖고, 뒤의 두 등급은 사용자 승인 없이 내보낼 수 없다([version-lineage.md](https://github.com/polynomeer/proofu/blob/0ffce5dda30aba50eaad5cfe872004f0df2db9df/docs/domain/version-lineage.md)).
+
+---
 
 ## 초기 아키텍처
 
@@ -74,6 +80,8 @@ sequenceDiagram
   C->>A: GET /jobs/jobId
   A-->>C: SUCCEEDED와 결과
 ```
+
+---
 
 ## 기술 선택과 이유
 
@@ -199,6 +207,8 @@ ADR-0006의 이유는 "감사와 재현 가능성"이다. 제출한 문서는 �
 
 첫 커밋 시점의 실제 버전은 Kotlin 2.3, Spring Boot 4.1, JDK 21, Next.js 16(App Router), React 19, Tailwind 4다. API와 워커 모두 `spring.threads.virtual.enabled: true`로 시작했다. API는 JPA를 `ddl-auto=validate`로만 쓴다. 스키마는 Flyway가 만들고, 엔티티는 스키마를 만들지 않는다.
 
+---
+
 ## 첫 커밋들이 실제로 만든 것
 
 첫 16개 커밋은 기능이 아니라 뼈대였다.
@@ -213,6 +223,8 @@ ADR-0006의 이유는 "감사와 재현 가능성"이다. 제출한 문서는 �
 - CI: 웹과 계약, JVM, 계약 비교의 세 잡. 로컬 인프라는 `postgres:16-alpine` 하나뿐이다.
 
 API 엔드포인트, 화면, AI 호출은 이 뼈대 위에 같은 날 오전부터 차례로 붙었다.
+
+---
 
 ## 설계가 남긴 질문
 

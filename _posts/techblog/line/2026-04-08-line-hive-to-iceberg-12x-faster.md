@@ -12,13 +12,19 @@ source_url: https://techblog.lycorp.co.jp/ko/from-hive-to-iceberg-12x-faster-dat
 
 원문: [Hive에서 Iceberg로: 데이터 반영 속도 12배 향상의 비밀](https://techblog.lycorp.co.jp/ko/from-hive-to-iceberg-12x-faster-data-updates) — LY Corporation Tech Blog, 김성도·고상일(LINE Plus 통합 커머스), 2026-04-03
 
+---
+
 ## 한 줄 요약
 
 HBase 스냅숏 + Hive ETL은 변경분을 반영하려면 수억 건 전체를 다시 써야 해서, 개선 끝에 1시간 주기가 한계였다. Iceberg는 스냅숏 단위 메타데이터로 행 단위 upsert가 되므로 변경된 수만 건만 반영하면 되고, 그러면 비용은 총량이 아니라 변경분에 비례한다. 엔진은 데이터 최신성(늦게 온 옛 데이터 무시), 종단 간 exactly-once(Iceberg 커밋과 "여기까지 반영됨" Kafka 메시지가 2PC로 함께 확정), 상태의 장애 허용 세 요구로 Spark 대신 **Flink**를 골랐고, GitOps가 되는 **Flink Kubernetes Operator**로 배포했다. 9억 건 상품 테이블에서 `identifier-field-ids` 누락으로 중복 적재와 동등 삭제 파일 폭증을 겪고, `rewrite_data_files`가 OOM·타임아웃·HDFS I/O 한계에 부딪혀 결국 **ID bucket 파티셔닝**으로 갔다. 12배는 체크포인트 5분 때문이 아니라 "5분마다 커밋해도 정합성과 읽기 성능이 유지되는 환경"을 만들었기 때문이다.
 
+---
+
 ## 배경: 전체 덮어쓰기의 딜레마
 
 MySQL에서 대용량 테이블을 추출할 때 `SELECT *`는 시점이 섞이고 부하가 크며, 스냅숏 기반은 정합성은 되지만 대용량에서 딜레마가 생긴다. HBase + Hive ETL도 같았다. 변경분은 HDFS에 계속 모이는데 조회 가능한 테이블에 반영하려면 병합 후 전체를 다시 써야 했다. 하루 → 1시간까지 줄였지만, 그 사이 상품이 바뀌면 옛 데이터로 처리하는 위험이 남았다. 마침 사내 Hadoop이 Iceberg를 지원하기 시작했다.
+
+---
 
 ## 엔진 선택: 세 요구와 Flink
 
@@ -30,12 +36,16 @@ Spark Structured Streaming은 마이크로 배치라 이벤트 시간 기준 상
 
 배포는 네이티브 Kubernetes(역할·서비스 어카운트·라우팅을 직접) 대신 **Flink Kubernetes Operator**(커스텀 리소스로 추상화, Helm 값만으로 라우팅·UI 자동, 애플리케이션/세션 모드, TaskManager 슬롯 1로 두어 병렬도만큼 파드 1:1 생성). 결정적 이유는 GitOps로 실행 중인 잡 상태와 Git 매니페스트의 일치를 보장할 수 있다는 것.
 
+---
+
 ## 아키텍처: 두 파이프라인
 
 - **Iceberg 반영 파이프라인(full-document-sink)**: MongoDB 실시간 CDC 토픽과 보정 fullDocument 토픽을 구독해 상품 ID로 KeyedStream을 만들고, ID별 `updateDate`를 상태로 저장, 들어온 메시지가 더 오래되면 무시, 같거나 최신이면 통과시키며 상태 갱신. 컨슈머 랙으로 옛 보정 데이터가 늦게 와도 최신을 덮지 못한다.
 - **보정 데이터 생성 파이프라인(compensation-sink)**: 보정 대상 ID 토픽을 구독해 MongoDB에서 fullDocument를 조회하고 `opType=READ`로 보정 토픽에 보낸다. 보정 대상은 네 경로에서 나온다. 처음 보는 ID인데 UPDATE로 온 경우(Flink 재기동으로 상태가 초기화됐을 수 있음), 이미 처리한 ID가 CREATE로 다시 온 경우(방어 로직), 하루 한 번 정합성 검증의 불일치, 운영자 수동 전송.
 
 보정 파이프라인의 윈도 최적화가 실무적이다. 순서 보장이 필요 없어 non-keyed 윈도로 시작했더니 **단일 태스크**로 돌아 병목이었다. keyed로 바꿨는데도 안 빨라진 이유는 KeyGroupStreamPartitioner가 MurmurHash3로 키 그룹을 정하는데 키가 고르지 않아 특정 슬롯에 몰렸기 때문이다. 상품 ID를 병렬도로 모듈러 연산한 뒤 임의 수를 곱한 값을 키로 써 분산을 맞췄다. 그러자 이번엔 5초 윈도가 수만 건을 한 번에 MongoDB에 조회해 과부하가 났다. Flink 기본 윈도에는 개수 제어가 없어 **`CountWithTimeoutTrigger`**(5초 경과 또는 1,000건 초과 중 먼저)를 직접 구현했다.
+
+---
 
 ## 트러블슈팅
 
@@ -47,15 +57,21 @@ Spark Structured Streaming은 마이크로 배치라 이벤트 시간 기준 상
 
 **최종: ID bucket 파티셔닝.** 비파티션 테이블에서 동등 삭제는 **글로벌**로 적용되어 모든 데이터 파일에 매칭해야 한다. 상품 ID bucket으로 파티셔닝하자 삭제와 rewrite가 파티션 범위로 한정되어 HDFS 부하 없이 안정됐고 읽기도 지연 없이 유지됐다.
 
+---
+
 ## 12배의 비밀
 
 60분 → 5분은 체크포인트 5분 설정과 체크포인트 완료 시 Iceberg 커밋 덕분이다. 그러나 원문이 강조하듯 진짜 비밀은 주기를 줄인 것이 아니라 **"짧은 주기로 계속 밀어 넣어도 무너지지 않는 환경"**이다. 5분마다 커밋으로 파일이 생기는 상황에서도 정합성과 읽기 성능이 유지됨을 파티션 아키텍처와 트러블슈팅으로 검증했기에 얻은 수치다.
+
+---
 
 ## 읽고 남는 질문
 
 - 반영 파이프라인의 Flink 재기동 시 상태가 초기화되면 "처음 보는 ID + UPDATE"가 대량으로 보정 대상이 될 텐데, 그때 보정 파이프라인과 MongoDB에 걸리는 부하와 회복 시간이 궁금하다. 상태를 savepoint로 보존하는지도.
 - bucket 수를 얼마로 잡았는지, 그리고 파티셔닝 후 rewrite 주기와 소요 시간이 얼마인지가 없다. 같은 Iceberg 주제의 카카오 글에서 compaction 시간이 UPDATE 비율에 좌우된다고 했는데, 상품 데이터(갱신 위주)에서의 수치가 있으면 비교가 된다.
 - 하루 한 번 정합성 검증은 MongoDB와 Iceberg를 전체 비교하는 것인지 샘플인지, 9억 건에서 그 비용이 얼마인지.
+
+---
 
 ## 한 줄로 가져가기
 

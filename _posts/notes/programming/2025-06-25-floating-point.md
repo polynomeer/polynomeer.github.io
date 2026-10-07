@@ -12,6 +12,8 @@ tags: [Floating Point]
 > 여기서의 **부동(浮動)**은 떠다니며 움직인다는 뜻으로 움직이지 않는다는 의미의 **부동(不動)**과 헷갈리지 않도록 주의하자. 실제로 **고정소수점(固定小數點, Fixed-point arithmetic)**이라는 개념이 존재한다.
 {: .prompt-warning }
 
+---
+
 ## Fixed point 구조
 
 ![fixed point](../../../assets/img/posts/fixed-point.png)
@@ -29,6 +31,8 @@ tags: [Floating Point]
 - `1000` → 소수부 = 0.5 (이진수 `1×2⁻¹`)
 
 전체 숫자는 `6.5`가 된다.
+
+---
 
 ## Floating point 구조
 

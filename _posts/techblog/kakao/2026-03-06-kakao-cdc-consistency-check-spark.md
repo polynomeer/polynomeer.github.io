@@ -13,9 +13,13 @@ source_url: https://tech.kakao.com/posts/717
 원문(2부, 모두 2025-07-28 kakao tech, dawn 최여명·데이터분석플랫폼):
 [Part 1. 코드 설계편](https://tech.kakao.com/posts/717) · [Part 2. Spark 최적화편](https://tech.kakao.com/posts/718)
 
+---
+
 ## 한 줄 요약
 
 카카오 데이터분석플랫폼은 300개 이상의 CDC 파이프라인을 돌리며 매일 소스(MySQL)와 타깃(MySQL·Iceberg)이 같은지 검사한다. 검사 잡은 테이블 단위 JSON으로 제출되고, 코드는 **읽기(Reader) → 값 보정(Translator) → 비교(Comparator) → 보고(Reporter)** 네 컴포넌트로 나뉜다. Part 2의 핵심은 MySQL을 읽을 때 "빠르게"보다 "DB에 부담 없이"가 우선이라는 점이다. 병렬도는 `min(executor × core, numPartitions)`로 정해지고, 1,000만 건 테이블에서 워커 32에 파티션 10이면 5초, 그 이상은 늘려도 소용없었다. 비교는 PK 기준 full outer join이고, `=!=`가 NULL에서 NULL을 돌려주는 함정을 `isNull`로 막는다.
+
+---
 
 ## Part 1: 설계
 
@@ -31,6 +35,8 @@ source_url: https://tech.kakao.com/posts/717
 **패턴.** 설정에 따라 런타임에 Reader·Translator·Reporter를 만드는 심플 팩토리, 스캔 모드별 읽기 뒤 공통 처리(컬럼 제외, 스키마 로깅)를 상위에 둔 템플릿 메서드, Translator를 갈아 끼우는 전략 패턴, Spark 세션을 환경(Production/Sandbox/Local)별 생성 로직과 함께 `object`로 묶은 싱글톤. 스타일은 scalafmt + scalafix(import 정리)를 pre-commit과 CI 훅에 걸었다.
 
 솔직한 회고가 좋다. Java 스타일 문법이 남아 있고, Translator는 더 나은 방법이 있었을 것 같고, enum 대신 문자열을 쓴 것이 아쉽다고 적었다. "내가 없어도 누구나 이해하고 고칠 수 있는 구조"가 설계 철학이었다.
+
+---
 
 ## Part 2: Spark 최적화
 
@@ -64,11 +70,15 @@ source_url: https://tech.kakao.com/posts/717
 
 회고에서 연속된 PK 구간은 IN 대신 BETWEEN이 나을 것 같고, Iceberg는 사전 필터링과 Sort Order로 file-level pruning을 더 살릴 여지가 있다고 적었다.
 
+---
+
 ## 읽고 남는 질문
 
 - 검사 시점에 CDC가 아직 반영하지 못한 "정상적인 지연"과 진짜 불일치를 어떻게 구분하는지가 없다. 소스를 읽는 순간과 타깃을 읽는 순간 사이의 변경이 오탐이 될 텐데, 스냅샷 시각을 맞추거나 재검사로 거르는 규칙이 있을 것 같다.
 - 표에서 워커 32/파티션 10과 워커 128/파티션 100의 차이가 1초다. 후자는 커넥션 100개를 세컨더리에 붙이는 것인데 그때 DB 쪽 지표(CPU, 복제 지연)가 어땠는지가 "부하가 먼저"라는 원칙의 실측이 됐을 것이다.
 - keybased 모드의 PK를 100개씩 IN절로 묶는 이유가 MySQL 쿼리 길이 때문인지 실행 계획 때문인지 궁금하다. 범위 기반으로 바꾸면 조건 수가 크게 줄어들 텐데 회고에도 같은 고민이 있다.
+
+---
 
 ## 한 줄로 가져가기
 

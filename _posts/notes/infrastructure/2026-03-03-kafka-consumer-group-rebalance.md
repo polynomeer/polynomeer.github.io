@@ -7,6 +7,8 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 컨슈머를 한 대 추가했을 뿐인데 전체 처리가 몇 초 멈춘다. 배포할 때마다 랙이 튀고, 롤링 업데이트에서 인스턴스 수만큼 그 일이 반복된다. 이 글은 리밸런스가 무엇을 멈추는지, 그 멈춤을 줄이는 선택지가 무엇인지 다룬다.
 
+---
+
 ## 그룹, 파티션, 소유권
 
 컨슈머 그룹은 토픽의 파티션을 나눠 갖는다. 규칙은 하나다. **한 파티션은 그룹 안에서 한 컨슈머만 읽는다.** 그래서 파티션 안의 순서가 지켜지고, 동시에 파티션 수가 병렬도의 상한이 된다. 파티션이 6개면 컨슈머를 10개 띄워도 4개는 논다.
@@ -19,6 +21,8 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 세 번째가 실무에서 가장 자주 사고를 낸다. 처리 로직이 느려서 `poll()` 주기가 늘어나면, 그 컨슈머는 실패한 것으로 간주되고 그룹은 파티션을 다른 멤버에게 다시 나눈다. 컨슈머는 살아 있으므로 처리를 마치고 커밋하려다 실패한다. 그 결과 느린 처리가 리밸런스를 부르고, 리밸런스가 다시 처리를 늦춘다.
 
+---
+
 ## eager: 전부 놓고 다시 받는다
 
 기본이던 방식(`RangeAssignor`, `RoundRobinAssignor`)은 stop-the-world(전체 정지)다.
@@ -28,6 +32,8 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 3. 각자 새 파티션을 받는다.
 
 **이 동안 그룹 전체가 아무것도 처리하지 않는다.** 컨슈머 20대 중 1대가 추가돼도 20대가 다 멈춘다. 멈추는 시간은 배정 계산과 왕복, 그리고 `poll()` 주기에 달린다.
+
+---
 
 ## cooperative: 옮길 것만 옮긴다
 
@@ -41,11 +47,15 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 전환에는 순서가 있다. 먼저 모든 컨슈머를 `[Cooperative, Eager]` 둘 다 지원하도록 배포하고, 그 다음 배포에서 eager를 뺀다. KIP-429가 이 두 번의 롤링 재시작을 요구한다. 한 번에 바꾸면 옛 코드의 리더가 eager로 배정을 계산하는 동안, 새 코드의 컨슈머는 파티션을 반납하지 않은 채 합류할 수 있다. 기본값 목록에 이미 둘 다 들어 있는 클라이언트라면 Range를 빼는 롤링 재시작 한 번이면 된다.
 
+---
+
 ## static membership: 재시작을 리밸런스로 보지 않게
 
 배포로 컨슈머가 내려갔다 같은 역할로 다시 올라오는 것은 **구성원 변경이 아니라 재시작**이다. `group.instance.id`를 고정하면 브로커가 그것을 기억하고, `session.timeout.ms` 안에 같은 ID가 돌아오면 캐시해 둔 배정을 그대로 돌려준다. 리밸런스가 아예 일어나지 않는다([KIP-345](https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances)).
 
 조건이 있다. `session.timeout.ms`가 재시작에 걸리는 시간보다 길어야 한다. 배포에 30초가 걸리는데 타임아웃이 10초면 효과가 없다. 그런데 진짜로 죽은 컨슈머를 감지하는 데도 그만큼 오래 걸린다. 그래서 이 값 하나가 재시작 내성과 장애 감지 속도를 맞바꾼다.
+
+---
 
 ## 세 방식의 비교
 
@@ -57,12 +67,16 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 셋은 배타적이지 않다. static membership과 cooperative를 함께 쓰는 것이 일반적인 구성이다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - **리밸런스가 없어도 중복은 생긴다.** 오프셋 커밋 전에 죽으면 다시 받는다. [at-least-once](/posts/kafka-delivery-guarantees/)는 리밸런스와 무관한 전제이고, [멱등](/posts/idempotency-key-design/) 소비자가 따로 필요하다(이후 [ParityPay 8편](/posts/parity-pay-kafka-failures/)에서 다뤘다).
 - 파티션 수를 늘리면 순서 보장이 깨진다. 키 해시의 분모가 바뀌어 같은 키가 다른 파티션으로 간다. 줄이는 것은 아예 안 된다.
 - `max.poll.records`를 줄이는 것이 흔한 처방이지만 만능이 아니다. 건당 처리가 느리면 배치를 줄여도 총 시간이 그대로다. 처리를 비동기로 빼면 이번엔 커밋 시점이 어려워진다.
 - `group.instance.id`를 잘못 쓰면 두 컨슈머가 같은 ID를 주장한다. 그룹에는 같은 ID의 인스턴스가 한 번에 하나만 있을 수 있으므로([Consumer Configs](https://kafka.apache.org/43/configuration/consumer-configs/)), 컨테이너 오케스트레이터가 같은 ID로 두 파드를 띄우면 하나가 `FENCED_INSTANCE_ID`로 쫓겨난다([KIP-345](https://cwiki.apache.org/confluence/display/KAFKA/KIP-345%3A+Introduce+static+membership+protocol+to+reduce+consumer+rebalances)).
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -72,9 +86,13 @@ tags: [Kafka, Consumer Group, Rebalancing, Messaging, Partitioning]
 
 [monticker 24편](/posts/monticker-partition-ordering/)의 한계에 "컨슈머 스레드 C는 한 프로세스 안의 동시성이다. 프로세스 수를 늘린 것은 리밸런스 실험뿐이다."를 적었다. 위 세 가지가 그 후속이다.
 
+---
+
 ## 실무와의 접점
 
 [SQS 파이프라인](/posts/polling-to-sqs-pipeline/)에는 리밸런스라는 개념이 없다. SQS는 파티션 소유권 대신 메시지 단위 가시성 타임아웃을 쓴다. Kafka는 순서를 위해 소유권을 두고, 그 대가로 소유권 재배치라는 정지를 갖는다. 그래서 순서가 필요 없는 작업이라면 그 정지를 감수할 이유도 없다.
+
+---
 
 ## 정리
 

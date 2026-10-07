@@ -8,6 +8,8 @@ mermaid: true
 
 이 글은 Spring Boot 애플리케이션에서 RabbitMQ로 메시지를 보내고 받는 최소 구성을 정리한다. RabbitMQ 자체의 개념은 [RabbitMQ](/posts/rabbitmq/)에, 설치는 [RabbitMQ Installation](/posts/rabbitmq-installation/)에, 메시지 큐를 왜 쓰는지는 [Message Queue](/posts/message-queue/)에 따로 정리했다. 코드는 Spring Boot 3, Spring AMQP 3.x 기준이다.
 
+---
+
 ## 먼저 알아야 할 모델
 
 RabbitMQ가 쓰는 AMQP 0-9-1 모델에서 생산자(producer)는 메시지를 큐에 직접 넣지 않는다. 메시지는 exchange로 발행되고, exchange가 binding이라는 규칙에 따라 메시지 사본을 큐들로 나눠 준다. 소비자(consumer)는 큐에서 메시지를 꺼낸다([RabbitMQ, AMQP 0-9-1 Model Explained](https://www.rabbitmq.com/tutorials/amqp-concepts)).
@@ -20,6 +22,8 @@ flowchart TD
 ```
 
 exchange 종류에 따라 라우팅 방식이 다르다. direct는 routing key가 정확히 일치하는 큐로, fanout은 연결된 모든 큐로, topic은 패턴이 맞는 큐로 보낸다. 이름이 없는 기본 exchange는 모든 큐를 큐 이름과 같은 routing key로 자동 연결해 두기 때문에, routing key에 큐 이름을 주면 그 큐로 바로 들어간다.
+
+---
 
 ## Project Initialization
 
@@ -61,6 +65,8 @@ spring:
 
 스타터가 있으면 Spring Boot가 메시지 전송용 `RabbitTemplate`, 큐 선언 등 관리 작업용 `AmqpAdmin`, 리스너 컨테이너를 만드는 `SimpleRabbitListenerContainerFactory`를 자동으로 구성한다.
 
+---
+
 ## 큐, exchange, binding 선언
 
 `Queue`, `Exchange`, `Binding`을 빈으로 등록하면 애플리케이션이 브로커에 연결될 때 자동으로 선언된다. Spring Boot 문서는 정의된 `Queue` 빈이 RabbitMQ에 자동으로 선언된다고 설명한다.
@@ -97,6 +103,8 @@ public class RabbitConfig {
 
 `MessageConverter` 빈은 객체를 메시지 본문으로 바꾸는 방식을 정한다. 기본 변환기인 `SimpleMessageConverter`는 문자열, 바이트 배열, Java 직렬화 객체만 다룬다([Spring AMQP, Message Converters](https://docs.spring.io/spring-amqp/reference/amqp/message-converters.html)). Java 직렬화는 다른 언어의 소비자가 읽을 수 없고 신뢰할 수 없는 메시지를 역직렬화하는 보안 문제도 있으므로, 보통 JSON 변환기를 등록한다. Spring Boot는 `MessageConverter` 빈이 있으면 자동 구성된 `RabbitTemplate`과 리스너 컨테이너 팩토리에 연결한다. (Jackson 3을 쓰는 Spring AMQP 4.x 문서에서는 같은 역할의 클래스가 `JacksonJsonMessageConverter`다.)
 
+---
+
 ## 메시지 보내기
 
 ```java
@@ -116,6 +124,8 @@ public class OrderEventPublisher {
 
 `convertAndSend`는 등록된 변환기로 객체를 메시지로 바꾼 뒤, 지정한 exchange에 routing key와 함께 발행한다.
 
+---
+
 ## 메시지 받기
 
 ```java
@@ -131,6 +141,8 @@ public class OrderCreatedListener {
 ```
 
 `@RabbitListener`를 붙이면 Spring AMQP가 리스너 컨테이너를 만들어 큐를 구독하고, 메시지가 오면 변환기로 객체를 만들어 메서드를 호출한다([Spring AMQP, Annotation-driven Listener Endpoints](https://docs.spring.io/spring-amqp/reference/amqp/receiving-messages/async-annotation-driven.html)).
+
+---
 
 ## 실패했을 때 무슨 일이 일어나는가
 
@@ -160,6 +172,8 @@ spring:
 DLX는 큐 인자(`x-dead-letter-exchange`)로도 지정할 수 있지만, RabbitMQ 문서는 큐를 다시 선언하지 않고 바꿀 수 있는 정책(policy)으로 지정하는 방법을 권한다.
 
 마지막으로, RabbitMQ도 같은 메시지를 두 번 전달할 수 있다. ack를 보내기 직전에 소비자가 죽으면 브로커는 그 메시지를 처리되지 않은 것으로 보고 다시 전달한다. 그래서 리스너는 같은 메시지를 두 번 받아도 결과가 같도록 멱등하게 작성하는 편이 안전하다.
+
+---
 
 ## 정리
 

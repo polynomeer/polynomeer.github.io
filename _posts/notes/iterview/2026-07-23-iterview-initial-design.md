@@ -12,6 +12,8 @@ iterview는 경력 개발자가 자기 이력서를 근거로 면접을 준비�
 
 한 가지를 먼저 밝혀 둔다. 이날 저장소는 처음부터 코드를 쓴 것이 아니라, 따로 있던 백엔드와 프론트엔드를 `apps/api`, `apps/web`으로 옮겨 온 것이다. 그래서 첫날 이미 Flyway 마이그레이션이 37개 있었다. 기술 선택의 이유는 당시 문서에 대안 비교로 남아 있지 않았다. 이번에 그 이유를 재구성해 저장소에 [ADR 0087](https://github.com/polynomeer/iterview/blob/bda27da3926d7c2a08545c3bd6d96449725a0792/docs/adr/0087-record-initial-technology-selection.md)로 기록했고, 이 글의 결정 섹션은 그 문서를 바탕으로 한다. 저장소 문서에 적힌 요구사항은 그대로 옮겼고, 대안과의 비교는 재구성이라는 점을 구분해 둔다.
 
+---
+
 ## 풀려던 문제와 조건
 
 처음 문서([`01-product-overview.md`](https://github.com/polynomeer/iterview/blob/cf4c803f2e51f2f767ad47b6046b1262d285a9f6/apps/api/docs/01-product-overview.md))는 사용자가 앱을 열 때마다 세 가지 질문에 답하게 하는 것을 목표로 적었다. 오늘 무엇을 연습할지, 이력서와 목표 직무에 비해 어디가 약한지, 아직 방어하지 못하는 꼬리 질문이 무엇인지다. 일반 면접 질문 은행이 아니라, 내 이력서의 특정 문장이 어떤 질문을 불러오는지를 다루는 것이 출발점이었다.
@@ -35,6 +37,8 @@ Resume PDF Upload -> Resume Version -> Raw Text Parse -> LLM Structured Extracti
 - 한국어와 영어를 지원하되, 사용자가 쓴 원문은 번역하지 않고 원래 언어로 저장한다.
 
 규모는 이 정도였다. `apps/api`의 Kotlin 소스가 399개 파일, 테스트가 38개 파일, 마이그레이션이 V1부터 V37까지였다. `apps/web/src`는 343개 파일이었다.
+
+---
 
 ## 처음 아키텍처
 
@@ -101,6 +105,8 @@ sequenceDiagram
 
 이 리스너는 Spring의 `@TransactionalEventListener(phase = AFTER_COMMIT)`이다. Spring 문서는 이 리스너가 트랜잭션이 성공적으로 커밋된 뒤에 실행되도록 묶인다고 설명한다. 동작 방식은 [@TransactionalEventListener가 무시되는 이유](/posts/transactional-event-listener/)에 따로 정리해 두었다.
 
+---
+
 ## 결정 1. 저장소: 두 앱을 한 저장소에 나란히 둔다
 
 첫날 커밋 13개 중 대부분은 이 결정을 위한 것이었다. 두 앱을 옮기고, 루트 스크립트와 루트 CI를 만들고, 무엇이 루트에 남고 무엇이 앱에 남는지를 [`monorepo-conventions.md`](https://github.com/polynomeer/iterview/blob/a75309473ef85c23953215885437d5859bb8ef54/docs/monorepo-conventions.md)에 적었다. 루트 `AGENTS.md`는 "do not introduce a root build orchestrator unless there is a concrete need"라고 못 박았다(구체적인 필요가 없으면 루트 빌드 오케스트레이터를 들이지 말라는 뜻이다).
@@ -112,6 +118,8 @@ sequenceDiagram
 | 앱을 나란히 두고 셸 스크립트로 묶기 (선택) | 각 앱의 빌드 시스템을 그대로 두라는 원칙과 맞는다 |
 
 치른 비용도 분명하다. 바뀐 앱만 빌드하는 기능이나 공유 빌드 캐시가 없어서 CI는 매번 두 앱을 다 돈다. 두 앱이 타입을 공유하지 않으므로 `04-api-contracts.md`와 `04-api-integration.md`를 손으로 맞춰야 한다.
+
+---
 
 ## 결정 2. 백엔드: Kotlin과 Spring Boot, 서블릿 스택
 
@@ -128,6 +136,8 @@ Kotlin과 Spring을 같이 쓰려면 설정이 몇 가지 필요하다. Kotlin �
 
 서블릿 스택을 고른 대가는 LLM 호출에서 드러난다. 모델 호출이 길어지면 요청 스레드가 그동안 묶인다. 클라이언트마다 타임아웃(기본 30초)을 둔 이유다.
 
+---
+
 ## 결정 3. 아키텍처: 배포 단위 하나, 패키지는 도메인별로
 
 | 선택지 | 평가 |
@@ -138,6 +148,8 @@ Kotlin과 Spring을 같이 쓰려면 설정이 몇 가지 필요하다. Kotlin �
 | 도메인별 패키지의 단일 애플리케이션 (선택) | 답변 파이프라인을 트랜잭션 하나로 끝낼 수 있다 |
 
 비용은 경계를 지키는 장치가 규칙뿐이라는 점이다. 한 도메인의 서비스가 다른 도메인의 리포지토리를 직접 불러도 컴파일러는 막지 않는다. 처음 문서는 "Do not move product rules into `common`" 같은 문장과 리뷰로 이를 막으려 했다. 경계를 코드로 강제하는 방법은 [모듈러 모놀리스 글](/posts/modular-monolith-boundaries/)에 정리했다.
+
+---
 
 ## 결정 4. 데이터베이스: PostgreSQL, Flyway, JPA
 
@@ -151,6 +163,8 @@ JPA 설정은 `ddl-auto: validate`, `open-in-view: false`였다. Hibernate는 �
 
 대가는 두 가지다. Kotlin에서 JPA 엔티티를 쓰려면 앞의 플러그인이 필요하다. 통합 테스트가 메모리 DB 대신 실제 PostgreSQL 컨테이너를 띄우므로 테스트를 돌리려면 Docker가 있어야 한다.
 
+---
+
 ## 결정 5. 캐시와 브로커 없이, 커밋 후 비동기와 DB 상태로
 
 | 선택지 | 평가 |
@@ -162,6 +176,8 @@ JPA 설정은 `ddl-auto: validate`, `open-in-view: false`였다. Hibernate는 �
 캐시는 아예 없었다. 아키텍처 문서는 비정규화된 읽기 모델을 "성능 때문에 나중에 도입해도 된다"고만 적었다.
 
 이 선택의 약점은 메모리 안의 이벤트다. 커밋 직후 프로세스가 죽으면 이벤트는 사라지고, 복구는 스케줄러 주기(기본 60초)를 기다린다. 인스턴스가 여러 개가 되면 일을 나눠 가지는 장치도 없다. 같은 문제를 Transactional Outbox로 푼 사례는 이후 [ParityPay 아웃박스 글](/posts/parity-pay-outbox/)에 정리했다.
+
+---
 
 ## 결정 6. LLM 연동: 용도별 인터페이스와 평범한 HTTP 호출
 
@@ -177,6 +193,8 @@ JPA 설정은 `ddl-auto: validate`, `open-in-view: false`였다. Hibernate는 �
 
 대가는 손으로 쓴 코드다. 요청과 응답 형태를 클라이언트마다 직접 작성했고, transport도 `interview`와 `resume` 쪽에 비슷한 구현이 두 벌 있었다.
 
+---
+
 ## 결정 7. 인증: API가 직접 서명하는 토큰
 
 `SignedTokenService`는 `userId|email|expiresAt`을 Base64URL로 인코딩하고 HmacSHA256으로 서명한다. 서명 비교는 `MessageDigest.isEqual`로 상수 시간에 한다. 웹 앱은 이 토큰을 `localStorage`에 두고 `Authorization: Bearer` 헤더로 보낸다.
@@ -189,6 +207,8 @@ JPA 설정은 `ddl-auto: validate`, `open-in-view: false`였다. Hibernate는 �
 | 최소한의 HMAC 토큰 (선택) | 상태가 없고 코드가 수십 줄이다 |
 
 토큰은 만료(기본 86400초) 전에는 폐기할 수 없다. OWASP는 세션 식별자를 `localStorage`에 두지 말라고 권한다. 자바스크립트가 항상 읽을 수 있어서 XSS 한 번이면 빼앗기기 때문이다. 이 부분은 처음부터 알고 남긴 빚에 가깝다. JWT 쪽의 같은 한계는 [JWT의 구조와 검증](/posts/jwt-structure-and-verification/)에서 다뤘다.
+
+---
 
 ## 결정 8. 프론트엔드: Vite 위의 React SPA
 
@@ -206,6 +226,8 @@ JPA 설정은 `ddl-auto: validate`, `open-in-view: false`였다. Hibernate는 �
 
 React 문서는 프레임워크 없이 시작하면 "often the same as building your own adhoc framework"라고 경고한다(사실상 자기만의 임시 프레임워크를 만드는 셈이라는 뜻이다). 라우팅, 데이터 로딩, 코드 분할이 모두 이 앱의 몫이 된다. 실제로 첫날 빌드부터 메인 번들이 크다는 경고가 나왔다.
 
+---
+
 ## 첫날 커밋들이 실제로 만든 것
 
 2026-07-23의 커밋 13개는 기능이 아니라 저장소의 뼈대를 만들었다.
@@ -220,6 +242,8 @@ React 문서는 프레임워크 없이 시작하면 "often the same as building 
 | `a753094` | [`monorepo-status.md`](https://github.com/polynomeer/iterview/blob/a75309473ef85c23953215885437d5859bb8ef54/docs/monorepo-status.md)에 남은 위험 기록 |
 
 CI는 GitHub Actions에서 JDK 21과 Node 20을 준비하고 `scripts/verify_all.sh ci`를 돌린다. 백엔드 통합 테스트는 Testcontainers의 PostgreSQL 컨테이너에서 돈다. 웹은 Vitest와 Testing Library를 쓴다. 로컬에서는 PostgreSQL만 컨테이너로 띄우고 API와 웹은 호스트에서 `dev_all.sh`로 실행한다. 관측성은 Spring 기본 로깅 말고는 없었다.
+
+---
 
 ## 처음 설계가 남긴 질문
 

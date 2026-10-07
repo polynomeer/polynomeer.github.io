@@ -9,11 +9,15 @@ tags: [Timeout, NLB, AWS]
 
 Network Load Balancer(NLB)는 클라이언트에게 단일 접점(single point of contact)을 제공한다. ELB, ALB와의 차이는 [ELB vs ALB vs NLB](/posts/elb-alb-nlb/)에 정리했다. 클라이언트는 NLB에게 요청을 보내고 NLB는 그 요청을 EC2 인스턴스(하나 이상의 Availability Zones)와 같은 타겟들에게 보낸다.
 
+---
+
 ## Load balancer state
 
 - `provisioning`: The Network Load Balancer is being set up. (설정 중)
 - `active`: The Network Load Balancer is fully set up and ready to route traffic. (트래픽을 받을 준비 완료)
 - `failed`: The Network Load Balancer couldn't be set up. (설정 실패)
+
+---
 
 ## Connection idle timeout
 
@@ -30,6 +34,8 @@ EC2 인스턴스는 반환 경로를 설정하기 위해 30초 이내에 새 요
 ## 참고
 
 - [Network Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/network-load-balancers.html) — AWS Docs
+
+---
 
 ## Recently
 

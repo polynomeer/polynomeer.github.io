@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## Spring Boot를 별도 프레임워크처럼 보면 오해가 생긴다
 
 Boot를 처음 쓰면 모든 것이 너무 쉽게 돌아간다.
@@ -31,6 +33,8 @@ SpringApplication.run(App.class, args);
 핵심 결론은 간단하다.
 
 > Spring Boot는 새 컨테이너를 만든다기보다, 기존 Spring 컨테이너 위에 조립 순서와 기본값을 얹는다.
+
+---
 
 ## `SpringApplication`은 컨텍스트가 생기기 전부터 움직인다
 
@@ -59,6 +63,8 @@ flowchart TD
 
 이 구조를 보면 왜 일부 리스너는 `@Component`로 등록하면 너무 늦는지도 이해된다. 컨텍스트가 아직 없으면, 그 컨텍스트가 만들어 줄 Bean 리스너도 아직 없다. 그래서 초기 이벤트를 받을 방법이 없다. 같은 문서도 일부 이벤트는 `ApplicationContext`가 만들어지기 전에 발행되므로 그 이벤트의 리스너는 `@Bean`으로 등록할 수 없다고 적는다.
 
+---
+
 ## Boot의 첫 번째 핵심은 `SpringApplication`
 
 `SpringApplication.run()`이 하는 일을 줄이면 이렇다.
@@ -72,6 +78,8 @@ flowchart TD
 7. started / ready 이벤트 발행
 
 즉 Boot는 컨테이너를 대체하지 않는다. 오히려 컨테이너가 만들어지기 전과 후를 감싸는 상위 조율 계층에 가깝다.
+
+---
 
 ## 두 번째 핵심은 자동 설정 후보 탐색이다
 
@@ -92,6 +100,8 @@ META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
 - starter 모듈
 
 전부 core가 세부 구현을 아는 대신, 모듈이 스스로 자신을 등록하는 구조다.
+
+---
 
 ## 세 번째 핵심은 `DeferredImportSelector`다
 
@@ -118,6 +128,8 @@ flowchart LR
 
 즉 Boot 자동 설정은 단순 "나중에 추가 등록"이 아니라, 타이밍을 의도적으로 늦춘 import다.
 
+---
+
 ## 조건부 설정은 결국 `Condition` 인터페이스 하나로 수렴한다
 
 `@ConditionalOnClass`, `@ConditionalOnBean`, `@ConditionalOnProperty`는 서로 완전히 다른 기능처럼 보이지만, 내부에서는 전부 `Condition` 평가로 수렴한다.
@@ -132,6 +144,8 @@ flowchart LR
 
 이 통일성이 중요하다. Boot는 새로운 자동 설정 유형이 필요할 때마다 엔진을 새로 만들지 않는다. 그저 `Condition` 구현체를 더한다.
 
+---
+
 ## `@ConditionalOnClass`는 클래스를 함부로 초기화하지 않는다
 
 19주차 실험에서 특히 의미 있었던 포인트다. 클래스 존재 여부를 확인한다고 해서 그 클래스를 바로 초기화해 버리면 부작용이 커진다. Boot 문서는 애노테이션 메타데이터를 ASM(바이트코드를 직접 읽는 라이브러리)으로 파싱하기 때문에, 실행 중 클래스패스에 없는 클래스도 `value` 속성에 실제 클래스로 적을 수 있다고 설명한다. 클래스를 로딩하지 않고 클래스 파일만 읽는다는 뜻이다.
@@ -144,6 +158,8 @@ flowchart LR
 
 이건 7주차 컴포넌트 스캔에서 봤던 "Spring은 필요 이상으로 클래스를 건드리지 않는다"는 감각과 이어진다. 클래스 로딩과 초기화가 기동 시간에 주는 비용은 [클래스 로딩과 기동 시간](/posts/class-loading-and-startup/)에서 다뤘다.
 
+---
+
 ## `@ConditionalOnProperty`의 `matchIfMissing`은 기본값 정책을 만든다
 
 실험에서 확인한 또 다른 포인트는 프로퍼티 조건이다.
@@ -155,6 +171,8 @@ flowchart LR
 
 즉 Boot의 자동 설정은 기술 메커니즘과 함께 사용자가 아무것도 설정하지 않았을 때의 기본값 정책까지 정한다.
 
+---
+
 ## 웹 서버 시작도 결국 기존 lifecycle 위에 올라탄다
 
 17주차 후반 실험에서 확인한 흥미로운 사실도 있다. 내장 웹 서버는 컨텍스트가 어느 정도 끝난 뒤에 뜬다. 더 정확히는:
@@ -165,6 +183,8 @@ flowchart LR
 즉 Boot가 특별한 별도 서버 기동 엔진을 만드는 게 아니라, Spring의 기존 lifecycle 메커니즘 위에 서버 시작을 자연스럽게 얹는다.
 
 Boot는 새 원리를 만들기보다 기존 Spring 확장점을 조합한다.
+
+---
 
 ## 왜 Boot가 얇다고 말할 수 있는가
 
@@ -183,6 +203,8 @@ Boot가 더하는 것은 주로 다음이다.
 - 조건부 등록
 
 즉 Boot는 Framework를 대체하지 않는다. Framework를 조립하고 기본값으로 채워 주는 얇은 레이어라고 보는 편이 정확하다.
+
+---
 
 ## 정리
 

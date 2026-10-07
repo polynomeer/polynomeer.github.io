@@ -7,6 +7,8 @@ tags: [Spring, Spring Security, Authentication, Authorization, Filter, JWT]
 
 Spring Security 설정이 안 먹을 때 디버깅이 어려운 이유는, 무엇이 어떤 순서로 도는지 안 보이기 때문이다. `@PreAuthorize`를 붙였는데 통과하거나, `permitAll()`을 줬는데 401이 나거나, CORS 프리플라이트가 막힌다. 셋 다 체인의 어디에서 처리되는가를 알면 설명된다.
 
+---
+
 ## 구조: 서블릿 필터 하나가 스프링 빈들을 호출한다
 
 Spring Security는 서블릿 컨테이너에 필터 하나만 등록한다. `DelegatingFilterProxy`다. 이것이 스프링 컨텍스트의 `FilterChainProxy`를 부르고, 그 안에 여러 개의 `SecurityFilterChain`이 있다.
@@ -23,6 +25,8 @@ Spring Security는 서블릿 컨테이너에 필터 하나만 등록한다. `Del
 **첫 번째로 매칭되는 체인 하나만 실행된다**([Spring Security: Architecture](https://docs.spring.io/spring-security/reference/servlet/architecture.html)). 여러 체인을 정의했는데 뒤의 설정이 안 먹는다면 앞 체인이 먼저 잡은 것이고, `@Order`로 순서를 정해야 한다.
 
 그래서 인증과 인가의 대부분은 DispatcherServlet에 닿기 전에 끝난다. 컨트롤러가 호출됐다면 이미 체인을 통과한 것이다.
+
+---
 
 ## 체인 안의 순서
 
@@ -44,6 +48,8 @@ Spring Security는 서블릿 컨테이너에 필터 하나만 등록한다. `Del
 
 `ExceptionTranslationFilter`가 그 앞이다. 이 필터는 나머지 체인을 호출한 뒤 거기서 올라온 인증·인가 예외를 401이나 403으로 바꾼다([Spring Security: Handling Security Exceptions](https://docs.spring.io/spring-security/reference/servlet/architecture.html)). 그래서 이 필터보다 앞에서 난 예외는 변환되지 않고 그대로 올라간다. 커스텀 필터에서 던진 예외가 500으로 나오는 이유가 대개 이것이다.
 
+---
+
 ## URL 기반 인가와 메서드 기반 인가
 
 둘은 **다른 층에서 판정된다.**
@@ -53,6 +59,8 @@ URL 기반(`authorizeHttpRequests`)은 `AuthorizationFilter`에서, 컨트롤러
 메서드 기반(`@PreAuthorize`, `@PostAuthorize`)은 AOP 프록시로 동작한다. 서비스 메서드를 감싸는 프록시가 판정한다([Spring Security: Method Security](https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html)). 그래서 [프록시의 한계](/posts/proxy-limits/)가 그대로 적용된다. 같은 클래스 안에서 부르면(self-invocation) `@PreAuthorize`가 무시되고, 호출은 조용히 통과한다.
 
 `@EnableMethodSecurity`를 켜지 않으면 애노테이션 자체가 동작하지 않는다는 것도 흔한 함정이다.
+
+---
 
 ## 자주 만나는 증상과 원인
 
@@ -66,11 +74,15 @@ POST만 403. CSRF다. 세션 쿠키 기반이면 토큰을 보내야 하고, `Au
 
 정적 리소스가 느림. 모든 요청이 체인을 지나지만, 공식 문서는 정적 경로를 체인에서 제외(`ignoring`)하기보다 `permitAll`을 권한다. 제외하면 보안 헤더를 쓸 수 없기 때문이다. Spring Security 6부터는 인가 규칙이 요구할 때만 세션을 조회한다([Spring Security: Favor permitAll over ignoring](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html#favor-permitall)).
 
+---
+
 ## 디버깅 순서
 
 1. `logging.level.org.springframework.security=DEBUG`를 켠다. 어떤 체인이 선택됐고 어떤 필터가 돌았는지 나온다.
 2. 실패 지점이 인증인지 인가인지 가른다. 401은 "누구인지 모름"(유효한 인증 정보가 없음), 403은 "누구인지는 알지만 권한 없음"(요청을 이해했지만 수행을 거부함)이다([RFC 9110 §15.5.2, §15.5.4](https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.2)). 이 구분이 원인의 절반을 좁힌다.
 3. `SecurityContextHolder.getContext().getAuthentication()`이 컨트롤러 진입 시점에 무엇인지 확인한다.
+
+---
 
 ## 이 설명이 깨지는 곳
 
@@ -78,6 +90,8 @@ POST만 403. CSRF다. 세션 쿠키 기반이면 토큰을 보내야 하고, `Au
 - `SecurityContextHolder`는 기본적으로 `ThreadLocal`(스레드마다 따로 보관하는 변수)에 인증 정보를 둔다([Spring Security: Servlet Authentication Architecture](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html)). 그래서 비동기로 스레드를 바꾸면 인증 정보가 따라가지 않는다. `DelegatingSecurityContextExecutor` 같은 장치가 필요하고, [가상 스레드](/posts/virtual-threads-internals/)에서도 전파 방식을 확인해야 한다.
 - 필터 순서를 직접 바꾸면 보호가 사라질 수 있다. `addFilterBefore`로 끼울 때 어떤 필터 앞인지가 의미를 바꾼다.
 - 인가 규칙의 순서가 중요하다. `AuthorizationFilter`는 규칙을 선언 순서대로 보고 첫 매칭만 적용한다([Spring Security: Authorize HttpServletRequests](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html)). 그래서 넓은 패턴을 위에 두면 아래 규칙이 죽는다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -87,9 +101,13 @@ POST만 403. CSRF다. 세션 쿠키 기반이면 토큰을 보내야 하고, `Au
 2. 정적 리소스를 체인에 두었을 때와 제외했을 때의 지연 차이.
 3. 인증 경로의 비용. 비밀번호 해시는 의도적으로 느린 CPU 작업이므로([비밀번호 저장](/posts/password-storage/)), 로그인 폭주가 다른 API를 느리게 만드는지 확인할 가치가 있다. [Tomcat 스레드 고갈](/posts/tomcat-thread-exhaustion/)과 같은 구조의 질문이다.
 
+---
+
 ## 실무와의 접점
 
 [인증](/posts/authentication/)과 [인가](/posts/authorization/) 정리에서 개념을 다뤘는데, 설정이 안 먹을 때 필요한 것은 개념이 아니라 실행 순서였다. 프레임워크를 쓸 때 막히는 지점은 대개 "무엇을 하는가"가 아니라 "언제 하는가"이고, Spring Security는 그 순서가 코드에 드러나지 않아 특히 그렇다. DEBUG 로그를 켜는 것이 문서를 읽는 것보다 빠른 경우가 많다.
+
+---
 
 ## 정리
 

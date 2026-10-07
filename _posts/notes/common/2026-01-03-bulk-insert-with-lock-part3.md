@@ -28,6 +28,8 @@ series_description: "지분율 데이터의 대량 삭제를 2시간에서 5분�
 - 입력: 운영자가 올리는 지분율 엑셀 파일
 - 증상: 대량 업로드 한 번의 등록에 40분 이상
 
+---
+
 ## 등록이 40분 이상 걸리던 구조
 
 기존 등록은 엑셀 데이터를 읽어서 DB에 저장하기까지를 단일 스레드에서 순서대로 처리했다.
@@ -49,6 +51,8 @@ flowchart TD
 
 40분은 단순히 기다리는 시간이 아니었다.
 등록이 끝나야 그 월의 지분율이 정산에 쓰일 수 있으므로, 등록 시간은 곧 정산 일정의 여유를 줄이는 시간이었다.
+
+---
 
 ## 단계를 나누고 삽입을 청크로 묶었다
 
@@ -95,6 +99,8 @@ flowchart TD
 ThreadPool의 스레드 수와 청크 크기는 이 글에 적지 않는다.
 당시 값을 정확히 기록해 두지 않았고, 근거 없이 숫자를 채우지 않기로 했다.
 아래 코드와 측정에 나오는 수치는 모두 재현 랩에서 새로 정한 값이다.
+
+---
 
 ## 랩 코드로 본 구현
 
@@ -154,6 +160,8 @@ permit 수를 동시 진행 청크의 상한으로 두면, 제출하는 루프�
 `Executors.newFixedThreadPool`은 문서상 "a shared unbounded queue"(크기 제한이 없는 공유 큐)에서 작업을 꺼내 쓰고, 스레드가 모두 바쁘면 새 작업은 그 큐에서 기다린다([Executors Javadoc](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Executors.html#newFixedThreadPool(int))).
 그래서 permit 상한이 없으면 큐에 쌓이는 청크 수에도 상한이 없다.
 
+---
+
 ## 랩에서 다시 재 본 효과
 
 랩에서 같은 메커니즘이 실제로 시간을 줄이는지 확인했다([RegistrationPipelineBenchmarkTest](https://github.com/polynomeer/engineering-lab/blob/d52297d0ad07c3d8a05a7471192a5655cb8b1378/career-lab/equity-system/src/test/java/com/portfolio/equitylab/registration/RegistrationPipelineBenchmarkTest.java)).
@@ -176,6 +184,8 @@ permit 수를 동시 진행 청크의 상한으로 두면, 제출하는 루프�
 실제 검증에는 CPU를 쓰는 부분과 DB를 기다리는 부분이 섞여 있었고, 운영에서 줄어든 비율은 40분에서 12분으로 약 3.3배였다.
 랩이 보여주는 것은 대기 시간이 긴 작업을 나눠 병렬로 돌리면 대기가 겹쳐 전체 시간이 줄어든다는 메커니즘까지다.
 
+---
+
 ## 결과
 
 운영에서의 변화는 다음과 같았다.
@@ -185,6 +195,8 @@ permit 수를 동시 진행 청크의 상한으로 두면, 제출하는 루프�
 - DB 부하: Backpressure로 동시 쓰기를 제한해, 고부하 상황에서도 DB 과부하를 막았다
 
 단계 분리, 청크 단위 삽입, 병렬 처리, Backpressure를 함께 적용했기 때문에 12분을 어느 하나의 효과로 나눌 수는 없다.
+
+---
 
 ## 남은 것과 대가
 
@@ -204,6 +216,8 @@ permit 수를 동시 진행 청크의 상한으로 두면, 제출하는 루프�
 마지막으로 등록이 빨라졌다고 해서 삭제와 등록의 순서 문제가 사라지지는 않았다.
 삭제와 등록은 여전히 같은 월의 데이터를 두고 순서를 지켜야 했고, 그 순서는 Redis 분산 락이 지키고 있었다.
 그 락이 어떤 구조였고 왜 순서를 보장하지 못할 수 있었는지가 다음 편의 주제다.
+
+---
 
 ## 다음 편
 

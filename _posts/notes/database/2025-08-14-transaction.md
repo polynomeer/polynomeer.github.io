@@ -11,6 +11,8 @@ tags: [Database, Transaction]
 
 실무에서 트랜잭션은 단순히 `BEGIN`, `COMMIT` 문법이 아니라 "어디까지를 하나의 일관된 작업으로 볼 것인가"를 정하는 설계 도구다.
 
+---
+
 ## 왜 필요한가
 
 - 중간 실패 시 데이터가 반쯤 반영되면 안 된다.
@@ -18,6 +20,8 @@ tags: [Database, Transaction]
 - 장애 후에도 커밋된 결과는 남아 있어야 한다.
 
 즉, 트랜잭션은 정합성, 동시성, 복구 문제를 함께 다루는 개념이다.
+
+---
 
 ## 기본 흐름
 
@@ -29,9 +33,13 @@ tags: [Database, Transaction]
 
 이 단순한 흐름 뒤에 실제로는 [MVCC](/posts/mvcc/), [undo log, redo log](/posts/redo-undo-log/), lock manager 같은 메커니즘이 붙어 있다.
 
+---
+
 ## autocommit을 주의해야 한다
 
 MySQL은 새 커넥션의 세션을 autocommit이 켜진 상태로 시작하고, 이때 SQL 한 문장이 하나의 트랜잭션이 되어 오류가 없으면 바로 커밋된다. [MySQL: autocommit, Commit, and Rollback](https://dev.mysql.com/doc/refman/8.0/en/innodb-autocommit-commit-rollback.html) 그래서 애플리케이션에서 "여러 문장이 하나의 작업"이라면 `START TRANSACTION`처럼 명시적 트랜잭션 경계를 반드시 잡아야 한다.
+
+---
 
 ## 트랜잭션에서 자주 발생하는 문제
 
@@ -42,6 +50,8 @@ MySQL은 새 커넥션의 세션을 autocommit이 켜진 상태로 시작하고,
 
 이 문제들은 [격리 수준](/posts/isolation-levels-and-anomalies/)과 [락 전략](/posts/lock-types-and-waits/) 선택으로 이어진다.
 
+---
+
 ## 좋은 트랜잭션의 조건
 
 - 짧다
@@ -51,12 +61,16 @@ MySQL은 새 커넥션의 세션을 autocommit이 켜진 상태로 시작하고,
 
 트랜잭션 안에서 네트워크 호출을 오래 잡고 있으면 락 대기와 데드락 가능성이 크게 올라간다. 네트워크 호출과 DB 트랜잭션을 분리한 사례는 [Airbnb 결제 시스템 리뷰](/posts/airbnb-orpheus-idempotency/)에서 다뤘다.
 
+---
+
 ## 실무 체크포인트
 
 - 이 작업이 정말 하나의 트랜잭션이어야 하는가
 - 실패 시 어디까지 롤백해야 하는가
 - 어떤 읽기/쓰기 경쟁이 존재하는가
 - 락이 걸리는 범위를 예측할 수 있는가
+
+---
 
 ## 정리
 

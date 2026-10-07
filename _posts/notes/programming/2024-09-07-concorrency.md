@@ -7,6 +7,8 @@ tags: [Java, Concurrency]
 
 여러 스레드가 같은 객체의 필드를 함께 읽고 쓰면, 각 스레드가 따로 실행될 때는 생기지 않던 오류가 생긴다. Java 튜토리얼은 이 오류를 두 가지로 나눈다. 여러 스레드가 공유 데이터에 접근하면서 연산이 섞이는 스레드 간섭(thread interference)과, 스레드마다 공유 메모리를 서로 다르게 보는 메모리 일관성 오류(memory consistency error)다 ([Oracle](https://docs.oracle.com/javase/tutorial/essential/concurrency/sync.html)).
 
+---
+
 ## 스레드 간섭이 생기는 이유
 
 `c++`는 한 줄이지만 한 번에 끝나는 연산이 아니다. 현재 값을 읽고, 1을 더하고, 결과를 다시 쓰는 세 단계로 나뉜다 ([Oracle](https://docs.oracle.com/javase/tutorial/essential/concurrency/interfere.html)).
@@ -31,6 +33,8 @@ class Counter {
 6. B가 -1을 쓴다.
 
 A의 결과는 B의 쓰기에 덮여 사라진다. 실행할 때마다 순서가 달라지므로 재현이 어렵다.
+
+---
 
 ## 동시성을 제어하는 방법
 
@@ -69,6 +73,8 @@ class AtomicCounter {
 ```
 
 이 외에도 `ConcurrentHashMap` 같은 동시성 컬렉션을 쓰거나, 상태가 바뀌지 않는 불변 객체로 설계해 공유 상태 자체를 없애는 방법이 있다.
+
+---
 
 ## 주의할 점
 

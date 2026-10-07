@@ -7,6 +7,8 @@ tags: [Java, JDBC, PreparedStatement, SQL]
 
 JDBC를 처음 다룰 때 `Statement`와 `PreparedStatement`는 둘 다 SQL을 실행하는 도구처럼 보인다. 하지만 실제로는 사용 목적과 안전성, 성능 특성이 꽤 다르다. 실무에서는 특별한 이유가 없다면 대부분 `PreparedStatement`를 기본값으로 보는 편이 맞다.
 
+---
+
 ## 가장 큰 차이: SQL을 어떻게 전달하느냐
 
 `Statement`는 보통 완성된 SQL 문자열을 그대로 전달한다.
@@ -27,6 +29,8 @@ ResultSet rs = ps.executeQuery();
 ```
 
 이 차이가 보안성과 재사용성, 가독성까지 모두 바꾼다.
+
+---
 
 ## 왜 `PreparedStatement`가 더 안전한가
 
@@ -50,6 +54,8 @@ ResultSet rs = ps.executeQuery();
 
 공격자가 SQL 명령을 끼워 넣어도 쿼리의 의도는 바뀌지 않는다는 뜻이다. 사용자 입력이 포함되는 SQL이라면 사실상 기본 선택지라고 봐야 한다.
 
+---
+
 ## 성능에서도 차이가 날 수 있다
 
 `PreparedStatement`는 "미리 컴파일된 SQL"로 설명되곤 하고, Javadoc도 "precompiled SQL statement"를 여러 번 효율적으로 실행하는 객체라고 적는다([PreparedStatement Javadoc](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html)). 다만 실제로 언제 어디서 준비되는지는 DB와 드라이버에 따라 다르다. 일반적으로는 다음 이점이 있다.
@@ -59,6 +65,8 @@ ResultSet rs = ps.executeQuery();
 - DB가 [실행 계획](/posts/reading-execution-plans/)을 재활용하기 더 유리한 경우가 있다
 
 특히 같은 형태의 쿼리를 여러 번 수행하는 배치나 반복 조회에서는 `PreparedStatement`가 더 자연스럽다. 반대로 바인딩 값의 타입이 들쭉날쭉하면 같은 SQL이 DB에서 다른 쿼리로 취급될 수 있다. Oracle에서 그 일이 벌어진 사례는 [네이버 D2 child cursor 리뷰](/posts/naver-oracle-child-cursor-explosion/)에서 다룬다.
+
+---
 
 ## 가독성과 유지보수 관점에서도 유리하다
 
@@ -75,6 +83,8 @@ String sql = "SELECT * FROM orders WHERE status = '" + status + "' AND created_a
 - 조건이 늘수록 읽기 어려워진다
 
 반면 `PreparedStatement`는 SQL 구조와 입력값 바인딩이 분리되어 있어 의도가 더 분명하다.
+
+---
 
 ## 언제 `Statement`를 쓰나
 
@@ -95,6 +105,8 @@ stmt.execute("CREATE TABLE sample (id BIGINT)");
 
 하지만 일반적인 CRUD나 검색 쿼리에서는 `PreparedStatement`가 더 안전하고 일관된 선택이다.
 
+---
+
 ## 배치 처리에서도 `PreparedStatement`가 자연스럽다
 
 여러 값을 반복해서 넣는 경우에는 `PreparedStatement`와 배치 실행이 잘 맞는다.
@@ -114,6 +126,8 @@ ps.executeBatch();
 
 이 패턴은 문자열을 매번 새로 조립하는 것보다 훨씬 안정적이고, JDBC 코드도 일관되게 유지된다.
 
+---
+
 ## 실무에서 자주 하는 실수
 
 ### `PreparedStatement`를 쓰지만 SQL은 여전히 문자열로 조립하는 경우
@@ -123,6 +137,8 @@ ps.executeBatch();
 ### 동적 컬럼명이나 정렬 조건을 그대로 받는 경우
 
 파라미터 바인딩은 값에만 적용된다. 컬럼명, 테이블명, 정렬 방향 같은 식별자는 `?`로 바인딩할 수 없다. 이런 값은 화이트리스트 기반으로 직접 제한해야 한다. OWASP 가이드도 바인딩할 수 없는 자리에는 입력 검증이나 쿼리 재설계를 방어책으로 권하고, 테이블·컬럼 이름은 사용자 파라미터가 아니라 코드에서 오는 것이 이상적이라고 적는다.
+
+---
 
 ## 정리
 

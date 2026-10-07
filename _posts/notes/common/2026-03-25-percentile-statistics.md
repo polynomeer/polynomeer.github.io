@@ -7,6 +7,8 @@ tags: [Observability, Metrics, Latency, Percentile, Prometheus, Performance, Loa
 
 지연 시간의 평균이 20ms인데 사용자는 느리다고 한다. p99(요청을 빠른 순으로 줄 세웠을 때 99% 지점의 값)를 보니 3초다. 여기까지는 널리 알려진 이야기인데, 그 다음 질문들이 남는다. 여러 서버의 p99를 평균 내도 되는가. 대시보드의 p99는 실제 p99인가. 부하 도구가 보여주는 p99는 믿을 수 있는가. 셋 다 답이 "아니다"에 가깝다.
 
+---
+
 ## 평균이 숨기는 것
 
 지연 분포는 정규분포가 아니다. 대부분 빠르고 꼬리가 길다. [GC 정지](/posts/why-a-process-pauses/), 캐시 미스, 재시도, 락 대기가 전부 오른쪽 꼬리에 모인다.
@@ -14,6 +16,8 @@ tags: [Observability, Metrics, Latency, Percentile, Prometheus, Performance, Loa
 요청 100건 중 99건이 10ms, 1건이 2,000ms면 평균은 30ms다. 평균만 보면 건강한 서버다. 그런데 한 페이지가 백엔드 요청 10개를 부르면, 그 페이지가 2초짜리를 하나라도 만날 확률은 1 - 0.99^10 ≈ 10%다. p99가 사용자의 p90이 된다. 요청 수가 많은 화면일수록 꼬리가 사용자에게 더 자주 보인다.
 
 그래서 SLO(Service Level Objective, 서비스 수준 목표)는 평균이 아니라 백분위로 쓴다. "p99 < 300ms"는 검증 가능한 문장이고 "평균 50ms"는 그렇지 않다.
+
+---
 
 ## 백분위는 평균 낼 수 없다
 
@@ -38,6 +42,8 @@ Prometheus에 두 종류의 지연 지표가 있는 것도 이 때문이다.
 
 여러 인스턴스를 합쳐 봐야 한다면 Histogram이어야 한다. Summary의 분위수는 그 인스턴스 안에서만 의미가 있다.
 
+---
+
 ## 히스토그램의 백분위는 추정값이다
 
 Histogram은 버킷별 개수만 안다. `histogram_quantile`은 해당 버킷 안에서 값이 고르게 분포한다고 가정하고 선형 보간한다([Prometheus: histogram_quantile](https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile)). 그래서 실제 분포가 버킷 안에서 한쪽에 몰려 있으면 그만큼 틀린다.
@@ -49,6 +55,8 @@ Histogram은 버킷별 개수만 안다. `histogram_quantile`은 해당 버킷 �
 
 대응은 자기 서비스의 SLO 근처에 버킷을 촘촘히 두는 것이다. SLO가 300ms면 그 주변에 경계를 여럿 둔다. (Prometheus의 native histogram은 이 문제를 줄이지만 아직 전환 중인 기능이다.)
 
+---
+
 ## 부하 도구의 p99: coordinated omission
 
 부하 테스트의 p99는 더 조심해야 한다. closed model(가상 사용자 고정)에서는 서버가 느려지면 각 VU(virtual user, 가상 사용자)가 응답을 기다리느라 다음 요청을 늦게 보낸다. 그래서 부하가 저절로 줄어들고, 느려진 구간의 샘플이 적게 수집된다. 그 결과 꼬리가 실제보다 짧게 나온다. k6 문서는 이 현상을 coordinated omission이라는 이름으로 소개한다([k6: Open and closed models](https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/)).
@@ -57,12 +65,16 @@ open model(도착률 고정)은 응답이 오든 말든 같은 속도로 보낸�
 
 [spring-ops-lab의 S1](/posts/tomcat-thread-exhaustion/)에서 이 함정을 실제로 만났다. 첫 실행에서 k6가 VU를 미리 할당하지 않아 요청 1,889건을 버렸고(`dropped_iterations`), 그 순간 open model이 조용히 closed model이 됐다. 서버가 받지도 않은 요청이 통계에서 사라지므로 꼬리가 짧게 나온다. 그래서 `dropped_iterations: 0`을 임계값으로 걸고, 그 조건을 못 지킨 실행은 폐기하기로 했다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - 표본이 적으면 p99는 흔들린다. 초당 10건이면 1분에 600건이고 p99는 상위 6건이 정한다. 짧은 창의 p99는 노이즈다.
 - p99.9와 max는 또 다른 이야기다. 배포, 스케일 아웃, GC 같은 드문 사건이 거기에 있고, 그것들은 SLO보다 사후 분석의 대상이다.
 - 집계 창의 길이가 값을 바꾼다. 1분 p99와 1시간 p99는 다른 질문의 답이다.
 - 서버 측 지연은 [큐잉](/posts/queueing-theory-for-servers/) 시간을 포함하지 않을 수 있다. 애플리케이션이 재는 것은 스레드를 받은 뒤부터다. 사용자가 겪는 시간은 그보다 길다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -72,9 +84,13 @@ open model(도착률 고정)은 응답이 오든 말든 같은 속도로 보낸�
 
 1번이 [spring-ops-lab](https://github.com/polynomeer/spring-ops-lab)의 S3 시나리오다.
 
+---
+
 ## 실무와의 접점
 
 [Datadog로 병목을 추적](/posts/batch-heap-dump-to-chunk/)할 때 대시보드의 지연 그래프를 근거로 삼았다. 그 값이 Summary였는지 Histogram이었는지, 여러 인스턴스를 어떻게 합쳤는지는 확인하지 않았다. 지금이라면 지표를 근거로 쓰기 전에 그 지표가 어떻게 계산됐는지를 먼저 확인할 것이다. 계산 방법이 틀린 p99도 그래프에서는 정상적인 숫자로 보이기 때문이다.
+
+---
 
 ## 정리
 

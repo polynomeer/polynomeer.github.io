@@ -12,6 +12,8 @@ ParityPay 저장소의 첫 커밋은 2026-09-07이다. 이 글은 그날의 커�
 
 근거는 두 갈래다. 아키텍처·원장·이벤트 전달의 결정은 첫 설계 커밋([`cfcaa3d`](https://github.com/polynomeer/parity-pay/tree/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs))에 ADR(Architecture Decision Record, 결정의 맥락·대안·결과를 남기는 짧은 문서)로 대안과 함께 적혀 있다. 반면 Java·Spring Boot·Redpanda·Testcontainers 같은 스택은 설계서의 표에 "목적" 한 줄만 있었다. 그래서 이 글을 쓰면서 첫 커밋과 기존 문서를 근거로 스택 선택 이유를 재구성해 [ADR-015](https://github.com/polynomeer/parity-pay/blob/c8f7dceadbb2919900044d864bef9c2b6b801123/docs/adr/015-initial-technology-stack.md)로 저장소에 남겼다. 아래에서 그 ADR을 인용할 때는 재구성이라는 점을 밝혀 둔다.
 
+---
+
 ## 무엇을 풀려고 했는가
 
 ParityPay는 가상의 커머스 플랫폼에 내장되는 페이머니 결제 서비스다. 사용자는 Mock Bank 계좌에서 페이머니를 충전하고, 그 잔액으로 결제하고, 취소한다. 구매확정 뒤에는 판매자에게 정산되고, 운영자는 내부 원장과 외부기관 기록이 어긋나는지 대사(reconciliation, 두 기록을 맞춰 보는 작업)한다.
@@ -25,6 +27,8 @@ ParityPay는 가상의 커머스 플랫폼에 내장되는 페이머니 결제 �
 - 통화는 KRW 하나이고 금액은 원 단위 정수(`long`, `BIGINT`)다. `float`·`double`은 쓰지 않는다.
 - 실행 환경은 한 대의 개발 기계 위 Docker Compose다. 실제 트래픽은 없고, 성능 수치는 측정하기 전까지 `TBD`로 둔다.
 - 기획서의 원칙 6은 "분산 기술은 해결할 문제가 명확할 때 단계적으로 도입"이다.
+
+---
 
 ## 초기 아키텍처
 
@@ -82,6 +86,8 @@ sequenceDiagram
 
 타임아웃을 실패로 확정하지 않고 `UNKNOWN`으로 두는 이유와 복구 규칙은 이후 [3편](/posts/parity-pay-unknown-state/)에서 다룬다. 페이머니 결제는 외부 호출이 없어서 멱등 키 선점, 잔액 차감, 원장 전기, 결제 기록이 한 번의 로컬 트랜잭션으로 끝난다.
 
+---
+
 ## 아키텍처 형태: 모듈러 모놀리스
 
 이 결정은 [ADR-001](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/001-modular-monolith.md)에 대안과 함께 있다. 결제·지갑·원장은 강한 로컬 트랜잭션으로 보호할 가치가 크고, 개인 프로젝트에서 독립 서비스를 운영하는 비용은 높다. 그러면서도 도메인 경계와 이후 분리 가능성은 보여 줘야 했다.
@@ -93,6 +99,8 @@ sequenceDiagram
 | 모듈러 모놀리스 (선택) | 한 배포 단위 안에 도메인 모듈을 나누고, 모듈 간에는 공개 포트와 이벤트만 쓴다 |
 
 경계는 약속이 아니라 테스트로 강제했다. 첫날 커밋에 ArchUnit 규칙이 들어갔고, 도메인 계층이 Spring·JPA에 의존하지 않는지, `ledger`가 업무 모듈을 참조하지 않는지를 빌드에서 검사한다. 이 방식의 일반론은 [모듈러 모놀리스 글](/posts/modular-monolith-boundaries/)에 정리했다. 대가는 ADR이 적은 대로 독립 확장과 장애 격리가 제한된다는 점이다. 설계서 §14는 분리 조건(DB 경합이 측정 가능한 병목이 되는 경우 등)을 적어 두고 "측정 없이 분리하지 않는다"고 못 박았다.
+
+---
 
 ## 시스템 오브 레코드: PostgreSQL
 
@@ -110,6 +118,8 @@ sequenceDiagram
 동시성 제어도 같은 방향이다. [ADR-004](https://github.com/polynomeer/parity-pay/blob/cfcaa3de107bd3d7bb3938ca92f8f3fbfbfc4fc1/docs/adr/004-atomic-balance-update.md)는 잔액 차감을 `WHERE available_amount >= :amount AND version = :expectedVersion`을 담은 단일 UPDATE로 정했다. 대안이었던 `SELECT FOR UPDATE`는 락 대기와 트랜잭션 길이가 늘 수 있고, 분산락은 DB 갱신과의 원자성이 자동으로 보장되지 않으며 실패 모드가 하나 더 생긴다는 이유로 뺐다. 분산락이 실제로 어떻게 깨지는지는 이후 [10편](/posts/parity-pay-lock-lease/)에서 직접 만들어 쟀다.
 
 치르는 비용은 단일 DB의 경합과 수직 확장 한계다. ADR-002는 이것을 성능 테스트로 측정하겠다고 적었고, 첫날에는 아직 측정 전이었다.
+
+---
 
 ## 언어와 프레임워크: Java 21과 Spring Boot 3.5
 
@@ -129,6 +139,8 @@ Kotlin과 다른 런타임을 왜 뺐는지는 저장소에 기록이 없다. AD
 
 첫날 설정에는 `spring.threads.virtual.enabled: true`로 [가상 스레드](/posts/virtual-threads-internals/)가 켜져 있다. 이 선택의 근거는 첫날 문서에 없고, 느린 외부기관 앞에서의 동작은 나중에 [9편](/posts/parity-pay-external-isolation/)에서 처음 측정했다.
 
+---
+
 ## 영속성과 스키마: JPA와 SQL을 나눠 쓰고 Flyway로 관리하기
 
 잔액 차감은 조건부 단일 UPDATE여야 하고, 원장 규칙은 트리거로 DB에 있어야 하고, Outbox 선점은 `FOR UPDATE SKIP LOCKED`였다. PostgreSQL 문서는 `SKIP LOCKED`를 일반 용도에는 맞지 않지만 "can be used to avoid lock contention with multiple consumers accessing a queue-like table"(큐처럼 쓰는 테이블에 여러 소비자가 접근할 때 잠금 경합을 피하는 데 쓸 수 있다)이라고 설명한다([PostgreSQL: SELECT, The Locking Clause](https://www.postgresql.org/docs/17/sql-select.html)).
@@ -140,6 +152,8 @@ Kotlin과 다른 런타임을 왜 뺐는지는 저장소에 기록이 없다. AD
 | jOOQ | 설계서 표에 "선택적"으로 있었지만 첫날에는 쓰지 않았다. 이유는 저장소에 없다 |
 
 스키마는 Flyway만 바꾸고 Hibernate는 `ddl-auto: validate`로 검증만 한다. Flyway는 대기 중인 버전 마이그레이션을 순서대로 적용한다([Flyway: Migrations](https://documentation.red-gate.com/fd/migrations-271585107.html)). 지연 제약 트리거처럼 ORM이 만들 수 없는 객체를 SQL 파일로 버전 관리해야 했으므로 SQL 중심 도구가 맞았다. 첫날 하루 동안 `V1`부터 `V12`까지 열두 개의 마이그레이션이 쌓였다.
+
+---
 
 ## 브로커: Redpanda를 Kafka 프로토콜로 쓰기
 
@@ -162,6 +176,8 @@ DB 커밋과 브로커 발행을 묶는 방식은 [ADR-005](https://github.com/p
 
 치른 비용 하나는 로컬 환경의 한계다. Compose의 Redpanda는 단일 노드라 복제가 없으므로, `acks=all`의 내구성 의미가 여러 브로커로 이루어진 클러스터와 같지 않다.
 
+---
+
 ## 캐시: Redis는 띄우되 금융 경로에 두지 않기
 
 Compose에는 Redis 7 컨테이너가 `--appendonly no`로 떠 있지만, 첫날 애플리케이션 코드는 Redis를 쓰지 않는다. 설계서는 Redis의 용도를 속도 제한·TTL 캐시·임시 인증 데이터로 한정하고 "Redis는 잔액이나 원장의 진실을 저장하지 않습니다"라고 적었다. 로그인 실패 제한도 Redis가 아니라 PostgreSQL 테이블과 별도 트랜잭션으로 구현됐다.
@@ -172,6 +188,8 @@ Compose에는 Redis 7 컨테이너가 `--appendonly no`로 떠 있지만, 첫날
 | Redis를 잔액·멱등 키 저장소로 사용 | RDB 스냅샷만 쓰면 비정상 종료 때 최근 몇 분의 데이터를, AOF 기본 정책(`everysec`)에서도 1초 분량을 잃을 수 있다 |
 
 후자의 내구성 설명은 Redis 문서([Redis persistence](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/))에서 가져왔다. 그런데 더 근본적인 문제는 내구성이 아니라, Redis에 쓴 값이 원장과 같은 트랜잭션에 묶이지 않는다는 점이다. 멱등 키를 Redis에 두면 "키는 기록됐는데 원장은 롤백된" 상태가 생길 수 있다. 멱등 키의 저장 위치 문제는 [멱등성 설계 글](/posts/idempotency-key-design/)에서 일반론으로 다뤘다. 비용은 쓰지 않는 컨테이너가 로컬 스택에 하나 더 있다는 것뿐이다.
+
+---
 
 ## 테스트: Testcontainers와 실제 PostgreSQL
 
@@ -185,6 +203,8 @@ Compose에는 Redis 7 컨테이너가 `--appendonly no`로 떠 있지만, 첫날
 
 인메모리 DB를 뺀 이유는 저장소에 직접 적혀 있지 않다. 위 요구에서 바로 따라 나오는 결론이라 ADR-015에 재구성으로 남겼다. 여기에 jqwik(임의 입력으로 성질을 검사하는 속성 기반 테스트)과 ArchUnit(모듈 경계 검사)이 붙는데, 둘은 각각 ADR-003과 ADR-001의 Validation 항목이 요구한 도구다. 비용은 Docker 없이는 백엔드 테스트가 돌지 않는다는 점과 컨테이너 기동 시간이다.
 
+---
+
 ## 관측성: 불변조건 지표와 트레이스
 
 설계서 §12는 원장 불균형과 음수 잔액을 "한 건이라도 즉시 경보"한다고 적었다. 그러려면 불변조건 위반을 지표로 내보내야 하고, 요청과 이벤트를 잇는 트레이스(NFR-005)가 필요했다.
@@ -196,6 +216,8 @@ Compose에는 Redis 7 컨테이너가 `--appendonly no`로 떠 있지만, 첫날
 | 상용 APM | 저장소에 검토 기록이 없다 |
 
 Spring Boot Actuator는 트레이서 파사드인 Micrometer Tracing을 자동 구성하고 OpenTelemetry와 OTLP 내보내기를 지원한다([Spring Boot: Tracing](https://docs.spring.io/spring-boot/3.5/reference/actuator/tracing.html)). Jaeger all-in-one은 로컬 시험용 단일 실행 파일이며 OTLP를 4317(gRPC)과 4318(HTTP)로 받는다([Jaeger: Getting Started](https://www.jaegertracing.io/docs/1.65/getting-started/)). 그래서 컬렉터를 따로 두지 않았다. 첫날 관측성 커밋은 `paritypay.invariant.*` 지표를 평소 0인 값으로 정의했다. 임계값을 고민할 필요가 없는 지표다. 비용은 Jaeger all-in-one이 인메모리 저장소라 재시작하면 트레이스가 사라진다는 점이다.
+
+---
 
 ## 첫날 커밋이 실제로 만든 것
 
@@ -219,6 +241,8 @@ Spring Boot Actuator는 트레이서 파사드인 Micrometer Tracing을 자동 �
 멱등 키 선점 방식은 충전 커밋 메시지에 이유가 있다. "확인 후 삽입"은 동시 요청 둘이 모두 자기가 처음이라고 믿게 만들고, 제약 위반 예외를 잡는 방식은 PostgreSQL이 그 트랜잭션을 중단시키므로 기존 레코드를 같은 트랜잭션에서 다시 읽을 수 없다. 그래서 `INSERT ... ON CONFLICT DO NOTHING`을 썼다.
 
 설계서의 모듈 목록과 비교하면 빠진 것도 분명하다. `member`, `risk`, `operations` 모듈과 별도 프로세스의 정산·대사 워커, 분리된 Mock Bank·Mock PG 앱은 첫날 없었다. Mock Bank는 같은 프로세스 안의 대역이라 실제 네트워크 지연과 연결 끊김을 재현하지 못했고, 체크리스트는 이것을 Phase 1의 부채로 적어 두었다.
+
+---
 
 ## 설계가 열어 둔 질문
 

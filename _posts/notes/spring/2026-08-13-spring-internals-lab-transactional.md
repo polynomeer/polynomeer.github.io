@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## `@Transactional`은 애노테이션이 아니라 인터셉터다
 
 Spring을 오래 써도 `@Transactional`은 자꾸 마법처럼 느껴진다. 하지만 [앞선 글](/posts/spring-internals-lab-proxy-aop/)에서 프록시와 AOP 구조를 먼저 정리해 두면 이 기능도 훨씬 덜 추상적으로 보인다.
@@ -24,6 +26,8 @@ Spring을 오래 써도 `@Transactional`은 자꾸 마법처럼 느껴진다. �
 - self-invocation과 `private` 메서드에 붙은 `@Transactional`은 왜 조용히 무시되는가
 
 결론부터 말하면, `@Transactional`은 결국 **트랜잭션 인터셉터 하나**다.
+
+---
 
 ## 호출 흐름은 생각보다 작다
 
@@ -42,6 +46,8 @@ flowchart TD
 ```
 
 그림에서 갈림길은 `rollbackOn(Throwable)` 판정 하나다. 예외가 났다는 사실만으로 롤백이 결정되지 않는다.
+
+---
 
 ## checked 예외는 기본적으로 롤백되지 않는다
 
@@ -67,6 +73,8 @@ public void noRollbackOnCheckedExceptionByDefault(...) throws Exception {
 
 그래서 `@Transactional`은 "예외면 롤백"이 아니라 "특정 종류의 예외면 롤백"으로 읽어야 한다.
 
+---
+
 ## `rollbackFor`는 규칙 테이블을 바꾸는 장치다
 
 이 기본 규칙을 뒤집는 방법이 `rollbackFor`다.
@@ -79,6 +87,8 @@ public void rollbackOnCheckedExceptionWithRollbackFor(...) throws Exception { ..
 이제 checked 예외도 롤백한다.
 
 `rollbackFor`는 transaction manager의 특별 옵션이 아니라, `rollbackOn(Throwable)` 판정 테이블을 더 넓히는 선언으로 이해하면 된다.
+
+---
 
 ## `readOnly=true`는 생각보다 약한 계약이다
 
@@ -102,6 +112,8 @@ public void rollbackOnCheckedExceptionWithRollbackFor(...) throws Exception { ..
 - ORM 최적화나 flush 전략 쪽에서 더 유용하게 쓰일 수 있다
 
 그래서 `readOnly=true`를 "DB 쓰기 차단 스위치"로 보면 오해가 생긴다.
+
+---
 
 ## self-invocation이 안 되는 이유는 여기서도 같다
 
@@ -129,11 +141,15 @@ sequenceDiagram
 
 이 문제는 트랜잭션 기능의 특수성이라기보다 프록시 기반 AOP의 일반 성질이다.
 
+---
+
 ## `private` 메서드가 안 되는 이유도 동일하다
 
 `private` 메서드는 프록시가 오버라이드할 수 없으므로 가로챌 수 없다. 그래서 여기에 `@Transactional`을 붙여도 트랜잭션 경계가 만들어지지 않는다. 같은 문서는 6.0부터 클래스 기반 프록시에서 `protected`와 package-visible 메서드까지 허용한다고 적는데, `private`은 여기에 없다.
 
 "지원 안 하는 문법"이라기보다, 프록시 구현 전략상 개입 지점이 존재하지 않는 경우다.
+
+---
 
 ## 커넥션 공유는 어떻게 되는가
 
@@ -153,6 +169,8 @@ flowchart LR
 ```
 
 커넥션이 스레드에 묶여 있어서 하위 호출이 같은 트랜잭션에 참여한다. 그래서 트랜잭션은 begin/commit 로그만이 아니라 스레드 범위 자원 바인딩과 함께 봐야 한다. 여러 메서드가 이 커넥션을 공유하거나 새로 여는 규칙은 [트랜잭션 전파](/posts/transaction-propagation/)에서 다룬다.
+
+---
 
 ## mini-spring이 보여주는 핵심
 
@@ -183,6 +201,8 @@ try {
 
 `@Transactional`의 최소 구조는 이 세 가지로 이미 다 들어 있다.
 
+---
+
 ## 왜 checked 예외는 기본적으로 커밋일까
 
 이건 설계 관례의 문제다. checked 예외는 종종 "호출자가 처리 가능한 비즈니스적 예외"로 쓰이고, unchecked 예외는 시스템 오류로 쓰인다는 오래된 관례가 있다.
@@ -190,6 +210,8 @@ try {
 물론 현실의 코드베이스가 이 규칙을 항상 잘 따르진 않는다. 그래서 Spring은 기본값은 주되 `rollbackFor`로 뒤집을 수 있게 한다.
 
 Spring은 "무조건 한 가지 규칙"보다 관례 기반 기본값과 명시적 override를 함께 두는 쪽을 택했다.
+
+---
 
 ## 정리
 

@@ -7,6 +7,8 @@ tags: [API Design, Idempotency, REST, HTTP, Retry, Payment]
 
 "PUT은 멱등하고 POST는 아니다"는 자주 인용되는데, 그 문장이 실제로 무엇을 약속하는지는 덜 이야기된다. 멱등성은 구현이 알아서 주는 성질이 아니라 API가 클라이언트와 맺는 계약이고, 계약인 이상 양쪽이 할 일이 있다.
 
+---
+
 ## 명세가 정의하는 것
 
 [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2)은 두 성질을 나눈다.
@@ -19,6 +21,8 @@ tags: [API Design, Idempotency, REST, HTTP, Retry, Payment]
 첫째, 멱등은 응답이 같다는 뜻이 아니다. `DELETE`를 두 번 보내면 처음은 200, 다음은 404일 수 있다. 명세가 말하는 것은 서버 상태의 효과이지 응답 코드가 아니다. RFC 9110도 연결이 끊겨 멱등 요청을 다시 보내는 경우를 두고 "It knows that repeating the request will have the same intended effect, even if the original request succeeded, though the response might differ."라고 적는다(원래 요청이 성공했더라도 반복의 의도된 효과는 같지만, 응답은 다를 수 있다).
 
 둘째, 명세는 메서드의 의도를 정할 뿐 구현을 검사하지 않는다. `PUT /orders/1`을 구현하면서 매번 새 이력을 append하면 그 API는 멱등하지 않다. 메서드 이름이 성질을 주지 않는다.
+
+---
 
 ## POST를 멱등하게 만드는 것: 멱등 키
 
@@ -47,6 +51,8 @@ Content-Type: application/json
 - 요청 단위: 클라이언트가 UUID를 만든다. "이 버튼 누름 한 번"이 단위다. 같은 주문에 대한 서로 다른 결제를 허용한다.
 - 엔티티 단위: `payment-1234-refund`처럼 결정적으로 만든다. "결제 1234의 환불은 한 번"이 강제된다.
 
+---
+
 ## 계약의 나머지 절반은 클라이언트가 지킨다
 
 서버가 아무리 잘해도 다음이 지켜지지 않으면 멱등성은 없다.
@@ -58,6 +64,8 @@ Content-Type: application/json
 
 [Airbnb의 Orpheus 리뷰](/posts/airbnb-orpheus-idempotency/)에서 이 네 항목에 백오프·지터를 쓴 재시도 전략을 더한 다섯 항목이 2019년에 한 목록으로 정리돼 있는 것을 봤다. 서버 설계와 같은 무게로 클라이언트 책임을 적은 것이 그 글의 강점이었다.
 
+---
+
 ## 키는 얼마나 오래 보관하는가
 
 저장한 결과는 무한히 둘 수 없다. 보존 기간이 계약의 일부다.
@@ -67,12 +75,16 @@ Content-Type: application/json
 
 기준은 "클라이언트의 최대 재시도 창"이다. 재시도 정책이 최대 24시간이면 보존은 그보다 길어야 한다. 이 둘이 문서에서 연결돼 있지 않은 API가 많다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - 멱등성은 외부 부작용까지 막지 않는다. RFC 9110도 멱등성은 사용자가 요청한 것에만 적용되고, 서버는 요청마다 로그를 남기거나 다른 비멱등 부작용을 둘 수 있다고 적는다. 저장은 한 번이어도 메일이 두 번 나갈 수 있다. 부작용마다 별도의 멱등 처리가 필요하다.
 - 읽기 전용이 곧 안전은 아니다. `GET /export?token=...`이 서버에서 파일을 만들고 과금한다면 그것은 안전하지 않다.
 - 타임아웃은 실패가 아니다. 멱등 키가 있어도 클라이언트가 "실패했으니 새 키로 다시"를 하면 무용지물이다. 타임아웃 뒤에는 재전송이 아니라 조회가 먼저다(이후 [ParityPay 3편](/posts/parity-pay-unknown-state/)에서 다뤘다).
 - `Idempotency-Key`는 아직 표준이 아니다. IETF 드래프트(07판, 2025-10-15)이고 datatracker에는 만료된 Internet-Draft로 표시된다. 벤더마다 헤더 이름과 동작이 다르다. 연동 문서에서 직접 확인해야 한다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -82,9 +94,13 @@ Content-Type: application/json
 
 2번은 이후 [ParityPay 4편의 결함 E](/posts/parity-pay-experiments-and-defects/)에서 정확히 그 경우를 만났다. 원장 계정을 "조회 후 없으면 삽입"으로 만들었다가 동시 요청에 유니크 제약 위반이 났고, `INSERT ... ON CONFLICT DO NOTHING` 후 조회로 바꿨다. 멱등 저장소는 이 방식이어야 "읽고 판단하는 사이"가 사라진다.
 
+---
+
 ## 실무와의 접점
 
 [2021년 결제대행 연동](/posts/payment-gateway-2021-retrospective/)에서 "같은 결제를 두 번 보내면 대행사는 어떻게 하는가"를 묻지 않았다. 우리 쪽 멱등 키가 있었는지, 대행사가 그것을 존중했는지 확인하지 않았고, 스케줄러가 한 대라 문제가 나지 않았을 뿐이다. 멱등성은 서버가 혼자 갖는 성질이 아니라 양쪽이 지키는 계약이라는 것이 그때 없던 관점이다.
+
+---
 
 ## 정리
 

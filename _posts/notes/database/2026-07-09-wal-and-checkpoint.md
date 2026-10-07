@@ -8,11 +8,15 @@ mermaid: true
 
 "커밋하면 디스크에 저장된다"는 말은 맞지만, 저장되는 것이 데이터 파일은 아니다. 데이터 페이지는 한참 뒤에 쓰인다. 커밋 시점에 디스크에 닿는 것은 **로그**이고, 이 순서를 뒤집지 않는 것이 [ACID](/posts/acid/)의 D(내구성)를 만드는 방법이다.
 
+---
+
 ## 문제: 랜덤 쓰기는 느리다
 
 트랜잭션 하나가 여러 테이블의 여러 페이지를 바꾼다. 그 페이지들은 디스크 여기저기에 흩어져 있다. 커밋할 때마다 전부 제자리에 쓰면, 커밋 하나가 랜덤 쓰기 수십 번이 된다.
 
 게다가 중간에 죽으면 일부만 쓰인 상태가 남는다. 어느 페이지가 반영됐고 어느 것이 안 됐는지 알 방법이 없다.
+
+---
 
 ## 해법: 로그를 먼저 쓴다
 
@@ -44,6 +48,8 @@ sequenceDiagram
 
 크래시에서 복구하는 방법도 이 규칙에서 나온다. 재시작하면 로그를 읽어 커밋된 것은 다시 적용하고([redo](/posts/redo-undo-log/)), 커밋 안 된 것은 되돌린다(undo). 로그에 커밋 레코드가 있으면 그 트랜잭션은 성공한 것이고, 데이터 페이지에 반영이 안 됐어도 redo로 복원된다.
 
+---
+
 ## 그룹 커밋
 
 `fsync`는 비싸다. 커밋마다 하나씩 하면 디스크 지연이 곧 커밋 지연이다.
@@ -51,6 +57,8 @@ sequenceDiagram
 그룹 커밋이 이 비용을 나눈다. 짧은 시간 안에 도착한 여러 트랜잭션의 커밋을 모아 `fsync` 한 번으로 처리한다. PostgreSQL 문서도 작은 트랜잭션이 동시에 많을 때 WAL `fsync` 한 번으로 여러 트랜잭션을 커밋할 수 있다고 적는다. 그래서 동시성이 높을수록 커밋당 비용이 줄어든다.
 
 실무적 함의가 하나 있다. **"커밋 지연이 N ms"는 단일 수치가 아니라 부하의 함수다.** 한가할 때 잰 값과 바쁠 때 잰 값이 다르고, 대개 바쁠 때가 건당으로는 더 싸다.
+
+---
 
 ## 체크포인트
 
@@ -67,6 +75,8 @@ MySQL에서 `innodb_io_capacity`와 리두 로그 크기(`innodb_redo_log_capaci
 
 PostgreSQL에서는 `checkpoint_timeout`, `max_wal_size`, `checkpoint_completion_target`이 같은 역할이다. 체크포인트는 `checkpoint_timeout`이 지나거나 `max_wal_size`를 넘기려 할 때 중 먼저 오는 쪽에서 시작하고, 기본값은 5분과 1GB다([PostgreSQL: WAL Configuration](https://www.postgresql.org/docs/current/wal-configuration.html)). 마지막 값은 체크포인트 쓰기를 시간에 걸쳐 분산시켜 스파이크를 줄인다.
 
+---
+
 ## 부분 페이지 쓰기
 
 디스크의 원자적 쓰기 단위(보통 512B~4KB)가 DB 페이지 크기(8~16KB)보다 작다. 그래서 페이지를 쓰는 도중 전원이 나가면 반만 쓰인 페이지가 남는다. 이 페이지는 redo로도 복구할 수 없다. redo는 정상 페이지에 변경을 적용하는 것이지 손상된 페이지를 고치는 것이 아니기 때문이다.
@@ -77,6 +87,8 @@ PostgreSQL에서는 `checkpoint_timeout`, `max_wal_size`, `checkpoint_completion
 - PostgreSQL: `full_page_writes`. 체크포인트 후 각 페이지의 첫 변경 시 페이지 전체를 WAL에 기록한다. 그래서 체크포인트 직후 WAL 양이 급증한다.
 
 두 방식 다 쓰기가 두 배가 되는 구간이 있다는 뜻이고, 이것이 "WAL이 왜 이렇게 많이 쌓이지"의 흔한 답이다.
+
+---
 
 ## 커밋 내구성의 손잡이
 
@@ -99,12 +111,16 @@ PostgreSQL의 `synchronous_commit=off`가 특이하다. 유실은 가능하지�
 
 비동기 커밋이 지는 위험은 데이터 유실이지 손상이 아니라는 뜻이다([PostgreSQL: Asynchronous Commit](https://www.postgresql.org/docs/current/wal-async-commit.html)). "최근 몇 건이 없었던 일이 될 수 있다"이지 "데이터가 망가진다"가 아니다. 설정을 고를 때는 이 구분을 기준으로 삼는다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - **`fsync`가 거짓말할 수 있다.** 쓰기 캐시가 켜진 디스크는 캐시에 담고 성공을 돌려준다([페이지 캐시와 fsync](/posts/page-cache-and-fsync/)).
 - **복제가 있으면 내구성의 정의가 바뀐다.** 로컬 `fsync`보다 "과반 복제본이 받았는가"가 더 강한 보장일 수 있다([리플리케이션 기본](/posts/db-replication/)).
 - **WAL은 복제와 PITR의 재료이기도 하다.** 스트리밍 복제, 논리 복제, 시점 복구, CDC가 전부 이 로그를 읽는다([CDC의 원리와 한계](/posts/cdc-principles-and-limits/)).
 - **긴 트랜잭션은 WAL을 쌓는다.** 커밋되지 않은 트랜잭션이 있으면 그 이전 로그를 지울 수 없다.
+
+---
 
 ## 무엇을 재면 확인되는가
 
@@ -113,6 +129,8 @@ PostgreSQL의 `synchronous_commit=off`가 특이하다. 유실은 가능하지�
 3. 체크포인트 직후의 WAL 생성량 급증(`full_page_writes`)을 실제로 본다.
 
 이후 [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서 잰 잠금 보유 17ms 중 마지막 0.761ms가 "COMMIT — 잠금 해제"였다. 그 0.761ms 안에서 일어나는 일이 이 글의 내용이고, 설정에 따라 그 값이 달라진다.
+
+---
 
 ## 정리
 

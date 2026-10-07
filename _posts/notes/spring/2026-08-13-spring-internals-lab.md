@@ -14,6 +14,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 > 이 시리즈는 저장소의 핵심 20주 로드맵(IoC 컨테이너부터 Spring Boot 자동 설정까지)을 기준으로 쓴 것이다. 저장소는 그 뒤로도 로드맵 너머의 주제와 캡스톤으로 계속 확장됐고, 확장된 부분은 저장소의 회고 문서(`docs/retrospective/retrospective.md`)에 정리되어 있다. 이름도 `spring-internals-lab`에서 `spring-lab`으로 바뀌었다.
 
+---
+
 ## Spring Internals Lab
 
 스프링을 오래 써도 핵심원리와 내부동작을 깊이 학습하지 않으면, 그 활용도 깊이가 없다. 스프링 관련 면접 질문을 깊게 들어가면 바로 답변하기 어려워지고, 가끔가다 마주치는 스프링의 고급활용이 필요한 순간에도 바로 해법을 꺼내어 쓸 수 없다. 특히 아래의 질문은 머릿속에 흐릿하게 남아서 완벽히 답하기 어렵다.
@@ -27,6 +29,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 이 질문들은 단순히 API 사용법만으로는 답하기 어렵다. 설정 클래스를 작성하고 애노테이션을 붙이는 쪽에서 보면 Spring은 너무 매끄럽게 동작한다. 하지만 장애 분석이나 설계 판단은 늘 그 아래 계층에서 벌어진다.
 
 `spring-internals-lab`은 이 간극을 메우기 위한 학습 저장소다. 핵심은 단순하다. 스프링을 추상 개념으로 외우지 않고, 실제 동작을 디버깅과 실험으로 관찰하고, 그 결과를 축소 구현으로 다시 만들며, 마지막에 설계 의도를 문서로 정리한다.
+
+---
 
 ## 이 저장소가 반복하는 학습 루프
 
@@ -48,6 +52,8 @@ README에 적힌 학습 루프가 이 프로젝트의 핵심이다.
 | 설계 의도 정리 | 왜 그렇게 나뉘는지 언어로 설명 | 동작은 봤지만 이유를 설명 못하는 상태 |
 
 이 프로젝트의 목표는 "스프링 소스코드를 읽는다"에서 한 단계 더 나아가는 것이다. 읽은 내용은 실행 결과와 구현 결과로 마무리한다.
+
+---
 
 ## 저장소 전체 구조
 
@@ -76,6 +82,8 @@ spring-internals-lab
 
 이 분리가 중요한 이유는 실험, 재구현, 실전 조립이 서로 다른 질문에 답하기 때문이다.
 
+---
+
 ## 한 번에 보면 구조가 더 잘 보인다
 
 ```mermaid
@@ -88,6 +96,8 @@ flowchart LR
 ```
 
 `mini-spring`은 출발점이 아니다. 먼저 실제 Spring을 보고, 그 뒤에 최소 구조를 다시 만든다. 이 순서가 뒤집히면 "내가 만든 단순 프레임워크"를 Spring에 억지로 투영하게 된다.
+
+---
 
 ## `experiments`는 관찰 도구다
 
@@ -117,6 +127,8 @@ flowchart LR
 
 실험 모듈은 "실제 스프링이 진짜 그렇게 동작하는가"를 먼저 사실로 고정해 둔다. 축소 구현은 그 사실 위에서 시작한다.
 
+---
+
 ## `mini-spring`은 설명 가능한 크기로 줄여 놓은 구현이다
 
 실험만으로는 구조 이해가 완결되지 않는다. 실제 스프링은 훨씬 방대하고 복잡하기 때문이다. 따라서 이 프로젝트는 같은 주제를 축소 구현으로 다시 한 번 다룬다.
@@ -135,6 +147,8 @@ flowchart LR
 이 모듈들의 공통점은 "Spring과 비슷해 보이는 프레임워크를 만든다"가 목표가 아니라는 점이다. 목표는 특정 메커니즘을 설명 가능한 크기로 줄이는 것이다.
 
 예를 들어 트랜잭션을 이해할 때 이 프로젝트는 바로 `@Transactional` 구현 전체를 복제하지 않는다. 먼저 `mini-aop`에서 인터셉터 체인을 만들고, 그 위에 `mini-transaction`을 올린다. 이 구조는 트랜잭션이 독립 기능이 아니라 AOP 위에 얹힌 어드바이스(advice, 메서드 호출 앞뒤에 끼워 넣는 부가 로직)라는 사실을 코드 구조 자체로 드러낸다. 실제 Spring도 같은 구성이다. 레퍼런스는 선언적 트랜잭션이 AOP 프록시로 활성화되고, 이 프록시가 `TransactionInterceptor`와 `TransactionManager`로 메서드 호출 전후의 트랜잭션을 처리한다고 설명한다([Understanding the Spring Framework's Declarative Transaction Implementation](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html)).
+
+---
 
 ## 이 저장소는 주차별로 범위를 닫아 간다
 
@@ -166,6 +180,8 @@ timeline
 
 각 문서가 하나의 질문을 닫는다. 그래서 이 시리즈도 추상 개념별이 아니라 주차별 핵심 메커니즘 기준으로 나눈다.
 
+---
+
 ## 어떤 질문을 어떤 모듈로 검증하는가
 
 이 저장소에서는 질문과 근거 코드가 비교적 명확하게 대응된다.
@@ -181,6 +197,8 @@ timeline
 | Boot는 언제 이벤트를 발행하고 서버를 띄우는가 | `experiments/spring-application-lifecycle` | 축소 구현 대신 실제 소스/실험 중심 |
 
 시리즈 글도 같은 방식으로 구조를 잡는다. 하나의 글은 하나의 질문을 기준으로 쓰고, 그 질문에 대응하는 `experiments`와 `mini-spring`을 같이 읽으면 된다.
+
+---
 
 ## 이 저장소를 읽는 가장 좋은 순서
 
@@ -205,6 +223,8 @@ flowchart TD
 
 문서가 질문을 제시하고, 실험이 사실을 고정하고, 축소 구현이 메커니즘을 설명한다.
 
+---
+
 ## 코드 구조로 보면 이 프로젝트의 의도가 더 선명하다
 
 아래는 README의 빌드 예시다.
@@ -222,6 +242,8 @@ flowchart TD
 - `experiments`와 `mini-spring`이 같은 수준의 1급 학습 산출물이다.
 
 이 레포는 "문서를 쓰기 위해 코드가 있는" 구조가 아니라, "코드 실험과 구현이 있고 문서는 그것을 설명하는" 구조에 가깝다.
+
+---
 
 ## 왜 이런 방식이 Spring 학습에 특히 잘 맞는가
 
@@ -249,6 +271,8 @@ flowchart LR
 
 이 흐름을 실험과 축소 구현으로 한 번 따라가면, 트랜잭션을 애노테이션 문법이 아니라 프록시와 인터셉터의 동작으로 읽게 된다.
 
+---
+
 ## 이 시리즈 1편이 맡는 역할
 
 이번 글은 세부 메커니즘으로 들어가기 전, `spring-internals-lab`이라는 저장소가 어떤 질문을 어떤 방식으로 닫는지 구조를 잡는 글이다. 이후 편에서는 각 계층을 실제 코드 중심으로 따로 판다.
@@ -263,6 +287,8 @@ flowchart LR
 6. [`@Transactional`과 Connection 관리](/posts/spring-internals-lab-transactional/)
 7. [`DispatcherServlet`과 MVC 요청 흐름](/posts/spring-internals-lab-dispatcher-servlet/)
 8. [`SpringApplication`, 자동 설정, 조건부 설정](/posts/spring-internals-lab-spring-boot/)
+
+---
 
 ## 정리
 

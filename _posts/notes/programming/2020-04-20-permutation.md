@@ -15,6 +15,8 @@ tags: [Algorithm, Permutation, Brute Force]
 • A=[1,2,3]인경우사전순은다음과같다
 • 123 132 213 231 312 321
 
+---
+
 ## 다음 순열(Next Permutation)
 
 모든 순열을 찾기 위해서는 우선 첫 순열과 마지막 순열을 찾고 첫 순열에서 마지막 순열이 나올때 까지 다음 순열, 다음 순열, 다음 순열, ... 마지막 순열까지 반복하면 모든 순열을 만들 수 있다. C++과 Python은 이미 라이브러리에 구현되어있지만 JAVA는 직접 구현해야한다.
@@ -100,6 +102,8 @@ bool next_permutation(int *a, int n) {
 
 다음 순열을 구하는 시간복잡도는 O(N)이다. 전체 순열을 모두 구하는 시간복잡도는 이 과정을 N!번 반복하므로 O(N!×N)이다.
 
+---
+
 ## BOJ 10972. 다음 순열
 
 - 문제링크 : https://www.acmicpc.net/problem/10972
@@ -176,6 +180,8 @@ int main() {
     return 0;
 }
 ```
+
+---
 
 ## BOJ 10973. 이전 순열
 
@@ -280,6 +286,8 @@ int main() {
     return 0;
 }
 ```
+
+---
 
 ## BOJ 10974. 모든 순열
 - 문제링크 : https://www.acmicpc.net/problem/10974

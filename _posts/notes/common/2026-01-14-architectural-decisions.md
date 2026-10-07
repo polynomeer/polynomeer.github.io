@@ -14,6 +14,8 @@ series_description: "MCP 계약 코드 채번이 2분 걸리던 원인을 추적
 
 > 이 글의 함수, 테이블 이름과 SQL은 회사의 실제 소스가 아니라 구조를 설명하려고 MySQL 문법으로 다시 구성한 예시다. 확인된 사실은 "SELECT 안에서 시퀀스 증가 함수를 호출했고, 그 함수가 시퀀스 테이블의 행을 UPDATE해 락 경합이 생겼다"는 것, 그리고 해결책의 하나로 시퀀스 증가를 별도 트랜잭션으로 분리했다는 것(곧 그 전에는 비즈니스 트랜잭션 안에서 실행됐다는 것)까지다. 나머지는 이 사실과 InnoDB 문서로부터 따라 나오는 설명이다.
 
+---
+
 ## 함수 안에 UPDATE가 있었다
 
 호출부는 조회처럼 생겼다.
@@ -43,6 +45,8 @@ END
 
 이 착시에는 이유가 있다. InnoDB에서 평범한 SELECT는 락을 걸지 않는다. [MySQL 문서](https://dev.mysql.com/doc/refman/8.0/en/innodb-consistent-read.html)는 READ COMMITTED와 REPEATABLE READ에서 SELECT가 기본으로 쓰는 consistent read를 이렇게 설명한다. "A consistent read does not set any locks on the tables it accesses"(consistent read는 접근하는 테이블에 어떤 락도 걸지 않는다). 그래서 "SELECT는 락과 무관하다"는 감각이 생긴다. 이 감각은 [MVCC](/posts/mvcc/)(행의 이전 버전을 보여 주어 읽기와 쓰기가 서로 막지 않게 하는 방식)로 처리되는 순수한 읽기에만 맞다. 함수 안의 UPDATE는 consistent read가 아니라 잠금을 거는 쓰기다.
 
+---
+
 ## UPDATE가 거는 락과 그 락이 풀리는 시점
 
 위 예시의 시퀀스 테이블은 `sequence_name`이 기본 키다. InnoDB 문서([Locks Set by Different SQL Statements](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html))에 따르면 `UPDATE ... WHERE`는 원래 탐색 중 만나는 레코드마다 배타적 next-key 락을 걸지만, 유일 인덱스로 한 행을 찾는 경우에는 인덱스 레코드 락 하나만 건다. 그래서 `next_seq('CONTRACT_CODE')`는 `CONTRACT_CODE` 행 하나에 X 락(배타 락, 다른 트랜잭션이 그 행을 읽기 위해 잠그거나 고치지 못하게 하는 락)을 건다.
@@ -50,6 +54,8 @@ END
 문제는 이 락이 언제 풀리느냐다. 같은 문서는 트랜잭션이 쥔 InnoDB 락이 모두 커밋이나 롤백 때 풀린다고 적는다. 함수가 반환됐다고 풀리는 것이 아니다. 그리고 [InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html) 문서에 따르면 T1이 행에 X 락을 쥐고 있으면, 다른 트랜잭션 T2가 같은 행에 요청한 락은 바로 승인되지 않고 T1이 락을 놓을 때까지 기다린다.
 
 `next_seq`는 계약 생성 트랜잭션 안에서 호출됐다. 그래서 락을 쥐는 구간은 "번호 하나 증가"가 아니라 "번호를 받은 순간부터 그 트랜잭션이 커밋할 때까지"가 된다. 그 사이에 있는 검증과 저장 같은 나머지 처리가 모두 락 보유 시간에 들어간다.
+
+---
 
 ## 두 트랜잭션이 같은 행에서 만나면
 
@@ -79,6 +85,8 @@ B가 기다리는 시간은 A의 UPDATE 한 번이 아니라 A의 트랜잭션 �
 
 애플리케이션 스레드와 커넥션이 몇 개든, 계약 코드 발급은 이 행 하나 앞에서 한 줄로 선다. 애플리케이션의 병렬성이 DB의 행 하나 때문에 직렬화된 것이다.
 
+---
+
 ## 이 구조가 증상을 설명하는 방식
 
 1편의 증상을 이 구조로 다시 읽으면 이렇다. 이 해석은 위 구조에서 따라 나오는 추론이고, 당시 문장별 대기 시간을 따로 잰 기록은 남아 있지 않다.
@@ -87,6 +95,8 @@ B가 기다리는 시간은 A의 UPDATE 한 번이 아니라 A의 트랜잭션 �
 - 배치 병목이 커진 이유: 배치도 같은 시퀀스 행에서 번호를 받으므로, 배치와 다른 요청이 서로의 트랜잭션이 끝나기를 기다린다.
 
 대기가 길어지면 다른 위험도 생긴다. 이것은 일반적인 InnoDB 동작이다. InnoDB는 행 락을 기다리는 시간이 `innodb_lock_wait_timeout`을 넘으면 기다리던 쪽에 오류를 돌려준다([문서](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_lock_wait_timeout), 기본값 50초). 락 보유 시간이 이 값에 가까워지면 느린 것이 실패로 바뀔 수 있다.
+
+---
 
 ## DB에서는 이렇게 보인다
 
@@ -98,6 +108,8 @@ sequence_table  PRIMARY     RECORD     X,REC_NOT_GAP   'CONTRACT_CODE'
 ```
 
 `X,REC_NOT_GAP`은 갭 없이 레코드 하나에만 걸린 배타 락이라는 뜻이다. 위 출력은 구조에서 예상되는 모양을 적은 것이고, 당시 운영 DB에서 떠 둔 출력은 아니다. 핵심은 `OBJECT_NAME`이 계약 테이블이 아니라 시퀀스 테이블이라는 점이다. 계약을 저장하는 요청의 대기가 저장 대상과 상관없는 테이블에서 생긴다는 것을 DB는 이렇게 직접 보여 준다.
+
+---
 
 ## 고쳐야 할 것은 세 겹이었다
 

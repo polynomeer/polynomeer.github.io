@@ -17,6 +17,8 @@ problem_decision_result:
 ./.venv/bin/python experiments/connection/run.py --seconds 12 --clients 200
 ```
 
+---
+
 ## 커넥션 하나를 여는 값
 
 | | 중앙값 | p95 |
@@ -28,6 +30,8 @@ problem_decision_result:
 여는 값이 질의의 약 24배다. 질의마다 열면 32배다.
 
 그러니 [커넥션 풀](/posts/connection-pool/)이 아끼는 것은 질의 시간이 아니다. **질의가 빨라지는 것이 아니라 핸드셰이크(접속 수립과 인증에 드는 왕복)가 사라지는 것**이다. 질의가 원래 100ms 걸린다면 풀이 있든 없든 100ms이고, 절약분 5.48ms는 5%다. 반대로 이 실험처럼 질의가 0.23ms면 절약분이 전체의 96%다. 풀의 이득은 질의가 쌀수록 크다.
+
+---
 
 ## 유휴 커넥션은 공짜가 아니다
 
@@ -44,6 +48,8 @@ problem_decision_result:
 **약 1.5MB, 완전히 선형이다.** PostgreSQL은 커넥션마다 백엔드 프로세스를 하나씩 띄우고, 유휴여도 그 프로세스는 그대로 있다. PostgreSQL 문서는 이를 "process per user" 모델이라고 부르고, 접속 요청이 올 때마다 postmaster가 새 백엔드 프로세스를 띄운다고 설명한다([How Connections Are Established](https://www.postgresql.org/docs/current/connect-estab.html)).
 
 이 값을 운영 규모로 곱하면 작지 않다. 애플리케이션 인스턴스 10대가 각각 풀 150을 잡으면 커넥션 1,500개이고, 일을 시작하기 전에 2.2GB다. 그리고 `max_connections`(서버가 받는 최대 동시 접속 수)를 넘으면 그때부터는 메모리 문제가 아니라 접속 거부다.
+
+---
 
 ## 풀 스윕: 처리량은 정점을 찍고 내려온다
 
@@ -79,6 +85,8 @@ problem_decision_result:
 
 질의가 무거울수록 최적 풀이 작다. 서버가 동시에 처리할 수 있는 양이 정해져 있으므로, 건당 비용이 크면 그 양에 도달하는 커넥션 수가 적기 때문이다.
 
+---
+
 ## 대기는 사라지지 않고 옮겨간다
 
 점 조회에서 풀 10 → 150 구간을 보면 두 값이 반대로 움직인다.
@@ -94,6 +102,8 @@ problem_decision_result:
 
 그리고 p99가 처리량보다 먼저 나빠진다. 서버 부하 스윕에서 풀 100의 p99는 409.5ms로 풀 10의 179.1ms보다 2.3배인데, 처리량은 24% 떨어졌을 뿐이다. 평균 처리량만 보면 "조금 느려졌다" 수준이지만, 꼬리 지연은 두 배가 넘게 나빠져 있다.
 
+---
+
 ## 준비된 문장
 
 준비된 문장(prepared statement)은 서버가 한 번 파싱해 둔 질의를 반복 실행할 때 재사용하는 방식이다.
@@ -105,6 +115,8 @@ problem_decision_result:
 
 0.25ms짜리 질의에서 중앙값 22%다. 절대값은 작지만 초당 수천 건이면 누적된다. 다만 이 이득은 풀러 구성과 맞물려 있다([커넥션과 세션](/posts/connections-and-sessions/)). PgBouncer(애플리케이션과 DB 사이에서 커넥션을 나눠 쓰게 하는 외부 풀러)의 transaction 모드는 1.21.0(2023-10-16) 전까지 프로토콜 수준의 준비된 문장을 지원하지 않았다. 1.21.0부터는 `max_prepared_statements`를 0이 아닌 값으로 두면 PgBouncer가 준비된 문장을 추적해 서버 커넥션마다 다시 준비해 준다. 이 설정의 기본값은 1.24.0(2025-01-10)부터 200이다([PgBouncer configuration](https://www.pgbouncer.org/config.html), [changelog](https://www.pgbouncer.org/changelog.html)).
 
+---
+
 ## 실무로 옮기면
 
 1. **풀 크기의 출발점은 `L = λ × W`다.** 초당 100건, 질의 20ms면 2다. [큐잉 이론](/posts/queueing-theory-for-servers/)에서 정리한 그 식이고, 이 실험의 정점(5~10)이 그 근처에 있다. HikariCP 위키가 출발점으로 제시하는 `connections = ((core_count * 2) + effective_spindle_count)`도 같은 방향이다. 이 실험의 서버는 CPU 2개이므로 이 식으로는 4에 디스크 몫을 더한 값이 된다([About Pool Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)).
@@ -115,6 +127,8 @@ problem_decision_result:
 
 이후 [ParityPay 2편](/posts/parity-pay-lock-hold-time/)에서는 잠금 보유 17ms 중 DB가 실제로 일한 시간이 2.31ms라는 것을 보고 고칠 곳을 찾았다. 여기서도 같은 방식이다. 총 지연을 "기다린 시간"과 "일한 시간"으로 나누기 전까지는 풀을 키울지 줄일지 알 수 없다.
 
+---
+
 ## 한계
 
 - **PostgreSQL에 CPU 2개다.** 정점의 위치는 그 상한의 함수이고, 큰 서버에서는 오른쪽으로 간다. 옮겨갈 수 있는 것은 숫자가 아니라 곡선의 모양이다.
@@ -123,6 +137,8 @@ problem_decision_result:
 - **메모리는 `docker stats` 값이다.** 공유 버퍼와 페이지 캐시 귀속이 섞여 있어 커넥션당 값은 증분이지 정확한 개별 메모리가 아니다.
 - **스윕마다 질의가 한 종류다.** 섞인 워크로드는 두 곡선 사이 어딘가에 있다.
 - **PgBouncer를 재지 않았다.** 외부 풀러가 정점을 옮기는지는 별도 측정이다.
+
+---
 
 ## 정리
 

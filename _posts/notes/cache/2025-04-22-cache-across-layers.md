@@ -9,6 +9,8 @@ tags: [Cache, CDN, Redis]
 
 ![layred-cache](../../../assets/img/posts/layered-cache.png)
 
+---
+
 ## 1. CPU 캐시
 
 ### 개요
@@ -25,6 +27,8 @@ tags: [Cache, CDN, Redis]
 - Write-back: 변경된 데이터를 캐시에만 쓰고, 그 블록이 다른 블록으로 교체되기 직전에 메모리에 반영([Cache (computing)](https://en.wikipedia.org/wiki/Cache_%28computing%29)).
 - Write-through: 캐시와 메모리에 동기적으로 함께 저장.
 
+---
+
 ## 2. 메모리 캐시 (RAM 캐시)
 ### 개요
 - 애플리케이션에서 자주 사용하는 데이터를 메모리에 저장하여 디스크 I/O를 줄이는 방식.
@@ -38,6 +42,8 @@ tags: [Cache, CDN, Redis]
 - Write-behind: 데이터를 캐시에 저장하고 나중에 디스크로 저장.
 - Read-through: 캐시에 데이터가 없을 경우 원본 데이터베이스에서 가져와 캐시에 저장.
 
+---
+
 ## 3. 애플리케이션 레벨 캐시
 ### 개요
 - 웹 애플리케이션, 백엔드 서비스 등에서 자주 조회되는 데이터를 캐싱.
@@ -50,6 +56,8 @@ tags: [Cache, CDN, Redis]
 ### 캐싱 전략
 - Lazy Loading: 요청이 들어올 때만 캐시에 데이터 저장.
 - Eager Loading: 애플리케이션 실행 시 미리 데이터를 캐시에 로드.
+
+---
 
 ## 4. 데이터베이스 캐시
 ### 개요
@@ -66,6 +74,8 @@ tags: [Cache, CDN, Redis]
 - Write-around: 캐시를 거치지 않고 직접 DB를 업데이트.
 - Write-back: DB 업데이트 전에 캐시에서 먼저 반영 후 배치로 저장.
 
+---
+
 ## 5. CDN (Content Delivery Network) 캐시
 ### 개요
 - 정적 자원(이미지, CSS, JavaScript 등)을 여러 지역에 분산하여 빠르게 제공하는 방식.
@@ -77,6 +87,8 @@ tags: [Cache, CDN, Redis]
 ### 캐싱 전략
 - Time-to-Live (TTL): 특정 시간 동안 캐시 유지.
 - Cache Purging: 특정 조건에서 캐시를 수동으로 삭제.
+
+---
 
 ## 6. 브라우저 캐시
 ### 개요
@@ -91,6 +103,8 @@ tags: [Cache, CDN, Redis]
 - Cache-Control 헤더: `max-age`, `no-cache`, `must-revalidate` 등으로 캐시 설정.
 - ETag: 콘텐츠 변경 여부를 체크하여 캐시 갱신 여부 결정.
 
+---
+
 ## 7. 네트워크 계층 캐시
 ### 개요
 - 네트워크 장비(프록시 서버, 로드 밸런서 등)에서 캐시를 활용하여 요청을 최적화.
@@ -102,6 +116,8 @@ tags: [Cache, CDN, Redis]
 ### 캐싱 전략
 - Least Recently Used (LRU): 오래 사용하지 않은 항목을 제거.
 - First In First Out (FIFO): 먼저 들어온 데이터를 먼저 제거.
+
+---
 
 ## 8. 분산 캐시
 ### 개요
@@ -115,6 +131,8 @@ tags: [Cache, CDN, Redis]
 - Replication: 동일한 데이터를 여러 서버에 저장.
 - Eviction Policies: `LRU`, `LFU`, `FIFO` 등을 사용하여 캐시 정리.
 
+---
+
 ## 9. AI/ML 캐시
 ### 개요
 - 머신러닝 모델의 결과값을 캐싱하여 반복적인 예측 연산을 줄임.
@@ -123,10 +141,14 @@ tags: [Cache, CDN, Redis]
 - Feature Store Cache: 머신러닝 모델에 필요한 특징(feature) 데이터를 캐싱.
 - Inference Cache: 동일한 입력에 대한 예측 결과를 캐싱.
 
+---
+
 ## 결론
 같은 이름의 전략(LRU, Write-back, TTL)이 CPU부터 브라우저까지 여러 계층에 반복해서 나온다. 계층마다 달라지는 것 중 하나는 캐시를 누가 관리하는가다. CPU와 OS 캐시는 하드웨어와 커널이 자동으로 관리하고, 애플리케이션 캐시와 CDN은 개발자가 TTL과 무효화 시점을 정해야 한다.
 
 계층별 목적, 예시, 전략을 표 하나로 모으면 다음과 같다.
+
+---
 
 ## 계층별 캐시 정리표
 
@@ -143,6 +165,8 @@ tags: [Cache, CDN, Redis]
 | **9. 네트워크 계층 캐시**      | 트래픽 최적화, 백엔드 부하 감소             | Reverse Proxy (Nginx), DNS Cache             | 캐시 프록시, TTL 설정, 다중 계층 캐시 가능          |
 | **10. AI/ML 캐시**             | 연산 비용 절감, 추론 응답 시간 단축         | Feature Store Cache, Model Output Cache      | 동일 입력 캐싱, 특성값 캐싱, LRU/TTL 활용           |
 
+---
+
 ## 계층별 특징 요약
 
 | 분류 기준         | 로컬/분산 | 휘발성    | 속도      | 사용 주체        |
@@ -152,6 +176,8 @@ tags: [Cache, CDN, Redis]
 | 분산 캐시         | 분산      | 예/아니오 | 중간~빠름 | 서비스 전반 공유 |
 | DB/파일 캐시      | 로컬/내부 | 예/아니오 | 중간      | DB/OS 내부 처리  |
 | CDN/브라우저      | 분산      | 예        | 빠름      | 클라이언트/전역  |
+
+---
 
 ## 핵심 요약
 

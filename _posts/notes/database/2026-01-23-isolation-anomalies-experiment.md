@@ -20,6 +20,8 @@ problem_decision_result:
 ./.venv/bin/python experiments/isolation/run.py --repeat 20
 ```
 
+---
+
 ## 무엇을 어떻게 쟀는가
 
 두 세션의 실행 순서를 이벤트로 고정해 각 이상 현상이 나는 interleaving(두 세션의 문장이 섞여 실행되는 순서)을 강제한다. 그래서 이 수치는 확률이 아니라 존재 증명이다. "이 조건에서 이 현상이 난다"까지만 말한다.
@@ -36,6 +38,8 @@ problem_decision_result:
 
 환경은 컨테이너 리소스를 고정했다. PostgreSQL 17과 MySQL 8.4 각각 `cpus: 2, mem_limit: 2g`. 세션마다 잠금 타임아웃을 3초로 명시했다.
 
+---
+
 ## 결과: 이상 현상 발생 (20회 중)
 
 RC는 READ COMMITTED, RR은 REPEATABLE READ, SER는 SERIALIZABLE이다.
@@ -49,6 +53,8 @@ RC는 READ COMMITTED, RR은 REPEATABLE READ, SER는 SERIALIZABLE이다.
 | 조건부 UPDATE | 0 | 0 | 0 | 0 | 0 | 0 |
 
 모든 칸이 20/20 아니면 0/20이다. 간헐적인 것은 하나도 없었다.
+
+---
 
 ## 갈리는 곳 1: 같은 REPEATABLE READ에서 lost update
 
@@ -76,11 +82,15 @@ PostgreSQL RR 트랜잭션은 자기가 시작한 뒤 남이 바꾼 행을 수�
 
 "격리 수준을 올리면 lost update가 막힌다"는 문장이 MySQL에서는 성립하지 않는다는 것이 20/20으로 나왔다.
 
+---
+
 ## 갈리는 곳 2: RR이 팬텀을 막는다
 
 표준은 REPEATABLE READ에서 팬텀을 허용한다. 그런데 양쪽 엔진 모두 막았다(0/20). 두 엔진 모두 RR의 일반 읽기가 트랜잭션 내내 같은 [MVCC](/posts/mvcc/) 스냅샷을 읽기 때문이다.
 
 표준의 표를 "이 수준에서는 이 현상이 난다"로 읽으면 양방향으로 틀린다. 표에 있는데 안 나는 것(팬텀)이 있고, 표에 없는데 나는 것(write skew)이 있다.
+
+---
 
 ## 갈리는 곳 3: SERIALIZABLE의 비용 모양
 
@@ -109,6 +119,8 @@ MySQL의 3초는 작업 시간이 아니라 잠금 타임아웃이다. 읽는 �
 
 PostgreSQL SERIALIZABLE은 같은 시나리오에서 22~26ms다. 읽는 쪽이 쓰는 쪽을 막지 않고, 충돌은 커밋할 때 판정한다. 충돌을 나중에 판정하는 낙관적 방식과 미리 잠그는 비관적 방식의 차이가 100배의 벽시계 시간으로 나타났다.
 
+---
+
 ## 조치: 조건부 UPDATE는 모든 칸에서 맞았다, 다만
 
 읽고 계산해서 쓰는 대신 한 문장으로 쓴다.
@@ -133,6 +145,8 @@ READ COMMITTED(PostgreSQL 기본값)와 MySQL의 세 수준 전부에서 거절 
 
 여기서 [개념 글의 주장을 한 번 좁혀야 한다](/posts/isolation-levels-and-anomalies/). "단일 행 조건으로 환원되는 문제는 조건부 UPDATE로 쓴다"는 여전히 맞다. 다만 그것이 재시도를 없애 주는 것은 READ COMMITTED에서다. 스냅샷 격리 위에서는 조건부 UPDATE도 직렬화 실패를 받는다. PostgreSQL 문서도 두 수준에서 재시도를 준비하라고 적는다. 조건부 UPDATE가 없애는 것은 "언제 읽었는가"라는 질문이지 "충돌이 있었는가"라는 질문이 아니다.
 
+---
+
 ## 실무로 옮기면
 
 - 기본값을 확인한다. PostgreSQL 기본은 READ COMMITTED, MySQL 기본은 REPEATABLE READ다. 두 DB를 함께 쓰는 조직에서 "우리는 기본값을 쓴다"는 말이 서로 다른 것을 뜻한다.
@@ -142,6 +156,8 @@ READ COMMITTED(PostgreSQL 기본값)와 MySQL의 세 수준 전부에서 거절 
 
 이후 [ParityPay 1편](/posts/parity-pay-invariants/)의 INV-003("지갑 가용 잔액은 음수가 되지 않는다")을 격리 수준이 아니라 조건부 UPDATE와 DB 제약으로 지킨 이유가 이 표에 있다. 그리고 [10편](/posts/parity-pay-lock-lease/)에서 분산락 대신 조건부 원자 UPDATE를 고른 근거도 같은 자리다. 다만 그 프로젝트는 PostgreSQL을 READ COMMITTED로 쓰므로 위 표의 첫 열에 해당하고, 격리 수준을 올렸다면 재시도 설계가 따라왔어야 한다.
 
+---
+
 ## 측정에서 틀렸던 것
 
 첫 구현은 두 세션의 순서를 `threading.Barrier`로 맞췄다. 한쪽이 잠금에 막히면 배리어에 도달하지 못하고 상대가 `BrokenBarrierError`로 죽는다. 결과 표에는 `other:`라는 빈 이름의 항목이 남았고, 실제로 무슨 일이 있었는지가 표에서 사라졌다.
@@ -149,6 +165,8 @@ READ COMMITTED(PostgreSQL 기본값)와 MySQL의 세 수준 전부에서 거절 
 사라진 것이 하필 가장 중요한 정보였다. MySQL SERIALIZABLE에서 쓰는 쪽이 막힌다는 사실 자체가 그 격리 수준의 비용이다. 이벤트 기반으로 바꾸고 잠금 타임아웃을 3초로 명시하자 그것이 `lock_timeout 20/20`이라는 측정값으로 돌아왔다([ADR-001](https://github.com/polynomeer/data-ops-lab/blob/main/docs/adr/001-record-blocking-as-a-result.md)).
 
 "이상 현상이 안 났다"와 "엔진이 막았다"는 다른 사실이다. 도구가 둘을 구분하지 못하면 표에서는 같아 보인다.
+
+---
 
 ## 한계
 
@@ -158,6 +176,8 @@ READ COMMITTED(PostgreSQL 기본값)와 MySQL의 세 수준 전부에서 거절 
 - 재시도 루프가 없다. PostgreSQL의 직렬화 실패는 실제 애플리케이션이라면 재시도가 흡수한다. 재시도 아래의 실효 처리량이 더 흥미로운 질문인데 여기서는 재지 않았다.
 - 단일 노드다. 복제 지연은 어떤 격리 수준으로도 해결되지 않는 별개의 낡은 읽기 원천이고, 이 실험의 범위 밖이다.
 - 잠금 읽기(`FOR UPDATE`) 경로를 재지 않았다. MySQL RR의 lost update를 막는 또 다른 방법이고, 그 비용은 별도 측정이 필요하다.
+
+---
 
 ## 정리
 

@@ -20,6 +20,8 @@ series_description: "크리에이터 스튜디오를 만들며 외부 연동 분
 
 회사 코드는 지금 볼 수 없다. 그래서 글의 코드는 두 종류다. 구조를 설명하려고 다시 쓴 예시와, 확정된 사실을 개인 실험 저장소(engineering-lab의 creator-studio 모듈, 이하 랩)에서 다시 구현한 코드다. 각 코드 블록에 어느 쪽인지 표시한다.
 
+---
+
 ## 용어
 
 - Braze: 마케팅 자동화 도구. 사용자 행동 이벤트를 받아 캠페인과 푸시에 쓴다.
@@ -28,6 +30,8 @@ series_description: "크리에이터 스튜디오를 만들며 외부 연동 분
 - ITGC(IT 일반통제): 회계 감사에서 재무 데이터를 다루는 IT 시스템의 통제를 점검하는 항목이다.
 - MDC(Mapped Diagnostic Context): 로깅 라이브러리가 제공하는 스레드별 키-값 저장소다. 넣어 둔 값이 같은 스레드의 모든 로그에 붙는다.
 - TTL(Time To Live): Redis 키가 자동으로 삭제되기까지 남은 시간이다.
+
+---
 
 ## 프로젝트의 조건
 
@@ -41,6 +45,8 @@ series_description: "크리에이터 스튜디오를 만들며 외부 연동 분
 | 로그 수집 | Filebeat, Elasticsearch, Kibana |
 
 사용자 수, 트래픽, 이벤트 건수, 로그 보관 기간 같은 수치는 기록으로 남아 있지 않다. 그래서 이 글의 판단 근거는 처리량이 아니라 데이터의 성격과 구조다. KMS로 어떤 필드를 암호화했는지도 기록이 없어 이 글에서는 다루지 않는다.
+
+---
 
 ## 시스템 구성
 
@@ -75,6 +81,8 @@ flowchart TD
     API -- "공통 포맷 로그" --> FB
 ```
 
+---
+
 ## 도메인: Character, Creator, Producer
 
 스튜디오의 사용자는 세 단계로 이어진다. 음원 플랫폼 계정 아래에 Character가 있고, Character가 스튜디오에 처음 가입하면 Creator로 매핑된다. 모든 Creator는 Producer 아래에 속한다. 직접 가입할 때는 Producer를 먼저 만들고 Creator 이름을 입력한다.
@@ -93,6 +101,8 @@ flowchart TD
 ```
 
 Creator와 콘텐츠 사이에 Producer가 있다는 점은 뒤의 매핑 장애에서 그대로 문제가 된다.
+
+---
 
 ## 1. 외부 연동을 커밋 뒤로 옮겼다
 
@@ -172,6 +182,8 @@ public Program createProgram(Long producerId, Long creatorId, String title) {
 
 외부 연동 실패가 핵심 트랜잭션에 영향을 주지 않게 됐다. 트랜잭션 길이와 장애 전파 범위가 줄었고, 재시도 정책이 한곳에서 일관되게 적용됐다. 이 결과를 보여주는 수치(트랜잭션 시간, 실패 건수)는 남아 있지 않다.
 
+---
+
 ## 2. 감사 로그 체계를 만들었다
 
 ### 문제
@@ -195,6 +207,8 @@ MDC는 값을 스레드 단위로 관리한다. [Logback 매뉴얼](https://logb
 운영 이슈 추적과 보안 감사 대응이 쉬워졌다. 회사는 ISMS 인증을 3회 연속 통과했고, 나는 그중 2023년과 2024년 두 차례 심사에 직접 참여했다. 3회는 회사의 인증 이력이고 2회는 내가 심사 현장에 있었던 횟수다. 참여한 심사에서 감사원 질문에 답하며 이 Audit Log 체계를 직접 언급하고 시연했다. 같은 로그 체계는 ITGC 회계 감사 대응에도 쓰였다.
 
 인증 통과를 이 로그 체계 하나의 성과로 말할 수는 없다. ISMS 심사는 관리 체계 전체를 보기 때문이다. 감사 로그의 위·변조 방지 장치가 있었는지는 내가 모른다.
+
+---
 
 ## 3. 인증 세션 구조의 빈틈을 찾고 개선안을 설계했다
 
@@ -263,6 +277,8 @@ return issue(memberId, deviceId); // 새 세션만 추가될 뿐, 이전 access 
 
 랩의 `SessionRotationRaceConditionTest`는 Testcontainers로 띄운 `redis:7.4-alpine`에서 원래 구조와 개선안을 비교한다. 원래 구조에서는 refresh 직후 옛 access token 조회가 통과하고, 개선안에서는 거절된다. 개선안은 refresh를 두 번 해도 기기당 세션 하나만 남기고, 이미 쓴 refresh token의 재사용을 거절한다. 네 테스트 모두 통과했다. 랩은 token을 서명된 JWT가 아닌 무작위 문자열로 단순화했고, refresh를 랩의 세션 관리자가 직접 처리한다. 그래서 이 결과는 key 구조가 옛 token을 거절할 수 있다는 확인이지 운영 환경의 결과가 아니다.
 
+---
+
 ## 4. Creator-Producer 매핑 장애를 애플리케이션 흐름으로 복구했다
 
 ### 증상
@@ -306,6 +322,8 @@ if (creatorRepository.existsByMemberId(memberId)) {
 ```
 
 랩의 `CreatorProducerMappingIntegrationTest` 네 개는 모두 통과했다. 가설 2 구조에서는 콘텐츠가 사라진 것처럼 보이고, 분리된 구조에서는 재가입이 거절되며, 콘텐츠가 있는 Producer로부터의 매핑 변경은 명시적 확인 없이 차단되고, 확인하고 바꾸면 이력이 남는다. 이것은 가설 하나를 재현한 결과이지 실제 원인의 증명이 아니다.
+
+---
 
 ## 네 판단이 남긴 비용
 

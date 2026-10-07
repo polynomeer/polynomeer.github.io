@@ -13,6 +13,8 @@ APM(Application Performance Monitoring)을 고르는 일은 대시보드 화면�
 
 모든 제품 정보는 2026-10-05에 각 제품의 공식 문서, 가격 페이지, 저장소 README에서 확인한 내용이다. 가격과 기능 구성은 자주 바뀌므로 도입 전에는 같은 페이지를 다시 열어 봐야 한다. 이 글에 나오는 도구 중 어느 것도 직접 벤치마크하지 않았고, 성능 오버헤드 수치는 해당 벤더나 프로젝트가 스스로 밝힌 것만 그대로 옮겼다.
 
+---
+
 ## APM이 보는 것과 데이터가 흐르는 길
 
 APM은 요청 하나가 서버 안에서 어떻게 처리됐는지를 보여 주는 도구다. 메트릭이 "p99 응답 시간이 올랐다"를 말한다면, APM은 "그 느린 요청은 어느 서비스의 어느 SQL에서 시간을 썼다"를 말한다. 무엇을 집계 지표로 볼지는 [RED와 USE](/posts/red-and-use-method/)가 정리하고, APM은 그 지표가 튄 순간의 개별 요청을 따라간다.
@@ -38,6 +40,8 @@ flowchart TD
 
 도구를 비교할 때 갈리는 지점이 이 그림의 각 칸이다. 에이전트가 벤더 전용인지 OpenTelemetry인지, 수집기와 저장소를 누가 운영하는지(SaaS냐 자체 설치냐), 저장소가 무엇인지(HBase, Elasticsearch, 오브젝트 스토리지 등)에 따라 비용과 운영 부담이 달라진다.
 
+---
+
 ## 바닥에 깔린 표준: OpenTelemetry와 OTLP
 
 비교에 앞서 OpenTelemetry(OTel)를 먼저 짚어야 한다. 대부분의 도구가 이제 OTel과의 관계로 자기 위치를 설명하기 때문이다.
@@ -49,6 +53,8 @@ OTLP(OpenTelemetry Protocol)는 계측 지점에서 수집기, 수집기에서 �
 Java에서는 OTel Java 에이전트 JAR을 `-javaagent`로 붙이면 코드 수정 없이 계측이 된다. 에이전트가 클래스 로딩 시점에 바이트코드를 주입해 인바운드 요청, 외부 HTTP 호출, DB 호출 같은 지점에서 스팬을 만든다([Java Agent](https://opentelemetry.io/docs/zero-code/java/agent/)). 바이트코드 계측(bytecode instrumentation)은 컴파일된 클래스 파일을 로딩 시점에 고쳐 측정 코드를 끼워 넣는 기법이고, 아래에 나오는 상용 APM의 Java 에이전트도 대부분 같은 방식이다.
 
 오버헤드에 대해 OTel 문서는 하나의 수치를 내놓지 않는다. 문서는 "the final agent overhead depends on multiple factors"(최종 에이전트 오버헤드는 여러 요인에 따라 달라진다)라고 쓰고, 자기 환경에서 직접 재라고 권한다([Performance](https://opentelemetry.io/docs/zero-code/java/agent/performance/)).
+
+---
 
 ## 비교 기준과 각 기준이 중요한 이유
 
@@ -64,6 +70,8 @@ Java에서는 OTel Java 에이전트 JAR을 `-javaagent`로 붙이면 코드 수
 | 종속성 | 다른 도구로 옮길 때의 비용 | 벤더 전용 에이전트는 교체 시 모든 서비스의 배포 설정을 바꿔야 한다. OTel 계측은 내보낼 곳만 바꾸면 된다 |
 
 RUM(Real User Monitoring)은 브라우저나 앱에서 실제 사용자가 겪은 로딩 시간과 오류를 수집하는 기능이다. 백엔드 팀에게는 "서버는 빨랐는데 사용자는 느렸다"를 가르는 데 쓰인다. 샘플링은 모든 요청을 저장하지 않고 일부만 남기는 것이다. 요청 시작 시점에 남길지를 정하면 헤드 샘플링, 트레이스가 끝난 뒤 전체를 보고 정하면 테일 샘플링이고, OTel에서는 테일 샘플링을 Collector의 프로세서로 처리한다([Sampling](https://opentelemetry.io/docs/concepts/sampling/)).
+
+---
 
 ## 상용 SaaS APM
 
@@ -105,6 +113,8 @@ Elastic APM은 Elastic Stack 위의 APM이다. 요청 응답 시간, DB 쿼리, 
 
 이미 로그를 Elasticsearch에 쌓고 있는 팀에게는 저장소를 하나 더 늘리지 않는다는 점이 크다. 배포는 Elastic Cloud(호스팅형, 서버리스)와 자체 설치 중에서 고른다. 서버리스 Observability는 수집 GB와 월 보존 GB로 과금하고, 확인 시점에 Complete 단계의 로그와 트레이스 수집은 GB당 $0.09부터였다([Elastic Observability Serverless Pricing](https://www.elastic.co/pricing/serverless-observability)). 호스팅형은 자원 기반 과금이다([Elastic Pricing](https://www.elastic.co/pricing)).
 
+---
+
 ## 국내 벤더와 국내 오픈소스
 
 ### 와탭(WhaTap)
@@ -122,6 +132,8 @@ Elastic APM은 Elastic Stack 위의 APM이다. 요청 응답 시간, DB 쿼리, 
 ### Scouter
 
 Scouter는 Apache License 2.0의 오픈소스 APM이다. JVM 애플리케이션(WAS와 독립 실행 애플리케이션)과 OS 자원을 모니터링한다. 구성은 Java Agent와 Host Agent, 데이터를 저장하는 Server(Collector), RCP 기반 데스크톱 Client(Viewer), HTTP로 데이터를 꺼내는 Web API다. 사용자 정의 알림은 플러그인 스크립트로 만든다. Zipkin-Scouter 저장소를 쓰면 Zipkin으로 계측한 다른 언어 서비스를 XLog 차트에 함께 띄울 수 있다([Scouter README](https://github.com/scouter-project/scouter/blob/master/README_kr.md)). 확인 시점의 최신 릴리스는 2026-02-15의 v2.21.3이다([Scouter Releases](https://github.com/scouter-project/scouter/releases/)). OTLP 수집에 대한 언급은 README에 없다.
+
+---
 
 ## 오픈소스 추적과 APM
 
@@ -163,6 +175,8 @@ Tempo는 혼자보다 Grafana의 다른 프로젝트와 묶어 쓰는 경우가 
 
 SigNoz는 스스로를 OpenTelemetry 네이티브 관측 플랫폼으로 소개하고, 로그, 메트릭, 트레이스, 알림, 대시보드, 예외를 한 화면에서 다룬다. 자체 설치(Docker, Kubernetes 등)와 SigNoz Cloud를 고를 수 있고, 저장소의 라이선스는 MIT에 엔터프라이즈 기능용 `ee/` 디렉터리가 따로 있다([SigNoz README](https://github.com/SigNoz/signoz)). 수집은 OTel Collector가 맡아 OTLP, Jaeger, Zipkin 등을 받아 ClickHouse에 쓰고, 알림은 SigNoz 바이너리 안의 Alert Manager가 처리한다([SigNoz Architecture](https://signoz.io/docs/architecture/)). 클라우드는 트레이스와 로그를 수집 GB당, 메트릭을 샘플 수 단위로 과금하고, 커뮤니티 에디션은 직접 설치해 쓸 수 있다([SigNoz Pricing](https://signoz.io/pricing/)).
 
+---
+
 ## 한눈에 보는 비교
 
 아래 표는 위에서 확인한 내용만 옮긴 것이다. 칸이 비어 있지 않더라도 기능의 깊이는 제품마다 다르다.
@@ -198,6 +212,8 @@ SigNoz는 스스로를 OpenTelemetry 네이티브 관측 플랫폼으로 소개�
 
 오픈소스의 비용은 0이 아니다. Pinpoint라면 HBase 클러스터를, SkyWalking이라면 BanyanDB나 Elasticsearch를, Tempo라면 오브젝트 스토리지와 Tempo 컴포넌트들을 누군가 운영해야 한다. 라이선스 비용이 운영 인력 비용으로 바뀌는 것이다.
 
+---
+
 ## 종속성: 바꾸기 어려운 것은 에이전트다
 
 도구를 바꿀 때 가장 비싼 부분은 UI가 아니라 계측이다. 벤더 전용 에이전트를 쓰면 모든 서비스의 기동 옵션(`-javaagent` 경로), 설정 파일, 커스텀 계측 코드가 그 벤더에 묶인다. 대시보드와 알림 규칙도 벤더 질의 언어로 쓰여 있어 옮길 때 다시 만들어야 한다.
@@ -205,6 +221,8 @@ SigNoz는 스스로를 OpenTelemetry 네이티브 관측 플랫폼으로 소개�
 OTel로 계측해 두면 이 중 첫 번째가 풀린다. SDK나 에이전트는 그대로 두고 OTLP를 보낼 곳만 바꾸면 되고, Collector를 가운데 두면 같은 데이터를 두 백엔드로 동시에 보내며 비교할 수도 있다. 다만 대시보드, 알림 규칙, 보존 정책은 OTel 범위 밖이라 백엔드를 바꾸면 여전히 다시 만들어야 한다. Datadog처럼 경로에 따라 쓸 수 있는 기능이 달라지는 경우도 있어, OTel로 보내면 벤더의 일부 기능을 포기해야 할 수 있다.
 
 반대로 자체 에이전트가 OTel보다 깊이 보는 영역도 있다. OTel 자동 계측은 요청, HTTP 호출, DB 호출 같은 경계에 스팬을 만들고, 그 안쪽은 직접 계측한 곳만 보인다. 메서드 단위 호출 스택을 코드 수정 없이 남기는 것은 Pinpoint, WhaTap, JENNIFER 같은 자체 에이전트가 앞세우는 기능이다. 그 공백은 프로파일러로 메울 수도 있다([off-CPU 프로파일링 실험](/posts/off-cpu-profiling-experiment/)). 종속성을 낮추는 선택은 이 깊이를 다른 도구로 메우는 비용을 함께 받아들이는 선택이다.
+
+---
 
 ## 팀 상황별 선택
 
@@ -245,6 +263,8 @@ flowchart TD
 ### 운영 인력보다 기능 범위가 중요한 팀
 
 프로파일링, DB 모니터링, RUM, 로그를 한 화면에서 연결해 보고 싶고 그 비용을 낼 수 있다면 Datadog, Dynatrace, Splunk 같은 통합 SaaS가 맞다. 호스트 단위 과금이므로 서버 수가 예측 가능한 조직에 잘 맞는다. 이 선택은 호스트 수와 수집량이 늘 때 비용이 선형으로 는다는 점과, 대시보드와 알림을 벤더 질의 언어로 쌓게 된다는 점을 받아들인다.
+
+---
 
 ## 고를 때 확인할 것
 

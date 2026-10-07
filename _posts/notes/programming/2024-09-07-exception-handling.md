@@ -87,6 +87,8 @@ catch 절에서 Throwable을 사용하면 모든 예외를 catch할 뿐만 아�
 
 표준예외는 이미 스프링 등 라이브러리가 사용하고 있다. 따라서 이를 구분해서 사용하기 위해서 커스텀 예외를 작성해서 그것을 통해서만 예외처리를 작성하는 것이 에러 트래킹에 유리하다.
 
+---
+
 ## Exception Handling in Spring Boot
 
 @ControllerAdvice + 
@@ -95,6 +97,8 @@ catch 절에서 Throwable을 사용하면 모든 예외를 catch할 뿐만 아�
 - https://medium.com/globant/best-practice-for-exception-handling-in-springboot-540484db8a1a
 - https://www.toptal.com/java/spring-boot-rest-api-error-handling
 - https://stackoverflow.com/questions/66762006/spring-boot-exception-handling-best-practice
+
+---
 
 ## Custom Exception vs Standard Exception
 

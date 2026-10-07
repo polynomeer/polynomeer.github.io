@@ -15,6 +15,8 @@ For example, a failure in concurrency control can result in data corruption from
 
 - https://en.wikipedia.org/wiki/Concurrency_control
 
+---
+
 ## Concurrency Control in DB
 ## Concurrency Control in Network
 ## Concurrency Control in OS

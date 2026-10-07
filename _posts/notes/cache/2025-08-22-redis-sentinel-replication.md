@@ -17,9 +17,13 @@ Redis를 운영할 때 중요한 것은 단순한 캐시 성능만이 아니라,
 
 Sentinel은 master와 replica를 감시하고, master 장애 시 replica 중 하나를 새 master로 승격한다([Redis Sentinel 문서](https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/)).
 
+---
+
 ## 복제 구조
 
 replica는 master의 데이터를 [복제](/posts/db-replication/)해 읽기 부하를 일부 분산하고, 장애 시 승격 후보 역할을 한다. 다만 비동기 복제이기 때문에, 장애 직전의 일부 쓰기가 replica에 완전히 반영되지 않았을 가능성은 항상 염두에 둬야 한다. [Redis 복제 문서](https://redis.io/docs/latest/operate/oss_and_stack/management/replication/)는 `WAIT`로 복제 확인을 받아도 failover 중에 확인된 쓰기를 잃을 수 있다고 적는다.
+
+---
 
 ## Sentinel의 역할
 
@@ -31,6 +35,8 @@ Sentinel은 단순 모니터링 도구가 아니다. 실제로는 다음 책임�
 - 새 master 정보 알림
 
 애플리케이션은 Sentinel을 직접 조회하거나, Sentinel을 이해하는 클라이언트 라이브러리를 통해 현재 master 위치를 얻는다.
+
+---
 
 ## 운영 시 주의점
 
@@ -45,6 +51,8 @@ replica가 master를 충분히 따라오지 못하면 장애 시 데이터 손�
 ### replica 읽기의 일관성
 
 replica 읽기는 최신성이 약해질 수 있다. 강한 최신성이 필요한 데이터라면 무조건 replica 읽기를 붙이는 방식은 위험할 수 있다.
+
+---
 
 ## 정리
 

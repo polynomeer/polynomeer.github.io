@@ -7,6 +7,8 @@ tags: [Maven, Dependency Management, Build]
 
 Maven 프로젝트를 열었는데 의존성이 내려받아지지 않으면, 처음에는 단순히 IDE 문제처럼 보일 수 있다. 하지만 실제 원인은 저장소 설정, 네트워크, 프록시, 로컬 캐시, 버전 좌표 오류 등 다양하다.
 
+---
+
 ## Maven이 의존성을 찾는 순서
 
 원인을 좁히려면 Maven이 의존성을 어디서 찾는지부터 알아야 한다. Maven 문서에 따르면 로컬 저장소는 Maven이 실행되는 컴퓨터의 디렉터리이고, 원격에서 내려받은 것을 캐시한다. 다운로드는 프로젝트가 선언한 의존성이 로컬 저장소에 없을 때 일어나고, 기본적으로 중앙 저장소(Maven Central)에서 받는다([Introduction to Repositories](https://maven.apache.org/guides/introduction/introduction-to-repositories.html)).
@@ -17,12 +19,16 @@ Maven 프로젝트를 열었는데 의존성이 내려받아지지 않으면, �
 
 실패는 이 세 단계 중 하나에서 일어난다. 좌표가 틀렸거나, 원격 저장소에 닿지 못했거나, 로컬에 남은 것이 잘못됐거나.
 
+---
+
 ## 가장 먼저 확인할 것
 
 - `groupId`, `artifactId`, `version`이 맞는가
 - 중앙 저장소나 사설 저장소에 실제로 존재하는가
 - 네트워크나 프록시 제한이 있는가
 - 로컬 캐시가 깨져 있지는 않은가
+
+---
 
 ## IDE 문제와 빌드 문제를 구분하기
 
@@ -41,6 +47,8 @@ mvn dependency:tree         # 의존성 트리: 어떤 의존성이 문제의 �
 `-U`가 필요한 이유가 있다. Maven은 원격 저장소를 얼마나 자주 다시 확인할지를 `updatePolicy`로 정하고, 기본값은 `daily`다([Settings Reference](https://maven.apache.org/settings.html)). 저장소 설정을 고친 뒤에도 같은 실패가 반복된다면, Maven이 아직 원격을 다시 확인하지 않은 것일 수 있다. `-U`는 이 확인을 강제한다.
 
 `-X` 출력에서는 실제로 요청한 URL을 찾는다. 기대한 사내 저장소가 아니라 중앙 저장소로 가고 있다면 저장소나 미러 설정이 적용되지 않은 것이다.
+
+---
 
 ## 자주 나오는 원인
 
@@ -109,9 +117,13 @@ Maven이 프록시를 거쳐 저장소에 접속하게 하려면 `settings.xml`�
 
 사용자 이름과 비밀번호는 프록시가 기본 인증을 요구할 때만 필요하다. 사내 저장소처럼 프록시를 거치지 않아야 하는 호스트는 `nonProxyHosts`에 `|`로 구분해 넣는다. 문서는 NTLM 프록시는 테스트되지 않아 지원하지 않는다고 적는다.
 
+---
+
 ## 덧붙임: HTTP 저장소 차단
 
 이 글을 쓴 뒤인 2021년에 나온 Maven 3.8.1부터는 외부 HTTP 저장소가 기본으로 차단된다. 기본 `conf/settings.xml`에 `maven-default-http-blocker` 미러가 추가되었고, 중간자 공격(CVE-2021-26291)을 막기 위한 변경이다([Maven 3.8.1 Release Notes](https://maven.apache.org/docs/3.8.1/release-notes.html)). 오래된 프로젝트가 `http://` 주소의 저장소를 쓰고 있다면, Maven을 올린 뒤 갑자기 의존성을 받지 못할 수 있다. 저장소 주소를 HTTPS로 바꾸는 것이 우선이다.
+
+---
 
 ## 정리
 

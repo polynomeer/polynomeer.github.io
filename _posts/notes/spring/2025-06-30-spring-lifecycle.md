@@ -16,6 +16,8 @@ tags: [Spring, Bean Lifecycle, Bean]
 
 스프링을 오래 쓰다 보면 기능 자체보다 시점 문제가 더 어렵다. 같은 코드라도 "생성자 안에서 호출했는가", "초기화 콜백에서 호출했는가", "프록시가 만들어진 뒤 호출했는가"에 따라 동작이 달라지기 때문이다.
 
+---
+
 ## 큰 흐름부터 보면
 
 1. 컨테이너 시작
@@ -30,6 +32,8 @@ tags: [Spring, Bean Lifecycle, Bean]
 
 이 순서를 그냥 외우기보다, "메타데이터 준비 -> 객체 생성 -> 의존성 연결 -> 후처리 -> 초기화 완료 -> 사용 -> 종료"의 흐름으로 잡아두는 편이 훨씬 오래 간다.
 
+---
+
 ## 1. 컨테이너 초기화와 BeanDefinition 준비
 
 `ApplicationContext`가 생성되고 설정 정보가 읽힌다. 이 단계에서 어떤 빈들이 존재하는지에 대한 메타정보인 [BeanDefinition](/posts/spring-internals-lab-bean-definition/)이 준비된다.
@@ -37,6 +41,8 @@ tags: [Spring, Bean Lifecycle, Bean]
 BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서드, 소멸 메서드 같은 정보가 들어 있다. 아직 실제 객체가 전부 생성된 것은 아니고, 스프링이 "무엇을 어떻게 만들지"를 아는 상태가 먼저 준비된다고 보면 된다.
 
 이 단계가 중요한 이유는 스프링이 객체를 직접 코드로 작성하는 대신 메타데이터를 기반으로 조립하는 컨테이너라는 점을 보여주기 때문이다.
+
+---
 
 ## 2. 빈 생성
 
@@ -46,6 +52,8 @@ BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서
 
 그래서 생성자에서 무거운 로직을 수행하거나, 라이프사이클 후반에 보장되는 상태를 가정하고 동작시키면 꼬이기 쉽다.
 
+---
+
 ## 3. 의존성 주입
 
 생성자 주입은 앞 단계의 생성자 호출과 함께 일어난다. 필드 주입과 세터 주입은 객체가 만들어진 뒤에 수행된다. 단일 생성자 주입이 가장 권장되는 이유도 이 차이에서 나온다. 주입 방식 자체는 [IoC와 DI 글](/posts/ioc-di/)에서 따로 다뤘다.
@@ -53,6 +61,8 @@ BeanDefinition에는 클래스 정보, 스코프, 의존관계, 초기화 메서
 생성자 주입은 "생성 시점에 필요한 의존성이 모두 준비되어야 한다"는 제약이 있고, 그 제약 덕분에 불완전한 객체를 만들 가능성이 줄어든다. 반대로 필드 주입이나 세터 주입은 라이프사이클 상 더 늦은 주입이 가능하지만, 객체 입장에서 의존성이 언제 완성되는지 덜 명확해진다.
 
 실무에서 빈 초기화 문제를 줄이려면 생성자 주입을 기본으로 생각하는 게 맞다.
+
+---
 
 ## 4. Aware 콜백
 
@@ -66,6 +76,8 @@ Spring Framework 레퍼런스는 이 콜백이 일반 프로퍼티가 채워진 
 
 다만 `ApplicationContextAware` 같은 인터페이스를 남용하면 비즈니스 객체가 컨테이너에 강하게 결합된다. 필요할 때만 쓰고, 일반적인 의존관계 해결 수단으로 쓰는 것은 피하는 편이 좋다.
 
+---
+
 ## 5. BeanPostProcessor가 개입하는 지점
 
 많은 고수준 기능이 이 구간에서 구현된다.
@@ -78,6 +90,8 @@ Spring Framework 레퍼런스는 이 콜백이 일반 프로퍼티가 채워진 
 스프링이 제공하는 다양한 기능은 이 확장 포인트를 활용한다. 같은 문서는 Spring AOP 인프라 클래스 일부가 프록시로 감싸는 로직을 제공하려고 bean post-processor로 구현되어 있다고 설명한다. 예를 들어 [AOP](/posts/aop/), `@Transactional`, `@Async`, `@Autowired` 처리 일부, `@PostConstruct` 처리도 모두 넓게 보면 후처리 메커니즘 위에서 돌아간다.
 
 그래서 우리가 주입받는 객체가 항상 원본 클래스 그 자체는 아니다. 후처리 과정에서 프록시 객체로 대체될 수 있다. 후처리기의 호출 순서는 [spring-internals-lab 5편](/posts/spring-internals-lab-bean-lifecycle/)에서 실험으로 확인했다.
+
+---
 
 ## 6. 초기화 콜백
 
@@ -97,6 +111,8 @@ Spring Framework 레퍼런스는 이 콜백이 일반 프로퍼티가 채워진 
 - 메모리 내 자료구조 준비
 
 다만 여기서도 주의할 점이 있다. 초기화 콜백은 애플리케이션 시작 경로 위에 있기 때문에, 너무 무거운 네트워크 호출이나 대량 적재를 넣으면 기동 시간이 길어지고 장애 전파 범위도 커진다.
+
+---
 
 ## 7. 프록시와 라이프사이클을 같이 봐야 하는 이유
 
@@ -130,6 +146,8 @@ public class OrderService {
 
 이 코드가 위험한 이유는 `@Transactional`이 메서드 선언만으로 마법처럼 적용되는 것이 아니라, 프록시를 통해 호출될 때 의미가 생기기 때문이다. 라이프사이클을 모르면 이 문제를 "왜 어노테이션이 무시되지?" 정도로만 보게 된다.
 
+---
+
 ## 8. 빈 사용 단계와 스코프 차이
 
 초기화가 끝난 뒤 빈은 실제 애플리케이션에서 사용된다. 그런데 이 구간도 스코프에 따라 감각이 달라진다.
@@ -146,6 +164,8 @@ public class OrderService {
 
 `request`, `session`, `application` 같은 웹 스코프는 HTTP 생명주기와 연결된다. 이 경우 빈 생명주기를 스프링 컨테이너만의 시간축으로 보면 오해하기 쉽다. `request` 빈은 HTTP 요청 하나, `session` 빈은 HTTP 세션 하나의 수명을 따른다.
 
+---
+
 ## 9. 종료 시점
 
 컨테이너가 내려갈 때는 `@PreDestroy`, `DisposableBean`, `destroyMethod` 등이 사용된다. 커넥션 정리, 외부 리소스 해제, 버퍼 flush 같은 작업이 이 구간에 들어간다.
@@ -160,6 +180,8 @@ public class OrderService {
 
 다만 종료 콜백은 "정상 종료"를 전제하는 경우가 많다. 프로세스 강제 종료, 컨테이너 kill, 장애 상황에서는 기대만큼 호출되지 않을 수 있다. 그래서 중요한 정합성을 종료 훅 하나에만 의존하는 설계는 위험하다.
 
+---
+
 ## 초기화와 소멸 방식은 무엇을 선택해야 하는가
 
 우선순위를 실무 감각으로 정리하면 대체로 이렇다.
@@ -169,6 +191,8 @@ public class OrderService {
 - 스프링 인터페이스 기반 콜백: 특별한 이유가 없으면 후순위
 
 이 기준이 좋은 이유는 코드가 프레임워크에 덜 묶이고, 의도가 더 명확하기 때문이다.
+
+---
 
 ## 실무에서 자주 부딪히는 문제
 
@@ -191,6 +215,8 @@ public class OrderService {
 
 `@Transactional`, `@Async`, `@Cacheable` 같은 기능은 프록시를 통과해야 적용된다. 같은 클래스 내부에서 직접 호출하면 기대한 부가기능이 동작하지 않을 수 있다.
 
+---
+
 ## 전체 순서를 한 번에 다시 보면
 
 `BeanFactory` Javadoc은 표준 초기화 순서를 `BeanNameAware`부터 `ApplicationContextAware`까지의 Aware 콜백, `postProcessBeforeInitialization`, `afterPropertiesSet`, 커스텀 init 메서드, `postProcessAfterInitialization` 순으로 나열한다([BeanFactory Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html)). `@PostConstruct`는 `postProcessBeforeInitialization` 단계에서 처리된다. 실무에서는 아래 흐름으로 잡아두면 대부분의 문제를 설명할 수 있다.
@@ -206,6 +232,8 @@ BeanDefinition 준비
 -> 프록시 포함 최종 빈 사용
 -> 종료 시 @PreDestroy / destroy / destroyMethod
 ```
+
+---
 
 ## 정리
 

@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## 이번 글의 질문
 
 `ApplicationContext.refresh()`는 Spring 컨테이너 초기화의 중심이다. 그런데 실무에서는 이 메서드를 직접 호출할 일보다 결과만 접할 일이 훨씬 많다. 그래서 다음 질문이 자주 흐릿하게 남는다.
@@ -22,6 +24,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 - `refresh()` 전, 후, 실패 후, `close()` 후에 컨테이너는 어떻게 다른 상태인가
 
 이번 글은 `spring-internals-lab`의 `context-refresh-visualizer` 실험과 소스 확인을 바탕으로, `refresh()`를 "Spring이 시작될 때 뭔가 많이 하는 메서드"가 아니라 정해진 단계로 컨테이너를 조립하는 파이프라인으로 본다.
+
+---
 
 ## `refresh()`는 사실상 컨테이너 부팅 시퀀스다
 
@@ -53,6 +57,8 @@ flowchart TD
 
 즉 `refresh()`는 객체를 바로 만들지 않는다. 먼저 정의를 다듬고, 그다음 후처리기를 등록하고, 마지막에 실제 singleton을 만든다.
 
+---
+
 ## 실험 코드는 아주 작다
 
 `spring-internals-lab`의 `experiments/context-refresh-visualizer`는 이 순서를 관찰하기 위해 각 지점에 로그를 남긴다.
@@ -78,6 +84,8 @@ context.refresh();
 
 그리고 후처리기와 이벤트 리스너를 같이 넣어서, 어떤 종류가 어느 단계에서 보이는지 비교한다.
 
+---
+
 ## 실제 관찰 순서
 
 실험 결과는 놀랄 만큼 단순했다.
@@ -99,6 +107,8 @@ event:ContextRefreshedEvent
 
 반대로 `LazySingleton`과 `PrototypeBean`은 이 로그에 아예 나타나지 않는다. 그래서 `refresh()`가 하는 일은 "모든 Bean 생성"이 아니라 non-lazy singleton을 미리 만들어 두는 것(선생성)에 가깝다.
 
+---
+
 ## `BeanFactoryPostProcessor`와 `BeanPostProcessor`는 이름만 비슷할 뿐 단계가 다르다
 
 이 둘은 처음 배울 때 늘 헷갈린다. 하지만 `refresh()`에 끼워 보면 차이가 분명해진다. [Spring 문서의 Container Extension Points](https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html)도 `BeanFactoryPostProcessor`는 Bean 설정 메타데이터를, `BeanPostProcessor`는 Bean 인스턴스를 다룬다고 나눠 설명한다.
@@ -118,6 +128,8 @@ event:ContextRefreshedEvent
 - `@Autowired` 처리
 
 이 기능들은 전부 같은 타이밍에 작동하지 않는다. 어떤 것은 정의 단계에서, 어떤 것은 인스턴스 단계에서 개입한다.
+
+---
 
 ## `finishBeanFactoryInitialization()`이 실제 Bean 생성의 중심이다
 
@@ -139,6 +151,8 @@ event:ContextRefreshedEvent
 
 모든 규칙이 정해진 뒤에야 singleton 생성이 시작된다.
 
+---
+
 ## lazy와 prototype이 여기서 빠지는 이유
 
 실험에서 `lazySingleton`과 `prototypeBean` 생성 로그가 없었던 이유도 이 단계 구조로 설명된다.
@@ -152,6 +166,8 @@ event:ContextRefreshedEvent
 prototype 쪽은 [Spring 문서의 Bean Scopes](https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html)도 같은 설명이다. 주입되거나 `getBean()`으로 요청될 때마다 새 인스턴스를 만든다.
 
 즉 컨테이너가 "준비 완료"라고 말할 때, 실제로는 모든 Bean이 있는 게 아니라 즉시 필요한 singleton만 준비된 상태다.
+
+---
 
 ## `refresh()` 전후의 컨텍스트 상태는 꽤 다르다
 
@@ -180,6 +196,8 @@ stateDiagram-v2
 
 실패 후에 다시 Registered처럼 보이는 이유도 이 그림으로 이해할 수 있다.
 
+---
+
 ## `GenericApplicationContext`는 왜 refresh를 한 번만 허용하는가
 
 `AnnotationConfigApplicationContext`는 내부적으로 `GenericApplicationContext` 기반이라 `refresh()`를 한 번만 허용한다. [`GenericApplicationContext` Javadoc](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/GenericApplicationContext.html)에 그대로 적혀 있다. "AbstractApplicationContext.refresh() may only be called once."(`refresh()`는 한 번만 호출할 수 있다.)
@@ -194,6 +212,8 @@ stateDiagram-v2
 
 즉 `refresh()`는 재계산 가능한 일반 메서드가 아니라, 컨텍스트를 활성 상태로 전환하는 일회성 부팅 단계에 가깝다.
 
+---
+
 ## 부모-자식 컨텍스트는 이벤트 전파도 계층적이다
 
 실험에서는 부모-자식 컨텍스트도 같이 본다. 여기서 흥미로운 점은 이벤트 전파 방향이다.
@@ -203,6 +223,8 @@ stateDiagram-v2
 - 자식에서 발행한 이벤트는 부모 리스너까지 올라간다.
 
 이건 Spring이 컨텍스트 계층을 "위로 집계되는 구조"로 다룬다는 뜻이다. 공통 로깅, 공통 감시 같은 리스너를 부모에 두면 자식 컨텍스트에서 일어나는 일도 함께 볼 수 있다.
+
+---
 
 ## mini-spring에는 왜 이 단계가 아직 없는가
 
@@ -223,6 +245,8 @@ stateDiagram-v2
 - 이벤트 발행
 
 Spring이 단순 객체 팩토리보다 훨씬 큰 이유가 이 차이에 있다. 객체 생성 전에 확장 지점을 순서대로 조율하는 컨테이너 레벨 파이프라인이 있다.
+
+---
 
 ## 정리
 

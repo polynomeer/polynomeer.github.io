@@ -7,6 +7,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 세 가지는 항상 같이 나오지만 역할이 다르다. 타임아웃은 포기 시점을, 재시도는 다시 시도할지를, 백오프는 언제 다시 할지를 정한다. 셋을 따로 정하지 않으면 서로를 망친다. 타임아웃 없는 재시도는 영원히 기다리고, 백오프 없는 재시도는 이미 아픈 상대를 더 때린다.
 
+---
+
 ## 타임아웃: 값이 없으면 무한이다
 
 가장 흔한 사고는 타임아웃을 안 거는 것이다. 라이브러리 기본값이 무한인 경우가 많고, 그러면 상대가 답하지 않을 때 **우리 쪽 자원이 무한히 묶인다.** gRPC 문서도 기본으로는 deadline을 설정하지 않아 클라이언트가 사실상 영원히 기다릴 수 있다고 적는다([gRPC: Deadlines](https://grpc.io/docs/guides/deadlines/)).
@@ -26,6 +28,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 값을 정하는 기준은 상대의 지연 분포다. p99가 300ms인 상대에 타임아웃 200ms를 걸면 정상 요청의 상당수를 죽인다. 반대로 30초를 걸면 장애 시 자원을 30초씩 묶는다. 그래서 p99의 2~3배 근처에서 시작해 실제 분포로 조정하는 것을 출발점으로 쓴다.
 
+---
+
 ## 재시도: 증폭을 먼저 계산한다
 
 재시도는 **상대에게 보내는 요청 수를 곱한다.** 3회 재시도는 3배다.
@@ -42,6 +46,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 그 위의 장치가 재시도 예산(retry budget)이다. 전체 요청 대비 재시도 비율에 상한(예: 10%)을 두고, 넘으면 재시도를 멈춘다. Google의 클라이언트는 재시도 비율이 10% 미만일 때만 재시도한다([Google SRE: Handling Overload](https://sre.google/sre-book/handling-overload/)). gRPC의 `retryThrottling`도 같은 계열이다([gRPC: Retry](https://grpc.io/docs/guides/retry/)). 고정 횟수만 두는 것보다 안전하다.
 
+---
+
 ## 백오프와 지터
 
 즉시 재시도하면 상대가 회복할 틈이 없다. 지수 백오프는 간격을 두 배씩 늘린다(100ms, 200ms, 400ms…). 상한(`max delay`)도 함께 둔다.
@@ -57,6 +63,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 다만 **지터가 값을 하려면 동기화된 폭주가 있어야 한다.** 이후 ParityPay 9편에서 지수 백오프와 지터를 붙였을 때 총량은 그대로 3.00배였고, 초당 최대가 33에서 38~41로 오히려 높았다. 부하가 초당 10건씩 고르게 도착하는 조건이라 펼칠 봉우리가 없었다.
 
 그래서 지터는 재시도 정책의 필수 요소이지만 재시도 자체를 정당화하지 않는다. 상대가 계속 느려서 매 시도가 타임아웃되는 조건에서는 총 부하가 줄지 않는다. 경합 때문에 실패하는 경우는 다르다. Brooker의 시뮬레이션처럼 충돌이 재시도를 부르는 상황에서는 지터가 충돌을 줄여, 클라이언트 100개 기준 호출 수가 절반 넘게 줄었다.
+
+---
 
 ## 데드라인 전파
 
@@ -80,6 +88,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 같은 원리가 재시도에도 적용된다. 남은 데드라인을 넘는 재시도는 하지 않는다. 결과를 받을 사람이 없기 때문이다. gRPC의 재시도도 호출 전체의 deadline을 넘겨 시도하지 않는다([gRPC: Retry](https://grpc.io/docs/guides/retry/)).
 
+---
+
 ## 타임아웃만으로 부족할 때
 
 재시도를 제약해도 상대가 완전히 죽어 있으면 매 요청이 타임아웃까지 기다린다. 그 대기가 우리 자원을 먹는다.
@@ -90,6 +100,8 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 
 세 장치가 제한하는 대상이 다르다. **타임아웃은 한 번의 대기를, 차단기는 반복되는 실패를, 벌크헤드는 동시 점유량을 제한한다.** 그래서 하나로 다른 둘을 대신할 수 없다.
 
+---
+
 ## 이 설명이 깨지는 곳
 
 - 타임아웃은 실패가 아니다. 상대가 처리했는데 응답만 유실됐을 수 있다. 결과를 모르는 상태이고, 재시도가 아니라 조회가 먼저다(이후 [ParityPay 3편](/posts/parity-pay-unknown-state/)에서 다뤘다).
@@ -97,12 +109,16 @@ tags: [Resilience, Retry, Timeout, Backoff, Circuit Breaker, Distributed System]
 - 차단기가 열려 있는 동안의 요청도 상태를 갖는다. 기관에 도달하지 않았으므로 `UNKNOWN`이 아니라 `FAILED`다. 이 구분이 없으면 격리 장치가 복구 작업의 부하가 된다.
 - 재시도가 없으면 리더 교체 같은 정상 동작이 장애로 보인다. 재시도를 없애는 것이 답은 아니다([합의 알고리즘](/posts/consensus-raft/)).
 
+---
+
 ## 무엇을 재면 확인되는가
 
 1. 재시도 전후로 상대가 받는 요청 수를 센다. 증폭 배수가 그대로 나온다.
 2. 지터가 봉우리를 낮추는지 확인하려면 동기화된 폭주 조건을 만들어야 한다. 고른 도착에서는 차이가 없다.
 3. 데드라인 전파를 켜고, 클라이언트가 포기한 뒤에도 하위 서비스가 계속 일하는지 본다.
 4. 차단기 파라미터별로 복귀 시간과 거절 건수를 함께 잰다.
+
+---
 
 ## 정리
 

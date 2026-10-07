@@ -14,6 +14,8 @@ mermaid: true
 
 리스너가 왜 호출되지 않는지 원인과 해결을 길게 다룬 글은 [@TransactionalEventListener가 무시되는 이유와 해결법](/posts/transactional-event-listener/)에 있다. 이 노트는 코드 리뷰나 장애 확인 때 빠르게 훑어볼 항목만 모은 것이다.
 
+---
+
 ## 핵심 요약
 
 - 기본 `@EventListener`는 발행 즉시 실행된다.
@@ -27,6 +29,8 @@ mermaid: true
 - phase: `BEFORE_COMMIT`, `AFTER_COMMIT`(기본값), `AFTER_ROLLBACK`, 커밋과 롤백을 모두 포함하는 `AFTER_COMPLETION`이 있다([Spring: Transaction-bound Events](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html)).
 - 트랜잭션이 없을 때: 같은 문서는 실행 중인 트랜잭션이 없으면 요구된 의미를 지킬 수 없으므로 리스너를 아예 호출하지 않는다고 적는다. Javadoc 표현으로는 이벤트가 버려진다(discarded).
 - `fallbackExecution`: 이 값을 `true`로 두면 트랜잭션이 없어도 리스너가 실행된다. 기다릴 커밋이 없으므로 발행 즉시 실행되고, 리스너 입장에서는 "커밋된 데이터만 본다"는 전제가 사라진다.
+
+---
 
 ## 실행 시점을 그림으로
 
@@ -60,12 +64,16 @@ public class OrderEventHandler {
 }
 ```
 
+---
+
 ## 언제 적합한가
 
 - DB 반영이 확정된 뒤 메시지를 발행해야 할 때
 - 롤백되면 메일/알림/외부 연동도 함께 막아야 할 때
 
 반대로 커밋 이후 작업이 실패해도 원래 트랜잭션은 이미 커밋되어 있다는 점은 기억해야 한다. 리스너가 메시지 발행에 실패하면 DB에는 주문이 있는데 메시지는 없는 상태가 된다. 이 간격이 허용되지 않는 작업이라면 리스너 안에서 재시도하거나, 이벤트를 같은 트랜잭션 안에서 별도 테이블에 기록해 두고 나중에 발행하는 방식을 검토한다.
+
+---
 
 ## 주의할 점
 
@@ -90,6 +98,8 @@ Spring TestContext 프레임워크에서 테스트 메서드에 `@Transactional`
 ### 비동기와 섞을 때
 
 리스너에 `@Async`를 함께 붙이면 리스너는 다른 스레드에서 실행된다. 커밋 이후에 호출된다는 점은 같지만, 리스너는 발행한 스레드의 트랜잭션 자원을 공유하지 않는다. 반대로 `@Async` 메서드 안에서 이벤트를 발행하는 경우는 다르다. 새 스레드에는 호출한 쪽의 트랜잭션이 이어지지 않으므로, 그 메서드에 따로 트랜잭션이 없다면 `AFTER_COMMIT` 리스너는 호출되지 않는다. 문서도 6.1 기준으로 `PlatformTransactionManager`가 관리하는 트랜잭션의 경우 리스너가 현재 스레드에 묶인 트랜잭션을 본다고 적는다.
+
+---
 
 ## 한 줄 결론
 

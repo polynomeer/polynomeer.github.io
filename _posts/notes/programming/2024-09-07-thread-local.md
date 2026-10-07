@@ -9,6 +9,8 @@ tags: [Java, ThreadLocal, Concurrency]
 
 ThreadLocal은 JDK 1.2 부터 제공된 클래스이며, 이를 활용하면 스레드 단위로 로컬 변수를 사용할 수 있다. 즉, 일반적인 로컬 변수의 수명은 특정 코드 블록의 범위에 한정하여 유효하지만, **ThreadLocal은 특정 스레드가 실행하는 모든 코드에서 사용 가능하다.** ThreadLocal은 내부적으로 스레드 정보를 key로 하여 값을 저장해두는 Map 구조를 가지고 있다.
 
+---
+
 ## ThreadLocal API
 
 TheadLocal construct는 특정 스레드 에서만 액세스할 수 있는 데이터를 저장할 수 있도록 해준다. 특정 스레드에 묶여서 Integer 값을 사용하고 싶다고 가정해 보면, 다음과 같이 선언해볼 수 있다.
@@ -37,6 +39,8 @@ ThreadLocal로부터 값을 제거하려면 `remove()` 메서드를 호출하면
 ```java
 threadLocal.remove();
 ```
+
+---
 
 ## Storing User Data in a Map
 
@@ -85,6 +89,8 @@ new Thread(secondUser).start();
 assertEquals(SharedMapWithUserContext.userContextPerUserId.size(), 2);
 ```
 
+---
+
 ## Storing User Data in ThreadLocal
 
 ThreadLocal을 사용하여 사용자 컨텍스트 인스턴스를 저장하도록 예제를 다시 작성할 수 있다. 각 스레드에는 자체 ThreadLocal 인스턴스가 있다.
@@ -130,6 +136,8 @@ thread context for given userId: 1 is: Context{userNameSecret='302e7ac0-1804-41a
 
 각 사용자가 고유한 Context를 가지고 있음을 알 수 있다 .
 
+---
+
 ## ThreadLocals and Thread Pools
 
 ThreadLocal은 사용하기 쉬운 API를 제공하여 일부 값을 각 스레드에 제한한다. 이것은 Java에서 [thread-safety](https://www.baeldung.com/java-thread-safety)를 달성하는 합리적인 방법이다. 그러나 ThreadLocal 과 Thread Pool을 함께 사용할 때는 각별히 주의해야 한다.
@@ -163,6 +171,8 @@ public class ThreadLocalAwareThreadPool extends ThreadPoolExecutor {
 ```
 
 이 ExecutorService 구현에 요청을 제출하면 ThreadLocal 및 스레드 풀을 사용해도 애플리케이션에 안전성의 위험이 발생하지 않는다는 것을 확신할 수 있다.
+
+---
 
 ## Conclusion
 

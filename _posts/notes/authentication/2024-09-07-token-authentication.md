@@ -13,6 +13,8 @@ mermaid: true
 
 [Authentication](/posts/authentication/)에서 로그인 이후의 요청을 인증하는 방식은 세션과 토큰 두 가지로 나뉜다고 정리했다. 이 글은 그중 토큰 방식을 다룬다. 토큰 기반 인증은 로그인에 성공한 사용자에게 서버가 토큰을 발급하고, 이후 요청마다 클라이언트가 그 토큰을 함께 보내 신원을 증명하는 방식이다.
 
+---
+
 ## 토큰 인증의 흐름
 
 Okta의 설명을 따르면 흐름은 네 단계다. 사용자가 접근을 요청하고, 서버가 자격 증명을 확인하고, 서버가 유효 기간이 정해진 토큰을 발급하고, 이후 접근에는 그 토큰을 쓴다([Okta, What Is Token-Based Authentication?](https://www.okta.com/identity-101/what-is-token-based-authentication/)). 같은 글은 USB 키나 스마트카드 같은 물리적인 하드웨어 토큰도 함께 다루지만, 웹 API에서 말하는 토큰은 보통 문자열 형태의 소프트웨어 토큰이다.
@@ -31,6 +33,8 @@ sequenceDiagram
 
 인증 서버와 API 서버는 같은 애플리케이션일 수도 있고 분리되어 있을 수도 있다. 핵심은 비밀번호가 로그인 요청에서 한 번만 오가고, 이후에는 토큰이 그 역할을 대신한다는 점이다.
 
+---
+
 ## Bearer 토큰
 
 웹 API에서 가장 흔한 토큰 형태는 bearer 토큰이다. RFC 6750은 bearer 토큰을 이렇게 정의한다.
@@ -45,6 +49,8 @@ sequenceDiagram
 
 토큰이 만료되었거나 폐기되었거나 형식이 잘못되었다면 서버는 `invalid_token` 오류와 401로, 토큰의 권한 범위가 부족하면 `insufficient_scope`와 403으로 응답한다.
 
+---
+
 ## 토큰 안에 무엇이 들어 있는가
 
 OAuth 2.0을 정의한 RFC 6749는 access token이 두 형태일 수 있다고 설명한다. 하나는 권한 정보를 조회하는 데 쓰는 식별자이고, 다른 하나는 권한 정보를 검증 가능한 형태로 직접 담은 토큰이다([RFC 6749, Section 1.4](https://www.rfc-editor.org/rfc/rfc6749.html#section-1.4)).
@@ -54,11 +60,15 @@ OAuth 2.0을 정의한 RFC 6749는 access token이 두 형태일 수 있다고 �
 
 JWT는 `헤더.페이로드.서명` 세 부분을 base64url로 인코딩해 점으로 이은 문자열이다([RFC 7519](https://www.rfc-editor.org/rfc/rfc7519.html)). 서명된 JWT의 페이로드는 인코딩되어 있을 뿐 암호화된 것이 아니므로 누구나 디코딩해서 읽을 수 있다.
 
+---
+
 ## access token과 refresh token
 
 토큰을 오래 쓰게 할수록 탈취되었을 때의 피해가 커지고, 짧게 하면 사용자가 자주 다시 로그인해야 한다. 이 긴장을 푸는 장치가 refresh token이다. RFC 6749에 따르면 refresh token은 access token이 만료되었을 때 새 access token을 받는 데 쓰며, 인증 서버에만 보내고 API 서버(resource server)로는 절대 보내지 않는다([RFC 6749, Section 1.5](https://www.rfc-editor.org/rfc/rfc6749.html#section-1.5)).
 
 그래서 흔한 구성은 access token의 수명을 짧게 두고, 만료되면 refresh token으로 새 access token을 받는 것이다. 매 요청에 실려 여러 서버를 오가는 access token은 짧게 살고, 오래 사는 refresh token은 인증 서버와만 오가므로 노출 경로가 좁다.
+
+---
 
 ## 토큰을 다룰 때 지킬 것
 
@@ -70,6 +80,8 @@ Auth0의 토큰 모범 사례 문서가 정리한 항목 중 핵심은 다음과
 - HTTPS로만 전송한다.
 - 토큰을 파싱하고 검증하는 코드는 직접 짜지 말고 검증된 라이브러리나 미들웨어를 쓴다.
 - 서명 알고리즘은 대칭키(HS256)보다 비대칭키(RS256)를 권한다. 검증하는 쪽이 공개키만 가지면 되고, 키를 교체할 때도 유리하다.
+
+---
 
 ## 세션 방식과 비교하면
 

@@ -23,6 +23,8 @@ private final ExpiryHeap heap = new ExpiryHeap();
 
 이 구현을 아주 직접적으로 말하면 "문자열 key를 `Record`로 매핑하는 자바 맵"이다. 그리고 그 위에 타입, TTL, hash 연산을 얹는다.
 
+---
+
 ## 1. Record가 값 타입을 감싼다
 
 `Record`는 현재 이 프로젝트가 지원하는 값 타입을 담는 래퍼다.
@@ -45,6 +47,8 @@ long expireAtMs = -1L;
 
 이런 키들이 하나의 keyspace 안에 함께 섞여 있다.
 
+---
+
 ## 2. 타입 체크는 keyspace 계층에서 수행된다
 
 예를 들어 해시 명령을 문자열 키에 적용하면 Redis는 WRONGTYPE 오류를 준다. RESP 명세가 드는 오류 예시도 `-WRONGTYPE Operation against a key holding the wrong kind of value`이고, `WRONGTYPE`은 잘못된 자료구조 타입에 명령을 실행했다는 뜻의 오류 접두어다([RESP 명세](https://redis.io/docs/latest/develop/reference/protocol-spec/)). 이 프로젝트도 같은 방향으로 간다.
@@ -56,6 +60,8 @@ if (r.type != Record.Type.HASH) {
 ```
 
 Redis 명령은 같은 문자열 key를 받아도, 실제 의미는 그 값의 자료구조 타입에 따라 달라진다. 그래서 커맨드는 key만 보는 것이 아니라 key가 가리키는 값의 타입까지 같이 본다.
+
+---
 
 ## 3. TTL은 passive + active expiration으로 처리한다
 
@@ -88,6 +94,8 @@ db.expireDue(nowMs, EXPIRE_BATCH_LIMIT);
 
 실제 Redis도 두 방식을 함께 쓴다. Redis 문서에 따르면 클라이언트가 만료된 키에 접근하면 그 자리에서 만료시키고(passive), 다시는 접근되지 않을 키를 위해 만료 시각이 설정된 키 중 몇 개를 무작위로 골라 주기적으로 검사한다(active) ([EXPIRE](https://redis.io/docs/latest/commands/expire/)). active 쪽의 방법은 다르다. Redis는 무작위 표본을 검사하고, 이 구현은 `ExpiryHeap`에서 만료 시각이 지난 키를 꺼낸다. 어느 쪽이든 만료 키는 정확히 그 시각에 즉시 지워지는 것이 아니라, 접근 시점의 정리와 백그라운드 정리를 함께 거쳐 사라진다.
 
+---
+
 ## 4. 왜 ExpiryHeap을 따로 두는가
 
 TTL은 각 레코드에 `expireAtMs`로 저장되지만, 그렇다고 매 루프마다 전체 keyspace를 스캔하면 비효율적이다.
@@ -112,6 +120,8 @@ selector.select(Math.max(1, Math.min(delayMs, 1000)));
 
 다음 만료가 1초보다 가까우면 `select()`는 그만큼만 기다리고 깨어난다. 그래서 네트워크 이벤트 루프와 TTL 스케줄링은 완전히 분리돼 있지 않고, 하나의 메인 루프 안에서 같이 움직인다.
 
+---
+
 ## 5. 왜 heap은 append-only에 가깝게 유지하는가
 
 `ExpiryHeap` 구현 설명에서 흥미로운 점은, TTL 변경 시 heap 안의 예전 엔트리를 직접 수정하지 않는다는 점이다.
@@ -130,6 +140,8 @@ selector.select(Math.max(1, Math.min(delayMs, 1000)));
 - pop 시 검증 비용이 추가된다.
 
 하지만 교육용 구현과 단일 스레드 keyspace에서는 충분히 합리적인 선택이다.
+
+---
 
 ## 6. Hash는 별도 자료구조를 사용한다
 
@@ -152,11 +164,15 @@ public final class OpenHashStringMap {
 
 자바 기본 `HashMap`을 그대로 쓰는 대신, Redis가 내부적으로 자료구조를 직접 설계하는 감각을 흉내 낸 셈이다.
 
+---
+
 ## 7. 왜 직접 해시맵을 만들었는가
 
 교육용 구현에서 직접 자료구조를 만드는 이유는 단순하다. Redis를 이해하려면 "키 하나가 다시 내부 자료구조를 가진다"는 점을 몸으로 봐야 하기 때문이다.
 
 Redis는 string, hash, list, set, zset를 모두 같은 방식으로 저장하지 않는다. 값 타입에 따라 내부 표현이 달라진다. `OBJECT ENCODING` 문서를 보면 같은 hash도 일반적으로는 `hashtable`, 작을 때는 `listpack`(Redis 7.0 이상)으로 인코딩되고, 작은 인코딩을 유지할 수 없는 연산이 들어오면 일반 타입으로 자동 변환된다([OBJECT ENCODING](https://redis.io/docs/latest/commands/object-encoding/)). 이 프로젝트에서 `OpenHashStringMap`을 따로 둔 것은 "값 타입마다 내부 표현이 따로 있다"는 점을 작은 규모로 드러낸다.
+
+---
 
 ## 8. keyspace 설계에서 보이는 Redis스러운 감각
 

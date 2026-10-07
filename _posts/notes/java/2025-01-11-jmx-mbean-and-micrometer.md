@@ -9,6 +9,8 @@ mermaid: true
 
 [무너지는 Spring 서버 1편](/posts/tomcat-thread-exhaustion/)에서 측정이 틀어진 첫 번째 원인은 Tomcat 스레드 지표가 아예 없었다는 것이다. `/actuator/prometheus`에 `tomcat_threads_busy_threads`가 없었다. 설명은 한 줄이었다. "Micrometer의 Tomcat 바인더는 MBean을 읽는데, `server.tomcat.mbeanregistry.enabled: true`가 없으면 MBean이 등록되지 않는다." 이 문장에는 모르는 단어가 셋 있다. JMX, MBean, 바인더다. 이 글은 셋을 차례로 풀고, 왜 결과가 0이 아니라 빈 패널이었는지를 설명한다.
 
+---
+
 ## JMX: JVM 안의 관리 창구
 
 JMX(Java Management Extensions)는 애플리케이션과 장치, 서비스 같은 자원을 관리하고 모니터링하는 Java SE 표준이다([JMX 소개](https://docs.oracle.com/en/java/javase/21/jmx/introduction-jmx-technology.html)). 구조는 두 층으로 보면 충분하다.
@@ -19,6 +21,8 @@ JMX(Java Management Extensions)는 애플리케이션과 장치, 서비스 같�
 JVM은 자기 자신에 대한 MBean도 기본으로 갖고 있다. `ManagementFactory.getPlatformMBeanServer()`가 돌려주는 플랫폼 MBean 서버에는 처음 호출될 때 스레드(`java.lang:type=Threading`), 메모리(`java.lang:type=Memory`) 같은 플랫폼 MXBean이 등록된다([ManagementFactory](https://docs.oracle.com/en/java/javase/21/docs/api/java.management/java/lang/management/ManagementFactory.html)). JConsole이나 VisualVM이 원격으로 붙어서 보여주는 값도 이 MBean들이다.
 
 비유하면 MBean 서버는 건물의 계기판 벽이고, MBean은 거기 붙은 계기 하나하나다. 계기가 벽에 붙어 있어야 누구든 와서 눈금을 읽을 수 있다.
+
+---
 
 ## Micrometer 바인더: MBean을 읽어 지표로 바꾸는 쪽
 
@@ -38,6 +42,8 @@ flowchart LR
     S -->|"속성 currentThreadsBusy 읽기"| B["Micrometer TomcatMetrics<br/>게이지 tomcat.threads.busy"]
     B -->|"/actuator/prometheus"| P["Prometheus<br/>tomcat_threads_busy_threads"]
 ```
+
+---
 
 ## MBean이 없으면 지표는 0이 아니라 없다
 
@@ -59,6 +65,8 @@ server:
 
 1편의 anti 조건에서 실제 값은 200개 중 191개였다. 설정이 빠진 상태였다면 그 순간에도 대시보드는 비어 있었을 것이고, 빈 패널은 "문제 없음"과 구별되지 않는다. 지표 체계 전반은 [메트릭, 로그, 트레이스](/posts/metrics-logs-traces/)에서 다뤘다.
 
+---
+
 ## MBean을 거치지 않는 지표도 있다
 
 모든 지표가 MBean에서 오는 것은 아니다. 1편 실험의 `UpstreamClient`는 벌크헤드에 남은 permit 수를 Micrometer 게이지로 직접 등록한다.
@@ -69,6 +77,8 @@ Gauge.builder("opslab.upstream.bulkhead.available", this, UpstreamClient::availa
 ```
 
 이 게이지는 MBean 서버를 거치지 않고 [세마포어](/posts/semaphore-and-permits/)의 `availablePermits()`를 바로 읽는다. 그래서 MBean 설정과 무관하게 항상 나온다. 반대로 Tomcat처럼 남이 만든 컴포넌트의 내부 상태는 그 컴포넌트가 MBean으로 내놓아야 읽을 수 있다. 바인더는 그 MBean이 있다는 전제 위에서만 동작한다.
+
+---
 
 ## 정리
 

@@ -12,6 +12,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 [GitHub 저장소](https://github.com/polynomeer/spring-lab)
 
+---
+
 ## 이번 글의 질문
 
 [의존성 주입](/posts/ioc-di/)은 흔히 한 덩어리로 설명되지만, 실제로는 두 단계로 나뉜다.
@@ -28,6 +30,8 @@ series_description: spring-internals-lab 프로젝트를 바탕으로 Spring 컨
 
 이번 글은 `dependency-resolution-matrix`와 `circular-dependency-lab` 실험을 함께 묶어서, **생성자 선택과 후보 선택은 다른 문제**라는 점부터 확인한다.
 
+---
+
 ## 먼저 생성자 선택이 있고, 그다음 후보 선택이 있다
 
 Spring은 처음부터 "이 타입의 Bean 뭐 넣지?"를 고민하지 않는다. 먼저 "이 클래스는 어떤 생성자로 만들지?"를 결정한다.
@@ -42,6 +46,8 @@ flowchart TD
 ```
 
 생성자가 정해져야 채울 파라미터 목록이 생기므로 생성자 선택이 먼저 온다.
+
+---
 
 ## 생성자 선택 규칙은 생각보다 보수적이다
 
@@ -72,6 +78,8 @@ Spring은 생성자가 여러 개인데 `@Autowired`가 하나도 없으면, 휴
 
 명시가 없을 때 Spring은 추론으로 맞히기보다 기본 생성자로 물러나는 쪽을 택한다.
 
+---
+
 ## 왜 이런 보수성이 필요한가
 
 생성자 주입은 객체 구조를 강하게 결정한다. 만약 Spring이 다음 같은 휴리스틱을 쓴다고 가정해 보자.
@@ -81,6 +89,8 @@ Spring은 생성자가 여러 개인데 `@Autowired`가 하나도 없으면, 휴
 - 가장 구체적인 타입의 생성자 선택
 
 이 규칙들은 언뜻 편해 보이지만, 코드가 조금만 변해도 어떤 생성자가 선택될지 달라진다. 그래서 Spring은 모호한 상황에서 추측을 최소화하고, 생성자가 여럿일 때 `@Autowired`를 생성자 선택을 명시하는 수단으로 쓴다.
+
+---
 
 ## 후보 선택은 또 다른 단계다
 
@@ -110,6 +120,8 @@ flowchart TD
 
 다만 `@Qualifier`의 위치는 그림과 다르게 읽어야 한다. 공식 문서에서 `@Qualifier`는 타입이 맞는 후보를 좁히는 수단이고, 이름 일치는 "If there is no other resolution indicator (such as a qualifier, a primary marker, or a fallback marker)"일 때 쓰는 마지막 대체 규칙이다([Fine-tuning Annotation-based Autowiring with Qualifiers](https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html)). 그래서 `@Qualifier`가 있으면 그 조건으로 먼저 후보가 걸러진다.
 
+---
+
 ## `@Primary`와 `@Qualifier`는 같은 문제를 다른 방식으로 푼다
 
 두 애노테이션은 같은 상황에서 등장하지만 성격이 다르다.
@@ -122,6 +134,8 @@ flowchart TD
 `@Primary`는 Bean을 제공하는 쪽에 붙는 힌트고, `@Qualifier`는 주입받는 쪽에 붙는 힌트다.
 
 그래서 남용했을 때의 비용도 다르다. `@Primary`를 남발하면 전체 기본값 구조가 꼬일 수 있고, `@Qualifier`를 남발하면 주입 지점마다 이름 의존이 강해진다.
+
+---
 
 ## 파라미터 이름 일치도 실제 후보 선택 규칙이다
 
@@ -137,6 +151,8 @@ public OrderService(PaymentGateway stripeGateway) { ... }
 
 이 규칙은 실무에서 자주 의식되지는 않지만, 이름을 잘못 맞춰 둔 경우 예상 밖의 후보가 선택되는 원인이 될 수 있다.
 
+---
+
 ## `Optional`, `List`, `ObjectProvider`는 실패 처리 전략이 다르다
 
 실험에서는 단일 타입뿐 아니라 관용적 주입 형태도 같이 본다.
@@ -149,6 +165,8 @@ public OrderService(PaymentGateway stripeGateway) { ... }
 | `ObjectProvider<T>` | 주입은 성공, 실제 조회 시점까지 지연 |
 
 네 형태 중 `Optional`, `List`, `ObjectProvider`는 모두 "필수 아님"을 표현한다. 그중 `ObjectProvider`는 후보를 찾는 시점 자체를 실제 조회 때로 미룬다는 점이 다르다.
+
+---
 
 ## 순환 참조는 주입 방식에 따라 완전히 다른 결과가 난다
 
@@ -180,6 +198,8 @@ flowchart LR
 
 두 경우를 가르는 것은 생성과 주입을 시점상 나눌 수 있는가다.
 
+---
+
 ## `@Lazy`는 순환을 푸는 방식 자체가 다르다
 
 한쪽 생성자 파라미터에 `@Lazy`를 붙이면, 실제 대상 대신 지연 [프록시](/posts/spring-internals-lab-proxy-aop/)가 들어간다.
@@ -200,6 +220,8 @@ class B {
 | `@Lazy` 순환 해결 | 지연 프록시 |
 
 이 차이를 모르면 "왜 어떤 순환은 풀리고 어떤 순환은 안 풀리는가"가 계속 추상적으로 남는다.
+
+---
 
 ## mini-spring은 어디까지 재현했는가
 
@@ -231,6 +253,8 @@ if (beanCreationPath.contains(name)) {
 2. 순환 해결은 탐지보다 훨씬 어렵다.
 
 그래서 mini는 순환을 해결하지 않고 감지해서 예외를 던지는 데서 멈춘다.
+
+---
 
 ## 정리
 
