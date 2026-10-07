@@ -184,6 +184,10 @@ Tech blog reviews (`_posts/techblog/`) must keep the original and the author's r
 - check every claim attributed to the original against the original, including what it says about results, follow-up posts, and future work
 - front matter summaries (`problem_decision_result`) follow the same rule
 
+## Section Breaks
+
+The post page draws a thin rule above every `##` section, and above every `###` topic in posts with fewer than three `##` headings (see `_sass/addon/commons.scss`). Do not add `---` between sections by hand; structure the post with headings instead.
+
 ## Diagrams and Code
 
 Add a diagram or code only where a reader would otherwise hold a sequence, structure, state machine, or interleaving in their head from prose alone.
