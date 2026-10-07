@@ -171,27 +171,6 @@ hr {
   opacity: 1;
 }
 
-/* Section dividers in a post body.
-   Every major section of a post starts with a thin rule, so a long post reads as
-   separate parts rather than one column. Every h2 after the first block of the
-   body gets one. A post with fewer than three h2s keeps its topics in h3s (most
-   TILs wrap them in a single "Today I Learned"), so its h3s get one as well,
-   except an h3 that opens right under its h2. A hand-written `---` right before
-   a divided heading would draw a second line, so it is hidden. */
-.post-header ~ .content {
-  > h2:not(:first-child),
-  &:not(:has(> h2 ~ h2 ~ h2)) > h3:not(:first-child, h2 + h3) {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--main-border-color);
-  }
-
-  > hr:has(+ h2),
-  &:not(:has(> h2 ~ h2 ~ h2)) > hr:has(+ h3) {
-    display: none;
-  }
-}
-
 footer {
   background-color: var(--main-bg);
   height: $footer-height;
