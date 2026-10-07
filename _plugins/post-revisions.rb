@@ -19,6 +19,17 @@
 # publication date, so re-dating a post renames the file, and `--numstat`
 # reports renames as `{old => new}` paths. The slug survives both, and
 # scripts/check-post-consistency.rb already guarantees it is unique.
+#
+# Commit subjects are written for the repository, in English. A post can give
+# readers a line of its own for a revision with `revision_notes`, keyed by the
+# revision's date or by a commit hash prefix (seven characters or more):
+#
+#   revision_notes:
+#     2026-10-01: PostgreSQL·Hibernate 출처 인용 추가
+#     "a1b2c3d": 측정 조건 표 보강   # quote hash keys; 1e23456 would read as a number
+#
+# A hash key wins over a date key; a date key applies to every revision made
+# that day. The note lands in the revision's `note`.
 
 require 'set'
 require 'time'
@@ -96,6 +107,19 @@ module Jekyll
         commits
       end
 
+      # `revision_notes` keys: YAML reads an unquoted date as a Date, so every
+      # key is compared as text
+      def note_for(notes, commit)
+        return nil unless notes.is_a?(Hash) && !notes.empty?
+
+        by_sha = notes.find { |key, _| key.to_s.match?(/\A\h{7,40}\z/) && commit['sha'].start_with?(key.to_s) }
+        return by_sha[1].to_s.strip if by_sha
+
+        day = commit['date'].strftime('%Y-%m-%d')
+        by_date = notes.find { |key, _| key.to_s == day }
+        by_date && by_date[1].to_s.strip
+      end
+
       def build(site)
         commits = history(site)
         return if commits.empty?
@@ -123,8 +147,11 @@ module Jekyll
           end
           next if revisions.empty?
 
+          notes = post.data['revision_notes']
           revisions = revisions.map do |commit|
-            commit.merge('date' => Time.parse(commit['date']), 'short_sha' => commit['sha'][0, 7])
+            dated = commit.merge('date' => Time.parse(commit['date']), 'short_sha' => commit['sha'][0, 7])
+            note = note_for(notes, dated)
+            note && !note.empty? ? dated.merge('note' => note) : dated
           end
 
           post.data['revisions'] = revisions.first(MAX_SHOWN)

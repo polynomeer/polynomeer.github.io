@@ -59,7 +59,7 @@ Each post gets:
 
 | key | value |
 | --- | --- |
-| `revisions` | newest first, at most 10, each with `date`, `subject`, `sha`, `short_sha`, `insertions`, `deletions` |
+| `revisions` | newest first, at most 10, each with `date`, `subject`, `sha`, `short_sha`, `insertions`, `deletions`, and `note` when the post gives one |
 | `revisions_total` | the count before the cap |
 | `last_modified_at` | the newest revision's date |
 
@@ -67,16 +67,33 @@ Each post gets:
 line in the post header and the "recently updated" sidebar panel, but it now
 means *the writing changed* rather than *some commit touched the file*.
 
+## Reader notes
+
+Commit subjects are written for the repository, in English. A post can give
+readers its own line for a revision in front matter:
+
+```yaml
+revision_notes:
+  "83a0a67": PostgreSQL·Hibernate 출처 인용 추가   # commit hash prefix, 7+ characters
+  2026-10-01: 측정 조건 표 보강                    # or the revision's date
+```
+
+A hash key wins over a date key, and a date key applies to every revision
+made that day, so use hashes when two revisions share a date. Quote hash keys:
+an all-digit or `1e…` hash would otherwise be read as a number. Adding notes
+changes a few lines of front matter, below the 6-line threshold, so it does
+not count as a revision itself.
+
 ## Rendering
 
-`_includes/post-revisions.html` is the first tail include of
-`_layouts/post.html`, rendered as a closed `<details>` so it stays a single
-pill above the backlinks. Each row is a date, the commit subject, and the
-line counts; the subject links to the commit when `site.revisions.repo` is
-set. The subjects are the repository's own Conventional Commits, in English —
-they are shown as what they are, with a link to the diff, rather than
-paraphrased.
+The post header shows "N번 수정" next to the updated date, linking to
+`#post-revisions`. `_includes/post-revisions.html` is a tail include placed
+right after the mentions (`post-backlinks`): what the post leans on and when
+it changed read together. It is a card with the revisions on a timeline -
+date, the note or else the commit subject, and the line counts - ending with
+the publication date. Rows beyond the first three fold behind a toggle. Each
+row links to its commit when `site.revisions.repo` is set; a note shows the
+commit subject as its tooltip.
 
-Strings are `post.revisions`, `post.revisions_count` and `post.revisions_more`
-in the locale files; styles sit with the other post-tail rules in
-`_sass/layout/post.scss`.
+Strings are `post.revisions*` in the locale files; styles sit with the other
+post-tail rules in `_sass/layout/post.scss`.

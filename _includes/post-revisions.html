@@ -1,71 +1,90 @@
 <!--
-  The post's substantive edits, collected by _plugins/post-revisions.rb.
-  Site-wide maintenance commits are filtered out there, so every row is an
-  actual change to the writing. The commit subjects are the repository's own,
-  in English; each links to the commit so the change can be read in full.
+  The post's substantive edits, collected by _plugins/post-revisions.rb, as a
+  section in the post tail next to the mentions: what the post leans on and
+  when it changed sit together. The post header links here ("N번 수정").
+
+  Each row shows the post's own `revision_notes` line when it has one, and
+  otherwise the commit subject (the repository's, in English); either links
+  to the commit. The list ends with the publication date so the history reads
+  from the start. Rows beyond the first three fold behind a toggle; without
+  the script every row shows.
 -->
 
 {% assign revisions = page.revisions %}
 
 {% if revisions.size > 0 %}
   {% assign repo = site.revisions.repo %}
+  {% assign loc = site.data.locales[include.lang].post %}
+  {% assign visible = 3 %}
+  {% capture last_date %}{% include datetime.html date=page.last_modified_at lang=include.lang %}{% endcapture %}
 
-  <dialog id="post-revisions-dialog" class="post-revisions-dialog" aria-labelledby="post-revisions-title">
-    <div class="post-revisions-heading">
-      <h2 id="post-revisions-title">{{ site.data.locales[include.lang].post.revisions }}</h2>
-      <form method="dialog">
-        <button class="post-revisions-close" aria-label="{{ site.data.locales[include.lang].post.revisions_close | default: 'Close revision history' }}" autofocus>&times;</button>
-      </form>
+  <section id="post-revisions" class="post-revisions" aria-labelledby="post-revisions-title" data-revisions data-visible="{{ visible }}">
+    <div class="post-revisions-head">
+      <h3 class="post-tail-heading" id="post-revisions-title">{{ loc.revisions }} <span class="connection-count">{{ page.revisions_total }}</span></h3>
+      <span class="post-revisions-state">{{ loc.revisions_state | replace: ':COUNT', page.revisions_total | replace: ':DATE', last_date | strip_newlines }}</span>
     </div>
-      <p class="post-revisions-state">
-        {{ site.data.locales[include.lang].post.revisions_count | replace: ':COUNT', page.revisions_total }}
-      </p>
 
     <ol class="post-revision-list">
       {% for revision in revisions %}
         <li class="post-revision">
-          <time class="post-revision-date" datetime="{{ revision.date | date_to_xmlschema }}">
-            {{ revision.date | date: '%Y-%m-%d' }}
-          </time>
-          <span class="post-revision-subject">
-            {% if repo %}
-              <a href="https://github.com/{{ repo }}/commit/{{ revision.sha }}" rel="noopener noreferrer" target="_blank">
-                {{ revision.subject }}
-              </a>
-            {% else %}
-              {{ revision.subject }}
-            {% endif %}
+          <time class="post-revision-date" datetime="{{ revision.date | date_to_xmlschema }}">{{ revision.date | date: '%Y-%m-%d' }}</time>
+          <span class="post-revision-subject{% unless revision.note %} is-commit{% endunless %}">
+            {%- if repo -%}
+              <a href="https://github.com/{{ repo }}/commit/{{ revision.sha }}" rel="noopener noreferrer" target="_blank"{% if revision.note %} title="{{ revision.subject | escape }}"{% endif %}>{{ revision.note | default: revision.subject }}</a>
+            {%- else -%}
+              {{ revision.note | default: revision.subject }}
+            {%- endif -%}
           </span>
-          <span class="post-revision-diff" aria-hidden="true">
+          <span class="post-revision-diff" aria-label="+{{ revision.insertions }} −{{ revision.deletions }}">
             <span class="post-revision-added">+{{ revision.insertions }}</span>
             <span class="post-revision-removed">&minus;{{ revision.deletions }}</span>
           </span>
         </li>
       {% endfor %}
+
+      {% if page.revisions_total > revisions.size %}
+        {% assign rest = page.revisions_total | minus: revisions.size %}
+        <li class="post-revision is-gap">{{ loc.revisions_more | replace: ':COUNT', rest }}</li>
+      {% endif %}
+
+      <li class="post-revision is-origin">
+        <time class="post-revision-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y-%m-%d' }}</time>
+        <span class="post-revision-subject">{{ loc.revisions_first }}</span>
+      </li>
     </ol>
+  </section>
 
-    {% if page.revisions_total > revisions.size %}
-      {% assign rest = page.revisions_total | minus: revisions.size %}
-      <p class="post-revision-more">
-        {{ site.data.locales[include.lang].post.revisions_more | replace: ':COUNT', rest }}
-      </p>
-    {% endif %}
-  </dialog>
-  <script>
-    (() => {
-      const dialog = document.getElementById('post-revisions-dialog');
-      const trigger = document.querySelector('.post-revisions-trigger');
-      if (!dialog || !trigger || typeof dialog.showModal !== 'function') return;
+  {% if revisions.size > visible %}
+    <script>
+      (() => {
+        const root = document.querySelector('[data-revisions]');
+        if (!root) return;
 
-      trigger.hidden = false;
-      trigger.addEventListener('click', () => dialog.showModal());
-      dialog.addEventListener('click', (event) => {
-        if (event.target !== dialog) return;
-        const rect = dialog.getBoundingClientRect();
-        if (event.clientX < rect.left || event.clientX > rect.right ||
-            event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
-      });
-      dialog.addEventListener('close', () => trigger.focus());
-    })();
-  </script>
+        const visible = Number(root.dataset.visible);
+        const rows = Array.from(root.querySelectorAll('.post-revision:not(.is-origin)'));
+        const hidden = rows.slice(visible);
+        if (hidden.length === 0) return;
+
+        const labels = {
+          expand: {{ site.data.locales[include.lang].post.revisions_expand | jsonify }},
+          collapse: {{ site.data.locales[include.lang].post.revisions_collapse | jsonify }}
+        };
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'post-tail-toggle';
+        toggle.setAttribute('aria-controls', 'post-revisions');
+
+        const apply = (open) => {
+          hidden.forEach((row) => row.classList.toggle('is-folded', !open));
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open ? labels.collapse : labels.expand.replace(':COUNT', hidden.length);
+        };
+
+        apply(false);
+        toggle.addEventListener('click', () => apply(toggle.getAttribute('aria-expanded') === 'false'));
+        root.querySelector('.post-revision-list').after(toggle);
+      })();
+    </script>
+  {% endif %}
 {% endif %}

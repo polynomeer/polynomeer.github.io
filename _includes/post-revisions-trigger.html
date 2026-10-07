@@ -1,5 +1,4 @@
+{%- comment -%} In the post header: how many times the post changed, linking to the history in the post tail (post-revisions.html). {%- endcomment -%}
 {% if page.revisions.size > 0 %}
-  <button type="button" class="post-revisions-trigger" aria-haspopup="dialog" aria-controls="post-revisions-dialog" hidden>
-    {{ site.data.locales[include.lang].post.revisions }}
-  </button>
+  <a class="post-revisions-link" href="#post-revisions">{{ site.data.locales[include.lang].post.revisions_count | replace: ':COUNT', page.revisions_total }}<i class="fas fa-arrow-down" aria-hidden="true"></i></a>
 {% endif %}
