@@ -11,7 +11,6 @@ Problem Details란 **에러나 예외 상황에 대한 표준화된 응답 형�
 
 ## 1. 정의
 
-- **출처**: [RFC 7807 — Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807)
 - 목적: 오류를 단순히 상태 코드로만 전달하는 대신, **JSON이나 XML 형식으로 에러의 세부 정보**를 제공
 - 일반적인 HTTP 상태 코드(예: `404 Not Found`)보다 **사람과 기계 모두가 이해하기 쉬운** 구조를 가짐
 
@@ -42,7 +41,6 @@ Problem Details란 **에러나 예외 상황에 대한 표준화된 응답 형�
 - **표준화**: 클라이언트가 예외 처리 로직을 일관성 있게 작성 가능하다. 기본 규격이 표준으로 정의되어 있으므로, 별도의 규격 정의에 관한 소통이나 설계 과정이 없이 기본 필드만으로 클라이언트에서 핸들링이 가능하다.
 
 - **확장 가능**: 표준 필드 외에도 추가 필드를 자유롭게 포함 가능하다. 기본 필드만으로는 클라이언트에서 핸들링이 어렵거나 복잡한 제어나 분기가 필요한 경우 얼마든지 필드를 확장해서 사용할 수 있다.
-
 
 예를 들면, 아래와 같은 확장형도 가능하다.
 
@@ -94,6 +92,6 @@ Problem Details란 **에러나 예외 상황에 대한 표준화된 응답 형�
 
 ---
 
-## 6. 참고자료
+## 참고
 
-- https://datatracker.ietf.org/doc/html/rfc7807
+- [RFC 7807: Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807) — IETF

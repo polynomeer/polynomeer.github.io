@@ -519,8 +519,8 @@ Gregor Hohpe의 글 **“The Many Facets of Coupling”**은 소프트웨어 아
 
 ---
 
-# 참고자료
+## 참고
 
-- [The Many Facets of Coupling](https://www.enterpriseintegrationpatterns.com/ramblings/coupling_facets.html)
-- ["High cohesion, low coupling" is one of the most misunderstood principles in software engineering.](https://www.linkedin.com/posts/theburningmonk_high-cohesion-low-coupling-is-one-of-the-activity-7282296949469286400-vx42/)
-- [Low Coupling, High Cohesion](https://medium.com/clarityhub/low-coupling-high-cohesion-3610e35ac4a6)
+- [The Many Facets of Coupling](https://www.enterpriseintegrationpatterns.com/ramblings/coupling_facets.html) — enterpriseintegrationpatterns.com
+- ["High cohesion, low coupling" is one of the most misunderstood principles in software engineering.](https://www.linkedin.com/posts/theburningmonk_high-cohesion-low-coupling-is-one-of-the-activity-7282296949469286400-vx42/) — LinkedIn
+- [Low Coupling, High Cohesion](https://medium.com/clarityhub/low-coupling-high-cohesion-3610e35ac4a6) — Medium
