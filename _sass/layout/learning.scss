@@ -8,10 +8,6 @@
 @use 'variables-hook' as *;
 @use 'addon/module' as *;
 
-.content .learning-page a:not(.img-link) {
-  border-bottom: none;
-}
-
 .learning-page {
   --course: var(--accent-green);
   --book: var(--accent-orange);

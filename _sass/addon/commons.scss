@@ -696,6 +696,19 @@ main {
   }
 }
 
+/*
+  Page components whose links are cards, rows and chips: the prose underline
+  (a bottom border) and its green hover never apply inside them. An override
+  that removed the underline afterwards also removed the bottom edge of every
+  boxed link, so they are left out of the rule instead. Each component styles
+  its own links.
+*/
+$boxed-link-scopes:
+  '.series-directory', '.series-detail-page', '.about-hero', '.about-jump', '.about-evidence',
+  '.about-representative', '.about-activity', '.tag-index', '#blog-stats', '.start-here',
+  '.capability-map', '.experiment-index', '.review-map', '.source-browser', '#on-this-day',
+  '.learning-page', '.topic-directory';
+
 .content {
   font-size: 1.08rem;
   margin-top: 2rem;
@@ -710,7 +723,7 @@ main {
       cursor: zoom-in;
     }
 
-    &:not(.img-link) {
+    &:not(.img-link):not(:where(#{$boxed-link-scopes}) a) {
       @extend %link-underline;
 
       &:hover {

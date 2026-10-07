@@ -613,9 +613,3 @@ h3.topic-card-question {
     color: var(--link-color);
   }
 }
-
-/* The directory sits inside `.content`, whose links carry an underline
-   border; these are cards and chips, not prose links. */
-.content .topic-directory a:not(.img-link) {
-  border-bottom: none;
-}

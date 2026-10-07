@@ -7,14 +7,6 @@
 @use 'variables-hook' as *;
 @use 'addon/module' as *;
 
-.content .about-hero a:not(.img-link),
-.content .about-jump a:not(.img-link),
-.content .about-evidence a:not(.img-link),
-.content .about-representative a:not(.img-link),
-.content .about-activity a:not(.img-link) {
-  border-bottom: none;
-}
-
 .about-hero,
 .about-evidence,
 .about-representative,

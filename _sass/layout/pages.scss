@@ -6,11 +6,6 @@
 @use 'variables-hook' as *;
 @use 'addon/module' as *;
 
-/* shared: cards and chips inside `.content` drop the prose link underline */
-.content .start-here a:not(.img-link) {
-  border-bottom: none;
-}
-
 /* ---------- /start/ ---------- */
 
 .start-here {
@@ -312,10 +307,6 @@
   margin-top: 0.5rem;
 }
 
-.content .capability-map a:not(.img-link) {
-  border-bottom: none;
-}
-
 .capability-list {
   display: flex;
   flex: 1 1 14rem;
@@ -607,10 +598,6 @@
 
 /* ---------- /experiments/ ---------- */
 
-.content .experiment-index a:not(.img-link) {
-  border-bottom: none;
-}
-
 .experiment-index {
   display: flex;
   flex-direction: column;
@@ -800,10 +787,6 @@
 }
 
 /* ---------- /tech-reviews/ ---------- */
-
-.content .review-map a:not(.img-link) {
-  border-bottom: none;
-}
 
 .review-map {
   display: flex;
@@ -1108,10 +1091,6 @@
 }
 
 /* ---------- /sources/ ---------- */
-
-.content .source-browser a:not(.img-link) {
-  border-bottom: none;
-}
 
 .source-browser {
   --type-rfc: var(--accent-orange);
