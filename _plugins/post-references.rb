@@ -295,7 +295,12 @@ module Jekyll
         external.uniq!(&:href)
         internal.uniq! { |i| i.href.chomp('/') }
 
-        found.reverse_each { |start, _body, finish| html[start...finish] = '' }
+        # A `---` written right before the reference heading belonged to the
+        # section that is moving out, so it goes with it.
+        found.reverse_each do |start, _body, finish|
+          hr = html[0...start].match(/<hr\s*\/?>\s*\z/)
+          html[(hr ? hr.begin(0) : start)...finish] = ''
+        end
         return doc.content = html if external.empty? && internal.empty? && notes.empty?
 
         doc.content = html.rstrip + render(site, external, internal, notes)

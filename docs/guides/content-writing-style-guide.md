@@ -184,6 +184,15 @@ Tech blog reviews (`_posts/techblog/`) must keep the original and the author's r
 - check every claim attributed to the original against the original, including what it says about results, follow-up posts, and future work
 - front matter summaries (`problem_decision_result`) follow the same rule
 
+## Section Breaks
+
+Separate the major parts of a post with a standard Markdown thematic break (`---` on its own line, with a blank line above and below). The page draws a rule only where the post has one.
+
+- put `---` before each `##` section after the first block of the body
+- in a post with fewer than three `##` sections (most TILs), also before each `###` topic, except one that opens right under its `##`
+- never right after a heading, and never before `## 참고` (the reference box sits apart from the body already)
+- always leave a blank line above `---`; directly under a line of text it turns that line into a heading
+
 ## Diagrams and Code
 
 Add a diagram or code only where a reader would otherwise hold a sequence, structure, state machine, or interleaving in their head from prose alone.
