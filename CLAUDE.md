@@ -121,6 +121,7 @@ series_description: 시리즈 설명
 
 - Treat modified and untracked files under `_posts/` as the user's work in progress. Do not reformat, rewrite, or "clean up" posts that the task did not name.
 - Do not rename, move, or delete posts, images, or tabs without explicit approval.
+- Never change a post's `date` (or the date in its file name) unless the request explicitly asks for it. New posts take the day they are written; editing, filling out, or reorganizing a post keeps its date. If a date looks wrong, report it instead of changing it.
 - Prefer variable-driven style edits in `_sass/colors/` before changing layout markup.
 - Reuse existing layouts and includes before creating new ones.
 - Never commit `_site/`, `.jekyll-cache/`, or `node_modules/`.

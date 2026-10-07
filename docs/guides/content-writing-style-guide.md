@@ -306,6 +306,8 @@ Series fields:
 
 All must remain valid YAML and use stable naming.
 
+Publication dates are not editorial material. Keep a post's `date` as it is when editing, expanding, or restructuring it, and give a new post the day it is written. Change a date only when the owner asks for it explicitly.
+
 ## Cleanup Checklist After Content Editing
 
 Before finishing a content task, check the edited files for:

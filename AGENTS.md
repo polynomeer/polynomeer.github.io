@@ -23,6 +23,7 @@ This file defines the working rules for human contributors and AI agents in this
 - Treat untracked and modified post files as user work in progress.
 - Do not rename, move, or delete posts, images, or tabs without explicit approval.
 - Preserve front matter fields unless the task requires changing them.
+- Never change a post's `date` (or the date in its file name) unless the request explicitly asks for it. New posts take the day they are written; editing, filling out, or reorganizing a post keeps its date. If a date looks wrong, report it instead of changing it.
 
 ## Content Writing Rules
 
