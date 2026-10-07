@@ -28,6 +28,12 @@
                 <span data-i18n="tabs.home">{{- site.data.locales[include.lang].tabs.home | capitalize -}}</span>
               </a>
             </span>
+            {%- comment -%} a post shows its first category between home and its title {%- endcomment -%}
+            {% if page.layout == 'post' and page.categories.size > 0 %}
+              <span>
+                <a href="{{ site.baseurl }}/categories/{{ page.categories.first | slugify | url_encode }}/">{{ page.categories.first }}</a>
+              </span>
+            {% endif %}
 
           {% elsif forloop.last %}
             {% if page.collection == 'tabs' or page.title_key %}
@@ -38,7 +44,7 @@
                 {{ page_title }}
               </span>
             {% else %}
-              <span>{{ page.title }}</span>
+              <span class="breadcrumb-current" title="{{ page.title | escape }}">{{ page.title }}</span>
             {% endif %}
 
           {% elsif page.layout == 'category' or page.layout == 'tag' %}
@@ -79,16 +85,6 @@
       {% endif %}
     </div>
 
-    <div class="topbar-lang-switcher lang-switcher lang-toggle" aria-label="{{ site.data.locales[include.lang].language.label }}">
-      <span class="lang-switcher-thumb" aria-hidden="true"></span>
-      <button type="button" class="lang-switcher-btn" data-lang-option="ko-KR">
-        {{ site.data.locales[include.lang].language.ko }}
-      </button>
-      <button type="button" class="lang-switcher-btn" data-lang-option="en">
-        {{ site.data.locales[include.lang].language.en }}
-      </button>
-    </div>
-
     <button type="button" id="search-trigger" class="btn btn-link">
       <i class="fas fa-search fa-fw"></i>
     </button>
@@ -105,9 +101,34 @@
         placeholder="{{ site.data.locales[include.lang].search.hint | capitalize }}..."
         data-i18n-placeholder="search.hint"
       >
+      <kbd class="search-shortcut" data-search-shortcut hidden>⌘K</kbd>
     </search>
     <button type="button" class="btn btn-link text-decoration-none" id="search-cancel" data-i18n="search.cancel">
       {{- site.data.locales[include.lang].search.cancel -}}
     </button>
   </div>
 </header>
+
+<script>
+  /* ⌘K / Ctrl+K focuses the search box (the mobile search bar opens first). */
+  (() => {
+    const input = document.getElementById('search-input');
+    const box = document.getElementById('search');
+    const hint = document.querySelector('[data-search-shortcut]');
+    if (!input || !box) return;
+
+    const mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    if (hint) {
+      hint.textContent = mac ? '⌘K' : 'Ctrl K';
+      hint.hidden = false;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'k') return;
+      event.preventDefault();
+      if (getComputedStyle(box).display === 'none') document.getElementById('search-trigger')?.click();
+      input.focus();
+      input.select();
+    });
+  })();
+</script>
