@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 11 - 지터는 언제 값을 하는가: 봉우리를 만들어야 보이는 것"
-date: 2026-10-02
+date: 2026-09-25
 categories: [Notes, ParityPay]
 tags: [Payment, Resilience, Retry, Backoff, Jitter, Fault Injection, Measurement, Experiment]
 series: parity-pay

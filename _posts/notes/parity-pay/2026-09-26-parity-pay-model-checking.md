@@ -1,6 +1,6 @@
 ---
 title: "ParityPay로 검증하는 결제 정합성 12 - 실험 41종이 못 밟는 경로를 모델 검사가 5단계 만에 찾았다"
-date: 2026-10-03
+date: 2026-09-26
 categories: [Notes, ParityPay]
 tags: [Payment, TLA+, Model Checking, Formal Verification, Consistency, Testing, Experiment]
 series: parity-pay
