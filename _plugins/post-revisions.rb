@@ -107,6 +107,20 @@ module Jekyll
         commits
       end
 
+      # Five blocks in the manner of a diffstat: green for insertions, red for
+      # deletions, grey for the rest. A change under five lines fills one block
+      # per line; a side with any lines keeps at least one block.
+      def blocks(insertions, deletions)
+        total = insertions + deletions
+        return 'nnnnn' if total.zero?
+
+        filled = [total, 5].min
+        added = (insertions * filled.to_f / total).round
+        added = 1 if insertions.positive? && added.zero?
+        added = filled - 1 if deletions.positive? && added == filled && filled > 1
+        ('a' * added) + ('d' * (filled - added)) + ('n' * (5 - filled))
+      end
+
       # `revision_notes` keys: YAML reads an unquoted date as a Date, so every
       # key is compared as text
       def note_for(notes, commit)
@@ -149,7 +163,8 @@ module Jekyll
 
           notes = post.data['revision_notes']
           revisions = revisions.map do |commit|
-            dated = commit.merge('date' => Time.parse(commit['date']), 'short_sha' => commit['sha'][0, 7])
+            dated = commit.merge('date' => Time.parse(commit['date']), 'short_sha' => commit['sha'][0, 7],
+                                 'blocks' => blocks(commit['insertions'], commit['deletions']))
             note = note_for(notes, dated)
             note && !note.empty? ? dated.merge('note' => note) : dated
           end

@@ -1,5 +1,5 @@
 {%- comment -%}
-  In the post header's date row: "수정 <date> · N번" as a chip that opens the
+  In the post header's date row: "수정 <date> N번 ▾" as a button that opens the
   revision history right below the row (post-revisions.html). Without the
   script the chip stays hidden and the plain date shows, with the history
   open underneath.
@@ -12,6 +12,5 @@
 <button type="button" class="post-revisions-chip" aria-expanded="false" aria-controls="post-revisions" data-revisions-chip hidden>
   {{ loc.updated }}
   {% include datetime.html date=page.last_modified_at lang=include.lang %}
-  <span class="post-revisions-chip-count">· {{ loc.revisions_times | replace: ':COUNT', page.revisions_total }}</span>
-  <i class="fas fa-angle-down" aria-hidden="true"></i>
+  <span class="post-revisions-chip-count">{{ loc.revisions_times | replace: ':COUNT', page.revisions_total }}<i class="fas fa-angle-down" aria-hidden="true"></i></span>
 </button>

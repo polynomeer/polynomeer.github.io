@@ -30,6 +30,10 @@
             {%- endif -%}
           </span>
           <span class="post-revision-diff" aria-label="+{{ revision.insertions }} −{{ revision.deletions }}">
+            <span class="post-revision-blocks" aria-hidden="true">
+              {%- assign cells = revision.blocks | split: '' -%}
+              {%- for cell in cells -%}<i class="is-{{ cell }}"></i>{%- endfor -%}
+            </span>
             <span class="post-revision-added">+{{ revision.insertions }}</span>
             <span class="post-revision-removed">&minus;{{ revision.deletions }}</span>
           </span>

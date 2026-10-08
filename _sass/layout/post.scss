@@ -21,6 +21,7 @@ header {
 
   .post-meta {
     span + span::before,
+    span + .post-revisions-chip::before,
     .post-revisions-chip + span::before {
       @include dot;
     }
@@ -2676,35 +2677,29 @@ header {
   gap: 0.3rem 0.75rem;
 }
 
+/* no box of its own: the 수정 date reads as before, and the count with its
+   arrow, in green, is what says it opens */
 .post-revisions-chip {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.3rem;
-  padding: 0.05rem 0.6rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  padding: 0;
+  border: 0;
+  background: none;
   color: inherit;
   font: inherit;
   cursor: pointer;
-  transition: border-color 0.2s ease;
 
-  i {
-    font-size: 0.7rem;
-    transition: transform 0.2s ease;
-  }
-
-  &:hover,
-  &:focus-visible {
-    border-color: color-mix(in srgb, var(--accent-cyan) 45%, transparent);
+  &:hover .post-revisions-chip-count,
+  &:focus-visible .post-revisions-chip-count {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   &:focus-visible {
-    outline: none;
-  }
-
-  &[aria-expanded='true'] i {
-    transform: rotate(180deg);
+    outline: 2px solid var(--accent-green);
+    outline-offset: 2px;
+    border-radius: 0.2rem;
   }
 
   &[hidden] {
@@ -2713,7 +2708,19 @@ header {
 }
 
 .post-revisions-chip-count {
-  color: var(--accent-cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--accent-green);
+
+  i {
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+  }
+
+  [aria-expanded='true'] > & i {
+    transform: rotate(180deg);
+  }
 }
 
 .post-revisions-updated[hidden] {
@@ -2843,6 +2850,28 @@ header {
   font-family: var(--bs-font-monospace, monospace);
   font-size: 0.74rem;
   white-space: nowrap;
+}
+
+.post-revision-blocks {
+  display: inline-flex;
+  gap: 2px;
+  margin-right: 0.45rem;
+  vertical-align: -1px;
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--btn-border-color);
+
+    &.is-a {
+      background: var(--accent-green);
+    }
+
+    &.is-d {
+      background: #ff6e6e;
+    }
+  }
 }
 
 .post-revision-added {
