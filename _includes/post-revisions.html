@@ -1,13 +1,13 @@
 <!--
-  The post's substantive edits, collected by _plugins/post-revisions.rb, as a
-  section in the post tail next to the mentions: what the post leans on and
-  when it changed sit together. The post header links here ("N번 수정").
+  The post's substantive edits, collected by _plugins/post-revisions.rb, in a
+  panel right under the post header's date row. The "수정 <date> · N번" chip
+  in that row opens and closes it (post-revisions-trigger.html); without the
+  script the panel is simply open.
 
   Each row shows the post's own `revision_notes` line when it has one, and
   otherwise the commit subject (the repository's, in English); either links
-  to the commit. The list ends with the publication date so the history reads
-  from the start. Rows beyond the first three fold behind a toggle; without
-  the script every row shows.
+  to the commit. The timeline ends with the publication date. Rows beyond the
+  first three fold behind a toggle.
 -->
 
 {% assign revisions = page.revisions %}
@@ -16,14 +16,8 @@
   {% assign repo = site.revisions.repo %}
   {% assign loc = site.data.locales[include.lang].post %}
   {% assign visible = 3 %}
-  {% capture last_date %}{% include datetime.html date=page.last_modified_at lang=include.lang %}{% endcapture %}
 
-  <section id="post-revisions" class="post-revisions" aria-labelledby="post-revisions-title" data-revisions data-visible="{{ visible }}">
-    <div class="post-revisions-head">
-      <h3 class="post-tail-heading" id="post-revisions-title">{{ loc.revisions }} <span class="connection-count">{{ page.revisions_total }}</span></h3>
-      <span class="post-revisions-state">{{ loc.revisions_state | replace: ':COUNT', page.revisions_total | replace: ':DATE', last_date | strip_newlines }}</span>
-    </div>
-
+  <section id="post-revisions" class="post-revisions" aria-label="{{ loc.revisions }}" data-revisions data-visible="{{ visible }}">
     <ol class="post-revision-list">
       {% for revision in revisions %}
         <li class="post-revision">
@@ -54,37 +48,44 @@
     </ol>
   </section>
 
-  {% if revisions.size > visible %}
-    <script>
-      (() => {
-        const root = document.querySelector('[data-revisions]');
-        if (!root) return;
+  <script>
+    (() => {
+      const panel = document.querySelector('[data-revisions]');
+      const chip = document.querySelector('[data-revisions-chip]');
+      const fallback = document.querySelector('[data-revisions-fallback]');
+      if (!panel || !chip) return;
 
-        const visible = Number(root.dataset.visible);
-        const rows = Array.from(root.querySelectorAll('.post-revision:not(.is-origin)'));
-        const hidden = rows.slice(visible);
-        if (hidden.length === 0) return;
+      /* the chip replaces the plain date and the panel starts closed, unless
+         the address points at it */
+      const setOpen = (open) => {
+        panel.hidden = !open;
+        chip.setAttribute('aria-expanded', String(open));
+      };
+      chip.hidden = false;
+      if (fallback) fallback.hidden = true;
+      setOpen(location.hash === '#post-revisions');
+      chip.addEventListener('click', () => setOpen(panel.hidden));
 
-        const labels = {
-          expand: {{ site.data.locales[include.lang].post.revisions_expand | jsonify }},
-          collapse: {{ site.data.locales[include.lang].post.revisions_collapse | jsonify }}
-        };
+      /* long histories show three rows and a toggle for the rest */
+      const visible = Number(panel.dataset.visible);
+      const hidden = Array.from(panel.querySelectorAll('.post-revision:not(.is-origin)')).slice(visible);
+      if (hidden.length === 0) return;
 
-        const toggle = document.createElement('button');
-        toggle.type = 'button';
-        toggle.className = 'post-tail-toggle';
-        toggle.setAttribute('aria-controls', 'post-revisions');
-
-        const apply = (open) => {
-          hidden.forEach((row) => row.classList.toggle('is-folded', !open));
-          toggle.setAttribute('aria-expanded', String(open));
-          toggle.textContent = open ? labels.collapse : labels.expand.replace(':COUNT', hidden.length);
-        };
-
-        apply(false);
-        toggle.addEventListener('click', () => apply(toggle.getAttribute('aria-expanded') === 'false'));
-        root.querySelector('.post-revision-list').after(toggle);
-      })();
-    </script>
-  {% endif %}
+      const labels = {
+        expand: {{ site.data.locales[include.lang].post.revisions_expand | jsonify }},
+        collapse: {{ site.data.locales[include.lang].post.revisions_collapse | jsonify }}
+      };
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'post-revisions-more';
+      const apply = (open) => {
+        hidden.forEach((row) => row.classList.toggle('is-folded', !open));
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.textContent = open ? labels.collapse : labels.expand.replace(':COUNT', hidden.length);
+      };
+      apply(false);
+      toggle.addEventListener('click', () => apply(toggle.getAttribute('aria-expanded') === 'false'));
+      panel.querySelector('.post-revision-list').after(toggle);
+    })();
+  </script>
 {% endif %}

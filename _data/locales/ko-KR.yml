@@ -155,9 +155,8 @@ post:
   backlinks_expand: "+:COUNT편 더 보기"
   backlinks_collapse: 접기
   revisions: 변경 이력
-  revisions_count: ":COUNT번 수정"
+  revisions_times: ":COUNT번"
   revisions_more: "이전 수정 :COUNT건은 생략했습니다"
-  revisions_state: "게시 뒤 :COUNT번 · 마지막 :DATE"
   revisions_first: 처음 게시
   revisions_expand: "이전 수정 :COUNT건 더 보기"
   revisions_collapse: 접기

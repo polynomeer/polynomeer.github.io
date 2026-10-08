@@ -20,8 +20,14 @@ header {
   }
 
   .post-meta {
-    span + span::before {
+    span + span::before,
+    .post-revisions-chip + span::before {
       @include dot;
+    }
+
+    /* the revision panel sits inside the meta block; its spans are columns */
+    .post-revisions span + span::before {
+      content: none;
     }
 
     em,
@@ -2660,8 +2666,8 @@ header {
 }
 
 /* Post metadata and revision history (see _plugins/post-revisions.rb).
-   The header links to the history, a section in the post tail after the
-   mentions: the same card, with the revisions on a timeline that ends at the
+   The 수정 date in the header is a chip that opens the history in a panel
+   right under the date row: the revisions on a timeline that ends at the
    publication date. */
 .post-date-row {
   display: flex;
@@ -2670,48 +2676,74 @@ header {
   gap: 0.3rem 0.75rem;
 }
 
-.post-revisions-link {
+.post-revisions-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-left: 0.35rem;
-  color: var(--accent-green);
-  font-size: 0.75rem;
+  gap: 0.3rem;
+  padding: 0.05rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
 
   i {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
   }
 
-  &:hover {
-    color: var(--link-color);
-    text-decoration: none;
+  &:hover,
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--accent-cyan) 45%, transparent);
   }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &[aria-expanded='true'] i {
+    transform: rotate(180deg);
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.post-revisions-chip-count {
+  color: var(--accent-cyan);
+}
+
+.post-revisions-updated[hidden] {
+  display: none;
 }
 
 .post-revisions {
-  margin: 0 0 2rem;
-  padding: 0.3rem 1rem 0.8rem;
-  border: 1px solid var(--btn-border-color);
-  border-radius: 0.6rem;
-  scroll-margin-top: 4rem;
-}
+  margin: 0.7rem 0 0.2rem;
+  padding: 0.55rem 1rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 22%, transparent);
+  border-radius: 0.8rem;
+  background: var(--filter-input-bg);
+  font-size: 0.9rem;
 
-.post-revisions-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.25rem 0.75rem;
-  padding: 0.6rem 0 0.55rem;
-
-  .post-tail-heading {
-    margin: 0;
+  &[hidden] {
+    display: none;
   }
 }
 
-.post-revisions-state {
+.post-revisions-more {
+  margin: 0.35rem 0 0 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--text-muted-color);
   font-size: 0.76rem;
+
+  &:hover {
+    color: var(--link-color);
+  }
 }
 
 /* the timeline: a rule down the left, a dot per revision, a ring for the

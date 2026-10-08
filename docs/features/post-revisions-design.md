@@ -86,14 +86,15 @@ not count as a revision itself.
 
 ## Rendering
 
-The post header shows "N번 수정" next to the updated date, linking to
-`#post-revisions`. `_includes/post-revisions.html` is a tail include placed
-right after the mentions (`post-backlinks`): what the post leans on and when
-it changed read together. It is a card with the revisions on a timeline -
-date, the note or else the commit subject, and the line counts - ending with
-the publication date. Rows beyond the first three fold behind a toggle. Each
-row links to its commit when `site.revisions.repo` is set; a note shows the
-commit subject as its tooltip.
+In the post header's date row, "수정 <date> · N번" is a chip
+(`_includes/post-revisions-trigger.html`). It opens
+`_includes/post-revisions.html`, a panel right under the date row with the
+revisions on a timeline - date, the note or else the commit subject, and the
+line counts - ending with the publication date. Rows beyond the first three
+fold behind a toggle. The panel starts closed unless the address is
+`#post-revisions`; without the script the chip stays hidden, the plain date
+shows, and the panel is open. Each row links to its commit when
+`site.revisions.repo` is set; a note shows the commit subject as its tooltip.
 
 Strings are `post.revisions*` in the locale files; styles sit with the other
-post-tail rules in `_sass/layout/post.scss`.
+post header rules in `_sass/layout/post.scss`.

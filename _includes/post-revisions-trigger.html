@@ -1,4 +1,17 @@
-{%- comment -%} In the post header: how many times the post changed, linking to the history in the post tail (post-revisions.html). {%- endcomment -%}
-{% if page.revisions.size > 0 %}
-  <a class="post-revisions-link" href="#post-revisions">{{ site.data.locales[include.lang].post.revisions_count | replace: ':COUNT', page.revisions_total }}<i class="fas fa-arrow-down" aria-hidden="true"></i></a>
-{% endif %}
+{%- comment -%}
+  In the post header's date row: "수정 <date> · N번" as a chip that opens the
+  revision history right below the row (post-revisions.html). Without the
+  script the chip stays hidden and the plain date shows, with the history
+  open underneath.
+{%- endcomment -%}
+{% assign loc = site.data.locales[include.lang].post %}
+<span class="post-revisions-updated" data-revisions-fallback>
+  {{ loc.updated }}
+  {% include datetime.html date=page.last_modified_at tooltip=true lang=include.lang %}
+</span>
+<button type="button" class="post-revisions-chip" aria-expanded="false" aria-controls="post-revisions" data-revisions-chip hidden>
+  {{ loc.updated }}
+  {% include datetime.html date=page.last_modified_at lang=include.lang %}
+  <span class="post-revisions-chip-count">· {{ loc.revisions_times | replace: ':COUNT', page.revisions_total }}</span>
+  <i class="fas fa-angle-down" aria-hidden="true"></i>
+</button>

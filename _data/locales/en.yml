@@ -155,9 +155,8 @@ post:
   backlinks_expand: "+:COUNT more"
   backlinks_collapse: Show fewer
   revisions: Revision history
-  revisions_count: ":COUNT revisions"
+  revisions_times: ":COUNT revisions"
   revisions_more: ":COUNT earlier revisions not shown"
-  revisions_state: ":COUNT revisions since publishing · last :DATE"
   revisions_first: First published
   revisions_expand: "Show :COUNT earlier revisions"
   revisions_collapse: Show less

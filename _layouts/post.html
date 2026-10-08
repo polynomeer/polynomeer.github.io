@@ -6,7 +6,6 @@ panel_includes:
 tail_includes:
   - post-adjacent-nav
   - post-backlinks
-  - post-revisions
   - related-posts
   - comments
 ---
@@ -39,14 +38,13 @@ tail_includes:
           </span>
 
           <!-- lastmod date -->
-          {% if page.last_modified_at %}
+          {% if page.revisions.size > 0 %}
+            {% include post-revisions-trigger.html lang=lang %}
+          {% elsif page.last_modified_at %}
             <span>
               {{ site.data.locales[lang].post.updated }}
               {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
-              {% include post-revisions-trigger.html lang=lang %}
             </span>
-          {% else %}
-            {% include post-revisions-trigger.html lang=lang %}
           {% endif %}
           <!-- author(s) -->
           <span>
@@ -130,6 +128,9 @@ tail_includes:
           {% include read-time.html content=content prompt=true lang=lang %}
         </div>
       </div>
+
+      {%- comment -%} The revision history, opened from the 수정 chip in the date row. {%- endcomment -%}
+      {% include post-revisions.html lang=lang %}
 
       {%- comment -%} Which project or job the post belongs to, right under the dates. {%- endcomment -%}
       {% include portfolio-context.html lang=lang %}
