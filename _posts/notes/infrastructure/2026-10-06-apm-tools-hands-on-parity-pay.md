@@ -11,12 +11,14 @@ mermaid: true
 problem_decision_result:
   problem: "앞 글에서 APM 도구 15종을 공식 문서만 읽고 비교한 뒤 '도입 전에 에이전트를 켠 상태와 끈 상태로 직접 재 보라'로 끝냈다. 정작 그 글에 적힌 오버헤드 수치는 전부 벤더와 프로젝트가 스스로 밝힌 것을 옮긴 것이었고, 한 번도 재지 않았다."
   decision: "결제 서비스(ParityPay)에 APM 백엔드를 설정 하나로 바꿔 끼우는 구조를 넣고, 같은 애플리케이션·같은 부하·같은 기계에서 백엔드만 갈아 가며 쟀다. 계정이 필요 없는 여섯 가지(Jaeger, Zipkin, Tempo, SigNoz, SkyWalking, Pinpoint)를 붙였고, 애플리케이션 코드는 어떤 도구가 붙어 있는지 모른다."
-  result: "OTel 에이전트의 값이 한 묶음에서 18.7%, 다른 날 다른 묶음에서 9.2%였다. 폭이 넓다는 것까지가 결과다. SkyWalking 자체 에이전트는 42.7%(p95 54 → 97 ms). 설치 비용은 컨테이너 1개(Zipkin, Jaeger, Tempo)에서 6개(SigNoz)까지 자릿수가 달랐고, Pinpoint는 다섯 번 막힌 끝에 저장소가 뜨지 않았다. 아무도 세지 않는 비용도 하나 나왔다. OTel Collector 자신이 70초 부하에 2.6 GiB까지 자란다."
+  result: "OTel 에이전트의 값이 한 묶음에서 18.7%, 다른 날 다른 묶음에서 9.2%였다. 폭이 넓다는 것까지가 결과다. SkyWalking 자체 에이전트는 42.7%(p95 54 → 97 ms). 설치 비용은 컨테이너 1개(Zipkin, Jaeger, Tempo)에서 6개(SigNoz)까지 자릿수가 달랐고, Pinpoint는 다섯 번 막힌 끝에 저장소가 뜨지 않았다(뒤에 떴다. 후속 글 참고). 아무도 세지 않는 비용도 하나 나왔다. OTel Collector 자신이 70초 부하에 2.6 GiB까지 자란다."
 ---
 
 [APM 도구 비교](/posts/apm-tools-comparison/)는 Datadog부터 Pinpoint, OpenTelemetry까지 15종을 계측 방식, 저장소, 가격, 종속성으로 갈라 놓고 이렇게 끝났다. 도입 전에 에이전트를 켠 상태와 끈 상태로 같은 부하를 걸어 보라고. 그 글의 오버헤드 수치는 전부 벤더와 프로젝트가 스스로 밝힌 값이었다. Pinpoint README의 "약 3%"도, OpenTelemetry 문서가 숫자 대신 "환경에 따라 달라진다"고 쓴 것도 옮겨 적었을 뿐이다.
 
 이 글은 그 측정이다. 계정이 필요 없는 여섯 가지를 붙여 봤다. Jaeger, Zipkin, Grafana Tempo, SigNoz, Apache SkyWalking, Pinpoint다. 이 중 넷은 떴고 둘은 뜨지 않았는데, 뜨지 않은 쪽에서 나온 기록이 뜬 쪽만큼 쓸모가 있었다. Datadog은 체험판 계정과 API 키가 필요해 손대지 않았다.
+
+이 글을 쓴 뒤 나머지 둘도 띄웠다. 그 과정과, 여기 적어 둔 SigNoz 원인이 틀렸다는 것은 [다음 글](/posts/apm-startup-troubleshooting/)에 있다. 아래 설치 비용 표의 "끝내 실패" 둘은 이 글을 쓰던 시점의 상태다.
 
 대상 애플리케이션은 [ParityPay](/posts/parity-pay-invariants/)다. 이중부기 원장 위에서 충전과 결제, 취소, 정산을 처리하는 모듈러 모놀리스이고, [외부 기관 호출](/posts/parity-pay-external-isolation/)과 Outbox 발행기, 복구 작업이 배경에서 계속 돈다. 트레이스 하나에 스팬이 20개쯤 달리는 정도의 복잡도다.
 
@@ -157,8 +159,8 @@ OpenTelemetry Collector 한 컨테이너의 값이다. 전량 샘플링으로 70
 | Jaeger | 1 (+컬렉터) | 메모리 | 0 | 미측정 |
 | Grafana Tempo | 1 (+컬렉터) | 로컬 디스크 | 0 | 약 157 MiB |
 | SkyWalking | 3 | BanyanDB (필수) | 3 | 미측정 |
-| Pinpoint | 5 | HBase + MySQL + ZooKeeper + Redis | 5 (끝내 실패) | 약 3.2 GiB |
-| SigNoz | 6 | ClickHouse + Keeper + PostgreSQL | 1 (끝내 실패) | 약 970 MiB |
+| Pinpoint | 5 | HBase + MySQL + ZooKeeper + Redis | 5 (이 글 시점) | 약 3.2 GiB |
+| SigNoz | 6 | ClickHouse + Keeper + PostgreSQL | 1 (이 글 시점) | 약 970 MiB |
 
 **컨테이너 수와 막힌 횟수가 같이 움직인다.** 한 개짜리는 한 번에 떴고, 다섯 개와 여섯 개짜리는 둘 다 끝까지 못 갔다.
 
@@ -167,6 +169,8 @@ Zipkin에서 막힌 것은 없다. 비교에서 가장 쉬웠다. 컨테이너 �
 SkyWalking은 세 번 막혔다. 먼저 `SW_STORAGE=h2`로 띄우자 `no provider found for module storage`로 종료했다. 10.x 이미지의 `oap-libs`에는 `storage-banyandb-plugin`만 들어 있다. 메모리나 임베디드 저장소로 가볍게 띄워 보는 경로가 없다. 다음으로 BanyanDB 최신 버전인 0.11.1을 붙이자 `Incompatible BanyanDB server API version: 0.11. But accepted versions: 0.10`으로 종료했다. 0.10.3으로 내리자 이번에는 앞 버전이 쓴 볼륨을 읽지 못해 `unknown field "created…"`로 종료했다. 볼륨을 지우고서야 떴다.
 
 SigNoz는 한 번 막혔는데 그 한 번이 끝까지 안 풀렸다. 2025년에 docker-compose 설치가 폐기되고 전용 설치기로 옮겨서, 공식 안내는 `curl … | bash`다. 이 실험은 같은 일을 단계로 나눠 했다. 공식 릴리스의 tarball과 checksums를 받아 sha256을 검증한 뒤 설치하는 방식이다. 컨테이너는 6개가 떴지만 ClickHouse 분산 DDL 스키마 마이그레이션이 10분 넘게 끝나지 않았고, 그동안 수집기가 OTLP를 받지 않아 트레이스가 한 건도 들어오지 않았다. 중간에 컨테이너를 recreate 했더니 클러스터 메타데이터에 죽은 복제본 호스트가 남아(`Cannot resolve host (a39b5c2f3c57)`) 마이그레이션이 영원히 끝나지 않는 상태가 됐다. 볼륨까지 지우고 한 번에 올려야 했다.
+
+**이 진단은 절반만 맞았다.** 나중에 볼륨을 지우고 한 번에 올려 마이그레이션을 2분 만에 끝낸 뒤에도 트레이스는 0건이었다. 진짜 문턱은 다른 데 있었고 [다음 글](/posts/apm-startup-troubleshooting/)에 적었다.
 
 Pinpoint는 다섯 번 막혔고, 그래도 뜨지 않았다. 이 글에서 가장 길게 붙잡은 도구다.
 
@@ -243,6 +247,8 @@ Mock PG의 장애 모드를 넣는 관리 API에 필드 이름을 `mode`로 추�
 ## 한계
 
 이 숫자들이 어디서 나왔는지부터 말해야 한다. 노트북 한 대다. Apple M1 Max 32 GB, macOS 26.6.2, Docker Desktop에 7.7 GiB를 준 상태이고, **측정 내내 다른 프로젝트의 컨테이너가 20여 개 떠 있었다.** 그래서 절대 처리량은 의미가 없고, 같은 묶음 안에서 팔끼리 비교한 비율만 쓸 수 있다. 서버 여러 대, 다른 JVM 설정, 다른 트래픽 모양에서는 다른 값이 나온다.
+
+Pinpoint와 SigNoz는 이 글 뒤에 둘 다 띄웠다. Pinpoint는 미리 쪼개는 리전 수와 ZooKeeper 세션 상한을 함께 고쳐야 했고, SigNoz는 첫 관리자 계정이 만들어지기 전까지 수집 경로가 열리지 않는 것이었다([후속 글](/posts/apm-startup-troubleshooting/)).
 
 Pinpoint의 결과는 이 기계에 대한 것이지 Pinpoint에 대한 것이 아니다. x86 호스트나 arm64 빌드가 있는 환경에서는 같은 자리에서 막히지 않을 가능성이 크다. 다섯 번째를 빼면 나머지 넷은 어디서나 만나는 종류이고, 그 넷만으로도 컨테이너 한 개짜리와는 다른 작업이다.
 
