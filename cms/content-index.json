@@ -1,6 +1,6 @@
 {
   "generatedFrom": "ruby scripts/cms/validate-content.rb --index",
-  "total": 1127,
+  "total": 1128,
   "titles": {
     "_posts/TIL/2020-TIL/2020-11-06-2020-11-06-TIL.md": {"title":"2020-11-06-TIL","status":"published"},
     "_posts/TIL/2020-TIL/2020-11-17-2020-11-17-TIL.md": {"title":"2020-11-17-TIL","status":"published"},
@@ -830,6 +830,7 @@
     "_posts/notes/infrastructure/2026-10-06-apm-tools-hands-on-parity-pay.md": {"title":"APM 도구 여섯 개를 직접 붙여 봤다: 에이전트 비용은 날마다 9%와 19% 사이였다","status":"published"},
     "_posts/notes/infrastructure/2026-10-06-big-tech-apm-and-tracing.md": {"title":"빅테크는 APM을 사지 않고 만들었다: Dapper에서 OpenTelemetry 졸업까지","status":"published"},
     "_posts/notes/infrastructure/2026-10-07-apm-startup-troubleshooting.md": {"title":"빈 화면의 원인은 매번 달랐다: APM 여섯 개를 띄우며 막힌 자리들","status":"published"},
+    "_posts/notes/infrastructure/2026-10-10-datadog-alternatives-plugged-in.md": {"title":"Datadog 대안 10선을 전부 꽂아 봤다: 셋은 떴고 넷은 키만 남았고 둘은 축이 달랐다","status":"published"},
     "_posts/notes/iterview/2026-07-23-iterview-initial-design.md": {"title":"iterview 초기 설계 - 이력서 기반 면접 훈련 플랫폼의 구조와 기술 선택","status":"published"},
     "_posts/notes/java/2021-01-12-array-and-list-in-java.md": {"title":"Java에서 배열과 리스트를 어떻게 구분해야 하는가","status":"published"},
     "_posts/notes/java/2021-01-12-array-vs-linked-list.md": {"title":"배열과 연결 리스트는 언제 차이가 커지는가","status":"published"},

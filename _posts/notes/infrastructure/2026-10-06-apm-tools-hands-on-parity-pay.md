@@ -20,6 +20,8 @@ problem_decision_result:
 
 이 글을 쓴 뒤 나머지 둘도 띄웠다. 그 과정과, 여기 적어 둔 SigNoz 원인이 틀렸다는 것은 [다음 글](/posts/apm-startup-troubleshooting/)에 있다. 아래 설치 비용 표의 "끝내 실패" 둘은 이 글을 쓰던 시점의 상태다.
 
+그 뒤에 셋을 더 붙였다. "Datadog 대안 10선"에 올라오는 열 개를 같은 배선에 대 본 기록은 [세 번째 글](/posts/datadog-alternatives-plugged-in/)에 있다. 컨테이너 한 개로 뜨는 도구가 하나 더 늘었고, 그쪽은 저장소까지 내장이다.
+
 대상 애플리케이션은 [ParityPay](/posts/parity-pay-invariants/)다. 이중부기 원장 위에서 충전과 결제, 취소, 정산을 처리하는 모듈러 모놀리스이고, [외부 기관 호출](/posts/parity-pay-external-isolation/)과 Outbox 발행기, 복구 작업이 배경에서 계속 돈다. 트레이스 하나에 스팬이 20개쯤 달리는 정도의 복잡도다.
 
 ---

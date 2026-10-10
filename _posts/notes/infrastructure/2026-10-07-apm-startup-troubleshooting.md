@@ -209,11 +209,14 @@ Pinpoint의 에이전트 오버헤드도 쟀지만 쓰지 않기로 했다. 대�
 
 SigNoz 화면은 로그인이 필요해 캡처하지 않았다. 수집이 열린 것까지만 확인했다.
 
+여기 적은 체크리스트는 뒤에 셋을 더 붙이면서 다시 시험받았다. 두 줄이 더 늘었고, 그중 하나는 이 글에 이미 적어 둔 것을 내가 또 어긴 것이다([다음 글](/posts/datadog-alternatives-plugged-in/)).
+
 전체 기록은 [ParityPay 저장소](https://github.com/polynomeer/parity-pay)의 `docs/22-apm-troubleshooting-log.md`에 있고, 측정값은 `reports/14-apm-tool-comparison.md`에 있다.
 
 ## 참고
 
 - [APM 도구 여섯 개를 직접 붙여 봤다](/posts/apm-tools-hands-on-parity-pay/) — 이 글의 앞 글. 오버헤드와 설치 비용 측정
+- [Datadog 대안 10선을 전부 꽂아 봤다](/posts/datadog-alternatives-plugged-in/) — 이 글의 다음 글. 셋을 더 붙였다
 - [빅테크는 APM을 사지 않고 만들었다](/posts/big-tech-apm-and-tracing/) — Pinpoint와 Zipkin이 어디서 왔는지
 - [Pinpoint README](https://github.com/pinpoint-apm/pinpoint) — pinpoint-apm
 - [SigNoz Architecture](https://signoz.io/docs/architecture/) — SigNoz
